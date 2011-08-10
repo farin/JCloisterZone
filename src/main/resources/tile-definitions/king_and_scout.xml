@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="LC">
+		<cloister/>
+		<city>N</city>
+		<farm city="N">E S W</farm>
+	</card>
+	<card id="RC">
+		<road>W</road>
+		<city>N</city>
+		<farm city="N">WR</farm>
+		<farm city="N">E S WL</farm>
+		<wagon-move>
+			<neighbouring>N W</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CRrR">
+		<road>W</road>
+		<road>S E</road>
+		<city>N</city>
+		<farm city="N">WR</farm>
+		<farm city="N">EL SR WL</farm>
+		<farm>SL ER</farm>
+		<wagon-move>
+			<neighbouring>N W</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcRR!">
+		<road>S</road>
+		<road>E</road>
+		<city>N W</city>
+		<farm city="N">SR</farm>
+		<farm city="N">SL</farm>
+		<farm city="N">ER</farm>
+		<farm city="N">EL</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CCcc">
+		<city>W E</city>
+		<city>N S</city>
+	</card>
+</pack>

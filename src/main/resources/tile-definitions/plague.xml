@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="Cc.1">
+		<plague />
+		<city>S E</city>
+		<farm city="S">N W</farm>
+	</card>
+	<card id="CC.2">
+		<plague />
+		<city>S</city>
+		<city>E</city>
+		<farm city="S E">N W</farm>
+	</card>
+	<card id="CCRR">
+		<plague />
+		<city>S</city>
+		<city>E</city>
+		<road>N</road>
+		<road>W</road>
+		<farm city="S">WL</farm>
+		<farm city="E">NR</farm>
+		<farm city="S E">NL WR</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+			<neighbouring>S W</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RRC">
+		<plague />
+		<city>E</city>
+		<road>N</road>
+		<road>W</road>
+		<farm city="E">NR</farm>
+		<farm>NL WR</farm>
+		<farm city="E">S WL</farm>
+		<wagon-move>
+			<neighbouring>E W</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RRRR">
+		<plague />
+		<road>N</road>
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+		<wagon-move>
+			<neighbouring>N E S W</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="Rr">
+		<plague />
+		<road>W S</road>
+		<farm>WR N E SL</farm>
+		<farm>SR WL</farm>
+	</card>
+</pack>

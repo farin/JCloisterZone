@@ -1,0 +1,143 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>jcloisterzone</groupId>
+  <artifactId>jcloisterzone</artifactId>
+  <name>JCloisterZone</name>
+  <version>2.0-SNAPSHOT</version>
+  <description>Carcassonne board game Java implementation</description>
+  <url>http://www.jcloisterzone.org/</url>
+
+
+  <repositories>
+  <repository>
+    <id>gettext-commons-repository</id>
+    <url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
+  </repository>
+  </repositories>
+
+
+  <dependencies>
+  	<dependency>
+    	<groupId>com.google.collections</groupId>
+    	<artifactId>google-collections</artifactId>
+    	<version>1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>1.6.0</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.mina</groupId>
+	    <artifactId>mina-core</artifactId>
+	    <version>2.0.3</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.ini4j</groupId>
+    	<artifactId>ini4j</artifactId>
+    	<version>0.5.1</version>
+	</dependency>
+	<dependency>
+    	<groupId>com.miglayout</groupId>
+    	<artifactId>miglayout</artifactId>
+    	<version>3.7.3</version>
+	</dependency>
+	<dependency>
+      <groupId>org.xnap.commons</groupId>
+      <artifactId>gettext-commons</artifactId>
+      <version>0.9.6</version>
+    </dependency>
+
+
+
+	<!--  test depencies -->
+
+  	<dependency>
+   		<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<version>4.5</version>
+    	<scope>test</scope>
+	</dependency>
+	<!-- dependency>
+    	<groupId>org.easymock</groupId>
+    	<artifactId>easymock</artifactId>
+    	<version>2.4</version>
+    	<scope>test</scope>
+	</dependency-->
+  </dependencies>
+
+
+  <build>
+  	<resources>
+  		<resource>
+        	<directory>src/main/resources</directory>
+        	<includes>
+          		<include>**/*</include>
+        	</includes>
+      	</resource>
+      	<resource>
+        	<directory>src/main/config</directory>
+        	<includes>
+          		<include>**/*</include>
+        	</includes>
+        	<excludes>
+        		<exclude>config.ini</exclude>
+        		<exclude>debug.ini</exclude>
+        	</excludes>
+      	</resource>
+  	</resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerVersion>1.6</compilerVersion>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>JCloisterZone</finalName>
+              <outputDirectory>build</outputDirectory>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <manifestEntries>
+                    <Main-Class>com.jcloisterzone.ui.Client</Main-Class>
+                    <SplashScreen-Image>sysimages/jcloisterzone.png</SplashScreen-Image>
+                    <Class-Path>.</Class-Path>
+                 </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!--
+      <plugin>
+        <groupId>org.xnap.commons</groupId>
+        <artifactId>maven-gettext-plugin</artifactId>
+        <version>1.2.3</version>
+        <configuration>
+          <targetBundle>mo.Messages</targetBundle>
+          <poDirectory>${basedir}/po</poDirectory>
+          <outputDirectory>${basedir}/src/main/resources</outputDirectory>
+          <keysFile>messages.pot</keysFile>
+        </configuration>
+      </plugin>
+      -->
+    </plugins>
+  </build>
+
+
+
+
+</project>

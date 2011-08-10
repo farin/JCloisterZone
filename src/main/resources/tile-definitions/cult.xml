@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="S">
+		<cloister shrine="yes"/>
+		<farm>N S W E</farm>
+	</card>
+	<card id="SC">
+		<cloister shrine="yes"/>
+		<city>N</city>
+		<farm city="N">S W E</farm>
+	</card>
+	<card id="SR">
+		<cloister shrine="yes"/>
+		<road>S</road>
+		<farm>N S W E</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="SCFR">
+		<cloister shrine="yes"/>
+		<city>N</city>
+		<road>S</road>
+		<farm city="N">S W E</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="SRFR">
+		<cloister shrine="yes"/>
+		<road>N</road>
+		<road>S</road>
+		<farm>NL W SR</farm>
+		<farm>NR E SL</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER N</neighbouring>
+			<neighbouring>CLOISTER S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="SRCR">
+		<cloister shrine="yes"/>
+		<city>N</city>
+		<road>W</road>
+		<road>E</road>
+		<farm city="N">WR EL</farm>
+		<farm>WL S ER</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER W</neighbouring>
+			<neighbouring>CLOISTER E</neighbouring>
+		</wagon-move>
+	</card>
+</pack>

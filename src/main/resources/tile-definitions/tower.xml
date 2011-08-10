@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="C" count="2">
+		<tower />
+		<city>N</city>
+		<farm city="N">W S E</farm>
+	</card>
+	<card id="F">
+		<tower />
+		<farm>N E S W</farm>
+	</card>
+	<card id="L">
+		<tower />
+		<cloister/>
+		<farm>N E S W</farm>
+	</card>
+	<card id="RR">
+		<tower />
+		<road>W</road>
+		<road>S</road>
+		<farm>WR N E SL</farm>
+		<farm>WL SR</farm>
+	</card>
+	<card id="RRR">
+		<tower />
+		<road>W</road>
+		<road>N</road>
+		<road>E</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER S WL</farm>
+	</card>
+	<card id="RrRr.2">
+		<tower />
+		<road>N W</road>
+		<road>S E</road>
+		<farm>NL WR</farm>
+		<farm>SL ER</farm>
+		<farm>NR EL SR WL</farm>
+	</card>
+	<card id="RRRR.1">
+		<tower />
+		<road>N</road>
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+	</card>
+	<card id="CRcr">
+		<tower />
+		<road>N S</road>
+		<city>W E</city>
+		<farm city="W">NL</farm>
+		<farm city="W">NR</farm>
+		<farm city="W">SL</farm>
+		<farm city="W">SR</farm>
+	</card>
+	<card id="CFR">
+		<tower />
+		<city>N</city>
+		<road>S</road>
+		<farm city="N">W SR</farm>
+		<farm city="N">E SL</farm>
+	</card>
+	<card id="RrC">
+		<tower />
+		<road>S W</road>
+		<city>N</city>
+		<farm city="N">WR E SL</farm>
+		<farm>WL SR</farm>
+	</card>
+	<card id="RCr">
+		<tower />
+		<city>N</city>
+		<road>W E</road>
+		<farm city="N">WR</farm>
+		<farm city="N">EL</farm>
+		<farm>WL S ER</farm>
+	</card>
+	<card id="Cc" >
+		<tower />
+		<city>N W</city>
+		<farm city="N">S E</farm>
+	</card>
+	<card id="CcR!">
+		<tower />
+		<road>E</road>
+		<city>N W</city>
+		<farm city="N">EL</farm>
+		<farm city="N">ER</farm>
+		<farm city="N">S</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CC.2">
+		<tower />
+		<city>N</city>
+		<city>W</city>
+		<farm city="N W">E S</farm>
+	</card>
+	<card id="CRCr.2">
+		<tower />
+		<road>W E</road>
+		<city>N</city>
+		<city>S</city>
+		<farm city="N">WR EL</farm>
+		<farm city="S">ER WL</farm>
+	</card>
+	<card id="CccR">
+		<tower />
+		<road>S</road>
+		<city>N W E</city>
+		<farm city="N">SL</farm>
+		<farm city="N">SR</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CccC+">
+		<tower />
+		<city>N W E</city>
+		<city>S</city>
+		<farm city="W S">CENTER</farm>
+	</card>
+</pack>

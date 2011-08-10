@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="I.s" group="river-start">
+		<farm>N E S W</farm>
+		<river>E</river>
+		<position x="0" y="0"/>
+	</card>
+	<card id="I.e" group="inactive">
+		<farm>N E S W</farm>
+		<river>W</river>
+	</card>
+	<card id="CICI" group="river">
+		<city>N</city>
+		<city>S</city>
+		<farm city="N">EL WR</farm>
+		<farm city="S">ER WL</farm>
+		<river>W E</river>
+	</card>
+	<card id="CIRI" group="river">
+		<city>N</city>
+		<road>S</road>
+		<farm city="N">EL</farm>
+		<farm city="N">WR</farm>
+		<farm>ER SL</farm>
+		<farm>WL SR</farm>
+		<river>W E</river>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="LIRI" group="river">
+		<cloister/>
+		<road>S</road>
+		<farm>WR N EL</farm>
+		<farm>ER SL</farm>
+		<farm>WL SR</farm>
+		<river>W E</river>
+		<wagon-move>
+			<neighbouring>CLOISTER S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RIrI" group="river">
+		<road>N S</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER SL</farm>
+		<farm>WL SR</farm>
+		<river>W E</river>
+	</card>
+	<card id="IFI.1" group="river">
+		<farm>WR N EL</farm>
+		<farm>WL S ER</farm>
+		<river>W E</river>
+	</card>
+	<card id="IFI.2" group="river">
+		<farm>WR N EL</farm>
+		<farm>WL S ER</farm>
+		<river>W E</river>
+	</card>
+	<card id="CcII" group="river">
+		<city>N E</city>
+		<farm city="N">WR SL</farm>
+		<farm>WL SR</farm>
+		<river>W S</river>
+	</card>
+	<card id="RrII" group="river">
+		<road>N E</road>
+		<farm>WR NL ER SL</farm>
+		<farm>NR EL</farm>
+		<farm>WL SR</farm>
+		<river>W S</river>
+	</card>
+	<card id="II.1" group="river">
+		<farm>WR N E SL</farm>
+		<farm>WL SR</farm>
+		<river>W S</river>
+	</card>
+	<card id="II.2" group="river">
+		<farm>WR N E SL</farm>
+		<farm>WL SR</farm>
+		<river>W S</river>
+	</card>
+
+</pack>

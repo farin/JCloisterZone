@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="Cc.g">
+		<city resource="grain">N W</city>
+		<farm city="N">S E</farm>
+	</card>
+	<card id="Cc.w">
+		<city resource="wine">N W</city>
+		<farm city="N">S E</farm>
+	</card>
+	<card id="CCc.c">
+		<city resource="cloth">W E</city>
+		<city>S</city>
+		<farm city="W">N</farm>
+		<farm city="W S">CENTER</farm>
+	</card>
+	<card id="CCc.w">
+		<city resource="wine">W E</city>
+		<city>S</city>
+		<farm city="W">N</farm>
+		<farm city="W S">CENTER</farm>
+	</card>
+	<card id="Ccc.g">
+		<city resource="grain">N W E</city>
+		<farm city="N">S</farm>
+	</card>
+	<card id="CcCC.c">
+		<city resource="cloth">N W</city>
+		<city>S</city>
+		<city>E</city>
+		<farm city="N E S">CENTER</farm>
+	</card>
+	<card id="CcRR!.c">
+		<road>S</road>
+		<road>E</road>
+		<city resource="cloth">N W</city>
+		<farm city="N">SR</farm>
+		<farm city="N">SL</farm>
+		<farm city="N">ER</farm>
+		<farm city="N">EL</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcRR.w">
+		<city resource="wine">N W</city>
+		<road>S</road>
+		<road>E</road>
+		<farm city="N">SR</farm>
+		<farm city="N">SL ER</farm>
+		<farm city="N">EL</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcRC.c">
+		<city resource="cloth">N W</city>
+		<city>S</city>
+		<road>E</road>
+		<farm city="N">EL</farm>
+		<farm city="N S">ER</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcRC.g">
+		<city resource="grain">N W</city>
+		<city>S</city>
+		<road>E</road>
+		<farm city="N">EL</farm>
+		<farm city="N S">ER</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcR.c">
+		<city resource="cloth">N W</city>
+		<road>E</road>
+		<farm city="N">EL</farm>
+		<farm city="N">ER S</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcR!.w">
+		<road>E</road>
+		<city resource="wine">N W</city>
+		<farm city="N">EL</farm>
+		<farm city="N">ER</farm>
+		<farm city="N">S</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CccR.w">
+		<city resource="wine">N W E</city>
+		<road>S</road>
+		<farm city="N">SR</farm>
+		<farm city="N">SL</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CcCc.w">
+		<city resource="wine">N W</city>
+		<city>E S</city>
+		<farm city="N S">CENTER</farm>
+	</card>
+	<card id="CFc.w">
+		<city resource="wine">W E</city>
+		<farm city="W">N</farm>
+		<farm city="W">S</farm>
+	</card>
+	<card id="CR">
+		<city>N</city>
+		<road>E</road>
+		<farm city="N">EL</farm>
+		<farm city="N">W S ER</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CRc.g">
+		<city resource="grain">W E</city>
+		<road>S</road>
+		<farm city="W">N</farm>
+		<farm city="W">SR</farm>
+		<farm city="W">SL</farm>
+		<wagon-move>
+			<neighbouring>W S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CRc.w">
+		<city resource="wine">W E</city>
+		<road>S</road>
+		<farm city="W">N</farm>
+		<farm city="W">SR</farm>
+		<farm city="W">SL</farm>
+		<wagon-move>
+			<neighbouring>W S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="CRcR.w">
+		<city resource="wine">E W</city>
+		<road>N</road>
+		<road>S</road>
+		<farm city="W">NL</farm>
+		<farm city="W">NR</farm>
+		<farm city="W">SL</farm>
+		<farm city="W">SR</farm>
+		<wagon-move>
+			<neighbouring>W N</neighbouring>
+			<neighbouring>W S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="LRRR">
+		<cloister/>
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<farm>WR N EL</farm>
+		<farm>ER SL</farm>
+		<farm>WL SR</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER W</neighbouring>
+			<neighbouring>CLOISTER S</neighbouring>
+			<neighbouring>CLOISTER E</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RCc.g">
+		<city resource="grain">N W</city>
+		<road>S</road>
+		<farm city="N">SR</farm>
+		<farm city="N">SL E</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RCc!.g">
+		<road>S</road>
+		<city resource="grain">N W</city>
+		<farm city="N">SR</farm>
+		<farm city="N">SL</farm>
+		<farm city="N">E</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RRC">
+		<city>N</city>
+		<road>W</road>
+		<road>S</road>
+		<farm city="N">WR</farm>
+		<farm>WL SR</farm>
+		<farm city="N">E SL</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card id="RrRr">
+		<road>N S</road>
+		<road>W E</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+	</card>
+</pack>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card count="1" id="RCr">
+		<road>W E</road>
+		<city>N</city>
+		<farm city="N">EL WR</farm>
+		<farm>ER S WL</farm>
+		<position x="0" y="0"/>
+	</card>
+	<!--
+	<card count="1" id="C">
+		<city>N</city>
+		<farm city="N">W S E</farm>
+	</card>
+	 -->
+</pack>

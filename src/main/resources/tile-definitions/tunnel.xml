@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="CRRR">
+		<city>N</city>
+		<road tunnel="yes">W</road>
+		<road tunnel="yes">E</road>
+		<road tunnel="yes">S</road>
+		<farm city="N">WR EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+	</card>
+	<card id="RCR">
+		<city>N</city>
+		<road tunnel="yes">W</road>
+		<road tunnel="yes">E</road>
+		<farm city="N">WR EL</farm>
+		<farm>ER S WL</farm>
+	</card>
+	<card id="RR">
+		<road tunnel="yes">E</road>
+		<road tunnel="yes">S</road>
+		<farm>SR W N EL</farm>
+		<farm>ER SL</farm>
+	</card>
+	<card id="RRRR">
+		<road>N</road>
+		<road tunnel="yes">W</road>
+		<road tunnel="yes">E</road>
+		<road tunnel="yes">S</road>
+		<farm>WR N EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+	</card>
+</pack>

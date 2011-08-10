@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card count="4" id="L" >
+		<cloister/>
+		<farm>N E S W</farm>
+	</card>
+	<card count="2" id="LR">
+		<cloister/>
+		<road>S</road>
+		<farm>N E S W</farm>
+		<wagon-move>
+			<neighbouring>CLOISTER S</neighbouring>
+		</wagon-move>
+	</card>
+
+	<card count="4" id="RCr">
+		<road>W E</road>
+		<city>N</city>
+		<farm city="N">EL WR</farm>
+		<farm>ER S WL</farm>
+		<position x="0" y="0"/>
+	</card>
+
+	<card count="1" id="Cccc+">
+		<city pennant="yes">N W S E</city>
+	</card>
+	<card count="2" id="CccR+">
+		<road>S</road>
+		<city pennant="yes">N W E</city>
+		<farm city="N">SL</farm>
+		<farm city="N">SR</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card count="1" id="CccR">
+		<road>S</road>
+		<city>N W E</city>
+		<farm city="N">SL</farm>
+		<farm city="N">SR</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</card>
+	<card count="2" id="CFc+">
+		<city pennant="yes">W E</city>
+		<farm city="W">N</farm>
+		<farm city="W">S</farm>
+	</card>
+	<card count="1" id="CFc.1">
+		<city>W E</city>
+		<farm city="W">N</farm>
+		<farm city="W">S</farm>
+	</card>
+	<card count="3" id="Cc.1">
+		<city>N W</city>
+		<farm city="N">S E</farm>
+	</card>
+	<card count="2" id="Cc+">
+		<city pennant="yes">N W</city>
+		<farm city="N">S E</farm>
+	</card>
+	<card count="3" id="CcRr">
+		<road>E S</road>
+		<city>N W</city>
+		<farm city="N">EL SR</farm>
+		<farm>ER SL</farm>
+	</card>
+	<card count="2" id="CcRr+">
+		<road>E S</road>
+		<city pennant="yes">N W</city>
+		<farm city="N">EL SR</farm>
+		<farm>ER SL</farm>
+	</card>
+	<card count="3" id="Ccc">
+		<city>N E W</city>
+		<farm city="N">S</farm>
+	</card>
+	<card count="1" id="Ccc+">
+		<city pennant="yes">N E W</city>
+		<farm city="N">S</farm>
+	</card>
+	<card count="3" id="CRr">
+		<road>E S</road>
+		<city>N</city>
+		<farm city="N">EL W SR</farm>
+		<farm>ER SL</farm>
+	</card>
+	<card count="3" id="CRRR">
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<city>N</city>
+		<farm city="N">WR EL</farm>
+		<farm>WL SR</farm>
+		<farm>ER SL</farm>
+		<wagon-move>
+			<neighbouring>W S E</neighbouring>
+		</wagon-move>
+	</card>
+	<card count="3" id="RrC">
+		<road>S W</road>
+		<city>N</city>
+		<farm city="N">WR E SL</farm>
+		<farm>WL SR</farm>
+	</card>
+	<card count="5" id="C">
+		<city>N</city>
+		<farm city="N">W S E</farm>
+	</card>
+	<card count="3" id="CFC.2">
+		<city>N</city>
+		<city>S</city>
+		<farm city="N S">W E</farm>
+	</card>
+	<card count="2" id="CC.2">
+		<city>N</city>
+		<city>W</city>
+		<farm city="N W">E S</farm>
+	</card>
+	<card count="1" id="RRRR">
+		<road>N</road>
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<farm>WR NL</farm>
+		<farm>NR EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+		<wagon-move>
+			<neighbouring>N E S W</neighbouring>
+		</wagon-move>
+	</card>
+	<card count="4" id="RRR">
+		<road>E</road>
+		<road>S</road>
+		<road>W</road>
+		<farm>WR N EL</farm>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+		<wagon-move>
+			<neighbouring>E S W</neighbouring>
+		</wagon-move>
+	</card>
+	<card count="9" id="Rr">
+		<road>W S</road>
+		<farm>WR N E SL</farm>
+		<farm>SR WL</farm>
+	</card>
+	<card count="8" id="RFr">
+		<road>W E</road>
+		<farm>WR N EL</farm>
+		<farm>ER S WL</farm>
+	</card>
+</pack>
