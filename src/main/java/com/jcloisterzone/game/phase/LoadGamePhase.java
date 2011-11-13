@@ -6,7 +6,9 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -63,7 +65,14 @@ public class LoadGamePhase extends CreateGamePhase {
 			game.fireGameEvent().tilePlaced(preplaced);
 		}
 		for(Meeple m : tilePackFactory.getPreplacedMeeples()) {
-			Feature f = game.getBoard().get(m.getPosition()).getFeature(m.getLocation());
+			Tile tile = game.getBoard().get(m.getPosition());
+			Feature f;
+			if (m instanceof Barn) {
+				//special case, barn holds 'corner' location
+				f = tile.getFeaturePartOf(m.getLocation(), Farm.class);
+			} else {
+				f = tile.getFeature(m.getLocation());
+			}
 			m.setFeature(f);
 			f.setMeeple(m);
 			game.fireGameEvent().deployed(m);

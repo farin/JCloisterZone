@@ -51,7 +51,9 @@ public class TilePhase extends Phase {
 				game.scoreFeature(points, ctx, p);
 			}
 			for(Meeple m : ctx.getMeeples()) {
-				m.undeploy(false);
+				if (! (m instanceof Barn)) {
+					m.undeploy(false);
+				}
 			}
 		}
 	}
