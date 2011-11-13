@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -167,19 +168,15 @@ public class GridPanel extends JComponent {
 	}
 
 	public void removeLayer(Class<? extends GridLayer> type) {
-		synchronized (layers) {
-			//TODO use iterators - BAD impl here
-			LinkedList<GridLayer> newval = new LinkedList<GridLayer>();
-			for(GridLayer layer : layers) {
-				if (! type.isInstance(layer)) {
-					newval.add(layer);
-				} else {
-					layer.layerRemoved();
-				}
+		Iterator<GridLayer> iter = layers.iterator();
+		while(iter.hasNext()) {
+			GridLayer layer = iter.next();
+			if (type.isInstance(layer)) {
+				iter.remove();
+				layer.layerRemoved();
 			}
-			layers.clear();
-			layers.addAll(newval);
 		}
+		repaint();		
 	}
 
 	//TODO ok

@@ -37,7 +37,7 @@ public class ControlPanel extends JPanel {
 	private ActionPanel actionPanel;
 	private PlayersPanel playersPanel;
 
-	public static final int PANEL_WIDTH = 170;
+	public static final int PANEL_WIDTH = 180;
 	private static Font cardFont = new Font("Helvecia", Font.BOLD, 22);
 	private static final String IMG_END_TURN = "sysimages/endTurn.png";
 
