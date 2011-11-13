@@ -43,7 +43,7 @@ public class TileFactory {
 		this.game = game;
 	}
 
-	public Tile createTile(String fullId, Element xml, boolean splitTunnels) {
+	public Tile createTile(String fullId, Element xml, boolean isTunnelActive) {
 		Tile tile = new Tile(fullId);
 		this.tile = tile;
 		tile.setGame(game);
@@ -57,7 +57,7 @@ public class TileFactory {
 		}
 		nl = xml.getElementsByTagName("road");
 		for(int i = 0; i < nl.getLength(); i++) {
-			processRoadElement((Element) nl.item(i), splitTunnels);
+			processRoadElement((Element) nl.item(i), isTunnelActive);
 		}
 		nl = xml.getElementsByTagName("city");
 		for(int i = 0; i < nl.getLength(); i++) {
@@ -100,24 +100,24 @@ public class TileFactory {
 	}
 
 
-	private void processRoadElement(Element e, boolean splitTunnels) {
+	private void processRoadElement(Element e, boolean isTunnelActive) {
 		String[] sides = asLocation(e);
 		//using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.lenght distinguish it
-		if (sides.length > 1 && splitTunnels && attributeBoolValue(e, "tunnel")) {
+		if (sides.length > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
 			for(String side: sides) {
 				String[] side_as_array = { side };
-				processRoadElement(side_as_array, e);
+				processRoadElement(side_as_array, e, true);
 			}
 		} else {
-			processRoadElement(sides, e);
+			processRoadElement(sides, e, isTunnelActive);
 		}
 	}
 
-	private void processRoadElement(String[] sides, Element e) {
+	private void processRoadElement(String[] sides, Element e, boolean isTunnelActive) {
 		//Road road = new Road(tile, sides.length, sides.length == 1 && attributeBoolValue(e, "tunnel"));
 		Road road = new Road();
 		road.setId(nextFeatureId++);
-		if (attributeBoolValue(e, "tunnel")) {
+		if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
 			road.setTunnelEnd(Road.OPEN_TUNNEL);
 		}
 		initFromDirList(road, sides);

@@ -92,10 +92,8 @@ public class TilePackFactory {
 		return discard;
 	}
 
-	protected boolean isSplitTunnels(Expansion expansion) {
-		return expansion != Expansion.TUNNEL &&
-		game.hasExpansion(Expansion.TUNNEL) &&
-		game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS);
+	protected boolean isTunnelActive(Expansion expansion) {
+		return expansion == Expansion.TUNNEL || (game.hasExpansion(Expansion.TUNNEL) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
 	}
 
 	protected int getTileCount(Element card, String tileId) {
@@ -131,7 +129,7 @@ public class TilePackFactory {
 
 		List<Tile> tiles = new ArrayList<Tile>(count);
 		for(int j = 0; j < count; j++) {
-			Tile tile = tileFactory.createTile(tileId, card, isSplitTunnels(expansion));
+			Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
 			game.expansionDelegate().initTile(tile, card); //must be called before rotation!
 			tiles.add(tile);
 		}
