@@ -107,28 +107,28 @@ public class Tile /*implements Cloneable*/ {
 
 	/** merge this to another tile - method argument is tile placed before */
 	protected void merge(Tile tile, Location loc) {
-		MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(loc.rev(), Road.class, City.class);
-		int farmLoopBound = 1;
+		Location oppositeLoc = loc.rev();
+		MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc, Road.class, City.class);
 		if (oppositePiece != null) {
 			if (isAbbeyTile()) {
-				oppositePiece.setAbbeyEdge(loc.rev());
+				oppositePiece.setAbbeyEdge(oppositeLoc);
 			} else {
 				MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc, Road.class, City.class);
-				oppositePiece.setEdge(loc.rev(), thisPiece);
+				oppositePiece.setEdge(oppositeLoc, thisPiece);
 				thisPiece.setEdge(loc, oppositePiece);
 			}
-			farmLoopBound = 2; //farm can be divided in two parts by road
 		}
-		for(int i = 0; i < farmLoopBound; i++) {
+		for(int i = 0; i < 2; i++) {
 			Location halfSide = loc.farmHalfSide(i);
-			oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(halfSide.rev(), Farm.class);
+			Location oppositeHalfSide = halfSide.rev();
+			oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide, Farm.class);
 			if (oppositePiece != null) {
 				if (isAbbeyTile()) {
-					oppositePiece.setAbbeyEdge(loc.rev());
+					oppositePiece.setAbbeyEdge(oppositeHalfSide);
 				} else {
 					MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide, Farm.class);
-					oppositePiece.setEdge(loc.rev(), thisPiece);
-					thisPiece.setEdge(loc, oppositePiece);
+					oppositePiece.setEdge(oppositeHalfSide, thisPiece);
+					thisPiece.setEdge(halfSide, oppositePiece);
 				}
 			}
 		}
