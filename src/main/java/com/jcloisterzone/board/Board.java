@@ -47,7 +47,8 @@ public class Board {
 	 * Updates current avail moves for next turn
 	 * @param tile next tile
 	 */
-	public void checkMoves(Tile tile) {
+	public void checkMoves(Tile tile) {		
+		Rotation tileRotation = tile.getRotation();
 		currentAvailMoves.clear();
 		for (Position p : availMoves.keySet()) {
 			EnumSet<Rotation> allowed = EnumSet.noneOf(Rotation.class);
@@ -61,7 +62,7 @@ public class Board {
 				currentAvailMoves.put(p, allowed);
 			}
 		}
-		tile.setRotation(Rotation.R0); //reset rotation
+		tile.setRotation(tileRotation); //reset rotation
 	}
 
 

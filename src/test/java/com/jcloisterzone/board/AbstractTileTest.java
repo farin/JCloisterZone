@@ -1,6 +1,7 @@
 package com.jcloisterzone.board;
 
 import org.ini4j.Ini;
+import org.junit.Before;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -9,13 +10,18 @@ import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {
 
-	Game game = new Game();
-	TilePackFactory packFactory = new TilePackFactory();
-	TileFactory tileFactory = new TileFactory();
-
-	{
-		game.setConfig(new Ini());
+	protected Game game = new Game();
+	protected TilePackFactory packFactory = new TilePackFactory();
+	protected TileFactory tileFactory = new TileFactory();
+	
+	protected void setUpGame(Game game) {
 		game.getExpansions().add(Expansion.BASIC);
+	}
+
+	@Before
+	public void initFactories() {
+		game.setConfig(new Ini());
+		setUpGame(game);
 		packFactory.setGame(game);
 		tileFactory.setGame(game);
 	}
@@ -30,6 +36,6 @@ public class AbstractTileTest {
 			}
 		}
 		throw new IllegalArgumentException("Invalid tile id");
-	}
+	}	
 
 }
