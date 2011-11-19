@@ -3,13 +3,13 @@
 	<card id="Cc.1">
 		<plague />
 		<city>S E</city>
-		<farm city="S">N W</farm>
+		<farm city="S">NL NR WL WR</farm>
 	</card>
 	<card id="CC.2">
 		<plague />
 		<city>S</city>
 		<city>E</city>
-		<farm city="S E">N W</farm>
+		<farm city="S E">NL NR WL WR</farm>
 	</card>
 	<card id="CCRR">
 		<plague />
@@ -32,7 +32,7 @@
 		<road>W</road>
 		<farm city="E">NR</farm>
 		<farm>NL WR</farm>
-		<farm city="E">S WL</farm>
+		<farm city="E">SL SR WL</farm>
 		<wagon-move>
 			<neighbouring>E W</neighbouring>
 		</wagon-move>
@@ -54,7 +54,7 @@
 	<card id="Rr">
 		<plague />
 		<road>W S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
 	</card>
 </pack>

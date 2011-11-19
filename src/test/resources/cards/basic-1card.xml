@@ -4,13 +4,13 @@
 		<road>W E</road>
 		<city>N</city>
 		<farm city="N">EL WR</farm>
-		<farm>ER S WL</farm>
+		<farm>ER SL SR WL</farm>
 		<position x="0" y="0"/>
 	</card>
 	<!--
 	<card count="1" id="C">
 		<city>N</city>
-		<farm city="N">W S E</farm>
+		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	 -->
 </pack>

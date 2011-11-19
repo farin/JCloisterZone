@@ -4,8 +4,8 @@
 		<cloister/>
 		<road>W</road>
 		<road>E</road>
-		<farm>ER S WL</farm>
-		<farm>EL N WR</farm>
+		<farm>ER SL SR WL</farm>
+		<farm>EL NL NR WR</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER W</neighbouring>
 			<neighbouring>CLOISTER E</neighbouring>
@@ -25,7 +25,7 @@
 		<city>N</city>
 		<city>W</city>
 		<city>E</city>
-		<farm city="N W E">S</farm>
+		<farm city="N W E">SL SR</farm>
 	</card>
 	<card id="CRCR">
 		<city>N</city>
@@ -43,18 +43,18 @@
 	<card id="CCc+">
 		<city pennant="yes">N W</city>
 		<city>S</city>
-		<farm city="N S">E</farm>
+		<farm city="N S">EL ER</farm>
 	</card>
 	<card id="C!">
 		<city>N</city>
-		<farm city="N">E</farm>
-		<farm city="N">W S</farm>
+		<farm city="N">EL ER</farm>
+		<farm city="N">WL WR SL SR</farm>
 	</card>
 	<card id="CFR">
 		<city>N</city>
 		<road>S</road>
-		<farm city="N">W SR</farm>
-		<farm city="N">E SL</farm>
+		<farm city="N">WL WR SR</farm>
+		<farm city="N">EL ER SL</farm>
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
@@ -63,7 +63,7 @@
 		<city>N W</city>
 		<road>E</road>
 		<farm city="W">EL</farm>
-		<farm city="W">ER S </farm>
+		<farm city="W">ER SL SR </farm>
 		<wagon-move>
 			<neighbouring>N E</neighbouring>
 		</wagon-move>
@@ -85,7 +85,7 @@
 		<city>N W</city>
 		<road inn="yes">S</road>
 		<farm city="W">SR</farm>
-		<farm city="W">SL E</farm>
+		<farm city="W">SL EL ER</farm>
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
@@ -94,7 +94,7 @@
 		<city>N</city>
 		<road inn="yes">W S</road>
 		<farm>SR WL</farm>
-		<farm city="N">WR E SL</farm>
+		<farm city="N">WR EL ER SL</farm>
 	</card>
 	<card id="CcRr+.i">
 		<city pennant="yes">N W</city>
@@ -106,7 +106,7 @@
 		<road inn="yes">E</road>
 		<road>W</road>
 		<road>S</road>
-		<farm>WR N EL</farm>
+		<farm>WR NL NR EL</farm>
 		<farm>WL SR</farm>
 		<farm>ER SL</farm>
 		<wagon-move>
@@ -115,12 +115,12 @@
 	</card>
 	<card id="RFr.i">
 		<road inn="yes">W E</road>
-		<farm>WR N EL</farm>
-		<farm>ER S WL</farm>
+		<farm>WR NL NR EL</farm>
+		<farm>ER SL SR WL</farm>
 	</card>
 	<card id="Rr.i">
 		<road inn="yes">W S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
 	</card>
 	<card id="RrRr">

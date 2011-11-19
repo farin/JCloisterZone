@@ -3,22 +3,22 @@
 	<card id="C" count="2">
 		<tower />
 		<city>N</city>
-		<farm city="N">W S E</farm>
+		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	<card id="F">
 		<tower />
-		<farm>N E S W</farm>
+		<farm>NL NR EL ER SL SR WL WR</farm>
 	</card>
 	<card id="L">
 		<tower />
 		<cloister/>
-		<farm>N E S W</farm>
+		<farm>NL NR EL ER SL SR WL WR</farm>
 	</card>
 	<card id="RR">
 		<tower />
 		<road>W</road>
 		<road>S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="RRR">
@@ -28,7 +28,7 @@
 		<road>E</road>
 		<farm>WR NL</farm>
 		<farm>NR EL</farm>
-		<farm>ER S WL</farm>
+		<farm>ER SL SR WL</farm>
 	</card>
 	<card id="RrRr.2">
 		<tower />
@@ -62,14 +62,14 @@
 		<tower />
 		<city>N</city>
 		<road>S</road>
-		<farm city="N">W SR</farm>
-		<farm city="N">E SL</farm>
+		<farm city="N">WL WR SR</farm>
+		<farm city="N">EL ER SL</farm>
 	</card>
 	<card id="RrC">
 		<tower />
 		<road>S W</road>
 		<city>N</city>
-		<farm city="N">WR E SL</farm>
+		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="RCr">
@@ -78,12 +78,12 @@
 		<road>W E</road>
 		<farm city="N">WR</farm>
 		<farm city="N">EL</farm>
-		<farm>WL S ER</farm>
+		<farm>WL SL SR ER</farm>
 	</card>
 	<card id="Cc" >
 		<tower />
 		<city>N W</city>
-		<farm city="N">S E</farm>
+		<farm city="N">SL SR EL ER</farm>
 	</card>
 	<card id="CcR!">
 		<tower />
@@ -91,7 +91,7 @@
 		<city>N W</city>
 		<farm city="N">EL</farm>
 		<farm city="N">ER</farm>
-		<farm city="N">S</farm>
+		<farm city="N">SL SR</farm>
 		<wagon-move>
 			<neighbouring>N E</neighbouring>
 		</wagon-move>
@@ -100,7 +100,7 @@
 		<tower />
 		<city>N</city>
 		<city>W</city>
-		<farm city="N W">E S</farm>
+		<farm city="N W">EL ER SL SR</farm>
 	</card>
 	<card id="CRCr.2">
 		<tower />

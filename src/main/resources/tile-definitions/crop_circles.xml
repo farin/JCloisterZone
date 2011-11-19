@@ -4,36 +4,36 @@
 		<crop-circle type="CITY"/>
 		<city>N</city>
 		<city>E</city>
-		<farm city="N E">S W</farm>
+		<farm city="N E">SL SR WL WR</farm>
 	</card>
 	<card id="Cc.2">
 		<crop-circle type="CITY"/>
 		<city>N W</city>
-		<farm city="N">S E</farm>
+		<farm city="N">SL SR EL ER</farm>
 	</card>
 	<card id="CR">
 		<crop-circle type="FARM"/>
 		<city>N</city>
 		<road>E</road>
-		<farm city="N">W S E</farm>
+		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	<card id="Rr">
 		<crop-circle type="ROAD"/>
 		<road>W S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
 	</card>
 	<card id="RrC">
 		<crop-circle type="FARM"/>
 		<road>S W</road>
 		<city>N</city>
-		<farm city="N">WR E SL</farm>
+		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="Rrr">
 		<crop-circle type="ROAD"/>
 		<road>N W S</road>
-		<farm>NR E SL</farm>
+		<farm>NR EL ER SL</farm>
 		<farm>SR WL</farm>
 		<farm>WR NL</farm>
 	</card>

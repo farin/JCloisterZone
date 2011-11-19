@@ -3,13 +3,13 @@
 	<card id="LC">
 		<cloister/>
 		<city>N</city>
-		<farm city="N">E S W</farm>
+		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 	<card id="RC">
 		<road>W</road>
 		<city>N</city>
 		<farm city="N">WR</farm>
-		<farm city="N">E S WL</farm>
+		<farm city="N">EL ER SL SR WL</farm>
 		<wagon-move>
 			<neighbouring>N W</neighbouring>
 		</wagon-move>

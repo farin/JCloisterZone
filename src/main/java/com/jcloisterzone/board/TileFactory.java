@@ -170,6 +170,10 @@ public class TileFactory {
 		Location loc = null;
 		for(int i = 0; i < sides.length; i++) {
 			Location l = Location.valueOf(sides[i]);
+			//debug test
+			if (piece instanceof Farm && ! l.isFarmLocation()) {
+				throw new IllegalArgumentException("Configuration error. Not form location. Tile "+tile.getId());
+			}
 			loc = loc == null ? l : loc.union(l);
 		}
 		//logger.debug(tile.getId() + "/" + piece.getClass().getSimpleName() + "/"  + loc);

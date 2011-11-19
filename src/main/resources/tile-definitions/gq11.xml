@@ -6,8 +6,8 @@
 	<card id="RFI" group="river-start">
 		<river>E</river>
 		<road>W</road>
-		<farm>WR N EL</farm>
-		<farm>ER S WL</farm>
+		<farm>WR NL NR EL</farm>
+		<farm>ER SL SR WL</farm>
 		<position x="0" y="0"/>
 	</card>
 	<card id="CICI" group="river">
@@ -35,12 +35,12 @@
 		</wagon-move>
 	</card>
 	<card id="F">
-		<farm pig="yes">N S W E</farm>
+		<farm pig="yes">NL NR SL SR WL WR EL ER</farm>
 	</card>
 	<card id="CRc">
 		<city>W E</city>
 		<road>S</road>
-		<farm city="W">N</farm>
+		<farm city="W">NL NR</farm>
 		<farm city="W">SR</farm>
 		<farm city="W">SL</farm>
 		<wagon-move>
@@ -80,14 +80,14 @@
 	</card>
 	<card id="Cc!">
 		<city>N W</city>
-		<farm city="N">S</farm>
-		<farm city="N">E</farm>
+		<farm city="N">SL SR</farm>
+		<farm city="N">EL ER</farm>
 	</card>
 	<card id="RCc">
 		<city>N W</city>
 		<road>S</road>
 		<farm city="N">SR</farm>
-		<farm city="N">SL E</farm>
+		<farm city="N">SL EL ER</farm>
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>

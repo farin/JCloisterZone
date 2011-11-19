@@ -2,7 +2,7 @@
 <pack>
 	<card id="F.v">
 		<volcano/>
-		<farm>N E S W</farm>
+		<farm>NL NR EL ER SL SR WL WR</farm>
 	</card>
 	<card id="RrRr.g">
 		<portal/>
@@ -16,19 +16,19 @@
 	<card id="R.v">
 		<volcano/>
 		<road>S</road>
-		<farm>N E S W</farm>
+		<farm>NL NR EL ER SL SR WL WR</farm>
 	</card>
 
 	<card id="C.d" group="dragon">
 		<dragon/>
 		<city>N</city>
-		<farm city="N">E S W</farm>
+		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 
 	<card id="C.v">
 		<volcano/>
 		<city>N</city>
-		<farm city="N">E S W</farm>
+		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 
 	<card id="LRRR.d" group="dragon">
@@ -37,7 +37,7 @@
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
-		<farm>WR N EL</farm>
+		<farm>WR NL NR EL</farm>
 		<farm>ER SL</farm>
 		<farm>WL SR</farm>
 		<wagon-move>
@@ -51,7 +51,7 @@
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
-		<farm>WR N EL</farm>
+		<farm>WR NL NR EL</farm>
 		<farm>ER SL</farm>
 		<farm>SR WL</farm>
 		<wagon-move>
@@ -63,7 +63,7 @@
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
-		<farm>WR N EL</farm>
+		<farm>WR NL NR EL</farm>
 		<farm>ER SL</farm>
 		<farm>SR WL</farm>
 		<wagon-move>
@@ -85,23 +85,23 @@
 	<card id="CCc+.p">
 		<city princess="yes">N</city>
 		<city pennant="yes">E S</city>
-		<farm city="N">W</farm>
+		<farm city="N">WL WR</farm>
 		<farm city="N S">CENTER</farm>
 	</card>
 	<card id="Ccc.p" >
 		<city princess="yes">N E W</city>
-		<farm city="N">S</farm>
+		<farm city="N">SL SR</farm>
 	</card>
 	<card id="Ccc+.g">
 		<portal/>
 		<city pennant="yes">N E W</city>
-		<farm city="N">S</farm>
+		<farm city="N">SL SR</farm>
 	</card>
 	<card id="LCcc.d" group="dragon">
 		<dragon/>
 		<cloister/>
 		<city>N E W</city>
-		<farm city="N">S</farm>
+		<farm city="N">SL SR</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER N</neighbouring>
 		</wagon-move>
@@ -109,52 +109,52 @@
 	<card count="2" id="Rr.d" group="dragon">
 		<dragon/>
 		<road >W S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
 	</card>
 	<card id="Rr.v">
 		<volcano/>
 		<road>W S</road>
-		<farm>WR N E SL</farm>
+		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
 	</card>
 	<card id="RFr.d" group="dragon">
 		<dragon/>
 		<road>W E</road>
-		<farm>WR N EL</farm>
-		<farm>WL S ER</farm>
+		<farm>WR NL NR EL</farm>
+		<farm>WL SL SR ER</farm>
 	</card>
 	<card id="RFr.v">
 		<volcano/>
 		<road>W E</road>
-		<farm>WR N EL</farm>
-		<farm>WL S ER</farm>
+		<farm>WR NL NR EL</farm>
+		<farm>WL SL SR ER</farm>
 	</card>
 	<card id="Cc!.p">
 		<city princess="yes">N W</city>
-		<farm city="N">E</farm>
-		<farm city="N">S</farm>
+		<farm city="N">EL ER</farm>
+		<farm city="N">SL SR</farm>
 	</card>
 	<card id="Cc.d" group="dragon">
 		<dragon/>
 		<city>N W</city>
-		<farm city="N">S E</farm>
+		<farm city="N">SL SR EL ER</farm>
 	</card>
 	<card id="Cc.p">
 		<city princess="yes">N W</city>
-		<farm city="N">S E</farm>
+		<farm city="N">SL SR EL ER</farm>
 	</card>
 	<card id="CC.v">
 		<volcano/>
 		<city>E</city>
 		<city>N</city>
-		<farm city="N E">W S</farm>
+		<farm city="N E">WL WR SL SR</farm>
 	</card>
 	<card id="CFc+.d" group="dragon">
 		<dragon/>
 		<city pennant="yes">W E</city>
-		<farm city="W">N</farm>
-		<farm city="W">S</farm>
+		<farm city="W">NL NR</farm>
+		<farm city="W">SL SR</farm>
 	</card>
 	<card id="CcRr.p">
 		<road>E S</road>
@@ -173,35 +173,35 @@
 		<dragon/>
 		<city>E W</city>
 		<road tunnel="yes">N S</road>
-		<farm city="W">N</farm>
-		<farm city="W">S</farm>
+		<farm city="W">NL NR</farm>
+		<farm city="W">SL SR</farm>
 	</card>
 	<card id="RrC.d" group="dragon">
 		<dragon/>
 		<road>S W</road>
 		<city>N</city>
-		<farm city="N">WR E SL</farm>
+		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="RrC.g">
 		<portal/>
 		<road>S W</road>
 		<city>N</city>
-		<farm city="N">WR E SL</farm>
+		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="CRr.d" group="dragon">
 		<dragon/>
 		<road>E S</road>
 		<city>N</city>
-		<farm city="N">EL W SR</farm>
+		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
 	</card>
 	<card id="CRr.g">
 		<portal/>
 		<road>E S</road>
 		<city>N</city>
-		<farm city="N">EL W SR</farm>
+		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
 	</card>
 </pack>

@@ -2,17 +2,17 @@
 <pack>
 	<card id="S">
 		<cloister shrine="yes"/>
-		<farm>N S W E</farm>
+		<farm>NL NR SL SR WL WR EL ER</farm>
 	</card>
 	<card id="SC">
 		<cloister shrine="yes"/>
 		<city>N</city>
-		<farm city="N">S W E</farm>
+		<farm city="N">SL SR WL WR EL ER</farm>
 	</card>
 	<card id="SR">
 		<cloister shrine="yes"/>
 		<road>S</road>
-		<farm>N S W E</farm>
+		<farm>NL NR SL SR WL WR EL ER</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER S</neighbouring>
 		</wagon-move>
@@ -21,7 +21,7 @@
 		<cloister shrine="yes"/>
 		<city>N</city>
 		<road>S</road>
-		<farm city="N">S W E</farm>
+		<farm city="N">SL SR WL WR EL ER</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER S</neighbouring>
 		</wagon-move>
@@ -30,8 +30,8 @@
 		<cloister shrine="yes"/>
 		<road>N</road>
 		<road>S</road>
-		<farm>NL W SR</farm>
-		<farm>NR E SL</farm>
+		<farm>NL WL WR SR</farm>
+		<farm>NR EL ER SL</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER N</neighbouring>
 			<neighbouring>CLOISTER S</neighbouring>
@@ -43,7 +43,7 @@
 		<road>W</road>
 		<road>E</road>
 		<farm city="N">WR EL</farm>
-		<farm>WL S ER</farm>
+		<farm>WL SL SR ER</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER W</neighbouring>
 			<neighbouring>CLOISTER E</neighbouring>

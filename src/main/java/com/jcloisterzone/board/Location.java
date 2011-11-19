@@ -2,6 +2,7 @@ package com.jcloisterzone.board;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -278,6 +279,12 @@ public class Location implements Serializable {
 	 */
 	public boolean isRotationOf(Location loc) {
 		return getRotationOf(loc) != null;
+	}
+
+	//debug code
+
+	public boolean isFarmLocation() {
+		return this == CENTER || Arrays.asList(FARM_SIDES).contains(this);
 	}
 
 
