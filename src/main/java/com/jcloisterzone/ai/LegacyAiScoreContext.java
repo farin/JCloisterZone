@@ -99,11 +99,8 @@ class LegacyAiScoreContext implements CompletableScoreContext {
 	private double updateCloisterChanceToClose(Cloister cloister) {
 		double result = 1.0;
 		Position p = cloister.getTile().getPosition();
-		for(Location loc : Location.sides()) {
-			result *= countChance(p.add(loc));
-		}
-		for(Location loc : Location.sidesDiagonal()) {
-			result *= countChance(p.add(loc));
+		for(Position adjacent: p.addMulti(Position.ADJACENT_AND_DIAGONAL.values())) {
+			result *= countChance(adjacent);
 		}
 		//for "1.6-compatibility" - make it already sense ?
 		if (result > 0.85) return 0.85;

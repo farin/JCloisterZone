@@ -9,15 +9,15 @@ import org.junit.Test;
 
 public class LocationTest {
 
-	@Test
-	public void isSpecialLocation() {
-		assertTrue(Location.E.isSideLocation());
-		assertTrue(Location.NW.isSideLocation());
-		assertTrue(Location.create(135).isSideLocation());
-		assertFalse(Location.CENTER.isSideLocation());
-		assertFalse(Location.CLOISTER.isSideLocation());
-		assertFalse(Location.TOWER.isSideLocation());
-	}
+//	@Test
+//	public void isSpecialLocation() {
+//		assertTrue(Location.E.isSideLocation());
+//		assertTrue(Location.NW.isSideLocation());
+//		assertTrue(Location.create(135).isSideLocation());
+//		assertFalse(Location.CENTER.isSideLocation());
+//		assertFalse(Location.CLOISTER.isSideLocation());
+//		assertFalse(Location.TOWER.isSideLocation());
+//	}
 
 	@Test
 	public void isPartOf() {
@@ -78,6 +78,13 @@ public class LocationTest {
 		assertTrue(Location.N.isRotationOf(Location.E));
 		assertTrue(Location._N.isRotationOf(Location._S));
 		assertTrue(Location.NW.isRotationOf(Location.NE));
+	}
+
+	@Test
+	public void getRotationOf() {
+		assertEquals(Rotation.R0, Location.E.getRotationOf(Location.E));
+		assertEquals(Rotation.R90, Location.E.getRotationOf(Location.N));
+		assertEquals(Rotation.R270, Location.S.getRotationOf(Location.W));
 	}
 
 	@Test

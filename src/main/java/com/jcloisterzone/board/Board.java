@@ -1,6 +1,5 @@
 package com.jcloisterzone.board;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public class Board {
 	 * Updates current avail moves for next turn
 	 * @param tile next tile
 	 */
-	public void checkMoves(Tile tile) {		
+	public void checkMoves(Tile tile) {
 		Rotation tileRotation = tile.getRotation();
 		currentAvailMoves.clear();
 		for (Position p : availMoves.keySet()) {
@@ -105,25 +104,16 @@ public class Board {
 				}
 			}
 		}
-//		if (game.hasExpansion(Expansion.TUNNEL)) {
-//			//TODO enumerate features with single iteration
-//			for(Location loc : Location.sides()) {
-//				Road road = (Road) tile.getFeaturePartOf(loc, Road.class);
-//				if (road != null && road.isTunnelEnd()) {
-//					tunnels.add(new TunnelEnd(p, loc));
-//				}
-//			}
-//		}
 
-		for(Entry<Location, Tile> e : getSideTilesMap(p.x, p.y).entrySet()) {
+		for(Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
 			tile.merge(e.getValue(), e.getKey());
 		}
 
 		tiles.put(p, tile);
 		availMovesRemove(p);
 
-		for(Location d : Location.sides()) {
-			Position next = p.add(d);
+		for(Position offset: Position.ADJACENT.values()) {
+			Position next = p.add(offset);
 			if (get(next) == null) {
 				availMovesAdd(next);
 				if (checkHole(next)) {
@@ -149,8 +139,8 @@ public class Board {
 	}
 
 	private boolean checkHole(Position p) {
-		for(Location d : Location.sides()) {
-			Position next = p.add(d);
+		for(Position offset: Position.ADJACENT.values()) {
+			Position next = p.add(offset);
 			if (get(next) == null) {
 				return false;
 			}
@@ -192,7 +182,7 @@ public class Board {
 	/*
 	 * Check if placement is legal against orthonogal neigbours. */
 	private boolean checkPlacement(Tile tile, Position p) {
-		for (Entry<Location, Tile> e : getSideTilesMap(p.x, p.y).entrySet()) {
+		for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
 			if (! tile.check(e.getValue(), e.getKey(), this)) {
 				return false;
 			}
@@ -216,38 +206,9 @@ public class Board {
 		return minY;
 	}
 
-	public List<Tile> getSideTiles(int x, int y) {
-		return getTilesForSides(x, y, Location.sides());
-	}
-
-	public Map<Location, Tile> getSideTilesMap(int x, int y) {
-		return getTilesForSidesMap(x, y, Location.sides());
-	}
-
-	public List<Tile> getDiagonalTiles(int x, int y) {
-		return getTilesForSides(x, y, Location.sidesDiagonal());
-	}
-
-	public Map<Location, Tile> getDiagonalTilesMap(int x, int y) {
-		return getTilesForSidesMap(x, y, Location.sidesDiagonal());
-	}
-
-	public List<Tile> getAllNeigbourTiles(int x, int y) {
-		List<Tile> l = getTilesForSides(x, y, Location.sides());
-		l.addAll(getTilesForSides(x, y, Location.sidesDiagonal()));
-		return l;
-	}
-
-	public Map<Location, Tile> getAllNeigbourTilesMap(int x, int y) {
-		Map<Location, Tile> m = getTilesForSidesMap(x, y, Location.sides());
-		m.putAll(getTilesForSidesMap(x, y, Location.sidesDiagonal()));
-		return m;
-	}
-
-	private List<Tile> getTilesForSides(int x, int y, Location[] sides) {
-		List<Tile> tiles = new ArrayList<Tile>(4);
-		for(Location d : sides) {
-			Position p = (new Position(x,y)).add(d);
+	public List<Tile> getMulti(Position[] positions) {
+		List<Tile> tiles = Lists.newArrayList();
+		for(Position p : positions) {
 			Tile t = get(p);
 			if (t != null) {
 				tiles.add(t);
@@ -256,45 +217,19 @@ public class Board {
 		return tiles;
 	}
 
-	private Map<Location, Tile> getTilesForSidesMap(int x, int y, Location[] sides) {
+	public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
 		Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
-		for(Location d : sides) {
-			Position p = (new Position(x,y)).add(d);
-			Tile t = get(p);
-			if (t != null) {
-				tiles.put(d, t);
+		for(Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
+			Tile tile = get(e.getValue().add(pos));
+			if (tile != null) {
+				tiles.put(e.getKey(), tile);
 			}
 		}
 		return tiles;
 	}
 
-//	public Set<TunnelEnd> getTunnels() {
-//		return tunnels;
-//	}
-//
-//	public static class TunnelEnd {
-//		final public Position pos;
-//		final public Location loc;
-//
-//		public TunnelEnd(Position pos, Location dir) {
-//			this.pos = pos;
-//			this.loc = dir;
-//		}
-//
-//		@Override
-//		public boolean equals(Object obj) {
-//			if (!(obj instanceof TunnelEnd)) return false;
-//			TunnelEnd te = (TunnelEnd) obj;
-//			return pos.equals(te.pos) && loc.equals(te.loc);
-//		}
-//
-//		@Override
-//		public int hashCode() {
-//			return 43 * pos.hashCode() + loc.hashCode();
-//		}
-//
-//	}
-
-
+	public List<Tile> getAllNeigbourTiles(Position pos) {
+		return getMulti(pos.addMulti(Position.ADJACENT_AND_DIAGONAL.values()));
+	}
 
 }

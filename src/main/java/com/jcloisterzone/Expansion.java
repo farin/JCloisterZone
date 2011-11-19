@@ -41,7 +41,12 @@ public enum Expansion {
 	TUNNEL("TU", _("The Tunnel"), TunnelGame.class),
 	CROP_CIRCLES("CC", _("Crop Circles") + " (" + _("tiles only") + ")"),
 	PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
-	ENTOURAGE("EN", _("The Entourage"), false);
+	ENTOURAGE("EN", _("The Entourage"), false),
+	PHANTOM("PH", _("The Phantom"), false),
+
+	//promo/one tile expansions
+	LA_PORXADA("PH", _("La porxada"), false),
+	SCHOOL("SC", _("The school"), false);
 
 	String code;
 	String label;

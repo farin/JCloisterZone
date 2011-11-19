@@ -306,7 +306,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 	protected double rankConvexity() {
 		Position pos = getTilePack().getCurrentTile().getPosition();
-		return 0.001 * getBoard().getAllNeigbourTiles(pos.x, pos.y).size();
+		return 0.001 * getBoard().getAllNeigbourTiles(pos).size();
 	}
 
 	protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {

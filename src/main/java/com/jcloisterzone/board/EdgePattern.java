@@ -31,26 +31,35 @@ public class EdgePattern {
 	public static EdgePattern forTile(Tile tile) {
 		EdgePattern pattern = new EdgePattern();
 		for(Location loc : Location.sides()) {
-			pattern.code[loc.ordinal] = getTileEdgePattern(tile, loc);
+			pattern.code[indexFor(loc)] = getTileEdgePattern(tile, loc);
 		}
 		return pattern;
+	}
+
+	private static int indexFor(Location loc) {
+		if (loc == Location.N) return 0;
+		if (loc == Location.W) return 1;
+		if (loc == Location.S) return 2;
+		if (loc == Location.E) return 3;
+		throw new IllegalArgumentException();
 	}
 
 	public static EdgePattern forEmptyTile(Board board, Position pos) {
 		EdgePattern pattern = new EdgePattern();
 		for(Location loc : Location.sides()) {
 			Tile t = board.get(pos.add(loc));
+			int idx = indexFor(loc);
 			if (t == null) {
-				pattern.code[loc.ordinal] = '?';
+				pattern.code[idx] = '?';
 			} else {
-				pattern.code[loc.ordinal] = getTileEdgePattern(t, loc.rev());
+				pattern.code[idx] = getTileEdgePattern(t, loc.rev());
 			}
 		}
 		return pattern;
 	}
 
 	public char at(Location loc) {
-		return code[loc.ordinal()];
+		return code[indexFor(loc)];
 	}
 
 	public char at(Location loc, Rotation rotation) {

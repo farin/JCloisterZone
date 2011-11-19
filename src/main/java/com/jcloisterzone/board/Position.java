@@ -1,7 +1,10 @@
 package com.jcloisterzone.board;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 
 
 /**
@@ -16,11 +19,26 @@ public class Position implements Serializable {
 
 	private static final long serialVersionUID = -345L;
 
-	/**
-	 * Initializes a new instance.
-	 * @param x x-coordinate
-	 * @param y y-coordinate
-	 */
+	public static final Map<Location, Position> ADJACENT;
+	public static final Map<Location, Position> ADJACENT_AND_DIAGONAL;
+
+	static {
+		ADJACENT = new ImmutableMap.Builder<Location, Position>()
+		 .put(Location.N, new Position(0, -1))
+		 .put(Location.E, new Position(1, 0))
+		 .put(Location.S, new Position(0, 1))
+		 .put(Location.W, new Position(-1, 0))
+		 .build();
+
+		ADJACENT_AND_DIAGONAL= new ImmutableMap.Builder<Location, Position>()
+		 .putAll(ADJACENT)
+		 .put(Location.NE, new Position(1, -1))
+		 .put(Location.SE, new Position(1, 1))
+		 .put(Location.SW, new Position(-1, 1))
+		 .put(Location.NW, new Position(-1, -1))
+		 .build();
+	}
+
 	public Position(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -34,6 +52,24 @@ public class Position implements Serializable {
 		return "[x=" + x + ",y=" + y + "]";
 	}
 
+	public Position add(Position p) {
+		return new Position(x+p.x, y+p.y);
+	}
+
+	public Position[] addMulti(Position[] offsets) {
+		Position[] result = new Position[offsets.length];
+		for(int i = 0; i < result.length; i++) {
+			result[i] = add(offsets[i]);
+		}
+		return result;
+	}
+
+	public Position[] addMulti(Collection<Position> offsets) {
+		Position[] arr = new Position[offsets.size()];
+		arr = offsets.toArray(arr);
+		return addMulti(arr);
+	}
+
 	public Position add(Location loc) {
 		int x = this.x;
 		int y = this.y;
@@ -42,27 +78,6 @@ public class Position implements Serializable {
 		if (Location.W.isPartOf(loc)) x--;
 		if (Location.E.isPartOf(loc)) x++;
 		return new Position(x,y);
-	}
-
-	public Location diff(Position p) {
-		if (x == p.x) {
-			if (y == p.y + 1) return Location.N;
-			if (y == p.y - 1) return Location.S;
-			return null;
-		}
-		if (x == p.x - 1) {
-			if (y == p.y) return Location.E;
-			if (y == p.y + 1) return Location.NE;
-			if (y == p.y - 1) return Location.SE;
-			return null;
-		}
-		if (x == p.x + 1) {
-			if (y == p.y) return Location.W;
-			if (y == p.y + 1) return Location.NW;
-			if (y == p.y - 1) return Location.SW;
-			return null;
-		}
-		return null;
 	}
 
 	public int squareDistance(Position p) {
@@ -82,6 +97,5 @@ public class Position implements Serializable {
 		}
 		return false;
 	}
-
 
 }

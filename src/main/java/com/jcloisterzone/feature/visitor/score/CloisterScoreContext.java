@@ -39,7 +39,7 @@ public class CloisterScoreContext implements CompletableScoreContext {
 	public boolean visit(Feature feature) {
 		cloister = (Cloister) feature;
 		Position pos = cloister.getTile().getPosition();
-		neigbouringTiles = game.getBoard().getAllNeigbourTiles(pos.x, pos.y).size();
+		neigbouringTiles = game.getBoard().getAllNeigbourTiles(pos).size();
 		return true;
 	}
 

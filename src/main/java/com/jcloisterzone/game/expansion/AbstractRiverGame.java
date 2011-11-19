@@ -72,7 +72,7 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 	@Override
 	public boolean checkMove(Tile tile, Position p) {
 		if (tile.getRiver() == null) return true;
-		for (Entry<Location, Tile> e : getBoard().getSideTilesMap(p.x, p.y).entrySet()) {
+		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
 
 			//check river connection
 			Location tileRelativePosition = e.getKey();

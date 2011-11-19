@@ -31,7 +31,7 @@ public final class CultGame extends ExpandedGame {
 
 	public void resolveChallengedCloisters(Cloister cloister) {
 		Position p = cloister.getTile().getPosition();
-		for(Tile nt : game.getBoard().getAllNeigbourTiles(p.x, p.y)) {
+		for(Tile nt : game.getBoard().getAllNeigbourTiles(p)) {
 			if (nt.hasCloister()) {
 				Cloister nextCloister = nt.getCloister();
 				if (cloister.isShrine() ^ nextCloister.isShrine()) {
@@ -56,7 +56,7 @@ public final class CultGame extends ExpandedGame {
 		if (tile.hasCloister()) {
 			int opositeCount = 0;
 			int sameCount = 0;
-			for(Tile nt: getBoard().getAllNeigbourTiles(p.x, p.y)) {
+			for(Tile nt: getBoard().getAllNeigbourTiles(p)) {
 				if (nt.hasCloister()) {
 					if  (tile.getCloister().isShrine() ^ nt.getCloister().isShrine()) {
 						opositeCount++;

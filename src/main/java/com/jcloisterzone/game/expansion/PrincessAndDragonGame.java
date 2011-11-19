@@ -90,7 +90,8 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 
 	public Set<Position> getAvailDragonMoves() {
 		Set<Position> result = Sets.newHashSet();
-		for(Tile tile : getBoard().getSideTiles(dragonPosition.x, dragonPosition.y)) {
+		for(Position offset: Position.ADJACENT.values()) {
+			Tile tile = getBoard().get(dragonPosition.add(offset));
 			if (dragonVisitedTiles.contains(tile.getPosition())) {
 				continue;
 			}

@@ -22,7 +22,7 @@ public class Cloister extends TileFeature implements Completable {
 	@Override
 	public boolean isPieceCompleted() {
 		Position p = getTile().getPosition();
-		return getGame().getBoard().getAllNeigbourTiles(p.x, p.y).size() == 8;
+		return getGame().getBoard().getAllNeigbourTiles(p).size() == 8;
 	}
 
 	@Override

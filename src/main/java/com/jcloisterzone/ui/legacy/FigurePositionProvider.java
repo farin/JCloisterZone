@@ -237,32 +237,26 @@ public class FigurePositionProvider {
 	}
 
 	private ImmutablePoint getRoadPlacement(Tile tile, Location d) {
-		ImmutablePoint p = null;
-
-			if (d.isRotationOf(Location.N)) p = new ImmutablePoint(CENTER, FIG_ROAD_PLACE);
-			if (d.isRotationOf(Location.NW)) p = new ImmutablePoint(40, 40);
+		Rotation rot;
+		rot = d.getRotationOf(Location.N);
+		if (rot != null) return new ImmutablePoint(CENTER, FIG_ROAD_PLACE).rotate(rot);
+		rot = d.getRotationOf(Location.NW);
+		if (rot != null) return new ImmutablePoint(40, 40).rotate(rot);
 		if (d == Location.ALL) {
 			return new ImmutablePoint(CENTER, QUARTER);
 		}
-		if (p == null) return P_CENTER;
-		try {
-			return p.rotate(Rotation.values()[d.ordinal()]);
-		} catch (Exception e) {
-			return p;
-		}
+		return P_CENTER;
 	}
 
 	private ImmutablePoint getCityPlacement(Tile tile, Location d) {
-		ImmutablePoint p = null;
-		if (d.isRotationOf(Location.N)) p = P_CITY_N;
-		if (d.isRotationOf(Location.NW)) p = P_CITY_NW;
-		if (d.isRotationOf(Location._N)) p = P_CITY_NOT_N;
-		if (p == null) return P_CENTER;
-		try {
-			return p.rotate(Rotation.values()[d.ordinal()]);
-		} catch (Exception e) {
-			return p;
-		}
+		Rotation rot;
+		rot = d.getRotationOf(Location.N);
+		if (rot != null) return P_CITY_N.rotate(rot);
+		rot = d.getRotationOf(Location.NW);
+		if (rot != null) return P_CITY_NW.rotate(rot);
+		rot = d.getRotationOf(Location._N);
+		if (rot != null) return P_CITY_NOT_N.rotate(rot);
+		return P_CENTER;
 	}
 
 	/* -- zbytek bude PRIVATE -- */

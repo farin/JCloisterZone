@@ -32,8 +32,9 @@ public class ScorePhase extends Phase {
 	}
 
 	private void scoreCompletedNearAbbey(Position pos) {
-		for(Tile t : getBoard().getSideTiles(pos.x, pos.y)) {
-			for(Feature feature : t.getFeatures()) {
+		for(Position offset: Position.ADJACENT.values()) {
+			Tile tile = getBoard().get(pos.add(offset));
+			for(Feature feature : tile.getFeatures()) {
 				//must skip because cloister are check later
 				//and double trigger is not wanted
 				if (feature instanceof Cloister) continue;
@@ -62,7 +63,7 @@ public class ScorePhase extends Phase {
 
 		alredyScored.clear();
 
-		for(Tile neighbour : getBoard().getAllNeigbourTiles(pos.x, pos.y)) {
+		for(Tile neighbour : getBoard().getAllNeigbourTiles(pos)) {
 			Cloister cloister = neighbour.getCloister();
 			if (cloister != null) {
 				scoreCompleted(cloister);
