@@ -2,7 +2,6 @@ package com.jcloisterzone.board;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -18,9 +17,9 @@ import com.google.common.collect.Maps;
  */
 public class Location implements Serializable {
 
-	private static final long serialVersionUID = -8348910171518350352L;
+	private static final long serialVersionUID = -8348910171518350353L;
 
-	private String name;
+	transient private String name;
 	private int mask;
 
 	private static Map<Integer, Location> instances = Maps.newHashMap();
@@ -49,44 +48,43 @@ public class Location implements Serializable {
 	}
 
 	/** North */
-	public static final Location N = new Location("N", 3);
+	public static final Location N = new Location("N", 3 << 8);
 	/** West */
-	public static final Location W = new Location("W", 192);
+	public static final Location W = new Location("W", 192 << 8);
 	/** South */
-	public static final Location S = new Location("S", 48);
+	public static final Location S = new Location("S", 48 << 8);
 	/** East */
-	public static final Location E = new Location("E", 12);
+	public static final Location E = new Location("E", 12 << 8);
 
 	/** North-west */
-	public static final Location NW = new Location("NW", 195);
+	public static final Location NW = new Location("NW", 195 << 8);
 	/** South-west */
-	public static final Location SW = new Location("SW", 240);
+	public static final Location SW = new Location("SW", 240 << 8);
 	/** South-east */
-	public static final Location SE = new Location("SE", 60);
+	public static final Location SE = new Location("SE", 60 << 8);
 	/** North-east */
-	public static final Location NE = new Location("NE", 15);
-
-	/** Cloister on tile */
-	public static final Location CLOISTER = new Location("CLOISTER", 256);
-	/** Tower on tile */
-	public static final Location TOWER = new Location("TOWER", 512);
+	public static final Location NE = new Location("NE", 15 << 8);
 
 	/** Horizontal location - W + E */
-	public static final Location HORIZONTAL = new Location("HORIZONTAL", 204);
+	public static final Location WE = new Location("WE", 204 << 8);
 	/** Vertical location -  N + S */
-	public static final Location VERTICAL = new Location("VERTICAL", 51);
-	/** All locations, whole tile - N + S + W + E  */
-	public static final Location ALL = new Location("ALL", 255);
-
+	public static final Location NS = new Location("NS", 51 << 8);
+	/** All edge locations */
+	public static final Location NWSE = new Location("NWSE", 255 << 8);
 
 	/** Supplement to the north */
-	public static final Location _N = new Location("_N", 252);
+	public static final Location _N = new Location("_N", 252 << 8);
 	/** Supplement to the west  */
-	public static final Location _W = new Location("_W", 63);
+	public static final Location _W = new Location("_W", 63 << 8);
 	/** Supplement to the south */
-	public static final Location _S = new Location("_S", 207);
+	public static final Location _S = new Location("_S", 207 << 8);
 	/** Supplement to the east */
-	public static final Location _E = new Location("_E", 243);
+	public static final Location _E = new Location("_E", 243 << 8);
+
+	/** Cloister on tile */
+	public static final Location CLOISTER = new Location("CLOISTER", 1 << 16 );
+	/** Tower on tile */
+	public static final Location TOWER = new Location("TOWER", 1 << 17);
 
 	// --- farm locations ---
 
@@ -107,7 +105,7 @@ public class Location implements Serializable {
 	/** West right farm */
 	public static final Location WR = new Location("WR", 128);
 	/** Center farm*/
-	public static final Location CENTER = new Location("CENTER", 0);
+	public static final Location INNER_FARM = new Location("INNER_FARM", 0);
 
 
 	private static final Location[] SIDES = {N, E, S, W};
@@ -139,10 +137,16 @@ public class Location implements Serializable {
 
 	/** Returns opposite location, mirrored by axis */
 	public Location rev() {
-		if (! isSideLocation()) return this; //non-side location
-		// liche bity posunout o 5, sude o 3;
-		int m = ((mask & 85) << 5) | ((mask & 170) << 3);
-		return create((m | (m >> 8)) & 255);
+		// odd bits shift by 5, even by 3;
+		int mLo = mask & 255;
+		mLo = ((mLo & 85) << 5) | ((mLo & 170) << 3);
+		mLo = (mLo | (mLo >> 8)) & 255;
+
+		int mHi =  (mask & 65280) >> 8;
+		mHi = ((mHi & 85) << 5) | ((mHi & 170) << 3);
+		mHi = (mHi | (mHi >> 8)) & 255;
+
+		return create((mask & ~65535) | (mHi << 8) | mLo);
 	}
 
 	/**
@@ -151,9 +155,13 @@ public class Location implements Serializable {
 	 * @return rotated location
 	 */
 	private Location shift(int i) {
-		if (! isSideLocation()) return this; //non-side location
-		int m = mask << i;
-		return create((m | (m >> 8)) & 255);
+		int mLo = (mask & 255) << i;
+		mLo = (mLo | mLo >> 8) & 255;
+
+		int mHi = (mask & 65280) << i;
+		mHi = (mHi | mHi >> 8) & 65280;
+
+		return create((mask & ~65535) | mHi | mLo);
 	}
 
 	/**
@@ -161,22 +169,15 @@ public class Location implements Serializable {
 	 * @param d how much rotate
 	 * @return rotated location
 	 */
-	//TODO no loop
 	public Location rotateCCW(Rotation rot) {
-		Location ret = this;
-		for (int i = 0; i < rot.ordinal(); i++)
-			ret = ret.prev();
-		return ret;
+		return shift((rot.ordinal()*6)%8);
 	}
 
 	/**
 	 * Relative rotations in clockwise location
 	 */
 	public Location rotateCW(Rotation rot) {
-		Location ret = this;
-		for (int i = 0; i < rot.ordinal(); i++)
-			ret = ret.next();
-		return ret;
+		return shift(rot.ordinal()*2);
 	}
 
 	public static Location[] sides() {
@@ -191,25 +192,24 @@ public class Location implements Serializable {
 		return DIAGONAL_SIDES;
 	}
 
-
-	@Deprecated
-	public Location farmHalfSide(int i) {
-		int m = (i==0) ? mask & 85: mask & 170;
-		return create(m);
+	public Location getLeftFarm() {
+		assert isEdgeLocation();
+		return create((mask >> 8) & 85);
 	}
 
-	private boolean isSideLocation() {
-		return (mask & 255) != 0;
+	public Location getRightFarm() {
+		assert isEdgeLocation();
+		return create((mask >> 8) & 170);
 	}
+
 
 	/** Checks if this is part of given location */
 	public boolean isPartOf(Location d) {
-		if (! isSideLocation()) return d == this;
-		if (((mask ^ d.mask) & mask) == 0) return true;
-		return false;
+		if (mask == 0) return this == d;
+		return ((mask ^ d.mask) & mask) == 0;
 	}
 
-
+	@Deprecated
 	public int  getMask() {
 		return mask;
 	}
@@ -231,19 +231,20 @@ public class Location implements Serializable {
 	/** Merge two locations together */
 	public Location union(Location d) {
 		if (d == null) return this;
-		if (! d.isSideLocation() || ! isSideLocation()) throw new IllegalArgumentException("Not side locations: " + this + "," + d );
+		assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "union("+this+','+d+')';
 		return create(mask | d.mask);
 	}
 
 	/** Subtract given location from this */
 	public Location substract(Location d) {
 		if (d == null) return this;
-		if (! d.isSideLocation() || ! isSideLocation()) throw new IllegalArgumentException("Not side location: " + this + "," + d);
+		assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "substract("+this+','+d+')';
 		return create((~(mask & d.mask)) & mask);
 	}
 
 	public Location intersect(Location d) {
 		if (d == null || (mask & d.mask) == 0) return null;
+		assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "interasect("+this+','+d+')';
 		return create(mask & d.mask);
 	}
 
@@ -263,7 +264,7 @@ public class Location implements Serializable {
 	}
 
 	public static Location valueOfIndex(int index) {
-		if (index == 8) return CENTER;
+		if (index == 8) return INNER_FARM;
 		return create(1 << index);
 	}
 
@@ -281,11 +282,18 @@ public class Location implements Serializable {
 		return getRotationOf(loc) != null;
 	}
 
-	//debug code
+	//assertion methods
 
 	public boolean isFarmLocation() {
-		return this == CENTER || Arrays.asList(FARM_SIDES).contains(this);
+		return this == INNER_FARM || (mask & 255) > 0;
 	}
 
+	public boolean isEdgeLocation() {
+		return (mask & 65280) > 0;
+	}
+
+	public boolean isSpecialLocation() {
+		return (mask & ~65535) > 0;
+	}
 
 }

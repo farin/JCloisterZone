@@ -78,15 +78,15 @@
 		<apply rotate="2">* ROAD SE</apply>
 		<apply rotate="3">* ROAD SW</apply>
 	</area>
-	<area> <!-- HORIZONTAL -->
+	<area> <!-- WE -->
 		<rectangle h="200" w="1000" x="0" y="400"/>
-		<apply>* ROAD HORIZONTAL</apply>
-		<apply rotate="1">* ROAD VERTICAL</apply>
+		<apply>* ROAD WE</apply>
+		<apply rotate="1">* ROAD NS</apply>
 	</area>
-	<area> <!-- ALL -->
+	<area> <!-- NWSE -->
 		<x-points>400, 600, 600, 800, 1000, 1000, 800, 600, 600, 400, 400, 200, 0, 0, 200, 400</x-points>
 		<y-points>0, 0, 200, 400, 400, 600, 600, 800, 1000, 1000, 800, 600, 600, 400, 400, 200</y-points>
-		<apply>* ROAD ALL</apply>
+		<apply>* ROAD NWSE</apply>
 	</area>
 	<area> <!-- oblique -->
 		<x-points>600, 560, 490, 380, 310, 120, 0, 0, 160, 220, 350, 400, 400</x-points>
@@ -249,10 +249,10 @@
 		<apply rotate="1">TB.CcRC.g ROAD E</apply>
 		<apply rotate="1">TB.CR ROAD E</apply>
 	</area>
-	<area> <!-- cathars-horizontal -->
+	<area> <!-- cathars-WE -->
 		<x-points>0, 100, 200, 380, 480, 680, 780, 830, 880, 1000, 1000, 970, 930, 830, 770, 450, 340, 260, 100, 40, 0</x-points>
 		<y-points>390, 410, 510, 670, 700, 700, 650, 460, 410, 360, 550, 570, 720, 820, 850, 880, 850, 790, 620, 580, 580</y-points>
-		<apply>SI.RCr ROAD HORIZONTAL</apply>
+		<apply>SI.RCr ROAD WE</apply>
 	</area>
 	<area> <!-- cathars-SE -->
 		<x-points>560, 550, 520, 420, 350, 220, 170, 130, 100, 0, 0, 20, 60, 110, 290, 380, 390</x-points>
@@ -262,13 +262,13 @@
 	<area> <!-- W_T1000R0101 -->
 		<x-points>0, 400, 600, 1000, 1000, 500, 0</x-points>
 		<y-points>410, 330, 330, 410, 590, 490, 600</y-points>
-		<apply>TO.RCr ROAD HORIZONTAL</apply>
+		<apply>TO.RCr ROAD WE</apply>
 	</area>
 	<area> <!-- tunnel -->
 		<x-points>400, 400, 600, 600, 400, 400, 600, 600</x-points>
 		<y-points>0, 300, 300, 700, 700, 1000, 1000, 0</y-points>
-		<apply>AM.CRcr+ ROAD VERTICAL</apply>
-		<apply>DG.CRcr.d ROAD VERTICAL</apply>
+		<apply>AM.CRcr+ ROAD NS</apply>
+		<apply>DG.CRcr.d ROAD NS</apply>
 	</area>
 	<area>
     	<x-points>407, 375, 282, 255, 267, 307, 290, 310, 312, 297, 310, 465, 685, 825, 887, 995, 997, 847, 762, 620, 505, 460, 435, 465, 537, 575, 590</x-points>
@@ -288,9 +288,9 @@
 	</area>
 
 	<!--  City areas -->
-	<area> <!-- ALL -->
+	<area> <!-- NWSE -->
 		<rectangle h="1000" w="1000" x="0" y="0"/>
-		<apply>* CITY ALL</apply>
+		<apply>* CITY NWSE</apply>
 	</area>
 	<area> <!-- N -->
 		<x-points>0, 290, 390, 610, 690, 1000</x-points>
@@ -316,24 +316,24 @@
 		<apply rotate="2">* CITY _S</apply>
 		<apply rotate="3">* CITY _E</apply>
 	</area>
-	<area> <!-- HORIZONTAL -->
+	<area> <!-- WE -->
 		<x-points>0, 390, 840, 1000, 1000, 800, 710, 590, 280, 0</x-points>
 		<y-points>0, 160, 160, 30, 1000, 750, 740, 810, 790, 1000</y-points>
-		<apply>* CITY HORIZONTAL</apply>
-		<apply rotate="1">* CITY VERTICAL</apply>
-		<apply rotate="2">AM.CRcr+ CITY HORIZONTAL</apply>
+		<apply>* CITY WE</apply>
+		<apply rotate="1">* CITY NS</apply>
+		<apply rotate="2">AM.CRcr+ CITY WE</apply>
 	</area>
-	<area> <!-- narrow_horizontal -->
+	<area> <!-- narrow_WE -->
 		<x-points>0, 40, 310, 350, 550, 580, 690, 730, 850, 900, 1000, 990, 770, 700, 600, 490, 460, 300, 260, 210, 0</x-points>
 		<y-points>0, 0, 200, 220, 220, 200, 210, 230, 200, 100, 10, 990, 710, 720, 790, 780, 760, 770, 810, 800, 1000</y-points>
-		<apply>DG.CRcr.d CITY HORIZONTAL</apply>
-		<apply>TB.CRcR.w CITY HORIZONTAL</apply>
+		<apply>DG.CRcr.d CITY WE</apply>
+		<apply>TB.CRcR.w CITY WE</apply>
 	</area>
-	<area> <!-- upper_horizontal -->
+	<area> <!-- upper_WE -->
 		<x-points>0, 60, 380, 810, 870, 1000, 1000, 880, 770, 710, 590, 530, 480, 320, 280, 200, 140, 0</x-points>
 		<y-points>0, 0, 130, 130, 120, 0, 970, 750, 610, 610, 680, 680, 660, 670, 700, 710, 750, 960</y-points>
-		<apply>TB.CCc.c CITY HORIZONTAL</apply>
-		<apply>TB.CCc.w CITY HORIZONTAL</apply>
+		<apply>TB.CCc.c CITY WE</apply>
+		<apply>TB.CCc.w CITY WE</apply>
 	</area>
 	<area> <!-- N_hL -->
 		<x-points>30, 170, 230, 310, 330, 360, 550, 610, 800, 1000</x-points>
@@ -525,13 +525,13 @@
 	<area> <!-- city-cross -->
 		<x-points>0, 110, 220, 850, 1000, 1000, 930, 860, 220, 120, 0</x-points>
 		<y-points>0, 70, 310, 310, 20, 1000, 840, 590, 590, 870, 1000</y-points>
-		<apply>KS.CCcc CITY HORIZONTAL</apply>
-		<apply>R2.CIcI CITY HORIZONTAL</apply>
+		<apply>KS.CCcc CITY WE</apply>
+		<apply>R2.CIcI CITY WE</apply>
 	</area>
 	<area> <!-- city-cross -->
 		<x-points>50, 320, 320, 0, 1000, 750, 750, 840, 1000, 1000</x-points>
 		<y-points>0, 200, 820, 1000, 1000, 890, 310, 110, 30, 0</y-points>
-		<apply>KS.CCcc CITY VERTICAL</apply>
+		<apply>KS.CCcc CITY NS</apply>
 	</area>
 	<area>
 		<x-points>1000, 0, 0, 100, 220, 390, 500, 670, 710, 750, 850, 950, 1000</x-points>
@@ -562,13 +562,13 @@
 	<area>
     	<x-points>0, 100, 315, 482, 802, 817, 847, 975, 995, 997, 897, 767, 735, 717, 632, 335, 302, 260, 217, 105, 0</x-points>
     	<y-points>10, 180, 267, 280, 282, 265, 265, 5, 5, 995, 790, 630, 635, 627, 675, 687, 692, 710, 710, 810, 985</y-points>
-    	<apply>AM.CCc+ CITY HORIZONTAL</apply>
-    	<apply rotate="3">AM.CCcc+ CITY VERTICAL</apply>
+    	<apply>AM.CCc+ CITY WE</apply>
+    	<apply rotate="3">AM.CCcc+ CITY NS</apply>
 	</area>
 	<area>
     	<x-points>2, 60, 95, 112, 125, 125, 135, 147, 147, 172, 257, 322, 597, 692, 805, 802, 815, 832, 840, 850, 865, 887, 970, 997, 997, 942, 885, 815, 795, 512, 257, 190, 152, 157, 150, 125, 70, 2</x-points>
     	<y-points>50, 115, 210, 332, 352, 380, 410, 430, 457, 492, 520, 525, 520, 497, 430, 395, 372, 360, 337, 312, 210, 120, 2, 0, 985, 952, 882, 667, 640, 680, 665, 660, 667, 707, 730, 740, 900, 977</y-points>
-    	<apply>AM.CCcc+ CITY HORIZONTAL</apply>
+    	<apply>AM.CCcc+ CITY WE</apply>
 	</area>
 
 	<!--  Farm areas -->
@@ -589,22 +589,22 @@
 	</area>
 	<area>  <!-- upper-half -->
 		<rectangle h="500" w="1000" x="0" y="0"/>
-		<apply>* FARM WR,N,EL</apply>
-		<apply>* FARM WR,N</apply>
-		<apply>* FARM N,EL</apply>
-		<apply rotate="1">* FARM NR,E,SL</apply>
-		<apply rotate="1">* FARM NR,E</apply>
-		<apply rotate="1">* FARM E,SL</apply>
-		<apply rotate="2">* FARM ER,S,WL</apply>
-		<apply rotate="2">* FARM ER,S</apply>
-		<apply rotate="2">* FARM S,WL</apply>
-		<apply rotate="3">* FARM SR,W,NL</apply>
-		<apply rotate="3">* FARM SR,W</apply>
-		<apply rotate="3">* FARM W,NL</apply>
-		<apply>* FARM N</apply>
-		<apply rotate="1">* FARM E</apply>
-		<apply rotate="2">* FARM S</apply>
-		<apply rotate="3">* FARM W</apply>
+		<apply>* FARM WR,NL,NR,EL</apply>
+		<apply>* FARM WR,NL,NR</apply>
+		<apply>* FARM NL,NR,EL</apply>
+		<apply rotate="1">* FARM NR,EL,ER,SL</apply>
+		<apply rotate="1">* FARM NR,EL,ER</apply>
+		<apply rotate="1">* FARM EL,ER,SL</apply>
+		<apply rotate="2">* FARM ER,SL,SR,WL</apply>
+		<apply rotate="2">* FARM ER,SL,SR</apply>
+		<apply rotate="2">* FARM SL,SR,WL</apply>
+		<apply rotate="3">* FARM SR,WL,WR,NL</apply>
+		<apply rotate="3">* FARM SR,WL,WR</apply>
+		<apply rotate="3">* FARM WL,WR,NL</apply>
+		<apply>* FARM NL,NR</apply>
+		<apply rotate="1">* FARM EL,ER</apply>
+		<apply rotate="2">* FARM SL,SR</apply>
+		<apply rotate="3">* FARM WL,WR</apply>
 		<apply>* FARM WR,EL</apply>
 		<apply rotate="1">* FARM NR,SL</apply>
 		<apply rotate="2">* FARM ER,WL</apply>
@@ -613,19 +613,19 @@
 	<area> <!-- edge-N -->
 		<x-points>0, 0, 500</x-points>
 		<y-points>0, 1000, 500</y-points>
-		<apply rotate="1">CA.C! FARM N</apply>
-		<apply rotate="3">GQ.Cc! FARM S</apply>
-		<apply rotate="2">GQ.Cc! FARM E</apply>
-		<apply rotate="2">IC.C! FARM E</apply>
-		<apply rotate="3">TB.CcR!.w FARM S</apply>
-		<apply rotate="2">TB.RCc!.g FARM E</apply>
-		<apply rotate="3">DG.LCcc.d FARM S</apply>
-		<apply rotate="2">DG.Cc!.p FARM E</apply>
-		<apply rotate="3">DG.Cc!.p FARM S</apply>
-		<apply rotate="3">TO.CcR! FARM S</apply>
-		<apply rotate="1">AM.C!+ FARM N</apply>
-		<apply rotate="2">AM.C!+ FARM E</apply>
-		<apply rotate="3">AM.C!+ FARM S</apply>
+		<apply rotate="1">CA.C! FARM NL,NR</apply>
+		<apply rotate="3">GQ.Cc! FARM SL,SR</apply>
+		<apply rotate="2">GQ.Cc! FARM EL,ER</apply>
+		<apply rotate="2">IC.C! FARM EL,ER</apply>
+		<apply rotate="3">TB.CcR!.w FARM SL,SR</apply>
+		<apply rotate="2">TB.RCc!.g FARM EL,ER</apply>
+		<apply rotate="3">DG.LCcc.d FARM SL,SR</apply>
+		<apply rotate="2">DG.Cc!.p FARM EL,ER</apply>
+		<apply rotate="3">DG.Cc!.p FARM SL,SR</apply>
+		<apply rotate="3">TO.CcR! FARM SL,SR</apply>
+		<apply rotate="1">AM.C!+ FARM NL,NR</apply>
+		<apply rotate="2">AM.C!+ FARM EL,ER</apply>
+		<apply rotate="3">AM.C!+ FARM SL,SR</apply>
 	</area>
 
 	<area> <!-- edge-NR -->
@@ -701,12 +701,12 @@
 	<area>
 		<x-points>0, 370, 770, 1000, 1000, 0</x-points>
 		<y-points>460, 790, 780, 450, 1000, 1000</y-points>
-		<apply>SI.RCr FARM WL,S,ER</apply>
+		<apply>SI.RCr FARM WL,SL,SR,ER</apply>
 	</area>
 	<area>
 		<x-points>0, 330, 0</x-points>
 		<y-points>0, 0, 1000</y-points>
-		<apply>DG.CCc+.p FARM W</apply>
+		<apply>DG.CCc+.p FARM WL,WR</apply>
 	</area>
 	<area>
     	<x-points>502, 342, 360, 597, 745, 1000, 1000</x-points>
@@ -734,55 +734,55 @@
 		<substract>DG.RRR.g</substract>
 	</area>
 	<complement-farm>
-		<apply>* FARM ALL</apply>
-		<apply>* FARM CENTER</apply>
-		<apply>* FARM HORIZONTAL</apply>
-		<apply>* FARM VERTICAL</apply>
-		<apply>* FARM _N</apply>
-		<apply>* FARM _S</apply>
-		<apply>* FARM _W</apply>
-		<apply>* FARM _E</apply>
-		<apply>* FARM NW</apply>
-		<apply>* FARM NE</apply>
-		<apply>* FARM SE</apply>
-		<apply>* FARM SW</apply>
-		<apply>* FARM WR,N,E,SL</apply>
-		<apply>* FARM NR,E,S,WL</apply>
-		<apply>* FARM ER,S,W,NL</apply>
-		<apply>* FARM SR,W,N,EL</apply>
+		<apply>* FARM NL,NR,WL,WR,SL,SR,EL,ER</apply>
+		<apply>* FARM INNER_FARM</apply>
+		<apply>* FARM WL,WR,EL,ER</apply>
+		<apply>* FARM NL,NR,SL,SR</apply>
+		<apply>* FARM WL,WR,SL,SR,EL,ER</apply>
+		<apply>* FARM NL,NR,SL,SR,EL,ER</apply>
+		<apply>* FARM NL,NR,WL,WR,EL,ER</apply>
+		<apply>* FARM NL,NR,WL,WR,SL,SR</apply>
+		<apply>* FARM NL,NR,WL,WR</apply>
+		<apply>* FARM NL,NR,EL,ER</apply>
+		<apply>* FARM SL,SR,EL,ER</apply>
+		<apply>* FARM SL,SR,WL,WR</apply>
+		<apply>* FARM WR,NL,NR,EL,ER,SL</apply>
+		<apply>* FARM NR,EL,ER,SL,SR,WL</apply>
+		<apply>* FARM ER,SL,SR,WL,WR,NL</apply>
+		<apply>* FARM SR,WL,WR,NL,NR,EL</apply>
 		<apply>BA.CcRr FARM EL,SR</apply>
 		<apply>BA.CcRr+ FARM EL,SR</apply>
-		<apply>BA.CRr FARM EL,W,SR</apply>
-		<apply>BA.RrC FARM WR,E,SL</apply>
-		<apply>IC.CCC FARM S</apply>
-		<apply>IC.CCc+ FARM E</apply>
-		<apply>IC.RCc.i FARM SL,E</apply>
-		<apply>IC.RrC.i FARM WR,E,SL</apply>
+		<apply>BA.CRr FARM EL,WL,WR,SR</apply>
+		<apply>BA.RrC FARM WR,EL,ER,SL</apply>
+		<apply>IC.CCC FARM SL,SR</apply>
+		<apply>IC.CCc+ FARM EL,ER</apply>
+		<apply>IC.RCc.i FARM SL,EL,ER</apply>
+		<apply>IC.RrC.i FARM WR,EL,ER,SL</apply>
 		<apply>IC.CcRr+.i FARM SR,EL</apply>
 		<apply>IC.RrRr FARM NL,WR,SL,ER</apply>
-		<apply>TB.Ccc.g FARM S</apply>
+		<apply>TB.Ccc.g FARM SL,SR</apply>
 		<apply>TB.CcRR.w FARM SL,ER</apply>
 		<apply>TB.CcRC.c FARM ER</apply>
 		<apply>TB.CcRC.g FARM ER</apply>
-		<apply>TB.CcR.c FARM ER,S</apply>
-		<apply>TB.CR FARM W,S,ER</apply>
-		<apply>TB.RCc.g FARM SL,E</apply>
-		<apply>TB.RRC FARM E,SL</apply>
+		<apply>TB.CcR.c FARM ER,SL,SR</apply>
+		<apply>TB.CR FARM WL,WR,SL,SR,ER</apply>
+		<apply>TB.RCc.g FARM SL,EL,ER</apply>
+		<apply>TB.RRC FARM EL,ER,SL</apply>
 		<apply>DG.RrRr.g FARM NR,EL,SR,WL</apply>
 		<apply>DG.CcRr.p FARM EL,SR</apply>
 		<apply>DG.CcRr.g FARM EL,SR</apply>
-		<apply>DG.RrC.d FARM WR,E,SL</apply>
-		<apply>DG.RrC.g FARM WR,E,SL</apply>
-		<apply>DG.CRr.d FARM EL,W,SR</apply>
-		<apply>DG.CRr.g FARM EL,W,SR</apply>
+		<apply>DG.RrC.d FARM WR,EL,ER,SL</apply>
+		<apply>DG.RrC.g FARM WR,EL,ER,SL</apply>
+		<apply>DG.CRr.d FARM EL,WL,WR,SR</apply>
+		<apply>DG.CRr.g FARM EL,WL,WR,SR</apply>
 		<apply>TO.RrRr.2 FARM NR,EL,SR,WL</apply>
-		<apply>TO.RrC FARM WR,E,SL</apply>
-		<apply>TO.RCr FARM WL,S,ER</apply>
+		<apply>TO.RrC FARM WR,EL,ER,SL</apply>
+		<apply>TO.RCr FARM WL,SL,SR,ER</apply>
 		<apply>AM.CCRR FARM WL,SR</apply>
 		<apply>PL.CCRR FARM NL,WR</apply>
-		<apply>AM.RC FARM N,E,SL</apply>
+		<apply>AM.RC FARM NL,NR,EL,ER,SL</apply>
 		<apply>AM.RrC FARM ER,SL</apply>
-		<apply>KS.RC FARM E,S,WL</apply>
+		<apply>KS.RC FARM EL,ER,SL,SR,WL</apply>
 		<apply>KS.CRrR FARM EL,SR,WL</apply>
 		<apply>R1.CcII FARM WR,SL</apply>
 		<apply>R1.RrII FARM WR,NL,ER,SL</apply>
@@ -791,10 +791,10 @@
 		<apply>SI.RCr FARM WR,EL</apply>
 		<apply>SI.CcRr FARM EL,SR</apply>
 		<apply>GQ.CRRr FARM ER,SL,WR</apply>
-		<apply>GQ.RCc FARM SL,E</apply>
+		<apply>GQ.RCc FARM SL,EL,ER</apply>
 		<apply>GQ.CcRR FARM SL,ER</apply>
 		<apply>GQ.CcCR FARM SL</apply>
-		<apply>CC.RrC FARM WR,E,SL</apply>
+		<apply>CC.RrC FARM WR,EL,ER,SL</apply>
 	</complement-farm>
 
 	<!-- Tower areas -->

@@ -19,7 +19,7 @@
 		<city>W</city>
 		<city>E</city>
 		<city>S</city>
-		<farm city="N W E S">CENTER</farm>
+		<farm city="N W E S">INNER_FARM</farm>
 	</card>
 	<card id="CCC">
 		<city>N</city>

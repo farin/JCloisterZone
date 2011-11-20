@@ -13,120 +13,120 @@ import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.game.CustomRule;
 
 public class CityScoring extends AbstractScoringTest {
-	
+
 	protected void assertScore(int expected, Tile tile, Location loc) {
-		City city = (City) tile.getFeaturePartOf(loc,  City.class);		
+		City city = (City) tile.getFeaturePartOf(loc);
 		CityScoreContext ctx = city.getScoreContext();
 		city.walk(ctx);
-		
+
 		assertEquals(expected, ctx.getPoints());
 	}
-	
+
 	@Test
-	public void tiny() {		
-		Tile t; 
+	public void tiny() {
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
 		putTile(new Position(0,-1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCCC");
-		
-		assertScore(4, t, Location.N);		
+
+		assertScore(4, t, Location.N);
 	}
-	
+
 	@Test
 	public void tinyCustomRule() {
 		game.getCustomRules().add(CustomRule.TINY_CITY_2_POINTS);
-		
-		Tile t; 
+
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
 		putTile(new Position(0,-1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCCC");
-		
-		assertScore(2, t, Location.N);	
+
+		assertScore(2, t, Location.N);
 	}
-	
+
 	@Test
-	public void simple() {		
-		Tile t; 
+	public void simple() {
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
 		 putTile(new Position(0,-1), Rotation.R180, Expansion.BASIC, "CcRr");
 		putTile(new Position(1,-1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCCC");
-		
-		assertScore(6, t, Location.N);	
+
+		assertScore(6, t, Location.N);
 	}
-	
+
 	@Test
-	public void pennant() {		
-		Tile t; 
+	public void pennant() {
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
 		 putTile(new Position(0,-1), Rotation.R180, Expansion.BASIC, "CcRr+");
 		putTile(new Position(1,-1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCCC");
-		
-		assertScore(8, t, Location.N);	
+
+		assertScore(8, t, Location.N);
 	}
-	
+
 	@Test
-	public void morePennants() {		
-		Tile t; 
+	public void morePennants() {
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
 		 putTile(new Position(0,-1), Rotation.R180, Expansion.BASIC, "CcRr+");
 		putTile(new Position(1,-1), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "C!+");
-		
-		assertScore(10, t, Location.N);	
+
+		assertScore(10, t, Location.N);
 	}
-	
+
 	@Test
-	public void twoPennantTile() {		
-		Tile t; 
+	public void twoPennantTile() {
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "C++");
 		putTile(new Position(-1,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "CCRR");
 		putTile(new Position(1,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "C!+");
 		putTile(new Position(0,1), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "CCc+");
 		putTile(new Position(0,-1), Rotation.R180, Expansion.ABBEY_AND_MAYOR, "CRr");
-		
-		assertScore(18, t, Location.N);	
+
+		assertScore(18, t, Location.N);
 	}
-	
+
 	@Test
 	public void unfinshedCathedral() {
-		Tile t; 
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "Cccc.c");
 		putTile(new Position(0, -1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCc+");
-		
-		assertScore(0, t, Location.N);	
+
+		assertScore(0, t, Location.N);
 	}
-	
+
 	@Test
 	public void finshedCathedral() {
-		Tile t; 
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "Cccc.c");
 		putTile(new Position(0,-1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCc+");
 		putTile(new Position(0,1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "C!");
 		putTile(new Position(1,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCC");
 		putTile(new Position(-1,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CCC");
-		
-		assertScore(15, t, Location.N);	
+
+		assertScore(15, t, Location.N);
 	}
-	
+
 	@Test
 	public void twoCathedrals() {
-		Tile t; 
+		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "Cccc.c");
-		putTile(new Position(1,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "Cccc.c");	
+		putTile(new Position(1,0), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "Cccc.c");
 		putTile(new Position(0,-1), Rotation.R180, Expansion.INNS_AND_CATHEDRALS, "CcRr+.i");
-		putTile(new Position(1,-1), Rotation.R270, Expansion.INNS_AND_CATHEDRALS, "CcRr+.i");		
+		putTile(new Position(1,-1), Rotation.R270, Expansion.INNS_AND_CATHEDRALS, "CcRr+.i");
 		putTile(new Position(0,1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CFR");
 		putTile(new Position(1,1), Rotation.R0, Expansion.INNS_AND_CATHEDRALS, "CFR");
 		putTile(new Position(2,0), Rotation.R270, Expansion.INNS_AND_CATHEDRALS, "CFR");
 		putTile(new Position(-1,0), Rotation.R90, Expansion.INNS_AND_CATHEDRALS, "CFR");
-		
+
 		assertScore(30, t, Location.N);
 	}
-	
+
 	@Test
 	public void siege() {
 		Tile t;
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.CATHARS, "C");
 		putTile(new Position(0,-1), Rotation.R270, Expansion.CATHARS, "Cc");
 		putTile(new Position(-1,-1), Rotation.R90, Expansion.CATHARS, "C");
-		
+
 		assertScore(3, t, Location.N);
 	}
 

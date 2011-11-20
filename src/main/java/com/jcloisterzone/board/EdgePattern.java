@@ -18,7 +18,7 @@ public class EdgePattern {
 	private EdgePattern(char[] code) { this.code = code; }
 
 	private static char getTileEdgePattern(Tile tile, Location loc) {
-		Feature f = tile.getFeaturePartOf(loc, Road.class, City.class);
+		Feature f = tile.getFeaturePartOf(loc);
 		if (f == null) {
 			return 'F';
 		}

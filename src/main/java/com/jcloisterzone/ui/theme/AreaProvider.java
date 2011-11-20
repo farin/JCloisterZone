@@ -157,7 +157,7 @@ public class AreaProvider {
 		for(int i = 0; i < nl.getLength(); i++) {
 			Element applyElemenet = (Element) nl.item(i);
 			String descriptor = normalizeDescriptor(applyElemenet.getFirstChild().getNodeValue());
-			//System.out.println(applyElemenet.getFirstChild().getNodeValue() + " " + descriptor);
+			//System.out.println(applyElemenet.getFirstChild().getNodeValue() + " >>> " + descriptor);
 			areaBuilder.put(descriptor, areaForRotation(areas, applyElemenet, shape));
 		}
 		nl = xml.getElementsByTagName("substract");

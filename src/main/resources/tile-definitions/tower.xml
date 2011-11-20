@@ -124,6 +124,6 @@
 		<tower />
 		<city>N W E</city>
 		<city>S</city>
-		<farm city="W S">CENTER</farm>
+		<farm city="W S">INNER_FARM</farm>
 	</card>
 </pack>

@@ -54,7 +54,7 @@ public class Barn extends Special {
 
 	@Override
 	protected Feature getPieceForDeploy(Tile tile, Location loc) {
-		Farm farmPiece = (Farm) tile.getFeaturePartOf(loc, Farm.class);
+		Farm farmPiece = (Farm) tile.getFeaturePartOf(loc);
 		if (farmPiece == null) {
 			throw new IllegalArgumentException("No such farm");
 		}

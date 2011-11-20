@@ -6,7 +6,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
@@ -69,7 +68,7 @@ public class LoadGamePhase extends CreateGamePhase {
 			Feature f;
 			if (m instanceof Barn) {
 				//special case, barn holds 'corner' location
-				f = tile.getFeaturePartOf(m.getLocation(), Farm.class);
+				f = tile.getFeaturePartOf(m.getLocation());
 			} else {
 				f = tile.getFeature(m.getLocation());
 			}

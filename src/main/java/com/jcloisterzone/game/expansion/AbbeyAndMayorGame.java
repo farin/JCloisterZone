@@ -95,7 +95,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		String[] sides = asLocation(e);
 		Feature[] te = new Feature[sides.length];
 		for(int i = 0; i < te.length; i++) {
-			te[i] = tile.getFeaturePartOf(Location.valueOf(sides[i]), Road.class, City.class, Cloister.class);
+			te[i] = tile.getFeaturePartOf(Location.valueOf(sides[i]));
 		}
 		for(int i = 0; i < te.length; i++) {
 			Feature[] neighbouring = new Feature[te.length-1];
@@ -185,7 +185,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		for(int i = 0; i < 4; i++) {
 			Tile tile = getBoard().get(pos);
 			if (tile == null) return false;
-			farm = (Farm) tile.getFeaturePartOf(corner, Farm.class);
+			farm = (Farm) tile.getFeaturePartOf(corner);
 			if (farm == null) return false;
 			corner = corner.next();
 			pos = pos.add(positionChange);

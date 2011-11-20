@@ -12,13 +12,13 @@
 		<city resource="cloth">W E</city>
 		<city>S</city>
 		<farm city="W">NL NR</farm>
-		<farm city="W S">CENTER</farm>
+		<farm city="W S">INNER_FARM</farm>
 	</card>
 	<card id="CCc.w">
 		<city resource="wine">W E</city>
 		<city>S</city>
 		<farm city="W">NL NR</farm>
-		<farm city="W S">CENTER</farm>
+		<farm city="W S">INNER_FARM</farm>
 	</card>
 	<card id="Ccc.g">
 		<city resource="grain">N W E</city>
@@ -28,7 +28,7 @@
 		<city resource="cloth">N W</city>
 		<city>S</city>
 		<city>E</city>
-		<farm city="N E S">CENTER</farm>
+		<farm city="N E S">INNER_FARM</farm>
 	</card>
 	<card id="CcRR!.c">
 		<road>S</road>
@@ -106,7 +106,7 @@
 	<card id="CcCc.w">
 		<city resource="wine">N W</city>
 		<city>E S</city>
-		<farm city="N S">CENTER</farm>
+		<farm city="N S">INNER_FARM</farm>
 	</card>
 	<card id="CFc.w">
 		<city resource="wine">W E</city>

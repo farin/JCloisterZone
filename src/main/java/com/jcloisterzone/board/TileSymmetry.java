@@ -15,7 +15,7 @@ public enum TileSymmetry {
 		TileSymmetry symetry = countBaseSymetry(tile);
 		Location river = tile.getRiver();
 		if (river != null) {
-			if (river == Location.HORIZONTAL || river == Location.VERTICAL) {
+			if (river == Location.WE || river == Location.NS) {
 				if (symetry == TileSymmetry.S4) symetry = TileSymmetry.S2;
 			} else {
 				symetry = TileSymmetry.NONE;

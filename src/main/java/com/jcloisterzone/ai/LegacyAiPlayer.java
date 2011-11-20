@@ -210,9 +210,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	private double rankFeatureConnectionsOn(Position pos, OpenEdge edge, Location loc, boolean isCornerConnection) {
 		Tile tile = getBoard().get(pos.add(loc));
 		if (tile == null) return 0.0;
-		Feature opposite = tile.getFeaturePartOf(loc.rev(), edge.getClass());
-		if (opposite == null) return 0.0;
-
+		Feature opposite = tile.getFeaturePartOf(loc.rev());
+		if (opposite == null || edge.getClass().isInstance(opposite)) return 0.0;
 
 		return 0.0;
 	}

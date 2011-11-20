@@ -32,14 +32,14 @@ public class TileTest extends AbstractTileTest {
 
 	@Test
 	public void getPiecePartOf() {
-		assertEquals(Road.class, BA_RRR.getFeaturePartOf(Location.E, Road.class, City.class).getClass());
-		assertEquals(City.class, BA_Cc1.getFeaturePartOf(Location.NW, Road.class, City.class).getClass());
-		assertEquals(City.class, BA_Cc1.getFeaturePartOf(Location.N, Road.class, City.class).getClass());
+		assertEquals(Road.class, BA_RRR.getFeaturePartOf(Location.E).getClass());
+		assertEquals(City.class, BA_Cc1.getFeaturePartOf(Location.NW).getClass());
+		assertEquals(City.class, BA_Cc1.getFeaturePartOf(Location.N).getClass());
 		assertNull(BA_Cc1.getFeature(Location.E));
 
 		assertNull(BA_Cc1_rot.getFeature(Location.W));
-		assertEquals(City.class, BA_Cc1_rot.getFeaturePartOf(Location.N, Road.class, City.class).getClass());
-		assertEquals(City.class, BA_Cc1_rot.getFeaturePartOf(Location.E, Road.class, City.class).getClass());
+		assertEquals(City.class, BA_Cc1_rot.getFeaturePartOf(Location.N).getClass());
+		assertEquals(City.class, BA_Cc1_rot.getFeaturePartOf(Location.E).getClass());
 	}
 
 //	@Test

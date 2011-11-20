@@ -26,7 +26,7 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 			Location river = XmlUtils.union(XmlUtils.asLocation((Element) nl.item(i)));
 			tile.setRiver(river);
 			if (tile.getSymmetry() != TileSymmetry.NONE) {
-				if (tile.getRiver().isRotationOf(Location.HORIZONTAL)) {
+				if (tile.getRiver().isRotationOf(Location.WE)) {
 					tile.setSymmetry(TileSymmetry.S2);
 				} else {
 					tile.setSymmetry(TileSymmetry.NONE);
@@ -83,7 +83,7 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 
 			//check U-turn
 			Location continueRiver = tile.getRiver().rotateCW(tile.getRotation()).substract(tileRelativePosition);
-			if (continueRiver == Location.CENTER) return true; //lake
+			if (continueRiver == Location.INNER_FARM) return true; //lake
 			for(Location continueSide: Location.sides()) { //split beacuse of river fork
 				if (continueRiver.intersect(continueSide) == null) continue;
 				Position pCheck = p.add(continueSide).add(continueSide.rotateCW(Rotation.R90));

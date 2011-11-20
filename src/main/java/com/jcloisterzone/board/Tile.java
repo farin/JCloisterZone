@@ -7,10 +7,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -93,13 +91,10 @@ public class Tile /*implements Cloneable*/ {
 		return null;
 	}
 
-	public Feature getFeaturePartOf(Location loc, Class<?/* extends FeaturePiece*/>... allowedClasses) {
-		assert allowedClasses.length > 0;
+	public Feature getFeaturePartOf(Location loc) {
 		for(Feature p : features) {
 			if (loc.isPartOf(p.getLocation())) {
-				for(Class<?> clazz : allowedClasses) {
-					if (clazz.isInstance(p)) return p;
-				}
+				return p;
 			}
 		}
 		return null;
@@ -108,25 +103,25 @@ public class Tile /*implements Cloneable*/ {
 	/** merge this to another tile - method argument is tile placed before */
 	protected void merge(Tile tile, Location loc) {
 		Location oppositeLoc = loc.rev();
-		MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc, Road.class, City.class);
+		MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
 		if (oppositePiece != null) {
 			if (isAbbeyTile()) {
 				oppositePiece.setAbbeyEdge(oppositeLoc);
 			} else {
-				MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc, Road.class, City.class);
+				MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc);
 				oppositePiece.setEdge(oppositeLoc, thisPiece);
 				thisPiece.setEdge(loc, oppositePiece);
 			}
 		}
 		for(int i = 0; i < 2; i++) {
-			Location halfSide = loc.farmHalfSide(i);
+			Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
 			Location oppositeHalfSide = halfSide.rev();
-			oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide, Farm.class);
+			oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
 			if (oppositePiece != null) {
 				if (isAbbeyTile()) {
 					oppositePiece.setAbbeyEdge(oppositeHalfSide);
 				} else {
-					MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide, Farm.class);
+					MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide);
 					oppositePiece.setEdge(oppositeHalfSide, thisPiece);
 					thisPiece.setEdge(halfSide, oppositePiece);
 				}
@@ -154,8 +149,6 @@ public class Tile /*implements Cloneable*/ {
 	public void setSymmetry(TileSymmetry symmetry) {
 		this.symmetry = symmetry;
 	}
-
-
 
 	public boolean isAbbeyTile() {
 		return id.equals(ABBEY_TILE_ID);

@@ -164,16 +164,11 @@ public class TileFactory {
 		game.expansionDelegate().initFeature(tile, farm, e);
 	}
 
-
-
 	private void initFromDirList(TileFeature piece, String[] sides) {
 		Location loc = null;
 		for(int i = 0; i < sides.length; i++) {
 			Location l = Location.valueOf(sides[i]);
-			//debug test
-			if (piece instanceof Farm && ! l.isFarmLocation()) {
-				throw new IllegalArgumentException("Configuration error. Not form location. Tile "+tile.getId());
-			}
+			assert !(piece instanceof Farm ^ l.isFarmLocation()) : "Invalid location kind for tile "+tile.getId();
 			loc = loc == null ? l : loc.union(l);
 		}
 		//logger.debug(tile.getId() + "/" + piece.getClass().getSimpleName() + "/"  + loc);
