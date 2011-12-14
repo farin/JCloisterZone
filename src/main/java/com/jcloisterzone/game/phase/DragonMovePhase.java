@@ -45,7 +45,7 @@ public class DragonMovePhase extends Phase {
 	public void moveDragon(Position p) {
 		PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
 		if (! pd.getAvailDragonMoves().contains(p)) {
-			throw new IllegalArgumentException("Ïnvalid dragon move.");
+			throw new IllegalArgumentException("Invalid dragon move.");
 		}
 		pd.getDragonVisitedTiles().add(p);
 		pd.setDragonPosition(p);
