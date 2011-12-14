@@ -2,21 +2,15 @@ package com.jcloisterzone.ai;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.ai.LegacyAiScoreContext.OpenEdge;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
@@ -207,6 +201,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		return rating;
 	}
 
+	/*
 	private double rankFeatureConnectionsOn(Position pos, OpenEdge edge, Location loc, boolean isCornerConnection) {
 		Tile tile = getBoard().get(pos.add(loc));
 		if (tile == null) return 0.0;
@@ -215,6 +210,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 		return 0.0;
 	}
+	*/
 
 	private double rankPossibleFeatureConnections() {
 		//FreePlaceInfo[] fpi = board.getFreeNei();

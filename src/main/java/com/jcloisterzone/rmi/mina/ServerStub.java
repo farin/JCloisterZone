@@ -73,10 +73,8 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
 			server.engageSlots(session.getId());
 		}
 		session.write(new ControllMessage(session.getId(), Application.PROTCOL_VERSION, server.getSnapshot()));
-		int slotId = 0;
 		for(PlayerSlot slot : server.getSlots()) {
 			session.write(new CallMessage("updateSlot", new Object[] { slot }));
-			slotId++;
 		}
 		for(Expansion exp: server.getExpansions()) {
 			session.write(new CallMessage("updateExpansion", new Object[] { exp, true }));

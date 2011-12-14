@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
-
 
 public class RecentPlacement extends AbstractAnimation {
 
@@ -44,6 +42,4 @@ public class RecentPlacement extends AbstractAnimation {
 		g.setColor(color);
 		g.fillRect(l.getOffsetX(position), l.getOffsetY(position), l.getSquareSize(), l.getSquareSize());
 	}
-
-
 }

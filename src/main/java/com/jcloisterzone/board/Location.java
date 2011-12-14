@@ -263,11 +263,6 @@ public class Location implements Serializable {
 		return value;
 	}
 
-	public static Location valueOfIndex(int index) {
-		if (index == 8) return INNER_FARM;
-		return create(1 << index);
-	}
-
 	public Rotation getRotationOf(Location loc) {
 		for(Rotation r : Rotation.values()) {
 			if (this.equals(loc.rotateCW(r))) return r;

@@ -1,6 +1,5 @@
 package com.jcloisterzone.ai.copy;
 
-import java.awt.image.TileObserver;
 import java.util.Collections;
 import java.util.Set;
 

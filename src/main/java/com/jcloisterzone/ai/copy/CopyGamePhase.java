@@ -7,11 +7,11 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 
 public class CopyGamePhase extends LoadGamePhase {
 
-	private TilePack originalTilePack;
+	//private TilePack originalTilePack;
 
 	public CopyGamePhase(Game game, Snapshot snapshot, TilePack originalTilePack) {
 		super(game, snapshot, null);
-		this.originalTilePack = originalTilePack;
+		//this.originalTilePack = originalTilePack;
 	}
 
 	@Override

@@ -7,15 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JPanel;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.ui.Client;
-
 
 public class ActionPanel extends JPanel {
 
