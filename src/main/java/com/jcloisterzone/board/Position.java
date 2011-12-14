@@ -8,9 +8,9 @@ import com.google.common.collect.ImmutableMap;
 
 
 /**
- * Reperesents position on board. Immutable class.
+ * Represents position on board. Immutable class.
  *
- * @author farin
+ * @author Roman Krejcik
  */
 public class Position implements Serializable {
 

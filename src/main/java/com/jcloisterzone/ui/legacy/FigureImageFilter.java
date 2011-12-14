@@ -8,7 +8,7 @@ import com.jcloisterzone.ui.theme.TileTheme;
 
 /**
  * Filter to change figure color.
- * @author farin
+ * @author Roman Krejcik
  */
 public class FigureImageFilter extends RGBImageFilter {
 	private Color c;

@@ -20,7 +20,7 @@ import com.jcloisterzone.game.Game;
  * which lays on tile and provides logic for tiles merging, rotating
  * and placing figures.
  *
- * @author farin
+ * @author Roman Krejcik
  */
 public class Tile /*implements Cloneable*/ {
 
@@ -48,13 +48,6 @@ public class Tile /*implements Cloneable*/ {
 		return id.hashCode();
 	}
 
-
-
-//	public char getSideMaskAt(Location loc) {
-//		return sideMask.charAt(loc.rotateCCW(rotation).ordinal());
-//	}
-
-
 	public EdgePattern getEdgePattern() {
 		return edgePattern;
 	}
@@ -63,10 +56,6 @@ public class Tile /*implements Cloneable*/ {
 		this.edgePattern = edgePattern;
 	}
 
-	/**
-	 * Gets tile ID.
-	 * @return tile ID.
-	 */
 	public String getId() {
 		return id;
 	}

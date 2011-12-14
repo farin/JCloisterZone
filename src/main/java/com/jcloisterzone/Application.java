@@ -1,5 +1,9 @@
 package com.jcloisterzone;
 
+/**
+ * Various application constants.
+ * @author Roman Krejcik
+ */
 public interface Application {
 
 	public String VERSION = "2.0-SNAPSHOT";

@@ -20,7 +20,7 @@ import com.jcloisterzone.game.PlayerSlot;
  * Represents one player in game. Contains information about figures, points and
  * control informations.<br>
  *
- * @author farin
+ * @author Roman Krejcik
  */
 public class Player implements Serializable {
 

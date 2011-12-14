@@ -19,8 +19,9 @@ import com.jcloisterzone.ui.theme.TileTheme;
 
 /**
  * Placement coordinates for figures placed on tiles.
+ * TODO should be defined as xml file for each theme
  *
- * @author farin
+ * @author Roman Krejcik
  */
 @Deprecated
 public class FigurePositionProvider {

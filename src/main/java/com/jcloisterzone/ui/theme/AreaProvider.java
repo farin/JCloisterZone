@@ -1,9 +1,3 @@
-/*
- * Created on 7.11.2004
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package com.jcloisterzone.ui.theme;
 
 import java.awt.Polygon;
@@ -32,9 +26,6 @@ import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.feature.Feature;
 
 
-/**
- * @author farin
- */
 public class AreaProvider {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());

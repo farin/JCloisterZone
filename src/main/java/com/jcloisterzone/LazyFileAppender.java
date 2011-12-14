@@ -3,6 +3,10 @@ package com.jcloisterzone;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * Creates file on first write.
+ * @author Roman Krejcik
+ */
 public class LazyFileAppender extends FileAppender {
 
 	private boolean activated;

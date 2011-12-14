@@ -15,7 +15,6 @@ import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.game.expansion.TunnelGame;
 
-
 public enum Expansion {
 	//Basic sets
 	BASIC("BA", _("Basic game")),
