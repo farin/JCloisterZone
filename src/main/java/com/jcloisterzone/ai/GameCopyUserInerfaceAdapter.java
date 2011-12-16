@@ -10,6 +10,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 
+@Deprecated //TODO DELETE
 class GameCopyUserInerfaceAdapter implements UserInterface {
 
 	private final RankingAiPlayer rankingAiPlayer;

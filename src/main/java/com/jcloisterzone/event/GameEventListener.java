@@ -46,6 +46,8 @@ public interface GameEventListener extends EventListener {
 
 	//feature events
 	void completed(Completable feature, CompletableScoreContext ctx);
+
+	//TODO ad cattegory, pack into object adne merge ?
 	void scored(Feature feature, int points, String label, Meeple meeple, boolean isFinal);
 	void scored(Position position, Player player, int points, String label, boolean isFinal);
 

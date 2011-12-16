@@ -10,6 +10,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.game.Game;
 
+@Deprecated //TODEL
 public class TilePackCopy implements TilePack {
 
 	private final TilePack tilePack;

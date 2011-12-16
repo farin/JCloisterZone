@@ -1,9 +1,7 @@
 package com.jcloisterzone.ai;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,7 +10,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -21,8 +18,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.phase.Phase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
+
+	enum GameState { PLAY, RANK; };
 
 	class PositionLocation {
 		Position position;
@@ -31,24 +31,35 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private Deque<GameBackup> backups = new ArrayDeque<GameBackup>();
-	private UserInterface gameCopyUiAdapter = new GameCopyUserInerfaceAdapter(this);
+	//private Deque<SavePointManager> backups = new ArrayDeque<SavePointManager>();
+	private SavePointManager spm;
+//	private UserInterface gameCopyUiAdapter = new GameCopyUserInerfaceAdapter(this);
 
 	private PositionRanking bestSoFar;
 	private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
-	protected void backup() {
-		backups.push(new GameBackup(getGame()));
-	}
+	private GameState gameState = GameState.PLAY;
 
-	protected void copy() {
-		Game game = backups.peek().copy();
-		game.addUserInterface(gameCopyUiAdapter);
-		setGame(game);
-	}
+//	protected void backup() {
+//		backups.push(new SavePointManager(getGame()));
+//	}
+//
+//	protected void copy() {
+//		Game game = backups.peek().copy();
+//		game.addUserInterface(gameCopyUiAdapter);
+//		setGame(game);
+//	}
+//
+//	protected void restore() {
+//		setGame(backups.pop().getGame());
+//	}
 
-	protected void restore() {
-		setGame(backups.pop().getGame());
+	//TODO copy game for AI purposes ???
+
+	@Override
+	public void setGame(Game game) {
+		super.setGame(game);
+		spm = new SavePointManager(game);
 	}
 
 	@Override
@@ -56,35 +67,49 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		throw new UnsupportedOperationException();
 	}
 
+	/* TEMPORARY COPIED FROM CLIENT STUB */
+	@Deprecated
+	private void phaseLoop() {
+		Phase phase = getGame().getPhase();
+		while(! phase.isEntered()) {
+			phase.setEntered(true);
+			phase.enter();
+			phase = getGame().getPhase();
+		}
+	}
+
 	@Override
 	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+		gameState = GameState.RANK;
 		bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
-		backup();
+		spm.startRecording();
+		SavePoint sp = spm.save();
 		for(Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
 			Position pos = entry.getKey();
 			for(Rotation rot : entry.getValue()) {
-				copy();
 				getGame().getPhase().placeTile(rot, pos);
+				phaseLoop();
 				double currRank = rank();
 				if (currRank > bestSoFar.getRank()) {
 					bestSoFar = new PositionRanking(currRank, pos, rot);
 				}
+				spm.restore(sp);
+				//TODO fix hopefulGatePlacement
 				//now rank meeple placements - must restore because rank change game
-				copy();
-				getGame().getPhase().placeTile(rot, pos);
+				//getGame().getPhase().placeTile(rot, pos);
 				hopefulGatePlacements.clear();
+				spm.restore(sp);
 				//TODO add best placements for MAGIC GATE
-				getGame().getPhase().enter();
+				//getGame().getPhase().enter();
 			}
 		}
-		restore();
+		spm.stopRecording();
+		gameState = GameState.PLAY;
 		logger.info("Selected move is: {}", bestSoFar);
 		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 	}
 
 	public void rankAction(List<PlayerAction> actions) {
-		backup();
-
 		for(PlayerAction action : actions) {
 			if (action instanceof MeepleAction) {
 				MeepleAction ma = (MeepleAction) action;
@@ -96,15 +121,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				}
 			}
 		}
-		restore();
 	}
 
 	public void rankMeepleAction(Tile currTile, MeepleAction meepleAction, Position pos, Set<Location> locations) {
 		if (locations == null) {
 			return;
 		}
+		SavePoint sp = spm.save();
 		for(Location loc : locations) {
-			copy();
 			getGame().getPhase().deployMeeple(pos, loc, meepleAction.getMeepleType());
 			double currRank = rank();
 			if (currRank > bestSoFar.getRank()) {
@@ -113,11 +137,17 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				bestSoFar.setActionPosition(pos);
 				bestSoFar.setActionLocation(loc);
 			}
+			spm.restore(sp);
 		}
 	}
 
 	@Override
 	public void selectAction(List<PlayerAction> actions) {
+		if (gameState == GameState.RANK) {
+			rankAction(actions);
+			return;
+		}
+
 		if (bestSoFar.getAction() instanceof MeepleAction) {
 			MeepleAction action = (MeepleAction) bestSoFar.getAction();
 			action.perform(getServer(), bestSoFar.getActionPosition(), bestSoFar.getActionLocation());

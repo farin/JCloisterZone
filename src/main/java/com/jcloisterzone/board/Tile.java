@@ -165,7 +165,7 @@ public class Tile /*implements Cloneable*/ {
 	}
 
 
-	protected void setPosition(Position p) {
+	public void setPosition(Position p) {
 		position = p;
 	}
 

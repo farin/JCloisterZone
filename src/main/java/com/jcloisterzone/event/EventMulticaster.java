@@ -40,6 +40,15 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 		return new EventMulticaster(a, b);
 	}
 
+	public static EventListener removeListener(EventListener l, EventListener lOld) {
+		if (l instanceof EventMulticaster) {
+			EventMulticaster mc = (EventMulticaster) l;
+			return addListener(removeListener(mc.a, lOld), removeListener(mc.b, lOld));
+		} else {
+			return l == lOld ? null : l;
+		}
+	}
+
 	@Override
 	public void updateCustomRule(CustomRule rule, Boolean enabled) {
 		((GameEventListener)a).updateCustomRule(rule, enabled);

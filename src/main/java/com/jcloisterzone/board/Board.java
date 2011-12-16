@@ -116,7 +116,7 @@ public class Board {
 			Position next = p.add(offset);
 			if (get(next) == null) {
 				availMovesAdd(next);
-				if (checkHole(next)) {
+				if (isHole(next)) {
 					holes.add(next);
 				}
 			}
@@ -129,6 +129,23 @@ public class Board {
 		if (p.y < minY) minY = p.y;
 	}
 
+	public void remove(Position pos) {
+		assert tiles.containsKey(pos);
+		Tile tile = tiles.remove(pos);
+		tile.setPosition(null);
+		availMovesAdd(pos);
+		if (isHole(pos)) holes.add(pos);
+		for(Position offset: Position.ADJACENT.values()) {
+			Position next = pos.add(offset);
+			holes.remove(next);
+			if (getAdjacentCount(next) == 0) {
+				availMoves.remove(next);
+			}
+		}
+	}
+
+
+
 	public void discardTile(String tileId) {
 		discardedTiles.add(tileId);
 		game.fireGameEvent().tileDiscarded(tileId);
@@ -138,7 +155,7 @@ public class Board {
 		return discardedTiles;
 	}
 
-	private boolean checkHole(Position p) {
+	private boolean isHole(Position p) {
 		for(Position offset: Position.ADJACENT.values()) {
 			Position next = p.add(offset);
 			if (get(next) == null) {
@@ -146,6 +163,17 @@ public class Board {
 			}
 		}
 		return true;
+	}
+
+	private int getAdjacentCount(Position p) {
+		int count = 0;
+		for(Position offset: Position.ADJACENT.values()) {
+			Position next = p.add(offset);
+			if (get(next) != null) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public Map<Position, Set<Rotation>> getAvailablePlacements() {

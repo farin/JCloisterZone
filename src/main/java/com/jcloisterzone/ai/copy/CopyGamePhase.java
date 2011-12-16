@@ -5,6 +5,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 
+@Deprecated // TODEL
 public class CopyGamePhase extends LoadGamePhase {
 
 	//private TilePack originalTilePack;

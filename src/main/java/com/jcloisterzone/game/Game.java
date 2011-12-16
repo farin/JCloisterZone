@@ -100,6 +100,9 @@ public class Game extends GameSettings {
 	public void addGameListener(GameEventListener listener) {
 		eventListener = (GameEventListener) EventMulticaster.addListener(eventListener, listener);
 	}
+	public void removeGameListener(GameEventListener listener) {
+		eventListener = (GameEventListener) EventMulticaster.removeListener(eventListener, listener);
+	}
 	public UserInterface getUserInterface() {
 		return userInterface;
 	}
