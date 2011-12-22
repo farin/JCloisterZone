@@ -3,6 +3,9 @@ package com.jcloisterzone.ai;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
 import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;
@@ -23,6 +26,8 @@ public class SavePointManager {
 	private final Game game;
 	protected Deque<Operation> operations = new ArrayDeque<Operation>();
 	private GameEventListener operationRecorder = new OperationRecorder();
+	
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	public SavePointManager(Game game) {
 		this.game = game;
@@ -55,6 +60,7 @@ public class SavePointManager {
 			if (item == spOp) {
 				break;
 			}
+			logger.info("      < undo {}", item);
 			operations.pollLast().undo(game);
 		}
 		Phase phase = sp.getPhase();

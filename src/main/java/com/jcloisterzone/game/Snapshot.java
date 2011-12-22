@@ -68,7 +68,6 @@ public class Snapshot implements Serializable {
 		createPlayerElements(game, clientId);
 		createTileElements(game);
 		createMeepleElements(game);
-
 	}
 
 	public Snapshot(File savedGame) throws IOException, SAXException {

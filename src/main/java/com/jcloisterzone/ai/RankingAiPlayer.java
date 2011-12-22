@@ -13,11 +13,14 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.ai.copy.CopyGamePhase;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.Phase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
@@ -59,7 +62,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	@Override
 	public void setGame(Game game) {
 		super.setGame(game);
-		spm = new SavePointManager(game);
+		//spm = new SavePointManager(game);
 	}
 
 	@Override
@@ -72,14 +75,38 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	private void phaseLoop() {
 		Phase phase = getGame().getPhase();
 		while(! phase.isEntered()) {
+			//logger.info("  * not entered {} -> {}", phase, phase.getDefaultNext());
 			phase.setEntered(true);
 			phase.enter();
-			phase = getGame().getPhase();
+			//phase = getGame().getPhase();
+			break; //now only transition Tile -> Action phase
 		}
+	}
+	
+	//TEMPORARY method
+	//TODO fast game copying without snapshot ?
+	//TODO do not recreate SavePointManager
+	private void copyGame() {
+		Snapshot snapshot = new Snapshot(getGame(), 0); 
+		Game gameCopy = snapshot.asGame();		
+		gameCopy.setConfig(getGame().getConfig());
+		gameCopy.addGameListener(new GameEventAdapter());
+		gameCopy.addUserInterface(this);
+		Phase phase = new CopyGamePhase(gameCopy, snapshot, getGame().getTilePack());
+		gameCopy.getPhases().put(phase.getClass(), phase);
+		gameCopy.setPhase(phase);
+		phase.startGame();
+		setGame(gameCopy);
 	}
 
 	@Override
 	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+		logger.info("---------- Ranking start ---------------");
+		logger.info("Positions: {} ", placements.keySet());
+		
+		Game original = getGame();
+		copyGame();
+		spm = new SavePointManager(getGame());
 		gameState = GameState.RANK;
 		bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
 		spm.startRecording();
@@ -87,7 +114,10 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		for(Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
 			Position pos = entry.getKey();
 			for(Rotation rot : entry.getValue()) {
+				//logger.info("  * phase {} -> {}", getGame().getPhase(), getGame().getPhase().getDefaultNext());
+				logger.info("  * placing {} {}", pos, rot);
 				getGame().getPhase().placeTile(rot, pos);
+				//logger.info("  * phase {} -> {}", getGame().getPhase(), getGame().getPhase().getDefaultNext());
 				phaseLoop();
 				double currRank = rank();
 				if (currRank > bestSoFar.getRank()) {
@@ -105,6 +135,8 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 		spm.stopRecording();
 		gameState = GameState.PLAY;
+		setGame(original);
+		spm = null;
 		logger.info("Selected move is: {}", bestSoFar);
 		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 	}
@@ -129,6 +161,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 		SavePoint sp = spm.save();
 		for(Location loc : locations) {
+			logger.info("    . deploying {}", meepleAction.getMeepleType());
 			getGame().getPhase().deployMeeple(pos, loc, meepleAction.getMeepleType());
 			double currRank = rank();
 			if (currRank > bestSoFar.getRank()) {

@@ -29,8 +29,7 @@ public abstract class Follower extends Meeple {
 	}
 
 
-	//TOHLE MUZE BYT PRIMOVE SCORE VISTORU
-
+	//TODO ??? can be this in score visitor instead of here ???
 	public void undeploy(boolean checkForLonelyBuilderOrPig) {
 		Feature piece = getFeature();
 		super.undeploy(checkForLonelyBuilderOrPig);

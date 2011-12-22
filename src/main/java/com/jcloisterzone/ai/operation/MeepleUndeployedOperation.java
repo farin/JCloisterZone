@@ -2,6 +2,7 @@ package com.jcloisterzone.ai.operation;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 
@@ -19,7 +20,11 @@ public class MeepleUndeployedOperation implements Operation {
 
 	@Override
 	public void undo(Game game) {
-		meeple.deploy(tile, loc);
+		Feature feature = tile.getFeature(loc);
+		feature.setMeeple(meeple);
+		meeple.setPosition(tile.getPosition());
+		meeple.setLocation(loc);
+		meeple.setFeature(feature);	
 	}
 
 }

@@ -24,7 +24,10 @@ public class CopyGamePhase extends LoadGamePhase {
 	protected void prepareAiPlayers() {
 		//empty
 	}
-
+	
+//	protected void preplaceTiles() {		
+//	}
+//
 //	@Override
 //	protected void prepareTilePack() {
 //		TilePack tilePack = new TilePackCopy(originalTilePack, game);

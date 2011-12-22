@@ -14,7 +14,7 @@ import com.jcloisterzone.game.Game;
 public class TilePackCopy implements TilePack {
 
 	private final TilePack tilePack;
-	private Tile currentTileCopy;
+	//private Tile currentTileCopy;
 	private Game game;
 
 	public TilePackCopy(TilePack tilePack, Game game) {
@@ -24,19 +24,20 @@ public class TilePackCopy implements TilePack {
 
 	@Override
 	public Tile getCurrentTile() {
-		if (currentTileCopy == null) {
-			//TODO load without parsing ?
-			//currentTileCopy = (Tile) originalTile.clone();
-			//currentTileCopy.setGame(game);
-
-			Tile originalTile = tilePack.getCurrentTile();
-			Expansion tileExpansion = Expansion.valueOfCode(originalTile.getId().substring(0, 2));
-			TilePackFactory tilePackFactory = new TilePackFactory();
-			tilePackFactory.setGame(game);
-			tilePackFactory.setExpansions(Collections.singleton(tileExpansion));
-			currentTileCopy = tilePackFactory.createTileForId(originalTile.getId());
-		}
-		return currentTileCopy;
+//		if (currentTileCopy == null) {
+//			//TODO load without parsing ?
+//			//currentTileCopy = (Tile) originalTile.clone();
+//			//currentTileCopy.setGame(game);
+//
+//			Tile originalTile = tilePack.getCurrentTile();
+//			Expansion tileExpansion = Expansion.valueOfCode(originalTile.getId().substring(0, 2));
+//			TilePackFactory tilePackFactory = new TilePackFactory();
+//			tilePackFactory.setGame(game);
+//			tilePackFactory.setExpansions(Collections.singleton(tileExpansion));
+//			currentTileCopy = tilePackFactory.createTileForId(originalTile.getId());
+//		}
+//		return currentTileCopy;
+		return tilePack.getCurrentTile();
 	}
 
 	@Override
@@ -65,8 +66,7 @@ public class TilePackCopy implements TilePack {
 	}
 
 	@Override
-	public void cleanUpTurn() {
-		currentTileCopy = null;
+	public void cleanUpTurn() {		
 	}
 
 	@Override
@@ -86,7 +86,10 @@ public class TilePackCopy implements TilePack {
 
 	@Override
 	public Tile drawTile(String tileId) {
-		throw new UnsupportedOperationException("Tile pack cannot be modified");
+		if (tileId.equals(tilePack.getCurrentTile().getId())) {
+			return tilePack.getCurrentTile();
+		}
+		throw new UnsupportedOperationException("Cannot draw another tile.");
 	}
 
 	@Override
