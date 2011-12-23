@@ -120,7 +120,7 @@ public class Snapshot implements Serializable {
 			Element el = doc.createElement("expansion");
 			el.setAttribute("name", exp.name());
 			root.appendChild(el);
-			ExpandedGame expandedBy = game.getExpandedGame(exp);
+			ExpandedGame expandedBy = game.getExpandedGameFor(exp);
 			if (expandedBy != null) {
 				expandedBy.saveToSnapshot(doc, el);
 			}
@@ -243,7 +243,7 @@ public class Snapshot implements Serializable {
 		for(int i = 0; i < nl.getLength(); i++) {
 			Element el = (Element) nl.item(i);
 			Expansion exp = Expansion.valueOf(el.getAttribute("name"));
-			ExpandedGame eg = game.getExpandedGame(exp);
+			ExpandedGame eg = game.getExpandedGameFor(exp);
 			if (eg != null) {
 				eg.loadFromSnapshot(doc, el);
 			}

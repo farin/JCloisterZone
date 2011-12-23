@@ -39,10 +39,16 @@ public class ExpandedGame implements GameDelegation {
 	protected Tile getTile() {
 		return getTilePack().getCurrentTile();
 	}
+	
+	/** 
+	 * @return object copy or null if expansion is stateless
+	 */
+	public ExpandedGame copy() {
+		return null; 
+	}
 
 	public void saveToSnapshot(Document doc, Element node) {
 	}
-
 
 	public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
 	}

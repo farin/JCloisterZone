@@ -91,14 +91,12 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 	public Set<Position> getAvailDragonMoves() {
 		Set<Position> result = Sets.newHashSet();
 		for(Position offset: Position.ADJACENT.values()) {
-			Tile tile = getBoard().get(dragonPosition.add(offset));
-			if (dragonVisitedTiles.contains(tile.getPosition())) {
-				continue;
-			}
-			if (tile.getPosition().equals(fairyPosition)) {
-				continue;
-			}
-			result.add(tile.getPosition());
+			Position position = dragonPosition.add(offset);
+			Tile tile = getBoard().get(position);
+			if (tile == null) continue;
+			if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
+			if (position.equals(fairyPosition)) { continue; }
+			result.add(position);
 		}
 		return result;
 	}
@@ -173,6 +171,19 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 			actions.add(princessAction);
 		}
 	}
+	
+	@Override
+	public PrincessAndDragonGame copy() {
+		PrincessAndDragonGame copy = new PrincessAndDragonGame();
+		copy.game = game;		
+		copy.dragonPosition = dragonPosition;
+		copy.dragonMovesLeft = dragonMovesLeft;
+		copy.dragonPlayer = dragonPlayer;
+		if (dragonVisitedTiles != null) copy.dragonVisitedTiles = Sets.newHashSet(dragonVisitedTiles);
+		copy.fairyPosition = fairyPosition;
+		return copy;
+	}
+	
 
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {
@@ -182,10 +193,12 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 			if (dragonMovesLeft > 0) {
 				dragon.setAttribute("moves", "" + dragonMovesLeft);
 				dragon.setAttribute("movingPlayer", "" + dragonPlayer);
-				for(Position visited : dragonVisitedTiles) {
-					Element ve = doc.createElement("visited");
-					XmlUtils.injectPosition(ve, visited);
-					dragon.appendChild(ve);
+				if (dragonVisitedTiles != null) {
+					for(Position visited : dragonVisitedTiles) {
+						Element ve = doc.createElement("visited");
+						XmlUtils.injectPosition(ve, visited);
+						dragon.appendChild(ve);
+					}
 				}
 			}
 			node.appendChild(dragon);

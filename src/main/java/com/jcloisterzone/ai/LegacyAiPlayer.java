@@ -48,6 +48,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	public static EnumSet<Expansion> supportedExpansions() {
 		return EnumSet.of(
 			Expansion.BASIC,
+			Expansion.ABBEY_AND_MAYOR,
 			Expansion.INNS_AND_CATHEDRALS,
 			Expansion.TRADERS_AND_BUILDERS,
 			Expansion.PRINCESS_AND_DRAGON,
@@ -91,7 +92,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		//objectRatings.clear();
 
 		return ranking;
-	}
+	}	
 
 	protected double reducePoints(double points, Player p) {
 		if (isMe(p)) return points;

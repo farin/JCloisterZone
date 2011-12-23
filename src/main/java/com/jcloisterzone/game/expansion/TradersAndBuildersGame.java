@@ -151,7 +151,15 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 		if (builderState == BuilderState.BUILDER_TURN) {
 			builderState = BuilderState.INACTIVE;
 		}
-
+	}
+	
+	@Override
+	public TradersAndBuildersGame copy() {
+		TradersAndBuildersGame copy = new TradersAndBuildersGame();
+		copy.game = game;	
+		copy.builderState = builderState;
+		copy.tradeResources = Maps.newHashMap(tradeResources);
+		return copy;
 	}
 
 	@Override
@@ -179,4 +187,3 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
 	}
 }
-

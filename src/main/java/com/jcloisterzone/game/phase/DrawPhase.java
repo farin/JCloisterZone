@@ -43,9 +43,9 @@ public class DrawPhase extends ServerAwarePhase {
 					//helper code for better behavior when debug draw is "river-invalid"
 					//river II must be checke first!
 					if (game.hasExpansion(Expansion.RIVER_II)) {
-						((RiverIIGame)game.getExpandedGame(Expansion.RIVER_II)).activateNonRiverTiles();
+						((RiverIIGame)game.getExpandedGameFor(Expansion.RIVER_II)).activateNonRiverTiles();
 					} else if (game.hasExpansion(Expansion.RIVER)) {
-						((RiverGame)game.getExpandedGame(Expansion.RIVER)).activateNonRiverTiles();
+						((RiverGame)game.getExpandedGameFor(Expansion.RIVER)).activateNonRiverTiles();
 					}
 					tilePack.deactivateGroup("river-start");
 					((DefaultTilePack)tilePack).setCurrentTile(tile); //recovery from lake placement

@@ -130,6 +130,16 @@ public final class TunnelGame extends ExpandedGame {
 		placedTunnelCurrentTurn = road;
 		game.fireGameEvent().tunnelPiecePlaced(player, p, d, isB);
 	}
+	
+	@Override
+	public TunnelGame copy() {		
+		TunnelGame copy = new TunnelGame();
+		copy.game = game;		
+		copy.placedTunnelCurrentTurn = placedTunnelCurrentTurn;
+		copy.tunnelTokensA = Maps.newHashMap(tunnelTokensA);
+		copy.tunnelTokensB = Maps.newHashMap(tunnelTokensB);
+		return copy;
+	}
 
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {

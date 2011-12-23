@@ -10,6 +10,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -25,8 +26,6 @@ import com.jcloisterzone.game.phase.Phase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
 
-	enum GameState { PLAY, RANK; };
-
 	class PositionLocation {
 		Position position;
 		Location location;
@@ -34,40 +33,16 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	//private Deque<SavePointManager> backups = new ArrayDeque<SavePointManager>();
+	private Game original;
 	private SavePointManager spm;
-//	private UserInterface gameCopyUiAdapter = new GameCopyUserInerfaceAdapter(this);
 
 	private PositionRanking bestSoFar;
-	private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
-
-	private GameState gameState = GameState.PLAY;
-
-//	protected void backup() {
-//		backups.push(new SavePointManager(getGame()));
-//	}
-//
-//	protected void copy() {
-//		Game game = backups.peek().copy();
-//		game.addUserInterface(gameCopyUiAdapter);
-//		setGame(game);
-//	}
-//
-//	protected void restore() {
-//		setGame(backups.pop().getGame());
-//	}
-
-	//TODO copy game for AI purposes ???
+	//private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
 	@Override
 	public void setGame(Game game) {
 		super.setGame(game);
 		//spm = new SavePointManager(game);
-	}
-
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		throw new UnsupportedOperationException();
 	}
 
 	/* TEMPORARY COPIED FROM CLIENT STUB */
@@ -84,9 +59,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	}
 	
 	//TEMPORARY method
-	//TODO fast game copying without snapshot ?
+	//TODO fast game copying without snapshot ? or without re creating board and tile instances 
 	//TODO do not recreate SavePointManager
-	private void copyGame() {
+	private void backupGame() {
+		assert original == null;
+		original = getGame();
+		
 		Snapshot snapshot = new Snapshot(getGame(), 0); 
 		Game gameCopy = snapshot.asGame();		
 		gameCopy.setConfig(getGame().getConfig());
@@ -97,19 +75,50 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		gameCopy.setPhase(phase);
 		phase.startGame();
 		setGame(gameCopy);
+		
+		spm = new SavePointManager(getGame());
+		bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
+		spm.startRecording();
+	}
+	
+	private void restoreGame() {
+		assert original != null;		
+		spm.stopRecording();		
+		spm = null;
+		setGame(original);
+		original = null;		
+	}
+	
+	private boolean isRankingInProcess() {
+		return original != null;
+	}
+	
+	
+	@Override
+	public void selectAbbeyPlacement(Set<Position> positions) {
+		Map<Position, Set<Rotation>> placements = Maps.newHashMap();
+		for(Position pos : positions) {
+			placements.put(pos, Collections.singleton(Rotation.R0));
+		}
+		rankTilePlacement(placements);		
+		if (bestSoFar.getRank() > 2.0) {			
+			getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
+		} else {			
+			getServer().placeNoTile();
+		}
 	}
 
 	@Override
 	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+		rankTilePlacement(placements);
+		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
+	}
+	
+	protected void rankTilePlacement(Map<Position, Set<Rotation>> placements) {
 		logger.info("---------- Ranking start ---------------");
 		logger.info("Positions: {} ", placements.keySet());
 		
-		Game original = getGame();
-		copyGame();
-		spm = new SavePointManager(getGame());
-		gameState = GameState.RANK;
-		bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
-		spm.startRecording();
+		backupGame();				
 		SavePoint sp = spm.save();
 		for(Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
 			Position pos = entry.getKey();
@@ -127,18 +136,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				//TODO fix hopefulGatePlacement
 				//now rank meeple placements - must restore because rank change game
 				//getGame().getPhase().placeTile(rot, pos);
-				hopefulGatePlacements.clear();
+				//hopefulGatePlacements.clear();
 				spm.restore(sp);
 				//TODO add best placements for MAGIC GATE
 				//getGame().getPhase().enter();
 			}
-		}
-		spm.stopRecording();
-		gameState = GameState.PLAY;
-		setGame(original);
-		spm = null;
-		logger.info("Selected move is: {}", bestSoFar);
-		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
+		}		
+		restoreGame();
+		logger.info("Selected move is: {}", bestSoFar);		
 	}
 
 	public void rankAction(List<PlayerAction> actions) {
@@ -148,9 +153,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				Tile currTile = getGame().getTilePack().getCurrentTile();
 				Position pos = currTile.getPosition();
 				rankMeepleAction(currTile, ma, pos, ma.getSites().get(pos));
-				for(PositionLocation posloc : hopefulGatePlacements) {
-					rankMeepleAction(currTile, ma, posloc.position, Collections.singleton(posloc.location));
-				}
+//				for(PositionLocation posloc : hopefulGatePlacements) {
+//					rankMeepleAction(currTile, ma, posloc.position, Collections.singleton(posloc.location));
+//				}
 			}
 		}
 	}
@@ -176,7 +181,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 	@Override
 	public void selectAction(List<PlayerAction> actions) {
-		if (gameState == GameState.RANK) {
+		if (isRankingInProcess()) {
 			rankAction(actions);
 			return;
 		}

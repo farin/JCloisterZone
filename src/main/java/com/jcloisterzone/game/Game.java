@@ -239,15 +239,20 @@ public class Game extends GameSettings {
 		}
 		board = new Board(this);
 	}
+	
+	//TODO refactor and clear
 
-
-	Collection<ExpandedGame> getExpandedGames() {
+	public Collection<ExpandedGame> getExpandedGames() {
 		return expandedGames.values();
 	}
-
-	public ExpandedGame getExpandedGame(Expansion expansion) {
-		return expandedGames.get(expansion);
+	
+	public Map<Expansion, ExpandedGame> getExpandedGamesMap() {
+		return expandedGames;
 	}
+
+	public ExpandedGame getExpandedGameFor(Expansion expansion) {
+		return expandedGames.get(expansion);
+	}	
 
 	public GameDelegation expansionDelegate() {
 		return expandedGamesDelegate;

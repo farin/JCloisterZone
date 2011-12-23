@@ -199,7 +199,17 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		return true;
 	}
 
-
+	
+	@Override
+	public AbbeyAndMayorGame copy() {
+		AbbeyAndMayorGame copy = new AbbeyAndMayorGame();
+		copy.game = game;
+		copy.unusedAbbey = Sets.newHashSet(unusedAbbey);
+		copy.returnedWagons = Maps.newHashMap(returnedWagons);
+		copy.vagonPlayer = vagonPlayer;
+		return copy;
+	}
+	
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {
 		for(Entry<Player, Feature> rv : returnedWagons.entrySet()) {
@@ -238,16 +248,11 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		}
 	}
 
-
 	public Player getVagonPlayer() {
 		return vagonPlayer;
 	}
 
-
 	public void setVagonPlayer(Player vagonPlayer) {
 		this.vagonPlayer = vagonPlayer;
 	}
-
-
 }
-

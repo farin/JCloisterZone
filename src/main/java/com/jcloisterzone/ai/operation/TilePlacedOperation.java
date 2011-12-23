@@ -1,6 +1,8 @@
 package com.jcloisterzone.ai.operation;
 
+import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
 
 public class TilePlacedOperation implements Operation {
@@ -12,9 +14,10 @@ public class TilePlacedOperation implements Operation {
 	}
 
 	@Override
-	public void undo(Game game) {
-		game.getBoard().remove(tile.getPosition());
-		//TODO undo register tower here ?
+	public void undo(Game game) {		
+		game.getBoard().remove(tile.getPosition());		
+		if (tile.isAbbeyTile()) {
+			((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
+		}
 	}
-
 }

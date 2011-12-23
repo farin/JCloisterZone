@@ -89,7 +89,19 @@ public final class KingAndScoutGame extends ExpandedGame {
 	public Player getRobberBaron() {
 		return robberBaron;
 	}
-
+	
+	@Override
+	public KingAndScoutGame copy() {
+		KingAndScoutGame copy = new KingAndScoutGame();
+		copy.game = game;
+		copy.completedCities = completedCities;
+		copy.biggestCitySize = biggestCitySize;
+		copy.completedRoads = completedRoads;
+		copy.longestRoadLength = longestRoadLength;
+		copy.king = king;
+		copy.robberBaron = robberBaron;
+		return copy;
+	}
 
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {

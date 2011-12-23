@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
@@ -178,6 +180,20 @@ public final class TowerGame extends ExpandedGame {
 	public void turnCleanUp() {
 		ransomPaidThisTurn = false;
 	}
+	
+	@Override
+	public TowerGame copy() {
+		TowerGame copy = new TowerGame();
+		copy.game = game;
+		copy.towers = Sets.newHashSet(towers);
+		copy.towerPieces = Maps.newHashMap(towerPieces);
+		copy.ransomPaidThisTurn = ransomPaidThisTurn;
+		copy.prisoners = Maps.newHashMap();
+		for(Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
+			copy.prisoners.put(entry.getKey(), Lists.newArrayList(entry.getValue()));
+		}
+		return copy;
+	}
 
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {
@@ -232,7 +248,5 @@ public final class TowerGame extends ExpandedGame {
 				inprison(m, player);
 			}
 		}
-
 	}
-
 }

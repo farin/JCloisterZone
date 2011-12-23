@@ -2,10 +2,12 @@ package com.jcloisterzone.ai;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
 import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;
@@ -18,6 +20,7 @@ import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -48,7 +51,7 @@ public class SavePointManager {
 
 	public SavePoint save() {
 		Operation op = operations.isEmpty() ? null : operations.peekLast();
-		return new SavePoint(op, game.getPhase());
+		return new SavePoint(op, game);
 	}
 
 	public void restore(SavePoint sp) {
@@ -62,6 +65,9 @@ public class SavePointManager {
 			}
 			logger.info("      < undo {}", item);
 			operations.pollLast().undo(game);
+		}
+		for(Entry<Expansion, ExpandedGame> entry : sp.getFrozenExpandedGames().entrySet()) {
+			game.getExpandedGamesMap().put(entry.getKey(), entry.getValue().copy());
 		}
 		Phase phase = sp.getPhase();
 		game.setPhase(phase);

@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -51,6 +52,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
@@ -502,6 +504,11 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public void playerActivated(Player turnPlayer, Player activePlayer) {
 		this.activePlayer = activePlayer;
 		controlPanel.playerActivated(turnPlayer, activePlayer);
+		
+		//TODO better image quality ?
+		Color c = getPlayerColor(activePlayer);				
+		Image image = getFigureTheme().getFigureImage(SmallFollower.class, c, null);			
+		setIconImage(image);
 	}
 
 	@Override
@@ -578,7 +585,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 			beep();
 			controlPanel.selectTilePlacement(positions);
 		}
-		mainPanel.selectTilePlacement(positions);
+		mainPanel.selectTilePlacement(positions);	
 	}
 
 	@Override

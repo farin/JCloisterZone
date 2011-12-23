@@ -60,5 +60,4 @@ public class DragonMovePhase extends Phase {
 		next(DragonMovePhase.class);
 	}
 
-
 }
