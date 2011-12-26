@@ -107,21 +107,6 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	//active player must be cached locally because of game's active player record is changed in other thread immediately
 	private Player activePlayer;
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-	        public void run() {
-	        	String configFile = System.getProperty("config");
-	        	if (configFile == null) {
-	        		configFile = "config.ini";
-	        	}
-	        	Client client = new Client(configFile);
-	        	if (client.getConfig().get("debug", "autostart", boolean.class)) {
-	        		client.createGame();
-	        	}
-	        }
-	    });
-	}
-
 	protected ClientStub getClientStub() {
 		return (ClientStub) Proxy.getInvocationHandler(server);
 	}
@@ -361,7 +346,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	    handler.connect(ia, port);
 	}
 
-	public void save() {
+	public void handleSave() {
 		JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setDialogTitle(_("Save game"));
@@ -405,7 +390,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		}
 	}
 
-	public void load() {
+	public void handleLoad() {
 		if (! closeGame()) return;
 		JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -427,6 +412,16 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 				}
 			}
 	    }
+	}
+
+	public void handleQuit() {
+		if (closeGame() == true) {
+			System.exit(0);
+		}
+	}
+
+	public void handleAbout() {
+		new AboutDialog();
 	}
 
 	public boolean isClientActive() {
@@ -504,10 +499,10 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public void playerActivated(Player turnPlayer, Player activePlayer) {
 		this.activePlayer = activePlayer;
 		controlPanel.playerActivated(turnPlayer, activePlayer);
-		
+
 		//TODO better image quality ?
-		Color c = getPlayerColor(activePlayer);				
-		Image image = getFigureTheme().getFigureImage(SmallFollower.class, c, null);			
+		Color c = getPlayerColor(activePlayer);
+		Image image = getFigureTheme().getFigureImage(SmallFollower.class, c, null);
 		setIconImage(image);
 	}
 
@@ -585,7 +580,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 			beep();
 			controlPanel.selectTilePlacement(positions);
 		}
-		mainPanel.selectTilePlacement(positions);	
+		mainPanel.selectTilePlacement(positions);
 	}
 
 	@Override

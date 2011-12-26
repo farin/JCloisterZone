@@ -16,7 +16,7 @@
   </repositories>
 
 
-  <dependencies>  	
+  <dependencies>
 	<dependency>
     <groupId>com.google.guava</groupId>
     	<artifactId>guava</artifactId>
@@ -47,6 +47,11 @@
       <artifactId>gettext-commons</artifactId>
       <version>0.9.6</version>
     </dependency>
+    <dependency>
+		<groupId>com.apple</groupId>
+		<artifactId>AppleJavaExtensions</artifactId>
+		<version>1.4</version>
+	</dependency>
 
 
 
@@ -111,7 +116,7 @@
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                 <manifestEntries>
-                    <Main-Class>com.jcloisterzone.ui.Client</Main-Class>
+                    <Main-Class>com.jcloisterzone.ui.Bootstrap</Main-Class>
                     <SplashScreen-Image>sysimages/jcloisterzone.png</SplashScreen-Image>
                     <Class-Path>.</Class-Path>
                  </manifestEntries>

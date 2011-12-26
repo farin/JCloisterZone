@@ -31,6 +31,8 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(Client client2) {
 		this.client = client2;
 
+		boolean isMac = Bootstrap.isMac();
+
 		JMenu menu;
 		JMenuItem menuItem;
 
@@ -74,7 +76,7 @@ public class MenuBar extends JMenuBar {
 		save.setEnabled(false);
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				client.save();
+				client.handleSave();
 			}
 		});
 		menu.add(save);
@@ -83,22 +85,22 @@ public class MenuBar extends JMenuBar {
 		load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				client.load();
+				client.handleLoad();
 			}
 		});
 		menu.add(load);
 
-		menu.addSeparator();
+		if (! isMac) {
+			menu.addSeparator();
 
-		menuItem = new JMenuItem(_("Quit"));
-		menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (client.closeGame() == true) {
-					System.exit(0);
+			menuItem = new JMenuItem(_("Quit"));
+			menuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					client.handleQuit();
 				}
-			}
-		});
-		menu.add(menuItem);
+			});
+			menu.add(menuItem);
+		}
 
 		this.add(menu);
 
@@ -228,26 +230,30 @@ public class MenuBar extends JMenuBar {
 
 		this.add(menu);
 
-		menu = new JMenu(_("Help"));
+		if (! isMac) {
 
-//		menuItem = new JMenuItem(_("Rules"));
-//		menuItem.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				//emty for now
-//			}
-//		});
-//		menuItem.setEnabled(false);
-//		menu.add(menuItem);
+			menu = new JMenu(_("Help"));
 
-		menuItem = new JMenuItem(_("About"));
-		menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new AboutDialog();
-			}
-		});
-		menu.add(menuItem);
+	//		menuItem = new JMenuItem(_("Rules"));
+	//		menuItem.addActionListener(new ActionListener() {
+	//			public void actionPerformed(ActionEvent e) {
+	//				//emty for now
+	//			}
+	//		});
+	//		menuItem.setEnabled(false);
+	//		menu.add(menuItem);
 
-		this.add(menu);
+			menuItem = new JMenuItem(_("About"));
+			menuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					client.handleAbout();
+				}
+			});
+			menu.add(menuItem);
+
+			this.add(menu);
+
+		}
 	}
 
 	//legacy methods - TODO refactor

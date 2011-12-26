@@ -81,7 +81,7 @@ public class StartPanel extends JPanel {
 				loadPanel.add(load, "wrap, alignx center,aligny top");
 				load.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						client.load();
+						client.handleLoad();
 					}
 				});
 				load.setFont(FONT_LARGE_BUTTON);
