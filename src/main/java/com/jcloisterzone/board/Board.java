@@ -133,6 +133,9 @@ public class Board {
 		assert tiles.containsKey(pos);
 		Tile tile = tiles.remove(pos);
 		tile.setPosition(null);
+		for(Entry<Location, Tile> e : getAdjacentTilesMap(pos).entrySet()) {
+			tile.unmerge(e.getValue(), e.getKey());
+		}
 		availMovesAdd(pos);
 		if (isHole(pos)) holes.add(pos);
 		for(Position offset: Position.ADJACENT.values()) {

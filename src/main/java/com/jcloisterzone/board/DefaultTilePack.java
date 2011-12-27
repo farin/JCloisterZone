@@ -114,6 +114,7 @@ public class DefaultTilePack implements TilePack {
 			Tile tile = drawTile(groupId, tileId);
 			if (tile != null) return tile;
 		}
+		logger.warn("Tile pack does not contain {}", tileId);
 		return null;
 	}
 

@@ -32,7 +32,6 @@ public class Bootstrap  {
 	        		macApplication.addApplicationListener(new MacApplicationAdapter(client));
 	        	}
 
-
 	        	if (client.getConfig().get("debug", "autostart", boolean.class)) {
 	        		client.createGame();
 	        	}

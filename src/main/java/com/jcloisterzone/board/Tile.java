@@ -118,6 +118,30 @@ public class Tile /*implements Cloneable*/ {
 		}
 	}
 
+	protected void unmerge(Tile tile, Location loc) {
+		Location oppositeLoc = loc.rev();
+		MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
+		if (oppositePiece != null) {
+			oppositePiece.setEdge(oppositeLoc, null);
+			if (! isAbbeyTile()) {
+				MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc);
+				thisPiece.setEdge(loc, null);
+			}
+		}
+		for(int i = 0; i < 2; i++) {
+			Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
+			Location oppositeHalfSide = halfSide.rev();
+			oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
+			if (oppositePiece != null) {
+				oppositePiece.setEdge(oppositeHalfSide, null);
+				if (! isAbbeyTile()) {
+					MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide);
+					thisPiece.setEdge(halfSide, null);
+				}
+			}
+		}
+	}
+
 	protected void rotate() {
 		rotation = rotation.next();
 	}
