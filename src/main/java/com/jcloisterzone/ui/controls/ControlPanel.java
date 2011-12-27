@@ -147,7 +147,6 @@ public class ControlPanel extends JPanel {
 	public void clearActions() {
 		actionPanel.clearActions();
 		buttonNextTurn.setEnabled(false);
-
 	}
 
 	public void playerActivated(Player turn, Player active) {

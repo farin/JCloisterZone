@@ -141,9 +141,9 @@ public class TileTheme extends Theme {
 		for(Location corner : corners) {
 			int r = size/2;
 			Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
-			if (corner.isPartOf(Location.NE)) a.transform(Rotation.R90.getAffineTransform(size));
-			if (corner.isPartOf(Location.SE)) a.transform(Rotation.R180.getAffineTransform(size));
-			if (corner.isPartOf(Location.SW)) a.transform(Rotation.R270.getAffineTransform(size));
+			if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
+			if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
+			if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
 			result.put(corner, a);
 		}
 		return result;
