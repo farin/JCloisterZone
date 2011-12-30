@@ -199,7 +199,7 @@
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
 	</card>
-	<card id="RrRr">
+	<card id="RRrr">
 		<road>N S</road>
 		<road>W E</road>
 		<farm>WR NL</farm>

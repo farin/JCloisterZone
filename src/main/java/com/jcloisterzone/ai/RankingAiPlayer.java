@@ -117,8 +117,8 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	}
 	
 	protected void rankTilePlacement(Map<Position, Set<Rotation>> placements) {
-		logger.info("---------- Ranking start ---------------");
-		logger.info("Positions: {} ", placements.keySet());
+		//logger.info("---------- Ranking start ---------------");
+		//logger.info("Positions: {} ", placements.keySet());
 		
 		backupGame();				
 		SavePoint sp = spm.save();
@@ -126,7 +126,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 			Position pos = entry.getKey();
 			for(Rotation rot : entry.getValue()) {
 				//logger.info("  * phase {} -> {}", getGame().getPhase(), getGame().getPhase().getDefaultNext());
-				logger.info("  * placing {} {}", pos, rot);
+				//logger.info("  * placing {} {}", pos, rot);
 				getGame().getPhase().placeTile(rot, pos);
 				//logger.info("  * phase {} -> {}", getGame().getPhase(), getGame().getPhase().getDefaultNext());
 				phaseLoop();
@@ -172,7 +172,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 		SavePoint sp = spm.save();
 		for(Location loc : locations) {
-			logger.info("    . deploying {}", meepleType);
+			//logger.info("    . deploying {}", meepleType);
 			getGame().getPhase().deployMeeple(pos, loc, meepleType);
 			double currRank = rank();
 			if (currRank > bestSoFar.getRank()) {

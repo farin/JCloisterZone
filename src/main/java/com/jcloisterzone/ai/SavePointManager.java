@@ -63,7 +63,7 @@ public class SavePointManager {
 			if (item == spOp) {
 				break;
 			}
-			logger.info("      < undo {}", item);
+			//logger.info("      < undo {}", item);
 			operations.pollLast().undo(game);
 		}
 		for(Entry<Expansion, ExpandedGame> entry : sp.getFrozenExpandedGames().entrySet()) {

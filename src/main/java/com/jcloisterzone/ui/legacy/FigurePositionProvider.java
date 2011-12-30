@@ -124,8 +124,8 @@ public class FigurePositionProvider {
 			.put("TB.LRRR FARM WR+N+EL", new ImmutablePoint(MAX-QUARTER, QUARTER))
 			.put("TB.CcRR!.c CITY NW", new ImmutablePoint(NEAR_CENTER, NEAR_CENTER))
 			.put("TB.CcR!.w CITY NW", new ImmutablePoint(NEAR_CENTER, NEAR_CENTER))
-			.put("TB.RrRr ROAD WE", new ImmutablePoint(QUARTER, CENTER))
-			.put("TB.RrRr ROAD NS", new ImmutablePoint(CENTER, QUARTER))
+			.put("TB.RRrr ROAD WE", new ImmutablePoint(QUARTER, CENTER))
+			.put("TB.RRrr ROAD NS", new ImmutablePoint(CENTER, QUARTER))
 			.put("TB.RRC ROAD W", new ImmutablePoint(20, CENTER))
 			.put("TB.RRC ROAD S", new ImmutablePoint(CENTER, MAX-20))
 		//carhars
