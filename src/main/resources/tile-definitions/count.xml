@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card id="1" group="count">
+		<road>W</road>
+		<farm>WR NL NR EL</farm>
+		<farm>WL SR</farm>
+		<position x="-2" y="-1"/>
+	</card>
+	<card id="2" group="count">
+		<farm>WR NL NR EL</farm>
+		<position x="-1" y="-1"/>
+	</card>
+	<card id="3" group="count">
+		<farm>WR NL NR EL</farm>
+		<position x="0" y="-1"/>
+	</card>
+	<card id="4" group="count">
+		<road>N</road>
+		<farm>WR NL</farm>
+		<farm>NR EL ER SL</farm>
+		<position x="1" y="-1"/>
+	</card>
+	<card id="5" group="count">
+		<farm>SR WL WR NL</farm>
+		<position x="-2" y="0"/>
+	</card>
+	<card id="6" group="count">
+		<position x="-1" y="0"/>
+	</card>
+	<card id="7" group="count">
+		<position x="0" y="0"/>
+	</card>
+	<card id="8" group="count">
+		<farm>NR EL ER SL</farm>
+		<position x="1" y="0"/>
+	</card>
+	<card id="9" group="count">
+		<city>S</city>
+		<farm city="S">WL WR NL ER</farm>
+		<position x="-2" y="1"/>
+	</card>
+	<card id="10" group="count">
+		<farm>ER SL SR WL</farm>
+		<position x="-1" y="1"/>
+	</card>
+	<card id="11" group="count">
+		<road>S</road>
+		<farm>ER SL</farm>
+		<farm>SR WL</farm>
+		<position x="0" y="1"/>
+	</card>
+	<card id="12" group="count">
+		<city>E</city>
+		<farm city="E">NR SL SR WL</farm>
+		<position x="1" y="1"/>
+	</card>
+</pack>

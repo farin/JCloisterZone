@@ -5,6 +5,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
+import com.jcloisterzone.game.expansion.CountGame;
 import com.jcloisterzone.game.expansion.CultGame;
 import com.jcloisterzone.game.expansion.InnsAndCathedralsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
@@ -34,7 +35,7 @@ public enum Expansion {
 	RIVER("R1", _("The River"), RiverGame.class),
 	RIVER_II("R2", _("The River II"), RiverIIGame.class),
 	CATHARS("SI", _("The Cathars"), CatharsGame.class), //cathars aka siege
-	COUNT("CO", _("The Count of Carcassonne"), false),
+	COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")", CountGame.class),
 	GQ11("GQ", _("The Mini Expansion (GQ11)")),
 	CULT("CU", _("The Cult"), CultGame.class),
 	TUNNEL("TU", _("The Tunnel"), TunnelGame.class),

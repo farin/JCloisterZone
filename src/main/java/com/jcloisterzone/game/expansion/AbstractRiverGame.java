@@ -77,6 +77,7 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 			//check river connection
 			Location tileRelativePosition = e.getKey();
 			Tile placedTile = e.getValue();
+			if (placedTile.getRiver() == null) return false; //e.g. count of carcassone preplaced tiles
 			boolean r1 = tileRelativePosition.rotateCCW(tile.getRotation()).isPartOf(tile.getRiver());
 			boolean r2 = tileRelativePosition.rotateCCW(placedTile.getRotation()).rev().isPartOf(placedTile.getRiver());
 			if (!(r1 & r2)) return false;

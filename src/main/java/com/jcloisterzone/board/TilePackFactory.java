@@ -175,10 +175,22 @@ public class TilePackFactory {
 				String tileId = getTileId(expansion, tileElement);
 				LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
 				for(Tile tile : createTiles(expansion, tileId, tileElement)) {
-					if (positions != null && ! positions.isEmpty()) {
-						tile.setPosition(positions.removeFirst());
-					}
 					tilePack.addTile(tile, getTileGroup(tile, tileElement));
+					if (positions != null && ! positions.isEmpty()) {
+						Position pos = positions.removeFirst();
+						//hard coded exceptions - should be declared in pack def
+						if (game.hasExpansion(Expansion.COUNT)) {
+							if (tile.getId().equals("BA.RCr")) continue;
+							if (tile.getId().equals("R1.I.s") || 
+								tile.getId().equals("R2.I.s") ||
+								tile.getId().equals("GQ.RFI")) {
+								pos = new Position(1, 2);
+							}
+						}						
+						logger.info("Setting initial placement {} for {}", pos, tile);
+						tile.setPosition(pos);
+					}
+					
 				}
 			}
 		}
