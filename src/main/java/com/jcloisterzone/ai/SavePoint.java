@@ -1,10 +1,8 @@
 package com.jcloisterzone.ai;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.operation.Operation;
