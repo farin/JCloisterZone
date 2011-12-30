@@ -223,8 +223,10 @@ public class GridPanel extends JComponent {
 
 		if (client.getSettings().isShowHistory()) {
 			showRecentHistory();
-		}
-		if (! client.isClientActive() && client.getActivePlayer() != null) { //if active player is null we are placing initial tiles
+		}		
+		boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
+		if ((! initialPlacement && ! client.isClientActive()) ||
+			(initialPlacement && client.getGame().getTilePack().getCurrentTile().equals(tile))) { 
 			getAnimationService().registerAnimation(tile.getPosition(), new RecentPlacement(tile.getPosition()));
 		}
 
