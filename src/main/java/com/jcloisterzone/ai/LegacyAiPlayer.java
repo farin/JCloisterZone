@@ -435,8 +435,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		double tensionX = 0, tensionY = 0;
 
 		for(Meeple m : getGame().getDeployedMeeples()) {
-			int distance = dragonPosition.squareDistance(m.getPosition());
-			if (distance > movesLeft) continue;
+			int distance = dragonPosition.squareDistance(m.getPosition());			
+			if (distance == 0 || distance > movesLeft) continue;
 
 			double weight = 1.0 / (distance * distance);
 			if (isMe(m.getPlayer())) {

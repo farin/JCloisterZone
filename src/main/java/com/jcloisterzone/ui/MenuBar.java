@@ -2,6 +2,7 @@ package com.jcloisterzone.ui;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -42,7 +43,7 @@ public class MenuBar extends JMenuBar {
 		menu = new JMenu(_("Game"));
 		menu.setMnemonic(KeyEvent.VK_G);
 		create = new JMenuItem(_("New game"));
-		create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		create.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				client.createGame();
@@ -51,7 +52,7 @@ public class MenuBar extends JMenuBar {
 		menu.add(create);
 
 		connect = new JMenuItem(_("Connect"));
-		connect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
+		connect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		connect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				client.showConnectGamePanel();
@@ -72,7 +73,7 @@ public class MenuBar extends JMenuBar {
 		menu.addSeparator();
 
 		save = new JMenuItem(_("Save"));
-		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		save.setEnabled(false);
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -82,7 +83,7 @@ public class MenuBar extends JMenuBar {
 		menu.add(save);
 
 		load = new JMenuItem(_("Load"));
-		load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
+		load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				client.handleLoad();
@@ -94,6 +95,7 @@ public class MenuBar extends JMenuBar {
 			menu.addSeparator();
 
 			menuItem = new JMenuItem(_("Quit"));
+			menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					client.handleQuit();
@@ -156,7 +158,7 @@ public class MenuBar extends JMenuBar {
 
 
 		showDiscard = new JMenuItem(_("Show discarded tiles"));
-		showDiscard.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
+		showDiscard.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		showDiscard.setEnabled(false);
 		showDiscard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

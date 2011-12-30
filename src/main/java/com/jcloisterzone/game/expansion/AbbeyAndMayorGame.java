@@ -36,6 +36,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.phase.ScorePhase;
 
 
 public final class AbbeyAndMayorGame extends ExpandedGame {
@@ -63,12 +64,12 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 	}
 
 	@Override
-	public void setGame(Game game) {
+	public void setGame(final Game game) {
 		super.setGame(game);
 		game.addGameListener(new GameEventAdapter() {
 			@Override
 			public void undeployed(Meeple m) {
-				if (m instanceof Wagon) {
+				if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
 					returnedWagons.put(m.getPlayer(), m.getFeature());
 				}
 			}

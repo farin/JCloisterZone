@@ -91,7 +91,7 @@ public class WagonPhase extends Phase {
 				for(Feature nei : feature.getNeighbouring()) {
 					//TODO double walk
 					if (nei.isFeatureOccupied()) continue;
-					if (nei instanceof Completable && ((Completable) nei).isFeatureCompleted()) continue;
+					if (nei instanceof Completable && ((Completable) nei).isFeatureCompleted()) continue;					
 					wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
 				}
 			}
