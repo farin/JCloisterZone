@@ -171,7 +171,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		figureTheme = new FigureTheme(this);
 		controlsTheme = new ControlsTheme(this);
 
-		this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
+		resetWindowIcon();
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -212,6 +212,10 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 		this.setTitle("JCloisterZone");
 		this.setVisible(true);
+	}
+	
+	private void resetWindowIcon() {
+		this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
 	}
 
 	public Ini getConfig() {
@@ -602,6 +606,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 
 	@Override
 	public void gameOver() {
+		resetWindowIcon();
 		closeGame(true);
 		new GameOverDialog(this);
 	}
