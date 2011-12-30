@@ -60,8 +60,8 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		BARN_BORDER("panel_barn_r.png"),
 		MAYOR("panel_mayor.png"),
 		MAYOR_BORDER("panel_mayor_r.png"),
-		VAGON("panel_vagon.png"),
-		VAGON_BORDER("panel_vagon_r.png"),
+		WAGON("panel_wagon.png"),
+		WAGON_BORDER("panel_wagon_r.png"),
 
 		RESOURCE_CLOTH("res_cloth.png"),
 		RESOURCE_GRAIN("res_grain.png"),
@@ -139,8 +139,8 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		initImage(PanelImages.BARN_BORDER);
 		initFigure(PanelImages.MAYOR,colorfilter);
 		initImage(PanelImages.MAYOR_BORDER);
-		initFigure(PanelImages.VAGON,colorfilter);
-		initImage(PanelImages.VAGON_BORDER);
+		initFigure(PanelImages.WAGON,colorfilter);
+		initImage(PanelImages.WAGON_BORDER);
 		initImage(PanelImages.PIG_BORDER);
 		initImage(PanelImages.TOWER_PIECE);
 
@@ -336,7 +336,7 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		drawSpecialFigure(g2, Pig.class, getWidth() - 25, SPECIAL_Y, PanelImages.PIG, PanelImages.PIG_BORDER);
 		drawSpecialFigure(g2, Barn.class, FIGURES_X, ABBEY_Y, PanelImages.BARN, PanelImages.BARN_BORDER);
 		drawSpecialFigure(g2, Mayor.class, FIGURES_X + 35, ABBEY_Y, PanelImages.MAYOR, PanelImages.MAYOR_BORDER);
-		drawSpecialFigure(g2, Wagon.class, FIGURES_X + 60, ABBEY_Y, PanelImages.VAGON, PanelImages.VAGON_BORDER);
+		drawSpecialFigure(g2, Wagon.class, FIGURES_X + 60, ABBEY_Y, PanelImages.WAGON, PanelImages.WAGON_BORDER);
 
 		if (game.hasExpansion(Expansion.KING_AND_SCOUT)) {
 			KingAndScoutGame ks = game.getKingAndScoutGame();

@@ -54,7 +54,7 @@ public class WagonPhase extends Phase {
 
 	@Override
 	public Player getActivePlayer() {
-		Player p = game.getAbbeyAndMayorGame().getVagonPlayer();
+		Player p = game.getAbbeyAndMayorGame().getWagonPlayer();
 		return p == null ? game.getTurnPlayer() : p;
 	}
 
@@ -69,10 +69,10 @@ public class WagonPhase extends Phase {
 			}
 			Player player = game.getAllPlayers()[pi];
 			Feature f = rw.remove(player);
-			Sites vagonMoves = prepareVagonMoves(f);
-			if (! vagonMoves.isEmpty()) {
-				amGame.setVagonPlayer(player);
-				PlayerAction action = new MeepleAction(Wagon.class, vagonMoves);
+			Sites wagonMoves = prepareWagonMoves(f);
+			if (! wagonMoves.isEmpty()) {
+				amGame.setWagonPlayer(player);
+				PlayerAction action = new MeepleAction(Wagon.class, wagonMoves);
 				game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
 				game.getUserInterface().selectAction(Collections.singletonList(action));
 				return true;
@@ -83,7 +83,7 @@ public class WagonPhase extends Phase {
 
 	class FindUnoccupiedNeighbours implements FeatureVisitor {
 
-		private Sites vagonMoves = new Sites();
+		private Sites wagonMoves = new Sites();
 
 		@Override
 		public boolean visit(Feature feature) {
@@ -92,21 +92,21 @@ public class WagonPhase extends Phase {
 					//TODO double walk
 					if (nei.isFeatureOccupied()) continue;
 					if (nei instanceof Completable && ((Completable) nei).isFeatureCompleted()) continue;
-					vagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
+					wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
 				}
 			}
 			return true;
 		}
 
-		public Sites getVagonMoves() {
-			return vagonMoves;
+		public Sites getWagonMoves() {
+			return wagonMoves;
 		}
 
 	}
 
-	private Sites prepareVagonMoves(Feature source) {
+	private Sites prepareWagonMoves(Feature source) {
 		FindUnoccupiedNeighbours visitor = new FindUnoccupiedNeighbours();
 		source.walk(visitor);
-		return visitor.getVagonMoves();
+		return visitor.getWagonMoves();
 	}
 }

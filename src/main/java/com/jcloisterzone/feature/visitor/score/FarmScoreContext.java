@@ -71,6 +71,10 @@ public class FarmScoreContext extends AbstractScoreContext {
 		}
 		return super.visit(feature);
 	}
+	
+//	public int getNumberOfCities() {
+//		return adjoiningCompletedCities.keySet().size();
+//	}
 
 	private int getPointsPerCity(Player player, int basePoints) {
 		int pointsPerCity = basePoints + pigHerds;
@@ -111,8 +115,6 @@ public class FarmScoreContext extends AbstractScoreContext {
 		}
 		return points;
 	}
-
-
 
 	public int getBarnPoints() {
 		if (getGame().hasExpansion(Expansion.CATHARS)) {

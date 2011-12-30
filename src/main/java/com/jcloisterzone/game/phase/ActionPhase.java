@@ -34,7 +34,7 @@ public class ActionPhase extends Phase {
 			actions.add(new MeepleAction(SmallFollower.class, commonSites));
 		}
 		game.expansionDelegate().prepareActions(actions, commonSites);
-		//TODO mayor a vagon action !!! pozor na branu
+		//TODO mayor a wagon action !!! be careful about magic gate !
 		if (isAutoTurnEnd(actions)) {
 			next();
 		} else {

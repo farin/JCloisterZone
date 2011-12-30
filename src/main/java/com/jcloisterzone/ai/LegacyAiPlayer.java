@@ -80,7 +80,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 		Arrays.fill(openCount, 0);
 
-		ranking += figureRating();
+		ranking += meepleRating();
 		ranking += pointRating();
 		ranking += openObjectRating();
 
@@ -99,21 +99,21 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		return -points/enemyPlayers;
 	}
 
-	protected double figureRating() {
+	protected double meepleRating() {
 		double rating = 0;
 
 		for(Player p : getGame().getAllPlayers()) {
-			double figurePoints = 0;
+			double meeplePoints = 0;
 			int limit = 0;
 			for(Follower f : p.getUndeployedFollowers()) {
 				if (f instanceof SmallFollower) {
-					figurePoints += 0.15;
+					meeplePoints += 0.15;
 				} else if (f instanceof BigFollower) {
-					figurePoints += 0.25;
+					meeplePoints += 0.25;
 				}
 				if (++limit == myTurnsLeft) break;
 			}
-			rating += reducePoints(figurePoints, p);
+			rating += reducePoints(meeplePoints, p);
 		}
 		return rating;
 	}
@@ -140,7 +140,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 		@Override
 		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-			logger.error("Barn scoring not implemented");
+			//prefer barn placement - magic constant 
+			rank += reducePoints(1.2 * ctx.getBarnPoints(), meeple.getPlayer());
 		}
 
 		@Override

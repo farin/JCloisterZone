@@ -41,7 +41,7 @@ import com.jcloisterzone.game.Game;
 public final class AbbeyAndMayorGame extends ExpandedGame {
 
 	private Map<Player, Feature> returnedWagons = Maps.newHashMap();
-	private Player vagonPlayer;
+	private Player wagonPlayer;
 	private Set<Player> unusedAbbey = Sets.newHashSet();
 
 	@Override
@@ -111,10 +111,10 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 	@Override
 	public void turnCleanUp() {
 		returnedWagons.clear();
-		vagonPlayer = null;
+		wagonPlayer = null;
 	}
 
-	private Set<Location> copyVagonsLocations(Set<Location> locations) {
+	private Set<Location> copyWagonsLocations(Set<Location> locations) {
 		Set<Location> result = Sets.newHashSet();
 		for(Feature piece : getTile().getFeatures()) {
 			Location loc = piece.getLocation();
@@ -146,9 +146,9 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		Set<Location> tileLocations = commonSites.get(pos);
 		if (game.getActivePlayer().hasFollower(Wagon.class)) {
 			if (tileLocations != null) {
-				Set<Location> vagonLocations = copyVagonsLocations(tileLocations);
-				if (! vagonLocations.isEmpty()) {
-					actions.add(new MeepleAction(Wagon.class, pos, vagonLocations));
+				Set<Location> wagonLocations = copyWagonsLocations(tileLocations);
+				if (! wagonLocations.isEmpty()) {
+					actions.add(new MeepleAction(Wagon.class, pos, wagonLocations));
 				}
 			}
 		}
@@ -206,7 +206,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		copy.game = game;
 		copy.unusedAbbey = Sets.newHashSet(unusedAbbey);
 		copy.returnedWagons = Maps.newHashMap(returnedWagons);
-		copy.vagonPlayer = vagonPlayer;
+		copy.wagonPlayer = wagonPlayer;
 		return copy;
 	}
 	
@@ -248,11 +248,11 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		}
 	}
 
-	public Player getVagonPlayer() {
-		return vagonPlayer;
+	public Player getWagonPlayer() {
+		return wagonPlayer;
 	}
 
-	public void setVagonPlayer(Player vagonPlayer) {
-		this.vagonPlayer = vagonPlayer;
+	public void setWagonPlayer(Player wagonPlayer) {
+		this.wagonPlayer = wagonPlayer;
 	}
 }
