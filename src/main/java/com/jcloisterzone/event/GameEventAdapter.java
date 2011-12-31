@@ -97,5 +97,9 @@ public class GameEventAdapter implements GameEventListener {
 	@Override
 	public void undeployed(Meeple meeple) {
 	}
+	
+	@Override
+	public void bridgeDeployed(Position pos, Location loc) {		
+	}
 
 }

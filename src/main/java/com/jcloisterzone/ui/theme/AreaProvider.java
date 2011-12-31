@@ -206,6 +206,13 @@ public class AreaProvider {
 		}
 		return area;
 	}
+	
+	public Area getBridgeArea(Location loc) {
+		//TODO use display.xml to define areas
+		if (loc == Location.NS) return new Area(new Rectangle(400, 0, 200, 1000)); 
+		if (loc == Location.WE) return  new Area(new Rectangle(0, 400, 1000, 200));
+		throw new IllegalArgumentException("Incorrect location");
+	}
 
 	public Area getSubstractionArea(Tile tile) {
 		return substraction.get(tile.getId());

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.action.BarnAction;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -228,6 +229,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void selectBridgePlacement(BridgeAction action) {
+		throw new UnsupportedOperationException();		
 	}
 
 	abstract protected double rank();

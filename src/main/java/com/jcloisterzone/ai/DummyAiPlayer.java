@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -65,6 +66,13 @@ public class DummyAiPlayer extends AiPlayer {
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {
 		getServer().moveDragon(positions.iterator().next());
+	}
+	
+	@Override
+	public void selectBridgePlacement(BridgeAction action) {
+		Position p = action.getSites().keySet().iterator().next();
+		Location loc = action.getSites().get(p).iterator().next();
+		getServer().deployBridge(p, loc);		
 	}
 
 }

@@ -271,5 +271,10 @@ public class Server extends GameSettings implements ServerIF {
 	public void removeKnightWithPrincess(Position p, Location d) {
 		stub.removeKnightWithPrincess(p, d);
 	}
+	
+	@Override
+	public void deployBridge(Position pos, Location loc) {
+		stub.deployBridge(pos, loc);		
+	}
 
 }

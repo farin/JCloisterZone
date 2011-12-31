@@ -177,6 +177,12 @@ public abstract class Phase implements ClientIF {
 	public void captureFigure(Position p, Location d) {
 		 logger.error(Application.ILLEGAL_STATE_MSG, "captureFigure");
 	}
+	 
+	@Override
+	public void deployBridge(Position pos, Location loc) {
+		logger.error(Application.ILLEGAL_STATE_MSG, "deployBridge");
+		
+	}
 
 
 }

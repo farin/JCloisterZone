@@ -54,5 +54,8 @@ public interface GameEventListener extends EventListener {
 	//meeple events
 	void deployed(Meeple meeple);
 	void undeployed(Meeple meeple);
+	
+	//BB events	
+	void bridgeDeployed(Position pos, Location loc);
 
 }

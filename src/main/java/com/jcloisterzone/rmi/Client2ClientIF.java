@@ -23,16 +23,18 @@ public interface Client2ClientIF {
 
 	public void placeTile(Rotation rotation, Position position);
 
-	public void deployMeeple(Position p, Location d, Class<? extends Meeple> meepleType);
-	public void placeTowerPiece(Position p);
-	public void escapeFromCity(Position p, Location d);
-	public void removeKnightWithPrincess(Position p, Location d);
-	public void captureFigure(Position p, Location d);
-	public void placeTunnelPiece(Position p, Location d, boolean isSecondPiece);
+	public void deployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType);
+	public void placeTowerPiece(Position pos);
+	public void escapeFromCity(Position pos, Location loc);
+	public void removeKnightWithPrincess(Position pos, Location loc);
+	public void captureFigure(Position pos, Location loc);
+	public void placeTunnelPiece(Position pos, Location loc, boolean isSecondPiece);
 
-	public void moveFairy(Position p);
-	public void moveDragon(Position p);
+	public void moveFairy(Position pos);
+	public void moveDragon(Position pos);
 
 	public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType);
+	
+	public void deployBridge(Position pos, Location loc); 
 
 }

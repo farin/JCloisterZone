@@ -29,6 +29,7 @@ import com.jcloisterzone.ui.animation.ScoreAnimation;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.AvailableMovesLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
+import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FairyLayer;
@@ -53,6 +54,7 @@ public class MainPanel extends BackgroundPanel {
 	private TowerLayer towerLayer;
 	private DragonLayer dragonLayer;
 	private FairyLayer fairyLayer;
+	private BridgeLayer bridgeLayer;
 
 	public MainPanel(Client client) {
 		this.client = client;
@@ -97,6 +99,10 @@ public class MainPanel extends BackgroundPanel {
 			fairyLayer = new FairyLayer(gridPanel, null);
 			gridPanel.addLayer(dragonLayer);
 			gridPanel.addLayer(fairyLayer);
+		}
+		if (client.getGame().hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+			bridgeLayer = new BridgeLayer(gridPanel);
+			gridPanel.addLayer(bridgeLayer);
 		}
 
 		add(gridPanel);
@@ -167,6 +173,11 @@ public class MainPanel extends BackgroundPanel {
 	public void undeployed(Meeple m) {
 		gridPanel.clearActionDecorations();
 		meepleLayer.meepleUndeployed(m);
+	}
+	
+	public void bridgeDeployed(Position pos, Location loc) {
+		gridPanel.clearActionDecorations();
+		bridgeLayer.bridgeDeployed(pos, loc);	
 	}
 
 

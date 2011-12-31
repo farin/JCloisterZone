@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -597,6 +598,11 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public void selectTowerCapture(CaptureAction action) {
 		controlPanel.selectAction(Collections.<PlayerAction>singletonList(action), false);
 	}
+	
+	@Override
+	public void selectBridgePlacement(BridgeAction action) {
+		controlPanel.selectAction(Collections.<PlayerAction>singletonList(action), true);		
+	}
 
 	@Override
 	public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
@@ -633,7 +639,11 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public void undeployed(Meeple m) {
 		mainPanel.undeployed(m);
 	}
-
+	
+	@Override
+	public void bridgeDeployed(Position pos, Location loc) {
+		mainPanel.bridgeDeployed(pos, loc);	
+	}
 
 	// ------------------ Feature evnts ----------
 

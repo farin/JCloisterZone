@@ -147,12 +147,11 @@ public class Board {
 		}
 	}
 
-
-
 	public void discardTile(String tileId) {
 		discardedTiles.add(tileId);
 		game.fireGameEvent().tileDiscarded(tileId);
 	}
+	
 
 	public List<String> getDiscardedTiles() {
 		return discardedTiles;

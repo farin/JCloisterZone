@@ -31,6 +31,7 @@ public class Tile /*implements Cloneable*/ {
 
 	private Feature[] features;
 	private Location river;
+	private Location bridge;
 
 	protected TileSymmetry symmetry;
 	protected Position position = null;
@@ -207,6 +208,16 @@ public class Tile /*implements Cloneable*/ {
 	public Position getPosition() {
 		return position;
 	}
+	
+	
+	public Location getBridge() {
+		return bridge;
+	}
+
+	public void setBridge(Location bridge) {
+		this.bridge = bridge;
+	}
+
 
 	private static class UnoccupiedScoreableVisitor implements FeatureVisitor {
 		private boolean completed = true, occupied;
@@ -287,13 +298,26 @@ public class Tile /*implements Cloneable*/ {
 	}
 
 
-
 	public Location getRiver() {
 		return river;
 	}
 
 	public void setRiver(Location river) {
 		this.river = river;
+	}
+	
+	public Set<Location> getAllowedBridges() {
+		if (isForbidden() || getBridge() != null) return null;
+		Set<Location> allowed = null;
+		if (edgePattern.isBridgeAllowed(Location.NS, rotation)) {
+			allowed = Sets.newHashSet();
+			allowed.add(Location.NS);
+		}
+		if (edgePattern.isBridgeAllowed(Location.WE, rotation)) {
+			if (allowed == null) allowed = Sets.newHashSet();
+			allowed.add(Location.WE);
+		}
+		return allowed;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.FeatureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -35,7 +36,11 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
 	protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
 		Set<Location> locations = action.getSites().get(p);
 		if (locations == null) return null;
-		return getClient().getTileTheme().getMeepleTileAreas(tile, getSquareSize(), locations);
+		if (action instanceof BridgeAction) {
+			return getClient().getTileTheme().getBridgeAreas(getSquareSize(), locations);
+		} else {
+			return getClient().getTileTheme().getMeepleTileAreas(tile, getSquareSize(), locations);
+		}
 	}
 
 

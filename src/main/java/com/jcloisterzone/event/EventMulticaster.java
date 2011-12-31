@@ -9,6 +9,7 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -207,7 +208,17 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 		((GameEventListener)a).scored(position, player, points, label, isFinal);
 		((GameEventListener)b).scored(position, player, points, label, isFinal);
 	}
-
-
+	
+	@Override
+	public void selectBridgePlacement(BridgeAction action) {
+		((UserInterface)a).selectBridgePlacement(action);
+		((UserInterface)b).selectBridgePlacement(action);		
+	}
+	
+	@Override
+	public void bridgeDeployed(Position pos, Location loc) {
+		((GameEventListener)a).bridgeDeployed(pos, loc);
+		((GameEventListener)b).bridgeDeployed(pos, loc);
+	}
 
 }

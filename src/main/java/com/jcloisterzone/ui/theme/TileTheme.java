@@ -148,6 +148,27 @@ public class TileTheme extends Theme {
 		}
 		return result;
 	}
+	
+	public Map<Location, Area> getBridgeAreas(int size, Set<Location> locations) {
+		Map<Location, Area> result = Maps.newHashMap();		
+		for(Location loc : locations) {			
+			result.put(loc, getBridgeArea(size, loc));
+		}
+		return result;
+	}
+	
+	//TODO move to Area Provider ???
+	public Area getBridgeArea(int size, Location loc) {
+		
+		AffineTransform transform1;
+		if (size == NORMALIZED_SIZE) {
+			transform1 = new AffineTransform();
+		} else {
+			double ratio = size/(double)NORMALIZED_SIZE;
+			transform1 = AffineTransform.getScaleInstance(ratio,ratio);
+		}				
+		return areaProvider.getBridgeArea(loc).createTransformedArea(transform1);		
+	}
 
 
 	private Area getRoadAndCitySubstractions(Tile tile) {
@@ -155,15 +176,18 @@ public class TileTheme extends Theme {
 		if (tile.getTower() != null) {
 			sub.add(areaProvider.getArea(tile, Tower.class, Location.TOWER));
 		}
+		if (tile.getBridge() != null) {
+			sub.add(areaProvider.getBridgeArea(tile.getBridge()));
+		}
 		Area substraction = areaProvider.getSubstractionArea(tile);
 		if (substraction != null) {
 			sub.add(substraction);
-		}
+		}		
 		return sub;
 	}
 
 	private Area getFarmSubstractions(Tile tile) {
-		Area sub = new Area();		//
+		Area sub = new Area();
 		for(Feature piece : tile.getFeatures()) {
 			if (! (piece instanceof Farm)) {
 				Area area = areaProvider.getArea(tile, piece.getClass(), piece.getLocation());
@@ -173,6 +197,9 @@ public class TileTheme extends Theme {
 		Area substraction = areaProvider.getSubstractionArea(tile);
 		if (substraction != null) {
 			sub.add(substraction);
+		}
+		if (tile.getBridge() != null) {
+			sub.add(areaProvider.getBridgeArea(tile.getBridge()));
 		}
 		return sub;
 	}

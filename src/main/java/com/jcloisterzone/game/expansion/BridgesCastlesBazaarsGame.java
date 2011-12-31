@@ -8,6 +8,8 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.ExpandedGame;
@@ -42,6 +44,27 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	
 	public int getPlayerBridges(Player pl) {
 		return bridges.get(pl);
+	}
+	
+	public void decreaseCastles(Player player) {
+		int n = getPlayerCastles(player);
+		if (n == 0) throw new IllegalStateException("Player has no castles");
+		castles.put(player, n-1);
+	}
+	
+	public void decreaseBridges(Player player) {
+		int n = getPlayerBridges(player);
+		if (n == 0) throw new IllegalStateException("Player has no bridges");
+		bridges.put(player, n-1);
+	}
+	
+	public void deployBridge(Position pos, Location loc) {
+		Tile tile = getBoard().get(pos);
+		if (! tile.getAllowedBridges().contains(loc)) {
+			throw new IllegalArgumentException("Cannot deploy " + loc + " bridge on " + pos);
+		}
+		tile.setBridge(loc);
+		game.fireGameEvent().bridgeDeployed(pos, loc);
 	}
 	
 	@Override

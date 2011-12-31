@@ -120,6 +120,14 @@ public class EdgePattern {
 		}
 		return result;
 	}
+	
+	public boolean isBridgeAllowed(Location loc, Rotation tileRotation) {
+		for(Location side : Location.sides()) {
+			Location l = loc.intersect(side);
+			if (l != null && at(l, tileRotation) != 'F') return false;
+		}
+		return true;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

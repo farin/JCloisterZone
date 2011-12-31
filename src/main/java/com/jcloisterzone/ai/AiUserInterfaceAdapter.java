@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
@@ -59,6 +60,13 @@ public class AiUserInterfaceAdapter implements UserInterface {
 		if (aiPlayer.isAiPlayerActive()) {
 			aiPlayer.selectDragonMove(positions, movesLeft);
 		}
+	}
+	
+	@Override
+	public void selectBridgePlacement(BridgeAction action) {
+		if (aiPlayer.isAiPlayerActive()) {
+			aiPlayer.selectBridgePlacement(action);
+		}		
 	}
 
 }
