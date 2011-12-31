@@ -31,6 +31,7 @@ import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
@@ -337,6 +338,9 @@ public class Game extends GameSettings {
 	}
 	public TunnelGame getTunnelGame() {
 		return (TunnelGame) expandedGames.get(Expansion.TUNNEL);
+	}
+	public BridgesCastlesBazaarsGame getBridgesCastlesBazaarsGame() {
+		return (BridgesCastlesBazaarsGame) expandedGames.get(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
 	}
 
 }

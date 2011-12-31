@@ -93,7 +93,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 		for(Position offset: Position.ADJACENT.values()) {
 			Position position = dragonPosition.add(offset);
 			Tile tile = getBoard().get(position);
-			if (tile == null) continue;
+			if (tile == null || tile.isForbidden()) continue;
 			if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
 			if (position.equals(fairyPosition)) { continue; }
 			result.add(position);
@@ -148,6 +148,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 	private void prepareMagicPortal(Sites commonSites) {
 		for(Tile tile : getBoard().getAllTiles()) {
 			if (tile == getTile()) continue; //prepared by basic common
+			if (tile.isForbidden()) continue;
 			if (tile.getPosition().equals(dragonPosition)) continue;
 			Set<Location> tileSites = getGame().prepareCommonForTile(tile, true);
 			if (tileSites.isEmpty()) continue;

@@ -4,6 +4,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
 import com.jcloisterzone.game.expansion.CountGame;
 import com.jcloisterzone.game.expansion.CultGame;
@@ -28,7 +29,7 @@ public enum Expansion {
 	TOWER("TO", _("The Tower"), TowerGame.class),
 	ABBEY_AND_MAYOR("AM", _("Abbey & Mayor"), AbbeyAndMayorGame.class),
 	CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
-	BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"), false),
+	BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"), BridgesCastlesBazaarsGame.class),
 
 	//Small expansion
 	KING_AND_SCOUT("KS", _("King and Scout"), KingAndScoutGame.class),

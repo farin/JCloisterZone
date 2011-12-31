@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<card count="2" id="Cccc.b">
+		<bazaar/>
+		<city>N E S W</city>
+	</card>
+	<card id="CCCR">
+		<city>W</city>
+		<city>N</city>
+		<city>E</city>
+		<road>S</road>
+		<farm city="W N E">SR</farm>
+		<farm city="E">SL</farm>
+		<wagon-move>
+			<neighbouring>S E</neighbouring>
+		</wagon-move>		
+	</card>
+	<card id="CFc.b">
+		<bazaar/>
+		<city>W E</city>
+		<farm city="W">NL NR</farm>
+		<farm city="W">SL SR</farm>		
+	</card>
+	<card id="CFR!">
+		<city>W</city>
+		<road>E</road>
+		<farm city="W">NL NR</farm>
+		<farm city="W">EL</farm>
+		<farm city="W">ER SL SR</farm>
+		<wagon-move>
+			<neighbouring>W E</neighbouring>
+		</wagon-move>		
+	</card>
+	<card id="CFR.b">
+		<bazaar/>
+		<city>N</city>
+		<road>S</road>
+		<farm>EL ER SL SR WL WR</farm>	
+	</card>
+	<card id="F.b">
+		<bazaar/>
+		<farm>NL NR EL ER SL SR WL WR</farm>
+	</card>
+	<card id="LCFc">
+		<cloister/>
+		<city>W E</city>
+		<farm city="W">NL NR</farm>
+		<farm city="W">SL SR</farm>
+	</card>
+	<card id="LRFr">
+		<cloister/>
+		<road>W E</road>
+		<farm>WR NL NR EL</farm>
+		<farm>ER SL SR WL</farm>	
+	</card>
+	<card id="R.bi">
+		<bazaar/>
+		<road inn="yes">S</road>
+		<farm>NL NR EL ER SL SR WL WR</farm>	
+	</card>
+	<card id="RFR.b">
+		<bazaar/>
+		<road>N</road>		
+		<road>S</road>
+		<farm>SR WL WR NL</farm>
+		<farm>NR EL ER SL</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>	
+	</card>
+	<card id="RFR.bi">
+		<bazaar/>
+		<road>N</road>		
+		<road inn="yes">S</road>
+		<farm>SR WL WR NL</farm>
+		<farm>NR EL ER SL</farm>
+		<wagon-move>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>		
+	</card>
+</pack>

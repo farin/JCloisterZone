@@ -35,6 +35,9 @@ public class Tile /*implements Cloneable*/ {
 	protected TileSymmetry symmetry;
 	protected Position position = null;
 	private Rotation rotation = Rotation.R0;
+	
+	/** no dragon, no magic gate, not bridges for forbidden tiles (used for initial Count tiles) */
+	private boolean forbidden;	
 
 	private TileTrigger trigger;
 	private EdgePattern edgePattern;
@@ -46,6 +49,14 @@ public class Tile /*implements Cloneable*/ {
 	@Override
 	public int hashCode() {
 		return id.hashCode();
+	}
+	
+	public boolean isForbidden() {
+		return forbidden;
+	}
+
+	public void setForbidden(boolean forbidden) {
+		this.forbidden = forbidden;
 	}
 
 	public EdgePattern getEdgePattern() {

@@ -182,6 +182,8 @@ public class FigurePositionProvider {
 			.put("TU.RRRR FARM WR+N+EL", new ImmutablePoint(BORDER, BORDER))
 		//Catapult
 			.put("CA.L CLOISTER CLOISTER", new ImmutablePoint(34, 40))
+		//Bridges, Castles & Bazaars
+			.put("BB.LRFr ROAD WE", new ImmutablePoint(50,75))
 
 			.put("BA.CcRr ROAD SE", P_OBLIQUE_SE)
 			.put("BA.CcRr+ ROAD SE", P_OBLIQUE_SE)

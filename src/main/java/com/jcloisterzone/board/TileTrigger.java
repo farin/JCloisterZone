@@ -5,5 +5,7 @@ public enum TileTrigger {
 	VOLCANO,
 	DRAGON,
 	PORTAL,
-	BESIEGED;
+	BESIEGED,
+	BAZAAR;
+	
 }

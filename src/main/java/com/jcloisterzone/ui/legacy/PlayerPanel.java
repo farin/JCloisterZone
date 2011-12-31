@@ -37,6 +37,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
@@ -62,6 +63,8 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		MAYOR_BORDER("panel_mayor_r.png"),
 		WAGON("panel_wagon.png"),
 		WAGON_BORDER("panel_wagon_r.png"),
+		CASTLE("panel_castle.png"),
+		BRIDGE("panel_bridge.png"),
 
 		RESOURCE_CLOTH("res_cloth.png"),
 		RESOURCE_GRAIN("res_grain.png"),
@@ -87,16 +90,11 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 	private final Client client;
 
 	public static int getHeight(Game game) {
-		int height = 97;
-		if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) {
-			height += 28;
-		}
-		if (game.hasExpansion(Expansion.TOWER)) {
-			height += 28;
-		}
-		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
-			height += 28;
-		}
+		int height = BASIC_HEIGHT;
+		if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) height += EXPANSION_EXTRA_HEIGHT;			
+		if (game.hasExpansion(Expansion.TOWER)) height += EXPANSION_EXTRA_HEIGHT;			
+		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) height += EXPANSION_EXTRA_HEIGHT;
+		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) height += EXPANSION_EXTRA_HEIGHT;
 		return height;
 	}
 
@@ -143,27 +141,34 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		initImage(PanelImages.WAGON_BORDER);
 		initImage(PanelImages.PIG_BORDER);
 		initImage(PanelImages.TOWER_PIECE);
+		initImage(PanelImages.CASTLE);
+		initImage(PanelImages.BRIDGE);
 
 		initImage(PanelImages.RESOURCE_CLOTH);
 		initImage(PanelImages.RESOURCE_GRAIN);
 		initImage(PanelImages.RESOURCE_WINE);
 
 		initImage(PanelImages.ACTIVE);
-
-		if (game.hasExpansion(Expansion.TOWER)) {
-			TOWER_Y = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) ?
-					125 : 97;
-
-			addMouseListener(new PayRansomListener());
-			//payRansomListener = new PayRansomListener();
+		
+		TOWER_Y = BASIC_HEIGHT;
+		ABBEY_Y = BASIC_HEIGHT;
+		BRIDGES_Y = BASIC_HEIGHT;
+		
+		if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) {
+			TOWER_Y += EXPANSION_EXTRA_HEIGHT;
+			ABBEY_Y += EXPANSION_EXTRA_HEIGHT;
+			BRIDGES_Y += EXPANSION_EXTRA_HEIGHT;
 		}
+		
+		if (game.hasExpansion(Expansion.TOWER)) {
+			ABBEY_Y += EXPANSION_EXTRA_HEIGHT;
+			BRIDGES_Y += EXPANSION_EXTRA_HEIGHT;
+			
+			addMouseListener(new PayRansomListener());
+		}
+		
 		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
-			//TODO quick ugly code - refactor
-			ABBEY_Y = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) ?
-					125 : 97;
-			if (game.hasExpansion(Expansion.TOWER)) {
-				ABBEY_Y += 28;
-			}
+			BRIDGES_Y += EXPANSION_EXTRA_HEIGHT;
 		}
 
 		setLayout(null); //because of kignAndScout icon and absolute position!
@@ -234,7 +239,9 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 	private final static int RESOURCES_X = 11;
 	private final static int RESOURCES_Y = 95;
 
-	private int TOWER_Y, ABBEY_Y; //depends on expansions
+	private final static int BASIC_HEIGHT = 97;
+	private final static int EXPANSION_EXTRA_HEIGHT = 28;
+	private int TOWER_Y, ABBEY_Y, BRIDGES_Y; //depends on expansions
 	private final static int TOWER_FIRST_CAPTURED_X = 30 + FIGURE_WIDTH;
 
 	@Override
@@ -279,7 +286,7 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 			g2.setFont(resourceFont);
 			int towerPieces = game.getTowerGame().getTowerPieces(p);
 			g2.drawString((towerPieces < 10 ? " ":"") + towerPieces + "", 5, TOWER_Y + 16);
-			g2.drawImage(figures.get(PanelImages.TOWER_PIECE), 30, TOWER_Y,null);
+			g2.drawImage(figures.get(PanelImages.TOWER_PIECE), 30, TOWER_Y, null);
 
 			//TODO comment bez nahrady - captured v panelu
 
@@ -305,7 +312,18 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 				x += TOWER_FIGURE_WIDTH + 2;
 
 			}
-
+		}
+		
+		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+			
+			g2.setFont(resourceFont);
+			int castles  = bcb.getPlayerCastles(p);
+			g2.drawString(castles + "", 5, BRIDGES_Y + 16);
+			g2.drawImage(figures.get(PanelImages.CASTLE), 20, BRIDGES_Y, null);
+			int bridges  = bcb.getPlayerCastles(p);
+			g2.drawString(bridges + "", 80, BRIDGES_Y + 16);
+			g2.drawImage(figures.get(PanelImages.BRIDGE), 95, BRIDGES_Y, null);
 		}
 
 		g2.setColor(Color.WHITE);
