@@ -164,6 +164,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
 	@Override
 	public void saveToSnapshot(Document doc, Element node) {
+		node.setAttribute("builderState", builderState.name());
 		for(Player player: game.getAllPlayers()) {
 			Element el = doc.createElement("player");
 			node.appendChild(el);
@@ -176,6 +177,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
 	@Override
 	public void loadFromSnapshot(Document doc, Element node) {
+		builderState = BuilderState.valueOf(node.getAttribute("builderState"));
 		NodeList nl = node.getElementsByTagName("player");
 		for(int i = 0; i < nl.getLength(); i++) {
 			Element playerEl = (Element) nl.item(i);

@@ -15,6 +15,7 @@ import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -93,7 +94,9 @@ public class TileTheme extends Theme {
 
 	public Map<Location, Area> getMeepleTileAreas(Tile tile, int size, Set<Location> locations) {
 		Map<Location, Area> areas = Maps.newHashMap();
-		Area subsRoadCity = getRoadAndCitySubstractions(tile);
+		Area subsBridge = getBaseRoadAndCitySubstractions(tile);
+		Area subsRoadCity = new Area(subsBridge);
+		substractBridge(subsRoadCity, tile);
 		Area subsFarm = getFarmSubstractions(tile);
 
 		for(Feature piece : tile.getFeatures()) {
@@ -108,9 +111,13 @@ public class TileTheme extends Theme {
 			}
 			Area a = areaProvider.getArea(tile, piece, loc);
 			if (piece instanceof City || piece instanceof Road) {
-				if (! subsRoadCity.isEmpty()) {
+				Area subs = subsRoadCity;
+				if (piece instanceof Bridge) {
+					subs = subsBridge;
+				}
+				if (! subs.isEmpty()) {
 					a = new Area(a); //copy to preserve original
-					a.subtract(subsRoadCity);
+					a.subtract(subs);
 				}
 			}
 			areas.put(loc, a);
@@ -169,16 +176,20 @@ public class TileTheme extends Theme {
 		}				
 		return areaProvider.getBridgeArea(loc).createTransformedArea(transform1);		
 	}
+	
+	private void substractBridge(Area substractions, Tile tile) {
+		Bridge bridge = tile.getBridge(); 
+		if (bridge != null) {
+			Area area = areaProvider.getBridgeArea(bridge.getLocation());			
+			substractions.add(area);
+		}
+	}	
 
-
-	private Area getRoadAndCitySubstractions(Tile tile) {
+	private Area getBaseRoadAndCitySubstractions(Tile tile) {
 		Area sub = new Area();
 		if (tile.getTower() != null) {
 			sub.add(areaProvider.getArea(tile, Tower.class, Location.TOWER));
-		}
-		if (tile.getBridge() != null) {
-			sub.add(areaProvider.getBridgeArea(tile.getBridge()));
-		}
+		}		
 		Area substraction = areaProvider.getSubstractionArea(tile);
 		if (substraction != null) {
 			sub.add(substraction);
@@ -198,9 +209,7 @@ public class TileTheme extends Theme {
 		if (substraction != null) {
 			sub.add(substraction);
 		}
-		if (tile.getBridge() != null) {
-			sub.add(areaProvider.getBridgeArea(tile.getBridge()));
-		}
+		substractBridge(sub, tile);
 		return sub;
 	}
 

@@ -2,8 +2,10 @@ package com.jcloisterzone.board;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 
@@ -246,6 +248,17 @@ public class Location implements Serializable {
 		if (d == null || (mask & d.mask) == 0) return null;
 		assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "interasect("+this+','+d+')';
 		return create(mask & d.mask);
+	}
+	
+	public Location[] intersectMulti(Location[] locs) {
+		List<Location> result = Lists.newArrayList();
+		for(Location loc: locs) {
+			Location i = this.intersect(loc);
+			if (i != null) {
+				result.add(i);
+			}
+		}
+		return result.toArray(new Location[result.size()]);
 	}
 
 	/** Creates instance according to name */

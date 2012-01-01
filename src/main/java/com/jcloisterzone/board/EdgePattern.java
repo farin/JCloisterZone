@@ -121,12 +121,27 @@ public class EdgePattern {
 		return result;
 	}
 	
-	public boolean isBridgeAllowed(Location loc, Rotation tileRotation) {
-		for(Location side : Location.sides()) {
-			Location l = loc.intersect(side);
-			if (l != null && at(l, tileRotation) != 'F') return false;
+	public boolean isBridgeAllowed(Location bridge, Rotation tileRotation) {
+		if (bridge == Location.NS) {
+			if (at(Location.N, tileRotation) != 'F') return false;
+			if (at(Location.S, tileRotation) != 'F') return false;
+		} else {
+			if (at(Location.W, tileRotation) != 'F') return false;
+			if (at(Location.E, tileRotation) != 'F') return false;
 		}
 		return true;
+	}
+	
+	public EdgePattern getBridgePattern(Location bridge) {
+		char[] bridgeCode = Arrays.copyOf(code, code.length); 
+		if (bridge == Location.NS) {
+			bridgeCode[0] = 'R';
+			bridgeCode[2] = 'R';
+		} else {
+			bridgeCode[1] = 'R';
+			bridgeCode[3] = 'R';
+		}		
+		return new EdgePattern(bridgeCode);
 	}
 
 	@Override

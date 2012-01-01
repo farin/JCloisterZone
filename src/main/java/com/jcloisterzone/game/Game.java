@@ -71,6 +71,8 @@ public class Game extends GameSettings {
 
 	private Map<Expansion, ExpandedGame> expandedGames = Maps.newHashMap();
 	private final GameDelegation expandedGamesDelegate = new ExpandedGameDelegate(this);
+	
+	private int idSequenceCurrVal = 0; 
 
 
 	public Ini getConfig() {
@@ -315,7 +317,10 @@ public class Game extends GameSettings {
 			scoreFeature(points, ctx, p);
 		}
 	}
-
+	
+	public int idSequnceNextVal() {
+		return ++idSequenceCurrVal;
+	}
 
 	//shortcut methods
 	public PrincessAndDragonGame getPrincessAndDragonGame() {

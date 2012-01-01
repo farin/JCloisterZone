@@ -48,9 +48,7 @@ public class Road extends CompletableFeature {
 	
 	public void setTunnelEdge(MultiTileFeature f) {
 		edges[edges.length - 1] = f;
-	}
-	
-	
+	}	
 
 	@Override
 	public RoadScoreContext getScoreContext() {

@@ -5,6 +5,7 @@ import static com.jcloisterzone.board.XmlUtils.asLocations;
 import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
 import static com.jcloisterzone.board.XmlUtils.attributeIntValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,8 +30,7 @@ public class TileFactory {
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	private Tile tile; //context
-	private List<Feature> features = Lists.newArrayList();
-	private int nextFeatureId = 1;
+	private ArrayList<Feature> features;	
 
 	private Game game;
 
@@ -46,6 +46,7 @@ public class TileFactory {
 	public Tile createTile(String fullId, Element xml, boolean isTunnelActive) {
 		Tile tile = new Tile(fullId);
 		this.tile = tile;
+		features = Lists.newArrayList();
 		tile.setGame(game);
 
 		logger.debug(">>> Creating " + tile.getId());
@@ -72,18 +73,18 @@ public class TileFactory {
 			processTowerElement((Element) nl.item(i));
 		}
 
-		tile.setFeatures(features.toArray(new Feature[features.size()]));
+		tile.setFeatures(features);
 		tile.setSymmetry(TileSymmetry.forTile(tile));
 		tile.setEdgePattern(EdgePattern.forTile(tile));
 
-		features.clear();
+		features = null;
 		this.tile = null; //clear context
 		return tile;
 	}
 
 	private void processCloisterElement(Element e) {
 		Cloister cloister = new Cloister();
-		cloister.setId(nextFeatureId++);
+		cloister.setId(game.idSequnceNextVal());
 		cloister.setTile(tile);
 		cloister.setLocation(Location.CLOISTER);
 		features.add(cloister);
@@ -92,7 +93,7 @@ public class TileFactory {
 
 	private void processTowerElement(Element e) {
 		Tower tower = new Tower();
-		tower.setId(nextFeatureId++);
+		tower.setId(game.idSequnceNextVal());
 		tower.setTile(tile);
 		tower.setLocation(Location.TOWER);
 		features.add(tower);
@@ -116,7 +117,7 @@ public class TileFactory {
 	private void processRoadElement(String[] sides, Element e, boolean isTunnelActive) {
 		//Road road = new Road(tile, sides.length, sides.length == 1 && attributeBoolValue(e, "tunnel"));
 		Road road = new Road();
-		road.setId(nextFeatureId++);
+		road.setId(game.idSequnceNextVal());
 		if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
 			road.setTunnelEnd(Road.OPEN_TUNNEL);
 		}
@@ -127,7 +128,7 @@ public class TileFactory {
 	private void processCityElement(Element e) {
 		String[] sides = asLocation(e);
 		City c = new City();
-		c.setId(nextFeatureId++);
+		c.setId(game.idSequnceNextVal());
 		c.setPennants(attributeIntValue(e, "pennant", 0));
 		initFromDirList(c, sides);
 		game.expansionDelegate().initFeature(tile, c, e);
@@ -137,7 +138,7 @@ public class TileFactory {
 	private void processFarmElement(Element e) {
 		String[] sides = asLocation(e);
 		Farm farm = new Farm();
-		farm.setId(nextFeatureId++);
+		farm.setId(game.idSequnceNextVal());
 		if (e.hasAttribute("city")) {
 			List<City> cities = Lists.newArrayList();
 			String[] citiesLocs = asLocations(e, "city");

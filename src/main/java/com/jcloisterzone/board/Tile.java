@@ -1,9 +1,12 @@
 package com.jcloisterzone.board;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
@@ -29,9 +32,9 @@ public class Tile /*implements Cloneable*/ {
 	protected Game game;
 	private final String id;
 
-	private Feature[] features;
+	private ArrayList<Feature> features;	
+	private Bridge bridge; //direct ref to bridge feature
 	private Location river;
-	private Location bridge;
 
 	protected TileSymmetry symmetry;
 	protected Position position = null;
@@ -73,15 +76,15 @@ public class Tile /*implements Cloneable*/ {
 	}
 
 	protected boolean check(Tile tile, Location rel, Board board) {
-		return edgePattern.at(rel, rotation) == tile.edgePattern.at(rel.rev(), tile.rotation);
+		return getEdgePattern().at(rel, rotation) == tile.getEdgePattern().at(rel.rev(), tile.rotation);
 	}
 
-	public void setFeatures(Feature[] features) {
+	public void setFeatures(ArrayList<Feature> features) {
 		assert this.features == null;
 		this.features = features;
 	}
 
-	public Feature[] getFeatures() {
+	public List<Feature> getFeatures() {
 		return features;
 	}
 
@@ -210,12 +213,18 @@ public class Tile /*implements Cloneable*/ {
 	}
 	
 	
-	public Location getBridge() {
+	public Bridge getBridge() {
 		return bridge;
 	}
 
-	public void setBridge(Location bridge) {
-		this.bridge = bridge;
+	public void placeBridge(Location bridgeLoc) {
+		assert bridge == null && bridgeLoc != null; //TODO AI support - remove bridge from tile
+		bridge = new Bridge();
+		bridge.setId(game.idSequnceNextVal());
+		bridge.setTile(this);		
+		bridge.setLocation(bridgeLoc.rotateCCW(rotation));
+		features.add(bridge);		
+		edgePattern = edgePattern.getBridgePattern(bridgeLoc); 
 	}
 
 

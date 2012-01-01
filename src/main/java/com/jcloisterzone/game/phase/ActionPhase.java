@@ -16,6 +16,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 
 
 public class ActionPhase extends Phase {
@@ -129,6 +130,13 @@ public class ActionPhase extends Phase {
 		m.deploy(getBoard().get(p), loc);
 		next();
 	}
-
+	
+	@Override
+	public void deployBridge(Position pos, Location loc) {
+		BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+		bcb.decreaseBridges(getActivePlayer());		
+		bcb.deployBridge(pos, loc);
+		next(ActionPhase.class);
+	}
 
 }

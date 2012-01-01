@@ -9,7 +9,6 @@ public enum Rotation {
 	R180,
 	R270;
 
-
 	public AffineTransform getAffineTransform(int size) {
 		AffineTransform at;
 		switch (ordinal()) {
@@ -35,6 +34,16 @@ public enum Rotation {
 	public Rotation next() {
 		if (ordinal() == values().length - 1) return values()[0];
 		return values()[ordinal()+1];
+	}
+	
+	public Rotation inverse() {
+		switch (this) {
+			case R0: return R0;
+			case R90: return R270;
+			case R180: return R180;
+			case R270: return R90;
+		}
+		throw new IllegalStateException();			
 	}
 
 }

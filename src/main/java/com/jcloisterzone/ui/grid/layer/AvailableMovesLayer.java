@@ -108,7 +108,7 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 	public void mouseClicked(MouseEvent e, Position p) {
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1 :
-				assert p.equals(previewPosition);
+				assert p.equals(previewPosition) : "Expected " + previewIcon + ", get " + p;
 				if (allowedRotation) {
 					getClient().getServer().placeTile(previewRotation, p);
 				}

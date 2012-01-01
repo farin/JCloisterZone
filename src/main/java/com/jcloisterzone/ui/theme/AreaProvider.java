@@ -33,7 +33,16 @@ public class AreaProvider {
 	private final Map<String, Area> areas; //key is descriptor
 	private final Map<String, Area> substraction; //key tile ID
 	private final Set<String> complementFarms;
-
+	
+	private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
+	
+	static {
+		Area a = new Area(new Rectangle(400, 0, 200, 1000));
+		a.subtract(new Area(new Ellipse2D.Double(300, 150, 200, 700)));
+		BRIDGE_AREA_NS = new Area(a);
+		a.transform(Rotation.R270.getAffineTransform(TileTheme.NORMALIZED_SIZE));
+		BRIDGE_AREA_WE = a;		
+	}
 
 	public AreaProvider(URL areaDef) {
 		ImmutableMap.Builder<String, Area> areaBuilder = new ImmutableMap.Builder<String, Area>();
@@ -167,7 +176,7 @@ public class AreaProvider {
 		}
 	}
 
-	private String getDescriptor(Tile tile, Rotation rotation, String  featureName, Location d) {
+	private String getDescriptor(Tile tile, Rotation rotation, String  featureName, Location loc) {
 		StringBuilder desc = new StringBuilder();
 		if (tile == null) {
 			desc.append("* ");
@@ -175,29 +184,30 @@ public class AreaProvider {
 			desc.append(tile.getId()).append(" ");
 		}
 		desc.append(featureName).append(" ");
-		desc.append(d.rotateCCW(rotation).toString());
+		desc.append(loc.rotateCCW(rotation).toString());
 		return desc.toString();
 	}
 
 	//copy from FigurePositionProvider - TODO maybe merge
-
 
 	public Area getArea(Tile tile, Feature piece, Location loc) {
 		return getArea(tile, piece.getClass(), loc);
 	}
 
 	public Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
-		return getArea(tile, featureClass.getSimpleName().replace("Piece", "").toUpperCase(), loc);
+		return getArea(tile, featureClass.getSimpleName().toUpperCase(), loc);
 	}
 
 	private Area getArea(Tile tile, String featureName, Location loc) {
-		Rotation iconRotation = tile.getRotation();
-		String descriptor = getDescriptor(tile, iconRotation, featureName, loc);
-
+		Rotation tileRotation = tile.getRotation();							
+		if (featureName.equals("BRIDGE")) {
+			return getBridgeArea(loc.rotateCCW(tileRotation));
+		}
+		String descriptor = getDescriptor(tile, tileRotation, featureName, loc);
 		Area area = areas.get(descriptor);
 		if (area == null) {
 			//try generic descriptor
-			area = areas.get(getDescriptor(null, iconRotation, featureName, loc));
+			area = areas.get(getDescriptor(null, tileRotation, featureName, loc));
 			if (area == null) {
 				logger.error("No shape defined for <" + descriptor + ">");
 				//just return some area - no sense in values
@@ -208,9 +218,9 @@ public class AreaProvider {
 	}
 	
 	public Area getBridgeArea(Location loc) {
-		//TODO use display.xml to define areas
-		if (loc == Location.NS) return new Area(new Rectangle(400, 0, 200, 1000)); 
-		if (loc == Location.WE) return  new Area(new Rectangle(0, 400, 1000, 200));
+		//TODO use display.xml to define areas ? (but it is too complicated shape) 
+		if (loc == Location.NS) return BRIDGE_AREA_NS; 
+		if (loc == Location.WE) return BRIDGE_AREA_WE;
 		throw new IllegalArgumentException("Incorrect location");
 	}
 

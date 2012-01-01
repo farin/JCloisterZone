@@ -3,10 +3,14 @@ package com.jcloisterzone.ui.legacy;
 import java.awt.geom.Area;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableMap;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
@@ -25,6 +29,8 @@ import com.jcloisterzone.ui.theme.TileTheme;
  */
 @Deprecated
 public class FigurePositionProvider {
+	
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final TileTheme theme;
 
@@ -225,6 +231,9 @@ public class FigurePositionProvider {
 		if (piece.equals(Road.class)) {
 			return getRoadPlacement(tile,d);
 		}
+		if (piece.equals(Bridge.class)) {
+			return getBridgePlacement(tile,d);
+		}
 		if (piece.equals(City.class)) {
 			return getCityPlacement(tile,d);
 		}
@@ -237,6 +246,7 @@ public class FigurePositionProvider {
 			int y = a.getBounds().y + a.getBounds().height / 2;
 			return new ImmutablePoint(x / 10, y / 10); //normalize to old value 100px
 		}
+		logger.error("Meeple placement is not defined for {}", key);
 		return null;
 	}
 
@@ -250,6 +260,14 @@ public class FigurePositionProvider {
 			return new ImmutablePoint(CENTER, QUARTER);
 		}
 		return P_CENTER;
+	}
+	
+	private ImmutablePoint getBridgePlacement(Tile tile, Location loc) {
+		ImmutablePoint p = new ImmutablePoint(CENTER, FIG_ROAD_PLACE);
+		if (loc == Location.WE) {
+			p = p.rotate(Rotation.R270);
+		}
+		return p;
 	}
 
 	private ImmutablePoint getCityPlacement(Tile tile, Location d) {
