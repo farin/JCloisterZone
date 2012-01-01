@@ -202,8 +202,9 @@ public class AreaProvider {
 		Rotation tileRotation = tile.getRotation();							
 		if (featureName.equals("BRIDGE")) {
 			Area a =  getBridgeArea(loc.rotateCCW(tileRotation));
-			if (tile.getRotation() == Rotation.R180 || tile.getRotation() == Rotation.R270) {
-				//bridge is same for R0 and R180 
+			//bridge is independent on tile rotation
+			if ((loc == Location.WE && (tileRotation == Rotation.R90 || tileRotation == Rotation.R180)) ||
+				(loc == Location.NS && (tileRotation == Rotation.R180 || tileRotation == Rotation.R270))) {
 				a = new Area(a);
 				a.transform(Rotation.R180.getAffineTransform(TileTheme.NORMALIZED_SIZE));
 			}

@@ -70,13 +70,17 @@ public class Tile /*implements Cloneable*/ {
 	public void setEdgePattern(EdgePattern edgePattern) {
 		this.edgePattern = edgePattern;
 	}
+	
+	public char getEdge(Location side) {
+		return getEdgePattern().at(side, rotation);
+	}
 
 	public String getId() {
 		return id;
 	}
 
 	protected boolean check(Tile tile, Location rel, Board board) {
-		return getEdgePattern().at(rel, rotation) == tile.getEdgePattern().at(rel.rev(), tile.rotation);
+		return getEdge(rel) == tile.getEdge(rel.rev());
 	}
 
 	public void setFeatures(ArrayList<Feature> features) {

@@ -321,7 +321,7 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 			int castles  = bcb.getPlayerCastles(p);
 			g2.drawString(castles + "", 5, BRIDGES_Y + 16);
 			g2.drawImage(figures.get(PanelImages.CASTLE), 20, BRIDGES_Y, null);
-			int bridges  = bcb.getPlayerCastles(p);
+			int bridges  = bcb.getPlayerBridges(p);
 			g2.drawString(bridges + "", 80, BRIDGES_Y + 16);
 			g2.drawImage(figures.get(PanelImages.BRIDGE), 95, BRIDGES_Y, null);
 		}

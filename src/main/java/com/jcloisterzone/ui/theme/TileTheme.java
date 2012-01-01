@@ -180,7 +180,8 @@ public class TileTheme extends Theme {
 	private void substractBridge(Area substractions, Tile tile) {
 		Bridge bridge = tile.getBridge(); 
 		if (bridge != null) {
-			Area area = areaProvider.getBridgeArea(bridge.getLocation());			
+			Area area;
+			area = areaProvider.getArea(tile, Bridge.class, bridge.getLocation());
 			substractions.add(area);
 		}
 	}	
@@ -208,8 +209,7 @@ public class TileTheme extends Theme {
 		Area substraction = areaProvider.getSubstractionArea(tile);
 		if (substraction != null) {
 			sub.add(substraction);
-		}
-		substractBridge(sub, tile);
+		}		
 		return sub;
 	}
 

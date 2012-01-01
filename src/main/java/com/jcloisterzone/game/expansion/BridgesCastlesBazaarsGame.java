@@ -2,7 +2,6 @@ package com.jcloisterzone.game.expansion;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
@@ -10,7 +9,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -54,7 +52,6 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	
 	@Override
 	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-		//TODO allow only one bridge per turn
 		if (! bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
 			BridgeAction action = prepareBridgeAction();
 			if (action != null) {
@@ -64,62 +61,112 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	}
 	
 	public BridgeAction prepareMandatoryBridgeAction() {
-		return prepareBridgeAction(); 
+		Tile tile = game.getTile();	
+		for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+			Tile adjacent = entry.getValue();
+			Location rel = entry.getKey();
+			
+			char adjacentSide = adjacent.getEdge(rel.rev());
+			char tileSide = tile.getEdge(rel);
+			if (tileSide != adjacentSide) {
+				Location bridgeLoc = getBridgeLocationForAdjacent(rel);
+				BridgeAction action = prepareTileBridgeAction(tile, null, bridgeLoc);
+				if (action != null) return action;
+				return prepareTileBridgeAction(adjacent, null, bridgeLoc);
+			}			
+		}
+		throw new IllegalStateException();
+	}
+	
+	private Location getBridgeLocationForAdjacent(Location rel) {
+		if (rel == Location.N || rel == Location.S) {
+			return Location.NS;
+		} else {
+			return Location.WE;
+		}	
 	}
 	
 	private BridgeAction prepareBridgeAction() {
 		BridgeAction action = null;		
 		Tile tile = game.getTile();		
-		action = prepareTileBridgeAction(tile, action);
-		for(Tile adjacent : getBoard().getAdjacentTilesMap(tile.getPosition()).values()) {
-			action = prepareTileBridgeAction(adjacent, action);
-		}
-		return action;
-	}
-	
-	private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action) {
 		action = prepareTileBridgeAction(tile, action, Location.NS);
 		action = prepareTileBridgeAction(tile, action, Location.WE);
+		for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+			Tile adjacent = entry.getValue();
+			Location rel = entry.getKey();
+			action = prepareTileBridgeAction(adjacent, action, getBridgeLocationForAdjacent(rel));
+		}
 		return action;
 	}
 		
 	private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action, Location bridgeLoc) {
-		if (! tile.isBridgeAllowed(bridgeLoc)) return action;		
-		for(Location side : bridgeLoc.intersectMulti(Location.sides())) {
-			Tile adjacent = getBoard().get(tile.getPosition().add(side));
-			if (adjacent != null) {
-				if (adjacent.getEdgePattern().at(side.rev(), adjacent.getRotation()) != 'R') {
-					return action;
-				}
-			}
-		}					
-		if (action == null) action = new BridgeAction();
-		action.getSites().getOrCreate(tile.getPosition()).add(bridgeLoc);			
+		if (isBridgePlacementAllowed(tile, tile.getPosition(), bridgeLoc)) {
+			if (action == null) action = new BridgeAction();
+			action.getSites().getOrCreate(tile.getPosition()).add(bridgeLoc);
+		}
 		return action;
+	}
+	
+	private boolean isBridgePlacementAllowed(Tile tile, Position p, Location bridgeLoc) {
+		if (! tile.isBridgeAllowed(bridgeLoc)) return false;
+		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {			
+			Location rel = e.getKey();
+			if (rel.intersect(bridgeLoc) != null) {
+				Tile adjacent = e.getValue();
+				char adjacentSide = adjacent.getEdge(rel.rev()); 
+				if (adjacentSide != 'R') return false;				
+			}
+		}
+		return true;
 	}
 	
 	@Override
 	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
 		if (getPlayerBridges(game.getActivePlayer()) > 0) {			
-			if (isBridgePlacementAllowed(tile, p, Location.NS)) return true;
-			if (isBridgePlacementAllowed(tile, p, Location.WE)) return true;
+			if (isTilePlacementWithBridgeAllowed(tile, p, Location.NS)) return true;
+			if (isTilePlacementWithBridgeAllowed(tile, p, Location.WE)) return true;			
+			if (isTilePlacementWithOneAdjacentBridgeAllowed(tile, p)) return true;
 		}
 		return false;
 	}
 		
-	private boolean isBridgePlacementAllowed(Tile tile, Position p, Location bridge) {
-		if (! tile.isBridgeAllowed(bridge)) return false;
-		EdgePattern pattern = tile.getEdgePattern().getBridgePattern(bridge.rotateCCW(tile.getRotation()));
+	private boolean isTilePlacementWithBridgeAllowed(Tile tile, Position p, Location bridgeLoc) {
+		if (! tile.isBridgeAllowed(bridgeLoc)) return false;
+
+		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {						
+			Tile adjacent = e.getValue();
+			Location rel = e.getKey();			
+			
+			char adjacentSide = adjacent.getEdge(rel.rev());
+			char tileSide = tile.getEdge(rel);
+			if (rel.intersect(bridgeLoc) != null) {
+				if (adjacentSide != 'R') return false;				
+			} else {
+				if (adjacentSide != tileSide) return false;
+			}
+		}		
+		return true;
+	}
+	
+	private boolean isTilePlacementWithOneAdjacentBridgeAllowed(Tile tile, Position p) {
+		boolean bridgeUsed = false;
 		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
 			Tile adjacent = e.getValue();
-			Location rel = e.getKey();
-			char tileSide = pattern.at(rel, tile.getRotation());
-			char adjacentSide = adjacent.getEdgePattern().at(rel.rev(), adjacent.getRotation()); 
+			Location rel = e.getKey();			
+			
+			char tileSide = tile.getEdge(rel);
+			char adjacentSide = adjacent.getEdge(rel.rev());
+			
 			if (tileSide != adjacentSide) {
-				return false;
+				if (bridgeUsed) return false;
+				if (tileSide != 'R') return false;
+				
+				Location bridgeLoc = getBridgeLocationForAdjacent(rel);							
+				if (! isBridgePlacementAllowed(adjacent, adjacent.getPosition(), bridgeLoc)) return false;
+				bridgeUsed = true;
 			}
 		}
-		return true;
+		return bridgeUsed; //ok if exactly one bridge is used 
 	}
 	
 	public int getPlayerCastles(Player pl) {

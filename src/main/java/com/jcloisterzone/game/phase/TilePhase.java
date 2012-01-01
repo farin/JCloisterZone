@@ -7,13 +7,13 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -81,18 +81,15 @@ public class TilePhase extends Phase {
 		
 		if (bridgeRequired) {
 			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-			BridgeAction action = bcb.prepareMandatoryBridgeAction();
-			game.getUserInterface().selectAction(Collections.<PlayerAction>singletonList(action));
-		} else {
-			postPlacement();
+			Sites sites = bcb.prepareMandatoryBridgeAction().getSites();
+			
+			assert sites.size() == 1;
+			Position pos = sites.keySet().iterator().next();
+			Location loc = sites.get(pos).iterator().next();
+			
+			bcb.decreaseBridges(getActivePlayer());		
+			bcb.deployBridge(pos, loc);
 		}
-	}
-	
-	@Override
-	public void deployBridge(Position pos, Location loc) {
-		BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-		bcb.decreaseBridges(getActivePlayer());		
-		bcb.deployBridge(pos, loc);
 		postPlacement();		
 	}
 	
