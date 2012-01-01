@@ -14,8 +14,9 @@ public class TilePlacedOperation implements Operation {
 	}
 
 	@Override
-	public void undo(Game game) {		
-		game.getBoard().remove(tile.getPosition());		
+	public void undo(Game game) {
+		game.getBoard().unmergeFeatures(tile);
+		game.getBoard().remove(tile);		
 		if (tile.isAbbeyTile()) {
 			((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
 		}

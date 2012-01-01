@@ -49,10 +49,11 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 		getTilePack().activateGroup("default");
 		getTilePack().deactivateGroup("river");
 		Tile lake = getTilePack().drawTile(TilePack.INACTIVE_GROUP, getLakeId());
-		getBoard().checkMoves(lake);
+		getBoard().refreshAvailablePlacements(lake);
 		Entry<Position, Set<Rotation>> entry = getBoard().getAvailablePlacements().entrySet().iterator().next();
 		lake.setRotation(entry.getValue().iterator().next());
 		getBoard().add(lake, entry.getKey());
+		getBoard().mergeFeatures(lake);
 		game.fireGameEvent().tilePlaced(lake);
 	}
 
@@ -70,7 +71,7 @@ public abstract class AbstractRiverGame extends ExpandedGame {
 	}
 
 	@Override
-	public boolean checkMove(Tile tile, Position p) {
+	public boolean isPlacementAllowed(Tile tile, Position p) {
 		if (tile.getRiver() == null) return true;
 		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
 

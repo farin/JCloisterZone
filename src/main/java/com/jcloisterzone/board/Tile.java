@@ -219,12 +219,13 @@ public class Tile /*implements Cloneable*/ {
 
 	public void placeBridge(Location bridgeLoc) {
 		assert bridge == null && bridgeLoc != null; //TODO AI support - remove bridge from tile
+		Location normalizedLoc = bridgeLoc.rotateCCW(rotation); 
 		bridge = new Bridge();
 		bridge.setId(game.idSequnceNextVal());
 		bridge.setTile(this);		
-		bridge.setLocation(bridgeLoc.rotateCCW(rotation));
+		bridge.setLocation(normalizedLoc);
 		features.add(bridge);		
-		edgePattern = edgePattern.getBridgePattern(bridgeLoc); 
+		edgePattern = edgePattern.getBridgePattern(normalizedLoc); 
 	}
 
 
@@ -315,18 +316,9 @@ public class Tile /*implements Cloneable*/ {
 		this.river = river;
 	}
 	
-	public Set<Location> getAllowedBridges() {
-		if (isForbidden() || getBridge() != null) return null;
-		Set<Location> allowed = null;
-		if (edgePattern.isBridgeAllowed(Location.NS, rotation)) {
-			allowed = Sets.newHashSet();
-			allowed.add(Location.NS);
-		}
-		if (edgePattern.isBridgeAllowed(Location.WE, rotation)) {
-			if (allowed == null) allowed = Sets.newHashSet();
-			allowed.add(Location.WE);
-		}
-		return allowed;
+	public boolean isBridgeAllowed(Location bridgeLoc) {
+		if (isForbidden() || getBridge() != null) return false;
+		return edgePattern.isBridgeAllowed(bridgeLoc, rotation);
 	}
 
 }

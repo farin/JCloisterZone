@@ -61,12 +61,5 @@ public class AiUserInterfaceAdapter implements UserInterface {
 			aiPlayer.selectDragonMove(positions, movesLeft);
 		}
 	}
-	
-	@Override
-	public void selectBridgePlacement(BridgeAction action) {
-		if (aiPlayer.isAiPlayerActive()) {
-			aiPlayer.selectBridgePlacement(action);
-		}		
-	}
 
 }

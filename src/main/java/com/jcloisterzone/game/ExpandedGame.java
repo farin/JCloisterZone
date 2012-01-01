@@ -89,15 +89,15 @@ public class ExpandedGame implements GameDelegation {
 	@Override
 	public void finalScoring() {
 	}
-
-
+	
 	@Override
-	public boolean checkMove(Tile tile, Position p) {
-		return true;
+	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {		
+		return false;
 	}
 
-
-
-
+	@Override
+	public boolean isPlacementAllowed(Tile tile, Position p) {
+		return true;
+	}
 
 }

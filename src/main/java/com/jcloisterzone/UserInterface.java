@@ -18,7 +18,6 @@ public interface UserInterface extends EventListener {
 	void selectTilePlacement(Map<Position, Set<Rotation>> placements);
 	void selectAction(List<PlayerAction> actions);
 	void selectTowerCapture(CaptureAction action);
-	void selectBridgePlacement(BridgeAction action);
 	void selectDragonMove(Set<Position> positions, int movesLeft);
 
 }

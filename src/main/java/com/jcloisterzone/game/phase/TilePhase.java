@@ -1,11 +1,15 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.BridgeAction;
+import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -18,6 +22,7 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 
 public class TilePhase extends Phase {
@@ -62,8 +67,39 @@ public class TilePhase extends Phase {
 	public void placeTile(Rotation rotation, Position p) {
 		Tile nextTile = getTile();
 		nextTile.setRotation(rotation);
+		
+		boolean bridgeRequired = false;
+		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+			bridgeRequired = ! getBoard().isPlacementAllowed(nextTile, p);
+		}
 
 		getBoard().add(nextTile, p);
+		if (nextTile.getTower() != null) {
+			game.getTowerGame().registerTower(p);
+		}		
+		game.fireGameEvent().tilePlaced(nextTile);
+		
+		if (bridgeRequired) {
+			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+			BridgeAction action = bcb.prepareMandatoryBridgeAction();
+			game.getUserInterface().selectAction(Collections.<PlayerAction>singletonList(action));
+		} else {
+			postPlacement();
+		}
+	}
+	
+	@Override
+	public void deployBridge(Position pos, Location loc) {
+		BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+		bcb.decreaseBridges(getActivePlayer());		
+		bcb.deployBridge(pos, loc);
+		postPlacement();		
+	}
+	
+	private void postPlacement() {
+		Tile tile = getTile();
+		
+		getBoard().mergeFeatures(tile);
 
 		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
 			Map<City, CityScoreContext> cityCache = Maps.newHashMap();
@@ -73,12 +109,8 @@ public class TilePhase extends Phase {
 				}
 			}
 		}
-
-		if (nextTile.getTower() != null) {
-			game.getTowerGame().registerTower(p);
-		}
-		game.fireGameEvent().tilePlaced(nextTile);
-		if (nextTile.getTrigger() == TileTrigger.VOLCANO) {
+			
+		if (tile.getTrigger() == TileTrigger.VOLCANO) {
 			PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
 			pd.setDragonPosition(getTile().getPosition());
 			game.getTilePack().activateGroup("dragon");

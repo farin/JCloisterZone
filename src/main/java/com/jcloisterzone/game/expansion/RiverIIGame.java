@@ -21,9 +21,9 @@ public final class RiverIIGame extends AbstractRiverGame {
 	}
 
 	@Override
-	public boolean checkMove(Tile tile, Position p) {
+	public boolean isPlacementAllowed(Tile tile, Position p) {
 		if (! getGame().hasExpansion(Expansion.RIVER)) {
-			return super.checkMove(tile, p);
+			return super.isPlacementAllowed(tile, p);
 		}
 		return true;
 	}

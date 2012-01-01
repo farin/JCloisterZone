@@ -210,12 +210,6 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 	}
 	
 	@Override
-	public void selectBridgePlacement(BridgeAction action) {
-		((UserInterface)a).selectBridgePlacement(action);
-		((UserInterface)b).selectBridgePlacement(action);		
-	}
-	
-	@Override
 	public void bridgeDeployed(Position pos, Location loc) {
 		((GameEventListener)a).bridgeDeployed(pos, loc);
 		((GameEventListener)b).bridgeDeployed(pos, loc);

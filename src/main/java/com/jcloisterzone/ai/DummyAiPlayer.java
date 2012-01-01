@@ -68,11 +68,4 @@ public class DummyAiPlayer extends AiPlayer {
 		getServer().moveDragon(positions.iterator().next());
 	}
 	
-	@Override
-	public void selectBridgePlacement(BridgeAction action) {
-		Position p = action.getSites().keySet().iterator().next();
-		Location loc = action.getSites().get(p).iterator().next();
-		getServer().deployBridge(p, loc);		
-	}
-
 }

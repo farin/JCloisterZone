@@ -158,6 +158,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 	protected void preplaceTiles() {
 		for(Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
 			game.getBoard().add(preplaced, preplaced.getPosition(), true);
+			game.getBoard().mergeFeatures(preplaced);
 			game.fireGameEvent().tilePlaced(preplaced);
 		}
 	}

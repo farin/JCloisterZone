@@ -61,6 +61,7 @@ public class LoadGamePhase extends CreateGamePhase {
 		for(Iterator<Tile> iter = ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles().iterator(); iter.hasNext();) {
 			Tile preplaced = iter.next();
 			game.getBoard().add(preplaced, preplaced.getPosition(), true);
+			game.getBoard().mergeFeatures(preplaced);
 			game.fireGameEvent().tilePlaced(preplaced);
 		}
 		for(Meeple m : tilePackFactory.getPreplacedMeeples()) {
@@ -97,7 +98,7 @@ public class LoadGamePhase extends CreateGamePhase {
 			//tile drawn but not placed yet
 			String tileId = snapshot.getNextTile();
 			Tile tile = game.getTilePack().drawTile(tileId);
-			game.getBoard().checkMoves(tile);
+			game.getBoard().refreshAvailablePlacements(tile);
 			game.fireGameEvent().tileDrawn(tile);
 		}
 		super.next();

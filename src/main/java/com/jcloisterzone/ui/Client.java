@@ -600,11 +600,6 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	}
 	
 	@Override
-	public void selectBridgePlacement(BridgeAction action) {
-		controlPanel.selectAction(Collections.<PlayerAction>singletonList(action), true);		
-	}
-
-	@Override
 	public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
 		mainPanel.tunnelPiecePlaced(player, p, d, isSecondPiece);
 	}

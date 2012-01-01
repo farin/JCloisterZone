@@ -81,7 +81,7 @@ public class DrawPhase extends ServerAwarePhase {
 	}
 
 	private void nextTile(Tile tile) {
-		getBoard().checkMoves(tile);
+		getBoard().refreshAvailablePlacements(tile);
 		if (getBoard().getAvailablePlacementPositions().isEmpty()) {
 			getBoard().discardTile(tile.getId());
 			next(DrawPhase.class);

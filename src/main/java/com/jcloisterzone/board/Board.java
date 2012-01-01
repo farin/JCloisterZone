@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Game;
 
 
@@ -46,15 +47,19 @@ public class Board {
 	 * Updates current avail moves for next turn
 	 * @param tile next tile
 	 */
-	public void checkMoves(Tile tile) {
+	public void refreshAvailablePlacements(Tile tile) {
 		Rotation tileRotation = tile.getRotation();
 		currentAvailMoves.clear();
 		for (Position p : availMoves.keySet()) {
 			EnumSet<Rotation> allowed = EnumSet.noneOf(Rotation.class);
 			for(Rotation rotation: Rotation.values()) {
 				tile.setRotation(rotation);
-				if (! checkPlacement(tile, p)) continue;
-				if (! game.expansionDelegate().checkMove(tile, p)) continue;
+				if (! isPlacementAllowed(tile, p)) {
+					if (! game.expansionDelegate().isSpecialPlacementAllowed(tile, p)) {
+						continue;
+					}
+				}
+				if (! game.expansionDelegate().isPlacementAllowed(tile, p)) continue;
 				allowed.add(rotation);
 			}
 			if (! allowed.isEmpty()) {
@@ -103,11 +108,7 @@ public class Board {
 					throw new IllegalArgumentException("Incorrect rotation");
 				}
 			}
-		}
-
-		for(Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
-			tile.merge(e.getValue(), e.getKey());
-		}
+		}		
 
 		tiles.put(p, tile);
 		availMovesRemove(p);
@@ -128,14 +129,18 @@ public class Board {
 		if (p.y > maxY) maxY = p.y;
 		if (p.y < minY) minY = p.y;
 	}
-
-	public void remove(Position pos) {
-		assert tiles.containsKey(pos);
-		Tile tile = tiles.remove(pos);
-		tile.setPosition(null);
-		for(Entry<Location, Tile> e : getAdjacentTilesMap(pos).entrySet()) {
-			tile.unmerge(e.getValue(), e.getKey());
+	
+	public void mergeFeatures(Tile tile) {
+		for(Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+			tile.merge(e.getValue(), e.getKey());
 		}
+	}
+
+	public void remove(Tile tile) {
+		Position pos = tile.getPosition(); 
+		assert pos != null;
+		tiles.remove(pos);
+		tile.setPosition(null);		
 		availMovesAdd(pos);
 		if (isHole(pos)) holes.add(pos);
 		for(Position offset: Position.ADJACENT.values()) {
@@ -144,6 +149,13 @@ public class Board {
 			if (getAdjacentCount(next) == 0) {
 				availMoves.remove(next);
 			}
+		}
+	}
+	
+	public void unmergeFeatures(Tile tile) {
+		assert tile.getPosition() != null;
+		for(Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+			tile.unmerge(e.getValue(), e.getKey());
 		}
 	}
 
@@ -211,7 +223,7 @@ public class Board {
 
 	/*
 	 * Check if placement is legal against orthonogal neigbours. */
-	private boolean checkPlacement(Tile tile, Position p) {
+	public boolean isPlacementAllowed(Tile tile, Position p) { 
 		for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
 			if (! tile.check(e.getValue(), e.getKey(), this)) {
 				return false;

@@ -3,6 +3,7 @@ package com.jcloisterzone.game.expansion;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,6 +14,7 @@ import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -61,6 +63,10 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 		} 
 	}
 	
+	public BridgeAction prepareMandatoryBridgeAction() {
+		return prepareBridgeAction(); 
+	}
+	
 	private BridgeAction prepareBridgeAction() {
 		BridgeAction action = null;		
 		Tile tile = game.getTile();		
@@ -72,28 +78,48 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	}
 	
 	private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action) {
-		Set<Location> locs = tile.getAllowedBridges();				
-		if (locs != null) {
-			Set<Location> correctConnection = null;
-			outer:
-			for(Location loc : locs) {
-				for(Location side : loc.intersectMulti(Location.sides())) {
-					Tile adjacent = getBoard().get(tile.getPosition().add(side));
-					if (adjacent != null) {
-						if (adjacent.getEdgePattern().at(side.rev(), adjacent.getRotation()) != 'R') {
-							continue outer;
-						}
-					}
+		action = prepareTileBridgeAction(tile, action, Location.NS);
+		action = prepareTileBridgeAction(tile, action, Location.WE);
+		return action;
+	}
+		
+	private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action, Location bridgeLoc) {
+		if (! tile.isBridgeAllowed(bridgeLoc)) return action;		
+		for(Location side : bridgeLoc.intersectMulti(Location.sides())) {
+			Tile adjacent = getBoard().get(tile.getPosition().add(side));
+			if (adjacent != null) {
+				if (adjacent.getEdgePattern().at(side.rev(), adjacent.getRotation()) != 'R') {
+					return action;
 				}
-				if (correctConnection == null) correctConnection = Sets.newHashSet();
-				correctConnection.add(loc);				
-			}			
-			if (correctConnection != null) {			
-				if (action == null) action = new BridgeAction();
-				action.getSites().put(tile.getPosition(), correctConnection);
+			}
+		}					
+		if (action == null) action = new BridgeAction();
+		action.getSites().getOrCreate(tile.getPosition()).add(bridgeLoc);			
+		return action;
+	}
+	
+	@Override
+	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
+		if (getPlayerBridges(game.getActivePlayer()) > 0) {			
+			if (isBridgePlacementAllowed(tile, p, Location.NS)) return true;
+			if (isBridgePlacementAllowed(tile, p, Location.WE)) return true;
+		}
+		return false;
+	}
+		
+	private boolean isBridgePlacementAllowed(Tile tile, Position p, Location bridge) {
+		if (! tile.isBridgeAllowed(bridge)) return false;
+		EdgePattern pattern = tile.getEdgePattern().getBridgePattern(bridge.rotateCCW(tile.getRotation()));
+		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
+			Tile adjacent = e.getValue();
+			Location rel = e.getKey();
+			char tileSide = pattern.at(rel, tile.getRotation());
+			char adjacentSide = adjacent.getEdgePattern().at(rel.rev(), adjacent.getRotation()); 
+			if (tileSide != adjacentSide) {
+				return false;
 			}
 		}
-		return action;
+		return true;
 	}
 	
 	public int getPlayerCastles(Player pl) {
@@ -118,7 +144,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	
 	public void deployBridge(Position pos, Location loc) {
 		Tile tile = getBoard().get(pos);
-		if (! tile.getAllowedBridges().contains(loc)) {
+		if (! tile.isBridgeAllowed(loc)) {
 			throw new IllegalArgumentException("Cannot deploy " + loc + " bridge on " + pos);
 		}
 		bridgeUsed = true;

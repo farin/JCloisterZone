@@ -33,8 +33,9 @@ public class AbstractScoringTest extends AbstractTileTest {
 	protected Tile putTile(Position pos, Rotation rot,  Expansion exp, String id) {
 		Tile tile = createTile(exp, id);
 		tile.setRotation(rot);
-		game.getBoard().checkMoves(tile);
+		game.getBoard().refreshAvailablePlacements(tile);
 		game.getBoard().add(tile, pos, true);
+		game.getBoard().mergeFeatures(tile);
 		return tile;
 	}
 	

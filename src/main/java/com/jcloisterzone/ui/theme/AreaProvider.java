@@ -201,7 +201,13 @@ public class AreaProvider {
 	private Area getArea(Tile tile, String featureName, Location loc) {
 		Rotation tileRotation = tile.getRotation();							
 		if (featureName.equals("BRIDGE")) {
-			return getBridgeArea(loc.rotateCCW(tileRotation));
+			Area a =  getBridgeArea(loc.rotateCCW(tileRotation));
+			if (tile.getRotation() == Rotation.R180 || tile.getRotation() == Rotation.R270) {
+				//bridge is same for R0 and R180 
+				a = new Area(a);
+				a.transform(Rotation.R180.getAffineTransform(TileTheme.NORMALIZED_SIZE));
+			}
+			return a;
 		}
 		String descriptor = getDescriptor(tile, tileRotation, featureName, loc);
 		Area area = areas.get(descriptor);

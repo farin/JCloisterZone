@@ -28,7 +28,10 @@ public interface GameDelegation {
 	void finalScoring();
 	//void tilePlaced(Tile tile);
 
-	boolean checkMove(Tile tile, Position p);
+	/** allow placements which are normally not allowed */
+	boolean isSpecialPlacementAllowed(Tile tile, Position p);
+	/** forbid placements which are normally allowed */
+	boolean isPlacementAllowed(Tile tile, Position p);
 
 
 

@@ -231,11 +231,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		throw new UnsupportedOperationException();
 	}
 	
-	@Override
-	public void selectBridgePlacement(BridgeAction action) {
-		throw new UnsupportedOperationException();		
-	}
-
 	abstract protected double rank();
 
 }

@@ -77,12 +77,19 @@ public class ExpandedGameDelegate implements GameDelegation {
 			eg.finalScoring();
 		}
 	}
-
+	
+	@Override
+	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
+		for(GameDelegation eg: game.getExpandedGames()) {
+			if (eg.isSpecialPlacementAllowed(tile, p)) return true;
+		}
+		return false;
+	}
 
 	@Override
-	public boolean checkMove(Tile tile, Position p) {
+	public boolean isPlacementAllowed(Tile tile, Position p) {
 		for(GameDelegation eg: game.getExpandedGames()) {
-			if (! eg.checkMove(tile, p)) return false;
+			if (! eg.isPlacementAllowed(tile, p)) return false;
 		}
 		return true;
 	}

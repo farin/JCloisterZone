@@ -52,7 +52,7 @@ public final class CultGame extends ExpandedGame {
 	}
 
 	@Override
-	public boolean checkMove(Tile tile, Position p) {
+	public boolean isPlacementAllowed(Tile tile, Position p) {
 		if (tile.hasCloister()) {
 			int opositeCount = 0;
 			int sameCount = 0;
