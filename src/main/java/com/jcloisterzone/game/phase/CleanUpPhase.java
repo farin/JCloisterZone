@@ -11,13 +11,16 @@ public class CleanUpPhase extends Phase {
 
 	@Override
 	public void enter() {
-		boolean builderTakeAnotherTurn = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) && game.getTradersAndBuildersGame().takeAnotherTurn();
+		boolean builderTakeAnotherTurn = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) && game.getTradersAndBuildersGame().hasPlayerAnotherTurn();
 		game.expansionDelegate().turnCleanUp();
-		if (! builderTakeAnotherTurn) {
-			game.setNextPlayer();
-		}
 		game.getTilePack().cleanUpTurn();
-		next();
+		if (builderTakeAnotherTurn) {
+			next(game.hasExpansion(Expansion.ABBEY_AND_MAYOR) ? AbbeyPhase.class : DrawPhase.class);
+		} else {
+			game.setNextPlayer();
+			next();
+		}		
+		
 	}
 
 }

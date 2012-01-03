@@ -104,11 +104,11 @@ public class CreateGamePhase extends ServerAwarePhase {
 		next = addPhase(next, new DragonPhase(game));
 			   addPhase(next, new TowerCapturePhase(game));
 		next = addPhase(next, new ActionPhase(game));
-		next = addPhase(next, new TilePhase(game));
-		next = addPhase(next, new FairyPhase(game));
+		next = addPhase(next, new TilePhase(game));		
 		next = addPhase(next, new DrawPhase(game, getServer()));
 		next = addPhase(next, new AbbeyPhase(game));
-		setDefaultNext(next); //set next for this CreatedPhase instance
+		next = addPhase(next, new FairyPhase(game));
+		setDefaultNext(next); //set next pahse for this (CreateGamePhase) instance
 		game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last first is default
 	}
 

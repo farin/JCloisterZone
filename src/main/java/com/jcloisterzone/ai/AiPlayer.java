@@ -10,7 +10,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
 
-public abstract class AiPlayer implements UserInterface{
+public abstract class AiPlayer implements UserInterface {
 
 	private Game game;
 	private ServerIF server;
@@ -63,6 +63,12 @@ public abstract class AiPlayer implements UserInterface{
 		if (activePlayer.getIndex() != player.getIndex()) return false;
 		return getClientStub().isLocalPlayer(activePlayer);
 	}
+	
+	@Override
+	public void showWarning(String title, String message) {
+		//do nothing
+	}
+
 
 
 }

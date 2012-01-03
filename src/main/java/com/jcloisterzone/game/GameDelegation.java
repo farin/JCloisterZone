@@ -25,8 +25,7 @@ public interface GameDelegation {
 	void prepareActions(List<PlayerAction> actions, Sites commonSites);
 	void scoreCompleted(CompletableScoreContext ctx);
 	void turnCleanUp();
-	void finalScoring();
-	//void tilePlaced(Tile tile);
+	void finalScoring();	
 
 	/** allow placements which are normally not allowed */
 	boolean isSpecialPlacementAllowed(Tile tile, Position p);

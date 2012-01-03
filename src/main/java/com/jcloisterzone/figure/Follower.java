@@ -31,8 +31,9 @@ public abstract class Follower extends Meeple {
 
 	//TODO ??? can be this in score visitor instead of here ???
 	public void undeploy(boolean checkForLonelyBuilderOrPig) {
-		Feature piece = getFeature();
-		super.undeploy(checkForLonelyBuilderOrPig);
+		//store ref which is lost be super call 
+		Feature piece = getFeature();		
+		super.undeploy(checkForLonelyBuilderOrPig); //clear piece
 		if (checkForLonelyBuilderOrPig &&
 				game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) &&
 				(piece instanceof City || piece instanceof Farm)) {

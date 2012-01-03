@@ -19,6 +19,10 @@ public abstract class Meeple extends Figure {
 		super(game);
 		this.player = player;
 	}
+	
+	public boolean canBeEatenByDragon() {
+		return true;
+	}
 
 	public boolean isUndeployed() {
 		//must check only location  because prisoner has everything except location also null

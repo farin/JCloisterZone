@@ -1,5 +1,7 @@
 package com.jcloisterzone.game;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,7 +53,7 @@ import com.jcloisterzone.game.phase.Phase;
 
 public class Snapshot implements Serializable {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+	protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	private Document doc;
 	private Element root;
@@ -80,7 +82,7 @@ public class Snapshot implements Serializable {
 				throw e;
 			}
 		}
-	}
+	}	
 
 	public boolean isGzipOutput() {
 		return gzipOutput;
@@ -245,7 +247,12 @@ public class Snapshot implements Serializable {
 			Expansion exp = Expansion.valueOf(el.getAttribute("name"));
 			ExpandedGame eg = game.getExpandedGameFor(exp);
 			if (eg != null) {
-				eg.loadFromSnapshot(doc, el);
+				try {
+					eg.loadFromSnapshot(doc, el);
+				} catch (Exception e) {
+					logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + exp.name(), e);
+					game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
+				}
 			}
 		}
 	}
@@ -359,6 +366,7 @@ public class Snapshot implements Serializable {
 		String xml = (String) stream.readObject();
 		InputStream is = new ByteArrayInputStream(xml.getBytes());
 		load(is);
+		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	private void writeObject(java.io.ObjectOutputStream stream) throws IOException {

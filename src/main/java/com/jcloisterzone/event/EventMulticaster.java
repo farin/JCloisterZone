@@ -9,7 +9,6 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -158,6 +157,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {
 		((UserInterface)a).selectDragonMove(positions, movesLeft);
 		((UserInterface)b).selectDragonMove(positions, movesLeft);
+	}
+	
+	@Override
+	public void showWarning(String title, String message) {
+		((UserInterface)a).showWarning(title, message);
+		((UserInterface)b).showWarning(title, message);
 	}
 
 	@Override

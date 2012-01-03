@@ -86,7 +86,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 		}
 	}
 
-	public boolean takeAnotherTurn() {
+	public boolean hasPlayerAnotherTurn() {
 		return builderState == BuilderState.ACTIVATED;
 	}
 

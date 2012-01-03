@@ -46,7 +46,9 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 	public void connect(InetAddress ia, int port) {
 		connector = new NioSocketConnector();
 		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
-		connector.getFilterChain().addLast("logger", new LoggingFilter() );
+		if (logger.isInfoEnabled()) {
+			connector.getFilterChain().addLast("logger", new LoggingFilter() );
+		}
 		connector.setHandler(this);
 
 		ConnectFuture future = connector.connect(new InetSocketAddress(ia, port));

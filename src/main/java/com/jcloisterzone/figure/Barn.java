@@ -20,6 +20,11 @@ public class Barn extends Special {
 	public Barn(Game game, Player player) {
 		super(game, player);
 	}
+	
+	@Override
+	public boolean canBeEatenByDragon() {
+		return false;
+	}
 
 	@Override
 	protected void checkDeployment(Feature feature) {

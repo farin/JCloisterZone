@@ -111,6 +111,10 @@ public final class KingAndScoutGame extends ExpandedGame {
 		if (robberBaron != null) {
 			node.setAttribute("robber", robberBaron.getIndex() + "");
 		}
+		node.setAttribute("completedCities", "" + completedCities);
+		node.setAttribute("biggestCitySize", "" + biggestCitySize);
+		node.setAttribute("completedRoads", "" + completedRoads);
+		node.setAttribute("longestRoadLength", "" + longestRoadLength);
 	}
 
 	@Override
@@ -121,7 +125,12 @@ public final class KingAndScoutGame extends ExpandedGame {
 		if (node.hasAttribute("robber")) {
 			robberBaron = game.getPlayer(Integer.parseInt(node.getAttribute("robber")));
 		}
+		completedCities = Integer.parseInt(node.getAttribute("completedCities"));
+		biggestCitySize = Integer.parseInt(node.getAttribute("biggestCitySize"));
+		completedRoads = Integer.parseInt(node.getAttribute("completedRoads"));
+		longestRoadLength = Integer.parseInt(node.getAttribute("longestRoadLength"));
 	}
 
 
 }
+

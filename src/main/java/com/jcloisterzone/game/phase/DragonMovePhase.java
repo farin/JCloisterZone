@@ -51,7 +51,7 @@ public class DragonMovePhase extends Phase {
 		pd.setDragonPosition(p);
 		pd.nextDragonPlayer();
 		for(Meeple m : game.getDeployedMeeples()) {
-			if (m.getPosition().equals(p)) {
+			if (m.getPosition().equals(p) && m.canBeEatenByDragon()) {
 				m.undeploy();
 			}
 		}

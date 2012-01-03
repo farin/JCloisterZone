@@ -1,13 +1,11 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -65,19 +63,19 @@ public class TilePhase extends Phase {
 
 	@Override
 	public void placeTile(Rotation rotation, Position p) {
-		Tile nextTile = getTile();
-		nextTile.setRotation(rotation);
+		Tile tile = getTile();
+		tile.setRotation(rotation);
 		
 		boolean bridgeRequired = false;
 		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
-			bridgeRequired = ! getBoard().isPlacementAllowed(nextTile, p);
+			bridgeRequired = ! getBoard().isPlacementAllowed(tile, p);
 		}
 
-		getBoard().add(nextTile, p);
-		if (nextTile.getTower() != null) {
+		getBoard().add(tile, p);
+		if (tile.getTower() != null) {
 			game.getTowerGame().registerTower(p);
 		}		
-		game.fireGameEvent().tilePlaced(nextTile);
+		game.fireGameEvent().tilePlaced(tile);
 		
 		if (bridgeRequired) {
 			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
@@ -90,14 +88,9 @@ public class TilePhase extends Phase {
 			bcb.decreaseBridges(getActivePlayer());		
 			bcb.deployBridge(pos, loc);
 		}
-		postPlacement();		
-	}
-	
-	private void postPlacement() {
-		Tile tile = getTile();
-		
 		getBoard().mergeFeatures(tile);
-
+		
+		//TODO seperate tileMerged event here ??? and move this code to abbey and mayor game
 		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
 			Map<City, CityScoreContext> cityCache = Maps.newHashMap();
 			for(Feature feature : getTile().getFeatures()) {
@@ -106,14 +99,9 @@ public class TilePhase extends Phase {
 				}
 			}
 		}
-			
-		if (tile.getTrigger() == TileTrigger.VOLCANO) {
-			PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-			pd.setDragonPosition(getTile().getPosition());
-			game.getTilePack().activateGroup("dragon");
-			game.fireGameEvent().dragonMoved(getTile().getPosition());
-		}
+		
 		next();
 	}
+
 
 }

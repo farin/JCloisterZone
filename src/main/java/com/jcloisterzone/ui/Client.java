@@ -450,6 +450,12 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 			}
 		}
 	}
+	
+	@Override
+	public void showWarning(String title, String message) {
+		JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
+		
+	}
 
 	@Override
 	public void updateCustomRule(CustomRule rule, Boolean enabled) {

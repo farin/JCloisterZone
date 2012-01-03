@@ -19,11 +19,13 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.Game;
 
 
 public final class PrincessAndDragonGame extends ExpandedGame {
@@ -37,6 +39,22 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 	public Set<Position> dragonVisitedTiles;
 
 	public Position fairyPosition;
+	
+	@Override
+	public void setGame(Game game) {
+		super.setGame(game);
+		
+		game.addGameListener(new GameEventAdapter() {
+			@Override
+			public void tilePlaced(Tile tile) {
+				if (tile.getTrigger() == TileTrigger.VOLCANO) {					
+					setDragonPosition(getTile().getPosition());
+					getTilePack().activateGroup("dragon");
+					getGame().fireGameEvent().dragonMoved(getTile().getPosition());
+				}
+			}
+		});				
+	}
 
 
 	public Position getFairyPosition() {

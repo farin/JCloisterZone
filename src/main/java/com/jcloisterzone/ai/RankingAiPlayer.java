@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;

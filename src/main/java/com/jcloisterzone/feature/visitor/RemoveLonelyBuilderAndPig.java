@@ -23,17 +23,19 @@ public class RemoveLonelyBuilderAndPig implements FeatureVisitor {
 	@Override
 	public boolean visit(Feature feature) {
 		Meeple m = feature.getMeeple();
-		if (! (m instanceof Follower) || m.getPlayer() != player) {
+		if (m == null || m.getPlayer() != player) {
 			return true;
 		}
 		if (m instanceof Builder || m instanceof Pig) {
 			toRemove = m;
 			return true;
-		} else {
+		}
+		if (m instanceof Follower) {
 			//another follower exists
 			toRemove = null;
 			return false;
 		}
+		return true; //some special case like Barn
 	}
 
 }
