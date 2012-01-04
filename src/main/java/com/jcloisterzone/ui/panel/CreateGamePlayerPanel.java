@@ -202,21 +202,23 @@ public class CreateGamePlayerPanel extends JPanel {
 			EnumSet<Expansion> supported = null;
 			switch (slot.getType()) {
 			case OPEN: //-> PLAYER
-				slot.setType(SlotType.PLAYER);
-				nick = nameProvider.getPlayerName();
+				slot.setType(SlotType.PLAYER);				
+				nick = nameProvider.reserveName(SlotType.PLAYER, slot.getNumber()); 
 				slot.setNick(nick);
 				nickname.setText(nick);
 				break;
 			case PLAYER: //-> AI
+				nameProvider.releaseName(SlotType.PLAYER, slot.getNumber());
 				slot.setType(SlotType.AI);
 				//TODO pryc s hardcoded AI tridou
 				slot.setAiClassName(LegacyAiPlayer.class.getName());
 				supported = LegacyAiPlayer.supportedExpansions();
-				nick = nameProvider.getAiName();
+				nick = nameProvider.reserveName(SlotType.AI, slot.getNumber());				
 				slot.setNick(nick);
 				nickname.setText(nick);
 				break;
 			case AI: //-> OPEN
+				nameProvider.releaseName(SlotType.AI, slot.getNumber());
 				slot.setType(SlotType.OPEN);
 				break;
 			default:

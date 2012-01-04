@@ -1,40 +1,63 @@
 package com.jcloisterzone.ui.panel;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.ini4j.Ini;
 
-public class NameProvider {
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.jcloisterzone.game.PlayerSlot.SlotType;
 
-	private LinkedList<String> playerNames;
-	private List<String> aiNames;
-	private int aiNameIdx;
+public class NameProvider {
+	
+	private static class ReservedName {
+		String name;
+		Integer slot;
+		
+		public ReservedName(String name, Integer slot) {
+			this.name = name;
+			this.slot = slot;
+		}				
+	}
+	
+	private Map<SlotType, List<ReservedName>> namesMap = Maps.newHashMap();
+
 
 	public NameProvider(Ini config) {
-		List<String> playerNames = config.get("players").getAll("name");
-		if (playerNames != null) {
-			this.playerNames = new LinkedList<String>(playerNames);
-		}
-		aiNames = config.get("players").getAll("ai_name");
-		if (aiNames == null) {
-			aiNames = Collections.singletonList("?");
+		initNames(SlotType.PLAYER, config.get("players").getAll("name"));
+		initNames(SlotType.AI, config.get("players").getAll("ai_name"));		
+	}
+	
+	private void initNames(SlotType type, List<String> names) {
+		List<ReservedName> rn = Lists.newArrayList();
+		namesMap.put(type, rn);
+		if (names != null) {			
+			for(String name: names) {
+				rn.add(new ReservedName(name, null));
+			}						
 		}
 	}
 
 	synchronized
-	public String getPlayerName() {
-		if (playerNames == null || playerNames.isEmpty()) return "";
-		return playerNames.removeFirst();
-	}
-
-	synchronized
-	public String getAiName() {
-		if (aiNameIdx == aiNames.size()) {
-			aiNameIdx = 0;
+	public String reserveName(SlotType type, int slot) {		
+		for(ReservedName rn : namesMap.get(type)) {
+			if (rn.slot == null) {
+				rn.slot = slot;
+				return rn.name;
+			}
 		}
-		return aiNames.get(aiNameIdx++);
+		return "";
 	}
+	
+	synchronized
+	public void releaseName(SlotType type, int slot) {
+		for(ReservedName rn : namesMap.get(type)) {
+			if (rn.slot == slot) {
+				rn.slot = null;
+				return;
+			}
+		}
+	}	
 
 }
