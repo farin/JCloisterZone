@@ -48,10 +48,10 @@ public class Barn extends Special {
 		//all ok - score non barn meeples
 		for(Player owner : ctx.getMajorOwners()) {
 			int points = ctx.getPoints(owner);
-			game.scoreFeature(points, ctx, owner);
-			for(Meeple m : ctx.getMeeples()) {
-				m.undeploy(false);
-			}
+			game.scoreFeature(points, ctx, owner);			
+		}
+		for(Meeple m : ctx.getMeeples()) {
+			m.undeploy(false);
 		}
 
 		super.checkDeployment(feature);

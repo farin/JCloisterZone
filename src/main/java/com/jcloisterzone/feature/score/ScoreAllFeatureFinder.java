@@ -42,9 +42,9 @@ public class ScoreAllFeatureFinder {
 			}
 		}
 		for(Meeple m : game.getDeployedMeeples()) {
-			if (! (m instanceof Follower)) continue;
+			if (!(m instanceof Follower)) continue;
 			Feature f = m.getFeature();
-			if (! (f instanceof Completable)) continue;
+			if (!(f instanceof Completable)) continue;
 			if (alreadyRated.contains(m)) continue;
 
 			Completable completable = (Completable) f;
@@ -57,7 +57,7 @@ public class ScoreAllFeatureFinder {
 			callback.scoreCompletableFeature(ctx);
 		}
 		for(Meeple m : game.getDeployedMeeples()) {
-			if (! (m instanceof Follower)) continue;
+			if (! (m instanceof Follower) && !(m instanceof Barn)) continue;
 			Feature f = m.getFeature();
 			if (! (f instanceof Farm)) continue;
 			if (alreadyRated.contains(m)) continue;

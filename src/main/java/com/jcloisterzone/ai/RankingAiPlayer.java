@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.CaptureAction;
+import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ai.copy.CopyGamePhase;
@@ -163,7 +164,24 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				BarnAction ba = (BarnAction) action;
 				rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.getSites());				
 			}
+			if (action instanceof FairyAction) {
+				rankFairyPlacement(currTile, (FairyAction) action);			
+			}
 		}
+	}
+	
+	protected void rankFairyPlacement(Tile currTile, FairyAction action) {
+		SavePoint sp = spm.save();
+		for(Position pos: action.getSites()) {
+			getGame().getPhase().moveFairy(pos);
+			double currRank = rank();							
+			if (currRank > bestSoFar.getRank()) {
+				bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
+				bestSoFar.setAction(action);
+				bestSoFar.setActionPosition(pos);
+			}
+			spm.restore(sp);
+		}		 		
 	}
 
 	protected void rankMeeplePlacement(Tile currTile, PlayerAction action, Class<? extends Meeple> meepleType, Position pos, Set<Location> locations) {
@@ -212,6 +230,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
 			if (bestSoFar.getAction() instanceof BarnAction) {
 				BarnAction action = (BarnAction) bestSoFar.getAction();
 				action.perform(getServer(), bestSoFar.getActionPosition(), bestSoFar.getActionLocation());
+				cleanRanking();
+				return;
+			}
+			if (bestSoFar.getAction() instanceof FairyAction) {
+				FairyAction action = (FairyAction) bestSoFar.getAction();
+				action.perform(getServer(), bestSoFar.getActionPosition());
 				cleanRanking();
 				return;
 			}

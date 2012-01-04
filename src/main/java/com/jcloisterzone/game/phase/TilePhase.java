@@ -10,7 +10,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -21,7 +20,6 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 
 public class TilePhase extends Phase {
 

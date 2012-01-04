@@ -272,8 +272,18 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		if (fairyPos == null) return 0;
 
 		double rating = 0;
+		
+//		TODO more sophisticated rating		
+		for(Meeple meeple : getGame().getDeployedMeeples()) {
+			if (meeple.getPosition() != fairyPos) continue;
+			if (! (meeple instanceof Follower)) continue;
+			
+			rating += reducePoints(1.0, meeple.getPlayer());
+		}
+		
+		return rating;
 
-//		TODO dodelat fairy rating
+// 		//OLD legacy impl		
 //		Set<PlacedFigure> onTile = gc.getPlacedFiguresForTile(board.get(fairyPos.x,fairyPos.y));
 //		Set<Player> onePointPlayers = Sets.newHashSet();
 //		for(PlacedFigure pfi : onTile) {
@@ -299,7 +309,6 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //		for(Player player : onePointPlayers) {
 //			rating += reducePoints(0.8, player);
 //		}
-		return rating;
 	}
 
 	protected double rankConvexity() {
