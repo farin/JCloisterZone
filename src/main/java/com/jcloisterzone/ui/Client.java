@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -77,8 +76,6 @@ import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.ui.theme.TileTheme;
-
-
 
 @SuppressWarnings("serial")
 public class Client extends JFrame implements UserInterface, GameEventListener {
@@ -323,6 +320,8 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	}
 
 	public void showConnectGamePanel() {
+		if (! closeGame()) return;
+		
 		Container pane = this.getContentPane();
 		cleanContentPane();
 
@@ -383,6 +382,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	}
 
 	public void createGame() {
+		if (! closeGame()) return;
 		try {
 			localServer = new Server(config);
 			localServer.start(getServerPort());
