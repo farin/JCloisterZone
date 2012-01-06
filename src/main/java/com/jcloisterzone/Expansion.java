@@ -29,7 +29,7 @@ public enum Expansion {
 	TOWER("TO", _("The Tower"), TowerGame.class),
 	ABBEY_AND_MAYOR("AM", _("Abbey & Mayor"), AbbeyAndMayorGame.class),
 	CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
-	BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"), BridgesCastlesBazaarsGame.class),
+	BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"), BridgesCastlesBazaarsGame.class),	
 
 	//Small expansion
 	KING_AND_SCOUT("KS", _("King and Scout"), KingAndScoutGame.class),
@@ -44,6 +44,7 @@ public enum Expansion {
 	PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
 	ENTOURAGE("EN", _("The Entourage"), false),
 	PHANTOM("PH", _("The Phantom"), false),
+	//THE_FESTIVAL("FE", _("The Festival (10th an.)"), false),
 
 	//promo/one tile expansions
 	LA_PORXADA("PH", _("La porxada"), false),

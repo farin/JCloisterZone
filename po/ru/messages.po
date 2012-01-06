@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-30 22:46+0100\n"
+"POT-Creation-Date: 2012-01-06 20:55+0100\n"
 "PO-Revision-Date: 2011-04-11 10:08+0200\n"
 "Last-Translator: Andrew Mitrofanov <MrNumbers@inbox.lv>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,103 +16,102 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:21
+#: src/main/java/com/jcloisterzone/Expansion.java:22
 msgid "Basic game"
 msgstr "Базовая игра"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:22
+#: src/main/java/com/jcloisterzone/Expansion.java:23
 msgid "Wheel of Fortune"
 msgstr "Колесо Фортуны"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:25
+#: src/main/java/com/jcloisterzone/Expansion.java:26
 msgid "Inns & Cathedrals"
 msgstr "Таверны и Соборы"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:26
+#: src/main/java/com/jcloisterzone/Expansion.java:27
 msgid "Traders & Builders"
 msgstr "Торговцы и Строители"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:27
+#: src/main/java/com/jcloisterzone/Expansion.java:28
 msgid "The Princess & the Dragon"
 msgstr "Принцесса и Дракон"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:28
+#: src/main/java/com/jcloisterzone/Expansion.java:29
 msgid "The Tower"
 msgstr "Башня"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:29
+#: src/main/java/com/jcloisterzone/Expansion.java:30
 msgid "Abbey & Mayor"
 msgstr "Аббатство и Мэр"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:30
+#: src/main/java/com/jcloisterzone/Expansion.java:31
 msgid "The Catapult"
 msgstr "Катапульта"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:30
-#: src/main/java/com/jcloisterzone/Expansion.java:38
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:31
+#: src/main/java/com/jcloisterzone/Expansion.java:39
 #: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "tiles only"
 msgstr "только карточки"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:31
+#: src/main/java/com/jcloisterzone/Expansion.java:32
 msgid "Bridges, Castles and Bazaars"
 msgstr "Мосты, Замки и Базары"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:34
+#: src/main/java/com/jcloisterzone/Expansion.java:35
 msgid "King and Scout"
 msgstr "Король и Разбойник"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:35
+#: src/main/java/com/jcloisterzone/Expansion.java:36
 msgid "The River"
 msgstr "Река"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:36
+#: src/main/java/com/jcloisterzone/Expansion.java:37
 msgid "The River II"
 msgstr "Река II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:37
+#: src/main/java/com/jcloisterzone/Expansion.java:38
 msgid "The Cathars"
 msgstr "Катары"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:38
+#: src/main/java/com/jcloisterzone/Expansion.java:39
 msgid "The Count of Carcassonne"
 msgstr "Граф Каркассона"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:39
+#: src/main/java/com/jcloisterzone/Expansion.java:40
 msgid "The Mini Expansion (GQ11)"
 msgstr "Мини-дополнение (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:40
+#: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "The Cult"
 msgstr "Место Поклонения"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:41
+#: src/main/java/com/jcloisterzone/Expansion.java:42
 msgid "The Tunnel"
 msgstr "Туннель"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Crop Circles"
 msgstr "Круги на полях"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "The Plague"
 msgstr "Чума"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:44
+#: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "The Entourage"
 msgstr "Фантом"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:45
-#, fuzzy
+#: src/main/java/com/jcloisterzone/Expansion.java:46
 msgid "The Phantom"
-msgstr "Выкупы (Дополнение \"Башня\")"
-
-#: src/main/java/com/jcloisterzone/Expansion.java:48
-msgid "La porxada"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:49
+msgid "La porxada"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "The school"
 msgstr ""
 
@@ -149,8 +148,7 @@ msgstr "Применять правило туннелей для туннеле
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr ""
-"Версия клиента JCloisterZone не совместима с версией сервера. Пожалуйста, "
+msgstr "Версия клиента JCloisterZone не совместима с версией сервера. Пожалуйста, "
 "обновите оба приложения до одинаковой версии."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
@@ -160,6 +158,15 @@ msgstr "Несовместимые версии"
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:84
 msgid "Connection error"
 msgstr "Соединение не установлено."
+
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid "Load error"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid ""
+"Saved game is incompatible or file is corrupted. Game couldn't work properly."
+msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/AboutDialog.java:40
 msgid "About application"
@@ -174,31 +181,30 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
-#: src/main/java/com/jcloisterzone/ui/Client.java:293
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
-#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:288
+#: src/main/java/com/jcloisterzone/ui/Client.java:291
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:63
 msgid "Close game"
 msgstr "Закрыть игру"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:43
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:67
+#: src/main/java/com/jcloisterzone/ui/Client.java:288
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:292
+#: src/main/java/com/jcloisterzone/ui/Client.java:290
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
-msgstr ""
-"Игра уже началась. Вы действительно хотите выйти из игры и отключить всех "
+msgstr "Игра уже началась. Вы действительно хотите выйти из игры и отключить всех "
 "остальных игроков?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
 msgid "Game is running. Do you really want to leave it?"
 msgstr "Игра уже началась. Вы действительно хотите покинуть игру?"
 
@@ -207,12 +213,12 @@ msgid "Save game"
 msgstr "Сохранить игру"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:374
-#: src/main/java/com/jcloisterzone/ui/Client.java:391
-#: src/main/java/com/jcloisterzone/ui/Client.java:414
+#: src/main/java/com/jcloisterzone/ui/Client.java:392
+#: src/main/java/com/jcloisterzone/ui/Client.java:415
 msgid "Error"
 msgstr "Ошибка"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:400
+#: src/main/java/com/jcloisterzone/ui/Client.java:401
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:80
 msgid "Load game"
 msgstr "Загрузить игру"
@@ -360,52 +366,51 @@ msgstr "Фея"
 msgid "Tower ransom"
 msgstr "Выкупы (Дополнение \"Башня\")"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:43
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 msgid "Place a follower"
 msgstr "Поставить подданного"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:45
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
 msgid "Do you really want to place a follower on farm?"
 msgstr "Вы хотите поставить подданного на этот фрагмент поля?"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:46
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:56
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:51
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:61
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:67
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:76
 msgid "Confirm follower placement"
 msgstr "Подтвердите выставление подданного"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:58
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:63
 msgid "Place a tower piece"
 msgstr "Поставить башню"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:61
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:75
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr ""
-"Вы хотите поставить подданного на башню?\n"
+msgstr "Вы хотите поставить подданного на башню?\n"
 "(Это не позволит добавлять новые фишки на башню)"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:347
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:366
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:365
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:384
 msgid "The biggest city size"
 msgstr "Размер самого большого города"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:348
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:367
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:366
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:385
 msgid "Number of completed cities"
 msgstr "Количество законченных городов"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:349
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:357
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:367
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:375
 msgid "The longest road length"
 msgstr "Длина самой длинной дороги"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:350
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:358
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:368
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:376
 msgid "Number of completed roads"
 msgstr "Количество законченных дорог"
 
@@ -480,8 +485,7 @@ msgstr "Свободный слот"
 msgid ""
 "Create a new local or network game. You can play against any number of "
 "computer player."
-msgstr ""
-"Создать локальную или сетевую игру. Вы можете играть против любого числа "
+msgstr "Создать локальную или сетевую игру. Вы можете играть против любого числа "
 "компьютерных игроков."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:71
@@ -492,7 +496,3 @@ msgstr "Присоединиться к серверу JCloisterZone с созд
 msgid "Load from a file previously saved game."
 msgstr "Загрузить из файла ранее сохранённую игру"
 
-#~ msgid "Free for use for all owners of the original board game."
-#~ msgstr ""
-#~ "Данная программа является бесплатной для всех владельцев оригинальной "
-#~ "настольной игры."

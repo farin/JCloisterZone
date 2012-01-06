@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-30 22:46+0100\n"
+"POT-Creation-Date: 2012-01-06 20:55+0100\n"
 "PO-Revision-Date: 2011-04-09 12:05+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,102 +16,102 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:21
+#: src/main/java/com/jcloisterzone/Expansion.java:22
 msgid "Basic game"
 msgstr "Juego base"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:22
+#: src/main/java/com/jcloisterzone/Expansion.java:23
 msgid "Wheel of Fortune"
 msgstr "La Rueda de la Fortuna"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:25
+#: src/main/java/com/jcloisterzone/Expansion.java:26
 msgid "Inns & Cathedrals"
 msgstr "Posadas y Catedrales"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:26
+#: src/main/java/com/jcloisterzone/Expansion.java:27
 msgid "Traders & Builders"
 msgstr "Comerciantes y Constructores"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:27
+#: src/main/java/com/jcloisterzone/Expansion.java:28
 msgid "The Princess & the Dragon"
 msgstr "La Princesa y el Dragón"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:28
+#: src/main/java/com/jcloisterzone/Expansion.java:29
 msgid "The Tower"
 msgstr "La Torre"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:29
+#: src/main/java/com/jcloisterzone/Expansion.java:30
 msgid "Abbey & Mayor"
 msgstr "La Abadía y el Alcalde"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:30
+#: src/main/java/com/jcloisterzone/Expansion.java:31
 msgid "The Catapult"
 msgstr "La Catapulta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:30
-#: src/main/java/com/jcloisterzone/Expansion.java:38
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:31
+#: src/main/java/com/jcloisterzone/Expansion.java:39
 #: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "tiles only"
 msgstr "sólo piezas"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:31
+#: src/main/java/com/jcloisterzone/Expansion.java:32
 msgid "Bridges, Castles and Bazaars"
 msgstr "Puentes, Castillos y Bazares"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:34
+#: src/main/java/com/jcloisterzone/Expansion.java:35
 msgid "King and Scout"
 msgstr "El Rey y el Explorador"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:35
+#: src/main/java/com/jcloisterzone/Expansion.java:36
 msgid "The River"
 msgstr "El Río"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:36
+#: src/main/java/com/jcloisterzone/Expansion.java:37
 msgid "The River II"
 msgstr "El Río II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:37
+#: src/main/java/com/jcloisterzone/Expansion.java:38
 msgid "The Cathars"
 msgstr "Los Cátaros"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:38
+#: src/main/java/com/jcloisterzone/Expansion.java:39
 msgid "The Count of Carcassonne"
 msgstr "El Conde de Carcassonne"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:39
+#: src/main/java/com/jcloisterzone/Expansion.java:40
 msgid "The Mini Expansion (GQ11)"
 msgstr "La Mini Expansión (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:40
+#: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "The Cult"
 msgstr "El Culto"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:41
+#: src/main/java/com/jcloisterzone/Expansion.java:42
 msgid "The Tunnel"
 msgstr "El Túnel"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Crop Circles"
 msgstr "Círculos en los Cultivos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "The Plague"
 msgstr "La Plaga"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:44
+#: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "The Entourage"
 msgstr "El Séquito"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:45
+#: src/main/java/com/jcloisterzone/Expansion.java:46
 msgid "The Phantom"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:48
+#: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "La porxada"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "The school"
 msgstr ""
 
@@ -160,6 +160,15 @@ msgstr "Versiones incompatibles"
 msgid "Connection error"
 msgstr "Fallo en la conexión."
 
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid "Load error"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid ""
+"Saved game is incompatible or file is corrupted. Game couldn't work properly."
+msgstr ""
+
 #: src/main/java/com/jcloisterzone/ui/AboutDialog.java:40
 msgid "About application"
 msgstr "Sobre la aplicación"
@@ -173,30 +182,30 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
-#: src/main/java/com/jcloisterzone/ui/Client.java:293
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
-#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:288
+#: src/main/java/com/jcloisterzone/ui/Client.java:291
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:63
 msgid "Close game"
 msgstr "Cerrar el juego"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:43
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:67
+#: src/main/java/com/jcloisterzone/ui/Client.java:288
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:292
+#: src/main/java/com/jcloisterzone/ui/Client.java:290
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
 msgstr "El juego se está ejecutando. ¿Está seguro de querer salir del juego y "
 "desconectar también a los otros jugadores?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
 msgid "Game is running. Do you really want to leave it?"
 msgstr "El juego se está ejecutando. ¿Realmente quieres salir?"
 
@@ -205,12 +214,12 @@ msgid "Save game"
 msgstr "Guardar el juego"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:374
-#: src/main/java/com/jcloisterzone/ui/Client.java:391
-#: src/main/java/com/jcloisterzone/ui/Client.java:414
+#: src/main/java/com/jcloisterzone/ui/Client.java:392
+#: src/main/java/com/jcloisterzone/ui/Client.java:415
 msgid "Error"
 msgstr "Error"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:400
+#: src/main/java/com/jcloisterzone/ui/Client.java:401
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:80
 msgid "Load game"
 msgstr "Cargar un juego"
@@ -358,51 +367,51 @@ msgstr "Hada"
 msgid "Tower ransom"
 msgstr "Rescate por la torre"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:43
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 msgid "Place a follower"
 msgstr "Colocar un seguidor"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:45
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
 msgid "Do you really want to place a follower on farm?"
 msgstr "¿Está seguro que quiere colocar un seguidor en la granja?"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:46
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:56
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:51
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:61
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:67
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:76
 msgid "Confirm follower placement"
 msgstr "Confirmar la colocación del seguidor"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:58
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:63
 msgid "Place a tower piece"
 msgstr "Colocar una pieza de la torre"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:61
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:75
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
 msgstr "¿Está seguro que quiere colocar un seguidor en la torre?\n"
 "(Para impedir agregar más piezas encima de la torre)"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:347
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:366
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:365
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:384
 msgid "The biggest city size"
 msgstr "Tamaño de la ciudad mayor"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:348
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:367
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:366
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:385
 msgid "Number of completed cities"
 msgstr "Número de ciudades terminadas"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:349
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:357
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:367
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:375
 msgid "The longest road length"
 msgstr "Longitud del camino más largo"
 
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:350
-#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:358
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:368
+#: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:376
 msgid "Number of completed roads"
 msgstr "Número de caminos terminados"
 
