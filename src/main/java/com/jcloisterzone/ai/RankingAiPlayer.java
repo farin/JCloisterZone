@@ -32,9 +32,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	class PositionLocation {
 		Position position;
 		Location location;
-	}
-
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+	}	
 
 	private Game original;
 	private SavePointManager spm;
@@ -255,5 +253,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	}
 	
 	abstract protected double rank();
+	
+	@Override
+	protected void handleRuntimeError(Exception e) {
+		super.handleRuntimeError(e);
+		cleanRanking();		
+		if (original != null) {
+			restoreGame();
+		}
+	}
 
 }

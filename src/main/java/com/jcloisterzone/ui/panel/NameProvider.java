@@ -53,7 +53,7 @@ public class NameProvider {
 	synchronized
 	public void releaseName(SlotType type, int slot) {
 		for(ReservedName rn : namesMap.get(type)) {
-			if (rn.slot == slot) {
+			if (rn.slot != null && rn.slot == slot) { //autoboxing, must check for null
 				rn.slot = null;
 				return;
 			}
