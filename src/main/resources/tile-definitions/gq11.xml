@@ -12,8 +12,8 @@
 	</card>
 	<card id="CICI" group="river">
 		<river>W E</river>
-		<city>N</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">S</city>
 		<farm city="N">WR EL</farm>
 		<farm city="S">WL ER</farm>
 	</card>
@@ -62,15 +62,15 @@
 	</card>
 	<card id="CRCr.2">
 		<road>W E</road>
-		<city>N</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">S</city>
 		<farm city="N">WR EL</farm>
 		<farm city="S">ER WL</farm>
 	</card>
 	<card id="CRRr">
 		<road>E</road>
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL</farm>
 		<farm city="N">ER SL WR</farm>
 		<farm>SR WL</farm>
@@ -106,7 +106,7 @@
 	</card>
 	<card id="CcCR">
 		<city>N W</city>
-		<city>E</city>
+		<city castle-base="true">E</city>
 		<road>S</road>
 		<farm city="N">SR</farm>
 		<farm city="N E">SL</farm>

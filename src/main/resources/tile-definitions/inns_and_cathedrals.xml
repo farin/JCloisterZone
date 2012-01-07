@@ -15,21 +15,21 @@
 		<city cathedral="yes">N W S E</city>
 	</card>
 	<card id="CCCC">
-		<city>N</city>
-		<city>W</city>
-		<city>E</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">W</city>
+		<city castle-base="true">E</city>
+		<city castle-base="true">S</city>
 		<farm city="N W E S">INNER_FARM</farm>
 	</card>
 	<card id="CCC">
-		<city>N</city>
-		<city>W</city>
-		<city>E</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">W</city>
+		<city castle-base="true">E</city>
 		<farm city="N W E">SL SR</farm>
 	</card>
 	<card id="CRCR">
-		<city>N</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">S</city>
 		<road>W</road>
 		<road>E</road>
 		<farm city="S">ER</farm>
@@ -42,7 +42,7 @@
 	</card>
 	<card id="CCc+">
 		<city pennant="yes">N W</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<farm city="N S">EL ER</farm>
 	</card>
 	<card id="C!">
@@ -51,7 +51,7 @@
 		<farm city="N">WL WR SL SR</farm>
 	</card>
 	<card id="CFR">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm city="N">WL WR SR</farm>
 		<farm city="N">EL ER SL</farm>
@@ -91,7 +91,7 @@
 		</wagon-move>
 	</card>
 	<card id="RrC.i">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road inn="yes">W S</road>
 		<farm>SR WL</farm>
 		<farm city="N">WR EL ER SL</farm>

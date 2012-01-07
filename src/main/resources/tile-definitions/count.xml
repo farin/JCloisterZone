@@ -35,7 +35,7 @@
 		<position x="1" y="0"/>
 	</card>
 	<card id="9" group="count">
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<farm city="S">WL WR NL ER</farm>
 		<position x="-2" y="1"/>
 	</card>
@@ -50,7 +50,7 @@
 		<position x="0" y="1"/>
 	</card>
 	<card id="12" group="count">
-		<city>E</city>
+		<city castle-base="true">E</city>
 		<farm city="E">NR SL SR WL</farm>
 		<position x="1" y="1"/>
 	</card>

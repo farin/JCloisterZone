@@ -7,14 +7,14 @@
 	</card>
 	<card id="CC.2">
 		<plague />
-		<city>S</city>
-		<city>E</city>
+		<city castle-base="true">S</city>
+		<city castle-base="true">E</city>
 		<farm city="S E">NL NR WL WR</farm>
 	</card>
 	<card id="CCRR">
 		<plague />
-		<city>S</city>
-		<city>E</city>
+		<city castle-base="true">S</city>
+		<city castle-base="true">E</city>
 		<road>N</road>
 		<road>W</road>
 		<farm city="S">WL</farm>
@@ -27,7 +27,7 @@
 	</card>
 	<card id="RRC">
 		<plague />
-		<city>E</city>
+		<city castle-base="true">E</city>
 		<road>N</road>
 		<road>W</road>
 		<farm city="E">NR</farm>

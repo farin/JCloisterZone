@@ -2,12 +2,12 @@
 <pack>
 	<card id="LC">
 		<cloister/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 	<card id="RC">
 		<road>W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR</farm>
 		<farm city="N">EL ER SL SR WL</farm>
 		<wagon-move>
@@ -17,7 +17,7 @@
 	<card id="CRrR">
 		<road>W</road>
 		<road>S E</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR</farm>
 		<farm city="N">EL SR WL</farm>
 		<farm>SL ER</farm>

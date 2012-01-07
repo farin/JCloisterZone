@@ -1,5 +1,6 @@
 package com.jcloisterzone.action;
 
+import java.util.Collections;
 import java.util.Set;
 
 import com.jcloisterzone.board.Location;
@@ -7,25 +8,30 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
-public abstract class FeatureAction extends PlayerAction {
+public abstract class SelectFeatureAction extends PlayerAction {
 
 	private final Sites sites;
 
-	public FeatureAction() {
+	public SelectFeatureAction() {
 		this(new Sites());
 	}
 	
-	public FeatureAction(Position p, Set<Location> locations) {
+	public SelectFeatureAction(Position p, Set<Location> locations) {
 		this();
 		sites.put(p, locations);
 	}
 
-	public FeatureAction(Sites sites) {
+	public SelectFeatureAction(Sites sites) {
 		this.sites = sites;
 	}
 
 	public Sites getSites() {
 		return sites;
+	}	
+	
+	public Set<Location> get(Position p) {
+		Set<Location> locs = sites.get(p);
+		return locs != null ? locs : Collections.<Location>emptySet();
 	}
 
 	public Set<Location> getOrCreate(Position p) {

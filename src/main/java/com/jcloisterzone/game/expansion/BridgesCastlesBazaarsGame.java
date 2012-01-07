@@ -1,8 +1,11 @@
 package com.jcloisterzone.game.expansion;
 
+import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,12 +15,13 @@ import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.ExpandedGame;
 
 public class BridgesCastlesBazaarsGame extends ExpandedGame {
@@ -25,6 +29,10 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	private boolean bridgeUsed;
 	private Map<Player, Integer> bridges = Maps.newHashMap();
 	private Map<Player, Integer> castles = Maps.newHashMap();
+	
+	private Player castlePlayer;
+	private Map<Player, Set<Location>> currentTileCastleBases = null;
+	
 	
 	@Override
 	public void initPlayer(Player player) {		
@@ -46,10 +54,33 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	}
 	
 	@Override
-	public void turnCleanUp() {
-		bridgeUsed = false;
+	public void initFeature(Tile tile, Feature feature, Element xml) {
+		if (feature instanceof City) {
+			((City) feature).setCastleBase(attributeBoolValue(xml, "castle-base"));
+		}
 	}
 	
+	@Override
+	public void turnCleanUp() {
+		bridgeUsed = false;		
+	}
+		
+	public Player getCastlePlayer() {
+		return castlePlayer;
+	}
+
+	public void setCastlePlayer(Player castlePlayer) {
+		this.castlePlayer = castlePlayer;
+	}
+
+	public Map<Player, Set<Location>> getCurrentTileCastleBases() {
+		return currentTileCastleBases;
+	}
+
+	public void setCurrentTileCastleBases(Map<Player, Set<Location>> currentTileCastleBases) {
+		this.currentTileCastleBases = currentTileCastleBases;
+	}
+
 	@Override
 	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
 		if (! bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
@@ -216,7 +247,8 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 			node.appendChild(el);
 			el.setAttribute("index", "" + player.getIndex());
 			el.setAttribute("castles", "" + getPlayerCastles(player));
-			el.setAttribute("bridges", "" + getPlayerBridges(player));			
+			el.setAttribute("bridges", "" + getPlayerBridges(player));	
+			//TODO save castle bases
 		}
 	}
 	
@@ -229,6 +261,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 			Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
 			castles.put(player, Integer.parseInt(playerEl.getAttribute("castles")));			
 			bridges.put(player, Integer.parseInt(playerEl.getAttribute("bridges")));
+			//TODO load castle bases
 		}
 	}
 }

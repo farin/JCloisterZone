@@ -183,6 +183,12 @@ public abstract class Phase implements ClientIF {
 		logger.error(Application.ILLEGAL_STATE_MSG, "deployBridge");
 		
 	}
+	
+	@Override
+	public void deployCastle(Position pos, Location loc) {
+		logger.error(Application.ILLEGAL_STATE_MSG, "deployCastle");
+		
+	}
 
 
 }

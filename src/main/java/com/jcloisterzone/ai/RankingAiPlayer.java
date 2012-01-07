@@ -6,9 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Maps;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.CaptureAction;
@@ -160,7 +157,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 			}
 			if (action instanceof BarnAction) {
 				BarnAction ba = (BarnAction) action;
-				rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.getSites());				
+				rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.get(pos));				
 			}
 			if (action instanceof FairyAction) {
 				rankFairyPlacement(currTile, (FairyAction) action);			

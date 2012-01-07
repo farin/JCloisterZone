@@ -8,10 +8,7 @@ public class City extends CompletableFeature {
 
 	private int pennants = 0;
 	private TradeResource tradeResource;
-	private boolean besieged = false;
-	private boolean cathedral = false;
-	private boolean pricenss;
-
+	private boolean besieged, cathedral, pricenss, castleBase; 
 
 	public TradeResource getTradeResource() {
 		return tradeResource;
@@ -44,12 +41,18 @@ public class City extends CompletableFeature {
 	public void setPricenss(boolean pricenss) {
 		this.pricenss = pricenss;
 	}
-
+		
+	public boolean isCastleBase() {
+		return castleBase;
+	}
+	public void setCastleBase(boolean castleBase) {
+		this.castleBase = castleBase;
+	}
+	
 	@Override
 	public CityScoreContext getScoreContext() {
 		return new CityScoreContext(getGame());
 	}
-
 
 	@Override
 	public PointCategory getPointCategory() {

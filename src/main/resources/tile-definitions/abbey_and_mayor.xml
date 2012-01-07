@@ -16,8 +16,8 @@
 		<farm city="N W">SL SR</farm>
 	</card>
 	<card id="CCRR">
-		<city>N</city>
-		<city>E</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">E</city>
 		<road>W</road>
 		<road>S</road>
 		<farm city="N">WR</farm>
@@ -46,7 +46,7 @@
 		</wagon-move>
 	</card>
 	<card id="RC">
-		<city>W</city>
+		<city castle-base="true">W</city>
 		<road>S</road>
 		<farm city="W">SR</farm>
 		<farm city="W">NL NR EL ER SL</farm>
@@ -55,14 +55,14 @@
 		</wagon-move>
 	</card>
 	<card id="CRr">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>S E</road>
 		<farm city="N">WL WR SR</farm>
 		<farm city="N">EL</farm>
 		<farm>ER SL</farm>
 	</card>
 	<card id="RrC">
-		<city>W</city>
+		<city castle-base="true">W</city>
 		<road>S E</road>
 		<farm city="W">NL NR EL</farm>
 		<farm city="W">SR</farm>

@@ -7,16 +7,15 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
 
-
-public abstract class TileAction extends PlayerAction {
+public abstract class SelectTileAction extends PlayerAction {
 
 	private final Set<Position> sites;
 
-	public TileAction() {
+	public SelectTileAction() {
 		this.sites = Sets.newHashSet();
 	}
 
-	public TileAction(Set<Position> sites) {
+	public SelectTileAction(Set<Position> sites) {
 		this.sites = sites;
 	}
 

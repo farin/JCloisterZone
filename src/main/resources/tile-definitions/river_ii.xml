@@ -9,7 +9,7 @@
 		<position x="0" y="0"/>
 	</card>
 	<card id="IFC" group="river">
-		<city>E</city>
+		<city castle-base="true">E</city>
 		<farm city="E">NL NR WR</farm>
 		<farm city="E">SL SR WL</farm>
 		<river>W</river>
@@ -48,7 +48,7 @@
 		<river>N S</river>
 	</card>
 	<card id="CIRI" group="river">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm city="N">EL</farm>
 		<farm city="N">WR</farm>

@@ -172,7 +172,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 						barnAction = new BarnAction();
 						actions.add(barnAction);
 					}
-					barnAction.getSites().add(corner);
+					barnAction.getOrCreate(pos).add(corner);
 				}
 				corner = corner.next();
 				positionChange = positionChange.next();

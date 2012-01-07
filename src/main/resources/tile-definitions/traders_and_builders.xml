@@ -10,13 +10,13 @@
 	</card>
 	<card id="CCc.c">
 		<city resource="cloth">W E</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W S">INNER_FARM</farm>
 	</card>
 	<card id="CCc.w">
 		<city resource="wine">W E</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W S">INNER_FARM</farm>
 	</card>
@@ -26,8 +26,8 @@
 	</card>
 	<card id="CcCC.c">
 		<city resource="cloth">N W</city>
-		<city>S</city>
-		<city>E</city>
+		<city castle-base="true">S</city>
+		<city castle-base="true">E</city>
 		<farm city="N E S">INNER_FARM</farm>
 	</card>
 	<card id="CcRR!.c">
@@ -57,7 +57,7 @@
 	</card>
 	<card id="CcRC.c">
 		<city resource="cloth">N W</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<road>E</road>
 		<farm city="N">EL</farm>
 		<farm city="N S">ER</farm>
@@ -67,7 +67,7 @@
 	</card>
 	<card id="CcRC.g">
 		<city resource="grain">N W</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<road>E</road>
 		<farm city="N">EL</farm>
 		<farm city="N S">ER</farm>
@@ -114,7 +114,7 @@
 		<farm city="W">SL SR</farm>
 	</card>
 	<card id="CR">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>E</road>
 		<farm city="N">EL</farm>
 		<farm city="N">WL WR SL SR ER</farm>
@@ -189,7 +189,7 @@
 		</wagon-move>
 	</card>
 	<card id="RRC">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>W</road>
 		<road>S</road>
 		<farm city="N">WR</farm>

@@ -21,13 +21,13 @@
 
 	<card id="C.d" group="dragon">
 		<dragon/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 
 	<card id="C.v">
 		<volcano/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL ER SL SR WL WR</farm>
 	</card>
 
@@ -74,7 +74,7 @@
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
-		<city princess="yes">N</city>
+		<city princess="yes" castle-base="true">N</city>
 		<farm city="N">WR EL</farm>
 		<farm>WL SR</farm>
 		<farm>ER SL</farm>
@@ -146,8 +146,8 @@
 	</card>
 	<card id="CC.v">
 		<volcano/>
-		<city>E</city>
-		<city>N</city>
+		<city castle-base="true">E</city>
+		<city castle-base="true">N</city>
 		<farm city="N E">WL WR SL SR</farm>
 	</card>
 	<card id="CFc+.d" group="dragon">
@@ -179,28 +179,28 @@
 	<card id="RrC.d" group="dragon">
 		<dragon/>
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="RrC.g">
 		<portal/>
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="CRr.d" group="dragon">
 		<dragon/>
 		<road>E S</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
 	</card>
 	<card id="CRr.g">
 		<portal/>
 		<road>E S</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
 	</card>

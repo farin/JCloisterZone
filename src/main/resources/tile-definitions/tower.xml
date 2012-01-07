@@ -2,7 +2,7 @@
 <pack>
 	<card id="C" count="2">
 		<tower />
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	<card id="F">
@@ -68,13 +68,13 @@
 	<card id="RrC">
 		<tower />
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card id="RCr">
 		<tower />
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>W E</road>
 		<farm city="N">WR</farm>
 		<farm city="N">EL</farm>
@@ -98,15 +98,15 @@
 	</card>
 	<card id="CC.2">
 		<tower />
-		<city>N</city>
-		<city>W</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">W</city>
 		<farm city="N W">EL ER SL SR</farm>
 	</card>
 	<card id="CRCr.2">
 		<tower />
 		<road>W E</road>
-		<city>N</city>
-		<city>S</city>
+		<city>N</city> <!-- tower in city - no castle base -->
+		<city castle-base="true">S</city>
 		<farm city="N">WR EL</farm>
 		<farm city="S">ER WL</farm>
 	</card>
@@ -123,7 +123,7 @@
 	<card id="CccC+">
 		<tower />
 		<city>N W E</city>
-		<city>S</city>
+		<city castle-base="true">S</city>
 		<farm city="W S">INNER_FARM</farm>
 	</card>
 </pack>

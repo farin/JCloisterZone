@@ -12,9 +12,9 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.FeatureAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.TileAction;
+import com.jcloisterzone.action.SelectFeatureAction;
+import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -150,13 +150,13 @@ public class MainPanel extends BackgroundPanel {
 	public void prepareAction(PlayerAction action) {
 		gridPanel.clearActionDecorations();
 		GridLayer layer = null;
-		if (action instanceof FeatureAction) {
-			layer = new FeatureAreaLayer(gridPanel, (FeatureAction) action);
-		} else if (action instanceof TileAction) {
-			layer = new TileActionLayer(gridPanel, (TileAction) action);
-		} else if (action instanceof BarnAction) {
+		if (action instanceof BarnAction) {
 			layer = new BarnAreaLayer(gridPanel, (BarnAction) action);
-		}
+		} else if (action instanceof SelectFeatureAction) {
+			layer = new FeatureAreaLayer(gridPanel, (SelectFeatureAction) action);
+		} else if (action instanceof SelectTileAction) {
+			layer = new TileActionLayer(gridPanel, (SelectTileAction) action);
+		} 
 		gridPanel.addLayer(layer);
 	}
 

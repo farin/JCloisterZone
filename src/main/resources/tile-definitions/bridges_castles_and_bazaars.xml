@@ -5,9 +5,9 @@
 		<city>N E S W</city>
 	</card>
 	<card id="CCCR">
-		<city>W</city>
-		<city>N</city>
-		<city>E</city>
+		<city castle-base="true">W</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">E</city>
 		<road>S</road>
 		<farm city="W N E">SR</farm>
 		<farm city="E">SL</farm>
@@ -33,7 +33,7 @@
 	</card>
 	<card id="CFR.b">
 		<bazaar/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm>EL ER SL SR WL WR</farm>	
 	</card>

@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.FairyAction;
-import com.jcloisterzone.action.TileAction;
+import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.grid.GridMouseListener;
@@ -14,9 +14,9 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class TileActionLayer extends AbstractGridLayer implements GridMouseListener {
 
-	private TileAction action;
+	private SelectTileAction action;
 
-	public TileActionLayer(GridPanel gridPanel, TileAction action) {
+	public TileActionLayer(GridPanel gridPanel, SelectTileAction action) {
 		super(gridPanel);
 		this.action = action;
 	}

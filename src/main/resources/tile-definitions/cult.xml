@@ -6,7 +6,7 @@
 	</card>
 	<card id="SC">
 		<cloister shrine="yes"/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">SL SR WL WR EL ER</farm>
 	</card>
 	<card id="SR">
@@ -19,7 +19,7 @@
 	</card>
 	<card id="SCFR">
 		<cloister shrine="yes"/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm city="N">SL SR WL WR EL ER</farm>
 		<wagon-move>
@@ -39,7 +39,7 @@
 	</card>
 	<card id="SRCR">
 		<cloister shrine="yes"/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>W</road>
 		<road>E</road>
 		<farm city="N">WR EL</farm>

@@ -14,7 +14,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class MeepleAction extends FeatureAction {
+public class MeepleAction extends SelectFeatureAction {
 
 	private final Class<? extends Meeple> meepleType;
 

@@ -15,7 +15,7 @@
 
 	<card count="4" id="RCr">
 		<road>W E</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL WR</farm>
 		<farm>ER SL SR WL</farm>
 		<position x="0" y="0"/>
@@ -82,7 +82,7 @@
 	</card>
 	<card count="3" id="CRr">
 		<road>E S</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
 	</card>
@@ -90,7 +90,7 @@
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL</farm>
 		<farm>WL SR</farm>
 		<farm>ER SL</farm>
@@ -100,22 +100,22 @@
 	</card>
 	<card count="3" id="RrC">
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>
 	<card count="5" id="C">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	<card count="3" id="CFC.2">
-		<city>N</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">S</city>
 		<farm city="N S">WL WR EL ER</farm>
 	</card>
 	<card count="2" id="CC.2">
-		<city>N</city>
-		<city>W</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">W</city>
 		<farm city="N W">EL ER SL SR</farm>
 	</card>
 	<card count="1" id="RRRR">

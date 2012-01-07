@@ -2,8 +2,8 @@
 <pack>
 	<card id="CC.1">
 		<crop-circle type="CITY"/>
-		<city>N</city>
-		<city>E</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">E</city>
 		<farm city="N E">SL SR WL WR</farm>
 	</card>
 	<card id="Cc.2">
@@ -13,7 +13,7 @@
 	</card>
 	<card id="CR">
 		<crop-circle type="FARM"/>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<road>E</road>
 		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
@@ -26,7 +26,7 @@
 	<card id="RrC">
 		<crop-circle type="FARM"/>
 		<road>S W</road>
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
 	</card>

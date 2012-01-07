@@ -35,6 +35,7 @@ public interface Client2ClientIF {
 
 	public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType);
 	
-	public void deployBridge(Position pos, Location loc); 
+	public void deployBridge(Position pos, Location loc);
+	public void deployCastle(Position pos, Location loc); 
 
 }

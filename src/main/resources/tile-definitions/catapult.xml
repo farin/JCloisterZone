@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
 	<card id="C">
-		<city>N</city>
+		<city castle-base="true">N</city>
 		<farm city="N">WL WR SL SR EL ER</farm>
 	</card>
 	<card id="C!">
@@ -17,8 +17,8 @@
 		<city>N W S E</city>
 	</card>
 	<card id="CFC">
-		<city>N</city>
-		<city>S</city>
+		<city castle-base="true">N</city>
+		<city castle-base="true">S</city>
 		<farm city="N S">WL WR EL ER</farm>
 	</card>
 	<card id="F">

@@ -22,7 +22,7 @@ public class BarnAreaLayer extends AbstractAreaLayer {
 	protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
 		//quick fix
 		if (getClient().getGame().getTile().getPosition().equals(p)) {
-			return getClient().getTileTheme().getBarnTileAreas(tile, getSquareSize(), action.getSites());
+			return getClient().getTileTheme().getBarnTileAreas(tile, getSquareSize(), action.get(p));
 		}
 		return null;
 	}

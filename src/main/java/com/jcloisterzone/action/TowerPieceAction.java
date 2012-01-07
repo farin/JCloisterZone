@@ -6,7 +6,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
 
-public class TowerPieceAction extends TileAction {
+public class TowerPieceAction extends SelectTileAction {
 
 	public TowerPieceAction() {
 		super();

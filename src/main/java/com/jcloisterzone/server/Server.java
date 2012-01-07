@@ -276,5 +276,10 @@ public class Server extends GameSettings implements ServerIF {
 	public void deployBridge(Position pos, Location loc) {
 		stub.deployBridge(pos, loc);		
 	}
+	
+	@Override
+	public void deployCastle(Position pos, Location loc) {
+		stub.deployCastle(pos, loc);		
+	}
 
 }

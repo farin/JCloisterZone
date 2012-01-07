@@ -5,7 +5,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class TunnelAction extends FeatureAction {
+public class TunnelAction extends SelectFeatureAction {
 
 	private final boolean secondTunnelPiece;
 

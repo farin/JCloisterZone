@@ -10,9 +10,9 @@ import javax.swing.JOptionPane;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
-import com.jcloisterzone.action.FeatureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -26,9 +26,9 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class FeatureAreaLayer extends AbstractAreaLayer {
 
-	private final FeatureAction action;
+	private final SelectFeatureAction action;
 
-	public FeatureAreaLayer(GridPanel gridPanel, FeatureAction action) {
+	public FeatureAreaLayer(GridPanel gridPanel, SelectFeatureAction action) {
 		super(gridPanel);
 		this.action = action;
 	}
