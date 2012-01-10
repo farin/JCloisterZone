@@ -7,6 +7,7 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
@@ -122,6 +123,11 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	class LegacyAiScoreAllCallback implements ScoreAllCallback {
 
 		private double rank = 0;
+		
+		@Override
+		public void scoreCastle(Meeple meeple, Castle castle) {
+			throw new UnsupportedOperationException();			
+		}
 
 		@Override
 		public CompletableScoreContext getCompletableScoreContext(Completable completable) {
@@ -277,6 +283,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		for(Meeple meeple : getGame().getDeployedMeeples()) {
 			if (meeple.getPosition() != fairyPos) continue;
 			if (! (meeple instanceof Follower)) continue;
+			if (meeple.getFeature() instanceof Castle) continue;
 			
 			rating += reducePoints(1.0, meeple.getPlayer());
 		}
@@ -313,7 +320,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 	protected double rankConvexity() {
 		Position pos = getTilePack().getCurrentTile().getPosition();
-		return 0.001 * getBoard().getAllNeigbourTiles(pos).size();
+		return 0.001 * getBoard().getAdjacentAndDiagonalTiles(pos).size();
 	}
 
 	protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {
@@ -447,6 +454,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		for(Meeple m : getGame().getDeployedMeeples()) {
 			int distance = dragonPosition.squareDistance(m.getPosition());			
 			if (distance == 0 || distance > movesLeft) continue;
+			if (m.getFeature() instanceof Castle) continue;
 
 			double weight = 1.0 / (distance * distance);
 			if (isMe(m.getPlayer())) {

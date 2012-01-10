@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
@@ -211,18 +212,18 @@ public class FigurePositionProvider {
 	/*TODO cely revise, momentalne je refactoring a presun sem ze Square */
 
 	public ImmutablePoint getFigurePlacement(Tile tile, Class<? extends Feature> piece, Location d) {
-		Rotation iconRotation = tile.getRotation();
+		Rotation tileRotation = tile.getRotation();
 
 		StringBuilder key = new StringBuilder();
 		key.append(tile.getId()).append(" ");
 		key.append(piece.getSimpleName().replace("Piece", "").toUpperCase()).append(" ");
-		key.append(d.rotateCCW(iconRotation).toString());
+		key.append(d.rotateCCW(tileRotation).toString());
 
 		//System.out.println(key.toString());
 
 		ImmutablePoint specialPlacement = specialPlacements.get(key.toString());
 		if (specialPlacement != null) {
-			return specialPlacement.rotate(iconRotation);
+			return specialPlacement.rotate(tileRotation);
 		}
 
 		if (piece.equals(Cloister.class)) {
@@ -238,13 +239,16 @@ public class FigurePositionProvider {
 			return getCityPlacement(tile,d);
 		}
 		if (piece.equals(Farm.class)) {
-			return getFarmPlacement(d, iconRotation);
+			return getFarmPlacement(d, tileRotation);
 		}
 		if (piece.equals(Tower.class)) {
 			Area a = theme.getAreaProvider().getArea(tile, Tower.class, Location.TOWER);
 			int x = a.getBounds().x + a.getBounds().width / 2;
 			int y = a.getBounds().y + a.getBounds().height / 2;
 			return new ImmutablePoint(x / 10, y / 10); //normalize to old value 100px
+		}
+		if (piece.equals(Castle.class)) {
+			return getCastlePlacement(tile, d);
 		}
 		logger.error("Meeple placement is not defined for {}", key);
 		return null;
@@ -259,6 +263,12 @@ public class FigurePositionProvider {
 		if (d == Location.NWSE) {
 			return new ImmutablePoint(CENTER, QUARTER);
 		}
+		return P_CENTER;
+	}
+	
+	private ImmutablePoint getCastlePlacement(Tile tile, Location d) {
+		Rotation rot = d.getRotationOf(Location.N);
+		if (rot != null) return new ImmutablePoint(CENTER, 0).rotate(rot);		
 		return P_CENTER;
 	}
 	

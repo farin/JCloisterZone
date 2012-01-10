@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,9 +14,12 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 
@@ -95,14 +99,59 @@ public class CastlePhase extends Phase {
 		BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
 		Player owner = bcb.getCastlePlayer();
 		bcb.decreaseCastles(owner);
-		//game.getUserInterface().castleDeployed();
-		//TODO ... continue with deployment ...
-		
+		Castle castle1 = replaceCityWithCastle(getBoard().get(pos), loc);
+		Castle castle2 = replaceCityWithCastle(getBoard().get(pos.add(loc)), loc.rev());
+		castle1.getEdges()[0] = castle2;
+		castle2.getEdges()[0] = castle1;
+		game.fireGameEvent().castleDeployed(castle1, castle2);
+					
 		prepareCastleAction(); //it is possible to deploy castle by another player  
+	}
+		
+	private Castle replaceCityWithCastle(Tile tile, Location loc) {
+		ListIterator<Feature> iter = tile.getFeatures().listIterator();
+		City city = null;
+		while(iter.hasNext()) {
+			Feature feature =  iter.next();
+			if (feature.getLocation() == loc) {
+				city = (City) feature;
+				break;
+			}
+		}
+		Meeple m = city.getMeeple();
+		if (m != null) {
+			m.undeploy(false);
+		}
+		Castle castle = new Castle();
+		castle.setTile(tile);
+		castle.setId(game.idSequnceNextVal());
+		castle.setLocation(loc.rotateCCW(tile.getRotation()));
+		iter.set(castle);
+		
+		for(Feature f : tile.getFeatures()) { //replace also city references
+			if (f instanceof Farm) {
+				Farm farm = (Farm) f;
+				Feature[] adjoining = farm.getAdjoiningCities();
+				if (adjoining != null) {
+					for(int i = 0; i < adjoining.length; i++) {
+						if (adjoining[i] == city) {
+							adjoining[i] = castle;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if (m != null) {
+			m.deploy(tile, loc);
+		}
+		return castle;
 	}
 	
 	class FindCastleBaseVisitor implements FeatureVisitor {
 		
+		int size = 0;
 		boolean castleBase = true;
 		Player owner;
 
@@ -116,11 +165,13 @@ public class CastlePhase extends Phase {
 			if (c.isOccupied()) {
 				owner = c.getMeeple().getPlayer();
 			}
+			size++;
+			if (size > 2) return false;
 			return true;
 		}
 
 		public boolean isCastleBase() {
-			return castleBase;
+			return castleBase && size == 2;
 		}
 
 		public Player getOwner() {

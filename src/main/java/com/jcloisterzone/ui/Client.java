@@ -46,6 +46,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventListener;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
@@ -644,6 +645,11 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	@Override
 	public void bridgeDeployed(Position pos, Location loc) {
 		mainPanel.bridgeDeployed(pos, loc);	
+	}
+	
+	@Override
+	public void castleDeployed(Castle castle1, Castle castle2) {
+		mainPanel.castleDeployed(castle1, castle2);
 	}
 
 	// ------------------ Feature evnts ----------

@@ -8,6 +8,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
@@ -57,5 +58,6 @@ public interface GameEventListener extends EventListener {
 	
 	//BB events	
 	void bridgeDeployed(Position pos, Location loc);
+	void castleDeployed(Castle castle1, Castle castle2);
 
 }

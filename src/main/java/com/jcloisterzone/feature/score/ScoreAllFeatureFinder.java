@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -43,10 +44,16 @@ public class ScoreAllFeatureFinder {
 		}
 		for(Meeple m : game.getDeployedMeeples()) {
 			if (!(m instanceof Follower)) continue;
-			Feature f = m.getFeature();
+			Feature f = m.getFeature();				
+			
+			if (f instanceof Castle) {
+				callback.scoreCastle(m, (Castle) f);
+				continue;
+			}
+			
 			if (!(f instanceof Completable)) continue;
-			if (alreadyRated.contains(m)) continue;
-
+			if (alreadyRated.contains(m)) continue;	
+			
 			Completable completable = (Completable) f;
 			CompletableScoreContext ctx = callback.getCompletableScoreContext(completable);
 			if (ctx instanceof CityScoreContext) {

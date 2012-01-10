@@ -269,7 +269,7 @@ public class Board {
 		return tiles;
 	}
 
-	public List<Tile> getAllNeigbourTiles(Position pos) {
+	public List<Tile> getAdjacentAndDiagonalTiles(Position pos) {
 		return getMulti(pos.addMulti(Position.ADJACENT_AND_DIAGONAL.values()));
 	}
 

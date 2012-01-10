@@ -1,11 +1,15 @@
 package com.jcloisterzone.feature.visitor.score;
 
+import java.util.Set;
+
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Completable;
 
 
 public interface CompletableScoreContext extends ScoreContext {
 
-	public boolean isCompleted();
+	boolean isCompleted();
+	Set<Position> getPositions(); 
 
 	int getPoints();
 

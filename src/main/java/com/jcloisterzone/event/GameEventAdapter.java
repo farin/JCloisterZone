@@ -7,6 +7,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
@@ -100,6 +101,10 @@ public class GameEventAdapter implements GameEventListener {
 	
 	@Override
 	public void bridgeDeployed(Position pos, Location loc) {		
+	}
+	
+	@Override
+	public void castleDeployed(Castle castle1, Castle castle2) {	
 	}
 
 }

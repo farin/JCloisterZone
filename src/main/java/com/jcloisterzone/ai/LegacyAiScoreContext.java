@@ -160,5 +160,10 @@ class LegacyAiScoreContext implements CompletableScoreContext {
 	public int getPoints() {
 		return ctx.getPoints();
 	}
+	
+	@Override
+	public Set<Position> getPositions() {
+		return ctx.getPositions();
+	}
 
 }

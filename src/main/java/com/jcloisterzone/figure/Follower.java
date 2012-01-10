@@ -2,6 +2,7 @@ package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -18,6 +19,11 @@ public abstract class Follower extends Meeple {
 
 	public int getPower() {
 		return 1;
+	}
+	
+	@Override
+	public boolean canBeEatenByDragon() {
+		return !(getFeature() instanceof Castle);
 	}
 
 	@Override

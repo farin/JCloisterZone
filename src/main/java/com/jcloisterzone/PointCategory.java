@@ -6,6 +6,7 @@ public enum PointCategory {
 	CITY,
 	FARM,
 	CLOISTER,
+	CASTLE,
 
 	TRADE_GOODS,
 	FAIRY,

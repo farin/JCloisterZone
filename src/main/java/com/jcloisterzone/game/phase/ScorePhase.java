@@ -1,11 +1,14 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
@@ -14,10 +17,11 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 
 public class ScorePhase extends Phase {
 
-	private List<Completable> alredyScored = Lists.newArrayList();
+	private Set<Completable> alredyScored = Sets.newHashSet();
 
 	public ScorePhase(Game game) {
 		super(game);
@@ -60,15 +64,22 @@ public class ScorePhase extends Phase {
 				scoreCompleted(r);
 			}
 		}
-
-		alredyScored.clear();
-
-		for(Tile neighbour : getBoard().getAllNeigbourTiles(pos)) {
+		
+		for(Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
 			Cloister cloister = neighbour.getCloister();
 			if (cloister != null) {
 				scoreCompleted(cloister);
 			}
 		}
+		
+		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+			for(Entry<Castle, Integer> entry : bcb.getCastleScore().entrySet()) {
+				scoreCastle(entry.getKey(), entry.getValue());				
+			}
+		}
+		
+		alredyScored.clear();
 
 		next();
 	}
@@ -77,6 +88,14 @@ public class ScorePhase extends Phase {
 		for(Meeple m : ctx.getMeeples()) {
 			m.undeploy(false);
 		}
+	}
+	
+	private void scoreCastle(Castle castle, int points) {
+		Meeple m = castle.getMeeple();
+		if (m == null) m = castle.getSecondFeature().getMeeple();
+		m.getPlayer().addPoints(points, PointCategory.CASTLE);
+		game.fireGameEvent().scored(m.getFeature(), points, points+"", m, false);		
+		m.undeploy(false);
 	}
 
 	private void scoreCompleted(Completable completable) {

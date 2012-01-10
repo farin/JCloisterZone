@@ -153,7 +153,7 @@ public class TileFactory {
 					}
 				}
 			}
-			farm.setAdjoiningCities(cities.toArray(new City[cities.size()]));
+			farm.setAdjoiningCities(cities.toArray(new Feature[cities.size()]));
 		}
 		if (attributeBoolValue(e, "pig")) {
 			//for river is pig herd always present

@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
@@ -8,6 +9,7 @@ import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 
 
@@ -29,6 +31,11 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
 
 		game.expansionDelegate().finalScoring();
 		game.fireGameEvent().gameOver();
+	}
+	
+	@Override
+	public void scoreCastle(Meeple meeple, Castle castle) {
+		game.fireGameEvent().scored(meeple.getFeature(), 0, "0", meeple, true);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -16,6 +17,7 @@ import com.jcloisterzone.game.Game;
 public class FarmScoreContext extends AbstractScoreContext {
 
 	private Map<City, CityScoreContext> adjoiningCompletedCities = Maps.newHashMap();
+	private Set<Castle> adjoiningCastles = Sets.newHashSet();
 	private Set<Player> pigs = Sets.newHashSet();
 	private int pigHerds = 0;
 
@@ -42,17 +44,23 @@ public class FarmScoreContext extends AbstractScoreContext {
 		this.scoredCities = scoredCities;
 	}
 
-	private void addAdjoiningCompletedCities(City[] adjoiningCities) {
-		for(City c : adjoiningCities) {
-			CityScoreContext ctx = cityCache.get(c);
-			if (ctx == null) {
-				ctx = c.getScoreContext();
-				ctx.setCityCache(cityCache);
-				c.walk(ctx);
+	private void addAdjoiningCompletedCities(Feature[] adjoiningCities) {
+		for(Feature feature : adjoiningCities) {
+			if (feature instanceof City) {
+				City c = (City) feature;
+				CityScoreContext ctx = cityCache.get(c);
+				if (ctx == null) {
+					ctx = c.getScoreContext();
+					ctx.setCityCache(cityCache);
+					c.walk(ctx);
+				}
+				if (ctx.isCompleted()) {
+					adjoiningCompletedCities.put((City) ctx.getMasterFeature(), ctx);
+				}
+			} else if (feature instanceof Castle) {
+				adjoiningCastles.add((Castle) feature.getRepresentativeFeature());
 			}
-			if (ctx.isCompleted()) {
-				adjoiningCompletedCities.put((City) ctx.getMasterFeature(), ctx);
-			}
+			
 		}
 	}
 
@@ -97,7 +105,8 @@ public class FarmScoreContext extends AbstractScoreContext {
 	private int getPlayerPoints(Player player, int pointsPerCity) {
 		//optimalization
 		if (scoredCities == null && ! getGame().hasExpansion(Expansion.CATHARS)) {
-			return pointsPerCity * adjoiningCompletedCities.size();
+			return pointsPerCity * adjoiningCompletedCities.size() +
+				   (pointsPerCity + 1) * adjoiningCastles.size();
 		}
 
 		int points = 0;
@@ -113,6 +122,7 @@ public class FarmScoreContext extends AbstractScoreContext {
 				points += pointsPerCity;
 			}
 		}
+		points += (pointsPerCity + 1) * adjoiningCastles.size();
 		return points;
 	}
 
@@ -125,9 +135,11 @@ public class FarmScoreContext extends AbstractScoreContext {
 					points += 4;
 				}
 			}
+			points += 5 * adjoiningCastles.size();
 			return points;
 		} else {
-			return adjoiningCompletedCities.size() * 4;
+			return adjoiningCompletedCities.size() * 4 + 
+				   adjoiningCastles.size() * 5;
 		}
 	}
 

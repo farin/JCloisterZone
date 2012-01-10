@@ -6,15 +6,15 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 
 public class Farm extends MultiTileFeature {
 
-	protected City[] adjoiningCities;
+	protected Feature[] adjoiningCities; //or castles
 	protected boolean pigHerd;
 
 
-	public City[] getAdjoiningCities() {
+	public Feature[] getAdjoiningCities() {
 		return adjoiningCities;
 	}
 
-	public void setAdjoiningCities(City[] adjoiningCities) {
+	public void setAdjoiningCities(Feature[] adjoiningCities) {
 		this.adjoiningCities = adjoiningCities;
 	}
 

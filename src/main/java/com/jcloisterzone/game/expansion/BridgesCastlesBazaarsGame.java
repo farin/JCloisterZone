@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
@@ -20,9 +21,14 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.event.GameEventAdapter;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.Game;
 
 public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	
@@ -33,6 +39,30 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	private Player castlePlayer;
 	private Map<Player, Set<Location>> currentTileCastleBases = null;
 	
+	/** castles deployed this turn - cannot be scored - refs to master feature  */
+	private List<Castle> newCastles = Lists.newArrayList();
+	/** castles from previous turns, can be scored - castle -> vinicity area */
+	private Map<Castle, Position[]> scoreableCastleVicinity = Maps.newHashMap();
+	private Map<Castle, Integer> castleScore = Maps.newHashMap();
+	
+	@Override
+	public void setGame(Game game) {
+		super.setGame(game);
+		game.addGameListener(new GameEventAdapter() {
+			@Override
+			public void castleDeployed(Castle castle1, Castle castle2) {				
+				newCastles.add(castle1.getRepresentativeFeature());		
+			}
+			
+			@Override
+			public void undeployed(Meeple meeple) {				
+				if (meeple.getFeature() instanceof Castle) {
+					Castle castle = (Castle) meeple.getFeature().getRepresentativeFeature();
+					scoreableCastleVicinity.remove(castle);					
+				}
+			}
+		});
+	}
 	
 	@Override
 	public void initPlayer(Player player) {		
@@ -61,8 +91,36 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	}
 	
 	@Override
+	public void scoreCompleted(CompletableScoreContext ctx) {
+		for(Position p : ctx.getPositions()) {
+			for(Entry<Castle, Position[]> entry : scoreableCastleVicinity.entrySet()) {
+				Position[] vicinity = entry.getValue();
+				for(int i = 0; i < vicinity.length; i++) {
+					if (vicinity[i].equals(p)) {		
+						Castle master = entry.getKey();
+						Integer score = castleScore.get(master);
+						if (score == null || score < ctx.getPoints()) {
+							castleScore.put(master, ctx.getPoints());
+						}
+						break;
+					}
+				}
+			}
+		}		
+	}
+	
+	public Map<Castle, Integer> getCastleScore() {
+		return castleScore;
+	}
+		
+	@Override
 	public void turnCleanUp() {
 		bridgeUsed = false;		
+		for(Castle castle: newCastles) {
+			scoreableCastleVicinity.put(castle, castle.getVicinity());
+		}
+		newCastles.clear();
+		castleScore.clear();
 	}
 		
 	public Player getCastlePlayer() {
@@ -80,7 +138,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 	public void setCurrentTileCastleBases(Map<Player, Set<Location>> currentTileCastleBases) {
 		this.currentTileCastleBases = currentTileCastleBases;
 	}
-
+	
 	@Override
 	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
 		if (! bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {

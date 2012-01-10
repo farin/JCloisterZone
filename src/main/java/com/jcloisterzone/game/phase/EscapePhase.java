@@ -52,7 +52,7 @@ public class EscapePhase extends Phase {
 			if (city.isBesieged()) { //cloister must border Cathar tile
 				isBesieged = true;
 				Position p = city.getTile().getPosition();
-				for(Tile tile : getBoard().getAllNeigbourTiles(p)) {
+				for(Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
 					if (tile.hasCloister()) {
 						cloisterNearby = true;
 						return false; //do not continue, besieged cloister exists
