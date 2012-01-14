@@ -485,9 +485,10 @@ msgid ""
 "computer player."
 msgstr "Crea una nuova partita locale o in rete. Puoi giocare contro "
 "un numero qualsiasi di giocatori."
+
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:71
 msgid "Connect to a remote JCloisterZone application with settled new game."
-msgstr ""
+msgstr "Connettiti ad una applicazione JCloisterZone remota con partita organizzata"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:89
 msgid "Load from a file previously saved game."
