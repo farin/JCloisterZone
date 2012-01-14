@@ -51,13 +51,13 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 		game.addGameListener(new GameEventAdapter() {
 			@Override
 			public void castleDeployed(Castle castle1, Castle castle2) {				
-				newCastles.add(castle1.getRepresentativeFeature());		
+				newCastles.add(castle1.getMaster());		
 			}
 			
 			@Override
 			public void undeployed(Meeple meeple) {				
 				if (meeple.getFeature() instanceof Castle) {
-					Castle castle = (Castle) meeple.getFeature().getRepresentativeFeature();
+					Castle castle = (Castle) meeple.getFeature().getMaster();
 					scoreableCastleVicinity.remove(castle);					
 				}
 			}

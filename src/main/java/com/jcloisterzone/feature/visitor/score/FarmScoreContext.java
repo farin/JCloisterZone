@@ -58,7 +58,7 @@ public class FarmScoreContext extends AbstractScoreContext {
 					adjoiningCompletedCities.put((City) ctx.getMasterFeature(), ctx);
 				}
 			} else if (feature instanceof Castle) {
-				adjoiningCastles.add((Castle) feature.getRepresentativeFeature());
+				adjoiningCastles.add((Castle) feature.getMaster());
 			}
 			
 		}

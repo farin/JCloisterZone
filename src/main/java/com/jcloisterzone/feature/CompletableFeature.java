@@ -1,24 +1,15 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.feature.visitor.IsCompletedVisitor;
 
 
 public abstract class CompletableFeature extends MultiTileFeature implements Completable {
 
 	@Override
-	public boolean isPieceCompleted() {
+	public boolean isOpen() {
 		for(MultiTileFeature edge : getEdges()) {
-			if (edge == null) return false;
+			if (edge == null) return true;
 		}
-		return true;
+		return false;
 	}
-
-	@Override
-	public boolean isFeatureCompleted() {
-		IsCompletedVisitor visitor = new IsCompletedVisitor();
-		walk(visitor);
-		return visitor.isCompleted();
-	}
-
 
 }

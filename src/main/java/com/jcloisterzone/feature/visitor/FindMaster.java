@@ -2,7 +2,7 @@ package com.jcloisterzone.feature.visitor;
 
 import com.jcloisterzone.feature.Feature;
 
-public class FindMaster implements FeatureVisitor {
+public class FindMaster implements FeatureVisitor<Feature> {
 
 	private Feature master;
 
@@ -14,7 +14,13 @@ public class FindMaster implements FeatureVisitor {
 		return true;
 	}
 
+	@Deprecated //
 	public Feature getMasterFeature() {
+		return master;
+	}
+	
+	@Override
+	public Feature getResult() {
 		return master;
 	}
 

@@ -14,7 +14,7 @@ public class Mayor extends Follower {
 		super(game, player);
 	}
 
-	static class PennatsCountingVisitor implements FeatureVisitor {
+	static class PennatsCountingVisitor implements FeatureVisitor<Integer> {
 		int pennats = 0;
 
 		@Override
@@ -24,7 +24,8 @@ public class Mayor extends Follower {
 			return true;
 		}
 
-		public int getPennats() {
+		@Override
+		public Integer getResult() {			
 			return pennats;
 		}
 	}
@@ -32,9 +33,7 @@ public class Mayor extends Follower {
 	@Override
 	public int getPower() {
 		//TODO not effective - city is walked twice during scoring
-		PennatsCountingVisitor v = new PennatsCountingVisitor();
-		getFeature().walk(v);
-		return v.getPennats();
+		return getFeature().walk(new PennatsCountingVisitor());
 	}
 
 	@Override

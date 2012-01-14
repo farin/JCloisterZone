@@ -403,7 +403,7 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 		if (Follower.class.isAssignableFrom(ft)) {
 			hasMeeple = p.hasFollower((Class<? extends Follower>) ft);
 		} else {
-			hasMeeple = p.hasSpeialMeeple((Class<? extends Special>) ft);
+			hasMeeple = p.hasSpecialMeeple((Class<? extends Special>) ft);
 		}
 		if (hasMeeple) {
 			g2.drawImage(figures.get(avail),offsetx,offsety,null);

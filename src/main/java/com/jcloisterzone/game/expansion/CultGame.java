@@ -36,7 +36,7 @@ public final class CultGame extends ExpandedGame {
 				Cloister nextCloister = nt.getCloister();
 				if (cloister.isShrine() ^ nextCloister.isShrine()) {
 					//opposite cloisters
-					if ( ! nextCloister.isFeatureCompleted()) {
+					if (nextCloister.isOpen()) {
 						makeCloisterChallenged(nextCloister);
 					}
 				}

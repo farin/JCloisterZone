@@ -3,23 +3,21 @@ package com.jcloisterzone.feature.visitor;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 
-public class IsCompletedVisitor implements FeatureVisitor {
-
+public class IsOccupiedOrCompleted extends IsOccupied {
+	
 	private boolean isCompleted = true;
-
+	
 	@Override
-	public boolean visit(Feature feature) {
+	public boolean visit(Feature feature) {		
 		Completable completable = (Completable) feature;
-		if (! completable.isPieceCompleted()) {
+		if (completable.isOpen()) {
 			isCompleted = false;
-			return false;
-		}
-		return true;
+		}		
+		return super.visit(feature);
 	}
-
-	public boolean isCompleted() {
-		return isCompleted;
+	
+	@Override
+	public Boolean getResult() {		
+		return isCompleted || super.getResult();
 	}
-
-
 }

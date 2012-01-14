@@ -10,9 +10,9 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
@@ -80,8 +80,12 @@ public class WagonPhase extends Phase {
 		}
 		return false;
 	}
+	
+	private Sites prepareWagonMoves(Feature source) {		
+		return source.walk(new FindUnoccupiedNeighbours());
+	}
 
-	class FindUnoccupiedNeighbours implements FeatureVisitor {
+	private class FindUnoccupiedNeighbours implements FeatureVisitor<Sites> {
 
 		private Sites wagonMoves = new Sites();
 
@@ -89,24 +93,16 @@ public class WagonPhase extends Phase {
 		public boolean visit(Feature feature) {
 			if (feature.getNeighbouring() != null) {
 				for(Feature nei : feature.getNeighbouring()) {
-					//TODO double walk
-					if (nei.isFeatureOccupied()) continue;
-					if (nei instanceof Completable && ((Completable) nei).isFeatureCompleted()) continue;					
+					if (nei.walk(new IsOccupiedOrCompleted())) continue;									
 					wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
 				}
 			}
 			return true;
 		}
 
-		public Sites getWagonMoves() {
+		public Sites getResult() {
 			return wagonMoves;
 		}
-
 	}
 
-	private Sites prepareWagonMoves(Feature source) {
-		FindUnoccupiedNeighbours visitor = new FindUnoccupiedNeighbours();
-		source.walk(visitor);
-		return visitor.getWagonMoves();
-	}
 }

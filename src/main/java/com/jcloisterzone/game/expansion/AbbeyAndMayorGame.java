@@ -29,6 +29,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.TileFeature;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
@@ -105,7 +106,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 				if (j == i) continue;
 				neighbouring[ni++] = te[j];
 			}
-			((TileFeature)te[i]).setNeighbouring(neighbouring);
+			((TileFeature)te[i]).addNeighbouring(neighbouring);
 		}
 	}
 
@@ -162,7 +163,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 			}
 		}
 
-		if (game.getActivePlayer().hasSpeialMeeple(Barn.class)) {
+		if (game.getActivePlayer().hasSpecialMeeple(Barn.class)) {
 			BarnAction barnAction = null;
 			Location corner = Location.WR.union(Location.NL);
 			Location positionChange = Location.W;
@@ -193,8 +194,8 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 			positionChange = positionChange.next();
 		}
 
-		if (! getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
-			return ! farm.isFeatureOccupiedBy(Barn.class);
+		if (! getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {					
+			return ! farm.walk(new IsOccupied().with(Barn.class));			
 		}
 
 		return true;

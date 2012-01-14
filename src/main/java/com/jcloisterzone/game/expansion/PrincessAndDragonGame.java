@@ -22,6 +22,7 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.ExpandedGame;
@@ -176,13 +177,13 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 
 	private void preparePrincess(List<PlayerAction> actions) {
 		City c = getTile().getPrincessCityPiece();
-		if (c == null || ! c.isFeatureOccupied()) return;
-		Feature cityRepresentative = c.getRepresentativeFeature();
+		if (c == null || ! c.walk(new IsOccupied().with(Follower.class))) return;
+		Feature cityRepresentative = c.getMaster();
 
 		PrincessAction princessAction = new PrincessAction();
 		for(Meeple m : getGame().getDeployedMeeples()) {
 			if (! (m.getFeature() instanceof City)) continue;
-			if (m.getFeature().getRepresentativeFeature().equals(cityRepresentative) && m instanceof Follower) {
+			if (m.getFeature().getMaster().equals(cityRepresentative) && m instanceof Follower) {
 				princessAction.getOrCreate(m.getPosition()).add(m.getLocation());
 			}
 		}

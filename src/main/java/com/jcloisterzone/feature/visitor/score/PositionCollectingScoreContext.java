@@ -38,7 +38,7 @@ public abstract class PositionCollectingScoreContext extends AbstractScoreContex
 	@Override
 	public boolean visit(Feature feature) {
 		positions.add(feature.getTile().getPosition());
-		if (! ((Completable)feature).isPieceCompleted()) {
+		if (((Completable)feature).isOpen()) {
 			isCompleted = false;
 		}
 		return super.visit(feature);

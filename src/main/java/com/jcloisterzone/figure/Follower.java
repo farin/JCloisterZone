@@ -6,6 +6,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.RemoveLonelyBuilderAndPig;
 import com.jcloisterzone.game.Game;
 
@@ -27,8 +28,8 @@ public abstract class Follower extends Meeple {
 	}
 
 	@Override
-	protected void checkDeployment(Feature f) {
-		if (f.isFeatureOccupied()) {
+	protected void checkDeployment(Feature f) {			
+		if (f.walk(new IsOccupied())) {
 			throw new IllegalArgumentException("Feature is occupied.");
 		}
 		super.checkDeployment(f);
@@ -42,11 +43,10 @@ public abstract class Follower extends Meeple {
 		super.undeploy(checkForLonelyBuilderOrPig); //clear piece
 		if (checkForLonelyBuilderOrPig &&
 				game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) &&
-				(piece instanceof City || piece instanceof Farm)) {
-			RemoveLonelyBuilderAndPig visitor = new RemoveLonelyBuilderAndPig(getPlayer());
-			piece.walk(visitor);
-			if (visitor.getMeepleToRemove() != null) {
-				visitor.getMeepleToRemove().undeploy(false);
+				(piece instanceof City || piece instanceof Farm)) {			
+			Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
+			if (toRemove != null) {
+				toRemove.undeploy(false);
 			}
 		}
 	}

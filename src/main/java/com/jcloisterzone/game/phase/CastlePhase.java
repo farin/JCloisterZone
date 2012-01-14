@@ -19,6 +19,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
@@ -46,12 +47,9 @@ public class CastlePhase extends Phase {
 		Tile tile = getTile();			
 		Map<Player, Set<Location>> currentTileCastleBases = null;
 		for(Feature f : tile.getFeatures()) {
-			if (!(f instanceof City)) continue;
-			FindCastleBaseVisitor visitor = new FindCastleBaseVisitor();
-			f.walk(visitor);
-			
-			Player owner = visitor.getOwner();
-			if (owner == null || !visitor.isCastleBase() || bcb.getPlayerCastles(owner) == 0) continue;							
+			if (!(f instanceof City)) continue;			
+			Player owner = f.walk(new FindCastleBaseVisitor());			
+			if (owner == null || bcb.getPlayerCastles(owner) == 0) continue;							
 			if (currentTileCastleBases == null) currentTileCastleBases = Maps.newHashMap();
 			Set<Location> locs = currentTileCastleBases.get(owner);
 			if (locs == null) {
@@ -149,7 +147,7 @@ public class CastlePhase extends Phase {
 		return castle;
 	}
 	
-	class FindCastleBaseVisitor implements FeatureVisitor {
+	class FindCastleBaseVisitor implements FeatureVisitor<Player> {
 		
 		int size = 0;
 		boolean castleBase = true;
@@ -162,7 +160,7 @@ public class CastlePhase extends Phase {
 				castleBase = false;
 				return false;
 			}
-			if (c.isOccupied()) {
+			if (c.getMeeple() instanceof Follower) {
 				owner = c.getMeeple().getPlayer();
 			}
 			size++;
@@ -170,13 +168,11 @@ public class CastlePhase extends Phase {
 			return true;
 		}
 
-		public boolean isCastleBase() {
-			return castleBase && size == 2;
+		public Player getResult() {
+			if (castleBase && size == 2) return owner;
+			return null;
 		}
 
-		public Player getOwner() {
-			return owner;
-		}					
 	}
 
 }

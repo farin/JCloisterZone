@@ -13,12 +13,13 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 
-public abstract class AbstractScoreContext implements ScoreContext {
+public abstract class AbstractScoreContext extends SelfReturningVisitor implements ScoreContext {
 
 	private final Game game;
 

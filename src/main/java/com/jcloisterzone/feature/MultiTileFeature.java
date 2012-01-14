@@ -4,12 +4,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.FindMaster;
-import com.jcloisterzone.feature.visitor.IsOccupiedVisitor;
-import com.jcloisterzone.figure.Meeple;
 
 public abstract class MultiTileFeature extends TileFeature implements Scoreable {
 
@@ -62,34 +59,14 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 		edges[getEdgeIndex(loc)] = this; //special value
 	}
 
+
 	@Override
-	public boolean isFeatureOccupied() {
-		IsOccupiedVisitor visitor = new IsOccupiedVisitor();
-		walk(visitor);
-		return visitor.isOccupied();
-	}
-	@Override
-	public boolean isFeatureOccupiedBy(Player p) {
-		IsOccupiedVisitor visitor = new IsOccupiedVisitor(p);
-		walk(visitor);
-		return visitor.isOccupied();
-	}
-	@Override
-	public boolean isFeatureOccupiedBy(Class<? extends Meeple> clazz) {
-		IsOccupiedVisitor visitor = new IsOccupiedVisitor(clazz);
-		walk(visitor);
-		return visitor.isOccupied();
+	public Feature getMaster() {
+		return walk(new FindMaster());		
 	}
 
 	@Override
-	public Feature getRepresentativeFeature() {
-		FindMaster visitor = new FindMaster();
-		walk(visitor);
-		return visitor.getMasterFeature();
-	}
-
-	@Override
-	public void walk(FeatureVisitor visitor) {
+	public <T> T walk(FeatureVisitor<T> visitor) {
 		Stack<MultiTileFeature> stack = new Stack<MultiTileFeature>();
 		//TODO implement by bit set or marking - this method can be optimized
 		Set<MultiTileFeature> visited = Sets.newHashSet();
@@ -109,6 +86,7 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 			}
 			previous = nextToVisit;
 		}
+		return visitor.getResult();
 	}
 
 }

@@ -22,7 +22,7 @@ public class Castle extends MultiTileFeature {
 	}
 	
 	@Override
-	public Castle getRepresentativeFeature() {
+	public Castle getMaster() {
 		Castle other = getSecondFeature();
 		return getId() < other.getId() ? this : other;
 	}

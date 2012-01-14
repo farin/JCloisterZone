@@ -63,7 +63,7 @@ public class ActionPhase extends Phase {
 		if (tower  == null) {
 			throw new IllegalArgumentException("No tower on tile.");
 		}
-		if (tower.isOccupied()) {
+		if (tower.getMeeple() != null) {
 			throw new IllegalArgumentException("The tower is sealed");
 		}
 		game.getTowerGame().decreaseTowerPieces(getActivePlayer());

@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.Player;
+import com.google.common.collect.ObjectArrays;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -19,57 +19,17 @@ public abstract class TileFeature implements Feature {
 	protected Game getGame() {
 		return tile.getGame();
 	}
-
+	
 	@Override
-	public boolean isOccupied() {
-		return meeple != null;
-	}
-	@Override
-	public boolean isOccupiedBy(Player p) {
-		return meeple != null && meeple.getPlayer() == p;
-	}
-	@Override
-	public boolean isOccupiedBy(Class<? extends Meeple> clazz) {
-		return clazz.isInstance(meeple);
-	}
-
-	@Override
-	public boolean isFeatureOccupied() {
-		return isOccupied();
-	}
-	@Override
-	public boolean isFeatureOccupiedBy(Player p) {
-		return isOccupiedBy(p);
-	}
-	@Override
-	public boolean isFeatureOccupiedBy(Class<? extends Meeple> clazz) {
-		return isOccupiedBy(clazz);
-	}
-
-
-	@Override
-	public void walk(FeatureVisitor visitor) {
+	public <T> T walk(FeatureVisitor<T> visitor) {
 		visitor.visit(this);
+		return visitor.getResult();
 	}
+	
 	@Override
-	public Feature getRepresentativeFeature() {
+	public Feature getMaster() {
 		return this;
 	}
-
-//	@Override
-//	public void deployMeeple(Meeple meeple) {
-//		this.meeple = meeple;
-//		getGame().fireGameEvent().deployed(meeple);
-//	}
-//	@Override
-//	public void undeployMeeple() {
-//		if (meeple != null) {
-//			getGame().fireGameEvent().undeployed(meeple);
-//			meeple.clearDeployment();
-//			meeple = null;
-//		}
-//	}
-
 
 	public void setMeeple(Meeple meeple) {
 		this.meeple = meeple;
@@ -79,18 +39,22 @@ public abstract class TileFeature implements Feature {
 		return meeple;
 	}
 
-
 	public Feature[] getNeighbouring() {
 		return neighbouring;
 	}
-	public void setNeighbouring(Feature[] neighbouring) {
-		this.neighbouring = neighbouring;
+	
+	public void addNeighbouring(Feature[] neighbouring) {
+		if (this.neighbouring == null) {
+			this.neighbouring = neighbouring;
+		} else {
+			this.neighbouring = ObjectArrays.concat(this.neighbouring, neighbouring, Feature.class);
+		}
 	}
-
 
 	public Tile getTile() {
 		return tile;
 	}
+	
 	public void setTile(Tile tile) {
 		assert this.tile == null;
 		this.tile = tile;
@@ -99,6 +63,7 @@ public abstract class TileFeature implements Feature {
 	public Location getLocation() {
 		return location.rotateCW(tile.getRotation());
 	}
+	
 	public void setLocation(Location location) {
 		assert this.location == null;
 		this.location = location;

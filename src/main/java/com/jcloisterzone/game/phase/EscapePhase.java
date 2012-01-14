@@ -36,15 +36,14 @@ public class EscapePhase extends Phase {
 		}
 	}
 
-	private class FindNearbyCloister implements FeatureVisitor {
+	private class FindNearbyCloister implements FeatureVisitor<Boolean> {
 
 		private boolean isBesieged, cloisterNearby;
 
 
-		public boolean isBesiegedWithNearbyCloister() {
+		public Boolean getResult() {
 			return isBesieged && cloisterNearby;
 		}
-
 
 		@Override
 		public boolean visit(Feature feature) {
@@ -61,7 +60,6 @@ public class EscapePhase extends Phase {
 			}
 			return true;
 		}
-
 	}
 
 
@@ -69,11 +67,8 @@ public class EscapePhase extends Phase {
 		EscapeAction escapeAction = null;
 		for(Meeple m : game.getDeployedMeeples()) {
 			if (m.getPlayer() != getActivePlayer()) continue;
-			if (! (m.getFeature() instanceof City)) continue;
-
-			FindNearbyCloister visitor = new FindNearbyCloister();
-			m.getFeature().walk(visitor);
-			if (visitor.isBesiegedWithNearbyCloister()) {
+			if (! (m.getFeature() instanceof City)) continue;			
+			if (m.getFeature().walk(new FindNearbyCloister())) {
 				if (escapeAction == null) {
 					escapeAction = new EscapeAction();
 				}

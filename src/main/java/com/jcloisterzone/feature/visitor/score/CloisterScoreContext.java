@@ -9,12 +9,13 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 
-public class CloisterScoreContext implements CompletableScoreContext {
+public class CloisterScoreContext extends SelfReturningVisitor implements CompletableScoreContext {
 
 	private int neigbouringTiles;
 	private Cloister cloister;

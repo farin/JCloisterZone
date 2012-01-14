@@ -58,7 +58,7 @@ public class Player implements Serializable {
 		return specialMeeples;
 	}
 
-	public boolean hasSpeialMeeple(Class<? extends Special> clazz) {
+	public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
 		for(Special m : specialMeeples) {
 			if (m.isUndeployed() && clazz.isInstance(m)) {
 				return true;

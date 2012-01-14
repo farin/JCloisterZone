@@ -129,7 +129,7 @@ public final class TowerGame extends ExpandedGame {
 		Set<Position> availTower = Sets.newHashSet();
 		for(Position p : getTowers()) {
 			Tower t = getBoard().get(p).getTower();
-			if (! t.isOccupied() && t.getHeight() >= minHeight) {
+			if (t.getMeeple() == null && t.getHeight() >= minHeight) {
 				availTower.add(p);
 			}
 		}

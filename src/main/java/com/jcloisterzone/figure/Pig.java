@@ -3,6 +3,7 @@ package com.jcloisterzone.figure;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.game.Game;
 
 public class Pig extends Special {
@@ -14,16 +15,13 @@ public class Pig extends Special {
 	}
 
 	@Override
-	protected void checkDeployment(Feature piece) {
-		if (! (piece instanceof Farm)) {
+	protected void checkDeployment(Feature farm) {
+		if (! (farm instanceof Farm)) {
 			throw new IllegalArgumentException("Pig must be placed on a farm only.");
 		}
-		if (! piece.isFeatureOccupied()) {
-			throw new IllegalArgumentException("Feature is not occupied.");
+		if (! farm.walk(new IsOccupied().with(Follower.class))) {
+			throw new IllegalArgumentException("Feature is not occupied by follower.");
 		}
-		super.checkDeployment(piece);
-
+		super.checkDeployment(farm);
 	}
-
-
 }

@@ -106,7 +106,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
 		Player player = game.getActivePlayer();
 		Position pos = getTile().getPosition();
-		if (player.hasSpeialMeeple(Builder.class)) {
+		if (player.hasSpecialMeeple(Builder.class)) {
 			MeepleAction meepleAction = new MeepleAction(Builder.class);
 			Set<Location> dirs = getTile().getPlayerFeatures(player, Road.class);
 			if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
@@ -114,7 +114,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 			if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
 			if (! meepleAction.getSites().isEmpty()) actions.add(meepleAction);
 		}
-		if (player.hasSpeialMeeple(Pig.class)) {
+		if (player.hasSpecialMeeple(Pig.class)) {
 			MeepleAction meepleAction = new MeepleAction(Pig.class);
 			Set<Location> dirs = getTile().getPlayerFeatures(player, Farm.class);
 			if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);

@@ -14,7 +14,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Game;
 
 
@@ -232,42 +234,17 @@ public class Tile /*implements Cloneable*/ {
 		edgePattern = edgePattern.getBridgePattern(normalizedLoc); 
 	}
 
-
-	private static class UnoccupiedScoreableVisitor implements FeatureVisitor {
-		private boolean completed = true, occupied;
-
-		@Override
-		public boolean visit(Feature feature) {
-			if (feature.getMeeple() != null) {
-				occupied = true;
-				return false;
-			}
-			if (feature instanceof Completable) {
-				if (! ((Completable)feature).isPieceCompleted()) {
-					completed = false;
-				}
-			}
-			return true;
-		}
-
-		public boolean isOccupied() {
-			return occupied;
-		}
-
-		public boolean isCompleted() {
-			return completed;
-		}
-	}
-
-
 	public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
 		Set<Location> locations = Sets.newHashSet();
 		for(Feature f : features) {
 			if (f instanceof Scoreable) {
-				UnoccupiedScoreableVisitor visitor = new UnoccupiedScoreableVisitor();
-				f.walk(visitor);
-				if (visitor.isOccupied()) continue;
-				if (excludeCompleted && f instanceof Completable && visitor.isCompleted()) continue;
+				IsOccupied visitor;
+				if (excludeCompleted && f instanceof Completable) {
+					visitor = new IsOccupiedOrCompleted();
+				} else {
+					visitor = new IsOccupied();
+				}								
+				if (f.walk(visitor)) continue;				
 				locations.add(f.getLocation());
 			}
 		}
@@ -278,8 +255,8 @@ public class Tile /*implements Cloneable*/ {
 	public Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass) {
 		Set<Location> locations = Sets.newHashSet();
 		for(Feature f : features) {
-			if (! featureClass.isInstance(f)) continue;
-			if (f.isFeatureOccupiedBy(player)) {
+			if (! featureClass.isInstance(f)) continue;					
+			if (f.walk(new IsOccupied().with(player).with(Follower.class))) {
 				locations.add(f.getLocation());
 			}
 		}

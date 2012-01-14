@@ -6,18 +6,15 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Special;
 
-public class RemoveLonelyBuilderAndPig implements FeatureVisitor {
+public class RemoveLonelyBuilderAndPig implements FeatureVisitor<Special> {
 
 	Player player;
-	Meeple toRemove = null;
+	Special toRemove = null;
 
 	public RemoveLonelyBuilderAndPig(Player player) {
 		this.player = player;
-	}
-
-	public Meeple getMeepleToRemove() {
-		return toRemove;
 	}
 
 	@Override
@@ -27,7 +24,7 @@ public class RemoveLonelyBuilderAndPig implements FeatureVisitor {
 			return true;
 		}
 		if (m instanceof Builder || m instanceof Pig) {
-			toRemove = m;
+			toRemove = (Special) m;
 			return true;
 		}
 		if (m instanceof Follower) {
@@ -37,5 +34,16 @@ public class RemoveLonelyBuilderAndPig implements FeatureVisitor {
 		}
 		return true; //some special case like Barn
 	}
+
+	@Deprecated
+	public Meeple getMeepleToRemove() {
+		return toRemove;
+	}
+	
+	@Override
+	public Special getResult() {	
+		return toRemove;
+	}
+
 
 }
