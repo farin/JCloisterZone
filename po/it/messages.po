@@ -151,6 +151,7 @@ msgid ""
 "upgrade both applications to same version."
 msgstr "La versione di JCloisterZone remota non è compatibile con quella locale."
 "Si prega di aggiornare entrambe le applicazioni alla stessa versione."
+
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid "Incompatible versions"
 msgstr "Versioni incompatibili."
@@ -203,6 +204,7 @@ msgid ""
 "other players?"
 msgstr "Una partita è in corso. Vuoi davvero uscire e disconnettere "
 "tutti gli altri giocatori?"
+
 #: src/main/java/com/jcloisterzone/ui/Client.java:297
 msgid "Game is running. Do you really want to leave it?"
 msgstr "Una partita è in corso. Vuoi davvero uscire?"
@@ -392,6 +394,7 @@ msgid ""
 "(To prevent tower from adding more pieces on the top)"
 msgstr "Sei sicuro di voler mettere un seguace sulla torre?\n"
 "(Per impedire che siamo messi altri pezzi sulla torre)"
+
 #: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:365
 #: src/main/java/com/jcloisterzone/ui/legacy/PlayerPanel.java:384
 msgid "The biggest city size"
