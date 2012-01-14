@@ -164,12 +164,19 @@ public class DefaultTilePack implements TilePack {
 
 	@Override
 	public void activateGroup(String group) {
-		activeGroups.add(group);
+		//check if group exists - game load can cause activation on empty (and non existing after load) group  
+		if (groups.containsKey(group)) {
+			activeGroups.add(group);
+		}
 	}
 
 	@Override
 	public void deactivateGroup(String group) {
 		activeGroups.remove(group);
+	}
+	
+	public void deactivateAllGroups() {
+		activeGroups.clear();
 	}
 
 	@Override

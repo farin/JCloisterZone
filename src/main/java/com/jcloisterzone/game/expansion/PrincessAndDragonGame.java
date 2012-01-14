@@ -57,7 +57,6 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 		});				
 	}
 
-
 	public Position getFairyPosition() {
 		return fairyPosition;
 	}

@@ -101,10 +101,10 @@ public class Board {
 				}
 			} else {
 				if (! currentAvailMoves.containsKey(p)) {
-					throw new IllegalArgumentException("Invalid position");
+					throw new IllegalArgumentException("Invalid position " + p);
 				}
 				if (! currentAvailMoves.get(p).contains(tile.getRotation())) {
-					throw new IllegalArgumentException("Incorrect rotation");
+					throw new IllegalArgumentException("Incorrect rotation " + tile.getRotation() + " "+ p);
 				}
 			}
 		}		

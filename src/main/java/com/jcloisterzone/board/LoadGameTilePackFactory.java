@@ -103,17 +103,21 @@ public class LoadGameTilePackFactory extends TilePackFactory {
 			pt.tile.setRotation(pt.rot);
 			pt.tile.setPosition(pt.pos);
 			pack.addTile(pt.tile, PLACED_GROUP);
+		}		
+		pack.activateGroup(PLACED_GROUP);		
+		if (preplaced.length > 0) {
+			pack.setCurrentTile(preplaced[preplaced.length-1].tile);
 		}
-		pack.activateGroup(PLACED_GROUP);
+		return pack;
+	}
+	
+	public void activateGroups(DefaultTilePack pack) {
+		pack.deactivateAllGroups();
 		for(String group : snapshot.getActiveGroups()) {
 			if (pack.getGroups().contains(group)) {
 				pack.activateGroup(group);
 			}
 		}
-		if (preplaced.length > 0) {
-			pack.setCurrentTile(preplaced[preplaced.length-1].tile);
-		}
-		return pack;
 	}
 
 }
