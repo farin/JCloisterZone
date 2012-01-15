@@ -34,6 +34,11 @@
 		<y-points>780, 410, 300, 440, 530, 490, 580, 720, 810, 880, 900</y-points>
 		<apply>TO.L CLOISTER CLOISTER</apply>
 	</area>
+	<area>
+    	<x-points>230, 277, 277, 297, 312, 362, 387, 442, 512, 512, 535, 580, 600, 582, 647, 685, 702, 695, 722, 720, 730, 622, 492, 480, 477, 387, 300, 290, 225</x-points>
+    	<y-points>590, 632, 652, 665, 662, 700, 690, 732, 705, 667, 660, 685, 682, 640, 610, 630, 627, 582, 567, 427, 415, 345, 365, 350, 275, 155, 252, 245, 330</y-points>
+    	<apply>TB.LRRR CLOISTER CLOISTER</apply>
+	</area>
 	<area> <!-- shrine -->
 		<circle r="250" x="500" y="500"/>
 		<apply>CU.S CLOISTER CLOISTER</apply>
@@ -250,11 +255,16 @@
 		<apply rotate="2">AM.CCRR ROAD S</apply>
 		<apply rotate="3">PL.CCRR ROAD W</apply>
 		<apply rotate="1">GQ.CRRr ROAD E</apply>
-		<apply rotate="1">GQ.CcRR ROAD E</apply>
-		<apply rotate="1">TB.CcRR.w ROAD E</apply>
+		<apply rotate="1">GQ.CcRR ROAD E</apply>		
 		<apply rotate="1">TB.CcRC.c ROAD E</apply>
 		<apply rotate="1">TB.CcRC.g ROAD E</apply>
 		<apply rotate="1">TB.CR ROAD E</apply>
+	</area>
+	<area>
+		<!-- rcurved-short -->
+    	<x-points>1000, 870, 830, 812, 690, 685, 700, 750, 812, 1000</x-points>
+	    <y-points>400, 365, 332, 227, 232, 352, 450, 515, 545, 600</y-points>
+    	<apply>TB.CcRR.w ROAD E</apply>
 	</area>
 	<area> <!-- cathars-WE -->
 		<x-points>0, 100, 200, 380, 480, 680, 780, 830, 880, 1000, 1000, 970, 930, 830, 770, 450, 340, 260, 100, 40, 0</x-points>
@@ -453,7 +463,11 @@
 		<apply>DG.Cc.d CITY NW</apply>
 		<apply>DG.Cc.p CITY NW</apply>
 		<apply>TB.CcR.c CITY NW</apply>
-		<apply rotate="2">TB.CcCc.w CITY SE</apply>
+	</area>
+	<area> <!-- mirrored NW_2 -->
+    	<x-points>0, 177, 317, 357, 352, 402, 530, 555, 597, 627, 637, 672, 695, 770, 790, 812, 990, 1000, 1000</x-points>
+    	<y-points>1000, 900, 882, 852, 842, 792, 732, 725, 667, 657, 607, 587, 592, 505, 300, 227, 0, 0, 1000</y-points>
+    	<apply>TB.CcCc.w CITY SE</apply>
 	</area>
 	<area> <!-- NW_3 -->
 		<x-points>0, 1000, 950, 750, 600, 560, 470, 420, 320, 310, 280, 240, 210, 50, 0</x-points>
@@ -659,7 +673,7 @@
 		<apply rotate="2">TB.RCc!.g FARM SL</apply>
 		<apply rotate="2">AM.CRcr+ FARM SL</apply>
 		<apply rotate="2">KS.CcRR! FARM SL</apply>
-		<apply rotate="1">BB.CFR! FARM EL</apply>
+		<apply rotate="1">BB.CFR! FARM EL</apply>		
 	</area>
 
 	<area> <!-- oblique-NL,WR -->
@@ -712,7 +726,12 @@
 		<apply rotate="2">DG.CRr.g FARM ER,SL</apply>
 		<apply rotate="0">TO.RrRr.2 FARM NL,WR</apply>
 		<apply rotate="3">TO.RrC FARM WL,SR</apply>
-		<apply rotate="3">CC.RrC FARM WL,SR</apply>
+		<apply rotate="3">CC.RrC FARM WL,SR</apply>		
+	</area>
+	<area>
+    	<x-points>997, 792, 742, 995</x-points>
+    	<y-points>480, 417, 250, 0</y-points>
+    	<apply>TB.CcRR.w FARM EL</apply>
 	</area>
 	<area>
 		<x-points>0, 370, 770, 1000, 1000, 0</x-points>

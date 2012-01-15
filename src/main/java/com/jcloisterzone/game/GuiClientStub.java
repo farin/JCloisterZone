@@ -42,6 +42,7 @@ public class GuiClientStub extends ClientStub {
 		});
 
 		if (client.getConfig().get("debug", "autostart", boolean.class)) {
+			client.getConfig().remove("debug", "autostart"); //apply autostart only once
 			final List<String> players = client.getConfig().get("debug").getAll("autostart_player");
 			if (players.isEmpty()) {
 				players.add("UNDEFINED");
