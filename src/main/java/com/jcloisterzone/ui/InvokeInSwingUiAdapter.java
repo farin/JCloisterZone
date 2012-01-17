@@ -23,10 +23,10 @@ public class InvokeInSwingUiAdapter implements InvocationHandler {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final Client client;
+	private final ClientController controller;
 
-	public InvokeInSwingUiAdapter(Client client) {
-		this.client = client;
+	public InvokeInSwingUiAdapter(ClientController client) {
+		this.controller = client;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class InvokeInSwingUiAdapter implements InvocationHandler {
 			@Override
 			public void run() {
 				try {
-					method.invoke(client, args);
+					method.invoke(controller, args);
 				} catch (InvocationTargetException ie) {
 					logger.error("Cannot invoke method " + method.toString() + " (probably bug in freezeArgs())", ie.getCause());
 				} catch (Exception e) {

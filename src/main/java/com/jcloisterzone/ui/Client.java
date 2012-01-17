@@ -6,19 +6,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -36,24 +31,9 @@ import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.CaptureAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventListener;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
@@ -65,11 +45,8 @@ import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.server.Server;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
-import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
-import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
@@ -79,9 +56,11 @@ import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.ui.theme.TileTheme;
 
 @SuppressWarnings("serial")
-public class Client extends JFrame implements UserInterface, GameEventListener {
+public class Client extends JFrame /*implements UserInterface*/ {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private ClientController controller = new ClientController(this);
 
 	private final Ini config;
 	private final ClientSettings settings;
@@ -90,11 +69,10 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	private ControlsTheme controlsTheme;
 	private Color[] playerColors;
 
-	private MenuBar menu;
+	//private MenuBar menuBar;
 	private ControlPanel controlPanel;
 	private MainPanel mainPanel;
 
-	//private CreateGameDialog gameDialog;
 	private CreateGamePanel createGamePanel;
 	private DiscardedTilesDialog discardedTilesDialog;
 
@@ -187,8 +165,8 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 				}
 			}
 		});
-		menu = new MenuBar(this);
-		this.setJMenuBar(menu);
+		MenuBar menuBar = new MenuBar(this);
+		this.setJMenuBar(menuBar);
 
 		//Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
 
@@ -213,7 +191,12 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		this.setVisible(true);
 	}
 	
-	private void resetWindowIcon() {
+	@Override
+	public MenuBar getJMenuBar() { 
+		return (MenuBar) super.getJMenuBar();
+	}
+	
+	void resetWindowIcon() {
 		this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
 	}
 
@@ -248,6 +231,10 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public ControlPanel getControlPanel() {
 		return controlPanel;
 	}
+	
+	public void setControlPanel(ControlPanel controlPanel) {
+		this.controlPanel = controlPanel;
+	}
 
 	public GridPanel getGridPanel() {
 		return mainPanel.getGridPanel();
@@ -255,6 +242,22 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 
 	public MainPanel getMainPanel() {
 		return mainPanel;
+	}
+	
+	public void setMainPanel(MainPanel mainPanel) {
+		this.mainPanel = mainPanel;
+	}
+
+	public CreateGamePanel getCreateGamePanel() {
+		return createGamePanel;
+	}
+
+	public void setCreateGamePanel(CreateGamePanel createGamePanel) {
+		this.createGamePanel = createGamePanel;
+	}
+	
+	public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
+		this.discardedTilesDialog = discardedTilesDialog;
 	}
 
 	public void cleanContentPane() {
@@ -307,7 +310,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		}
 		server = null;
 		activePlayer = null;
-		menu.setIsGameRunning(false);
+		getJMenuBar().setIsGameRunning(false);
 		if (controlPanel != null) {
 			controlPanel.closeGame();
 			mainPanel.closeGame();
@@ -315,7 +318,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		if (discardedTilesDialog != null) {
 			discardedTilesDialog.dispose();
 			discardedTilesDialog = null;
-			menu.setShowDiscardedEnabled(false);
+			getJMenuBar().setShowDiscardedEnabled(false);
 		}
 		return true;
 	}
@@ -337,7 +340,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public void setGame(Game game) {
 		this.game = game;
 		Object clientProxy = Proxy.newProxyInstance(Client.class.getClassLoader(),
-				new Class[] { UserInterface.class, GameEventListener.class }, new InvokeInSwingUiAdapter(this));
+				new Class[] { UserInterface.class, GameEventListener.class }, new InvokeInSwingUiAdapter(controller));
 		game.addUserInterface((UserInterface) clientProxy);
 		game.addGameListener((GameEventListener) clientProxy);
 	}
@@ -438,8 +441,12 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 	public Player getActivePlayer() {
 		return activePlayer;
 	}
+	
+	public void setActivePlayer(Player activePlayer) {
+		this.activePlayer = activePlayer;
+	}
 
-	private void beep() {
+	void beep() {
 		if (settings.isPlayBeep()) {
 			try {
 				AudioInputStream beepStream = AudioSystem.getAudioInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
@@ -452,174 +459,7 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 		}
 	}
 	
-	@Override
-	public void showWarning(String title, String message) {
-		JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
-		
-	}
-
-	@Override
-	public void updateCustomRule(CustomRule rule, Boolean enabled) {
-		createGamePanel.updateCustomRule(rule, enabled);
-	}
-
-	@Override
-	public void updateExpansion(Expansion expansion, Boolean enabled) {
-		createGamePanel.updateExpansion(expansion, enabled);
-	}
-
-	@Override
-	public void updateSlot(PlayerSlot slot) {
-		createGamePanel.updateSlot(slot);
-	}
-
-	@Override
-	public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-		createGamePanel.updateSupportedExpansions(expansions);
-	}
-
-	@Override
-	public void started(Snapshot snapshot) {
-		cleanContentPane();
-
-		Container pane = getContentPane();
-
-
-		pane.setLayout(new BorderLayout());
-		controlPanel = new ControlPanel(this);
-		JScrollPane ctrlScroll = new JScrollPane(controlPanel);
-		ctrlScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		ctrlScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		pane.add(ctrlScroll, BorderLayout.EAST);
-		//pane.add(controlPanel, BorderLayout.EAST);
-		mainPanel = new MainPanel(this);
-
-		JScrollPane scroll = new JScrollPane(mainPanel);
-		scroll.setWheelScrollingEnabled(false);
-		pane.add(scroll, BorderLayout.CENTER);
-		pane.setVisible(true);
-
-		mainPanel.started(snapshot);
-		controlPanel.started();
-		menu.setZoomInEnabled(true);
-		menu.setZoomOutEnabled(true);
-		menu.setIsGameRunning(true);
-	}
-
-	@Override
-	public void playerActivated(Player turnPlayer, Player activePlayer) {
-		this.activePlayer = activePlayer;
-		controlPanel.playerActivated(turnPlayer, activePlayer);
-
-		//TODO better image quality ?
-		Color c = getPlayerColor(activePlayer);
-		Image image = getFigureTheme().getFigureImage(SmallFollower.class, c, null);
-		setIconImage(image);
-	}
-
-	@Override
-	public void tileDrawn(Tile tile) {
-		clearActions();
-		controlPanel.tileDrawn(tile);
-	}
-
-	@Override
-	public void tileDiscarded(String tileId) {
-		if (discardedTilesDialog == null) {
-			discardedTilesDialog = new DiscardedTilesDialog(this);
-			menu.setShowDiscardedEnabled(true);
-		}
-		discardedTilesDialog.addTile(tileId);
-		discardedTilesDialog.setVisible(true);
-	}
-
-	@Override
-	public void tilePlaced(Tile tile) {
-		mainPanel.tilePlaced(tile);
-		controlPanel.tilePlaced(tile);
-	}
-
-	@Override
-	public void dragonMoved(Position p) {
-		mainPanel.dragonMoved(p);
-	}
-
-	@Override
-	public void selectDragonMove(Set<Position> positions, int movesLeft) {
-		clearActions();
-		DragonLayer dragonDecoration = getGridPanel().findDecoration(DragonLayer.class);
-		dragonDecoration.setMoves(movesLeft);
-		getGridPanel().repaint();
-		if (isClientActive()) {
-			getGridPanel().addLayer(new DragonAvailableMove(getGridPanel(), positions));
-			beep();
-		}
-	}
-
-	@Override
-	public void fairyMoved(Position p) {
-		mainPanel.fairyMoved(p);
-	}
-
-	@Override
-	public void towerIncreased(Position p, Integer height) {
-		clearActions();
-		mainPanel.towerIncreased(p, height);
-	}
-
-	@Override
-	public void ransomPaid(Player from, Player to, Follower f) {
-		controlPanel.repaint();
-	}
-
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		clearActions();
-		controlPanel.tileDrawn(game.getTilePack().getAbbeyTile());
-		if (isClientActive()) {
-			beep();
-			controlPanel.selectAbbeyPlacement(positions);
-		}
-		mainPanel.selectTilePlacement(positions);
-	}
-
-	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
-		clearActions();
-		Set<Position> positions = placements.keySet();
-		if (isClientActive()) {
-			beep();
-			controlPanel.selectTilePlacement(positions);
-		}
-		mainPanel.selectTilePlacement(positions);
-	}
-
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (isClientActive()) {
-			controlPanel.selectAction(actions, true);
-		}
-	}
-
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		controlPanel.selectAction(Collections.<PlayerAction>singletonList(action), false);
-	}
-	
-	@Override
-	public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
-		mainPanel.tunnelPiecePlaced(player, p, d, isSecondPiece);
-	}
-
-
-	@Override
-	public void gameOver() {
-		resetWindowIcon();
-		closeGame(true);
-		new GameOverDialog(this);
-	}
-
-	private void clearActions() {
+	void clearActions() {
 		if (controlPanel.getActionPanel().getActions() != null) {
 			controlPanel.clearActions();
 		}
@@ -627,46 +467,6 @@ public class Client extends JFrame implements UserInterface, GameEventListener {
 
 	public DiscardedTilesDialog getDiscardedTilesDialog() {
 		return discardedTilesDialog;
-	}
-
-	//------------------ Meeple events -----------
-
-
-	@Override
-	public void deployed(Meeple m) {
-		mainPanel.deployed(m);
-	}
-
-	@Override
-	public void undeployed(Meeple m) {
-		mainPanel.undeployed(m);
-	}
-	
-	@Override
-	public void bridgeDeployed(Position pos, Location loc) {
-		mainPanel.bridgeDeployed(pos, loc);	
-	}
-	
-	@Override
-	public void castleDeployed(Castle castle1, Castle castle2) {
-		mainPanel.castleDeployed(castle1, castle2);
-	}
-
-	// ------------------ Feature evnts ----------
-
-	@Override
-	public void completed(Completable feature, CompletableScoreContext ctx) { }
-
-	@Override
-	public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
-		mainPanel.scored(feature, label, meeple, finalScoring);
-		controlPanel.getPlayersPanel().repaint();
-	}
-
-	@Override
-	public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
-		mainPanel.scored(position, player, label, finalScoring);
-		controlPanel.getPlayersPanel().repaint();
 	}
 
 
