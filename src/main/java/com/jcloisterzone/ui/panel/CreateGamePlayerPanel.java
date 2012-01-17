@@ -22,7 +22,7 @@ import javax.swing.event.CaretListener;
 import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.ai.LegacyAiPlayer;
+import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;

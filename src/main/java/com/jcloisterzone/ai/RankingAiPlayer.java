@@ -18,6 +18,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventAdapter;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -34,8 +35,13 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	private Game original;
 	private SavePointManager spm;
 
+	private Map<Feature, AiScoreContext> scoreCache = Maps.newHashMap();
 	private PositionRanking bestSoFar;
 	//private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
+	
+	public Map<Feature, AiScoreContext> getScoreCache() {
+		return scoreCache;
+	}
 
 	@Override
 	public void setGame(Game game) {
@@ -110,7 +116,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
 		rankTilePlacement(placements);
 		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
-	}
+	}	
 	
 	protected void rankTilePlacement(Map<Position, Set<Rotation>> placements) {
 		//logger.info("---------- Ranking start ---------------");
@@ -135,7 +141,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				//now rank meeple placements - must restore because rank change game
 				//getGame().getPhase().placeTile(rot, pos);
 				//hopefulGatePlacements.clear();
-				spm.restore(sp);
+				//spm.restore(sp);
 				//TODO add best placements for MAGIC GATE
 				//getGame().getPhase().enter();
 			}
@@ -200,6 +206,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	
 	private void cleanRanking() {
 		bestSoFar = null;
+		scoreCache.clear();
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.jcloisterzone.ai;
+package com.jcloisterzone.ai.legacyplayer;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.ai.AiScoreContext;
 import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -23,7 +24,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 
-class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableScoreContext {
+class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableScoreContext, AiScoreContext {
 
 	public static class OpenEdge {
 		double chanceToClose;
@@ -33,15 +34,27 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private Game game;
-	private CompletableScoreContext ctx;
+	private final Game game;
+	private final CompletableScoreContext ctx;
+	private final Map<Feature, AiScoreContext> scoreCache;
+	private boolean valid = true;
 
 	private Map<Position, OpenEdge> openEdgesChanceToClose = Maps.newHashMap();
 	private double chanceToClose = 1.0;
 
-	public LegacyAiScoreContext(Game game, CompletableScoreContext ctx) {
+	public LegacyAiScoreContext(Game game, CompletableScoreContext ctx, Map<Feature, AiScoreContext> scoreCache) {
 		this.game = game;
 		this.ctx = ctx;
+		this.scoreCache = scoreCache;
+	}
+	
+	@Override
+	public boolean isValid() {		
+		return valid;
+	};
+	
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 
 	public double getChanceToClose() {
@@ -109,6 +122,8 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 
 	@Override
 	public boolean visit(Feature feature) {
+		scoreCache.put(feature, this);
+		
 		if (feature instanceof CompletableFeature) {
 			chanceToClose *= updateCompletableChanceToClose((CompletableFeature) feature);
 		} else if (feature instanceof Cloister) {

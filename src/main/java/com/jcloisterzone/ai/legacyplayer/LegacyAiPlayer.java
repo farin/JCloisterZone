@@ -1,4 +1,4 @@
-package com.jcloisterzone.ai;
+package com.jcloisterzone.ai.legacyplayer;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -6,6 +6,8 @@ import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.ai.AiScoreContext;
+import com.jcloisterzone.ai.RankingAiPlayer;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -44,7 +46,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	private static final int OPEN_COUNT_FARM = 2;
 	private static final int OPEN_COUNT_CLOITSTER = 3;
 
-	private int[] openCount = new int[4]; //number of my open objects
+	private int[] openCount = new int[4]; //number of my open objects	
 
 	public static EnumSet<Expansion> supportedExpansions() {
 		return EnumSet.of(
@@ -64,6 +66,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 			Expansion.PLAGUE
 		);
 	}
+	
+	
 
 	protected void initVars() {
 		packSize = getTilePack().tolalSize();
@@ -131,12 +135,22 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 		@Override
 		public CompletableScoreContext getCompletableScoreContext(Completable completable) {
-			return new LegacyAiScoreContext(getGame(), completable.getScoreContext());
+			//TODO uncomment after invalidate implemeted
+//			AiScoreContext ctx = getScoreCache().get(completable);
+//			if (ctx != null && ctx.isValid()) {
+//				return (CompletableScoreContext) ctx;
+//			}
+			return new LegacyAiScoreContext(getGame(), completable.getScoreContext(), getScoreCache());
 		}
 
 		@Override
 		public FarmScoreContext getFarmScoreContext(Farm farm) {
-			return farm.getScoreContext();
+			//TODO uncomment after invalidate implemeted
+//			AiScoreContext ctx = getScoreCache().get(farm);
+//			if (ctx != null && ctx.isValid()) {
+//				return (FarmScoreContext) ctx;
+//			}
+			return new LegacyAiFarmScoreContext(getGame(), getScoreCache());
 		}
 
 		@Override

@@ -234,7 +234,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 		NodeList nl = node.getElementsByTagName("wagon");
 		for(int i = 0; i < nl.getLength(); i++) {
 			Element wg = (Element) nl.item(i);
-			Location loc = Location.create(Integer.parseInt(wg.getAttribute("loc")));
+			Location loc = Location.valueOf(wg.getAttribute("loc"));
 			Position pos = XmlUtils.extractPosition(wg);
 			int playerIndex = Integer.parseInt(wg.getAttribute("player"));
 			Player player = game.getPlayer(playerIndex);
