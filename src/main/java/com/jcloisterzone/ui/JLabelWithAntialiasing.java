@@ -22,7 +22,7 @@ public class JLabelWithAntialiasing extends JLabel { //TODO rename JLabelAntiali
 
 	@Override
 	public void paint(Graphics g) {
-		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		super.paint(g);
 	}
 

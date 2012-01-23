@@ -147,14 +147,14 @@ public class Client extends JFrame /*implements UserInterface*/ {
 		tileTheme = new TileTheme(this);
 		figureTheme = new FigureTheme(this);
 		controlsTheme = new ControlsTheme(this);
-
+		
 		resetWindowIcon();
 
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());			
 		} catch (Exception e) {
 			e.printStackTrace(); //TODO logger
-		}
+		}		
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
@@ -169,8 +169,10 @@ public class Client extends JFrame /*implements UserInterface*/ {
 		this.setJMenuBar(menuBar);
 
 		//Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
-
-		Container pane = this.getContentPane();
+		
+		//replace default pane with layered		
+		Container pane = getContentPane();
+		
 		pane.setLayout(new BorderLayout());
 		JPanel envelope = new BackgroundPanel(new GridBagLayout());
 		pane.add(envelope, BorderLayout.CENTER);

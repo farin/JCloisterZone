@@ -36,10 +36,11 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
 		@Override
 		public void mouseMoved(MouseEvent e) { 
-			super.mouseMoved(e);			
+			super.mouseMoved(e);						
 			if (areas == null) return;
-			int x = e.getX() % getSquareSize();
-			int y = e.getY() % getSquareSize();
+			int size = getSquareSize();
+			int x = e.getX() % size;
+			int y = e.getY() % size;
 			Location swap = null;
 			for (Entry<Location, Area> enrty : areas.entrySet()) {
 				if (enrty.getValue().contains(x, y)) {
@@ -52,7 +53,9 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 			}			
 			if (swap != selectedLocation) {
 				selectedLocation = swap;
-				gridPanel.repaint();
+				gridPanel.repaint();				
+				//RepaintManager.currentManager(gridPanel).addDirtyRegion(gridPanel, x * size, y * size, size, size);			
+				//gridPanel.repaint(0, x * size, y * size, size, size);
 			}
 		}
 

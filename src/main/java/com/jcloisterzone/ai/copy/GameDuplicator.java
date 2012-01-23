@@ -1,6 +1,5 @@
 package com.jcloisterzone.ai.copy;
 
-import com.jcloisterzone.game.Game;
 
 //NOT USED NOW
 public class GameDuplicator {

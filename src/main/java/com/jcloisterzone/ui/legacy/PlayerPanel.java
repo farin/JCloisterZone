@@ -45,6 +45,7 @@ import com.jcloisterzone.ui.Client;
 
 
 @SuppressWarnings("serial")
+@Deprecated
 public class PlayerPanel extends JPanel { //TODO JLabel
 
 	private enum PanelImages {

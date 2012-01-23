@@ -33,9 +33,9 @@ public class ControlPanel extends JPanel {
 	private JLabelWithAntialiasing packSize;
 	private JButton buttonNextTurn;
 	private ActionPanel actionPanel;
-	private PlayersPanel playersPanel;
+	//private PlayersPanel playersPanel;
 
-	public static final int PANEL_WIDTH = 180;
+	public static final int PANEL_WIDTH = 220;
 	private static Font cardFont = new Font("Helvecia", Font.BOLD, 22);
 	private static final String IMG_END_TURN = "sysimages/endTurn.png";
 
@@ -51,6 +51,7 @@ public class ControlPanel extends JPanel {
 				}
 			}
 		});
+		setOpaque(false);
 		setLayout(new MigLayout("", "[]", "[][][]"));
 
 			JPanel top = new JPanel(new MigLayout());
@@ -76,8 +77,13 @@ public class ControlPanel extends JPanel {
 		actionPanel = new ActionPanel(client);
 		add(actionPanel, "wrap");
 
-		playersPanel = new PlayersPanel(client);
-		add(playersPanel, "wrap, grow");
+//		playersPanel = new PlayersPanel(client);
+//		add(playersPanel, "wrap, grow");
+		
+		for(Player player : client.getGame().getAllPlayers()) {
+			PlayerPanel panel = new PlayerPanel(client, player);			
+			add(panel, "wrap, growx, gaptop 10");
+		}
 	}
 
 	public void selectNoAction() {
@@ -111,7 +117,7 @@ public class ControlPanel extends JPanel {
 	}
 
 	public void started() {
-		playersPanel.started();
+		//playersPanel.started();
 	}
 
 	public void tileDrawn(Tile tile) {
@@ -141,7 +147,7 @@ public class ControlPanel extends JPanel {
 		actionPanel.setActions(arr);
 		buttonNextTurn.setEnabled(canPass);
 		buttonNextTurn.requestFocus();
-		playersPanel.repaint();
+		repaint(); //players only
 	}
 
 	public void clearActions() {
@@ -150,7 +156,7 @@ public class ControlPanel extends JPanel {
 	}
 
 	public void playerActivated(Player turn, Player active) {
-		playersPanel.repaint();
+		repaint(); //players only
 	}
 
 	public void closeGame() {
@@ -160,9 +166,9 @@ public class ControlPanel extends JPanel {
 		packSize.setText("");
 	}
 
-	public PlayersPanel getPlayersPanel() {
-		return playersPanel;
-	}
+//	public PlayersPanel getPlayersPanel() {
+//		return playersPanel;
+//	}
 
 	public NextSquare getNextTileLabel() {
 		return nextTileLabel;

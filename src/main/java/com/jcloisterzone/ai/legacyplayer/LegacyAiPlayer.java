@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.ai.AiScoreContext;
 import com.jcloisterzone.ai.RankingAiPlayer;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Castle;

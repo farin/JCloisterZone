@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JComponent;
+import javax.swing.JLayer;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -37,6 +39,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.MainPanel;
+import com.jcloisterzone.ui.grid.OverlayScrollPaneLayout;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 
@@ -72,21 +75,26 @@ public class ClientController implements GameEventListener, UserInterface {
 	public void started(Snapshot snapshot) {
 		client.cleanContentPane();
 
-		Container pane = client.getContentPane();
-
-		pane.setLayout(new BorderLayout());
-		ControlPanel controlPanel = new ControlPanel(client);
-		client.setControlPanel(controlPanel);
-		JScrollPane ctrlScroll = new JScrollPane(controlPanel);
-		ctrlScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		ctrlScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		pane.add(ctrlScroll, BorderLayout.EAST);
+		Container pane = client.getContentPane();		
+		pane.setLayout(new BorderLayout());		
 		
+		JScrollPane scroll = new JScrollPane();
+		scroll.setLayout(new OverlayScrollPaneLayout());
+		scroll.setWheelScrollingEnabled(false);
+				
+		//JLayer needed to correct rendering of overlay components
+		JLayer<JComponent> layer = new JLayer<JComponent>(scroll);
+		pane.add(layer, BorderLayout.CENTER);				
+				
 		MainPanel mainPanel = new MainPanel(client);
 		client.setMainPanel(mainPanel);
-		JScrollPane scroll = new JScrollPane(mainPanel);
-		scroll.setWheelScrollingEnabled(false);
-		pane.add(scroll, BorderLayout.CENTER);
+		scroll.setViewportView(mainPanel);
+		
+		ControlPanel controlPanel = new ControlPanel(client);
+		client.setControlPanel(controlPanel);
+		scroll.add(controlPanel, OverlayScrollPaneLayout.OVERLAY, 0);		
+		
+		
 		pane.setVisible(true);
 
 		mainPanel.started(snapshot);
@@ -197,13 +205,13 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
 		client.getMainPanel().scored(feature, label, meeple, finalScoring);
-		client.getControlPanel().getPlayersPanel().repaint();
+		client.getControlPanel().repaint(); //players only
 	}
 
 	@Override
 	public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
 		client.getMainPanel().scored(position, player, label, finalScoring);
-		client.getControlPanel().getPlayersPanel().repaint();
+		client.getControlPanel().repaint(); //players only
 	}
 	
 	// User interface
