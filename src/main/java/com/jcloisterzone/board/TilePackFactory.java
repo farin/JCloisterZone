@@ -108,24 +108,21 @@ public class TilePackFactory {
 		return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
 	}
 
-	public List<Tile> createTiles(Expansion expansion, String tileId, Element card) {
+	public List<Tile> createTiles(Expansion expansion, String tileId, Element card, Map<String, Integer> discardList) {
 		if (usedIds.contains(tileId)) {
 			throw new IllegalArgumentException("Multiple occurences of id " + tileId + " in tile definition xml.");
 		}
 		usedIds.add(tileId);
-
-		Map<String, Integer> discardList = getDiscardTiles();
+		
+		int count = getTileCount(card, tileId);
+		
 		if (discardList.containsKey(tileId)) {
 			int n = discardList.get(tileId);
-			if (n == 1) {
-				discardList.remove(tileId);
-			} else {
-				discardList.put(tileId, n-1);
+			count -= n;
+			if (count == 0) {
+				return Collections.emptyList();
 			}
-			return Collections.emptyList();
-		}
-
-		int count = getTileCount(card, tileId);
+		}		
 
 		List<Tile> tiles = new ArrayList<Tile>(count);
 		for(int j = 0; j < count; j++) {
@@ -147,25 +144,11 @@ public class TilePackFactory {
 		}
 		return result;
 	}
-
-	@Deprecated
-	public Tile createTileForId(String id) {
-		for(Entry<Expansion, Element> entry: defs.entrySet()) {
-			Expansion expansion = entry.getKey();
-			NodeList nl = entry.getValue().getElementsByTagName("card");
-			for(int i = 0; i < nl.getLength(); i++) {
-				Element tileElement = (Element) nl.item(i);
-				String tileId = getTileId(expansion, tileElement);
-				if (! tileId.equals(id)) continue;
-				tileElement.setAttribute("count", "1");
-				return createTiles(expansion, tileId, tileElement).get(0);
-			}
-		}
-		return null;
-	}
-
+	
 	public DefaultTilePack createTilePack() {
 		DefaultTilePack tilePack = new DefaultTilePack();
+		
+		Map<String, Integer> discardList = getDiscardTiles();
 
 		for(Entry<Expansion, Element> entry: defs.entrySet()) {
 			Expansion expansion = entry.getKey();
@@ -174,7 +157,7 @@ public class TilePackFactory {
 				Element tileElement = (Element) nl.item(i);
 				String tileId = getTileId(expansion, tileElement);
 				LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
-				for(Tile tile : createTiles(expansion, tileId, tileElement)) {
+				for(Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
 					tilePack.addTile(tile, getTileGroup(tile, tileElement));
 					if (positions != null && ! positions.isEmpty()) {
 						Position pos = positions.removeFirst();
@@ -189,8 +172,7 @@ public class TilePackFactory {
 						}						
 						logger.info("Setting initial placement {} for {}", pos, tile);
 						tile.setPosition(pos);
-					}
-					
+					}					
 				}
 			}
 		}

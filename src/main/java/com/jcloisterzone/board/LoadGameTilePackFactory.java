@@ -71,8 +71,8 @@ public class LoadGameTilePackFactory extends TilePackFactory {
 	}
 
 	@Override
-	public List<Tile> createTiles(Expansion expansion, String tileId, Element card) {
-		List<Tile> result =  super.createTiles(expansion, tileId, card);
+	public List<Tile> createTiles(Expansion expansion, String tileId, Element card, Map<String, Integer> discardList) {
+		List<Tile> result =  super.createTiles(expansion, tileId, card, discardList);
 		for(PreplacedTile pt : preplaced) {
 			if (pt.tileId.equals(tileId)) {
 				pt.tile = result.remove(result.size()-1);
