@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JCloisterZone\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 20:55+0100\n"
+"POT-Creation-Date: 2012-02-09 20:17+0100\n"
 "PO-Revision-Date: 2011-03-20 23:15+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
@@ -108,11 +108,11 @@ msgstr "Průvod"
 msgid "The Phantom"
 msgstr "Fantom"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "La porxada"
 msgstr "La porxada"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "The school"
 msgstr "Škola"
 
@@ -145,18 +145,18 @@ msgstr "Povolit přímé umístění stodoly na louku s již položenou stodolou
 msgid "Apply tunnel rule on tunnel from other expansions."
 msgstr "Použít pravidla o tunelech i na tunely z ostatních rozšíření."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:73
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
 msgstr "Vzdálené JCloisterZone není kompatibilní s touto aplikací. Použijte stejné "
 "verze na obou stranách."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
 msgid "Incompatible versions"
 msgstr "Nekompatibilní verze"
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:84
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:85
 msgid "Connection error"
 msgstr "Spojení se nezdařilo."
 
@@ -182,44 +182,44 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr "Šířeno pod licencí  GNU Affero General Public License version 3"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:291
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
 #: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:63
 msgid "Close game"
 msgstr "Ukončit hru"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
 msgstr "Zrušít"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
+#: src/main/java/com/jcloisterzone/ui/Client.java:294
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
 msgstr "Hra není dohrána. Opravdu si přejete hru ukončit a odpojit tak také ostatní "
 "hráče?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:301
 msgid "Game is running. Do you really want to leave it?"
 msgstr "Hra není dohrána. Opravdu si přejete hru ukončit?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:355
+#: src/main/java/com/jcloisterzone/ui/Client.java:359
 msgid "Save game"
 msgstr "Uložit hru"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:374
-#: src/main/java/com/jcloisterzone/ui/Client.java:392
-#: src/main/java/com/jcloisterzone/ui/Client.java:415
+#: src/main/java/com/jcloisterzone/ui/Client.java:378
+#: src/main/java/com/jcloisterzone/ui/Client.java:396
+#: src/main/java/com/jcloisterzone/ui/Client.java:419
 msgid "Error"
 msgstr "Chyba"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:401
+#: src/main/java/com/jcloisterzone/ui/Client.java:405
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:80
 msgid "Load game"
 msgstr "Nahrát hru"
@@ -319,51 +319,55 @@ msgstr "Tyto kartičky byly zahozeny během hry"
 msgid "Game overview"
 msgstr "Závěrečný přehled"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:43
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
 msgid "Player"
 msgstr "Hráč"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
 msgid "Rank"
 msgstr "Pořadí"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:46
 msgid "Total points"
 msgstr "Celkem bodů"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:47
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
 msgid "Roads"
 msgstr "Cesty"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
 msgid "Cities"
 msgstr "Města"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
 msgid "Cloisters"
 msgstr "Kláštery"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:51
 msgid "Farms"
 msgstr "Louky"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:52
+msgid "Castles"
+msgstr "Hrady"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:54
 msgid "The biggest city"
 msgstr "Největší město"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:53
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
 msgid "The Longest road"
 msgstr "Nejdelší cesta"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
 msgid "Trade goods"
 msgstr "Kupecké zboží"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:56
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:58
 msgid "Fairy"
 msgstr "Víla"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:59
 msgid "Tower ransom"
 msgstr "Výkupné za věž"
 

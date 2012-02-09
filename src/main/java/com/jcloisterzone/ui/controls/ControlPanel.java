@@ -126,8 +126,8 @@ public class ControlPanel extends JPanel {
 
 	public void selectAbbeyPlacement(Set<Position> positions) {
 		nextTileLabel.setEnabled(true);
-		nextTileLabel.requestFocus();
 		buttonNextTurn.setEnabled(true);
+		buttonNextTurn.requestFocus();
 	}
 
 	public void tilePlaced(Tile tile) {

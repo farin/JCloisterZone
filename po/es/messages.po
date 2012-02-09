@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 20:55+0100\n"
+"POT-Creation-Date: 2012-02-09 20:17+0100\n"
 "PO-Revision-Date: 2011-04-09 12:05+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,11 +107,11 @@ msgstr "El Séquito"
 msgid "The Phantom"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "La porxada"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "The school"
 msgstr ""
 
@@ -145,18 +145,18 @@ msgstr "Permitir la colocación directa de un granero en una granja en la que ya
 msgid "Apply tunnel rule on tunnel from other expansions."
 msgstr "Aplicar la regla del túnel en túneles de otras expansiones."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:73
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
 msgstr "La versión remota de JCloisterZone no es compatible con la aplicación local. "
 "Por favor, actualice ambas aplicaciones a la misma versión."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
 msgid "Incompatible versions"
 msgstr "Versiones incompatibles"
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:84
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:85
 msgid "Connection error"
 msgstr "Fallo en la conexión."
 
@@ -182,44 +182,44 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:291
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
 #: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:63
 msgid "Close game"
 msgstr "Cerrar el juego"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
+#: src/main/java/com/jcloisterzone/ui/Client.java:294
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
 msgstr "El juego se está ejecutando. ¿Está seguro de querer salir del juego y "
 "desconectar también a los otros jugadores?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:301
 msgid "Game is running. Do you really want to leave it?"
 msgstr "El juego se está ejecutando. ¿Realmente quieres salir?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:355
+#: src/main/java/com/jcloisterzone/ui/Client.java:359
 msgid "Save game"
 msgstr "Guardar el juego"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:374
-#: src/main/java/com/jcloisterzone/ui/Client.java:392
-#: src/main/java/com/jcloisterzone/ui/Client.java:415
+#: src/main/java/com/jcloisterzone/ui/Client.java:378
+#: src/main/java/com/jcloisterzone/ui/Client.java:396
+#: src/main/java/com/jcloisterzone/ui/Client.java:419
 msgid "Error"
 msgstr "Error"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:401
+#: src/main/java/com/jcloisterzone/ui/Client.java:405
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:80
 msgid "Load game"
 msgstr "Cargar un juego"
@@ -319,51 +319,55 @@ msgstr "Estas piezas han sido descartadas durante el juego"
 msgid "Game overview"
 msgstr "Descripción del juego"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:43
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
 msgid "Player"
 msgstr "Jugador"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
 msgid "Rank"
 msgstr "Posición"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:46
 msgid "Total points"
 msgstr "Puntos totales"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:47
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
 msgid "Roads"
 msgstr "Caminos"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
 msgid "Cities"
 msgstr "Ciudades"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
 msgid "Cloisters"
 msgstr "Monasterios"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:51
 msgid "Farms"
 msgstr "Granjas"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:52
+msgid "Castles"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:54
 msgid "The biggest city"
 msgstr "La ciudad más grande"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:53
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
 msgid "The Longest road"
 msgstr "El camino más largo"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
 msgid "Trade goods"
 msgstr "Mercancías"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:56
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:58
 msgid "Fairy"
 msgstr "Hada"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:59
 msgid "Tower ransom"
 msgstr "Rescate por la torre"
 

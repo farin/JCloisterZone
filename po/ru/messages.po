@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 20:55+0100\n"
+"POT-Creation-Date: 2012-02-09 20:17+0100\n"
 "PO-Revision-Date: 2011-04-11 10:08+0200\n"
 "Last-Translator: Andrew Mitrofanov <MrNumbers@inbox.lv>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,11 +107,11 @@ msgstr "Фантом"
 msgid "The Phantom"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "La porxada"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "The school"
 msgstr ""
 
@@ -144,18 +144,18 @@ msgstr "Разрешать помещать амбар на поле, на ко�
 msgid "Apply tunnel rule on tunnel from other expansions."
 msgstr "Применять правило туннелей для туннелей из других дополнений."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:73
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
 msgstr "Версия клиента JCloisterZone не совместима с версией сервера. Пожалуйста, "
 "обновите оба приложения до одинаковой версии."
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
 msgid "Incompatible versions"
 msgstr "Несовместимые версии"
 
-#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:84
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:85
 msgid "Connection error"
 msgstr "Соединение не установлено."
 
@@ -181,44 +181,44 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:291
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
 #: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:63
 msgid "Close game"
 msgstr "Закрыть игру"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:288
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:292
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:290
+#: src/main/java/com/jcloisterzone/ui/Client.java:294
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
 msgstr "Игра уже началась. Вы действительно хотите выйти из игры и отключить всех "
 "остальных игроков?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:301
 msgid "Game is running. Do you really want to leave it?"
 msgstr "Игра уже началась. Вы действительно хотите покинуть игру?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:355
+#: src/main/java/com/jcloisterzone/ui/Client.java:359
 msgid "Save game"
 msgstr "Сохранить игру"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:374
-#: src/main/java/com/jcloisterzone/ui/Client.java:392
-#: src/main/java/com/jcloisterzone/ui/Client.java:415
+#: src/main/java/com/jcloisterzone/ui/Client.java:378
+#: src/main/java/com/jcloisterzone/ui/Client.java:396
+#: src/main/java/com/jcloisterzone/ui/Client.java:419
 msgid "Error"
 msgstr "Ошибка"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:401
+#: src/main/java/com/jcloisterzone/ui/Client.java:405
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:80
 msgid "Load game"
 msgstr "Загрузить игру"
@@ -318,51 +318,55 @@ msgstr "Эти карточки были изъяты в процессе игр
 msgid "Game overview"
 msgstr "Обзор игры"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:43
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
 msgid "Player"
 msgstr "Игрок"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
 msgid "Rank"
 msgstr "Место"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:46
 msgid "Total points"
 msgstr "Всего очков"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:47
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
 msgid "Roads"
 msgstr "Дороги"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
 msgid "Cities"
 msgstr "Города"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
 msgid "Cloisters"
 msgstr "Монастыри"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:51
 msgid "Farms"
 msgstr "Поля"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:52
+msgid "Castles"
+msgstr "Замки"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:54
 msgid "The biggest city"
 msgstr "Самый большой город"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:53
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
 msgid "The Longest road"
 msgstr "Самая длинная дорога"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
 msgid "Trade goods"
 msgstr "Товары"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:56
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:58
 msgid "Fairy"
 msgstr "Фея"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:59
 msgid "Tower ransom"
 msgstr "Выкупы (Дополнение \"Башня\")"
 

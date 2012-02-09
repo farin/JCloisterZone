@@ -57,7 +57,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 			public void completed(Completable feature, CompletableScoreContext ctx) {
 				if (feature instanceof City) {
 					int cityTradeResources[] = ((CityScoreContext)ctx).getCityTradeResources();
-					if (cityTradeResources != null) {
+					if (cityTradeResources != null) {						
 						int playersTradeResources[] = tradeResources.get(getGame().getActivePlayer());
 						for(int i = 0; i < cityTradeResources.length; i++) {
 							playersTradeResources[i] += cityTradeResources[i];

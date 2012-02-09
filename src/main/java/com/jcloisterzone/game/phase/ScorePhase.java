@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
@@ -36,15 +37,11 @@ public class ScorePhase extends Phase {
 	}
 
 	private void scoreCompletedNearAbbey(Position pos) {
-		for(Position offset: Position.ADJACENT.values()) {
-			Tile tile = getBoard().get(pos.add(offset));
-			for(Feature feature : tile.getFeatures()) {
-				//must skip because cloister are check later
-				//and double trigger is not wanted
-				if (feature instanceof Cloister) continue;
-				if (feature instanceof Completable) {
-					scoreCompleted((Completable) feature);
-				}
+		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(pos).entrySet()) {
+			Tile tile = e.getValue();
+			Feature feature = tile.getFeaturePartOf(e.getKey().rev());
+			if (feature instanceof Completable) {
+				scoreCompleted((Completable) feature);
 			}
 		}
 	}
