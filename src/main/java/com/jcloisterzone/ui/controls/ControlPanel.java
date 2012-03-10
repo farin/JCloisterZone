@@ -146,12 +146,12 @@ public class ControlPanel extends JPanel {
 //		actionPanel.setActions(new PlayerAction[] { action } );
 //	}
 
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		//tileRotation = Rotation.R0;
-		//nextTileLabel.setEnabled(true);
-		//nextTileLabel.requestFocus();
-		//canPass = true;
-	}
+//	public void selectAbbeyPlacement(Set<Position> positions) {
+//		//tileRotation = Rotation.R0;
+//		//nextTileLabel.setEnabled(true);
+//		//nextTileLabel.requestFocus();
+//		//canPass = true;
+//	}
 
 //	public void tilePlaced(Tile tile) {
 //		//nextTileLabel.setEmptyIcon();

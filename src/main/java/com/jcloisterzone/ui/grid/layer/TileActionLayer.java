@@ -4,9 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 
-import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.SelectTileAction;
-import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -14,11 +12,13 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class TileActionLayer extends AbstractGridLayer implements GridMouseListener {
 
-	private SelectTileAction action;
+	private final SelectTileAction action;
+	private final Image gridDecoration;
 
-	public TileActionLayer(GridPanel gridPanel, SelectTileAction action) {
+	public TileActionLayer(GridPanel gridPanel, SelectTileAction action, Image gridDecoration) {
 		super(gridPanel);
 		this.action = action;
+		this.gridDecoration = gridDecoration;
 	}
 
 	@Override
@@ -27,17 +27,9 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
 	}
 
 	public void paint(Graphics2D g2) {
-		Image img;
-		if (action instanceof FairyAction) {
-			img = getClient().getControlsTheme().getActionDecoration("fairy");
-		} else if (action instanceof TowerPieceAction) {
-			img = getClient().getControlsTheme().getActionDecoration("tower");
-		} else {
-			throw new UnsupportedOperationException("Unknown action");
-		}
-		int imgSize = img.getWidth(null);
+		int imgSize = gridDecoration.getWidth(null);
 		for(Position pos : action.getSites()) {
-			g2.drawImage(img, getAffineTransform(imgSize, pos), null);
+			g2.drawImage(gridDecoration, getAffineTransform(imgSize, pos), null);
 		}
 	}
 

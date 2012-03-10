@@ -13,7 +13,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.grid.GridLayer;
-import com.jcloisterzone.ui.grid.layer.AvailableMovesLayer;
+import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 
 public class TilePlacementAction extends PlayerAction {
 	
@@ -60,7 +60,7 @@ public class TilePlacementAction extends PlayerAction {
 	
 	@Override
 	protected GridLayer createGridLayer() {
-		return new AvailableMovesLayer(client.getGridPanel(), this);		
+		return new TilePlacementLayer(client.getGridPanel(), this);		
 	}
 	
 	@Override

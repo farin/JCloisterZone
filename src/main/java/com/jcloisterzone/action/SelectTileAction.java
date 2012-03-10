@@ -5,8 +5,6 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
-import com.jcloisterzone.ui.grid.GridLayer;
-import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 
 
 public abstract class SelectTileAction extends PlayerAction {
@@ -25,11 +23,6 @@ public abstract class SelectTileAction extends PlayerAction {
 		return sites;
 	}
 	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new TileActionLayer(client.getGridPanel(), this);
-	}
-
 	public abstract void perform(Client2ClientIF server, Position p);
 
 }

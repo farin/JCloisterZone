@@ -3,17 +3,14 @@ package com.jcloisterzone.event;
 import java.util.EnumSet;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
@@ -122,12 +119,6 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 	public void towerIncreased(Position p, Integer height) {
 		((GameEventListener)a).towerIncreased(p, height);
 		((GameEventListener)b).towerIncreased(p, height);
-	}
-
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		((UserInterface)a).selectAbbeyPlacement(positions);
-		((UserInterface)b).selectAbbeyPlacement(positions);
 	}
 
 	@Override

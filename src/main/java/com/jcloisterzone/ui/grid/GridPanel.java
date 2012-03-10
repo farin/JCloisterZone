@@ -26,7 +26,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
-import com.jcloisterzone.ui.grid.layer.AvailableMovesLayer;
+import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
@@ -203,7 +203,7 @@ public class GridPanel extends JComponent {
 	public void tilePlaced(Tile tile, TileLayer tileLayer) {
 		Position p = tile.getPosition();
 
-		removeLayer(AvailableMovesLayer.class);
+		removeLayer(AbstractTilePlacementLayer.class);
 		removeLayer(PlacementHistory.class);
 
 		boolean dirty = false;

@@ -28,7 +28,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
-import com.jcloisterzone.ui.grid.layer.AvailableMovesLayer;
+import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
@@ -142,7 +142,7 @@ public class MainPanel extends BackgroundPanel {
 
 	public void closeGame() {
 		gridPanel.clearActionDecorations();
-		gridPanel.removeLayer(AvailableMovesLayer.class);
+		gridPanel.removeLayer(AbstractTilePlacementLayer.class);
 	}
 
 	public void tilePlaced(Tile tile) {

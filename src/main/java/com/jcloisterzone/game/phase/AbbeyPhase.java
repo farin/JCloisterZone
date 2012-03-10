@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -22,7 +23,7 @@ public class AbbeyPhase extends Phase {
 	public void enter() {
 		AbbeyAndMayorGame amGame = game.getAbbeyAndMayorGame();
 		if (amGame.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
-			game.getUserInterface().selectAbbeyPlacement(getBoard().getHoles());
+			notifyUI(new AbbeyPlacementAction(getBoard().getHoles()), true);			
 		} else {
 			next();
 		}

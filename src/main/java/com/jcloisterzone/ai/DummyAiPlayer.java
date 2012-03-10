@@ -10,11 +10,6 @@ public class DummyAiPlayer extends AiPlayer {
 
 
 	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		selectDummyAbbeyPlacement(positions);
-	}
-
-	@Override
 	public void selectAction(List<PlayerAction> actions, boolean canPass) {
 		selectDummyAction(actions, canPass);
 	}	

@@ -238,16 +238,16 @@ public class ClientController implements GameEventListener, UserInterface {
 		}
 	}	
 
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		client.clearActions();
-		//client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
-		if (client.isClientActive()) {
-			client.beep();
-			client.getControlPanel().selectAbbeyPlacement(positions);
-		}
-		//client.getMainPanel().selectTilePlacement(positions);
-	}
+//	@Override
+//	public void selectAbbeyPlacement(Set<Position> positions) {
+//		client.clearActions();
+//		//client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
+//		if (client.isClientActive()) {
+//			client.beep();
+//			client.getControlPanel().selectAbbeyPlacement(positions);
+//		}
+//		//client.getMainPanel().selectTilePlacement(positions);
+//	}
 
 //	@Override
 //	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {

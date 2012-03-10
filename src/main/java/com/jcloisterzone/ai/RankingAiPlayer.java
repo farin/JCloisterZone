@@ -7,12 +7,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ai.copy.CopyGamePhase;
 import com.jcloisterzone.board.Location;
@@ -100,10 +99,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	}
 	
 	
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
+	protected void selectAbbeyPlacement(AbbeyPlacementAction action) {
 		Map<Position, Set<Rotation>> placements = Maps.newHashMap();
-		for(Position pos : positions) {
+		for(Position pos : action.getSites()) {
 			placements.put(pos, Collections.singleton(Rotation.R0));
 		}
 		rankTilePlacement(placements);		
@@ -225,8 +223,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 	@Override
 	public void selectAction(List<PlayerAction> actions, boolean canPass) {
-		if (actions.get(0) instanceof TilePlacementAction) {
-			selectTilePlacement((TilePlacementAction) actions.get(0));
+		PlayerAction firstAction = actions.get(0);
+		
+		if (firstAction instanceof TilePlacementAction) {
+			selectTilePlacement((TilePlacementAction) firstAction);
+			return;
+		}
+		if (firstAction instanceof AbbeyPlacementAction) {
+			selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
 			return;
 		}
 		

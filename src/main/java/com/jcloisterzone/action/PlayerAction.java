@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Image;
 
 import com.jcloisterzone.Player;

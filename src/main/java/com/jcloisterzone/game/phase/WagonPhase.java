@@ -1,12 +1,10 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Collections;
 import java.util.Map;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
