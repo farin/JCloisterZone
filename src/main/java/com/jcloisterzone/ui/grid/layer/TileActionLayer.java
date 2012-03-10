@@ -49,7 +49,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
 			}
 		}
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			getClient().getControlPanel().getActionPanel().nextAction();
+			action.switchAction();
 		}
 	}
 

@@ -14,11 +14,8 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.PlaceTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.Client;
 
 public class ControlPanel extends JPanel {
@@ -29,8 +26,7 @@ public class ControlPanel extends JPanel {
 
 	private final Client client;
 	
-	private boolean canPass;
-	private Rotation tileRotation;
+	private boolean canPass;	
 	
 	/*private NextSquare nextTileLabel;
 	private JLabelWithAntialiasing packSize;
@@ -100,7 +96,7 @@ public class ControlPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		g2.translate(0, 170);		
+		g2.translate(0, 70);		
 		actionPanel.paintComponent(g2);
 		g2.translate(0, 60);
 		
@@ -119,48 +115,48 @@ public class ControlPanel extends JPanel {
 		return actionPanel;
 	}
 
-	public Rotation getRotation() {
-		return tileRotation;
-	}
+//	public Rotation getRotation() {
+//		return tileRotation;
+//	}
 
-	public void rotateTile() {
-		if (tileRotation != null) {
-			tileRotation = tileRotation.next();
-			client.getGridPanel().repaint();		
-			repaint();
-		}
-	}
+//	public void rotateTile() {
+//		if (tileRotation != null) {
+//			tileRotation = tileRotation.next();
+//			client.getGridPanel().repaint();		
+//			repaint();
+//		}
+//	}
 
 	public void started() {
 		//playersPanel.started();
 	}
 
-	public void tileDrawn(Tile tile) {
-		tileRotation = Rotation.R0;
-		//nextTileLabel.setTile(tile);
-		//packSize.setText(client.getGame().getTilePack().tolalSize() + "");
-	}
+//	public void tileDrawn(Tile tile) {
+//		tileRotation = Rotation.R0;
+//		//nextTileLabel.setTile(tile);
+//		//packSize.setText(client.getGame().getTilePack().tolalSize() + "");
+//	}
 
-	public void selectTilePlacement(Set<Position> positions) {
-		tileRotation = Rotation.R0;
-		//nextTileLabel.setEnabled(true);
-		//nextTileLabel.requestFocus();
-		PlaceTileAction action = new PlaceTileAction(client.getGame().getTile(), positions);
-		action.setClient(client);
-		actionPanel.setActions(new PlayerAction[] { action } );
-	}
+//	public void selectTilePlacement(Set<Position> positions) {
+//		tileRotation = Rotation.R0;
+//		//nextTileLabel.setEnabled(true);
+//		//nextTileLabel.requestFocus();
+//		TilePlacementAction action = new TilePlacementAction(client.getGame().getTile(), positions);
+//		action.setClient(client);
+//		actionPanel.setActions(new PlayerAction[] { action } );
+//	}
 
 	public void selectAbbeyPlacement(Set<Position> positions) {
-		tileRotation = Rotation.R0;
+		//tileRotation = Rotation.R0;
 		//nextTileLabel.setEnabled(true);
 		//nextTileLabel.requestFocus();
-		canPass = true;
+		//canPass = true;
 	}
 
-	public void tilePlaced(Tile tile) {
-		//nextTileLabel.setEmptyIcon();
-		tileRotation = null;
-	}
+//	public void tilePlaced(Tile tile) {
+//		//nextTileLabel.setEmptyIcon();
+//		tileRotation = null;
+//	}
 
 	public void selectAction(List<PlayerAction> actions, boolean canPass) {
 		//direct collection sort can be unsupported - so copy to array first!

@@ -87,12 +87,6 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 		((GameEventListener)b).playerActivated(p, p2);
 	}
 
-//	@Override
-//	public void scoreAssigned(int score, PlacedFigure pf) {
-//		((GameEventListener)a).scoreAssigned(score, pf);
-//		((GameEventListener)b).scoreAssigned(score, pf);
-//	}
-
 	@Override
 	public void tileDrawn(Tile tile) {
 		((GameEventListener)a).tileDrawn(tile);
@@ -137,21 +131,9 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 	}
 
 	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> positions) {
-		((UserInterface)a).selectTilePlacement(positions);
-		((UserInterface)b).selectTilePlacement(positions);
-	}
-
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		((UserInterface)a).selectAction(actions);
-		((UserInterface)b).selectAction(actions);
-	}
-
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		((UserInterface)a).selectTowerCapture(action);
-		((UserInterface)b).selectTowerCapture(action);
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
+		((UserInterface)a).selectAction(actions, canPass);
+		((UserInterface)b).selectAction(actions, canPass);
 	}
 
 	@Override

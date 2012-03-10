@@ -126,13 +126,7 @@ public class MainPanel extends BackgroundPanel {
 				public void mouseClicked(MouseEvent e) {
 					if (!client.isClientActive()) return;
 					if (e.getButton() == MouseEvent.BUTTON3) {
-						if (client.getGame().getPhase() instanceof TilePhase) {
-							client.getControlPanel().rotateTile();
-							return;
-						} else {
-							client.getControlPanel().getActionPanel().nextAction();
-							return;
-						}
+						client.getControlPanel().getActionPanel().switchAction();						
 					}
 				}
 			}
@@ -145,13 +139,6 @@ public class MainPanel extends BackgroundPanel {
 		});
 		setVisible(true);
 	}
-	
-	public void selectTilePlacement(Set<Position> positions) {
-		gridPanel.clearActionDecorations();
-		gridPanel.removeLayer(AvailableMovesLayer.class); //has effect after selectAbbeyPlacement without abbey place!
-		gridPanel.addLayer(new AvailableMovesLayer(gridPanel, positions));
-	}
-
 
 	public void closeGame() {
 		gridPanel.clearActionDecorations();

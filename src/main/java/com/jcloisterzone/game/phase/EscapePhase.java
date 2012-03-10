@@ -1,10 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Collections;
-
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.EscapeAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -30,7 +27,7 @@ public class EscapePhase extends Phase {
 	public void enter() {
 		EscapeAction action = prepareEscapeAction();
 		if (prepareEscapeAction() != null) {
-			game.getUserInterface().selectAction(Collections.<PlayerAction>singletonList(action));
+			notifyUI(action, true);
 		} else {
 			next();
 		}

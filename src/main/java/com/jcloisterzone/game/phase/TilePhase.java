@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -31,7 +32,7 @@ public class TilePhase extends Phase {
 	@Override
 	public void enter() {
 		Map<Position, Set<Rotation>> freezed = Maps.newHashMap(getBoard().getAvailablePlacements());
-		game.getUserInterface().selectTilePlacement(freezed);
+		notifyUI(new TilePlacementAction(game.getTile(), freezed), false);	
 	}
 
 	private void scoreFollowersOnBarnFarm(Farm farm, Map<City, CityScoreContext> cityCache) {

@@ -1,6 +1,7 @@
 package com.jcloisterzone.action;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import com.jcloisterzone.Player;
@@ -14,7 +15,7 @@ public abstract class PlayerAction implements Comparable<PlayerAction> {
 	
 	public String getName() {
 		return getClass().getSimpleName().toLowerCase().replace("action", "");
-	}
+	}	
 	
 	public Image getImage(Player player, boolean active) {					
 		return getImage(active ? client.getPlayerColor(player) : Color.GRAY);		
@@ -40,6 +41,10 @@ public abstract class PlayerAction implements Comparable<PlayerAction> {
 		}
 	}
 	
+	/** Called after right mouse click */
+	public void switchAction() {
+		client.getControlPanel().getActionPanel().nextAction();
+	}
 		
 	protected Image getImage(Color color) {
 		return client.getFigureTheme().getActionImage(this, color);

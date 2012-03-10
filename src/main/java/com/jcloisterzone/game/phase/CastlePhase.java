@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Collections;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +9,6 @@ import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -82,9 +80,8 @@ public class CastlePhase extends Phase {
 		}
 		Player player = game.getAllPlayers()[pi];
 		bcb.setCastlePlayer(player);		
-		Set<Location> locs = currentTileCastleBases.remove(player);
-		CastleAction action = new CastleAction(getTile().getPosition(), locs);
-		game.getUserInterface().selectAction(Collections.<PlayerAction>singletonList(action));		
+		Set<Location> locs = currentTileCastleBases.remove(player);		
+		notifyUI(new CastleAction(getTile().getPosition(), locs), true);		
 	}
 	
 	@Override

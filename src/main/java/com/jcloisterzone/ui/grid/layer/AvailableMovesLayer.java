@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -19,6 +21,9 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 
 	private static final Composite ALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f);
 	private static final Composite DISALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
+	
+	private TilePlacementAction action;
+	private ImmutableSet<Position> availablePositions;
 
 	private Image previewIcon;
 	private Position previewPosition;
@@ -27,12 +32,11 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 	private Rotation previewRotation;
 	private boolean allowedRotation, isAbbey;
 
-	private Set<Position> positions;
-
-	public AvailableMovesLayer(GridPanel gridPanel, Set<Position> positions) {
-		super(gridPanel);
-		this.positions = positions;
-		String tileId = getClient().getGame().getTile().getId();
+	public AvailableMovesLayer(GridPanel gridPanel, TilePlacementAction action) {
+		super(gridPanel);				
+		this.action = action;
+		availablePositions = ImmutableSet.copyOf(action.getAvailablePlacements().keySet());
+		String tileId = action.getTile().getId();
 		isAbbey = Tile.ABBEY_TILE_ID.equals(tileId);
 		previewIcon = getClient().getTileTheme().getTileImage(tileId);
 	}
@@ -46,7 +50,7 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 	@Override
 	public void paint(Graphics2D g2) {
 		if (previewPosition != null) {
-			if (realRotation != getClient().getControlPanel().getRotation()) {
+			if (realRotation != action.getTileRotation()) {
 				preparePreviewRotation(previewPosition);
 			}
 			Composite compositeBackup = g2.getComposite();
@@ -56,39 +60,38 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 		}
 		g2.setColor(gridPanel.getClient().isClientActive() ? Color.BLACK : Color.GRAY);
 		int s = getSquareSize() - 1;
-		for(Position p : positions) {
+		for (Position p : availablePositions) {
 			g2.drawRect(getOffsetX(p),getOffsetY(p),s,s);
 		}
 	}
 
 	private void preparePreviewRotation(Position p) {
-		realRotation = getClient().getControlPanel().getRotation();
+		realRotation = action.getTileRotation();
 		previewRotation = realRotation;
 		if (isAbbey) {
 			allowedRotation = true;
 			return;
 		}
-		Set<Rotation> allowedRotations = gridPanel.getClient().getGame().getBoard().getAvailablePlacements().get(p);
+		Set<Rotation> allowedRotations = action.getAvailablePlacements().get(p);
 		if (allowedRotations.contains(previewRotation)) {
 			allowedRotation = true;
 		} else {
 			if (allowedRotations.size() == 1) {
 				previewRotation = allowedRotations.iterator().next();
 				allowedRotation = true;
-			} else if (gridPanel.getClient().getGame().getTile().getSymmetry() == TileSymmetry.S2) {
+			} else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
 				previewRotation = realRotation.next();
 				allowedRotation = true;
 			} else {
 				allowedRotation = false;
 			}
 		}
-		//System.err.println("real " + realRotation + " prev" + previewRotation + " allowed " + allowedRotation);
 	}
 
 
 	@Override
 	public void squareEntered(MouseEvent e, Position p) {
-		if (positions.contains(p)) {
+		if (availablePositions.contains(p)) {
 			previewPosition = p;
 			preparePreviewRotation(p);
 			gridPanel.repaint();
@@ -111,11 +114,11 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 			case MouseEvent.BUTTON1 :
 				assert p.equals(previewPosition) : "Expected " + previewIcon + ", get " + p;
 				if (allowedRotation) {
-					getClient().getServer().placeTile(previewRotation, p);
+					action.perform(getClient().getServer(), previewRotation, p);
 				}
 				break;
 			case MouseEvent.BUTTON3 :
-				getClient().getControlPanel().rotateTile();
+				action.switchAction();
 				break;
 		}
 	}

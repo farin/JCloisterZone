@@ -12,6 +12,8 @@ import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.SelectTileAction;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ai.copy.CopyGamePhase;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -112,8 +114,8 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 	}
 
-	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+	protected void selectTilePlacement(TilePlacementAction action) {
+		Map<Position, Set<Rotation>> placements = action.getAvailablePlacements();
 		rankTilePlacement(placements);
 		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 	}	
@@ -204,20 +206,38 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 	}
 	
+	private void rankPass() {
+		SavePoint sp = spm.save();
+		getGame().getPhase().pass();
+		double currRank = rank();
+		if (currRank > bestSoFar.getRank()) { 
+			bestSoFar = new PositionRanking(currRank);
+		}		
+		spm.restore(sp);
+	}
+	
 	private void cleanRanking() {
 		bestSoFar = null;
 		scoreCache.clear();
 	}
+	
+	
 
 	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (isRankingInProcess()) {
-			rankAction(actions);
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
+		if (actions.get(0) instanceof TilePlacementAction) {
+			selectTilePlacement((TilePlacementAction) actions.get(0));
 			return;
 		}
 		
+		if (isRankingInProcess()) {
+			rankAction(actions);
+			return;
+		} 
+		
 		if (bestSoFar == null) { //loaded game or wagon phase
-			backupGame();
+			backupGame(); 
+			if (canPass) rankPass();
 			rankAction(actions);
 			restoreGame();
 		}
@@ -246,10 +266,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		cleanRanking();
 	}
 
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		throw new UnsupportedOperationException();
-	}
+
 
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {

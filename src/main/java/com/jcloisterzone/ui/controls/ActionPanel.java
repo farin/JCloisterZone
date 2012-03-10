@@ -62,6 +62,10 @@ public class ActionPanel implements FakeComponent {
 		this.selectedActionIndex = -1;
 		repaint();
 	}
+	
+	public void switchAction() {
+		getSelectedAction().switchAction();
+	}
 
 	public void nextAction() {
 		if (client.isClientActive()) {

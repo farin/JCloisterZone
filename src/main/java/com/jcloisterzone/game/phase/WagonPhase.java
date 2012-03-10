@@ -71,10 +71,9 @@ public class WagonPhase extends Phase {
 			Feature f = rw.remove(player);
 			Sites wagonMoves = prepareWagonMoves(f);
 			if (! wagonMoves.isEmpty()) {
-				amGame.setWagonPlayer(player);
-				PlayerAction action = new MeepleAction(Wagon.class, wagonMoves);
+				amGame.setWagonPlayer(player);				
 				game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-				game.getUserInterface().selectAction(Collections.singletonList(action));
+				notifyUI(new MeepleAction(Wagon.class, wagonMoves), true);
 				return true;
 			}
 		}

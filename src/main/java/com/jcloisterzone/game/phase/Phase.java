@@ -1,6 +1,8 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -83,6 +86,15 @@ public abstract class Phase implements ClientIF {
 
 	public Player getActivePlayer() {
 		return game.getTurnPlayer();
+	}
+
+	
+	protected void notifyUI(List<PlayerAction> actions, boolean canPass) {
+		game.getUserInterface().selectAction(actions, canPass);
+	}
+	
+	protected void notifyUI(PlayerAction action, boolean canPass) {
+		game.getUserInterface().selectAction(Collections.singletonList(action), canPass);
 	}
 
 	//adapter methods

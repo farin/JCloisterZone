@@ -1,7 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 
 import java.awt.Color;
@@ -12,15 +12,13 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.expansion.KingAndScoutGame;
+import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.FakeComponent;
 
@@ -90,8 +88,10 @@ public class PlayerPanel implements FakeComponent {
 	}
 		
 	private void drawMeepleBox(Graphics2D g2, Class<? extends Meeple> type, int count) {
-		Image img = client.getFigureTheme().getFigureImage(type, color, null);
-		drawMeepleBox(g2, img, count);
+		if (count > 0) {
+			Image img = client.getFigureTheme().getFigureImage(type, color, null);
+			drawMeepleBox(g2, img, count);
+		}
 	}
 	
 	@Override
@@ -118,33 +118,50 @@ public class PlayerPanel implements FakeComponent {
 		for(Follower f : player.getUndeployedFollowers()) { 
 			if (f instanceof SmallFollower) {
 				small++;
-			} else { //all small followers are at beginning of collection
-				if (small > 0) {					
-					drawMeepleBox(g2, SmallFollower.class, small);
-					small = 0;					
-				}
+			} else { //all small followers are at beginning of collection									
+				drawMeepleBox(g2, SmallFollower.class, small);
+				small = 0;									
 				drawMeepleBox(g2, f.getClass(), 1);				
 			}
-		}			
-		if (small > 0) { //case when only small followers are in collection					 
-			drawMeepleBox(g2, SmallFollower.class, small);					
+		}			 					 
+		drawMeepleBox(g2, SmallFollower.class, small); //case when only small followers are in collection (not drawn yet)			
+		
+		for(Special meeple : player.getSpecialMeeples()) {
+			drawMeepleBox(g2, meeple.getClass(), 1);
 		}
 		
-		//debug counts
-		drawMeepleBox(g2, BigFollower.class, 1);
-		drawMeepleBox(g2, Builder.class, 1);
-		drawMeepleBox(g2, Pig.class, 1);
-		drawMeepleBox(g2, Mayor.class, 1);
-		drawMeepleBox(g2, Wagon.class, 1);
-		drawMeepleBox(g2, Barn.class, 1);
+		TowerGame tower = client.getGame().getTowerGame();
+		if (tower != null) {
+			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("towerpiece"), tower.getTowerPieces(player));	
+		}
+		KingAndScoutGame ks = client.getGame().getKingAndScoutGame();
+		if (ks != null) {
+			if (ks.getKing() == player) {
+				drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("king"), 1);
+			}
+			if (ks.getRobberBaron() == player) {
+				drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("robber"), 1);
+			}
+		}
+		BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+		if (bcb != null) {
+			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), bcb.getPlayerBridges(player));
+			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), bcb.getPlayerCastles(player));
+		}
 		
-		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("towerpiece"), 5);
 		
-		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("king"), 1);
-		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("robber"), 1);
-		
-		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), 3);
-		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), 3);
+//		//debug counts
+//		drawMeepleBox(g2, BigFollower.class, 1);
+//		drawMeepleBox(g2, Builder.class, 1);
+//		drawMeepleBox(g2, Pig.class, 1);
+//		drawMeepleBox(g2, Mayor.class, 1);
+//		drawMeepleBox(g2, Wagon.class, 1);
+//		drawMeepleBox(g2, Barn.class, 1);				
+//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("towerpiece"), 5);		
+//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("king"), 1);
+//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("robber"), 1);		
+//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), 3);
+//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), 3);
 		
 		int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 		

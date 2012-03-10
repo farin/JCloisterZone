@@ -108,6 +108,10 @@ public class ClientController implements GameEventListener, UserInterface {
 	public void playerActivated(Player turnPlayer, Player activePlayer) {
 		client.setActivePlayer(activePlayer);
 		client.getControlPanel().playerActivated(turnPlayer, activePlayer);
+		
+		if (client.isClientActive()) {
+			client.beep();
+		}
 
 		//TODO better image quality ?
 		Color c = client.getPlayerColor(activePlayer);
@@ -118,7 +122,7 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void tileDrawn(Tile tile) {
 		client.clearActions();
-		client.getControlPanel().tileDrawn(tile);
+		//client.getControlPanel().tileDrawn(tile);
 	}
 
 	@Override
@@ -136,7 +140,7 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void tilePlaced(Tile tile) {
 		client.getMainPanel().tilePlaced(tile);
-		client.getControlPanel().tilePlaced(tile);
+		//client.getControlPanel().tilePlaced(tile);
 	}
 
 	@Override
@@ -237,35 +241,31 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void selectAbbeyPlacement(Set<Position> positions) {
 		client.clearActions();
-		client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
+		//client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
 		if (client.isClientActive()) {
 			client.beep();
 			client.getControlPanel().selectAbbeyPlacement(positions);
 		}
-		client.getMainPanel().selectTilePlacement(positions);
+		//client.getMainPanel().selectTilePlacement(positions);
 	}
 
+//	@Override
+//	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+//		client.clearActions();
+//		Set<Position> positions = placements.keySet();
+//		if (client.isClientActive()) {
+//			client.beep();
+//			client.getControlPanel().selectTilePlacement(positions);
+//		}
+//		client.getMainPanel().selectTilePlacement(positions);
+//	}
+
 	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
 		client.clearActions();
-		Set<Position> positions = placements.keySet();
-		if (client.isClientActive()) {
-			client.beep();
-			client.getControlPanel().selectTilePlacement(positions);
+		if (client.isClientActive()) {			
+			client.getControlPanel().selectAction(actions, canPass);
 		}
-		client.getMainPanel().selectTilePlacement(positions);
-	}
-
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (client.isClientActive()) {
-			client.getControlPanel().selectAction(actions, true);
-		}
-	}
-
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		client.getControlPanel().selectAction(Collections.<PlayerAction>singletonList(action), false);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.jcloisterzone.ai;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,40 +45,17 @@ public class AiUserInterfaceAdapter implements UserInterface {
 	}
 
 	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> positions) {
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
 		if (aiPlayer.isAiPlayerActive()) {
 			try {
-				aiPlayer.selectTilePlacement(positions);
+				aiPlayer.selectAction(actions, canPass);
 			} catch (Exception e) {
 				aiPlayer.handleRuntimeError(e);
-				aiPlayer.selectDummyTilePlacement(positions);
+				aiPlayer.selectDummyAction(actions, canPass);
 			}
 		}
 	}
-
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (aiPlayer.isAiPlayerActive()) {
-			try {
-				aiPlayer.selectAction(actions);
-			} catch (Exception e) {
-				aiPlayer.handleRuntimeError(e);
-				aiPlayer.selectDummyAction(actions);
-			}
-		}
-	}
-
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		if (aiPlayer.isAiPlayerActive()) {
-			try {
-				aiPlayer.selectTowerCapture(action);
-			} catch (Exception e) {
-				aiPlayer.handleRuntimeError(e);
-				aiPlayer.selectDummyTowerCapture(action);
-			}
-		}
-	}
+	
 
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {
