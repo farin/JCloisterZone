@@ -94,7 +94,7 @@ public abstract class AiPlayer implements UserInterface {
 	// dummy implementations
 	
 	protected final void selectDummyAbbeyPlacement(Set<Position> positions) {
-		getServer().placeNoTile();
+		getServer().pass();
 	}
 
 	protected final void selectDummyTilePlacement(Map<Position, Set<Rotation>> placements) {
@@ -124,7 +124,7 @@ public abstract class AiPlayer implements UserInterface {
 				}
 			}
 		}
-		getServer().placeNoFigure();
+		getServer().pass();
 	}
 
 	protected final void selectDummyTowerCapture(CaptureAction action) {

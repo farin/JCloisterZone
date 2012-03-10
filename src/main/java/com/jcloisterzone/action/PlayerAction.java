@@ -12,7 +12,7 @@ public abstract class PlayerAction implements Comparable<PlayerAction> {
 
 	@Override
 	public int compareTo(PlayerAction o) {
-		return  getSortOrder() - o.getSortOrder();
+		return getSortOrder() - o.getSortOrder();
 	}
 
 }

@@ -37,7 +37,7 @@ public class WagonPhase extends Phase {
 	}
 
 	@Override
-	public void placeNoFigure() {
+	public void pass() {
 		enter();
 	}
 

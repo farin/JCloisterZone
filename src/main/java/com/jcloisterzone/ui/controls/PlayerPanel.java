@@ -1,14 +1,15 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
+import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
+
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-
-import javax.swing.JComponent;
+import java.awt.image.BufferedImage;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Barn;
@@ -21,51 +22,51 @@ import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.FakeComponent;
 
-public class PlayerPanel extends JComponent {
+public class PlayerPanel implements FakeComponent {
 	
-	//TODO make private / debel only now
 	//public static final AlphaComposite BG_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .3f);
-	private static final Color BG_COLOR = new Color(0, 0, 0, 225);
+	//private static final Color BG_COLOR = new Color(0, 0, 0, 225);
+	
 	private static final Color DELIM_TOP_COLOR = new Color(100,100,100);
 	private static final Color DELIM_BOTTOM_COLOR = new Color(160,160,160);
 	
 	private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
 	private static Font FONT_NICKNAME = new Font("Georgia", Font.BOLD, 18);
 	private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
-	
-	private static final int CORNER_DIAMETER = 20;
+		
 	private static final int PADDING_L = 9;
 	private static final int PADDING_R = 11;
+	private static final int LINE_HEIGHT = 32;
+	private static final int DELIMITER_Y = 34;
 		
 	private final Client client;
 	private final Player player;
 	private final Color color;
 	
-	//meeple box supplementary context variables
+	//context coordinates variables
 	private int bx, by;
 	
 	public PlayerPanel(Client client, Player player) {
 		this.client = client;
 		this.player = player;
 		this.color = client.getPlayerColor(player);
-		
-		//TODO only devel
-		setMinimumSize(new Dimension(1, 140));
 	}
 	
 	private void drawDelimiter(Graphics2D g2, int y) {
-		int w = getWidth();
 		g2.setColor(DELIM_TOP_COLOR);
-		g2.drawLine(PADDING_L, y, w-PADDING_R, y);
+		g2.drawLine(PADDING_L, y, PANEL_WIDTH-PADDING_R, y);
 		g2.setColor(DELIM_BOTTOM_COLOR);
-		g2.drawLine(PADDING_L, y+1, w-PADDING_R, y+1);
+		g2.drawLine(PADDING_L, y+1, PANEL_WIDTH-PADDING_R, y+1);
 	}
 	
 	private void drawTextShadow(Graphics2D g2, String text, int x, int y) {
-		//TODO shadow color based on color  
-		g2.setColor(Color.DARK_GRAY);
-		g2.drawString(text, x+0.8f, y+0.7f);
+		//TODO shadow color based on color ??
+		/*g2.setColor(Color.DARK_GRAY);
+		g2.drawString(text, x+0.8f, y+0.7f);*/
+		g2.setColor(ControlPanel.SHADOW_COLOR);
+		g2.drawString(text, x+0.6f, y+0.5f);
 		g2.setColor(color);
 		g2.drawString(text, x, y);
 	}
@@ -73,9 +74,9 @@ public class PlayerPanel extends JComponent {
 	private void drawMeepleBox(Graphics2D g2, Image img, int count) {
 		int w = count > 1 ? 47 : 30;
 		int h = 22;
-		if (bx+w > getWidth()-PADDING_R) {
+		if (bx+w > PANEL_WIDTH-PADDING_R) {
 			bx = PADDING_L;
-			by += 32;
+			by += LINE_HEIGHT;
 		}		
 		g2.setColor(Color.WHITE);
 		g2.fillRoundRect(bx, by, w, h, 8, 8);
@@ -83,7 +84,7 @@ public class PlayerPanel extends JComponent {
 		g2.drawImage(img, bx, by-4, null);
 		if (count > 1) {			
 			g2.setColor(Color.BLACK);
-			g2.drawString(""+count, bx+32, by+17);
+			g2.drawString(""+count, bx+LINE_HEIGHT, by+17);
 		}
 		bx += w + 8;		
 	}
@@ -94,28 +95,25 @@ public class PlayerPanel extends JComponent {
 	}
 	
 	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		Graphics2D g2 = (Graphics2D) g;
+	public void paintComponent(Graphics2D parentGraphics) {	
+		
+		BufferedImage bimg = new BufferedImage(PANEL_WIDTH, 200, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = bimg.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		int w = getWidth(), h = getHeight();
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);		
 		
-		g2.setColor(BG_COLOR);
-		g2.fillRoundRect(0, 0, w+CORNER_DIAMETER, h, CORNER_DIAMETER, CORNER_DIAMETER);
-		
-		drawDelimiter(g2, 34);
+		drawDelimiter(g2, DELIMITER_Y);
 							
 		g2.setFont(FONT_POINTS);
 		drawTextShadow(g2, "123", PADDING_L, 27);
 			
 		g2.setFont(FONT_NICKNAME);
-		drawTextShadow(g2, player.getNick(), 78, 27);
+		drawTextShadow(g2, player.getNick(), 78, 27);	
 		
 		g2.setFont(FONT_MEEPLE);
 		bx = PADDING_L;
 		by = 43;
+		
 		int small = 0;						
 		for(Follower f : player.getUndeployedFollowers()) { 
 			if (f instanceof SmallFollower) {
@@ -132,7 +130,7 @@ public class PlayerPanel extends JComponent {
 			drawMeepleBox(g2, SmallFollower.class, small);					
 		}
 		
-		//debug
+		//debug counts
 		drawMeepleBox(g2, BigFollower.class, 1);
 		drawMeepleBox(g2, Builder.class, 1);
 		drawMeepleBox(g2, Pig.class, 1);
@@ -147,6 +145,14 @@ public class PlayerPanel extends JComponent {
 		
 		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), 3);
 		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), 3);
+		
+		int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
+		
+		parentGraphics.setColor(BG_COLOR);
+		parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
+		
+		parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
+		parentGraphics.translate(0, realHeight + 12); //add also padding 
 	}
 
 }

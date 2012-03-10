@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,6 +22,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.phase.TilePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
@@ -64,8 +64,16 @@ public class MainPanel extends BackgroundPanel {
 		animationService = new AnimationService();
 		animationService.start();
 
-		setLayout(new GridBagLayout());
+		//setLayout(new GridBagLayout());
+		//setLayout(new BorderLayout());
+		//setLayout(new MigLayout());
+		setLayout(new MainPanelLayout());
 	}
+	
+//	@Override
+//	public boolean isOptimizedDrawingEnabled() {
+//		return false;
+//	}
 
 	public GridPanel getGridPanel() {
 		return gridPanel;
@@ -116,13 +124,12 @@ public class MainPanel extends BackgroundPanel {
 			new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					if (!client.isClientActive()) return;
 					if (e.getButton() == MouseEvent.BUTTON3) {
-						Tile nextTile = client.getControlPanel().getNextTileLabel().getTile();
-						if (nextTile != null) {
+						if (client.getGame().getPhase() instanceof TilePhase) {
 							client.getControlPanel().rotateTile();
 							return;
-						}
-						if (client.getControlPanel().getActionPanel().getActions() != null) {
+						} else {
 							client.getControlPanel().getActionPanel().nextAction();
 							return;
 						}
@@ -138,11 +145,13 @@ public class MainPanel extends BackgroundPanel {
 		});
 		setVisible(true);
 	}
+	
+	
 
 
 	public void selectTilePlacement(Set<Position> positions) {
 		gridPanel.clearActionDecorations();
-		gridPanel.removeLayer(AvailableMovesLayer.class); //has effect after selectAbbeyPlacement withou abbey place!
+		gridPanel.removeLayer(AvailableMovesLayer.class); //has effect after selectAbbeyPlacement without abbey place!
 		gridPanel.addLayer(new AvailableMovesLayer(gridPanel, positions));
 	}
 

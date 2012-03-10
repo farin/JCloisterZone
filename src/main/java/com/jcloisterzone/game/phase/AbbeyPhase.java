@@ -29,7 +29,7 @@ public class AbbeyPhase extends Phase {
 	}
 
 	@Override
-	public void placeNoTile() {
+	public void pass() {
 		next();
 	}
 

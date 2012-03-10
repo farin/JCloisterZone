@@ -108,7 +108,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		if (bestSoFar.getRank() > 2.0) {			
 			getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 		} else {			
-			getServer().placeNoTile();
+			getServer().pass();
 		}
 	}
 
@@ -242,7 +242,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				return;
 			}
 		}		
-		getServer().placeNoFigure();
+		getServer().pass();
 		cleanRanking();
 	}
 

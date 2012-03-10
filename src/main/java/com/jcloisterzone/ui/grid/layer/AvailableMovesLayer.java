@@ -32,7 +32,7 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 	public AvailableMovesLayer(GridPanel gridPanel, Set<Position> positions) {
 		super(gridPanel);
 		this.positions = positions;
-		String tileId = getClient().getControlPanel().getTileId();
+		String tileId = getClient().getGame().getTile().getId();
 		isAbbey = Tile.ABBEY_TILE_ID.equals(tileId);
 		previewIcon = getClient().getTileTheme().getTileImage(tileId);
 	}
@@ -106,6 +106,7 @@ public class AvailableMovesLayer extends AbstractGridLayer implements GridMouseL
 
 	@Override
 	public void mouseClicked(MouseEvent e, Position p) {
+		if (!getClient().isClientActive()) return;
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1 :
 				assert p.equals(previewPosition) : "Expected " + previewIcon + ", get " + p;

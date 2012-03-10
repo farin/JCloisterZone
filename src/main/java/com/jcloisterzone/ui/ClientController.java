@@ -10,10 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JComponent;
-import javax.swing.JLayer;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -39,7 +36,6 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.grid.OverlayScrollPaneLayout;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 
@@ -76,29 +72,32 @@ public class ClientController implements GameEventListener, UserInterface {
 		client.cleanContentPane();
 
 		Container pane = client.getContentPane();		
-		pane.setLayout(new BorderLayout());		
+		pane.setLayout(new BorderLayout());
 		
-		JScrollPane scroll = new JScrollPane();
-		scroll.setLayout(new OverlayScrollPaneLayout());
-		scroll.setWheelScrollingEnabled(false);
-				
-		//JLayer needed to correct rendering of overlay components
-		JLayer<JComponent> layer = new JLayer<JComponent>(scroll);
-		pane.add(layer, BorderLayout.CENTER);				
-				
+//		JScrollPane scroll = new JScrollPane();
+//		scroll.setLayout(new OverlayScrollPaneLayout());
+//		scroll.setWheelScrollingEnabled(false);
+		
+		//TODO try to implement optimized layout
+		
 		MainPanel mainPanel = new MainPanel(client);
 		client.setMainPanel(mainPanel);
-		scroll.setViewportView(mainPanel);
-		
+		pane.add(mainPanel, BorderLayout.CENTER);				
+										
 		ControlPanel controlPanel = new ControlPanel(client);
 		client.setControlPanel(controlPanel);
-		scroll.add(controlPanel, OverlayScrollPaneLayout.OVERLAY, 0);		
 		
-		
-		pane.setVisible(true);
-
 		mainPanel.started(snapshot);
 		controlPanel.started();
+		
+		/* TODO simplify control panel layout !!! */ 
+		
+		
+		//mainPanel.add(controlPanel, BorderLayout.EAST);
+		mainPanel.add(controlPanel);
+		
+		pane.setVisible(true);
+		
 		MenuBar menu = client.getJMenuBar();
 		menu.setZoomInEnabled(true);
 		menu.setZoomOutEnabled(true);

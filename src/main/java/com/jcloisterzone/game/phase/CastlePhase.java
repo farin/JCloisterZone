@@ -88,7 +88,7 @@ public class CastlePhase extends Phase {
 	}
 	
 	@Override
-	public void placeNoFigure() {
+	public void pass() {
 		prepareCastleAction();
 	}
 	

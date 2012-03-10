@@ -93,13 +93,8 @@ public abstract class Phase implements ClientIF {
 	}
 
 	@Override
-	public void placeNoFigure() {
-		logger.error(Application.ILLEGAL_STATE_MSG, "placeNoFigure");
-	}
-
-	@Override
-	public void placeNoTile() {
-		logger.error(Application.ILLEGAL_STATE_MSG, "placeNoTile");
+	public void pass() {
+		logger.error(Application.ILLEGAL_STATE_MSG, "pass");
 	}
 
 	@Override
