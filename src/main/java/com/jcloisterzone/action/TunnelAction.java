@@ -1,5 +1,8 @@
 package com.jcloisterzone.action;
 
+import java.awt.Image;
+
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
@@ -12,6 +15,15 @@ public class TunnelAction extends SelectFeatureAction {
 	public TunnelAction(boolean secondTunnelPiece, Sites sites) {
 		super(sites);
 		this.secondTunnelPiece = secondTunnelPiece;
+	}
+	
+	@Override
+	public Image getImage(Player player, boolean active) {					
+		if (active && isSecondTunnelPiece()) {
+			return getImage(client.getPlayerSecondTunelColor(player));			
+		} else {
+			return super.getImage(player, active);
+		}
 	}
 
 	public boolean isSecondTunnelPiece() {

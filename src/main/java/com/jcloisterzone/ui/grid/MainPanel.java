@@ -146,9 +146,6 @@ public class MainPanel extends BackgroundPanel {
 		setVisible(true);
 	}
 	
-	
-
-
 	public void selectTilePlacement(Set<Position> positions) {
 		gridPanel.clearActionDecorations();
 		gridPanel.removeLayer(AvailableMovesLayer.class); //has effect after selectAbbeyPlacement without abbey place!
@@ -160,20 +157,6 @@ public class MainPanel extends BackgroundPanel {
 		gridPanel.clearActionDecorations();
 		gridPanel.removeLayer(AvailableMovesLayer.class);
 	}
-
-	public void prepareAction(PlayerAction action) {
-		gridPanel.clearActionDecorations();
-		GridLayer layer = null;
-		if (action instanceof BarnAction) {
-			layer = new BarnAreaLayer(gridPanel, (BarnAction) action);
-		} else if (action instanceof SelectFeatureAction) {
-			layer = new FeatureAreaLayer(gridPanel, (SelectFeatureAction) action);
-		} else if (action instanceof SelectTileAction) {
-			layer = new TileActionLayer(gridPanel, (SelectTileAction) action);
-		} 
-		gridPanel.addLayer(layer);
-	}
-
 
 	public void tilePlaced(Tile tile) {
 		gridPanel.tilePlaced(tile, tileLayer);

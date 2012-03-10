@@ -7,6 +7,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 
 public abstract class SelectFeatureAction extends PlayerAction {
 
@@ -36,6 +38,11 @@ public abstract class SelectFeatureAction extends PlayerAction {
 
 	public Set<Location> getOrCreate(Position p) {
 		return sites.getOrCreate(p);
+	}
+	
+	@Override
+	protected GridLayer createGridLayer() {
+		return new FeatureAreaLayer(client.getGridPanel(), this);
 	}
 
 	public abstract void perform(Client2ClientIF server, Position p, Location d);

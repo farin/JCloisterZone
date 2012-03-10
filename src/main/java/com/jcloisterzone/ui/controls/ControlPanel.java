@@ -1,14 +1,9 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
@@ -16,19 +11,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.PlaceTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.JLabelWithAntialiasing;
 
 public class ControlPanel extends JPanel {
 	
@@ -154,6 +145,9 @@ public class ControlPanel extends JPanel {
 		tileRotation = Rotation.R0;
 		//nextTileLabel.setEnabled(true);
 		//nextTileLabel.requestFocus();
+		PlaceTileAction action = new PlaceTileAction(client.getGame().getTile(), positions);
+		action.setClient(client);
+		actionPanel.setActions(new PlayerAction[] { action } );
 	}
 
 	public void selectAbbeyPlacement(Set<Position> positions) {
@@ -170,7 +164,12 @@ public class ControlPanel extends JPanel {
 
 	public void selectAction(List<PlayerAction> actions, boolean canPass) {
 		//direct collection sort can be unsupported - so copy to array first!
-		PlayerAction[] arr = actions.toArray(new PlayerAction[actions.size()]);
+		int i = 0;
+		PlayerAction[] arr = new PlayerAction[actions.size()];
+		for(PlayerAction pa : actions) {
+			pa.setClient(client);
+			arr[i++] = pa;			
+		}
 		Arrays.sort(arr);
 		actionPanel.setActions(arr);
 		this.canPass = canPass; 
