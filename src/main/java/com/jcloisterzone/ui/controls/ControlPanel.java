@@ -9,18 +9,17 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.Client;
 
 public class ControlPanel extends JPanel {
 	
 	public static final Color BG_COLOR = new Color(0, 0, 0, 30);
+	public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
 	public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
 	public static final int CORNER_DIAMETER = 20;
 
@@ -44,7 +43,7 @@ public class ControlPanel extends JPanel {
 		
 		client.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(KeyEvent e) {				
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {			
 					if (canPass) {
 						pass();

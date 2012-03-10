@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
 import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
+import static com.jcloisterzone.ui.controls.ControlPanel.ACTIVE_BG_COLOR;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 
@@ -23,12 +24,11 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.FakeComponent;
 
 public class PlayerPanel implements FakeComponent {
-	
-	//public static final AlphaComposite BG_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .3f);
-	//private static final Color BG_COLOR = new Color(0, 0, 0, 225);
-	
-	private static final Color DELIM_TOP_COLOR = new Color(100,100,100);
-	private static final Color DELIM_BOTTOM_COLOR = new Color(160,160,160);
+		
+	//private static final Color DELIM_TOP_COLOR = new Color(100,100,100);
+	//private static final Color DELIM_BOTTOM_COLOR = new Color(160,160,160);
+	private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
+	private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
 	
 	private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
 	private static Font FONT_NICKNAME = new Font("Georgia", Font.BOLD, 18);
@@ -54,9 +54,9 @@ public class PlayerPanel implements FakeComponent {
 	
 	private void drawDelimiter(Graphics2D g2, int y) {
 		g2.setColor(DELIM_TOP_COLOR);
-		g2.drawLine(PADDING_L, y, PANEL_WIDTH-PADDING_R, y);
+		g2.drawLine(PADDING_L, y, PANEL_WIDTH /*-PADDING_R*/, y);
 		g2.setColor(DELIM_BOTTOM_COLOR);
-		g2.drawLine(PADDING_L, y+1, PANEL_WIDTH-PADDING_R, y+1);
+		g2.drawLine(PADDING_L, y+1, PANEL_WIDTH /*-PADDING_R*/, y+1);
 	}
 	
 	private void drawTextShadow(Graphics2D g2, String text, int x, int y) {
@@ -97,6 +97,9 @@ public class PlayerPanel implements FakeComponent {
 	@Override
 	public void paintComponent(Graphics2D parentGraphics) {	
 		
+		boolean isActive = client.getGame().getActivePlayer().getIndex() == player.getIndex();
+		boolean playerTurn = client.getGame().getTurnPlayer().getIndex() == player.getIndex();
+		
 		BufferedImage bimg = new BufferedImage(PANEL_WIDTH, 200, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bimg.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -105,7 +108,7 @@ public class PlayerPanel implements FakeComponent {
 		drawDelimiter(g2, DELIMITER_Y);
 							
 		g2.setFont(FONT_POINTS);
-		drawTextShadow(g2, "123", PADDING_L, 27);
+		drawTextShadow(g2, ""+player.getPoints(), PADDING_L, 27);
 			
 		g2.setFont(FONT_NICKNAME);
 		drawTextShadow(g2, player.getNick(), 78, 27);	
@@ -165,7 +168,13 @@ public class PlayerPanel implements FakeComponent {
 		
 		int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 		
-		parentGraphics.setColor(BG_COLOR);
+		if (isActive) {
+			//TODO
+			//parentGraphics.setColor(Color.BLACK);
+			//parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
+		}
+		
+		parentGraphics.setColor(playerTurn ? ACTIVE_BG_COLOR : BG_COLOR);
 		parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
 		
 		parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);

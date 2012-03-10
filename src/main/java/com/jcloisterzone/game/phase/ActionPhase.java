@@ -54,7 +54,8 @@ public class ActionPhase extends Phase {
 		return true;
 	}
 
-	public void placeNoFigure() {
+	@Override
+	public void pass() {
 		next();
 	}
 
