@@ -20,8 +20,10 @@ public class GridMouseAdapter implements MouseListener, MouseMotionListener {
 
 	private Position getGridPosition(MouseEvent e) {
 		int sqSize = gridPanel.getSquareSize();
-		int x = (e.getX() / sqSize) + gridPanel.getLeft();
-		int y = (e.getY() / sqSize) + gridPanel.getTop();
+		int cx = e.getX() - gridPanel.getOffsetX();
+		int cy = e.getY() - gridPanel.getOffsetY();
+		int x = cx / sqSize + ((cx < 0) ? -1 : 0);
+		int y = cy / sqSize + ((cy < 0) ? -1 : 0);	
 		return new Position(x, y);
 	}
 

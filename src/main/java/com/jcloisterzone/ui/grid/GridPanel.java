@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -43,11 +44,15 @@ public class GridPanel extends JComponent {
 	/** current board size */
 	private int left, right, top, bottom;
 	private int squareSize;
+	
+	//focus
+	private int offsetX, offsetY;
+	private float cx = 0.0f, cy = 0.0f;
 
 
 	private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
 
-	public GridPanel(Client client, Snapshot snapshot) {
+	public GridPanel(Client client, Snapshot snapshot) {		
 		setDoubleBuffered(true);
 		setOpaque(false);
 
@@ -70,7 +75,8 @@ public class GridPanel extends JComponent {
 				if (pos.y <= top) top = pos.y - 1;
 				if (pos.y >= bottom) bottom = pos.y + 1;
 			}
-		}
+		}		
+
 	}
 
 	public Tile getTile(Position p) {
@@ -107,6 +113,20 @@ public class GridPanel extends JComponent {
 
 	public int getBottom() {
 		return bottom;
+	}
+	
+	public int getOffsetX() {
+		return offsetX;
+	}
+	
+	public int getOffsetY() {
+		return offsetY;
+	}
+	
+	public void moveCenter(int dx, int dy) {
+		cx += dx / 2.0;
+		cy += dy / 2.0;
+		repaint();
 	}
 
 	public void zoom(int steps) {
@@ -222,6 +242,8 @@ public class GridPanel extends JComponent {
 	
 	@Override
 	protected void paintComponent(Graphics g) {	
+		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform origTransform = g2.getTransform();
 		//super.paintComponent(g);
 		
 //		System.out.println("------------------------");		
@@ -229,19 +251,24 @@ public class GridPanel extends JComponent {
 		
 		int w = getWidth(), h = getHeight();
 		
-		Graphics2D g2 = (Graphics2D) g;
+		offsetX = (w - ControlPanel.PANEL_WIDTH - squareSize)/2 - (int)(cx * squareSize);
+		offsetY = (h - squareSize)/2 - (int)(cy * squareSize);
+		
+		g2.translate(offsetX, offsetY);
+		
+		
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(UIManager.getColor("Panel.background"));
-		//g2.fillRect(0, 0, getWidth(), getHeight());
+		g2.fillRect(left*squareSize, top*squareSize, (right+2)*squareSize-1, (bottom+2)*squareSize-1);
 		g2.setColor(Color.LIGHT_GRAY);
-		for (int i = 0; i < right-left+1; i++) {
-			g2.drawLine(i*squareSize, 0, i*squareSize, (bottom-top+1)*squareSize);
-			g2.drawLine((i+1)*squareSize-1, 0, (i+1)*squareSize-1, (bottom-top+1)*squareSize);
+		for (int i = left; i <= right; i++) {
+			g2.drawLine(i*squareSize, top*squareSize, i*squareSize, (bottom+1)*squareSize);
+			g2.drawLine((i+1)*squareSize-1, top*squareSize, (i+1)*squareSize-1, (bottom+1)*squareSize);
 		}
-		for (int i = 0; i < bottom-top+1; i++) {
-			g2.drawLine(0, i*squareSize, (right-left+1)*squareSize, i*squareSize);
-			g2.drawLine(0, (i+1)*squareSize-1, (right-left+1)*squareSize, (i+1)*squareSize-1);
+		for (int i = top; i <= bottom; i++) {
+			g2.drawLine(left*squareSize, i*squareSize, (right+1)*squareSize, i*squareSize);
+			g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
 		}
 		
 //		profile("grid");
@@ -254,7 +281,7 @@ public class GridPanel extends JComponent {
 			}
 		}
 				
-		
+		g2.setTransform(origTransform);
 		g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 		controlPanel.paintComponent(g2);
 		

@@ -95,11 +95,11 @@ public abstract class AbstractGridLayer implements GridLayer {
 	}
 
 	public int getOffsetX(Position pos) {
-		return getSquareSize() * (pos.x-gridPanel.getLeft());
+		return getSquareSize() * pos.x;
 	}
 
 	public int getOffsetY(Position pos) {
-		return getSquareSize() * (pos.y-gridPanel.getTop());
+		return getSquareSize() * pos.y;
 	}
 
 	public int getSquareSize() {
