@@ -67,7 +67,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
 	@Override
 	public void squareExited(MouseEvent e, Position p) {
-		if (previewPosition == null) {
+		if (previewPosition != null) {
 			previewPosition = null;
 			gridPanel.repaint();
 		}				

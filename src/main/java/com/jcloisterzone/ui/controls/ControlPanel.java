@@ -3,6 +3,8 @@ package com.jcloisterzone.ui.controls;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,16 +43,29 @@ public class ControlPanel extends JPanel {
 	public ControlPanel(final Client client) {
 		this.client = client;
 		
-		client.addKeyListener(new KeyAdapter() {
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 			@Override
-			public void keyPressed(KeyEvent e) {				
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {			
-					if (canPass) {
-						pass();
+			public boolean dispatchKeyEvent(KeyEvent e) {				
+				if (e.getModifiers() == 0 && e.getID() == KeyEvent.KEY_PRESSED) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_SPACE:
+					case KeyEvent.VK_ENTER:					
+						if (canPass && client.isClientActive()) {
+							pass();
+							return true;
+						}
+						break;
+					case KeyEvent.VK_TAB:
+						if (client.isClientActive()) {
+							actionPanel.switchAction();							
+							return true;
+						}
+						break;
 					}
 				}
+				return false;
 			}
-		});
+		});		
 		
 		setOpaque(false);
 //		setLayout(new MigLayout("", "[]", "[][][]"));

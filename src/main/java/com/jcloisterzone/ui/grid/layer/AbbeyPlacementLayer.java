@@ -36,9 +36,11 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer {
 		if (!getClient().isClientActive()) return;
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1 :
-				assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;								
-				action.perform(getClient().getServer(), p);				
-				break;
+				if (getPreviewPosition() != null) {
+					assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;								
+					action.perform(getClient().getServer(), p);				
+					break;
+				}
 			case MouseEvent.BUTTON3 :
 				action.switchAction();
 				break;

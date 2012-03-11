@@ -79,9 +79,11 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
 		if (!getClient().isClientActive()) return;
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1 :
-				assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;				
-				if (allowedRotation) {
-					action.perform(getClient().getServer(), previewRotation, p);
+				if (getPreviewPosition() != null) {
+					assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;				
+					if (allowedRotation) {
+						action.perform(getClient().getServer(), previewRotation, p);
+					}
 				}
 				break;
 			case MouseEvent.BUTTON3 :
