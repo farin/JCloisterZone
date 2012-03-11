@@ -1,7 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
 import static com.jcloisterzone.ui.controls.ControlPanel.ACTIVE_BG_COLOR;
+import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 
@@ -9,12 +9,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -25,7 +28,6 @@ import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.FakeComponent;
-import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class PlayerPanel implements FakeComponent {
@@ -238,6 +240,63 @@ public class PlayerPanel implements FakeComponent {
 		
 //		gp.profile(" > complete");
 	}
+	
+//	 form legacy
+//	  
+//	  class PayRansomListener extends MouseAdapter {
+//		/* nez delat nejaky buttony bude jednodussi listener a odpocet ze
+//		 * souradnic, zejmena protoze figurky se kresli ze dvou obrazku
+//		 * a buttony nebo JLabely by byly take slozitejsi
+//		 */
+//
+//		@Override
+//		public void mouseClicked(MouseEvent e) {
+//			//vyska figurky je 19px
+//			if (e.getButton() != MouseEvent.BUTTON1) return;
+//			for(Entry<Rectangle, Class<? extends Follower>> entry : ransomClickable.entrySet()) {
+//				Rectangle rect = entry.getKey();
+//				if (rect.contains(e.getX(), e.getY())) {
+//					client.getServer().payRansom(p.getIndex(), entry.getValue());
+//				}
+//			}
+//		}
+//	}
+	
+//	if (game.hasExpansion(Expansion.TOWER)) {
+//		TowerGame tg = game.getTowerGame();
+//
+//		ransomClickable.clear();
+//		g2.setFont(resourceFont);
+//		int towerPieces = game.getTowerGame().getTowerPieces(p);
+//		g2.drawString((towerPieces < 10 ? " ":"") + towerPieces + "", 5, TOWER_Y + 16);
+//		g2.drawImage(figures.get(PanelImages.TOWER_PIECE), 30, TOWER_Y, null);
+//
+//		//TODO comment bez nahrady - captured v panelu
+//
+//		List<Follower> capturedFigures = tg.getPrisoners().get(p);
+//		int x = TOWER_FIRST_CAPTURED_X;
+//		for(Follower f : capturedFigures) {
+//			int playerIndex = f.getPlayer().getIndex();
+//			boolean canPayRansom = client.isClientActive() &&
+//							client.getGame().getTurnPlayer().getIndex() == playerIndex &&
+//							! client.getGame().getTowerGame().isRansomPaidThisTurn();
+//
+//			Color color = client.getPlayerColor(p);
+//			Image figImage = client.getFigureTheme().getFigureImage(f, color);
+//			//Image img = figImage.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+//			//img = new ImageIcon(img).getImage();
+//
+//			g2.drawImage(figImage, x, TOWER_Y, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH, null);
+//			if (canPayRansom) {
+//				g2.setColor(Color.BLACK);
+//				g2.drawRect(x, TOWER_Y-1, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH);
+//				ransomClickable.put(new Rectangle(x, TOWER_Y, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH), f.getClass());
+//			}
+//			x += TOWER_FIGURE_WIDTH + 2;
+//
+//		}
+//	}
+
 
 }
 

@@ -52,16 +52,20 @@ public class ControlPanel implements FakeComponent {
 						}
 						break;
 					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_A:
 						client.getGridPanel().moveCenter(-1, 0);
 						break;
 					case KeyEvent.VK_RIGHT:
+					case KeyEvent.VK_D:
 						client.getGridPanel().moveCenter(1, 0);
 						break;
 					case KeyEvent.VK_DOWN:
-						client.getGridPanel().moveCenter(0, -1);
+					case KeyEvent.VK_S:
+						client.getGridPanel().moveCenter(0, 1);
 						break;
 					case KeyEvent.VK_UP:
-						client.getGridPanel().moveCenter(0, 1);
+					case KeyEvent.VK_W:
+						client.getGridPanel().moveCenter(0, -1);
 						break;
 					}						
 				}

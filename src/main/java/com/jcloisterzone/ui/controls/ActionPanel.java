@@ -6,6 +6,9 @@ import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import javax.swing.ImageIcon;
+
+import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.FakeComponent;
@@ -20,6 +23,10 @@ public class ActionPanel implements FakeComponent {
 	private final Client client;
 	private PlayerAction[] actions;
 	private int selectedActionIndex = -1;
+	
+	//cached scaled smooth images
+	private Image[] selected, deselected;
+	private boolean refreshImages;
 
 	public ActionPanel(Client client) {
 		this.client = client;
@@ -47,7 +54,10 @@ public class ActionPanel implements FakeComponent {
 	}	
 
 	public void setActions(PlayerAction[] actions) {
-		if (client.isClientActive()) {
+		if (client.isClientActive()) {			
+			selected = new Image[actions.length];
+			deselected = new Image[actions.length];
+			refreshImageCache();			
 			this.actions = actions;
 			if (actions.length > 0) {
 				setSelectedActionIndex(0);
@@ -55,9 +65,31 @@ public class ActionPanel implements FakeComponent {
 			repaint();
 		}
 	}
+	
+	
+	public void refreshImageCache() { 
+		//refresh is executed in AWT thread
+		refreshImages = true;
+	}
+	
+	private void doRefreshImageCache() {
+		if (actions == null) return;
+		Player activePlayer = client.getGame().getActivePlayer();
+		for(int i = 0; i < actions.length; i++) {
+			selected[i] = new ImageIcon(
+				actions[i].getImage(activePlayer, true).getScaledInstance(ACTIVE_ICON_SIZE, ACTIVE_ICON_SIZE, Image.SCALE_SMOOTH)
+			).getImage();				
+			deselected[i] = new ImageIcon(
+				actions[i].getImage(activePlayer, false).getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)
+			).getImage();
+		}
+	}
 
 	public void clearActions() {
 		deselectAction();
+		refreshImages = false;
+		selected = null;
+		deselected = null;
 		this.actions = null;
 		this.selectedActionIndex = -1;
 		repaint();
@@ -97,19 +129,24 @@ public class ActionPanel implements FakeComponent {
 	}
 	
 	@Override
-	public void paintComponent(Graphics2D g2) {
+	public void paintComponent(Graphics2D g2) {			
 		g2.setColor(ControlPanel.BG_COLOR);
 		g2.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 		
 		if (actions == null || actions.length == 0) return;
+		
+		if (refreshImages) { 
+			doRefreshImageCache();
+			refreshImages = false;
+		}
 
 		int x = 2*PADDING;
 		
-		for(PlayerAction action : actions) {
-			boolean active = (action == actions[selectedActionIndex]);					
-
-			Image img = action.getImage(client.getGame().getActivePlayer(), active);
-			int size = active ? ACTIVE_ICON_SIZE : ICON_SIZE;
+		for(int i = 0; i < actions.length; i++) {
+			boolean active = (i == selectedActionIndex);					
+			
+			Image img = active ? selected[i] : deselected[i];
+			int size = img.getWidth(null);
 			int iy = (LINE_HEIGHT-size) / 2;
 			
 			g2.drawImage(img, x, iy, size, size, null);

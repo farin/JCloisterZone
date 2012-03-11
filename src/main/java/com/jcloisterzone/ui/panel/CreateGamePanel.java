@@ -75,6 +75,7 @@ public class CreateGamePanel extends JPanel {
 			}
 		});
 		startGameButton.setEnabled(false);
+		startGameButton.requestFocus();
 
 		playersPanel = new JPanel();
 		playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
