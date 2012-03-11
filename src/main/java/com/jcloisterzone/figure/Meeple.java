@@ -24,9 +24,15 @@ public abstract class Meeple extends Figure {
 		return true;
 	}
 
+	@Deprecated
 	public boolean isUndeployed() {
 		//must check only location  because prisoner has everything except location also null
 		return location == null;
+	}
+	
+	public boolean isDeployed() {
+		//must check only location  because prisoner has everything except location also null
+		return location != null;
 	}
 
 	public void clearDeployment() {

@@ -1,19 +1,15 @@
 package com.jcloisterzone.ui.grid;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.SelectFeatureAction;
-import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -22,22 +18,18 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.phase.TilePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
-import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
-import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
+import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FairyLayer;
-import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
-import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TowerLayer;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -63,11 +55,8 @@ public class MainPanel extends BackgroundPanel {
 		this.client = client;
 		animationService = new AnimationService();
 		animationService.start();
-
-		//setLayout(new GridBagLayout());
-		//setLayout(new BorderLayout());
-		//setLayout(new MigLayout());
-		setLayout(new MainPanelLayout());
+		
+		setLayout(new BorderLayout());	
 	}
 	
 //	@Override

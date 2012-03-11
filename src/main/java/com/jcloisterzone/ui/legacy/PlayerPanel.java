@@ -341,14 +341,14 @@ public class PlayerPanel extends JPanel { //TODO JLabel
 			g2.setColor(color);
 		}
 
-		int i = 0;
-		for(Follower f : p.getUndeployedFollowers()) {
-			if (f instanceof SmallFollower) {
-				g2.drawImage(figures.get(PanelImages.BASIC),FIGURES_X+i*FIGURE_WIDTH,FIGURES_Y,null);
-				g2.drawImage(figures.get(PanelImages.BASIC_BORDER),FIGURES_X+i*FIGURE_WIDTH,FIGURES_Y,null);
-				i++;
-			}
-		}
+//		int i = 0;
+//		for(Follower f : p.getUndeployedFollowers()) {
+//			if (f instanceof SmallFollower) {
+//				g2.drawImage(figures.get(PanelImages.BASIC),FIGURES_X+i*FIGURE_WIDTH,FIGURES_Y,null);
+//				g2.drawImage(figures.get(PanelImages.BASIC_BORDER),FIGURES_X+i*FIGURE_WIDTH,FIGURES_Y,null);
+//				i++;
+//			}
+//		}
 
 		drawSpecialFigure(g2, BigFollower.class, FIGURES_X+7*FIGURE_WIDTH, FIGURES_Y, PanelImages.DOUBLE, PanelImages.DOUBLE_BORDER);
 		drawSpecialFigure(g2, Builder.class, getWidth() - 45, SPECIAL_Y, PanelImages.BUILDER, PanelImages.BUILDER_BORDER);

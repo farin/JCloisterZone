@@ -1,13 +1,13 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -15,11 +15,9 @@ import javax.swing.JOptionPane;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.Castle;
@@ -78,23 +76,14 @@ public class ClientController implements GameEventListener, UserInterface {
 //		scroll.setLayout(new OverlayScrollPaneLayout());
 //		scroll.setWheelScrollingEnabled(false);
 		
-		//TODO try to implement optimized layout
-		
-		MainPanel mainPanel = new MainPanel(client);
-		client.setMainPanel(mainPanel);
-		pane.add(mainPanel, BorderLayout.CENTER);				
-										
 		ControlPanel controlPanel = new ControlPanel(client);
 		client.setControlPanel(controlPanel);
 		
-		mainPanel.started(snapshot);
-		controlPanel.started();
+		MainPanel mainPanel = new MainPanel(client);
+		client.setMainPanel(mainPanel);
+		pane.add(mainPanel, BorderLayout.CENTER);																
 		
-		/* TODO simplify control panel layout !!! */ 
-		
-		
-		//mainPanel.add(controlPanel, BorderLayout.EAST);
-		mainPanel.add(controlPanel);
+		mainPanel.started(snapshot);		
 		
 		pane.setVisible(true);
 		
@@ -122,7 +111,8 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void tileDrawn(Tile tile) {
 		client.clearActions();
-		//client.getControlPanel().tileDrawn(tile);
+		int packSize = client.getGame().getTilePack().totalSize();
+		client.setTitle(Client.BASE_TITLE + " ⋅ " + packSize + " " + _("tiles left") );
 	}
 
 	@Override
@@ -140,7 +130,6 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void tilePlaced(Tile tile) {
 		client.getMainPanel().tilePlaced(tile);
-		//client.getControlPanel().tilePlaced(tile);
 	}
 
 	@Override
@@ -156,6 +145,7 @@ public class ClientController implements GameEventListener, UserInterface {
 
 	@Override
 	public void gameOver() {
+		client.setTitle(Client.BASE_TITLE);
 		client.resetWindowIcon();
 		client.closeGame(true);
 		new GameOverDialog(client);
@@ -174,7 +164,7 @@ public class ClientController implements GameEventListener, UserInterface {
 
 	@Override
 	public void ransomPaid(Player from, Player to, Follower f) {
-		client.getControlPanel().repaint();
+		client.getGridPanel().repaint();
 	}
 	
 	//------------------ Meeple events -----------
@@ -208,13 +198,13 @@ public class ClientController implements GameEventListener, UserInterface {
 	@Override
 	public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
 		client.getMainPanel().scored(feature, label, meeple, finalScoring);
-		client.getControlPanel().repaint(); //players only
+		client.getMainPanel().repaint(); //players only
 	}
 
 	@Override
 	public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
 		client.getMainPanel().scored(position, player, label, finalScoring);
-		client.getControlPanel().repaint(); //players only
+		client.getMainPanel().repaint(); //players only
 	}
 	
 	// User interface
@@ -223,8 +213,6 @@ public class ClientController implements GameEventListener, UserInterface {
 	public void showWarning(String title, String message) {
 		JOptionPane.showMessageDialog(client, message, title, JOptionPane.WARNING_MESSAGE);		
 	}
-
-	
 
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {
@@ -237,28 +225,6 @@ public class ClientController implements GameEventListener, UserInterface {
 			client.beep();
 		}
 	}	
-
-//	@Override
-//	public void selectAbbeyPlacement(Set<Position> positions) {
-//		client.clearActions();
-//		//client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
-//		if (client.isClientActive()) {
-//			client.beep();
-//			client.getControlPanel().selectAbbeyPlacement(positions);
-//		}
-//		//client.getMainPanel().selectTilePlacement(positions);
-//	}
-
-//	@Override
-//	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
-//		client.clearActions();
-//		Set<Position> positions = placements.keySet();
-//		if (client.isClientActive()) {
-//			client.beep();
-//			client.getControlPanel().selectTilePlacement(positions);
-//		}
-//		client.getMainPanel().selectTilePlacement(positions);
-//	}
 
 	@Override
 	public void selectAction(List<PlayerAction> actions, boolean canPass) {

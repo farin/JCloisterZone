@@ -69,7 +69,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	
 
 	protected void initVars() {
-		packSize = getTilePack().tolalSize();
+		packSize = getTilePack().totalSize();
 		enemyPlayers = getGame().getAllPlayers().length - 1;
 		myTurnsLeft = ((packSize-1) / (enemyPlayers+1)) + 1;
 	}
@@ -110,13 +110,15 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		for(Player p : getGame().getAllPlayers()) {
 			double meeplePoints = 0;
 			int limit = 0;
-			for(Follower f : p.getUndeployedFollowers()) {
-				if (f instanceof SmallFollower) {
-					meeplePoints += 0.15;
-				} else if (f instanceof BigFollower) {
-					meeplePoints += 0.25;
+			for(Follower f : p.getFollowers()) {
+				if (f.isDeployed()) {
+					if (f instanceof SmallFollower) {
+						meeplePoints += 0.15;
+					} else if (f instanceof BigFollower) {
+						meeplePoints += 0.25;
+					}
+					if (++limit == myTurnsLeft) break;
 				}
-				if (++limit == myTurnsLeft) break;
 			}
 			rating += reducePoints(meeplePoints, p);
 		}

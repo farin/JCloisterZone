@@ -28,7 +28,7 @@ public class DefaultTilePack implements TilePack {
 	private Tile currentTile;
 
 	@Override
-	public int tolalSize() {
+	public int totalSize() {
 		int n = 0;
 		for(Entry<String, ArrayList<Tile>> entry: groups.entrySet()) {
 			if (! entry.getKey().equals(INACTIVE_GROUP)) {

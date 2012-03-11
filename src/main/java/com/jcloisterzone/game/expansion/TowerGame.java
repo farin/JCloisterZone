@@ -89,7 +89,7 @@ public final class TowerGame extends ExpandedGame {
 
 	private boolean hasSmallOrBigFollower(Player p) {
 		for(Follower m : p.getFollowers()) {
-			if (m.isUndeployed() && (m instanceof SmallFollower || m instanceof BigFollower)) {
+			if (!m.isDeployed() && (m instanceof SmallFollower || m instanceof BigFollower)) {
 				return true;
 			}
 		}

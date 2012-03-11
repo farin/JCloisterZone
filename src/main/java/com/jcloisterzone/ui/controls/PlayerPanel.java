@@ -11,7 +11,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -22,6 +25,8 @@ import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.FakeComponent;
+import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class PlayerPanel implements FakeComponent {
 		
@@ -43,13 +48,17 @@ public class PlayerPanel implements FakeComponent {
 	private final Player player;
 	private final Color color;
 	
+	private Map<String, Image> scaledImages = Maps.newHashMap();
+	
 	//context coordinates variables
 	private int bx, by;
 	
 	public PlayerPanel(Client client, Player player) {
-		this.client = client;
+		this.client = client;		
 		this.player = player;
-		this.color = client.getPlayerColor(player);
+		this.color = client.getPlayerColor(player);		
+		
+		scaleImages();
 	}
 	
 	private void drawDelimiter(Graphics2D g2, int y) {
@@ -69,7 +78,9 @@ public class PlayerPanel implements FakeComponent {
 		g2.drawString(text, x, y);
 	}
 	
-	private void drawMeepleBox(Graphics2D g2, Image img, int count) {
+	private void drawMeepleBox(Graphics2D g2, String imgKey, int count) {
+		if (count == 0) return;
+		
 		int w = count > 1 ? 47 : 30;
 		int h = 22;
 		if (bx+w > PANEL_WIDTH-PADDING_R) {
@@ -77,33 +88,67 @@ public class PlayerPanel implements FakeComponent {
 			by += LINE_HEIGHT;
 		}		
 		g2.setColor(Color.WHITE);
-		g2.fillRoundRect(bx, by, w, h, 8, 8);
-		img = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		g2.drawImage(img, bx, by-4, null);
+		g2.fillRoundRect(bx, by, w, h, 8, 8);		
+		g2.drawImage(scaledImages.get(imgKey), bx, by-4, null);
+				
 		if (count > 1) {			
 			g2.setColor(Color.BLACK);
 			g2.drawString(""+count, bx+LINE_HEIGHT, by+17);
 		}
 		bx += w + 8;		
 	}
-		
-	private void drawMeepleBox(Graphics2D g2, Class<? extends Meeple> type, int count) {
-		if (count > 0) {
-			Image img = client.getFigureTheme().getFigureImage(type, color, null);
-			drawMeepleBox(g2, img, count);
+	
+	private Image scaleImage(Image img) {
+		return img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+	}
+	
+	private void scaleFigureImages(Collection<? extends Meeple> meeples) {
+		FigureTheme theme = client.getFigureTheme(); 
+		//Image img = theme.getFigureImage(type, color, null);
+		for(Meeple f : meeples) {
+			String key = f.getClass().getSimpleName();
+			if (!scaledImages.containsKey(key)) {
+				scaledImages.put(key, scaleImage(theme.getFigureImage(f.getClass(), color, null)));
+			}
 		}
 	}
 	
+	private void scaleImages() {
+		FigureTheme theme = client.getFigureTheme(); 
+		scaleFigureImages(player.getFollowers());
+		scaleFigureImages(player.getSpecialMeeples());
+		TowerGame tower = client.getGame().getTowerGame();
+		if (tower != null) {
+			scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));			
+		}
+		KingAndScoutGame ks = client.getGame().getKingAndScoutGame();
+		if (ks != null) {
+			scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));	
+			scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));
+		}
+		BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+		if (bcb != null) {
+			scaledImages.put("bridge", scaleImage(theme.getNeutralImage("bridge")));
+			scaledImages.put("castle", scaleImage(theme.getNeutralImage("castle")));
+		}
+	}
+		
 	@Override
-	public void paintComponent(Graphics2D parentGraphics) {	
+	public void paintComponent(Graphics2D parentGraphics) {
+		
+//		GridPanel gp = client.getGridPanel();		
 		
 		boolean isActive = client.getGame().getActivePlayer().getIndex() == player.getIndex();
 		boolean playerTurn = client.getGame().getTurnPlayer().getIndex() == player.getIndex();
 		
+//		gp.profile(" > get flags");
+		
 		BufferedImage bimg = new BufferedImage(PANEL_WIDTH, 200, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bimg.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);		
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+//		gp.profile(" > create buffer");
 		
 		drawDelimiter(g2, DELIMITER_Y);
 							
@@ -111,46 +156,57 @@ public class PlayerPanel implements FakeComponent {
 		drawTextShadow(g2, ""+player.getPoints(), PADDING_L, 27);
 			
 		g2.setFont(FONT_NICKNAME);
-		drawTextShadow(g2, player.getNick(), 78, 27);	
+		drawTextShadow(g2, player.getNick(), 78, 27);
+		
+//		gp.profile(" > nick & score");
 		
 		g2.setFont(FONT_MEEPLE);
 		bx = PADDING_L;
 		by = 43;
 		
-		int small = 0;						
-		for(Follower f : player.getUndeployedFollowers()) { 
-			if (f instanceof SmallFollower) {
-				small++;
-			} else { //all small followers are at beginning of collection									
-				drawMeepleBox(g2, SmallFollower.class, small);
-				small = 0;									
-				drawMeepleBox(g2, f.getClass(), 1);				
+		int small = 0;					
+		String smallImgKey = SmallFollower.class.getSimpleName();
+		for(Follower f : player.getFollowers()) {
+			if (!f.isDeployed()) {
+				if (f instanceof SmallFollower) {
+					small++;
+				} else { //all small followers are at beginning of collection									
+					drawMeepleBox(g2, smallImgKey, small);
+					small = 0;									
+					drawMeepleBox(g2, f.getClass().getSimpleName(), 1);				
+				}
 			}
 		}			 					 
-		drawMeepleBox(g2, SmallFollower.class, small); //case when only small followers are in collection (not drawn yet)			
+		drawMeepleBox(g2, smallImgKey, small); //case when only small followers are in collection (not drawn yet)
+		
+//		gp.profile(" > followers");
 		
 		for(Special meeple : player.getSpecialMeeples()) {
-			drawMeepleBox(g2, meeple.getClass(), 1);
+			drawMeepleBox(g2, meeple.getClass().getSimpleName(), 1);
 		}
+		
+//		gp.profile(" > special");
 		
 		TowerGame tower = client.getGame().getTowerGame();
 		if (tower != null) {
-			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("towerpiece"), tower.getTowerPieces(player));	
+			drawMeepleBox(g2, "towerpiece", tower.getTowerPieces(player));	
 		}
 		KingAndScoutGame ks = client.getGame().getKingAndScoutGame();
 		if (ks != null) {
 			if (ks.getKing() == player) {
-				drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("king"), 1);
+				drawMeepleBox(g2, "king", 1);
 			}
 			if (ks.getRobberBaron() == player) {
-				drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("robber"), 1);
+				drawMeepleBox(g2, "robber", 1);
 			}
 		}
 		BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
 		if (bcb != null) {
-			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), bcb.getPlayerBridges(player));
-			drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), bcb.getPlayerCastles(player));
+			drawMeepleBox(g2, "bridge", bcb.getPlayerBridges(player));
+			drawMeepleBox(g2, "castle", bcb.getPlayerCastles(player));
 		}
+		
+//		gp.profile(" > expansions");
 		
 		
 //		//debug counts
@@ -178,7 +234,9 @@ public class PlayerPanel implements FakeComponent {
 		parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
 		
 		parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-		parentGraphics.translate(0, realHeight + 12); //add also padding 
+		parentGraphics.translate(0, realHeight + 12); //add also padding
+		
+//		gp.profile(" > complete");
 	}
 
 }

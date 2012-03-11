@@ -38,8 +38,8 @@ public class TilePackCopy implements TilePack {
 	}
 
 	@Override
-	public int tolalSize() {
-		return tilePack.tolalSize();
+	public int totalSize() {
+		return tilePack.totalSize();
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class ActionPanel implements FakeComponent {
 	}
 	
 	private void repaint() {
-		client.getControlPanel().repaint();
+		client.getMainPanel().repaint();
 	}
 
 	public PlayerAction[] getActions() {

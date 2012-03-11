@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -25,6 +24,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
+import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
@@ -38,6 +38,7 @@ public class GridPanel extends JComponent {
 	private static final int STARTING_GRID_SIZE = 3;
 
 	final Client client;
+	final ControlPanel controlPanel;
 
 	/** current board size */
 	private int left, right, top, bottom;
@@ -48,8 +49,10 @@ public class GridPanel extends JComponent {
 
 	public GridPanel(Client client, Snapshot snapshot) {
 		setDoubleBuffered(true);
+		setOpaque(false);
 
 		this.client = client;
+		this.controlPanel = client.getControlPanel();
 
 		squareSize = INITIAL_SQUARE_SIZE;
 		left = 0 - STARTING_GRID_SIZE / 2;
@@ -68,16 +71,6 @@ public class GridPanel extends JComponent {
 				if (pos.y >= bottom) bottom = pos.y + 1;
 			}
 		}
-
-		calculateSize();
-	}
-
-	private void calculateSize() {
-		Dimension d = new Dimension((right-left+1)*squareSize, (bottom-top+1)*squareSize);
-		//setMinimumSize(d);
-		//setMaximumSize(d);
-		//setSize(d);
-		setPreferredSize(d);
 	}
 
 	public Tile getTile(Position p) {
@@ -132,12 +125,7 @@ public class GridPanel extends JComponent {
 				layer.zoomChanged(squareSize);
 			}
 		}
-		calculateSize();
-		revalidate();
-		//TODO copy from ex-grid panel
-//		if (gridPane == null) return;
-//		squareSizeUpdate += sizeChange;
-//		SwingUtilities.invokeLater(new ZoomUpdate());
+		repaint();
 	}
 
 	public void showRecentHistory() {
@@ -206,63 +194,71 @@ public class GridPanel extends JComponent {
 		removeLayer(AbstractTilePlacementLayer.class);
 		removeLayer(PlacementHistory.class);
 
-		boolean dirty = false;
-		if (p.x == left) { --left; dirty = true; }
-		if (p.x == right) { ++right; dirty = true; }
-		if (p.y == top) { --top; dirty = true; }
-		if (p.y == bottom) { ++bottom; dirty = true; }
-//		if (dirty) {
-//			synchronized (layers) {
-//				for(GridLayer layer : layers) {
-//					layer.gridChanged(left, right, top, bottom);
-//				}
-//			}
-//		}
-
+		if (p.x == left)  --left;
+		if (p.x == right) ++right;
+		if (p.y == top) --top;
+		if (p.y == bottom) ++bottom;
+		
 		tileLayer.tilePlaced(tile);
 
 		if (client.getSettings().isShowHistory()) {
 			showRecentHistory();
 		}		
 		boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
-		if ((! initialPlacement && ! client.isClientActive()) ||
+		if ((!initialPlacement && !client.isClientActive()) ||
 			(initialPlacement && client.getGame().getTilePack().getCurrentTile().equals(tile))) { 
 			getAnimationService().registerAnimation(tile.getPosition(), new RecentPlacement(tile.getPosition()));
-		}
-
-		if (dirty) {
-			calculateSize();
-			revalidate();
-		} else {
-			repaint();
-		}
-
+		}		
+		repaint();
 	}
-
+	
+//	//TODO remove profile code
+//	long ts, last;
+//	public void profile(String msg) {
+//		long now = System.currentTimeMillis();
+//		System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
+//		last = now;
+//	}
+	
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	protected void paintComponent(Graphics g) {	
+		//super.paintComponent(g);
+		
+//		System.out.println("------------------------");		
+//		ts = last = System.currentTimeMillis();		
+		
+		int w = getWidth(), h = getHeight();
+		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(UIManager.getColor("Panel.background"));
-		g2.fillRect(0, 0, getWidth(), getHeight());
+		//g2.fillRect(0, 0, getWidth(), getHeight());
 		g2.setColor(Color.LIGHT_GRAY);
-		for(int i = 0; i < right-left+1; i++) {
+		for (int i = 0; i < right-left+1; i++) {
 			g2.drawLine(i*squareSize, 0, i*squareSize, (bottom-top+1)*squareSize);
 			g2.drawLine((i+1)*squareSize-1, 0, (i+1)*squareSize-1, (bottom-top+1)*squareSize);
 		}
-		for(int i = 0; i < bottom-top+1; i++) {
+		for (int i = 0; i < bottom-top+1; i++) {
 			g2.drawLine(0, i*squareSize, (right-left+1)*squareSize, i*squareSize);
 			g2.drawLine(0, (i+1)*squareSize-1, (right-left+1)*squareSize, (i+1)*squareSize-1);
 		}
+		
+//		profile("grid");
+		
 		//paint layers
 		synchronized (layers) {
 			for(GridLayer layer : layers) {
 				layer.paint(g2);
+//				profile(layer.getClass().getSimpleName());
 			}
 		}
+				
+		
+		g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
+		controlPanel.paintComponent(g2);
+		
+//		profile("control panel");
 	}
-
 
 }

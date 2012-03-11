@@ -60,6 +60,8 @@ public class Client extends JFrame /*implements UserInterface*/ {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 	
+	public static final String BASE_TITLE = "JCloisterZone";
+	
 	private ClientController controller = new ClientController(this);
 
 	private final Ini config;
@@ -189,7 +191,7 @@ public class Client extends JFrame /*implements UserInterface*/ {
 
 		this.pack();
 		this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-		this.setTitle("JCloisterZone");
+		this.setTitle(BASE_TITLE);
 		this.setVisible(true);
 	}
 	
