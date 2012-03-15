@@ -128,7 +128,18 @@ public class GridPanel extends JComponent {
 	}
 	
 	public void moveCenterTo(float cx, float cy) {
-		//TODO check constraints
+		int centerOffsetX = calculateCenterX(), centerOffsetY = calculateCenterY(); 
+		
+		float maxCx = left + centerOffsetX / (float) squareSize;  
+		float minCx = (right+1) - (getWidth() - centerOffsetX) / (float) squareSize;
+		float maxCy = top + centerOffsetY / (float) squareSize;
+		float minCy = (bottom+1) - (getHeight() - centerOffsetY) / (float) squareSize;
+				
+		if (cx > maxCx) cx = maxCx;
+		if (cx < minCx) cx = minCx;
+		if (cy > maxCy) cy = maxCy;
+		if (cy < minCy) cy = minCy;
+		
 		this.cx = cx;
 		this.cy = cy;
 		repaint();
@@ -245,6 +256,15 @@ public class GridPanel extends JComponent {
 //		last = now;
 //	}
 	
+	private int calculateCenterX() {
+		return (getWidth() - ControlPanel.PANEL_WIDTH - squareSize)/2;
+	}
+	
+	private int calculateCenterY() {
+		return (getHeight() - squareSize)/2;
+	}
+	
+	
 	@Override
 	protected void paintComponent(Graphics g) {	
 		Graphics2D g2 = (Graphics2D) g;
@@ -254,13 +274,10 @@ public class GridPanel extends JComponent {
 //		System.out.println("------------------------");		
 //		ts = last = System.currentTimeMillis();		
 		
-		int w = getWidth(), h = getHeight();
 		
-		offsetX = (w - ControlPanel.PANEL_WIDTH - squareSize)/2 - (int)(cx * squareSize);
-		offsetY = (h - squareSize)/2 - (int)(cy * squareSize);
-		
-		g2.translate(offsetX, offsetY);
-		
+		offsetX = calculateCenterX() - (int)(cx * squareSize);
+		offsetY = calculateCenterY() - (int)(cy * squareSize);		
+		g2.translate(offsetX, offsetY);		
 		
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -287,7 +304,7 @@ public class GridPanel extends JComponent {
 		}
 				
 		g2.setTransform(origTransform);
-		g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
+		g2.translate(getWidth() - ControlPanel.PANEL_WIDTH, 0);
 		controlPanel.paintComponent(g2);
 		
 //		profile("control panel");
