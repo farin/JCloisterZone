@@ -169,7 +169,7 @@ public class GridPanel extends JComponent {
         repaint();
     }
 
-    public void zoom(int steps) {
+    public void zoom(double steps) {
         int size = (int) (squareSize * Math.pow(1.3, steps));
         if (size < 25) size = 25;
         if (size > 300) size = 300;

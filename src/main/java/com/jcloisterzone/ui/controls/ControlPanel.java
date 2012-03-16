@@ -30,46 +30,6 @@ public class ControlPanel implements FakeComponent {
     public ControlPanel(final Client client) {
         this.client = client;
 
-//		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-//			@Override
-//			public boolean dispatchKeyEvent(KeyEvent e) {
-//				if (e.getModifiers() == 0 && e.getID() == KeyEvent.KEY_PRESSED) {
-//					switch (e.getKeyCode()) {
-//					case KeyEvent.VK_SPACE:
-//					case KeyEvent.VK_ENTER:
-//						if (canPass && client.isClientActive()) {
-//							pass();
-//							return true;
-//						}
-//						break;
-//					case KeyEvent.VK_TAB:
-//						if (client.isClientActive()) {
-//							actionPanel.switchAction();
-//							return true;
-//						}
-//						break;
-//					case KeyEvent.VK_LEFT:
-//					case KeyEvent.VK_A:
-//						client.getGridPanel().moveCenter(-1, 0);
-//						break;
-//					case KeyEvent.VK_RIGHT:
-//					case KeyEvent.VK_D:
-//						client.getGridPanel().moveCenter(1, 0);
-//						break;
-//					case KeyEvent.VK_DOWN:
-//					case KeyEvent.VK_S:
-//						client.getGridPanel().moveCenter(0, 1);
-//						break;
-//					case KeyEvent.VK_UP:
-//					case KeyEvent.VK_W:
-//						client.getGridPanel().moveCenter(0, -1);
-//						break;
-//					}
-//				}
-//				return false;
-//			}
-//		});
-
         actionPanel = new ActionPanel(client);
 
         Player[] players = client.getGame().getAllPlayers();
