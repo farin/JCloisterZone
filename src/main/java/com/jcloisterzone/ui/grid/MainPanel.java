@@ -108,24 +108,7 @@ public class MainPanel extends BackgroundPanel {
 		}
 
 		add(gridPanel);
-
-		addMouseListener(
-			new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (!client.isClientActive()) return;
-					if (e.getButton() == MouseEvent.BUTTON3) {
-						client.getControlPanel().getActionPanel().switchAction();						
-					}
-				}
-			}
-		);
-		addMouseWheelListener(new MouseWheelListener() {
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				gridPanel.zoom(-e.getWheelRotation());
-			}
-		});
+		
 		setVisible(true);
 	}
 
