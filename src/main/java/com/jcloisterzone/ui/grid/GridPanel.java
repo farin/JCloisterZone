@@ -155,7 +155,7 @@ public class GridPanel extends JComponent {
     }
 
     public void moveCenter(int dx, int dy) {
-        moveCenterTo(cx + dx / 2.0f, cy + dy / 2.0f);
+        moveCenterTo(cx + dx / 4.0f, cy + dy / 4.0f);
     }
 
     public void moveCenterTo(float cx, float cy) {
