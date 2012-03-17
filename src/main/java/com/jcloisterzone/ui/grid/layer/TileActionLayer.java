@@ -12,44 +12,41 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class TileActionLayer extends AbstractGridLayer implements GridMouseListener {
 
-	private final SelectTileAction action;
-	private final Image gridDecoration;
+    private final SelectTileAction action;
+    private final Image gridDecoration;
 
-	public TileActionLayer(GridPanel gridPanel, SelectTileAction action, Image gridDecoration) {
-		super(gridPanel);
-		this.action = action;
-		this.gridDecoration = gridDecoration;
-	}
+    public TileActionLayer(GridPanel gridPanel, SelectTileAction action, Image gridDecoration) {
+        super(gridPanel);
+        this.action = action;
+        this.gridDecoration = gridDecoration;
+    }
 
-	@Override
-	public int getZIndex() {
-		return 70;
-	}
+    @Override
+    public int getZIndex() {
+        return 70;
+    }
 
-	public void paint(Graphics2D g2) {
-		int imgSize = gridDecoration.getWidth(null);
-		for(Position pos : action.getSites()) {
-			g2.drawImage(gridDecoration, getAffineTransform(imgSize, pos), null);
-		}
-	}
+    public void paint(Graphics2D g2) {
+        int imgSize = gridDecoration.getWidth(null);
+        for(Position pos : action.getSites()) {
+            g2.drawImage(gridDecoration, getAffineTransform(imgSize, pos), null);
+        }
+    }
 
-	@Override
-	public void mouseClicked(MouseEvent e, Position p) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			if (action.getSites().contains(p)) {
-				action.perform(getClient().getServer(), p);
-			}
-		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
-			action.switchAction();
-		}
-	}
+    @Override
+    public void mouseClicked(MouseEvent e, Position p) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            if (action.getSites().contains(p)) {
+                action.perform(getClient().getServer(), p);
+            }
+        }
+    }
 
 
-	@Override
-	public void squareEntered(MouseEvent e, Position p) { }
-	@Override
-	public void squareExited(MouseEvent e, Position p) {  }
+    @Override
+    public void squareEntered(MouseEvent e, Position p) { }
+    @Override
+    public void squareExited(MouseEvent e, Position p) {  }
 
 
 

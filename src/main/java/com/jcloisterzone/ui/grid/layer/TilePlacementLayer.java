@@ -13,83 +13,80 @@ import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class TilePlacementLayer extends AbstractTilePlacementLayer {
-	
-	private TilePlacementAction action;
-	
-	private Rotation realRotation;
-	private Rotation previewRotation;
-	private boolean allowedRotation;
-	
-	public TilePlacementLayer(GridPanel gridPanel, TilePlacementAction action) {
-		super(gridPanel, action.getAvailablePlacements().keySet());				
-		this.action = action;				
-	}
-	
-	@Override
-	protected Image createPreviewIcon() {
-		String tileId = action.getTile().getId();		
-		return getClient().getTileTheme().getTileImage(tileId);
-	}
-	
-	@Override
-	protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position previewPosition) {
-		if (realRotation != action.getTileRotation()) {
-			preparePreviewRotation(previewPosition);
-		}		
-		Composite compositeBackup = g2.getComposite();
-		g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);		
-		g2.drawImage(previewIcon, getAffineTransform(previewIcon.getWidth(null), previewPosition, previewRotation), null);
-		g2.setComposite(compositeBackup);								
-	}
-	
-	private void preparePreviewRotation(Position p) {
-		realRotation = action.getTileRotation();
-		previewRotation = realRotation;
-		
-		Set<Rotation> allowedRotations = action.getAvailablePlacements().get(p);
-		if (allowedRotations.contains(previewRotation)) {
-			allowedRotation = true;
-		} else {
-			if (allowedRotations.size() == 1) {
-				previewRotation = allowedRotations.iterator().next();
-				allowedRotation = true;
-			} else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
-				previewRotation = realRotation.next();
-				allowedRotation = true;
-			} else {
-				allowedRotation = false;
-			}
-		}
-	}
-	
-	@Override
-	public void squareEntered(MouseEvent e, Position p) {
-		realRotation = null;
-		super.squareEntered(e, p);		
-	}
-	
-	@Override
-	public void squareExited(MouseEvent e, Position p) {		
-		realRotation = null;
-		super.squareExited(e, p);
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e, Position p) {
-		if (!getClient().isClientActive()) return;
-		switch (e.getButton()) {
-			case MouseEvent.BUTTON1 :
-				if (getPreviewPosition() != null) {
-					assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;				
-					if (allowedRotation) {
-						action.perform(getClient().getServer(), previewRotation, p);
-					}
-				}
-				break;
-			case MouseEvent.BUTTON3 :
-				action.switchAction();
-				break;
-		}
-	}
+
+    private TilePlacementAction action;
+
+    private Rotation realRotation;
+    private Rotation previewRotation;
+    private boolean allowedRotation;
+
+    public TilePlacementLayer(GridPanel gridPanel, TilePlacementAction action) {
+        super(gridPanel, action.getAvailablePlacements().keySet());
+        this.action = action;
+    }
+
+    @Override
+    protected Image createPreviewIcon() {
+        String tileId = action.getTile().getId();
+        return getClient().getTileTheme().getTileImage(tileId);
+    }
+
+    @Override
+    protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position previewPosition) {
+        if (realRotation != action.getTileRotation()) {
+            preparePreviewRotation(previewPosition);
+        }
+        Composite compositeBackup = g2.getComposite();
+        g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);
+        g2.drawImage(previewIcon, getAffineTransform(previewIcon.getWidth(null), previewPosition, previewRotation), null);
+        g2.setComposite(compositeBackup);
+    }
+
+    private void preparePreviewRotation(Position p) {
+        realRotation = action.getTileRotation();
+        previewRotation = realRotation;
+
+        Set<Rotation> allowedRotations = action.getAvailablePlacements().get(p);
+        if (allowedRotations.contains(previewRotation)) {
+            allowedRotation = true;
+        } else {
+            if (allowedRotations.size() == 1) {
+                previewRotation = allowedRotations.iterator().next();
+                allowedRotation = true;
+            } else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
+                previewRotation = realRotation.next();
+                allowedRotation = true;
+            } else {
+                allowedRotation = false;
+            }
+        }
+    }
+
+    @Override
+    public void squareEntered(MouseEvent e, Position p) {
+        realRotation = null;
+        super.squareEntered(e, p);
+    }
+
+    @Override
+    public void squareExited(MouseEvent e, Position p) {
+        realRotation = null;
+        super.squareExited(e, p);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e, Position p) {
+
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            if (getPreviewPosition() != null) {
+                if (getClient().isClientActive()) {
+                    assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;
+                    if (allowedRotation) {
+                        action.perform(getClient().getServer(), previewRotation, p);
+                    }
+                }
+            }
+        }
+    }
 
 }

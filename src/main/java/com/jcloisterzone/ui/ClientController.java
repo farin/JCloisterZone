@@ -42,6 +42,7 @@ import com.jcloisterzone.ui.grid.layer.DragonLayer;
 public class ClientController implements GameEventListener, UserInterface {
 
     private final Client client;
+    private KeyController keyController;
 
     public ClientController(Client client) {
         this.client = client;
@@ -83,7 +84,11 @@ public class ClientController implements GameEventListener, UserInterface {
 
         mainPanel.started(snapshot);
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyController(client));
+        if (keyController == null) {
+            //first started game
+            keyController = new KeyController(client);
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
+        }
 
         pane.setVisible(true);
 

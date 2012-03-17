@@ -34,7 +34,6 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 @SuppressWarnings("serial")
 public class MainPanel extends BackgroundPanel {
 
-
     private final Client client;
     private AnimationService animationService;
 

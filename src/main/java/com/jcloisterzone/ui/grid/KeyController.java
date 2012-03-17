@@ -10,14 +10,12 @@ import com.jcloisterzone.ui.Client;
 public class KeyController implements KeyEventDispatcher {
 
     private final Client client;
-    private final GridPanel gridPanel;
 
     boolean repeatLeft, repeatRight, repeatUp, repeatDown;
     boolean repeatZoomIn, repeatZoomOut;
 
     public KeyController(Client client) {
         this.client = client;
-        gridPanel = client.getGridPanel();
         (new Timer(true)).scheduleAtFixedRate(new KeyRepeater(), 0, 40);
     }
 
@@ -95,6 +93,8 @@ public class KeyController implements KeyEventDispatcher {
 
         @Override
         public void run() {
+            GridPanel gridPanel = client.getGridPanel();
+            if (gridPanel == null) return;
             if (repeatLeft) {
                 gridPanel.moveCenter(-1, 0);
             }
