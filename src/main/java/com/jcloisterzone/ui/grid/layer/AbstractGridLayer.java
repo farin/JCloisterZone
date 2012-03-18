@@ -22,140 +22,144 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
-	protected final GridPanel gridPanel;
-	private GridMouseAdapter mouseAdapter;
+    protected final GridPanel gridPanel;
+    private GridMouseAdapter mouseAdapter;
 
-	public AbstractGridLayer(GridPanel gridPanel) {
-		this.gridPanel = gridPanel;
-	}
+    public AbstractGridLayer(GridPanel gridPanel) {
+        this.gridPanel = gridPanel;
+    }
 
-	private void triggerFakeMouseEvent() {
-		Point pt = gridPanel.getMousePosition();
-		if (pt != null) {
-			mouseAdapter.mouseMoved(
-				new MouseEvent(gridPanel, 0, System.currentTimeMillis(), 0, pt.x, pt.y, -1, -1, 0, false, 0)
-			);
-		}
-	}
+    private void triggerFakeMouseEvent() {
+        Point pt = gridPanel.getMousePosition();
+        if (pt != null) {
+            mouseAdapter.mouseMoved(
+                new MouseEvent(gridPanel, 0, System.currentTimeMillis(), 0, pt.x, pt.y, -1, -1, 0, false, 0)
+            );
+        }
+    }
 
-	@Override
-	public void zoomChanged(int squareSize) {
-		if (mouseAdapter != null) {
-			triggerFakeMouseEvent();
-		}
-	}
+    @Override
+    public void zoomChanged(int squareSize) {
+        if (mouseAdapter != null) {
+            triggerFakeMouseEvent();
+        }
+    }
 
 //	@Override
 //	public void gridChanged(int left, int right, int top, int bottom) {
 //	}
 
-	protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
-		return new GridMouseAdapter(gridPanel, listener);
-	}
+    protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
+        return new GridMouseAdapter(gridPanel, listener);
+    }
 
-	@Override
-	public void layerAdded() {
-		if (this instanceof GridMouseListener && gridPanel.getClient().isClientActive()) {
-			mouseAdapter = createGridMouserAdapter((GridMouseListener) this);
-			gridPanel.addMouseListener(mouseAdapter);
-			gridPanel.addMouseMotionListener(mouseAdapter);
-			triggerFakeMouseEvent();
-		}
-	}
+    @Override
+    public void layerAdded() {
+        if (this instanceof GridMouseListener && gridPanel.getClient().isClientActive()) {
+            mouseAdapter = createGridMouserAdapter((GridMouseListener) this);
+            gridPanel.addMouseListener(mouseAdapter);
+            gridPanel.addMouseMotionListener(mouseAdapter);
+            triggerFakeMouseEvent();
+        }
+    }
 
-	@Override
-	public void layerRemoved() {
-		if (mouseAdapter != null) {
-			gridPanel.removeMouseMotionListener(mouseAdapter);
-			gridPanel.removeMouseListener(mouseAdapter);
-			mouseAdapter = null;
-		}
-	}
-	public AffineTransform getAffineTransform(int scaleFrom, Position pos) {
-		return getAffineTransform(scaleFrom, pos, Rotation.R0);
-	}
+    @Override
+    public void layerRemoved() {
+        if (mouseAdapter != null) {
+            gridPanel.removeMouseMotionListener(mouseAdapter);
+            gridPanel.removeMouseListener(mouseAdapter);
+            mouseAdapter = null;
+        }
+    }
+    public AffineTransform getAffineTransform(int scaleFrom, Position pos) {
+        return getAffineTransform(scaleFrom, pos, Rotation.R0);
+    }
 
-	public AffineTransform getAffineTransform(Position pos) {
-		return getAffineTransform(pos, Rotation.R0);
-	}
+    public AffineTransform getAffineTransform(Position pos) {
+        return getAffineTransform(pos, Rotation.R0);
+    }
 
-	public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
-		AffineTransform r =  rotation.getAffineTransform(getSquareSize());
-		AffineTransform t =  AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos));
-		t.concatenate(r);
-		return t;
-	}
+    public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
+        AffineTransform r =  rotation.getAffineTransform(getSquareSize());
+        AffineTransform t =  AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos));
+        t.concatenate(r);
+        return t;
+    }
 
-	public AffineTransform getAffineTransform(int scaleFrom, Position pos, Rotation rotation) {
-		AffineTransform t = getAffineTransform(pos, rotation);
-		double ratio =  getSquareSize() / (double) scaleFrom;
-		AffineTransform scale =  AffineTransform.getScaleInstance(ratio, ratio);
-		t.concatenate(scale);
-		return t;
-	}
+    public AffineTransform getAffineTransform(int scaleFrom, Position pos, Rotation rotation) {
+        double ratio =  getSquareSize() / (double) scaleFrom;
+        return getAffineTransform(scaleFrom, pos, rotation, ratio);
+    }
 
-	public int getOffsetX(Position pos) {
-		return getSquareSize() * pos.x;
-	}
+    public AffineTransform getAffineTransform(int scaleFrom, Position pos, Rotation rotation, double ratio) {
+        AffineTransform t = getAffineTransform(pos, rotation);
+        AffineTransform scale =  AffineTransform.getScaleInstance(ratio, ratio);
+        t.concatenate(scale);
+        return t;
+    }
 
-	public int getOffsetY(Position pos) {
-		return getSquareSize() * pos.y;
-	}
+    public int getOffsetX(Position pos) {
+        return getSquareSize() * pos.x;
+    }
 
-	public int getSquareSize() {
-		return gridPanel.getSquareSize();
-	}
+    public int getOffsetY(Position pos) {
+        return getSquareSize() * pos.y;
+    }
 
-	protected Client getClient() {
-		return gridPanel.getClient();
-	}
+    public int getSquareSize() {
+        return gridPanel.getSquareSize();
+    }
 
-	protected Area transformArea(Area area, Position pos) {
-		Area copy = new Area(area);
-		copy.transform(getAffineTransform(pos));
-		return copy;
-	}
+    protected Client getClient() {
+        return gridPanel.getClient();
+    }
 
-	// LEGACY CODE - TODO REFACTOR
+    protected Area transformArea(Area area, Position pos) {
+        Area copy = new Area(area);
+        copy.transform(getAffineTransform(pos));
+        return copy;
+    }
 
-	private int scale(int x) {
-		return (int) (getSquareSize() * (x / 100.0));
-	}
+    // LEGACY CODE - TODO REFACTOR
 
-	@Deprecated
-	private Font getFont(int relativeSize) {
-		int realSize = scale(relativeSize);
-		return new Font(null, Font.BOLD, realSize);
+    private int scale(int x) {
+        return (int) (getSquareSize() * (x / 100.0));
+    }
+
+    @Deprecated
+    private Font getFont(int relativeSize) {
+        int realSize = scale(relativeSize);
+        return new Font(null, Font.BOLD, realSize);
 //		Font font = Square.cachedFont;
 //		if (font == null || font.getSize() != realSize) {
 //			font = new Font(null, Font.BOLD, realSize);
 //			Square.cachedFont = font;
 //		}
 //		return font;
-	}
+    }
 
-	public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
-		ImmutablePoint center = centerNoScaled.scale(getSquareSize());
-		drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
-	}
+    public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
+        ImmutablePoint center = centerNoScaled.scale(getSquareSize());
+        drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
+    }
 
 
-	public void drawAntialiasedTextCenteredNoScale(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint center, Color fgColor, Color bgColor) {
-		Color original = g2.getColor();
-		FontRenderContext frc = g2.getFontRenderContext();
-		TextLayout tl = new TextLayout(text, getFont(fontSize),frc);
-		Rectangle2D bounds = tl.getBounds();
+    public void drawAntialiasedTextCenteredNoScale(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint center, Color fgColor, Color bgColor) {
+        Color original = g2.getColor();
+        FontRenderContext frc = g2.getFontRenderContext();
+        TextLayout tl = new TextLayout(text, getFont(fontSize),frc);
+        Rectangle2D bounds = tl.getBounds();
 
-		center = center.translate( (int) (bounds.getWidth() / -2), (int) (bounds.getHeight() / -2));
+        center = center.translate( (int) (bounds.getWidth() / -2), (int) (bounds.getHeight() / -2));
 
-		if (bgColor != null) {
-			g2.setColor(bgColor);
-			g2.fillRect(getOffsetX(pos) + center.getX() - 6, getOffsetY(pos) + center.getY() - 5, 12 + (int)bounds.getWidth(),10 +(int) bounds.getHeight());
-		}
+        if (bgColor != null) {
+            g2.setColor(bgColor);
+            g2.fillRect(getOffsetX(pos) + center.getX() - 6, getOffsetY(pos) + center.getY() - 5, 12 + (int)bounds.getWidth(),10 +(int) bounds.getHeight());
+        }
 
-		g2.setColor(fgColor);
-		tl.draw(g2, getOffsetX(pos) + center.getX(),  getOffsetY(pos) + center.getY() + (int) bounds.getHeight());
-		g2.setColor(original);
-	}
+        g2.setColor(fgColor);
+        tl.draw(g2, getOffsetX(pos) + center.getX(),  getOffsetY(pos) + center.getY() + (int) bounds.getHeight());
+        g2.setColor(original);
+    }
 
 }

@@ -154,8 +154,11 @@ public class GridPanel extends JComponent {
         return offsetY;
     }
 
-    public void moveCenter(int dx, int dy) {
-        moveCenterTo(cx + dx / 4.0f, cy + dy / 4.0f);
+    public void moveCenter(int xSteps, int ySteps) {
+        //step should be 30px
+        float dx = xSteps * 30.0f / getSquareSize();
+        float dy = ySteps * 30.0f / getSquareSize();
+        moveCenterTo(cx + dx, cy + dy);
     }
 
     public void moveCenterTo(float cx, float cy) {
@@ -272,13 +275,13 @@ public class GridPanel extends JComponent {
         repaint();
     }
 
-//	//TODO remove profile code
-//	long ts, last;
-//	public void profile(String msg) {
-//		long now = System.currentTimeMillis();
-//		System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
-//		last = now;
-//	}
+    //TODO remove profile code
+    long ts, last;
+    public void profile(String msg) {
+        long now = System.currentTimeMillis();
+        System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
+        last = now;
+    }
 
     private int calculateCenterX() {
         return (getWidth() - ControlPanel.PANEL_WIDTH - squareSize)/2;
@@ -295,8 +298,8 @@ public class GridPanel extends JComponent {
         AffineTransform origTransform = g2.getTransform();
         //super.paintComponent(g);
 
-//		System.out.println("------------------------");
-//		ts = last = System.currentTimeMillis();
+        System.out.println("------------------------");
+        ts = last = System.currentTimeMillis();
 
 
         offsetX = calculateCenterX() - (int)(cx * squareSize);
@@ -317,13 +320,13 @@ public class GridPanel extends JComponent {
             g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
         }
 
-//		profile("grid");
+        profile("grid");
 
         //paint layers
         synchronized (layers) {
             for(GridLayer layer : layers) {
                 layer.paint(g2);
-//				profile(layer.getClass().getSimpleName());
+                profile(layer.getClass().getSimpleName());
             }
         }
 
@@ -331,7 +334,7 @@ public class GridPanel extends JComponent {
         g2.translate(getWidth() - ControlPanel.PANEL_WIDTH, 0);
         controlPanel.paintComponent(g2);
 
-//		profile("control panel");
+        profile("control panel");
     }
 
 }
