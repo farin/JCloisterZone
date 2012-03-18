@@ -2,6 +2,8 @@ package com.jcloisterzone.ui.controls;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
@@ -9,9 +11,8 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.FakeComponent;
 
-public class ControlPanel implements FakeComponent {
+public class ControlPanel extends FakeComponent {
 
     public static final Color BG_COLOR = new Color(0, 0, 0, 30);
     public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
@@ -33,12 +34,27 @@ public class ControlPanel implements FakeComponent {
         actionPanel = new ActionPanel(client);
 
         Player[] players = client.getGame().getAllPlayers();
+        PlayerPanelImageCache cache = new PlayerPanelImageCache(client);
         playerPanels = new PlayerPanel[players.length];
-        for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, players[i]);
-        }
 
+        for (int i = 0; i < players.length; i++) {
+            playerPanels[i] = new PlayerPanel(client, players[i], cache);
+        }
     }
+
+//    //TODO clean coupling and component initialization (GridPanel, MainPanel & ControlPanel
+//    public void registerMouseListener() {
+//        client.getGridPanel().addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                int w = client.getGridPanel().getWidth();
+//                if (e.getX() > w-PANEL_WIDTH) {
+//                    //click on panel
+//
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void paintComponent(Graphics2D g2) {
@@ -70,7 +86,6 @@ public class ControlPanel implements FakeComponent {
     public ActionPanel getActionPanel() {
         return actionPanel;
     }
-
 
     public void selectAction(List<PlayerAction> actions, boolean canPass) {
         //direct collection sort can be unsupported - so copy to array first!

@@ -90,6 +90,8 @@ public class ClientController implements GameEventListener, UserInterface {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
         }
 
+        controlPanel.getActionPanel().registerListener(client.getGridPanel());
+
         pane.setVisible(true);
 
         MenuBar menu = client.getJMenuBar();

@@ -16,6 +16,7 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer {
 
     public AbbeyPlacementLayer(GridPanel gridPanel, AbbeyPlacementAction action) {
         super(gridPanel, action.getSites());
+        this.action = action;
     }
 
     @Override

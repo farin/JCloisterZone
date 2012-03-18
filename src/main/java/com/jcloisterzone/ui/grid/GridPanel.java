@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.Lists;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.XmlUtils;
@@ -30,6 +31,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.MouseListeningRegion;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
@@ -52,7 +54,6 @@ public class GridPanel extends JComponent {
     //focus
     private int offsetX, offsetY;
     private float cx = 0.0f, cy = 0.0f;
-
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
 
@@ -275,14 +276,6 @@ public class GridPanel extends JComponent {
         repaint();
     }
 
-    //TODO remove profile code
-    long ts, last;
-    public void profile(String msg) {
-        long now = System.currentTimeMillis();
-        System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
-        last = now;
-    }
-
     private int calculateCenterX() {
         return (getWidth() - ControlPanel.PANEL_WIDTH - squareSize)/2;
     }
@@ -291,6 +284,13 @@ public class GridPanel extends JComponent {
         return (getHeight() - squareSize)/2;
     }
 
+    //TODO remove profile code
+    long ts, last;
+    public void profile(String msg) {
+        long now = System.currentTimeMillis();
+        System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
+        last = now;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
