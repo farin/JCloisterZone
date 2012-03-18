@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.theme;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -21,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.legacy.FigureImageFilter;
-
-
 
 public abstract class Theme {
 
@@ -127,12 +124,6 @@ public abstract class Theme {
 
 		g.dispose();
 		return result;
-	}
-
-	//TODO revise
-	@Deprecated
-	protected Image prepareImage(Image img) {
-		return new ImageIcon(img).getImage();
 	}
 
 

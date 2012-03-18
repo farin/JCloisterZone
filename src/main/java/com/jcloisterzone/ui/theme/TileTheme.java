@@ -56,10 +56,6 @@ public class TileTheme extends Theme {
 		return areaProvider;
 	}
 
-	public Image getEmptyImage() {
-		return getImage("empty.jpg");
-	}
-
 	public Image getTileImage(String tileId) {
 		//TODO cache directly under tileID without pathname conversion
 		String name = tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";

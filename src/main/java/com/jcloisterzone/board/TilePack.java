@@ -6,7 +6,7 @@ public interface TilePack {
 
 	static final String INACTIVE_GROUP = "inactive";
 
-	int tolalSize();
+	int totalSize();
 	boolean isEmpty();
 	int size();
 

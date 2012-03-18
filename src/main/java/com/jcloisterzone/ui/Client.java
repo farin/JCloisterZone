@@ -58,437 +58,444 @@ import com.jcloisterzone.ui.theme.TileTheme;
 @SuppressWarnings("serial")
 public class Client extends JFrame /*implements UserInterface*/ {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-	
-	private ClientController controller = new ClientController(this);
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final Ini config;
-	private final ClientSettings settings;
-	private TileTheme tileTheme;
-	private FigureTheme figureTheme;
-	private ControlsTheme controlsTheme;
-	private Color[] playerColors;
+    public static final String BASE_TITLE = "JCloisterZone";
 
-	//private MenuBar menuBar;
-	private ControlPanel controlPanel;
-	private MainPanel mainPanel;
+    private ClientController controller = new ClientController(this);
 
-	private CreateGamePanel createGamePanel;
-	private DiscardedTilesDialog discardedTilesDialog;
+    private final Ini config;
+    private final ClientSettings settings;
+    private TileTheme tileTheme;
+    private FigureTheme figureTheme;
+    private ControlsTheme controlsTheme;
+    private Color[] playerColors;
 
-	private Server localServer;
-	private ServerIF server;
+    //private MenuBar menuBar;
+    private ControlPanel controlPanel;
+    private MainPanel mainPanel;
 
-	private Game game;
-	//active player must be cached locally because of game's active player record is changed in other thread immediately
-	private Player activePlayer;
+    private CreateGamePanel createGamePanel;
+    private DiscardedTilesDialog discardedTilesDialog;
 
-	protected ClientStub getClientStub() {
-		return (ClientStub) Proxy.getInvocationHandler(server);
-	}
+    private Server localServer;
+    private ServerIF server;
 
-	public long getClientId() {
-		return getClientStub().getClientId();
-	}
+    private Game game;
+    //active player must be cached locally because of game's active player record is changed in other thread immediately
+    private Player activePlayer;
 
-	private Locale getLocaleFromConfig() {
-		String language = config.get("ui", "locale");
-		if (language == null) {
-			return Locale.getDefault();
-		}
-		if (language.contains("_")) {
-			String[] tokens = language.split("_", 2);
-			return new Locale(tokens[0], tokens[1]);
-		}
-		return new Locale(language);
-	}
+    protected ClientStub getClientStub() {
+        return (ClientStub) Proxy.getInvocationHandler(server);
+    }
 
-	private Color stringToColor(String colorName) {
-		if (colorName.startsWith("#")) {
-			//RGB format
-			int r = Integer.parseInt(colorName.substring(1,3),16);
-			int g = Integer.parseInt(colorName.substring(3,5),16);
-			int b = Integer.parseInt(colorName.substring(5,7),16);
-			return new Color(r,g,b);
-		} else {
-			//constant format
-			java.lang.reflect.Field f;
-			try {
-				f = Color.class.getField(colorName);
-				return (Color) f.get(null);
-			} catch (Exception e1) {
-				logger.error("Invalid color name in config file: " + colorName);
-				return Color.BLACK;
-			}
-		}
-	}
+    public long getClientId() {
+        return getClientStub().getClientId();
+    }
 
-	@Override
-	public void setLocale(Locale l) {
-		I18nUtils.setLocale(l);
-		super.setLocale(l);
-	}
+    private Locale getLocaleFromConfig() {
+        String language = config.get("ui", "locale");
+        if (language == null) {
+            return Locale.getDefault();
+        }
+        if (language.contains("_")) {
+            String[] tokens = language.split("_", 2);
+            return new Locale(tokens[0], tokens[1]);
+        }
+        return new Locale(language);
+    }
 
-	public Client(String configFile) {
-		config = new Ini();
-		try {
-			config.load(Client.class.getClassLoader().getResource(configFile));
-		} catch (Exception ex) {
-			logger.error("Unable to read config.ini", ex);
-			System.exit(1);
-		}
-		setLocale(getLocaleFromConfig());
-		settings = new ClientSettings(config);
-		List<String> colorNames = config.get("players").getAll("color");
-		playerColors = new Color[colorNames.size()];
-		for(int i = 0; i < playerColors.length; i++ ) {
-			playerColors[i] = stringToColor(colorNames.get(i));
-		}
-		tileTheme = new TileTheme(this);
-		figureTheme = new FigureTheme(this);
-		controlsTheme = new ControlsTheme(this);
+    private Color stringToColor(String colorName) {
+        if (colorName.startsWith("#")) {
+            //RGB format
+            int r = Integer.parseInt(colorName.substring(1,3),16);
+            int g = Integer.parseInt(colorName.substring(3,5),16);
+            int b = Integer.parseInt(colorName.substring(5,7),16);
+            return new Color(r,g,b);
+        } else {
+            //constant format
+            java.lang.reflect.Field f;
+            try {
+                f = Color.class.getField(colorName);
+                return (Color) f.get(null);
+            } catch (Exception e1) {
+                logger.error("Invalid color name in config file: " + colorName);
+                return Color.BLACK;
+            }
+        }
+    }
 
-		resetWindowIcon();
+    @Override
+    public void setLocale(Locale l) {
+        I18nUtils.setLocale(l);
+        super.setLocale(l);
+    }
 
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace(); //TODO logger
-		}
+    public Client(String configFile) {
+        config = new Ini();
+        try {
+            config.load(Client.class.getClassLoader().getResource(configFile));
+        } catch (Exception ex) {
+            logger.error("Unable to read config.ini", ex);
+            System.exit(1);
+        }
+        setLocale(getLocaleFromConfig());
+        settings = new ClientSettings(config);
+        List<String> colorNames = config.get("players").getAll("color");
+        playerColors = new Color[colorNames.size()];
+        for(int i = 0; i < playerColors.length; i++ ) {
+            playerColors[i] = stringToColor(colorNames.get(i));
+        }
+        tileTheme = new TileTheme(this);
+        figureTheme = new FigureTheme(this);
+        controlsTheme = new ControlsTheme(this);
 
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				if (closeGame() == true) {
-					System.exit(0);
-				}
-			}
-		});
-		MenuBar menuBar = new MenuBar(this);
-		this.setJMenuBar(menuBar);
+        resetWindowIcon();
 
-		//Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace(); //TODO logger
+        }
 
-		Container pane = this.getContentPane();
-		pane.setLayout(new BorderLayout());
-		JPanel envelope = new BackgroundPanel(new GridBagLayout());
-		pane.add(envelope, BorderLayout.CENTER);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (closeGame() == true) {
+                    System.exit(0);
+                }
+            }
+        });
+        MenuBar menuBar = new MenuBar(this);
+        this.setJMenuBar(menuBar);
 
-		StartPanel panel = new StartPanel();
-		panel.setClient(this);
-		//panel.setPreferredSize(new Dimension(800, 600));
-		envelope.add(panel);
+        //Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
 
-		/*controlPanel = new ControlPanel(this);
-		pane.add(controlPanel, BorderLayout.EAST);
-		gridPanel = new GridPanel(this);
-		pane.add(new JScrollPane(gridPanel), BorderLayout.CENTER);*/
+        //replace default pane with layered
+        Container pane = getContentPane();
 
-		this.pack();
-		this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-		this.setTitle("JCloisterZone");
-		this.setVisible(true);
-	}
-	
-	@Override
-	public MenuBar getJMenuBar() { 
-		return (MenuBar) super.getJMenuBar();
-	}
-	
-	void resetWindowIcon() {
-		this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
-	}
+        pane.setLayout(new BorderLayout());
+        JPanel envelope = new BackgroundPanel(new GridBagLayout());
+        pane.add(envelope, BorderLayout.CENTER);
 
-	public Ini getConfig() {
-		return config;
-	}
+        StartPanel panel = new StartPanel();
+        panel.setClient(this);
+        //panel.setPreferredSize(new Dimension(800, 600));
+        envelope.add(panel);
 
-	public ClientSettings getSettings() {
-		return settings;
-	}
+        /*controlPanel = new ControlPanel(this);
+        pane.add(controlPanel, BorderLayout.EAST);
+        gridPanel = new GridPanel(this);
+        pane.add(new JScrollPane(gridPanel), BorderLayout.CENTER);*/
 
-	public TileTheme getTileTheme() {
-		return tileTheme;
-	}
+        this.pack();
+        this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        this.setTitle(BASE_TITLE);
+        this.setVisible(true);
+    }
 
-	public FigureTheme getFigureTheme() {
-		return figureTheme;
-	}
+    @Override
+    public MenuBar getJMenuBar() {
+        return (MenuBar) super.getJMenuBar();
+    }
 
-	public ControlsTheme getControlsTheme() {
-		return controlsTheme;
-	}
+    void resetWindowIcon() {
+        this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
+    }
 
-	public ServerIF getServer() {
-		return server;
-	}
+    public Ini getConfig() {
+        return config;
+    }
 
-	public Game getGame() {
-		return game;
-	}
+    public ClientSettings getSettings() {
+        return settings;
+    }
 
-	public ControlPanel getControlPanel() {
-		return controlPanel;
-	}
-	
-	public void setControlPanel(ControlPanel controlPanel) {
-		this.controlPanel = controlPanel;
-	}
+    public TileTheme getTileTheme() {
+        return tileTheme;
+    }
 
-	public GridPanel getGridPanel() {
-		return mainPanel.getGridPanel();
-	}
+    public FigureTheme getFigureTheme() {
+        return figureTheme;
+    }
 
-	public MainPanel getMainPanel() {
-		return mainPanel;
-	}
-	
-	public void setMainPanel(MainPanel mainPanel) {
-		this.mainPanel = mainPanel;
-	}
+    public ControlsTheme getControlsTheme() {
+        return controlsTheme;
+    }
 
-	public CreateGamePanel getCreateGamePanel() {
-		return createGamePanel;
-	}
+    public ServerIF getServer() {
+        return server;
+    }
 
-	public void setCreateGamePanel(CreateGamePanel createGamePanel) {
-		this.createGamePanel = createGamePanel;
-	}
-	
-	public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
-		this.discardedTilesDialog = discardedTilesDialog;
-	}
+    public Game getGame() {
+        return game;
+    }
 
-	public void cleanContentPane() {
-		Container pane = this.getContentPane();
-		pane.setVisible(false);
-		pane.removeAll();
-		if (createGamePanel != null) {
-			createGamePanel.disposePanel();
-		}
-	}
+    public ControlPanel getControlPanel() {
+        return controlPanel;
+    }
 
-	public void showCreateGamePanel(boolean mutableSlots) {
-		Container pane = this.getContentPane();
-		cleanContentPane();
-		createGamePanel = new CreateGamePanel(this, mutableSlots);
-		JPanel envelope = new BackgroundPanel();
-		envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-		envelope.add(createGamePanel);
+    public void setControlPanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
+    }
 
-		JScrollPane scroll = new JScrollPane(envelope);
-		pane.add(scroll, BorderLayout.CENTER);
-		pane.setVisible(true);
-	}
+    public GridPanel getGridPanel() {
+        if (mainPanel == null) return null;
+        return mainPanel.getGridPanel();
+    }
 
-	public boolean closeGame() {
-		return closeGame(false);
-	}
+    public MainPanel getMainPanel() {
+        return mainPanel;
+    }
 
-	public boolean closeGame(boolean force) {
-		if (settings.isConfirmGameClose() && game != null && !(game.getPhase() instanceof GameOverPhase)) {
-			if (localServer != null) {
-				String options[] = {_("Close game"), _("Cancel") };
-				int result = JOptionPane.showOptionDialog(this,
-						_("Game is running. Do you really want to quit game and also disconnect all other players?"),
-						_("Close game"),
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-				if (JOptionPane.OK_OPTION != result) return false;
-			} else {
-				String options[] = {_("Close game"), _("Cancel") };
-				int result = JOptionPane.showOptionDialog(this,
-						_("Game is running. Do you really want to leave it?"),
-						_("Close game"),
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-				if (JOptionPane.OK_OPTION != result) return false;
-			}
-		}
-		if (localServer != null) {
-			localServer.stop();
-			localServer = null;
-		}
-		server = null;
-		activePlayer = null;
-		getJMenuBar().setIsGameRunning(false);
-		if (controlPanel != null) {
-			controlPanel.closeGame();
-			mainPanel.closeGame();
-		}
-		if (discardedTilesDialog != null) {
-			discardedTilesDialog.dispose();
-			discardedTilesDialog = null;
-			getJMenuBar().setShowDiscardedEnabled(false);
-		}
-		return true;
-	}
+    public void setMainPanel(MainPanel mainPanel) {
+        this.mainPanel = mainPanel;
+    }
 
-	public void showConnectGamePanel() {
-		if (! closeGame()) return;
-		
-		Container pane = this.getContentPane();
-		cleanContentPane();
+    public CreateGamePanel getCreateGamePanel() {
+        return createGamePanel;
+    }
 
-		JPanel envelope = new BackgroundPanel();
-		envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-		envelope.add(new ConnectGamePanel(this));
+    public void setCreateGamePanel(CreateGamePanel createGamePanel) {
+        this.createGamePanel = createGamePanel;
+    }
 
-		pane.add(envelope, BorderLayout.CENTER);
-		pane.setVisible(true);
-	}
+    public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
+        this.discardedTilesDialog = discardedTilesDialog;
+    }
 
-	public void setGame(Game game) {
-		this.game = game;
-		Object clientProxy = Proxy.newProxyInstance(Client.class.getClassLoader(),
-				new Class[] { UserInterface.class, GameEventListener.class }, new InvokeInSwingUiAdapter(controller));
-		game.addUserInterface((UserInterface) clientProxy);
-		game.addGameListener((GameEventListener) clientProxy);
-	}
+    public void cleanContentPane() {
+        Container pane = this.getContentPane();
+        pane.setVisible(false);
+        pane.removeAll();
+        this.mainPanel = null;
+        this.controlPanel = null;
+        if (createGamePanel != null) {
+            createGamePanel.disposePanel();
+        }
+    }
 
-	public void connect(InetAddress ia, int port) {
-		GuiClientStub handler = new GuiClientStub(this);
-		server = (ServerIF) Proxy.newProxyInstance(ServerIF.class.getClassLoader(),
-				new Class[] { ServerIF.class }, handler);
-	    handler.setServerProxy(server);
-	    handler.connect(ia, port);
-	}
+    public void showCreateGamePanel(boolean mutableSlots) {
+        Container pane = this.getContentPane();
+        cleanContentPane();
+        createGamePanel = new CreateGamePanel(this, mutableSlots);
+        JPanel envelope = new BackgroundPanel();
+        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
+        envelope.add(createGamePanel);
 
-	public void handleSave() {
-		JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setDialogTitle(_("Save game"));
-		fc.setDialogType(JFileChooser.SAVE_DIALOG);
-	    fc.setFileFilter(new SavegameFileFilter());
-	    fc.setLocale(getLocale());
-		int returnVal = fc.showSaveDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			if (file != null) {
-				if (! file.getName().endsWith(".jcz")) {
-					file = new File(file.getAbsolutePath() + ".jcz");
-				}
-				try {
-					Snapshot snapshot = new Snapshot(game, getClientId());
-					if ("plain".equals(getConfig().get("debug", "save_format"))) {
-						snapshot.setGzipOutput(false);
-					}
-					snapshot.save(file);
-				} catch (Exception ex) {
-					logger.error(ex.getMessage(), ex);
-					JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}
+        JScrollPane scroll = new JScrollPane(envelope);
+        pane.add(scroll, BorderLayout.CENTER);
+        pane.setVisible(true);
+    }
 
-	private int getServerPort() {
-		return config.get("server", "port", int.class);
-	}
+    public boolean closeGame() {
+        return closeGame(false);
+    }
 
-	public void createGame() {
-		if (! closeGame()) return;
-		try {
-			localServer = new Server(config);
-			localServer.start(getServerPort());
-			connect(InetAddress.getLocalHost(), getServerPort());
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-			JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-			closeGame(true);
-		}
-	}
+    public boolean closeGame(boolean force) {
+        if (settings.isConfirmGameClose() && game != null && !(game.getPhase() instanceof GameOverPhase)) {
+            if (localServer != null) {
+                String options[] = {_("Close game"), _("Cancel") };
+                int result = JOptionPane.showOptionDialog(this,
+                        _("Game is running. Do you really want to quit game and also disconnect all other players?"),
+                        _("Close game"),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (JOptionPane.OK_OPTION != result) return false;
+            } else {
+                String options[] = {_("Close game"), _("Cancel") };
+                int result = JOptionPane.showOptionDialog(this,
+                        _("Game is running. Do you really want to leave it?"),
+                        _("Close game"),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (JOptionPane.OK_OPTION != result) return false;
+            }
+        }
+        if (localServer != null) {
+            localServer.stop();
+            localServer = null;
+        }
+        server = null;
+        activePlayer = null;
+        getJMenuBar().setIsGameRunning(false);
+        if (controlPanel != null) {
+            controlPanel.closeGame();
+            mainPanel.closeGame();
+        }
+        if (discardedTilesDialog != null) {
+            discardedTilesDialog.dispose();
+            discardedTilesDialog = null;
+            getJMenuBar().setShowDiscardedEnabled(false);
+        }
+        return true;
+    }
 
-	public void handleLoad() {
-		if (! closeGame()) return;
-		JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setDialogTitle(_("Load game"));
-		fc.setDialogType(JFileChooser.OPEN_DIALOG);
-	    fc.setFileFilter(new SavegameFileFilter());
-	    fc.setLocale(getLocale());
-	    int returnVal = fc.showOpenDialog(this);
-	    if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			if (file != null) {
-				try {
-					localServer = new Server(new Snapshot(file));
-					localServer.start(getServerPort());
-					connect(InetAddress.getLocalHost(), getServerPort());
-				} catch (Exception ex) {
-					logger.error(ex.getMessage(), ex);
-					JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-				}
-			}
-	    }
-	}
+    public void showConnectGamePanel() {
+        if (! closeGame()) return;
 
-	public void handleQuit() {
-		if (closeGame() == true) {
-			System.exit(0);
-		}
-	}
+        Container pane = this.getContentPane();
+        cleanContentPane();
 
-	public void handleAbout() {
-		new AboutDialog();
-	}
+        JPanel envelope = new BackgroundPanel();
+        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
+        envelope.add(new ConnectGamePanel(this));
 
-	public boolean isClientActive() {
-		if (activePlayer == null) return false;
-		if (activePlayer.getSlot().getType() != SlotType.PLAYER) return false;
-		return getClientStub().isLocalPlayer(activePlayer);
-	}
+        pane.add(envelope, BorderLayout.CENTER);
+        pane.setVisible(true);
+    }
 
-	public Player getActivePlayer() {
-		return activePlayer;
-	}
-	
-	public void setActivePlayer(Player activePlayer) {
-		this.activePlayer = activePlayer;
-	}
+    public void setGame(Game game) {
+        this.game = game;
+        Object clientProxy = Proxy.newProxyInstance(Client.class.getClassLoader(),
+                new Class[] { UserInterface.class, GameEventListener.class }, new InvokeInSwingUiAdapter(controller));
+        game.addUserInterface((UserInterface) clientProxy);
+        game.addGameListener((GameEventListener) clientProxy);
+    }
 
-	void beep() {
-		if (settings.isPlayBeep()) {
-			try {
-				AudioInputStream beepStream = AudioSystem.getAudioInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
-				Clip c = AudioSystem.getClip();
-				c.open(beepStream);
-				c.start();
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-	}
-	
-	void clearActions() {
-		if (controlPanel.getActionPanel().getActions() != null) {
-			controlPanel.clearActions();
-		}
-	}
+    public void connect(InetAddress ia, int port) {
+        GuiClientStub handler = new GuiClientStub(this);
+        server = (ServerIF) Proxy.newProxyInstance(ServerIF.class.getClassLoader(),
+                new Class[] { ServerIF.class }, handler);
+        handler.setServerProxy(server);
+        handler.connect(ia, port);
+    }
 
-	public DiscardedTilesDialog getDiscardedTilesDialog() {
-		return discardedTilesDialog;
-	}
+    public void handleSave() {
+        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setDialogTitle(_("Save game"));
+        fc.setDialogType(JFileChooser.SAVE_DIALOG);
+        fc.setFileFilter(new SavegameFileFilter());
+        fc.setLocale(getLocale());
+        int returnVal = fc.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            if (file != null) {
+                if (! file.getName().endsWith(".jcz")) {
+                    file = new File(file.getAbsolutePath() + ".jcz");
+                }
+                try {
+                    Snapshot snapshot = new Snapshot(game, getClientId());
+                    if ("plain".equals(getConfig().get("debug", "save_format"))) {
+                        snapshot.setGzipOutput(false);
+                    }
+                    snapshot.save(file);
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage(), ex);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private int getServerPort() {
+        return config.get("server", "port", int.class);
+    }
+
+    public void createGame() {
+        if (! closeGame()) return;
+        try {
+            localServer = new Server(config);
+            localServer.start(getServerPort());
+            connect(InetAddress.getLocalHost(), getServerPort());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            closeGame(true);
+        }
+    }
+
+    public void handleLoad() {
+        if (! closeGame()) return;
+        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setDialogTitle(_("Load game"));
+        fc.setDialogType(JFileChooser.OPEN_DIALOG);
+        fc.setFileFilter(new SavegameFileFilter());
+        fc.setLocale(getLocale());
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            if (file != null) {
+                try {
+                    localServer = new Server(new Snapshot(file));
+                    localServer.start(getServerPort());
+                    connect(InetAddress.getLocalHost(), getServerPort());
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage(), ex);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    public void handleQuit() {
+        if (closeGame() == true) {
+            System.exit(0);
+        }
+    }
+
+    public void handleAbout() {
+        new AboutDialog();
+    }
+
+    public boolean isClientActive() {
+        if (activePlayer == null) return false;
+        if (activePlayer.getSlot().getType() != SlotType.PLAYER) return false;
+        return getClientStub().isLocalPlayer(activePlayer);
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public void setActivePlayer(Player activePlayer) {
+        this.activePlayer = activePlayer;
+    }
+
+    void beep() {
+        if (settings.isPlayBeep()) {
+            try {
+                AudioInputStream beepStream = AudioSystem.getAudioInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
+                Clip c = AudioSystem.getClip();
+                c.open(beepStream);
+                c.start();
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    void clearActions() {
+        if (controlPanel.getActionPanel().getActions() != null) {
+            controlPanel.clearActions();
+        }
+    }
+
+    public DiscardedTilesDialog getDiscardedTilesDialog() {
+        return discardedTilesDialog;
+    }
 
 
-	//------------------- LEGACY: TODO refactor ---------------
-	//TODO move getColor on player - ale je to potreba i u slotu, pozor na to
+    //------------------- LEGACY: TODO refactor ---------------
+    //TODO move getColor on player - ale je to potreba i u slotu, pozor na to
 
 
-	public Color getPlayerSecondTunelColor(Player player) {
-		int slotNumber = player.getSlot().getNumber();
-		return playerColors[(slotNumber + 2) % playerColors.length];
-	}
+    public Color getPlayerSecondTunelColor(Player player) {
+        int slotNumber = player.getSlot().getNumber();
+        return playerColors[(slotNumber + 2) % playerColors.length];
+    }
 
-	public Color getPlayerColor(Player player) {
-		return playerColors[player.getSlot().getNumber()];
-	}
+    public Color getPlayerColor(Player player) {
+        return playerColors[player.getSlot().getNumber()];
+    }
 
-	public Color getPlayerColor(PlayerSlot playerSlot) {
-		return playerColors[playerSlot.getNumber()];
-	}
+    public Color getPlayerColor(PlayerSlot playerSlot) {
+        return playerColors[playerSlot.getNumber()];
+    }
 
-	public Color getPlayerColor() {
-		return playerColors[game.getActivePlayer().getSlot().getNumber()];
-	}
+    public Color getPlayerColor() {
+        return playerColors[game.getActivePlayer().getSlot().getNumber()];
+    }
 
 }

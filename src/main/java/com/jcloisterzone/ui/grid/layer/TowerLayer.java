@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.util.Map;
 import java.util.Map.Entry;

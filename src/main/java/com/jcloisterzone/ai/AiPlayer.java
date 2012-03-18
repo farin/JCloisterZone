@@ -2,7 +2,6 @@ package com.jcloisterzone.ai;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -10,13 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
@@ -93,44 +93,60 @@ public abstract class AiPlayer implements UserInterface {
 	
 	// dummy implementations
 	
-	protected final void selectDummyAbbeyPlacement(Set<Position> positions) {
-		getServer().placeNoTile();
+	protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {
+		for(PlayerAction action : actions) {
+			if (action instanceof TilePlacementAction) {
+				if (selectDummyTilePlacement((TilePlacementAction) action)) return;
+			}
+			if (action instanceof AbbeyPlacementAction) {
+				if (selectDummyAbbeyPlacement((AbbeyPlacementAction) action)) return;
+			}
+			if (action instanceof MeepleAction) {				
+				if (selectDummyMeepleAction((MeepleAction) action)) return;
+			}
+			if (action instanceof CaptureAction) {
+				if (selectDummyTowerCapture((CaptureAction) action)) return;
+			}
+		}
+		getServer().pass();
 	}
-
-	protected final void selectDummyTilePlacement(Map<Position, Set<Rotation>> placements) {
+	
+	protected boolean selectDummyAbbeyPlacement(AbbeyPlacementAction action) {
+		getServer().pass();
+		return true;
+	}
+	
+	protected boolean selectDummyTilePlacement(TilePlacementAction action) {
 		Position nearest = null, p0 = new Position(0, 0);
 		int min = Integer.MAX_VALUE;
-		for(Position pos : placements.keySet()) {
+		for(Position pos : action.getAvailablePlacements().keySet()) {
 			int dist = pos.squareDistance(p0);
 			if (dist < min) {
 				min = dist;
 				nearest = pos;
 			}
 		}
-		getServer().placeTile(placements.get(nearest).iterator().next(), nearest);
+		getServer().placeTile(action.getAvailablePlacements().get(nearest).iterator().next(), nearest);
+		return true;
 	}
-
-	protected final void selectDummyAction(List<PlayerAction> actions) {
-		for(PlayerAction action : actions) {
-			if (action instanceof MeepleAction) {
-				MeepleAction ma = (MeepleAction) action;
-				Position p = ma.getSites().keySet().iterator().next();
-				for(Location loc : ma.getSites().get(p)) {
-					Feature f = getBoard().get(p).getFeature(loc);
-					if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-						getServer().deployMeeple(p, loc, ma.getMeepleType());
-						return;
-					}
-				}
+	
+	protected boolean selectDummyMeepleAction(MeepleAction ma) {
+		Position p = ma.getSites().keySet().iterator().next();
+		for(Location loc : ma.getSites().get(p)) {
+			Feature f = getBoard().get(p).getFeature(loc);
+			if (f instanceof City || f instanceof Road || f instanceof Cloister) {
+				getServer().deployMeeple(p, loc, ma.getMeepleType());
+				return true;
 			}
 		}
-		getServer().placeNoFigure();
+		return false;
 	}
 
-	protected final void selectDummyTowerCapture(CaptureAction action) {
+	protected boolean selectDummyTowerCapture(CaptureAction action) {
 		Position p = action.getSites().keySet().iterator().next();
 		Location loc = action.getSites().get(p).iterator().next();
 		getServer().captureFigure(p, loc);
+		return true;
 	}
 
 	protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {

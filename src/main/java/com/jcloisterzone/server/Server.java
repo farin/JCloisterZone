@@ -204,13 +204,8 @@ public class Server extends GameSettings implements ServerIF {
 	}
 
 	@Override
-	public void placeNoFigure() {
-		stub.placeNoFigure();
-	}
-
-	@Override
-	public void placeNoTile() {
-		stub.placeNoTile();
+	public void pass() {
+		stub.pass();
 	}
 
 	@Override

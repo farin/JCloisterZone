@@ -7,11 +7,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ai.copy.CopyGamePhase;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -98,22 +99,21 @@ public abstract class RankingAiPlayer extends AiPlayer {
 	}
 	
 	
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
+	protected void selectAbbeyPlacement(AbbeyPlacementAction action) {
 		Map<Position, Set<Rotation>> placements = Maps.newHashMap();
-		for(Position pos : positions) {
+		for(Position pos : action.getSites()) {
 			placements.put(pos, Collections.singleton(Rotation.R0));
 		}
 		rankTilePlacement(placements);		
 		if (bestSoFar.getRank() > 2.0) {			
 			getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 		} else {			
-			getServer().placeNoTile();
+			getServer().pass();
 		}
 	}
 
-	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
+	protected void selectTilePlacement(TilePlacementAction action) {
+		Map<Position, Set<Rotation>> placements = action.getAvailablePlacements();
 		rankTilePlacement(placements);
 		getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
 	}	
@@ -204,20 +204,44 @@ public abstract class RankingAiPlayer extends AiPlayer {
 		}
 	}
 	
+	private void rankPass() {
+		SavePoint sp = spm.save();
+		getGame().getPhase().pass();
+		double currRank = rank();
+		if (currRank > bestSoFar.getRank()) { 
+			bestSoFar = new PositionRanking(currRank);
+		}		
+		spm.restore(sp);
+	}
+	
 	private void cleanRanking() {
 		bestSoFar = null;
 		scoreCache.clear();
 	}
+	
+	
 
 	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (isRankingInProcess()) {
-			rankAction(actions);
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
+		PlayerAction firstAction = actions.get(0);
+		
+		if (firstAction instanceof TilePlacementAction) {
+			selectTilePlacement((TilePlacementAction) firstAction);
+			return;
+		}
+		if (firstAction instanceof AbbeyPlacementAction) {
+			selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
 			return;
 		}
 		
+		if (isRankingInProcess()) {
+			rankAction(actions);
+			return;
+		} 
+		
 		if (bestSoFar == null) { //loaded game or wagon phase
-			backupGame();
+			backupGame(); 
+			if (canPass) rankPass();
 			rankAction(actions);
 			restoreGame();
 		}
@@ -242,14 +266,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
 				return;
 			}
 		}		
-		getServer().placeNoFigure();
+		getServer().pass();
 		cleanRanking();
 	}
 
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		throw new UnsupportedOperationException();
-	}
+
 
 	@Override
 	public void selectDragonMove(Set<Position> positions, int movesLeft) {

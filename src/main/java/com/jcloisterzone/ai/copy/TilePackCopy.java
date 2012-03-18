@@ -1,13 +1,10 @@
 package com.jcloisterzone.ai.copy;
 
-import java.util.Collections;
 import java.util.Set;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.game.Game;
 
 @Deprecated //TODEL
@@ -41,8 +38,8 @@ public class TilePackCopy implements TilePack {
 	}
 
 	@Override
-	public int tolalSize() {
-		return tilePack.tolalSize();
+	public int totalSize() {
+		return tilePack.totalSize();
 	}
 
 	@Override

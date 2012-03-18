@@ -41,6 +41,7 @@ import com.google.common.collect.Sets;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -278,7 +279,12 @@ public class Snapshot implements Serializable {
 			p.setPoints(Integer.parseInt(el.getAttribute("points")));
 			if (el.hasAttribute("ai-class")) {
 				slot.setType(SlotType.AI);
-				slot.setAiClassName(el.getAttribute("ai-class"));
+				String aiClassName = el.getAttribute("ai-class");
+//				//TODO temporaty for loading old games
+//				if ("com.jcloisterzone.ai.LegacyAiPlayer".equals(aiClassName)) {
+//					aiClassName = LegacyAiPlayer.class.getName();
+//				}
+				slot.setAiClassName(aiClassName);
 			} else {
 				if (el.hasAttribute("local")) {
 					//easy way how to mark player local - Server process result of this method

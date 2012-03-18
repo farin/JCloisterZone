@@ -19,6 +19,7 @@ public class MeepleAction extends SelectFeatureAction {
 	private final Class<? extends Meeple> meepleType;
 
 	public MeepleAction(Class<? extends Meeple> meepleType) {
+		super();
 		this.meepleType = meepleType;
 	}
 
@@ -48,7 +49,6 @@ public class MeepleAction extends SelectFeatureAction {
 
 	@Override
 	protected int getSortOrder() {
-		//TODO bad code
 		if (meepleType.equals(SmallFollower.class)) return 10;
 		if (meepleType.equals(BigFollower.class)) return 11;
 		if (meepleType.equals(Wagon.class)) return 12;

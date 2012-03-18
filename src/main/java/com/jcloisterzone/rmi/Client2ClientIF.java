@@ -18,9 +18,7 @@ public interface Client2ClientIF {
 
 	/* ---------------------- STARTED GAME MESSAGES ------------------*/
 
-	public void placeNoFigure();
-	public void placeNoTile();
-
+	public void pass();
 	public void placeTile(Rotation rotation, Position position);
 
 	public void deployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType);

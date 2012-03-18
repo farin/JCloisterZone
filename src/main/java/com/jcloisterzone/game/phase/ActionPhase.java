@@ -39,7 +39,7 @@ public class ActionPhase extends Phase {
 		if (isAutoTurnEnd(actions)) {
 			next();
 		} else {
-			game.getUserInterface().selectAction(actions);
+			notifyUI(actions, true);
 		}
 	}
 
@@ -54,7 +54,8 @@ public class ActionPhase extends Phase {
 		return true;
 	}
 
-	public void placeNoFigure() {
+	@Override
+	public void pass() {
 		next();
 	}
 
@@ -91,7 +92,7 @@ public class ActionPhase extends Phase {
 			return;
 		}
 		next(TowerCapturePhase.class);
-		game.getUserInterface().selectTowerCapture(captureAction);
+		notifyUI(captureAction, false);		
 	}
 
 	@Override

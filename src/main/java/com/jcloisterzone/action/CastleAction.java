@@ -8,7 +8,7 @@ import com.jcloisterzone.rmi.Client2ClientIF;
 
 public class CastleAction extends SelectFeatureAction {
 	
-	public CastleAction(Position position, Set<Location> sites) {
+	public CastleAction( Position position, Set<Location> sites) {
 		super(position, sites);
 	}
 

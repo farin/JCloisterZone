@@ -11,7 +11,7 @@ public abstract class SelectTileAction extends PlayerAction {
 
 	private final Set<Position> sites;
 
-	public SelectTileAction() {
+	public SelectTileAction() {		
 		this.sites = Sets.newHashSet();
 	}
 
@@ -22,7 +22,7 @@ public abstract class SelectTileAction extends PlayerAction {
 	public Set<Position> getSites() {
 		return sites;
 	}
-
+	
 	public abstract void perform(Client2ClientIF server, Position p);
 
 }

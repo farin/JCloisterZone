@@ -2,12 +2,9 @@ package com.jcloisterzone;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -60,7 +57,7 @@ public class Player implements Serializable {
 
 	public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
 		for(Special m : specialMeeples) {
-			if (m.isUndeployed() && clazz.isInstance(m)) {
+			if (!m.isDeployed() && clazz.isInstance(m)) {
 				return true;
 			}
 		}
@@ -69,7 +66,7 @@ public class Player implements Serializable {
 
 	public boolean hasFollower() {
 		for(Follower m : followers) {
-			if (m.isUndeployed()) {
+			if (!m.isDeployed()) {
 				return true;
 			}
 		}
@@ -78,7 +75,7 @@ public class Player implements Serializable {
 
 	public boolean hasFollower(Class<? extends Follower> clazz) {
 		for(Follower m : followers) {
-			if (m.isUndeployed() && clazz.isInstance(m)) {
+			if (!m.isDeployed() && clazz.isInstance(m)) {
 				return true;
 			}
 		}
@@ -89,32 +86,14 @@ public class Player implements Serializable {
 	public Meeple getUndeployedMeeple(Class<? extends Meeple> clazz) {
 		if (Follower.class.isAssignableFrom(clazz)) {
 			for(Follower m : followers) {
-				if (m.isUndeployed() && clazz.isInstance(m)) return m;
+				if (!m.isDeployed() && clazz.isInstance(m)) return m;
 			}
 		} else {
 			for(Special m : specialMeeples) {
-				if (m.isUndeployed() && clazz.isInstance(m)) return m;
+				if (!m.isDeployed() && clazz.isInstance(m)) return m;
 			}
 		}
 		return null;
-	}
-
-	public Collection<Follower> getUndeployedFollowers() {
-		return Collections2.filter(followers, new Predicate<Follower>() {
-			@Override
-			public boolean apply(Follower m) {
-				return m.isUndeployed();
-			}
-		});
-	}
-
-	public Collection<Special> getUndeployedSpecialMeeples() {
-		return Collections2.filter(specialMeeples, new Predicate<Special>() {
-			@Override
-			public boolean apply(Special m) {
-				return m.isUndeployed();
-			}
-		});
 	}
 
 	public void addPoints(int points, PointCategory category) {

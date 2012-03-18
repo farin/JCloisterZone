@@ -75,6 +75,7 @@ public class CreateGamePanel extends JPanel {
 			}
 		});
 		startGameButton.setEnabled(false);
+		startGameButton.requestFocus();
 
 		playersPanel = new JPanel();
 		playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -90,7 +91,7 @@ public class CreateGamePanel extends JPanel {
 		expansionPanel = new JPanel();
 		expansionPanel.setBorder(new TitledBorder(null, _("Expansions"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		expansionPanel.setLayout(new MigLayout("", "[]", "[]"));
-		for(Expansion exp: Expansion.values()) {
+		for (Expansion exp: Expansion.values()) {
 			if (! exp.isEnabled()) continue;
 			//if (exp == Expansion.WHEEL_OF_FORTUNE) continue;
 			JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
@@ -109,7 +110,7 @@ public class CreateGamePanel extends JPanel {
 		add(rulesPanel, "cell 2 1,grow");
 
 		Expansion prev = Expansion.BASIC;
-		for(CustomRule rule: CustomRule.values()) {
+		for (CustomRule rule: CustomRule.values()) {
 			if (prev != rule.getExpansion()) {
 				prev = rule.getExpansion();
 				JLabel label = new JLabel(prev.toString());
@@ -123,7 +124,7 @@ public class CreateGamePanel extends JPanel {
 	}
 
 	public void disposePanel() {
-		for(Component comp : playersPanel.getComponents()) {
+		for (Component comp : playersPanel.getComponents()) {
 			if (comp instanceof CreateGamePlayerPanel) {
 				((CreateGamePlayerPanel) comp).disposePanel();
 			}
@@ -177,7 +178,7 @@ public class CreateGamePanel extends JPanel {
 		if (expansions == null) {
 			expansions = EnumSet.allOf(Expansion.class);
 		}
-		for(Expansion exp : Expansion.values()) {
+		for (Expansion exp : Expansion.values()) {
 			if (exp.isEnabled()) {
 				boolean isSupported = expansions.contains(exp);
 				JCheckBox chbox = expansionCheckboxes.get(exp);
@@ -200,7 +201,7 @@ public class CreateGamePanel extends JPanel {
 		boolean allPlayersAssigned = true;
 		ArrayList<Integer> serials = new ArrayList<Integer>();
 
-		for(Component c : playersPanel.getComponents()) {
+		for (Component c : playersPanel.getComponents()) {
 			CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
 			PlayerSlot ps = playerPanel.getSlot();
 			if (ps == null || ps.getType() == SlotType.OPEN) {
@@ -216,7 +217,7 @@ public class CreateGamePanel extends JPanel {
 		}
 		if (mutableSlots && ! serials.isEmpty()) {
 			Collections.sort(serials);
-			for(Component c : playersPanel.getComponents()) {
+			for (Component c : playersPanel.getComponents()) {
 				CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
 				PlayerSlot ps = playerPanel.getSlot();
 				if (ps != null && ps.getSerial() != null) {

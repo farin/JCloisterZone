@@ -3,17 +3,14 @@ package com.jcloisterzone.event;
 import java.util.EnumSet;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
@@ -87,12 +84,6 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 		((GameEventListener)b).playerActivated(p, p2);
 	}
 
-//	@Override
-//	public void scoreAssigned(int score, PlacedFigure pf) {
-//		((GameEventListener)a).scoreAssigned(score, pf);
-//		((GameEventListener)b).scoreAssigned(score, pf);
-//	}
-
 	@Override
 	public void tileDrawn(Tile tile) {
 		((GameEventListener)a).tileDrawn(tile);
@@ -131,27 +122,9 @@ public class EventMulticaster implements GameEventListener, UserInterface {
 	}
 
 	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		((UserInterface)a).selectAbbeyPlacement(positions);
-		((UserInterface)b).selectAbbeyPlacement(positions);
-	}
-
-	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> positions) {
-		((UserInterface)a).selectTilePlacement(positions);
-		((UserInterface)b).selectTilePlacement(positions);
-	}
-
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		((UserInterface)a).selectAction(actions);
-		((UserInterface)b).selectAction(actions);
-	}
-
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		((UserInterface)a).selectTowerCapture(action);
-		((UserInterface)b).selectTowerCapture(action);
+	public void selectAction(List<PlayerAction> actions, boolean canPass) {
+		((UserInterface)a).selectAction(actions, canPass);
+		((UserInterface)b).selectAction(actions, canPass);
 	}
 
 	@Override

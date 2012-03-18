@@ -1,26 +1,24 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
-import java.util.Collections;
+import java.awt.KeyboardFocusManager;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.CaptureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.Castle;
@@ -36,229 +34,211 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
+import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 
 public class ClientController implements GameEventListener, UserInterface {
-	
-	private final Client client;
-	
-	public ClientController(Client client) {
-		this.client = client;
-	}
-	
-	@Override
-	public void updateCustomRule(CustomRule rule, Boolean enabled) {
-		client.getCreateGamePanel().updateCustomRule(rule, enabled);
-	}
 
-	@Override
-	public void updateExpansion(Expansion expansion, Boolean enabled) {
-		client.getCreateGamePanel().updateExpansion(expansion, enabled);
-	}
+    private final Client client;
+    private KeyController keyController;
 
-	@Override
-	public void updateSlot(PlayerSlot slot) {
-		client.getCreateGamePanel().updateSlot(slot);
-	}
+    public ClientController(Client client) {
+        this.client = client;
+    }
 
-	@Override
-	public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-		client.getCreateGamePanel().updateSupportedExpansions(expansions);
-	}
+    @Override
+    public void updateCustomRule(CustomRule rule, Boolean enabled) {
+        client.getCreateGamePanel().updateCustomRule(rule, enabled);
+    }
 
-	@Override
-	public void started(Snapshot snapshot) {
-		client.cleanContentPane();
+    @Override
+    public void updateExpansion(Expansion expansion, Boolean enabled) {
+        client.getCreateGamePanel().updateExpansion(expansion, enabled);
+    }
 
-		Container pane = client.getContentPane();
+    @Override
+    public void updateSlot(PlayerSlot slot) {
+        client.getCreateGamePanel().updateSlot(slot);
+    }
 
-		pane.setLayout(new BorderLayout());
-		ControlPanel controlPanel = new ControlPanel(client);
-		client.setControlPanel(controlPanel);
-		JScrollPane ctrlScroll = new JScrollPane(controlPanel);
-		ctrlScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		ctrlScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		pane.add(ctrlScroll, BorderLayout.EAST);
-		
-		MainPanel mainPanel = new MainPanel(client);
-		client.setMainPanel(mainPanel);
-		JScrollPane scroll = new JScrollPane(mainPanel);
-		scroll.setWheelScrollingEnabled(false);
-		pane.add(scroll, BorderLayout.CENTER);
-		pane.setVisible(true);
+    @Override
+    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
+        client.getCreateGamePanel().updateSupportedExpansions(expansions);
+    }
 
-		mainPanel.started(snapshot);
-		controlPanel.started();
-		MenuBar menu = client.getJMenuBar();
-		menu.setZoomInEnabled(true);
-		menu.setZoomOutEnabled(true);
-		menu.setIsGameRunning(true);
-	}
+    @Override
+    public void started(Snapshot snapshot) {
+        client.cleanContentPane();
 
-	@Override
-	public void playerActivated(Player turnPlayer, Player activePlayer) {
-		client.setActivePlayer(activePlayer);
-		client.getControlPanel().playerActivated(turnPlayer, activePlayer);
+        Container pane = client.getContentPane();
+        pane.setLayout(new BorderLayout());
 
-		//TODO better image quality ?
-		Color c = client.getPlayerColor(activePlayer);
-		Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
-		client.setIconImage(image);
-	}
+        ControlPanel controlPanel = new ControlPanel(client);
+        client.setControlPanel(controlPanel);
 
-	@Override
-	public void tileDrawn(Tile tile) {
-		client.clearActions();
-		client.getControlPanel().tileDrawn(tile);
-	}
+        MainPanel mainPanel = new MainPanel(client);
+        client.setMainPanel(mainPanel);
+        pane.add(mainPanel, BorderLayout.CENTER);
 
-	@Override
-	public void tileDiscarded(String tileId) {
-		DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
-		if (discardedTilesDialog == null) {
-			discardedTilesDialog = new DiscardedTilesDialog(client);
-			client.setDiscardedTilesDialog(discardedTilesDialog);
-			client.getJMenuBar().setShowDiscardedEnabled(true);
-		}
-		discardedTilesDialog.addTile(tileId);
-		discardedTilesDialog.setVisible(true);
-	}
+        mainPanel.started(snapshot);
 
-	@Override
-	public void tilePlaced(Tile tile) {
-		client.getMainPanel().tilePlaced(tile);
-		client.getControlPanel().tilePlaced(tile);
-	}
+        if (keyController == null) {
+            //first started game
+            keyController = new KeyController(client);
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
+        }
 
-	@Override
-	public void dragonMoved(Position p) {
-		client.getMainPanel().dragonMoved(p);
-	}
-	
-	@Override
-	public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
-		client.getMainPanel().tunnelPiecePlaced(player, p, d, isSecondPiece);
-	}
+        controlPanel.getActionPanel().registerListener(client.getGridPanel());
 
+        pane.setVisible(true);
 
-	@Override
-	public void gameOver() {
-		client.resetWindowIcon();
-		client.closeGame(true);
-		new GameOverDialog(client);
-	}
-	
-	@Override
-	public void fairyMoved(Position p) {
-		client.getMainPanel().fairyMoved(p);
-	}
+        MenuBar menu = client.getJMenuBar();
+        menu.setZoomInEnabled(true);
+        menu.setZoomOutEnabled(true);
+        menu.setIsGameRunning(true);
+    }
 
-	@Override
-	public void towerIncreased(Position p, Integer height) {
-		client.clearActions();
-		client.getMainPanel().towerIncreased(p, height);
-	}
+    @Override
+    public void playerActivated(Player turnPlayer, Player activePlayer) {
+        client.setActivePlayer(activePlayer);
+        client.getControlPanel().playerActivated(turnPlayer, activePlayer);
 
-	@Override
-	public void ransomPaid(Player from, Player to, Follower f) {
-		client.getControlPanel().repaint();
-	}
-	
-	//------------------ Meeple events -----------
+        if (client.isClientActive()) {
+            client.beep();
+        }
+
+        //TODO better image quality ?
+        Color c = client.getPlayerColor(activePlayer);
+        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
+        client.setIconImage(image);
+    }
+
+    @Override
+    public void tileDrawn(Tile tile) {
+        client.clearActions();
+        int packSize = client.getGame().getTilePack().totalSize();
+        client.setTitle(Client.BASE_TITLE + " ⋅ " + packSize + " " + _("tiles left") );
+    }
+
+    @Override
+    public void tileDiscarded(String tileId) {
+        DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
+        if (discardedTilesDialog == null) {
+            discardedTilesDialog = new DiscardedTilesDialog(client);
+            client.setDiscardedTilesDialog(discardedTilesDialog);
+            client.getJMenuBar().setShowDiscardedEnabled(true);
+        }
+        discardedTilesDialog.addTile(tileId);
+        discardedTilesDialog.setVisible(true);
+    }
+
+    @Override
+    public void tilePlaced(Tile tile) {
+        client.getMainPanel().tilePlaced(tile);
+    }
+
+    @Override
+    public void dragonMoved(Position p) {
+        client.getMainPanel().dragonMoved(p);
+    }
+
+    @Override
+    public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
+        client.getMainPanel().tunnelPiecePlaced(player, p, d, isSecondPiece);
+    }
 
 
-	@Override
-	public void deployed(Meeple m) {
-		client.getMainPanel().deployed(m);
-	}
+    @Override
+    public void gameOver() {
+        client.setTitle(Client.BASE_TITLE);
+        client.resetWindowIcon();
+        client.closeGame(true);
+        new GameOverDialog(client);
+    }
 
-	@Override
-	public void undeployed(Meeple m) {
-		client.getMainPanel().undeployed(m);
-	}
-	
-	@Override
-	public void bridgeDeployed(Position pos, Location loc) {
-		client.getMainPanel().bridgeDeployed(pos, loc);	
-	}
-	
-	@Override
-	public void castleDeployed(Castle castle1, Castle castle2) {
-		client.getMainPanel().castleDeployed(castle1, castle2);
-	}
-	
-	// ------------------ Feature evnts ----------
+    @Override
+    public void fairyMoved(Position p) {
+        client.getMainPanel().fairyMoved(p);
+    }
 
-	@Override
-	public void completed(Completable feature, CompletableScoreContext ctx) { }
+    @Override
+    public void towerIncreased(Position p, Integer height) {
+        client.clearActions();
+        client.getMainPanel().towerIncreased(p, height);
+    }
 
-	@Override
-	public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
-		client.getMainPanel().scored(feature, label, meeple, finalScoring);
-		client.getControlPanel().getPlayersPanel().repaint();
-	}
+    @Override
+    public void ransomPaid(Player from, Player to, Follower f) {
+        client.getGridPanel().repaint();
+    }
 
-	@Override
-	public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
-		client.getMainPanel().scored(position, player, label, finalScoring);
-		client.getControlPanel().getPlayersPanel().repaint();
-	}
-	
-	// User interface
-	
-	@Override
-	public void showWarning(String title, String message) {
-		JOptionPane.showMessageDialog(client, message, title, JOptionPane.WARNING_MESSAGE);		
-	}
+    //------------------ Meeple events -----------
 
-	
 
-	@Override
-	public void selectDragonMove(Set<Position> positions, int movesLeft) {
-		client.clearActions();
-		DragonLayer dragonDecoration = client.getGridPanel().findDecoration(DragonLayer.class);
-		dragonDecoration.setMoves(movesLeft);
-		client.getGridPanel().repaint();
-		if (client.isClientActive()) {
-			client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
-			client.beep();
-		}
-	}	
+    @Override
+    public void deployed(Meeple m) {
+        client.getMainPanel().deployed(m);
+    }
 
-	@Override
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		client.clearActions();
-		client.getControlPanel().tileDrawn(client.getGame().getTilePack().getAbbeyTile());
-		if (client.isClientActive()) {
-			client.beep();
-			client.getControlPanel().selectAbbeyPlacement(positions);
-		}
-		client.getMainPanel().selectTilePlacement(positions);
-	}
+    @Override
+    public void undeployed(Meeple m) {
+        client.getMainPanel().undeployed(m);
+    }
 
-	@Override
-	public void selectTilePlacement(Map<Position, Set<Rotation>> placements) {
-		client.clearActions();
-		Set<Position> positions = placements.keySet();
-		if (client.isClientActive()) {
-			client.beep();
-			client.getControlPanel().selectTilePlacement(positions);
-		}
-		client.getMainPanel().selectTilePlacement(positions);
-	}
+    @Override
+    public void bridgeDeployed(Position pos, Location loc) {
+        client.getMainPanel().bridgeDeployed(pos, loc);
+    }
 
-	@Override
-	public void selectAction(List<PlayerAction> actions) {
-		if (client.isClientActive()) {
-			client.getControlPanel().selectAction(actions, true);
-		}
-	}
+    @Override
+    public void castleDeployed(Castle castle1, Castle castle2) {
+        client.getMainPanel().castleDeployed(castle1, castle2);
+    }
 
-	@Override
-	public void selectTowerCapture(CaptureAction action) {
-		client.getControlPanel().selectAction(Collections.<PlayerAction>singletonList(action), false);
-	}
+    // ------------------ Feature evnts ----------
+
+    @Override
+    public void completed(Completable feature, CompletableScoreContext ctx) { }
+
+    @Override
+    public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
+        client.getMainPanel().scored(feature, label, meeple, finalScoring);
+        client.getMainPanel().repaint(); //players only
+    }
+
+    @Override
+    public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
+        client.getMainPanel().scored(position, player, label, finalScoring);
+        client.getMainPanel().repaint(); //players only
+    }
+
+    // User interface
+
+    @Override
+    public void showWarning(String title, String message) {
+        JOptionPane.showMessageDialog(client, message, title, JOptionPane.WARNING_MESSAGE);
+    }
+
+    @Override
+    public void selectDragonMove(Set<Position> positions, int movesLeft) {
+        client.clearActions();
+        DragonLayer dragonDecoration = client.getGridPanel().findDecoration(DragonLayer.class);
+        dragonDecoration.setMoves(movesLeft);
+        client.getGridPanel().repaint();
+        if (client.isClientActive()) {
+            client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
+            client.beep();
+        }
+    }
+
+    @Override
+    public void selectAction(List<PlayerAction> actions, boolean canPass) {
+        client.clearActions();
+        if (client.isClientActive()) {
+            client.getControlPanel().selectAction(actions, canPass);
+        }
+    }
 
 }

@@ -1,171 +1,119 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.JLabelWithAntialiasing;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends FakeComponent {
 
-	private final Client client;
+    public static final Color BG_COLOR = new Color(0, 0, 0, 30);
+    public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
+    public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
+    public static final int CORNER_DIAMETER = 20;
 
-	private NextSquare nextTileLabel;
-	private JLabelWithAntialiasing packSize;
-	private JButton buttonNextTurn;
-	private ActionPanel actionPanel;
-	private PlayersPanel playersPanel;
+    private final Client client;
 
-	public static final int PANEL_WIDTH = 180;
-	private static Font cardFont = new Font("Helvecia", Font.BOLD, 22);
-	private static final String IMG_END_TURN = "sysimages/endTurn.png";
+    private boolean canPass;
 
-	public ControlPanel(final Client client) {
-		this.client = client;
-		client.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					if (buttonNextTurn.isEnabled()) {
-						selectNoAction();
-					}
-				}
-			}
-		});
-		setLayout(new MigLayout("", "[]", "[][][]"));
+    private ActionPanel actionPanel;
+    private PlayerPanel[] playerPanels;
 
-			JPanel top = new JPanel(new MigLayout());
-			nextTileLabel = new NextSquare(client);
-			top.add(nextTileLabel, "");
+    public static final int PANEL_WIDTH = 220;
 
-			packSize = new JLabelWithAntialiasing("");
-			packSize.setFont(cardFont);
-			top.add(packSize, "wrap, gapleft 10");
+    public ControlPanel(final Client client) {
+        this.client = client;
 
-			buttonNextTurn = new JButton(new ImageIcon(ControlPanel.class.getClassLoader().getResource(IMG_END_TURN)));
-			buttonNextTurn.setToolTipText(_("Next"));
-			buttonNextTurn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					selectNoAction();
-				}
-			});
-			buttonNextTurn.setEnabled(false);
-			top.add(buttonNextTurn, "wrap");
+        actionPanel = new ActionPanel(client);
 
-		add(top, "wrap");
+        Player[] players = client.getGame().getAllPlayers();
+        PlayerPanelImageCache cache = new PlayerPanelImageCache(client);
+        playerPanels = new PlayerPanel[players.length];
 
-		actionPanel = new ActionPanel(client);
-		add(actionPanel, "wrap");
+        for (int i = 0; i < players.length; i++) {
+            playerPanels[i] = new PlayerPanel(client, players[i], cache);
+        }
+    }
 
-		playersPanel = new PlayersPanel(client);
-		add(playersPanel, "wrap, grow");
-	}
+//    //TODO clean coupling and component initialization (GridPanel, MainPanel & ControlPanel
+//    public void registerMouseListener() {
+//        client.getGridPanel().addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                int w = client.getGridPanel().getWidth();
+//                if (e.getX() > w-PANEL_WIDTH) {
+//                    //click on panel
+//
+//                }
+//            }
+//        });
+//    }
 
-	public void selectNoAction() {
-		if (getTileId() == null) {
-			client.getServer().placeNoFigure();
-		} else {
-			client.getServer().placeNoTile();
-		}
-	}
+    @Override
+    public void paintComponent(Graphics2D g2) {
+        AffineTransform origTransform = g2.getTransform();
 
-	public ActionPanel getActionPanel() {
-		return actionPanel;
-	}
+//		GridPanel gp = client.getGridPanel();
 
-	public String getTileId() {
-		if (nextTileLabel.getTile() == null) return null;
-		return nextTileLabel.getTile().getId();
-	}
+        g2.translate(0, 70);
+        actionPanel.paintComponent(g2);
 
-	public Rotation getRotation() {
-		if (nextTileLabel.getTile() == null) return null;
-		return nextTileLabel.getTile().getRotation();
-	}
+//		gp.profile("action panel");
 
-	public void rotateTile() {
-		if (nextTileLabel.getTile() != null && client.isClientActive()) {
-			nextTileLabel.getTile().setRotation(getRotation().next());
-			nextTileLabel.repaint();
-			client.getGridPanel().repaint();
-		}
-	}
+        g2.translate(0, 60);
+        for (PlayerPanel pp : playerPanels) {
+            pp.paintComponent(g2);
+        }
 
-	public void started() {
-		playersPanel.started();
-	}
+//		gp.profile("players");
 
-	public void tileDrawn(Tile tile) {
-		nextTileLabel.setTile(tile);
-		packSize.setText(client.getGame().getTilePack().tolalSize() + "");
-	}
+        g2.setTransform(origTransform);
+    }
 
-	public void selectTilePlacement(Set<Position> positions) {
-		nextTileLabel.setEnabled(true);
-		nextTileLabel.requestFocus();
-	}
+    public void pass() {
+        if (canPass) {
+            client.getServer().pass();
+        }
+    }
 
-	public void selectAbbeyPlacement(Set<Position> positions) {
-		nextTileLabel.setEnabled(true);
-		buttonNextTurn.setEnabled(true);
-		buttonNextTurn.requestFocus();
-	}
+    public ActionPanel getActionPanel() {
+        return actionPanel;
+    }
 
-	public void tilePlaced(Tile tile) {
-		nextTileLabel.setEmptyIcon();
-	}
+    public void selectAction(List<PlayerAction> actions, boolean canPass) {
+        //direct collection sort can be unsupported - so copy to array first!
+        int i = 0;
+        PlayerAction[] arr = new PlayerAction[actions.size()];
+        for(PlayerAction pa : actions) {
+            pa.setClient(client);
+            arr[i++] = pa;
+        }
+        Arrays.sort(arr);
+        actionPanel.setActions(arr);
+        this.canPass = canPass;
+        client.getGridPanel().repaint(); //players only
+    }
 
-	public void selectAction(List<PlayerAction> actions, boolean canPass) {
-		//direct collection sort can be unsupported - so copy to array first!
-		PlayerAction[] arr = actions.toArray(new PlayerAction[actions.size()]);
-		Arrays.sort(arr);
-		actionPanel.setActions(arr);
-		buttonNextTurn.setEnabled(canPass);
-		buttonNextTurn.requestFocus();
-		playersPanel.repaint();
-	}
+    public void clearActions() {
+        actionPanel.clearActions();
+        canPass = false;
+    }
 
-	public void clearActions() {
-		actionPanel.clearActions();
-		buttonNextTurn.setEnabled(false);
-	}
+    public void playerActivated(Player turn, Player active) {
+        client.getGridPanel().repaint(); //players only
+    }
 
-	public void playerActivated(Player turn, Player active) {
-		playersPanel.repaint();
-	}
+    public void closeGame() {
+        clearActions();
+        canPass = false;
+    }
 
-	public void closeGame() {
-		clearActions();
-		nextTileLabel.setEmptyIcon();
-		buttonNextTurn.setEnabled(false);
-		packSize.setText("");
-	}
-
-	public PlayersPanel getPlayersPanel() {
-		return playersPanel;
-	}
-
-	public NextSquare getNextTileLabel() {
-		return nextTileLabel;
-	}
 }
 
