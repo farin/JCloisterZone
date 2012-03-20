@@ -13,6 +13,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 
@@ -43,18 +44,14 @@ public class TilePlacementAction extends PlayerAction {
     @Override
     public Image getImage(Player player, boolean active) {
         Image img =  client.getTileTheme().getTileImage(tile.getId());
-        //if (tileRotation != Rotation.R0) {
-            //TODO is buffered image necessary
-            int w = img.getWidth(null), h = img.getHeight(null);
-            BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            AffineTransform at = tileRotation.getAffineTransform(w);
-            Graphics2D ig = bi.createGraphics();
-            ig.drawImage(img, at, null);
-            ig.setColor(Color.BLACK);
-            ig.drawRect(0, 0, w-1, h-1);
-            return bi;
-//		}
-//		return img;
+        int w = img.getWidth(null), h = img.getHeight(null);
+        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        AffineTransform at = tileRotation.getAffineTransform(w);
+        Graphics2D ig = bi.createGraphics();
+        ig.drawImage(img, at, null);
+        ig.setColor(Color.BLACK);
+        ig.drawRect(0, 0, w-1, h-1);
+        return bi;
     }
 
     public void perform(Client2ClientIF server, Rotation rotation, Position p) {
@@ -67,10 +64,17 @@ public class TilePlacementAction extends PlayerAction {
     }
 
     @Override
-    public void switchAction() {
+    public void forward() {
         tileRotation = tileRotation.next();
-        client.getControlPanel().getActionPanel().refreshImageCache();
-        client.getMainPanel().repaint();
+        ActionPanel panel = client.getControlPanel().getActionPanel();
+        panel.refreshImageCache();
+    }
+
+    @Override
+    public void backward() {
+        tileRotation = tileRotation.prev();
+        ActionPanel panel = client.getControlPanel().getActionPanel();
+        panel.refreshImageCache();
     }
 
 }

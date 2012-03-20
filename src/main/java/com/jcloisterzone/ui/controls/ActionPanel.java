@@ -20,7 +20,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     public static final int LINE_HEIGHT = 30;
     public static final int PADDING = 3;
     public static final int ICON_SIZE = 40;
-    public static final int ACTIVE_ICON_SIZE = 50;
+    public static final int ACTIVE_ICON_SIZE = 55;
 
     private final Client client;
     private PlayerAction[] actions;
@@ -28,27 +28,14 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
     //cached scaled smooth images
     private Image[] selected, deselected;
-    private boolean refreshImages;
+    private boolean refreshImages, refreshMouseRegions;
 
     public ActionPanel(Client client) {
         this.client = client;
-
-        //TODO
-//		addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (e.getButton() != MouseEvent.BUTTON1) return;
-//				if (e.getX() < 2) return;
-//				int index = (e.getX() - 2) / ICON_SIZE;
-//				if (index < actions.length && index >= 0) {
-//					setSelectedActionIndex(index);
-//				}
-//			}
-//		});
     }
 
     private void repaint() {
-        client.getMainPanel().repaint();
+        client.getGridPanel().repaint();
     }
 
     public PlayerAction[] getActions() {
@@ -59,7 +46,8 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
         if (client.isClientActive()) {
             selected = new Image[actions.length];
             deselected = new Image[actions.length];
-            refreshImageCache();
+            refreshImages = true;
+            refreshMouseRegions = true;
             this.actions = actions;
             if (actions.length > 0) {
                 setSelectedActionIndex(0);
@@ -72,10 +60,15 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     public void refreshImageCache() {
         //refresh is executed in AWT thread
         refreshImages = true;
+        repaint();
     }
 
     private void doRefreshImageCache() {
-        if (actions == null) return;
+        if (actions == null) {
+            selected = null;
+            deselected = null;
+        }
+
         Player activePlayer = client.getGame().getActivePlayer();
         for(int i = 0; i < actions.length; i++) {
             selected[i] = new ImageIcon(
@@ -89,26 +82,27 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
     public void clearActions() {
         deselectAction();
-        refreshImages = false;
-        selected = null;
-        deselected = null;
         this.actions = null;
         this.selectedActionIndex = -1;
+        refreshImages = true;
+        refreshMouseRegions = true;
         repaint();
     }
 
-    public void switchAction() {
-        if (selectedActionIndex != -1) {
-            getSelectedAction().switchAction();
-        }
+    public void forward() {
+        if (selectedActionIndex != -1) getSelectedAction().forward();
     }
 
-    public void nextAction() {
+    public void backward() {
+        if (selectedActionIndex != -1) getSelectedAction().backward();
+    }
+
+    public void rollAction(int change) {
         if (client.isClientActive()) {
             if (actions.length == 0) return;
-            setSelectedActionIndex(selectedActionIndex == actions.length - 1 ? 0 : selectedActionIndex + 1);
+            int idx = (selectedActionIndex + change + actions.length) % actions.length;
+            setSelectedActionIndex(idx);
             repaint();
-            client.getGridPanel().repaint();
         }
     }
 
@@ -139,14 +133,22 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
         if (actions == null || actions.length == 0) return;
 
+        //possible race condition - (but AtomBoolean cannot be used, too slow for painting)
+        boolean refreshImages = this.refreshImages;
+        this.refreshImages = false;
+        boolean refreshMouseRegions = this.refreshMouseRegions;
+        this.refreshMouseRegions = false;
+
         if (refreshImages) {
             doRefreshImageCache();
-            refreshImages = false;
         }
 
-        int x = 2*PADDING;
+        int x = 3*PADDING;
 
-        getMouseRegions().clear();
+
+        if (refreshMouseRegions) {
+            getMouseRegions().clear();
+        }
         for(int i = 0; i < actions.length; i++) {
             boolean active = (i == selectedActionIndex);
 
@@ -154,8 +156,9 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
             int size = img.getWidth(null);
             int iy = (LINE_HEIGHT-size) / 2;
 
-            //TODO clean and create regions only on selected action change !!!
-            getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy, size, size), this, i));
+            if (refreshMouseRegions) {
+                getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy, size, size), this, i));
+            }
             g2.drawImage(img, x, iy, size, size, null);
             x += size + PADDING;
         }

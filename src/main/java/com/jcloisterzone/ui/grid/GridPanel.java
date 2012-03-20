@@ -22,7 +22,6 @@ import javax.swing.UIManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.XmlUtils;
@@ -31,7 +30,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
-import com.jcloisterzone.ui.controls.MouseListeningRegion;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
@@ -90,15 +88,23 @@ public class GridPanel extends JComponent {
             new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getButton() == MouseEvent.BUTTON2) {
+                    switch (e.getButton()) {
+                    case MouseEvent.BUTTON2:
                         int clickX = e.getX()-offsetX;
                         int clickY = e.getY()-offsetY;
                         moveCenterTo(clickX/(float)squareSize, clickY/(float)squareSize);
-                    }
-                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        break;
+                    case MouseEvent.BUTTON3:
+                    case 5:
                         if (client.isClientActive()) {
-                            client.getControlPanel().getActionPanel().switchAction();
+                            client.getControlPanel().getActionPanel().forward();
                         }
+                        break;
+                    case 4:
+                        if (client.isClientActive()) {
+                            client.getControlPanel().getActionPanel().backward();
+                        }
+                        break;
                     }
                 }
             }

@@ -2,8 +2,6 @@ package com.jcloisterzone.ui.controls;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
@@ -62,12 +60,12 @@ public class ControlPanel extends FakeComponent {
 
 //		GridPanel gp = client.getGridPanel();
 
-        g2.translate(0, 70);
+        g2.translate(0, 40);
         actionPanel.paintComponent(g2);
 
 //		gp.profile("action panel");
 
-        g2.translate(0, 60);
+        g2.translate(0, 70);
         for (PlayerPanel pp : playerPanels) {
             pp.paintComponent(g2);
         }
