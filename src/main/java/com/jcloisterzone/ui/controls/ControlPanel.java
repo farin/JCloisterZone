@@ -12,10 +12,20 @@ import com.jcloisterzone.ui.Client;
 
 public class ControlPanel extends FakeComponent {
 
-    public static final Color BG_COLOR = new Color(0, 0, 0, 30);
-    public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
+//    public static final Color BG_COLOR = new Color(0, 0, 0, 30);
+//    public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
+//    public static final Color BG_COLOR = new Color(223, 223, 223, 200);
+//    public static final Color ACTIVE_BG_COLOR = new Color(208, 208, 208, 200);
+    //public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
+    //public static final int CORNER_DIAMETER = 20;
+
+    public static final Color BG_COLOR = new Color(210, 210, 210, 200);
+    //public static final Color ACTIVE_BG_COLOR = new Color(206, 206, 206, 200);
+    @Deprecated
+    public static final Color ACTIVE_BG_COLOR = BG_COLOR;
     public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
-    public static final int CORNER_DIAMETER = 20;
+
+    public static final int CORNER_DIAMETER = 16;
 
     private final Client client;
 

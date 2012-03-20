@@ -30,6 +30,7 @@ import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class PlayerPanel extends FakeComponent {
@@ -116,7 +117,7 @@ public class PlayerPanel extends FakeComponent {
 
 //		gp.profile(" > get flags");
 
-        BufferedImage bimg = new BufferedImage(PANEL_WIDTH, 200, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
         Graphics2D g2 = bimg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

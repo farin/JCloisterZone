@@ -13,6 +13,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
@@ -45,7 +46,7 @@ public class TilePlacementAction extends PlayerAction {
     public Image getImage(Player player, boolean active) {
         Image img =  client.getTileTheme().getTileImage(tile.getId());
         int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi = UiUtils.newTransparentImage(w, h);
         AffineTransform at = tileRotation.getAffineTransform(w);
         Graphics2D ig = bi.createGraphics();
         ig.drawImage(img, at, null);

@@ -5,6 +5,8 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -80,6 +82,7 @@ public class Client extends JFrame /*implements UserInterface*/ {
 
     private Server localServer;
     private ServerIF server;
+
 
     private Game game;
     //active player must be cached locally because of game's active player record is changed in other thread immediately

@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import sun.net.www.content.text.plain;
 
 import com.google.common.collect.Maps;
@@ -38,7 +40,7 @@ public class PlayerPanelImageCache {
     }
 
     private Image scaleImage(Image img) {
-        return img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        return new ImageIcon(img.getScaledInstance(30, 30, Image.SCALE_SMOOTH)).getImage();
     }
 
     private void scaleFigureImages(Player player, Color color, Collection<? extends Meeple> meeples) {

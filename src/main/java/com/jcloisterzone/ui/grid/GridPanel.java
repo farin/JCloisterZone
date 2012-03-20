@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -52,6 +53,17 @@ public class GridPanel extends JComponent {
     //focus
     private int offsetX, offsetY;
     private float cx = 0.0f, cy = 0.0f;
+
+//    //blur under control panel
+//    private static final float[] BLUR_KERNEL = new float[64];
+//    static {
+//        for (int i = 0; i < BLUR_KERNEL.length; i++) {
+//            BLUR_KERNEL[i] = 1.0f/BLUR_KERNEL.length;
+//        }
+//    }
+//    private static final ConvolveOp BLUR_OP = new ConvolveOp(new Kernel(8, 8, BLUR_KERNEL), ConvolveOp.EDGE_NO_OP, null);
+//    private static final Color TRANSPARENT_COLOR = new Color(255, 255, 255, 0);
+//    private BufferedImage blurBuffer;
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
 
@@ -298,22 +310,7 @@ public class GridPanel extends JComponent {
         last = now;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        AffineTransform origTransform = g2.getTransform();
-        //super.paintComponent(g);
-
-        System.out.println("------------------------");
-        ts = last = System.currentTimeMillis();
-
-
-        offsetX = calculateCenterX() - (int)(cx * squareSize);
-        offsetY = calculateCenterY() - (int)(cy * squareSize);
-        g2.translate(offsetX, offsetY);
-
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    private void paintGrid(Graphics2D g2) {
         g2.setColor(UIManager.getColor("Panel.background"));
         g2.fillRect(left*squareSize, top*squareSize, (right+2)*squareSize-1, (bottom+2)*squareSize-1);
         g2.setColor(Color.LIGHT_GRAY);
@@ -327,6 +324,33 @@ public class GridPanel extends JComponent {
         }
 
         profile("grid");
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        //super.paintComponent(g);
+
+        System.out.println("------------------------");
+        ts = last = System.currentTimeMillis();
+
+        int w = getWidth(), h = getHeight();
+//        int w = getWidth(), h = getHeight();
+//        if (blurBuffer == null || blurBuffer.getWidth() != w || blurBuffer.getHeight() != h) {
+//            blurBuffer = UiUtils.newTransparentImage(w, h);
+//        }
+//        Graphics2D g2 = blurBuffer.createGraphics();
+//        g2.setBackground(TRANSPARENT_COLOR);
+//        g2.clearRect(0, 0, w, h);
+
+        AffineTransform origTransform = g2.getTransform();
+        offsetX = calculateCenterX() - (int)(cx * squareSize);
+        offsetY = calculateCenterY() - (int)(cy * squareSize);
+        g2.translate(offsetX, offsetY);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        paintGrid(g2);
 
         //paint layers
         synchronized (layers) {
@@ -337,7 +361,34 @@ public class GridPanel extends JComponent {
         }
 
         g2.setTransform(origTransform);
-        g2.translate(getWidth() - ControlPanel.PANEL_WIDTH, 0);
+
+        //g2.dispose();
+        //g2.setTransform(origTransform);
+//        Graphics2D gComp = (Graphics2D) g;
+//        gComp.drawImage(blurBuffer, 0, 0, null);
+//        gComp.setClip(new Rectangle(getWidth() - ControlPanel.PANEL_WIDTH, 0, ControlPanel.PANEL_WIDTH, h));
+//        gComp.drawImage(blurBuffer, BLUR_OP, 0, 0);
+//        gComp.setClip(g.getClip());
+//        profile("blur");
+
+        g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
+        int alpha = 225, x = -20;
+        Color color = new Color(255, 255, 255, alpha);
+        g2.setColor(color);
+        g2.fillRect(x, 0, -x+ControlPanel.PANEL_WIDTH, h);
+        color = new Color(255, 255, 255, (int) (alpha * 0.7));
+        g2.setColor(color);
+        g2.fillRect(x-3, 0, 3, h);
+//        while (alpha > 0) {
+//            alpha -= 3;
+//            x -= 1;
+//            color = new Color(255, 255, 255, alpha);
+//            g2.setColor(color);
+//            //g2.fillRect(x, 0, 1, h);
+//            g2.drawLine(x, 0, x, h);
+//        }
+        profile("gradient");
+
         controlPanel.paintComponent(g2);
 
         profile("control panel");
