@@ -52,6 +52,8 @@ public class GridPanel extends JComponent {
     //focus
     private int offsetX, offsetY;
     private float cx = 0.0f, cy = 0.0f;
+    private MoveCenterAnimation moveAnimation;
+
 
 //    //blur under control panel
 //    private static final float[] BLUR_KERNEL = new float[64];
@@ -103,7 +105,7 @@ public class GridPanel extends JComponent {
                     case MouseEvent.BUTTON2:
                         int clickX = e.getX()-offsetX;
                         int clickY = e.getY()-offsetY;
-                        moveCenterTo(clickX/(float)squareSize, clickY/(float)squareSize);
+                        moveCenterToAnimated(clickX/(float)squareSize, clickY/(float)squareSize);
                         break;
                     case MouseEvent.BUTTON3:
                     case 5:
@@ -179,7 +181,15 @@ public class GridPanel extends JComponent {
         moveCenterTo(cx + dx, cy + dy);
     }
 
-    public void moveCenterTo(float cx, float cy) {
+    public void moveCenterToAnimated(float cx, float cy) {
+        if (moveAnimation != null) {
+            moveAnimation.setCancel(true);
+        }
+        moveAnimation = new MoveCenterAnimation(cx, cy);
+        moveAnimation.start();
+    }
+
+    private void moveCenterTo(float cx, float cy) {
         if (cx < left-0.5f) cx = left-0.5f;
         if (cx > right+0.5f) cx = right+0.5f;
         if (cy < top-0.5f) cy = top-0.5f;
@@ -391,6 +401,50 @@ public class GridPanel extends JComponent {
         controlPanel.paintComponent(g2);
 
         profile("control panel");
+    }
+
+    class MoveCenterAnimation extends Thread {
+        //TODO easing ?
+
+        private float toCx, toCy, fromCx, fromCy;
+        long start, end;
+        private boolean cancel;
+
+        public MoveCenterAnimation(float toCx, float toCy) {
+            moveTo(toCx, toCy);
+        }
+
+        private void moveTo(float toCx, float toCy) {
+            this.toCx = toCx;
+            this.toCy = toCy;
+            fromCx = cx;
+            fromCy = cy;
+            start = System.currentTimeMillis();
+            end = start + 100;
+        }
+
+        public void setCancel(boolean cancel) {
+            this.cancel = cancel;
+        }
+
+        @Override
+        public void run() {
+            long t;
+            while (!cancel && (t = System.currentTimeMillis()) < end) {
+                float dx = (float)(t - start)/(end-start)*(toCx-fromCx);
+                float dy = (float)(t - start)/(end-start)*(toCy-fromCy);
+                //System.out.println(fromCx+dx + " " + fromCy+dy);
+                moveCenterTo(fromCx+dx, fromCy+dy);
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                }
+            }
+            if (!cancel) {
+                moveCenterTo(toCx, toCy);
+            }
+        }
+
     }
 
 }
