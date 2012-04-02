@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import sun.net.www.content.text.plain;
-
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;

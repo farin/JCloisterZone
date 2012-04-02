@@ -8,10 +8,8 @@ import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,9 +17,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.TradeResource;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
@@ -31,7 +27,6 @@ import com.jcloisterzone.game.expansion.TowerGame;
 import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class PlayerPanel extends FakeComponent {
 
