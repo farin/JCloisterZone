@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.controls;
 
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 
 public class MouseListeningRegion {
 
@@ -25,10 +24,6 @@ public class MouseListeningRegion {
 
     public Object getData() {
         return data;
-    }
-
-    public interface RegionMouseListener {
-        public void mouseClicked(MouseEvent e, MouseListeningRegion origin);
     }
 
 }

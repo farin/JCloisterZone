@@ -6,17 +6,12 @@ Game can be also played against computer AI.
 
 h2. Roadmap
 
-h3. version 2.0
-
-* fix farm scoring
-* optimize AI performance
-* automated tests
-
-h3. version 2.1
-
 * graphics themes support
 * Bridges, Castles and Bazaars expansion
 * The Plague and The Entourage small expansions
+* optimize AI performance
+* automated tests
+
 
 h3. nice to have
 

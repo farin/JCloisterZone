@@ -39,6 +39,10 @@ public class PlayerPanel extends FakeComponent {
     private static Font FONT_NICKNAME = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
 
+//    private static Font FONT_POINTS = new Font(null, Font.BOLD, 30);
+//    private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
+//    private static Font FONT_MEEPLE = new Font(null, Font.BOLD, 18);;
+
     private static final int PADDING_L = 9;
     private static final int PADDING_R = 11;
     private static final int LINE_HEIGHT = 32;
@@ -78,10 +82,14 @@ public class PlayerPanel extends FakeComponent {
     }
 
     private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count) {
+        drawMeepleBox(g2, playerKey, imgKey, count, false);
+    }
+
+    private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne) {
         if (count == 0) return;
 
         int w = 30;
-        if (count > 1) {
+        if (count > 1 || (count == 1 && showOne)) {
             w = count < 10 ? 47 : 60;
         }
         int h = 22;
@@ -93,7 +101,7 @@ public class PlayerPanel extends FakeComponent {
         g2.fillRoundRect(bx, by, w, h, 8, 8);
         g2.drawImage(cache.get(playerKey, imgKey), bx, by-4, null);
 
-        if (count > 1) {
+        if (count > 1 || (count == 1 && showOne)) {
             g2.setColor(Color.BLACK);
             g2.drawString(""+count, bx+LINE_HEIGHT, by+17);
         }
@@ -140,13 +148,13 @@ public class PlayerPanel extends FakeComponent {
                 if (f instanceof SmallFollower) {
                     small++;
                 } else { //all small followers are at beginning of collection
-                    drawMeepleBox(g2, player, smallImgKey, small);
+                    drawMeepleBox(g2, player, smallImgKey, small, true);
                     small = 0;
                     drawMeepleBox(g2, player, f.getClass().getSimpleName(), 1);
                 }
             }
         }
-        drawMeepleBox(g2, player, smallImgKey, small); //case when only small followers are in collection (not drawn yet)
+        drawMeepleBox(g2, player, smallImgKey, small, true); //case when only small followers are in collection (not drawn yet)
 
 //		gp.profile(" > followers");
 
@@ -168,12 +176,12 @@ public class PlayerPanel extends FakeComponent {
         }
 
         if (tower != null) {
-            drawMeepleBox(g2, null, "towerpiece", tower.getTowerPieces(player));
+            drawMeepleBox(g2, null, "towerpiece", tower.getTowerPieces(player), true);
         }
 
         if (bcb != null) {
-            drawMeepleBox(g2, null, "bridge", bcb.getPlayerBridges(player));
-            drawMeepleBox(g2, null, "castle", bcb.getPlayerCastles(player));
+            drawMeepleBox(g2, null, "bridge", bcb.getPlayerBridges(player), true);
+            drawMeepleBox(g2, null, "castle", bcb.getPlayerCastles(player), true);
         }
 
 
@@ -186,9 +194,9 @@ public class PlayerPanel extends FakeComponent {
             }
         }
         if (tb != null) {
-            drawMeepleBox(g2, null, "cloth", tb.getTradeResources(player, TradeResource.CLOTH));
-            drawMeepleBox(g2, null, "grain", tb.getTradeResources(player, TradeResource.GRAIN));
-            drawMeepleBox(g2, null, "wine", tb.getTradeResources(player, TradeResource.WINE));
+            drawMeepleBox(g2, null, "cloth", tb.getTradeResources(player, TradeResource.CLOTH), true);
+            drawMeepleBox(g2, null, "grain", tb.getTradeResources(player, TradeResource.GRAIN), true);
+            drawMeepleBox(g2, null, "wine", tb.getTradeResources(player, TradeResource.WINE), true);
         }
         if (tower != null) {
             List<Follower> capturedFigures = tower.getPrisoners().get(player);

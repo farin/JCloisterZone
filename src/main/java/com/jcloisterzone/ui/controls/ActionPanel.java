@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.controls.MouseListeningRegion.RegionMouseListener;
 
 public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
