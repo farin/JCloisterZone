@@ -22,7 +22,7 @@ import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class MeepleLayer extends AbstractGridLayer {
 
-    protected float FIGURE_SIZE_RATIO = 0.35f;
+    protected double FIGURE_SIZE_RATIO = 0.35;
 
     private Map<Meeple, PositionedImage> images = Maps.newHashMap();
     //TODO own layer ???

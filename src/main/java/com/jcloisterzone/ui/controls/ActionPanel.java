@@ -18,8 +18,9 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
     public static final int LINE_HEIGHT = 30;
     public static final int PADDING = 3;
-    public static final int ICON_SIZE = 40;
-    public static final int ACTIVE_ICON_SIZE = 55;
+    public static final int LEFT_MARGIN = 10;
+    public static final int MAX_ICON_SIZE = 40;
+    public static final double ACTIVE_SIZE_RATIO = 1.375;
 
     private final Client client;
     private PlayerAction[] actions;
@@ -68,13 +69,18 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
             deselected = null;
         }
 
+        int availableWidth = ControlPanel.PANEL_WIDTH - LEFT_MARGIN - (actions.length-1)*PADDING;
+        double units = actions.length + (ACTIVE_SIZE_RATIO-1.0);
+        int baseSize = Math.min(MAX_ICON_SIZE, (int) Math.floor(availableWidth / units));
+        int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
+
         Player activePlayer = client.getGame().getActivePlayer();
         for(int i = 0; i < actions.length; i++) {
             selected[i] = new ImageIcon(
-                actions[i].getImage(activePlayer, true).getScaledInstance(ACTIVE_ICON_SIZE, ACTIVE_ICON_SIZE, Image.SCALE_SMOOTH)
+                actions[i].getImage(activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
             ).getImage();
             deselected[i] = new ImageIcon(
-                actions[i].getImage(activePlayer, false).getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)
+                actions[i].getImage(activePlayer, false).getScaledInstance(baseSize, baseSize, Image.SCALE_SMOOTH)
             ).getImage();
         }
     }
@@ -142,8 +148,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
             doRefreshImageCache();
         }
 
-        int x = 3*PADDING;
-
+        int x = LEFT_MARGIN;
 
         if (refreshMouseRegions) {
             getMouseRegions().clear();

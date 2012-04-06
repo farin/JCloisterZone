@@ -51,7 +51,7 @@ public class GridPanel extends JComponent {
 
     //focus
     private int offsetX, offsetY;
-    private float cx = 0.0f, cy = 0.0f;
+    private double cx = 0.0, cy = 0.0;
     private MoveCenterAnimation moveAnimation;
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
@@ -93,7 +93,7 @@ public class GridPanel extends JComponent {
                     case MouseEvent.BUTTON2:
                         int clickX = e.getX()-offsetX;
                         int clickY = e.getY()-offsetY;
-                        moveCenterToAnimated(clickX/(float)squareSize, clickY/(float)squareSize);
+                        moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
                         break;
                     case MouseEvent.BUTTON3:
                     case 5:
@@ -164,12 +164,12 @@ public class GridPanel extends JComponent {
 
     public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
-        float dx = xSteps * 30.0f / getSquareSize();
-        float dy = ySteps * 30.0f / getSquareSize();
+        double dx = xSteps * 30.0f / getSquareSize();
+        double dy = ySteps * 30.0f / getSquareSize();
         moveCenterTo(cx + dx, cy + dy);
     }
 
-    public void moveCenterToAnimated(float cx, float cy) {
+    public void moveCenterToAnimated(double cx, double cy) {
         if (moveAnimation != null) {
             moveAnimation.setCancel(true);
         }
@@ -177,7 +177,7 @@ public class GridPanel extends JComponent {
         moveAnimation.start();
     }
 
-    private void moveCenterTo(float cx, float cy) {
+    private void moveCenterTo(double cx, double cy) {
         if (cx < left-0.5f) cx = left-0.5f;
         if (cx > right+0.5f) cx = right+0.5f;
         if (cy < top-0.5f) cy = top-0.5f;
@@ -379,15 +379,15 @@ public class GridPanel extends JComponent {
     class MoveCenterAnimation extends Thread {
         //TODO easing ?
 
-        private float toCx, toCy, fromCx, fromCy;
+        private double toCx, toCy, fromCx, fromCy;
         long start, end;
         private boolean cancel;
 
-        public MoveCenterAnimation(float toCx, float toCy) {
+        public MoveCenterAnimation(double toCx, double toCy) {
             moveTo(toCx, toCy);
         }
 
-        private void moveTo(float toCx, float toCy) {
+        private void moveTo(double toCx, double toCy) {
             this.toCx = toCx;
             this.toCy = toCy;
             fromCx = cx;
@@ -404,8 +404,8 @@ public class GridPanel extends JComponent {
         public void run() {
             long t;
             while (!cancel && (t = System.currentTimeMillis()) < end) {
-                float dx = (float)(t - start)/(end-start)*(toCx-fromCx);
-                float dy = (float)(t - start)/(end-start)*(toCy-fromCy);
+                double dx = (double)(t - start)/(end-start)*(toCx-fromCx);
+                double dy = (double)(t - start)/(end-start)*(toCy-fromCy);
                 //System.out.println(fromCx+dx + " " + fromCy+dy);
                 moveCenterTo(fromCx+dx, fromCy+dy);
                 try {
