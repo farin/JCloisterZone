@@ -22,6 +22,7 @@ public class KeyController implements KeyEventDispatcher {
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         //System.out.println(e);
+        if (!client.hasFocus()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:

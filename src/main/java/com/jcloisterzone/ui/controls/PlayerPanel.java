@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
@@ -7,11 +8,15 @@ import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.JOptionPane;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
@@ -27,7 +32,7 @@ import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 
-public class PlayerPanel extends FakeComponent {
+public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
@@ -81,10 +86,14 @@ public class PlayerPanel extends FakeComponent {
     }
 
     private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count) {
-        drawMeepleBox(g2, playerKey, imgKey, count, false);
+        drawMeepleBox(g2, playerKey, imgKey, count, false, null);
     }
 
     private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne) {
+        drawMeepleBox(g2, playerKey, imgKey, count, showOne, null);
+    }
+
+    private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne, Object regionData) {
         if (count == 0) return;
 
         int w = 30;
@@ -100,6 +109,10 @@ public class PlayerPanel extends FakeComponent {
         g2.fillRoundRect(bx, by, w, h, 8, 8);
         g2.drawImage(cache.get(playerKey, imgKey), bx, by-4, null);
 
+        if (regionData != null) {
+            getMouseRegions().add(new MouseListeningRegion(new Rectangle(bx, by, w, h), this, regionData));
+        }
+
         if (count > 1 || (count == 1 && showOne)) {
             g2.setColor(Color.BLACK);
             g2.drawString(""+count, bx+LINE_HEIGHT, by+17);
@@ -109,6 +122,7 @@ public class PlayerPanel extends FakeComponent {
 
     @Override
     public void paintComponent(Graphics2D parentGraphics) {
+        super.paintComponent(parentGraphics);
 
 //		GridPanel gp = client.getGridPanel();
 
@@ -174,6 +188,7 @@ public class PlayerPanel extends FakeComponent {
 
         if (tower != null) {
             drawMeepleBox(g2, null, "towerpiece", tower.getTowerPieces(player), true);
+            getMouseRegions().clear();
         }
 
         if (bcb != null) {
@@ -202,6 +217,7 @@ public class PlayerPanel extends FakeComponent {
                 groupedByType = Maps.newHashMap();
                 for(Player opponent : client.getGame().getAllPlayers()) {
                     if (opponent == player) continue;
+                    boolean isOpponentActive = client.getGame().getActivePlayer() == opponent;
                     for (Follower f : capturedFigures) {
                         if (f.getPlayer() == opponent) {
                             Integer prevVal = groupedByType.get(f.getClass());
@@ -209,7 +225,9 @@ public class PlayerPanel extends FakeComponent {
                         }
                     }
                     for (Entry<Class<? extends Follower>, Integer> entry : groupedByType.entrySet()) {
-                        drawMeepleBox(g2, opponent, entry.getKey().getSimpleName(), entry.getValue());
+                        drawMeepleBox(g2, opponent, entry.getKey().getSimpleName(), entry.getValue(), false,
+                            isOpponentActive ? entry.getKey() : null
+                        );
                     }
                     groupedByType.clear();
                 }
@@ -255,62 +273,23 @@ public class PlayerPanel extends FakeComponent {
         return centerY;
     }
 
-//	 form legacy
-//
-//	  class PayRansomListener extends MouseAdapter {
-//		/* nez delat nejaky buttony bude jednodussi listener a odpocet ze
-//		 * souradnic, zejmena protoze figurky se kresli ze dvou obrazku
-//		 * a buttony nebo JLabely by byly take slozitejsi
-//		 */
-//
-//		@Override
-//		public void mouseClicked(MouseEvent e) {
-//			//vyska figurky je 19px
-//			if (e.getButton() != MouseEvent.BUTTON1) return;
-//			for(Entry<Rectangle, Class<? extends Follower>> entry : ransomClickable.entrySet()) {
-//				Rectangle rect = entry.getKey();
-//				if (rect.contains(e.getX(), e.getY())) {
-//					client.getServer().payRansom(p.getIndex(), entry.getValue());
-//				}
-//			}
-//		}
-//	}
-
-//	if (game.hasExpansion(Expansion.TOWER)) {
-//		TowerGame tg = game.getTowerGame();
-//
-//		ransomClickable.clear();
-//		g2.setFont(resourceFont);
-//		int towerPieces = game.getTowerGame().getTowerPieces(p);
-//		g2.drawString((towerPieces < 10 ? " ":"") + towerPieces + "", 5, TOWER_Y + 16);
-//		g2.drawImage(figures.get(PanelImages.TOWER_PIECE), 30, TOWER_Y, null);
-//
-//		//TODO comment bez nahrady - captured v panelu
-//
-//		List<Follower> capturedFigures = tg.getPrisoners().get(p);
-//		int x = TOWER_FIRST_CAPTURED_X;
-//		for(Follower f : capturedFigures) {
-//			int playerIndex = f.getPlayer().getIndex();
-//			boolean canPayRansom = client.isClientActive() &&
-//							client.getGame().getTurnPlayer().getIndex() == playerIndex &&
-//							! client.getGame().getTowerGame().isRansomPaidThisTurn();
-//
-//			Color color = client.getPlayerColor(p);
-//			Image figImage = client.getFigureTheme().getFigureImage(f, color);
-//			//Image img = figImage.getScaledInstance(size, size, Image.SCALE_SMOOTH);
-//			//img = new ImageIcon(img).getImage();
-//
-//			g2.drawImage(figImage, x, TOWER_Y, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH, null);
-//			if (canPayRansom) {
-//				g2.setColor(Color.BLACK);
-//				g2.drawRect(x, TOWER_Y-1, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH);
-//				ransomClickable.put(new Rectangle(x, TOWER_Y, TOWER_FIGURE_WIDTH, TOWER_FIGURE_WIDTH), f.getClass());
-//			}
-//			x += TOWER_FIGURE_WIDTH + 2;
-//
-//		}
-//	}
-
+    @SuppressWarnings("unchecked")
+    @Override
+    public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
+        Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
+        TowerGame tg = client.getGame().getTowerGame();
+        if (!tg.isRansomPaidThisTurn()) {
+            if (client.getSettings().isConfirmRansomPayment()) {
+                String options[] = {_("Pay ransom"), _("Cancel") };
+                int result = JOptionPane.showOptionDialog(client,
+                        _("Do you really want to pay 3 points to release prisoner?"),
+                        _("Confirm ransom paymentt"),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (JOptionPane.YES_OPTION != result) return;
+            }
+            client.getServer().payRansom(player.getIndex(), followerClass);
+        }
+    }
 
 }
 

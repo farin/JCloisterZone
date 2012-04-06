@@ -116,6 +116,12 @@ public class GridPanel extends JComponent {
                 zoom(-e.getWheelRotation());
             }
         });
+
+        addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                controlPanel.dispatchMouseEvent(e);
+            }
+        });
     }
 
     public Tile getTile(Position p) {
@@ -360,17 +366,6 @@ public class GridPanel extends JComponent {
         g2.setTransform(origTransform);
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
-//        g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
-//        int alpha = 225, x = -20;
-//        Color color = new Color(255, 255, 255, alpha);
-//        g2.setColor(color);
-//        g2.fillRect(x, 0, -x+ControlPanel.PANEL_WIDTH, h);
-//        color = new Color(255, 255, 255, (int) (alpha * 0.7));
-//        g2.setColor(color);
-//        g2.fillRect(x-3, 0, 3, h);
-//
-//        profile("gradient");
-
         controlPanel.paintComponent(g2);
 
         profile("control panel");
@@ -406,7 +401,6 @@ public class GridPanel extends JComponent {
             while (!cancel && (t = System.currentTimeMillis()) < end) {
                 double dx = (double)(t - start)/(end-start)*(toCx-fromCx);
                 double dy = (double)(t - start)/(end-start)*(toCy-fromCy);
-                //System.out.println(fromCx+dx + " " + fromCy+dy);
                 moveCenterTo(fromCx+dx, fromCy+dy);
                 try {
                     Thread.sleep(15);

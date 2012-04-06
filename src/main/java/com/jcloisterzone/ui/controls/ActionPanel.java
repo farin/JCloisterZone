@@ -170,7 +170,9 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
-        Integer i = (Integer) origin.getData();
-        setSelectedActionIndex(i);
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            Integer i = (Integer) origin.getData();
+            setSelectedActionIndex(i);
+        }
     }
 }

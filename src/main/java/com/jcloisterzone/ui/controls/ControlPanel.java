@@ -93,20 +93,16 @@ public class ControlPanel extends FakeComponent {
         }
     }
 
-    // //TODO clean coupling and component initialization (GridPanel, MainPanel
-    // & ControlPanel
-    // public void registerMouseListener() {
-    // client.getGridPanel().addMouseListener(new MouseAdapter() {
-    // @Override
-    // public void mouseClicked(MouseEvent e) {
-    // int w = client.getGridPanel().getWidth();
-    // if (e.getX() > w-PANEL_WIDTH) {
-    // //click on panel
-    //
-    // }
-    // }
-    // });
-    // }
+    @Override
+    public void dispatchMouseEvent(MouseEvent e) {
+        super.dispatchMouseEvent(e);
+        if (e.isConsumed()) return;
+        actionPanel.dispatchMouseEvent(e);
+        for(PlayerPanel pp : playerPanels) {
+            if (e.isConsumed()) return;
+            pp.dispatchMouseEvent(e);
+        }
+    }
 
     private void paintBackgroundBody(Graphics2D g2) {
         GridPanel gp = client.getGridPanel();

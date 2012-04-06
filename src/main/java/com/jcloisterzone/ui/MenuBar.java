@@ -201,6 +201,15 @@ public class MenuBar extends JMenuBar {
         });
         ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmTowerPlacement());
         menu.add(menuItem);
+        menuItem = new JCheckBoxMenuItem(_("Confirm ransom payment"));
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
+                client.getSettings().setConfirmRansomPayment(state);
+            }
+        });
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmTowerPlacement());
+        menu.add(menuItem);
 
         menu.addSeparator();
 
