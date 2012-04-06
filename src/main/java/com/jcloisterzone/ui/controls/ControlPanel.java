@@ -16,6 +16,7 @@ import java.util.Map;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.grid.GridPanel;
 
 public class ControlPanel extends FakeComponent {
 
@@ -37,15 +38,22 @@ public class ControlPanel extends FakeComponent {
         FONT_PASS_UNDERLINE = FONT_PASS_PLAIN.deriveFont(fontAttributes);
     }
 
-    public static final Color HEADER_COLOR = new Color(170, 170, 170, 200);
-    public static final Color BG_COLOR = new Color(210, 210, 210, 200);
-    // public static final Color ACTIVE_BG_COLOR = new Color(206, 206, 206,
-    // 200);
+    public static final Color HEADER_FONT_COLOR = new Color(170, 170, 170, 200);
+    public static final Color PLAYER_BG_COLOR = new Color(210, 210, 210, 200);
+    public static final Color PANEL_BG_COLOR = new Color(255, 255, 255, 225);
+    public static final Color PANEL_BG_COLOR_SHADOW = new Color(255, 255, 255, 158);
+
+
     @Deprecated
-    public static final Color ACTIVE_BG_COLOR = BG_COLOR;
-    public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
+    public static final Color FONT_SHADOW_COLOR = new Color(0, 0, 0, 60);
 
     public static final int CORNER_DIAMETER = 16;
+    public static final int PANEL_WIDTH = 220;
+    public static final int PANEL_SHADOW_WIDTH = 3;
+    public static final int LEFT_PADDING = 20;
+    public static final int ACTIVE_MARKER_SIZE = 25;
+    public static final int ACTIVE_MARKER_PADDING = 6;
+
 
     private final Client client;
 
@@ -54,7 +62,6 @@ public class ControlPanel extends FakeComponent {
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
-    public static final int PANEL_WIDTH = 220;
     public static final String STR_CLICK_TO = "click to ";
     public static final String STR_PASS = "pass";
     private int clickToWidth, passWidth;
@@ -101,6 +108,52 @@ public class ControlPanel extends FakeComponent {
     // });
     // }
 
+    private void paintBackgroundBody(Graphics2D g2) {
+        GridPanel gp = client.getGridPanel();
+        int h = gp.getHeight();
+
+        g2.setColor(PANEL_BG_COLOR);
+        g2.fillRect(0 , 0, PANEL_WIDTH, h);
+    }
+
+    private void paintBackgroundShadow(Graphics2D g2) {
+        GridPanel gp = client.getGridPanel();
+        int h = gp.getHeight();
+
+        Player active = client.getGame().getActivePlayer();
+        if (active == null) {
+            g2.setColor(PANEL_BG_COLOR);
+            g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, h);
+            g2.setColor(PANEL_BG_COLOR_SHADOW);
+            g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
+        } else {
+            int y = playerPanels[active.getIndex()].getCenterY();
+
+            g2.setColor(PANEL_BG_COLOR);
+            g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, y-ACTIVE_MARKER_SIZE);
+            g2.fillRect(-LEFT_PADDING , y+ACTIVE_MARKER_SIZE, LEFT_PADDING, h-y-ACTIVE_MARKER_SIZE);
+            g2.fillPolygon(
+                new int[] { -LEFT_PADDING, 0, 0, -ACTIVE_MARKER_PADDING },
+                new int[] { y-ACTIVE_MARKER_SIZE, y-ACTIVE_MARKER_SIZE, y, y}, 4
+            );
+            g2.fillPolygon(
+                new int[] { -LEFT_PADDING, 0, 0, -ACTIVE_MARKER_PADDING },
+                new int[] { y+ACTIVE_MARKER_SIZE, y+ACTIVE_MARKER_SIZE, y, y}, 4
+            );
+            g2.setColor(PANEL_BG_COLOR_SHADOW);
+            g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, 0, PANEL_SHADOW_WIDTH, y-ACTIVE_MARKER_SIZE);
+            g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, y+ACTIVE_MARKER_SIZE, PANEL_SHADOW_WIDTH, h-y+ACTIVE_MARKER_SIZE);
+            g2.fillPolygon(
+                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, 0, -PANEL_SHADOW_WIDTH },
+                new int[] { y-ACTIVE_MARKER_SIZE, y-ACTIVE_MARKER_SIZE, y, y}, 4
+            );
+            g2.fillPolygon(
+                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, 0, -PANEL_SHADOW_WIDTH },
+                new int[] { y+ACTIVE_MARKER_SIZE, y+ACTIVE_MARKER_SIZE, y, y}, 4
+            );
+        }
+    }
+
     @Override
     public void paintComponent(Graphics2D g2) {
         super.paintComponent(g2);
@@ -108,8 +161,10 @@ public class ControlPanel extends FakeComponent {
 
 //		GridPanel gp = client.getGridPanel();
 
+        paintBackgroundBody(g2);
+
         g2.setFont(FONT_PACK_SIZE);
-        g2.setColor(HEADER_COLOR);
+        g2.setColor(HEADER_FONT_COLOR);
         int packSize = client.getGame().getTilePack().totalSize();
         g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
 
@@ -133,6 +188,9 @@ public class ControlPanel extends FakeComponent {
 //		gp.profile("players");
 
         g2.setTransform(origTransform);
+
+        paintBackgroundShadow(g2);
+
     }
 
     public void pass() {

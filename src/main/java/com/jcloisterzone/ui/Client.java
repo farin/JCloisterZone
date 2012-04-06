@@ -241,7 +241,7 @@ public class Client extends JFrame /*implements UserInterface*/ {
         this.controlPanel = controlPanel;
     }
 
-    public GridPanel getGridPanel() {
+	public GridPanel getGridPanel() {
         if (mainPanel == null) return null;
         return mainPanel.getGridPanel();
     }

@@ -116,11 +116,16 @@ public class ClientController implements GameEventListener, UserInterface {
         client.setIconImage(image);
     }
 
+    public void refreshWindowTitle() {
+        int packSize = client.getGame().getTilePack().totalSize();
+        String activePlayer = client.getGame().getActivePlayer().getNick();
+        client.setTitle(Client.BASE_TITLE + " ⋅ " + activePlayer + " ⋅ " + packSize + " " + _("tiles left") );
+    }
+
     @Override
     public void tileDrawn(Tile tile) {
         client.clearActions();
-        int packSize = client.getGame().getTilePack().totalSize();
-        client.setTitle(Client.BASE_TITLE + " ⋅ " + packSize + " " + _("tiles left") );
+        refreshWindowTitle();
     }
 
     @Override

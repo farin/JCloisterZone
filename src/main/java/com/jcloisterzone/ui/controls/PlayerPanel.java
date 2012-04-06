@@ -1,9 +1,8 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.ACTIVE_BG_COLOR;
-import static com.jcloisterzone.ui.controls.ControlPanel.BG_COLOR;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -30,8 +29,6 @@ import com.jcloisterzone.ui.UiUtils;
 
 public class PlayerPanel extends FakeComponent {
 
-    //private static final Color DELIM_TOP_COLOR = new Color(100,100,100);
-    //private static final Color DELIM_BOTTOM_COLOR = new Color(160,160,160);
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
 
@@ -54,6 +51,8 @@ public class PlayerPanel extends FakeComponent {
 
     private final PlayerPanelImageCache cache;
 
+    private int centerY;
+
     //context coordinates variables
     private int bx, by;
 
@@ -75,7 +74,7 @@ public class PlayerPanel extends FakeComponent {
         //TODO shadow color based on color ??
         /*g2.setColor(Color.DARK_GRAY);
         g2.drawString(text, x+0.8f, y+0.7f);*/
-        g2.setColor(ControlPanel.SHADOW_COLOR);
+        g2.setColor(ControlPanel.FONT_SHADOW_COLOR);
         g2.drawString(text, x+0.6f, y+0.5f);
         g2.setColor(color);
         g2.drawString(text, x, y);
@@ -107,8 +106,6 @@ public class PlayerPanel extends FakeComponent {
         }
         bx += w + 8;
     }
-
-
 
     @Override
     public void paintComponent(Graphics2D parentGraphics) {
@@ -243,13 +240,19 @@ public class PlayerPanel extends FakeComponent {
             //parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
         }
 
-        parentGraphics.setColor(playerTurn ? ACTIVE_BG_COLOR : BG_COLOR);
+        parentGraphics.setColor(PLAYER_BG_COLOR);
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
+
+        centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
         parentGraphics.translate(0, realHeight + 12); //add also padding
 
 //		gp.profile(" > complete");
+    }
+
+    public int getCenterY() {
+        return centerY;
     }
 
 //	 form legacy

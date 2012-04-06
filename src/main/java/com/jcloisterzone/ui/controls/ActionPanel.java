@@ -127,7 +127,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     public void paintComponent(Graphics2D g2) {
         super.paintComponent(g2);
 
-        g2.setColor(ControlPanel.BG_COLOR);
+        g2.setColor(ControlPanel.PLAYER_BG_COLOR);
         g2.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 
         if (actions == null || actions.length == 0) return;

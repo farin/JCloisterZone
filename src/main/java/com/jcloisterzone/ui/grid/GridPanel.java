@@ -54,18 +54,6 @@ public class GridPanel extends JComponent {
     private float cx = 0.0f, cy = 0.0f;
     private MoveCenterAnimation moveAnimation;
 
-
-//    //blur under control panel
-//    private static final float[] BLUR_KERNEL = new float[64];
-//    static {
-//        for (int i = 0; i < BLUR_KERNEL.length; i++) {
-//            BLUR_KERNEL[i] = 1.0f/BLUR_KERNEL.length;
-//        }
-//    }
-//    private static final ConvolveOp BLUR_OP = new ConvolveOp(new Kernel(8, 8, BLUR_KERNEL), ConvolveOp.EDGE_NO_OP, null);
-//    private static final Color TRANSPARENT_COLOR = new Color(255, 255, 255, 0);
-//    private BufferedImage blurBuffer;
-
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
 
     public GridPanel(Client client, Snapshot snapshot) {
@@ -370,33 +358,18 @@ public class GridPanel extends JComponent {
         }
 
         g2.setTransform(origTransform);
-
-        //g2.dispose();
-        //g2.setTransform(origTransform);
-//        Graphics2D gComp = (Graphics2D) g;
-//        gComp.drawImage(blurBuffer, 0, 0, null);
-//        gComp.setClip(new Rectangle(getWidth() - ControlPanel.PANEL_WIDTH, 0, ControlPanel.PANEL_WIDTH, h));
-//        gComp.drawImage(blurBuffer, BLUR_OP, 0, 0);
-//        gComp.setClip(g.getClip());
-//        profile("blur");
-
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
-        int alpha = 225, x = -20;
-        Color color = new Color(255, 255, 255, alpha);
-        g2.setColor(color);
-        g2.fillRect(x, 0, -x+ControlPanel.PANEL_WIDTH, h);
-        color = new Color(255, 255, 255, (int) (alpha * 0.7));
-        g2.setColor(color);
-        g2.fillRect(x-3, 0, 3, h);
-//        while (alpha > 0) {
-//            alpha -= 3;
-//            x -= 1;
-//            color = new Color(255, 255, 255, alpha);
-//            g2.setColor(color);
-//            //g2.fillRect(x, 0, 1, h);
-//            g2.drawLine(x, 0, x, h);
-//        }
-        profile("gradient");
+
+//        g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
+//        int alpha = 225, x = -20;
+//        Color color = new Color(255, 255, 255, alpha);
+//        g2.setColor(color);
+//        g2.fillRect(x, 0, -x+ControlPanel.PANEL_WIDTH, h);
+//        color = new Color(255, 255, 255, (int) (alpha * 0.7));
+//        g2.setColor(color);
+//        g2.fillRect(x-3, 0, 3, h);
+//
+//        profile("gradient");
 
         controlPanel.paintComponent(g2);
 
