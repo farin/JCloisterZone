@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.AbbeyPlacementAction;
-import com.jcloisterzone.action.CaptureAction;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
@@ -104,8 +104,8 @@ public abstract class AiPlayer implements UserInterface {
 			if (action instanceof MeepleAction) {				
 				if (selectDummyMeepleAction((MeepleAction) action)) return;
 			}
-			if (action instanceof CaptureAction) {
-				if (selectDummyTowerCapture((CaptureAction) action)) return;
+			if (action instanceof TakePrisonerAction) {
+				if (selectDummyTowerCapture((TakePrisonerAction) action)) return;
 			}
 		}
 		getServer().pass();
@@ -142,10 +142,10 @@ public abstract class AiPlayer implements UserInterface {
 		return false;
 	}
 
-	protected boolean selectDummyTowerCapture(CaptureAction action) {
+	protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
 		Position p = action.getSites().keySet().iterator().next();
 		Location loc = action.getSites().get(p).iterator().next();
-		getServer().captureFigure(p, loc);
+		getServer().takePrisoner(p, loc);
 		return true;
 	}
 

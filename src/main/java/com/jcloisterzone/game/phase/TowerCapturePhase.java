@@ -29,7 +29,7 @@ public class TowerCapturePhase extends Phase {
 	}
 
 	@Override
-	public void captureFigure(Position p, Location loc) {
+	public void takePrisoner(Position p, Location loc) {
 		Follower m = (Follower) game.getMeeple(p, loc);
 		m.undeploy();
 		//unplace figure returns figure to owner -> we must handle capture / prisoner exchange

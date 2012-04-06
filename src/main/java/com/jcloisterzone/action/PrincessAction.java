@@ -8,7 +8,7 @@ public class PrincessAction extends SelectFeatureAction {
 
 	@Override
 	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.removeKnightWithPrincess(p, d);
+		server.undeployMeeple(p, d);
 	}
 
 	@Override

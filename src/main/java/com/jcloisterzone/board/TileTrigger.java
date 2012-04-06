@@ -2,10 +2,11 @@ package com.jcloisterzone.board;
 
 public enum TileTrigger {
 
-	VOLCANO,
-	DRAGON,
-	PORTAL,
-	BESIEGED,
-	BAZAAR;
-	
+    VOLCANO,
+    DRAGON,
+    PORTAL,
+    BESIEGED,
+    BAZAAR,
+    FESTIVAL;
+
 }

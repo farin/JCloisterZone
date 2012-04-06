@@ -7,9 +7,9 @@ import com.jcloisterzone.rmi.Client2ClientIF;
 /** Escape from The Cathars expansion */
 public class EscapeAction extends SelectFeatureAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p, Location loc) {
-		server.escapeFromCity(p, loc);
-	}
+    @Override
+    public void perform(Client2ClientIF server, Position p, Location loc) {
+        server.undeployMeeple(p, loc);
+    }
 
 }
