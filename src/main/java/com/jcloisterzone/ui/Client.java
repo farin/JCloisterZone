@@ -241,7 +241,7 @@ public class Client extends JFrame /*implements UserInterface*/ {
         this.controlPanel = controlPanel;
     }
 
-	public GridPanel getGridPanel() {
+    public GridPanel getGridPanel() {
         if (mainPanel == null) return null;
         return mainPanel.getGridPanel();
     }
@@ -407,7 +407,6 @@ public class Client extends JFrame /*implements UserInterface*/ {
     }
 
     public void handleLoad() {
-        if (! closeGame()) return;
         JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Load game"));
@@ -418,6 +417,7 @@ public class Client extends JFrame /*implements UserInterface*/ {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file != null) {
+                if (! closeGame()) return;
                 try {
                     localServer = new Server(new Snapshot(file));
                     localServer.start(getServerPort());

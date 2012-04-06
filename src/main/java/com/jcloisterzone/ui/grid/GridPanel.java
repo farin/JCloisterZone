@@ -30,6 +30,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
@@ -269,6 +270,7 @@ public class GridPanel extends JComponent {
     public void clearActionDecorations() {
         removeLayer(AbstractAreaLayer.class);
         removeLayer(TileActionLayer.class);
+        removeLayer(AbbeyPlacementLayer.class);
     }
 
     // delegated UI methods
@@ -279,7 +281,7 @@ public class GridPanel extends JComponent {
         removeLayer(AbstractTilePlacementLayer.class);
         removeLayer(PlacementHistory.class);
 
-        if (p.x == left)  --left;
+        if (p.x == left) --left;
         if (p.x == right) ++right;
         if (p.y == top) --top;
         if (p.y == bottom) ++bottom;
