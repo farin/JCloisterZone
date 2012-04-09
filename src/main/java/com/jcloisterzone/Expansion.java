@@ -45,11 +45,11 @@ public enum Expansion {
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
     ENTOURAGE("EN", _("The Entourage"), false),
     PHANTOM("PH", _("The Phantom"), false),
-    FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class),
+    FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class);
 
     //promo/one tile expansions
-    LA_PORXADA("PH", _("La porxada"), false),
-    SCHOOL("SC", _("The school"), false);
+    //LA_PORXADA("PH", _("La porxada"), false),
+    //SCHOOL("SC", _("The school"), false);
 
     String code;
     String label;

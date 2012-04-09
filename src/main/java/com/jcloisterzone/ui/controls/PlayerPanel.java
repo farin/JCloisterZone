@@ -283,7 +283,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                 String options[] = {_("Pay ransom"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(client,
                         _("Do you really want to pay 3 points to release prisoner?"),
-                        _("Confirm ransom paymentt"),
+                        _("Confirm ransom payment"),
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.YES_OPTION != result) return;
             }
