@@ -156,7 +156,8 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         String smallImgKey = SmallFollower.class.getSimpleName();
         for(Follower f : player.getFollowers()) {
             if (!f.isDeployed()) {
-                if (f instanceof SmallFollower) {
+                //instanceof cannot be used because of Phantom
+                if (f.getClass().equals(SmallFollower.class)) {
                     small++;
                 } else { //all small followers are at beginning of collection
                     drawMeepleBox(g2, player, smallImgKey, small, true);

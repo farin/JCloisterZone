@@ -64,6 +64,13 @@ public abstract class Phase implements ClientIF {
 
     public void enter() { }
 
+    /**
+     * Method is invoked on active phase when user buy back inprisoned follower
+     */
+    public void notifyRansomPaid() {
+        //do nothing by default
+    }
+
     public boolean isActive() {
         return true;
     }

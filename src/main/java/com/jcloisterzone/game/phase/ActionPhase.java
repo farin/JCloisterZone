@@ -18,6 +18,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.expansion.TowerGame;
 
 
 public class ActionPhase extends Phase {
@@ -36,7 +37,6 @@ public class ActionPhase extends Phase {
             actions.add(new MeepleAction(SmallFollower.class, commonSites));
         }
         game.expansionDelegate().prepareActions(actions, commonSites);
-        //TODO mayor a wagon action !!! be careful about magic gate !
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
@@ -44,10 +44,16 @@ public class ActionPhase extends Phase {
         }
     }
 
+    @Override
+    public void notifyRansomPaid() {
+        enter(); //recompute available actions
+    }
+
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (! actions.isEmpty()) return false;
         if (game.hasExpansion(Expansion.TOWER)) {
-            if (game.getTowerGame().isAnyFollowerImprisoned(getActivePlayer())) {
+            TowerGame tg = game.getTowerGame();
+            if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
                 //player can return figure immediately
                 return false;
             }

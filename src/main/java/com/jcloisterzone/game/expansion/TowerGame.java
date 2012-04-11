@@ -99,7 +99,7 @@ public final class TowerGame extends ExpandedGame {
     @Override
     public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareCommonOnTower(actions, commonSites);
+            prepareCommonOnTower(commonSites);
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
@@ -109,7 +109,7 @@ public final class TowerGame extends ExpandedGame {
         }
     }
 
-    private void prepareCommonOnTower(List<PlayerAction> actions,  Sites commonTileSites) {
+    public void prepareCommonOnTower(Sites commonTileSites) {
         Set<Position> towerActions = getOpenTowers(1);
         if (! towerActions.isEmpty()) {
             if (getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
@@ -140,10 +140,19 @@ public final class TowerGame extends ExpandedGame {
         return prisoners;
     }
 
-    public boolean isAnyFollowerImprisoned(Player followerOwner) {
+    public boolean hasImprisonedFollower(Player followerOwner) {
         for(List<Follower> list : prisoners.values()) {
             for(Follower m : list) {
                 if (m.getPlayer() == followerOwner) return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasImprisonedFollower(Player followerOwner, Class<? extends Follower> followerClass) {
+        for(List<Follower> list : prisoners.values()) {
+            for(Follower m : list) {
+                if (m.getPlayer() == followerOwner && m.getClass().equals(followerClass)) return true;
             }
         }
         return false;
@@ -170,6 +179,7 @@ public final class TowerGame extends ExpandedGame {
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 game.fireGameEvent().ransomPaid(game.getActivePlayer(), opponent, meeple);
+                game.getPhase().notifyRansomPaid();
                 return;
             }
         }

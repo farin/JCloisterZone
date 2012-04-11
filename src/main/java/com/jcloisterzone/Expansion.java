@@ -11,6 +11,7 @@ import com.jcloisterzone.game.expansion.CultGame;
 import com.jcloisterzone.game.expansion.FestivalGame;
 import com.jcloisterzone.game.expansion.InnsAndCathedralsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
+import com.jcloisterzone.game.expansion.PhantomGame;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 import com.jcloisterzone.game.expansion.RiverGame;
 import com.jcloisterzone.game.expansion.RiverIIGame;
@@ -44,7 +45,7 @@ public enum Expansion {
     CROP_CIRCLES("CC", _("Crop Circles") + " (" + _("tiles only") + ")"),
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
     ENTOURAGE("EN", _("The Entourage"), false),
-    PHANTOM("PH", _("The Phantom"), false),
+    PHANTOM("PH", _("The Phantom"), PhantomGame.class),
     FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class);
 
     //promo/one tile expansions
