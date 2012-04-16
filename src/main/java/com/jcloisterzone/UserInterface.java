@@ -10,13 +10,14 @@ import com.jcloisterzone.board.Position;
 
 public interface UserInterface extends EventListener {
 
-	void selectAction(List<PlayerAction> actions, boolean canPass);
-	
-	void showWarning(String title, String message);
-	
-	//deprecated - use unified interface 	
-	void selectDragonMove(Set<Position> positions, int movesLeft);
-	
-	
+    void selectAction(List<PlayerAction> actions, boolean canPass);
+    void selectBazaarTile();
+
+    void showWarning(String title, String message);
+
+    //TODO deprecated - use unified interface
+    void selectDragonMove(Set<Position> positions, int movesLeft);
+
+
 
 }

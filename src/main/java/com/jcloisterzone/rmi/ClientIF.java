@@ -8,11 +8,11 @@ import com.jcloisterzone.game.PlayerSlot;
 
 public interface ClientIF extends Client2ClientIF {
 
-	public void updateSlot(PlayerSlot slot);
-	public void updateSupportedExpansions(EnumSet<Expansion> expansions);
+    public void updateSlot(PlayerSlot slot);
+    public void updateSupportedExpansions(EnumSet<Expansion> expansions);
 
-	/* ---------------------- STARTED GAME MESSAGES ------------------*/
+    /* ---------------------- STARTED GAME MESSAGES ------------------*/
 
-	void nextTile(Integer tileIndex);
+    void drawTiles(Integer[] tileIndexes);
 
 }

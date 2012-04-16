@@ -8,15 +8,19 @@ import com.jcloisterzone.board.Position;
 
 public class DummyAiPlayer extends AiPlayer {
 
+    @Override
+    public void selectAction(List<PlayerAction> actions, boolean canPass) {
+        selectDummyAction(actions, canPass);
+    }
 
-	@Override
-	public void selectAction(List<PlayerAction> actions, boolean canPass) {
-		selectDummyAction(actions, canPass);
-	}	
+    @Override
+    public void selectDragonMove(Set<Position> positions, int movesLeft) {
+        selectDummyDragonMove(positions, movesLeft);
+    }
 
-	@Override
-	public void selectDragonMove(Set<Position> positions, int movesLeft) {
-		selectDummyDragonMove(positions, movesLeft);
-	}
-	
+    @Override
+    public void selectBazaarTile() {
+        throw new UnsupportedOperationException();
+    }
+
 }

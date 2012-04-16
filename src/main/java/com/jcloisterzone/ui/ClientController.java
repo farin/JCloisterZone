@@ -34,6 +34,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
+import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
@@ -242,6 +243,17 @@ public class ClientController implements GameEventListener, UserInterface {
         if (client.isClientActive()) {
             client.getControlPanel().selectAction(actions, canPass);
         }
+    }
+
+    @Override
+    public void selectBazaarTile() {
+        client.clearActions();
+        BazaarPanel bazaarPanel = new BazaarPanel(client);
+        client.getGridPanel().setBazaarPanel(bazaarPanel);
+        if (client.isClientActive()) {
+            bazaarPanel.selectBazaarTile();
+        }
+        client.getGridPanel().repaint();
     }
 
 }

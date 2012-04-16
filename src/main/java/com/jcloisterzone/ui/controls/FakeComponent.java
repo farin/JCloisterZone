@@ -8,11 +8,17 @@ import java.awt.geom.Area;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.jcloisterzone.ui.Client;
 
 public abstract class FakeComponent {
 
+    protected final Client client;
     private List<MouseListeningRegion> mouseRegions = Lists.newArrayList();
     private AffineTransform transform;
+
+    public FakeComponent(Client client) {
+        this.client = client;
+    }
 
     public void paintComponent(Graphics2D g) {
         transform = g.getTransform();

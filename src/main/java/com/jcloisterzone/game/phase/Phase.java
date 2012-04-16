@@ -83,10 +83,7 @@ public abstract class Phase implements ClientIF {
     protected Board getBoard() {
         return game.getBoard();
     }
-    @Deprecated
-    protected Game getGame() {
-        return game;
-    }
+
     protected Tile getTile() {
         return game.getTilePack().getCurrentTile();
     }
@@ -178,8 +175,8 @@ public abstract class Phase implements ClientIF {
 
 
     @Override
-    public void nextTile(Integer tileIndex) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "nextTile");
+    public void drawTiles(Integer[] tileIndex) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "drawTiles");
     }
 
      @Override

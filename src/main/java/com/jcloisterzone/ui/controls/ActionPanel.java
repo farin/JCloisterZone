@@ -22,7 +22,6 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     public static final int MAX_ICON_SIZE = 40;
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
-    private final Client client;
     private PlayerAction[] actions;
     private int selectedActionIndex = -1;
 
@@ -31,7 +30,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     private boolean refreshImages, refreshMouseRegions;
 
     public ActionPanel(Client client) {
-        this.client = client;
+        super(client);
     }
 
     private void repaint() {

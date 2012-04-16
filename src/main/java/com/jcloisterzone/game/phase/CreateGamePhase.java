@@ -97,6 +97,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         //no assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
         next = addPhase(next, new CleanUpPhase(game));
+        next = addPhase(next, new BazaarPhase(game, getServer()));
         next = addPhase(next, new EscapePhase(game));
         next = addPhase(next, new WagonPhase(game));
         next = addPhase(next, new ScorePhase(game));

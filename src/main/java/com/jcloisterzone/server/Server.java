@@ -231,9 +231,13 @@ public class Server extends GameSettings implements ServerIF {
     }
 
     @Override
-    public void selectTile(Integer tiles) {
-        //generate random tile
-        stub.nextTile(random.nextInt(tiles));
+    public void selectTiles(Integer tiles, int count) {
+        assert tiles >= count && count > 0;
+        Integer[] result = new Integer[count];
+        for(int i = 0; i < count; i++) {
+            result[i] = random.nextInt(tiles--);
+        }
+        stub.drawTiles(result);
     }
 
     @Override

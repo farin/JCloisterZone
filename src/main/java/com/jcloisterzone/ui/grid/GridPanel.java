@@ -45,6 +45,7 @@ public class GridPanel extends JComponent {
 
     final Client client;
     final ControlPanel controlPanel;
+    private BazaarPanel bazaarPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -135,6 +136,14 @@ public class GridPanel extends JComponent {
 
     public Client getClient() {
         return client;
+    }
+
+    public BazaarPanel getBazaarPanel() {
+        return bazaarPanel;
+    }
+
+    public void setBazaarPanel(BazaarPanel bazaarPanel) {
+        this.bazaarPanel = bazaarPanel;
     }
 
     public AnimationService getAnimationService() {
@@ -369,8 +378,13 @@ public class GridPanel extends JComponent {
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
         controlPanel.paintComponent(g2);
-
         profile("control panel");
+
+        if (bazaarPanel != null) {
+            g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
+            bazaarPanel.paintComponent(g2);
+        }
+
     }
 
     class MoveCenterAnimation extends Thread {

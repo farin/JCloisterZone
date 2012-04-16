@@ -50,7 +50,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
-    private final Client client;
     private final Player player;
     private final Color color;
 
@@ -62,7 +61,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private int bx, by;
 
     public PlayerPanel(Client client, Player player, PlayerPanelImageCache cache) {
-        this.client = client;
+        super(client);
         this.player = player;
         this.cache = cache;
         this.color = client.getPlayerColor(player);

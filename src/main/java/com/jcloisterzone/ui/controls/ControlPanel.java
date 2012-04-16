@@ -55,8 +55,6 @@ public class ControlPanel extends FakeComponent {
     public static final int ACTIVE_MARKER_PADDING = 6;
 
 
-    private final Client client;
-
     private boolean canPass;
 
     private ActionPanel actionPanel;
@@ -67,7 +65,7 @@ public class ControlPanel extends FakeComponent {
     private int clickToWidth, passWidth;
 
     public ControlPanel(final Client client) {
-        this.client = client;
+        super(client);
 
         FontMetrics fm = client.getFontMetrics(FONT_PASS_PLAIN);
         clickToWidth = fm.stringWidth(STR_CLICK_TO);
