@@ -104,7 +104,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void moveFairy(Position p) {
-        for(Follower f : game.getActivePlayer().getFollowers()) {
+        for(Follower f : getActivePlayer().getFollowers()) {
             if (p.equals(f.getPosition())) {
                 game.getPrincessAndDragonGame().setFairyPosition(p);
                 game.fireGameEvent().fairyMoved(p);

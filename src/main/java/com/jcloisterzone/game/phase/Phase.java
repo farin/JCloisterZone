@@ -193,7 +193,11 @@ public abstract class Phase implements ClientIF {
     @Override
     public void deployCastle(Position pos, Location loc) {
         logger.error(Application.ILLEGAL_STATE_MSG, "deployCastle");
+    }
 
+    @Override
+    public void bazaarBid(Integer supplyIndex, Integer price) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBid");
     }
 
 

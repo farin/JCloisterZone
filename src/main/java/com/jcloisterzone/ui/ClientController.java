@@ -31,6 +31,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
@@ -251,7 +252,26 @@ public class ClientController implements GameEventListener, UserInterface {
         BazaarPanel bazaarPanel = new BazaarPanel(client);
         client.getGridPanel().setBazaarPanel(bazaarPanel);
         if (client.isClientActive()) {
-            bazaarPanel.selectBazaarTile();
+            bazaarPanel.setSelectedItem(0);
+            bazaarPanel.setSelectable(true);
+            bazaarPanel.setBidable(true);
+        }
+        client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
+        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        bazaarPanel.setSelectable(false);
+        bazaarPanel.setBidable(false);
+        client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void makeBazaarBid(int supplyIndex) {
+        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        if (client.isClientActive()) {
+            bazaarPanel.setBidable(true);
         }
         client.getGridPanel().repaint();
     }

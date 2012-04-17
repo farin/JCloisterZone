@@ -21,6 +21,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.expansion.BazaarItem;
 
 
 public class EventMulticaster implements GameEventListener, UserInterface {
@@ -122,6 +123,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
+        ((GameEventListener)a).bazaarTileSelected(supplyIndex, bazaarItem);
+        ((GameEventListener)b).bazaarTileSelected(supplyIndex, bazaarItem);
+    }
+
+    @Override
     public void selectAction(List<PlayerAction> actions, boolean canPass) {
         ((UserInterface)a).selectAction(actions, canPass);
         ((UserInterface)b).selectAction(actions, canPass);
@@ -131,6 +138,14 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     public void selectBazaarTile() {
         ((UserInterface)a).selectBazaarTile();
         ((UserInterface)b).selectBazaarTile();
+    }
+
+
+
+    @Override
+    public void makeBazaarBid(int supplyIndex) {
+        ((UserInterface)a).makeBazaarBid(supplyIndex);
+        ((UserInterface)b).makeBazaarBid(supplyIndex);
     }
 
     @Override

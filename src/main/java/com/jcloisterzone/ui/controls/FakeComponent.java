@@ -24,7 +24,7 @@ public abstract class FakeComponent {
         transform = g.getTransform();
     }
 
-    List<MouseListeningRegion> getMouseRegions() {
+    protected List<MouseListeningRegion> getMouseRegions() {
         return mouseRegions;
     }
 

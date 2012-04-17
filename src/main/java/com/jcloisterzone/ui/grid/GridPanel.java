@@ -86,6 +86,20 @@ public class GridPanel extends JComponent {
     }
 
 
+    public void forward() {
+        if (client.isClientActive()) {
+            if (bazaarPanel != null) bazaarPanel.forward();
+            client.getControlPanel().getActionPanel().forward();
+        }
+    }
+
+    public void backward() {
+        if (client.isClientActive()) {
+            if (bazaarPanel != null) bazaarPanel.backward();
+            client.getControlPanel().getActionPanel().backward();
+        }
+    }
+
     private void registerMouseListeners() {
         addMouseListener(
             new MouseAdapter() {
@@ -99,14 +113,10 @@ public class GridPanel extends JComponent {
                         break;
                     case MouseEvent.BUTTON3:
                     case 5:
-                        if (client.isClientActive()) {
-                            client.getControlPanel().getActionPanel().forward();
-                        }
+                        forward();
                         break;
                     case 4:
-                        if (client.isClientActive()) {
-                            client.getControlPanel().getActionPanel().backward();
-                        }
+                        backward();
                         break;
                     }
                 }
@@ -121,6 +131,10 @@ public class GridPanel extends JComponent {
 
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
+                if (bazaarPanel != null) {
+                    bazaarPanel.dispatchMouseEvent(e);
+                    if (e.isConsumed()) return;
+                }
                 controlPanel.dispatchMouseEvent(e);
             }
         });

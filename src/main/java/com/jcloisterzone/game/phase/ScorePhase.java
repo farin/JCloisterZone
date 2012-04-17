@@ -30,137 +30,137 @@ import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 
 public class ScorePhase extends Phase {
 
-	private Set<Completable> alredyScored = Sets.newHashSet();
+    private Set<Completable> alredyScored = Sets.newHashSet();
 
-	public ScorePhase(Game game) {
-		super(game);
-	}
+    public ScorePhase(Game game) {
+        super(game);
+    }
 
-	private void scoreCompletedOnTile(Tile tile) {
-		for(Feature feature : tile.getFeatures()) {
-			if (feature instanceof Completable) {
-				scoreCompleted((Completable) feature);
-			}
-		}
-	}
+    private void scoreCompletedOnTile(Tile tile) {
+        for(Feature feature : tile.getFeatures()) {
+            if (feature instanceof Completable) {
+                scoreCompleted((Completable) feature);
+            }
+        }
+    }
 
-	private void scoreCompletedNearAbbey(Position pos) {
-		for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(pos).entrySet()) {
-			Tile tile = e.getValue();
-			Feature feature = tile.getFeaturePartOf(e.getKey().rev());
-			if (feature instanceof Completable) {
-				scoreCompleted((Completable) feature);
-			}
-		}
-	}
-	
-	private void scoreFollowersOnBarnFarm(Farm farm, Map<City, CityScoreContext> cityCache) {
-		FarmScoreContext ctx = farm.getScoreContext();
-		ctx.setCityCache(cityCache);
-		farm.walk(ctx);
+    private void scoreCompletedNearAbbey(Position pos) {
+        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(pos).entrySet()) {
+            Tile tile = e.getValue();
+            Feature feature = tile.getFeaturePartOf(e.getKey().rev());
+            if (feature instanceof Completable) {
+                scoreCompleted((Completable) feature);
+            }
+        }
+    }
 
-		boolean hasBarn = false;
-		for(Meeple m : ctx.getSpecialMeeples()) {
-			if (m instanceof Barn) {
-				hasBarn = true;
-				break;
-			}
-		}
-		if (hasBarn) {
-			for(Player p : ctx.getMajorOwners()) {
-				int points = ctx.getPointsWhenBarnIsConnected(p);
-				game.scoreFeature(points, ctx, p);
-			}
-			for(Meeple m : ctx.getMeeples()) {
-				if (! (m instanceof Barn)) {
-					m.undeploy(false);
-				}
-			}
-		}
-	}
+    private void scoreFollowersOnBarnFarm(Farm farm, Map<City, CityScoreContext> cityCache) {
+        FarmScoreContext ctx = farm.getScoreContext();
+        ctx.setCityCache(cityCache);
+        farm.walk(ctx);
 
-	@Override
-	public void enter() {
-		Position pos = getTile().getPosition();
-		
-		//TODO separate event here ??? and move this code to abbey and mayor game
-		if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
-			Map<City, CityScoreContext> cityCache = Maps.newHashMap();
-			for(Feature feature : getTile().getFeatures()) {
-				if (feature instanceof Farm) {
-					scoreFollowersOnBarnFarm((Farm) feature, cityCache);
-				}
-			}
-		}		
+        boolean hasBarn = false;
+        for(Meeple m : ctx.getSpecialMeeples()) {
+            if (m instanceof Barn) {
+                hasBarn = true;
+                break;
+            }
+        }
+        if (hasBarn) {
+            for(Player p : ctx.getMajorOwners()) {
+                int points = ctx.getPointsWhenBarnIsConnected(p);
+                game.scoreFeature(points, ctx, p);
+            }
+            for(Meeple m : ctx.getMeeples()) {
+                if (! (m instanceof Barn)) {
+                    m.undeploy(false);
+                }
+            }
+        }
+    }
 
-		scoreCompletedOnTile(getTile());
-		if (getTile().isAbbeyTile()) {
-			scoreCompletedNearAbbey(pos);
-		}
+    @Override
+    public void enter() {
+        Position pos = getTile().getPosition();
 
-		if (game.hasExpansion(Expansion.TUNNEL)) {
-			Road r = game.getTunnelGame().getPlacedTunnel();
-			if (r != null) {
-				scoreCompleted(r);
-			}
-		}
-		
-		for(Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
-			Cloister cloister = neighbour.getCloister();
-			if (cloister != null) {
-				scoreCompleted(cloister);
-			}
-		}
-		
-		if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
-			BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-			for(Entry<Castle, Integer> entry : bcb.getCastleScore().entrySet()) {
-				scoreCastle(entry.getKey(), entry.getValue());				
-			}
-		}
-		
-		alredyScored.clear();
+        //TODO separate event here ??? and move this code to abbey and mayor game
+        if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
+            Map<City, CityScoreContext> cityCache = Maps.newHashMap();
+            for(Feature feature : getTile().getFeatures()) {
+                if (feature instanceof Farm) {
+                    scoreFollowersOnBarnFarm((Farm) feature, cityCache);
+                }
+            }
+        }
 
-		next();
-	}
+        scoreCompletedOnTile(getTile());
+        if (getTile().isAbbeyTile()) {
+            scoreCompletedNearAbbey(pos);
+        }
 
-	protected void undeployMeeples(CompletableScoreContext ctx) {
-		for(Meeple m : ctx.getMeeples()) {
-			m.undeploy(false);
-		}
-	}
-	
-	private void scoreCastle(Castle castle, int points) {
-		Meeple m = castle.getMeeple();
-		if (m == null) m = castle.getSecondFeature().getMeeple();
-		m.getPlayer().addPoints(points, PointCategory.CASTLE);
-		game.fireGameEvent().scored(m.getFeature(), points, points+"", m, false);		
-		m.undeploy(false);
-	}
+        if (game.hasExpansion(Expansion.TUNNEL)) {
+            Road r = game.getTunnelGame().getPlacedTunnel();
+            if (r != null) {
+                scoreCompleted(r);
+            }
+        }
 
-	private void scoreCompleted(Completable completable) {
-		CompletableScoreContext ctx = completable.getScoreContext();
-		completable.walk(ctx);
-		if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) {
-			for(Meeple m : ctx.getSpecialMeeples()) {
-				if (m instanceof Builder && m.getPlayer().equals(game.getActivePlayer())) {
-					if (! m.getPosition().equals(getTile().getPosition())) {
-						game.getTradersAndBuildersGame().builderUsed();
-					}
-					break;
-				}
-			}
-		}
-		if (ctx.isCompleted()) {
-			Completable master = (Completable) ctx.getMasterFeature();
-			if (! alredyScored.contains(master)) {
-				alredyScored.add(master);
-				game.expansionDelegate().scoreCompleted(ctx);
-				game.scoreCompletableFeature(ctx);
-				undeployMeeples(ctx);
-				game.fireGameEvent().completed(master, ctx);
-			}
-		}
-	}
+        for(Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
+            Cloister cloister = neighbour.getCloister();
+            if (cloister != null) {
+                scoreCompleted(cloister);
+            }
+        }
+
+        if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+            BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+            for(Entry<Castle, Integer> entry : bcb.getCastleScore().entrySet()) {
+                scoreCastle(entry.getKey(), entry.getValue());
+            }
+        }
+
+        alredyScored.clear();
+
+        next();
+    }
+
+    protected void undeployMeeples(CompletableScoreContext ctx) {
+        for(Meeple m : ctx.getMeeples()) {
+            m.undeploy(false);
+        }
+    }
+
+    private void scoreCastle(Castle castle, int points) {
+        Meeple m = castle.getMeeple();
+        if (m == null) m = castle.getSecondFeature().getMeeple();
+        m.getPlayer().addPoints(points, PointCategory.CASTLE);
+        game.fireGameEvent().scored(m.getFeature(), points, points+"", m, false);
+        m.undeploy(false);
+    }
+
+    private void scoreCompleted(Completable completable) {
+        CompletableScoreContext ctx = completable.getScoreContext();
+        completable.walk(ctx);
+        if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) {
+            for(Meeple m : ctx.getSpecialMeeples()) {
+                if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
+                    if (! m.getPosition().equals(getTile().getPosition())) {
+                        game.getTradersAndBuildersGame().builderUsed();
+                    }
+                    break;
+                }
+            }
+        }
+        if (ctx.isCompleted()) {
+            Completable master = (Completable) ctx.getMasterFeature();
+            if (! alredyScored.contains(master)) {
+                alredyScored.add(master);
+                game.expansionDelegate().scoreCompleted(ctx);
+                game.scoreCompletableFeature(ctx);
+                undeployMeeples(ctx);
+                game.fireGameEvent().completed(master, ctx);
+            }
+        }
+    }
 
 }

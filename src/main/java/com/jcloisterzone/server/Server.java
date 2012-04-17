@@ -276,4 +276,9 @@ public class Server extends GameSettings implements ServerIF {
         stub.deployCastle(pos, loc);
     }
 
+    @Override
+    public void bazaarBid(Integer supplyIndex, Integer price) {
+        stub.bazaarBid(supplyIndex, price);
+    }
+
 }

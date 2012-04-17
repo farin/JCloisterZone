@@ -35,4 +35,6 @@ public interface Client2ClientIF {
     public void deployBridge(Position pos, Location loc);
     public void deployCastle(Position pos, Location loc);
 
+    public void bazaarBid(Integer supplyIndex, Integer price);
+
 }

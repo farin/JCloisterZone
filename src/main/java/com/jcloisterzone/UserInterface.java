@@ -12,6 +12,7 @@ public interface UserInterface extends EventListener {
 
     void selectAction(List<PlayerAction> actions, boolean canPass);
     void selectBazaarTile();
+    void makeBazaarBid(int supplyIndex);
 
     void showWarning(String title, String message);
 

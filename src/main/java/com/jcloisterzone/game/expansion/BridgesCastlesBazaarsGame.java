@@ -46,6 +46,9 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     private Map<Castle, Integer> castleScore = Maps.newHashMap();
 
     private BazaarItem[] bazaarSupply;
+    private BazaarItem currentBazaarAuction;
+    private Player bazaarTileSelectingPlayer;
+    private Player bazaarBiddingPlayer;
 
     @Override
     public void setGame(Game game) {
@@ -331,5 +334,29 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 
     public BazaarItem[] getBazaarSupply() {
         return bazaarSupply;
+    }
+
+    public Player getBazaarTileSelectingPlayer() {
+        return bazaarTileSelectingPlayer;
+    }
+
+    public void setBazaarTileSelectingPlayer(Player bazaarTileSelectingPlayer) {
+        this.bazaarTileSelectingPlayer = bazaarTileSelectingPlayer;
+    }
+
+    public Player getBazaarBiddingPlayer() {
+        return bazaarBiddingPlayer;
+    }
+
+    public void setBazaarBiddingPlayer(Player bazaarBiddingPlayer) {
+        this.bazaarBiddingPlayer = bazaarBiddingPlayer;
+    }
+
+    public BazaarItem getCurrentBazaarAuction() {
+        return currentBazaarAuction;
+    }
+
+    public void setCurrentBazaarAuction(BazaarItem currentBazaarAuction) {
+        this.currentBazaarAuction = currentBazaarAuction;
     }
 }

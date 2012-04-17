@@ -66,7 +66,7 @@ public class DrawPhase extends ServerAwarePhase {
         if (makeDebugDraw()) {
             return;
         }
-        if (isLocalPlayer(game.getActivePlayer())) {
+        if (isLocalPlayer(getActivePlayer())) {
             //call only from one client (from the active one)
             getServer().selectTiles(getTilePack().size(), 1);
         }

@@ -1,6 +1,9 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Arrays;
+
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BazaarItem;
@@ -23,12 +26,20 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     @Override
+    public Player getActivePlayer() {
+        return bcb.getBazaarBiddingPlayer();
+    }
+
+    @Override
     public void enter() {
         if (!isBazaarTriggered()) {
             next();
             return;
         }
-        if (isLocalPlayer(game.getActivePlayer())) {
+        Player p = game.getNextPlayer();
+        bcb.setBazaarTileSelectingPlayer(p);
+        bcb.setBazaarBiddingPlayer(p);
+        if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
             getServer().selectTiles(getTilePack().size(), game.getAllPlayers().length);
         }
@@ -49,5 +60,51 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         bcb.setBazaarSupply(supply);
         game.getUserInterface().selectBazaarTile();
+    }
+
+    private boolean canPlayerBid(Player p) {
+        for(BazaarItem bi : bcb.getBazaarSupply()) {
+            if (bi.getOwner() == p) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void bazaarBid(Integer supplyIndex, Integer price) {
+        if (bcb.getCurrentBazaarAuction() == null) {
+            //active player just selected tile
+            BazaarItem bi = bcb.getBazaarSupply()[supplyIndex];
+            bcb.setCurrentBazaarAuction(bi);
+            game.fireGameEvent().bazaarTileSelected(supplyIndex, bi);
+        }
+        nextBidder();
+    }
+
+    private void nextBidder() {
+        Player nextBidder = getActivePlayer();
+        do {
+            nextBidder = game.getNextPlayer(nextBidder);
+            if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
+                //all players makes bid
+                return;
+            }
+        } while (!canPlayerBid(nextBidder));
+
+        BazaarItem[] supply = bcb.getBazaarSupply();
+        for(int i = 0; i < supply.length; i++) {
+            if (supply[i] == bcb.getCurrentBazaarAuction()) {
+                game.getUserInterface().makeBazaarBid(i);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void pass() {
+        if (bcb.getBazaarBiddingPlayer() == bcb.getBazaarTileSelectingPlayer()) {
+            logger.error("Tile selecting player is not allowed to pass");
+            return;
+        }
+        nextBidder();
     }
 }

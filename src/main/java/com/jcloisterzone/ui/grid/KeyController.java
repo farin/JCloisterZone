@@ -33,15 +33,10 @@ public class KeyController implements KeyEventDispatcher {
                 }
                 break;
             case KeyEvent.VK_TAB:
-                if (client.isClientActive()) {
-                    if (e.getModifiers() == 0) {
-                        client.getControlPanel().getActionPanel().forward();
-                        return true;
-                    }
-                    if (e.getModifiers() == KeyEvent.SHIFT_MASK) {
-                        client.getControlPanel().getActionPanel().backward();
-                        return true;
-                    }
+                if (e.getModifiers() == 0) {
+                    client.getGridPanel().forward();
+                } else if (e.getModifiers() == KeyEvent.SHIFT_MASK) {
+                    client.getGridPanel().backward();
                 }
                 break;
             default:
