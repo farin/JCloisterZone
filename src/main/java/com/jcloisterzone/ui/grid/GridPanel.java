@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.w3c.dom.Element;
@@ -38,7 +39,7 @@ import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.theme.TileTheme;
 
-public class GridPanel extends JComponent {
+public class GridPanel extends JPanel {
 
     public static int INITIAL_SQUARE_SIZE = 120;
     private static final int STARTING_GRID_SIZE = 3;
@@ -61,6 +62,7 @@ public class GridPanel extends JComponent {
     public GridPanel(Client client, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
+        setLayout(null);
 
         this.client = client;
         this.controlPanel = client.getControlPanel();
@@ -83,6 +85,7 @@ public class GridPanel extends JComponent {
             }
         }
         registerMouseListeners();
+        controlPanel.registerSwingComponents(this);
     }
 
 
@@ -355,10 +358,10 @@ public class GridPanel extends JComponent {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintChildren(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        //super.paintComponent(g);
+        AffineTransform orig = g2.getTransform();
 
         System.out.println("------------------------");
         ts = last = System.currentTimeMillis();
@@ -398,6 +401,10 @@ public class GridPanel extends JComponent {
             g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
             bazaarPanel.paintComponent(g2);
         }
+
+        //jb.paint(g2);
+        g2.setTransform(orig);
+        super.paintChildren(g);
 
     }
 

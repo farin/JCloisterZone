@@ -250,6 +250,7 @@ public class ClientController implements GameEventListener, UserInterface {
     public void selectBazaarTile() {
         client.clearActions();
         BazaarPanel bazaarPanel = new BazaarPanel(client);
+        bazaarPanel.registerSwingComponents(client.getGridPanel());
         client.getGridPanel().setBazaarPanel(bazaarPanel);
         if (client.isClientActive()) {
             bazaarPanel.setSelectedItem(0);
