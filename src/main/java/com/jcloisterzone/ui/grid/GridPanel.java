@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -16,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -139,6 +140,29 @@ public class GridPanel extends JPanel {
                     if (e.isConsumed()) return;
                 }
                 controlPanel.dispatchMouseEvent(e);
+            }
+        });
+
+        addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                controlPanel.componentResized(e);
+                if (bazaarPanel != null) bazaarPanel.componentResized(e);
+            }
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                controlPanel.componentMoved(e);
+                if (bazaarPanel != null) bazaarPanel.componentMoved(e);
+            }
+            @Override
+            public void componentShown(ComponentEvent e) {
+                controlPanel.componentShown(e);
+                if (bazaarPanel != null) bazaarPanel.componentShown(e);
+            }
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                controlPanel.componentHidden(e);
+                if (bazaarPanel != null) bazaarPanel.componentHidden(e);
             }
         });
     }
@@ -333,13 +357,13 @@ public class GridPanel extends JPanel {
         return (getHeight() - squareSize)/2;
     }
 
-    //TODO remove profile code
-    long ts, last;
-    public void profile(String msg) {
-        long now = System.currentTimeMillis();
-        System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
-        last = now;
-    }
+//    //TODO remove profile code
+//    long ts, last;
+//    public void profile(String msg) {
+//        long now = System.currentTimeMillis();
+//        System.out.println((now-ts) + " (" + (now-last) +") : " + msg);
+//        last = now;
+//    }
 
     private void paintGrid(Graphics2D g2) {
         g2.setColor(UIManager.getColor("Panel.background"));
@@ -354,17 +378,17 @@ public class GridPanel extends JPanel {
             g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
         }
 
-        profile("grid");
+//        profile("grid");
     }
 
     @Override
     protected void paintChildren(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        AffineTransform orig = g2.getTransform();
+        //System.err.println("GP " + g2.getTransform());
 
-        System.out.println("------------------------");
-        ts = last = System.currentTimeMillis();
+//        System.out.println("------------------------");
+//        ts = last = System.currentTimeMillis();
 
         int w = getWidth(), h = getHeight();
 //        int w = getWidth(), h = getHeight();
@@ -387,7 +411,7 @@ public class GridPanel extends JPanel {
         synchronized (layers) {
             for(GridLayer layer : layers) {
                 layer.paint(g2);
-                profile(layer.getClass().getSimpleName());
+//                profile(layer.getClass().getSimpleName());
             }
         }
 
@@ -395,15 +419,16 @@ public class GridPanel extends JPanel {
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
         controlPanel.paintComponent(g2);
-        profile("control panel");
+//        profile("control panel");
 
         if (bazaarPanel != null) {
             g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
+            //System.err.println("GP " + g2.getTransform());
             bazaarPanel.paintComponent(g2);
         }
 
         //jb.paint(g2);
-        g2.setTransform(orig);
+        g2.setTransform(origTransform);
         super.paintChildren(g);
 
     }

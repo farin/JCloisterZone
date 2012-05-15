@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Arrays;
-
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.TileTrigger;

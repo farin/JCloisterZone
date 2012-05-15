@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.controls;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -12,7 +13,7 @@ import javax.swing.JComponent;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.ui.Client;
 
-public abstract class FakeComponent {
+public abstract class FakeComponent extends ComponentAdapter {
 
     protected final Client client;
     private List<MouseListeningRegion> mouseRegions = Lists.newArrayList();
@@ -45,13 +46,14 @@ public abstract class FakeComponent {
         }
     }
 
-    private Area transformRegion(Rectangle r) {
+    protected Area transformRegion(Rectangle r) {
         Area a = new Area(r);
         a.transform(transform);
         return a;
     }
 
-    protected void setBounds(JComponent comp, int x, int y, int width, int height) {
-    	comp.setBounds(transformRegion(new Rectangle(x, y, width, height)).getBounds());
-    }
+//    protected Rectangle computeBounds(int x, int y, int width, int height) {
+//        return transformRegion(new Rectangle(x, y, width, height)).getBounds();
+//    }
+
 }

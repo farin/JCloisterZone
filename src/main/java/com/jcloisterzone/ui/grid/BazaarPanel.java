@@ -2,19 +2,17 @@ package com.jcloisterzone.ui.grid;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
@@ -49,8 +47,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     private boolean refreshMouseRegions;
 
     private JButton bidButton;
-    private JSpinner bidAmount;
-    private SpinnerNumberModel bidAmountModel;
+    //private JSpinner bidAmount;
+    //private SpinnerNumberModel bidAmountModel;
 
 
     public BazaarPanel(Client client) {
@@ -62,22 +60,25 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     }
 
     @Override
+    public void componentResized(ComponentEvent e) {
+        refreshMouseRegions = true;
+        computeBidButtonBounds();
+        client.getGridPanel().repaint();
+    }
+
+    @Override
     public void registerSwingComponents(JComponent parent) {
-    	 bidButton = new JButton(_("Bid"));
-    	 bidButton.setFont(new Font(null, Font.BOLD, 24));
-    	 bidButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				assert bidable;
-				client.getServer().bazaarBid(selectedItem, 0);
-			}
-    	 });
-    	 parent.add(bidButton);
-    	 bidAmountModel = new SpinnerNumberModel(0, 0, 0, 1);
-    	 bidAmount = new JSpinner(bidAmountModel);
-    	 bidAmount.setEditor(new JSpinner.NumberEditor(bidAmount));
-    	 //bidAmount.setBounds(1, 1, 200, 200); //devel code - TODO
-    	 parent.add(bidAmount);
+         bidButton = new JButton(_("Bid"));
+         bidButton.setFont(new Font(null, Font.BOLD, 24));
+         bidButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                assert bidable;
+                client.getServer().bazaarBid(selectedItem, 0);
+            }
+         });
+         bidButton.setVisible(false);
+         parent.add(bidButton);
     }
 
 
@@ -91,8 +92,21 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     }
 
     public void setBidable(boolean bidable) {
-        refreshMouseRegions = true;
         this.bidable = bidable;
+        computeBidButtonBounds();
+    }
+
+    private void computeBidButtonBounds() {
+        if (!bidable || selectedItem == -1) {
+            bidButton.setVisible(false);
+            return;
+        }
+
+        //TODO hardcoded offset - but no better solution for now
+        int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
+        int width = BazaarPanel.PANEL_WIDTH-160;
+        bidButton.setBounds(bazaarPanelX+140, 114+120*selectedItem, width, 40);
+        bidButton.setVisible(true);
     }
 
     public boolean isBidable() {
@@ -102,7 +116,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     public void setSelectedItem(int selectedItem) {
         this.selectedItem = selectedItem;
         int points = client.getGame().getActivePlayer().getPoints();
-        bidAmountModel.setMaximum(points);
+        computeBidButtonBounds();
+        //bidAmountModel.setMaximum(points);
     }
 
     public int getSelectedItem() {
@@ -115,6 +130,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             if (selectedItem == bcb.getBazaarSupply().length) {
                 selectedItem = 0;
             }
+            computeBidButtonBounds();
             client.getGridPanel().repaint();
         }
     }
@@ -128,6 +144,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             client.getGridPanel().repaint();
         }
     }
+
 
     @Override
     public void paintComponent(Graphics2D g2) {
@@ -149,6 +166,9 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             getMouseRegions().clear();
         }
 
+        //System.out.println("B " + isTransormChanged() + " " + g2.getTransform());
+        //System.out.println(g2.getTransform());
+
         int i = 0;
         for(BazaarItem bi : bcb.getBazaarSupply()) {
             //TOOD caceh supply images ??
@@ -157,23 +177,6 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             if (selectedItem == i) {
                 g2.setColor(ControlPanel.PLAYER_BG_COLOR);
                 g2.fillRect(0, y-1, BazaarPanel.PANEL_WIDTH, 102);
-
-                if (bidable) {
-//                    g2.setFont(FONT_BID);
-//                    g2.setColor(Color.WHITE);
-//                    int areaWidth = BazaarPanel.PANEL_WIDTH-160;
-//                    g2.drawRect(140, y+60, areaWidth, 30);
-//                    g2.drawString("Bid", 140+(areaWidth-BID_LABEL_WIDTH)/2, y+82);
-//
-//                    if (refreshMouseRegions) {
-//                        getMouseRegions().add(new MouseListeningRegion(new Rectangle(140, y+60, areaWidth, 30), this, "submit"));
-//                    }
-
-                	int width = BazaarPanel.PANEL_WIDTH-160;
-                	//setBounds(bidAmount, 140, y, width, 50);
-                	bidAmount.setBounds(1, 1, 200, 200);
-                	setBounds(bidButton, 140, y+54, width, 40);
-                }
             }
 
             if (refreshMouseRegions && selectable) {
@@ -185,7 +188,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             i++;
             y += 120;
         }
-
+        this.refreshMouseRegions = false;
     }
 
     @Override
@@ -195,6 +198,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             int idx = (Integer) data;
             if (selectedItem != -1 && selectedItem != idx) {
                 selectedItem = idx;
+                computeBidButtonBounds();
                 client.getGridPanel().repaint();
             }
             return;
