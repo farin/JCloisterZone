@@ -28,4 +28,9 @@ public class DummyAiPlayer extends AiPlayer {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void buyOrSellBazaarOffer(int supplyIndex) {
+        throw new UnsupportedOperationException();
+    }
+
 }

@@ -13,6 +13,8 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
@@ -244,6 +246,7 @@ public class ClientController implements GameEventListener, UserInterface {
         if (client.isClientActive()) {
             client.getControlPanel().selectAction(actions, canPass);
         }
+        client.getGridPanel().repaint();
     }
 
     @Override
@@ -271,10 +274,25 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void makeBazaarBid(int supplyIndex) {
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        bazaarPanel.setSelectedItem(supplyIndex);
+
         if (client.isClientActive()) {
             bazaarPanel.setBidable(true);
+            bazaarPanel.setSelectable(false);
+            client.getControlPanel().allowPassOnly();
+        } else {
+            bazaarPanel.setBidable(false);
+            bazaarPanel.setSelectable(false);
+            client.getControlPanel().clearActions();
         }
         client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void buyOrSellBazaarOffer(int supplyIndex) {
+        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        bazaarPanel.setSelectedItem(supplyIndex);
+        throw new UnsupportedOperationException("TODO not implemented");
     }
 
 }

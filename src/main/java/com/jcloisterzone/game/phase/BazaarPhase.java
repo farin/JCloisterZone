@@ -25,7 +25,8 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public Player getActivePlayer() {
-        return bcb.getBazaarBiddingPlayer();
+        Player bidding =  bcb.getBazaarBiddingPlayer();
+        return bidding == null ? bcb.getBazaarTileSelectingPlayer() : bidding;
     }
 
     @Override
@@ -37,6 +38,7 @@ public class BazaarPhase extends ServerAwarePhase {
         Player p = game.getNextPlayer();
         bcb.setBazaarTileSelectingPlayer(p);
         bcb.setBazaarBiddingPlayer(p);
+        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
             getServer().selectTiles(getTilePack().size(), game.getAllPlayers().length);
@@ -69,13 +71,29 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public void bazaarBid(Integer supplyIndex, Integer price) {
-        if (bcb.getCurrentBazaarAuction() == null) {
-            //active player just selected tile
-            BazaarItem bi = bcb.getBazaarSupply()[supplyIndex];
+        BazaarItem bi = bcb.getCurrentBazaarAuction();
+        boolean isTileSelection = bi == null;
+        if (bi == null) {
+            bi = bcb.getBazaarSupply()[supplyIndex];
             bcb.setCurrentBazaarAuction(bi);
+        }
+        bi.setCurrentPrice(price);
+        bi.setCurrentBidder(getActivePlayer());
+
+        if (isTileSelection) {
             game.fireGameEvent().bazaarTileSelected(supplyIndex, bi);
         }
         nextBidder();
+    }
+
+    private int getCurrentBazaarAuctionIndex() {
+        BazaarItem[] supply = bcb.getBazaarSupply();
+        for(int i = 0; i < supply.length; i++) {
+            if (supply[i] == bcb.getCurrentBazaarAuction()) {
+                return i;
+            }
+        }
+        throw new IllegalStateException();
     }
 
     private void nextBidder() {
@@ -84,17 +102,16 @@ public class BazaarPhase extends ServerAwarePhase {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
                 //all players makes bid
+                bcb.setBazaarBiddingPlayer(null);
+                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                game.getUserInterface().buyOrSellBazaarOffer(getCurrentBazaarAuctionIndex());
                 return;
             }
         } while (!canPlayerBid(nextBidder));
 
-        BazaarItem[] supply = bcb.getBazaarSupply();
-        for(int i = 0; i < supply.length; i++) {
-            if (supply[i] == bcb.getCurrentBazaarAuction()) {
-                game.getUserInterface().makeBazaarBid(i);
-                break;
-            }
-        }
+        bcb.setBazaarBiddingPlayer(nextBidder);
+        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        game.getUserInterface().makeBazaarBid(getCurrentBazaarAuctionIndex());
     }
 
     @Override
