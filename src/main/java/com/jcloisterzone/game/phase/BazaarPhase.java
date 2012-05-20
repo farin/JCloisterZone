@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BazaarItem;
@@ -37,7 +38,6 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         Player p = game.getNextPlayer();
         bcb.setBazaarTileSelectingPlayer(p);
-        bcb.setBazaarBiddingPlayer(p);
         game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
@@ -53,7 +53,7 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     @Override
-    public void drawTiles(Integer[] tileIndexes) {
+    public void drawTiles(int[] tileIndexes) {
         BazaarItem[] supply = new BazaarItem[tileIndexes.length];
         for(int i = 0; i < tileIndexes.length; i++) {
             supply[i] = new BazaarItem(getTilePack().drawTile(tileIndexes[i]));
@@ -98,20 +98,45 @@ public class BazaarPhase extends ServerAwarePhase {
 
     private void nextBidder() {
         Player nextBidder = getActivePlayer();
+        int supplyIdx = getCurrentBazaarAuctionIndex();
         do {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
                 //all players makes bid
                 bcb.setBazaarBiddingPlayer(null);
-                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                game.getUserInterface().buyOrSellBazaarOffer(getCurrentBazaarAuctionIndex());
+                BazaarItem bi = bcb.getCurrentBazaarAuction();
+                if (bcb.getBazaarTileSelectingPlayer() == bi.getCurrentBidder()) {
+                	bazaarBuyOrSell(true);
+                } else {
+                	game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                	game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+                }
                 return;
             }
         } while (!canPlayerBid(nextBidder));
 
         bcb.setBazaarBiddingPlayer(nextBidder);
         game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-        game.getUserInterface().makeBazaarBid(getCurrentBazaarAuctionIndex());
+        game.getUserInterface().makeBazaarBid(supplyIdx);
+    }
+
+    private void nextSelectingPlayer() {
+    	bcb.setCurrentBazaarAuction(null);
+    	bcb.setBazaarBiddingPlayer(null);
+    	Player currentPlayer = bcb.getBazaarTileSelectingPlayer();
+    	Player nextPlayer = game.getNextPlayer(currentPlayer);
+    	while (nextPlayer != currentPlayer) {
+    		if (! bcb.hasTileAuctioned(nextPlayer)) {
+    			bcb.setBazaarTileSelectingPlayer(nextPlayer);
+    			game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+    			game.getUserInterface().selectBazaarTile();
+    			return;
+    		}
+    		nextPlayer = game.getNextPlayer(nextPlayer);
+    	}
+    	//all tiles has been auctioned
+    	bcb.setBazaarTileSelectingPlayer(null);
+    	next();
     }
 
     @Override
@@ -122,4 +147,25 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         nextBidder();
     }
+
+    @Override
+    public void bazaarBuyOrSell(boolean buy) {
+    	BazaarItem bi = bcb.getCurrentBazaarAuction();
+    	int points = bi.getCurrentPrice();
+    	Player pSelecting = bcb.getBazaarTileSelectingPlayer();
+    	Player pBidding = bi.getCurrentBidder();
+
+    	assert pSelecting != pBidding || buy; //if same, buy is flag expected
+    	if (!buy) points *= -1;
+    	pSelecting.addPoints(-points, PointCategory.BAZAAR_AUCTION);
+    	if (pSelecting != pBidding) {
+    		pBidding.addPoints(points, PointCategory.BAZAAR_AUCTION);
+    	}
+
+    	bi.setOwner(buy ? pSelecting : pBidding);
+    	bi.setCurrentBidder(null);
+    	nextSelectingPlayer();
+    }
+
+
 }

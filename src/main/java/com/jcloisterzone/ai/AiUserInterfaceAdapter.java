@@ -49,7 +49,7 @@ public class AiUserInterfaceAdapter implements UserInterface {
     }
 
     @Override
-    public void buyOrSellBazaarOffer(int supplyIndex) {
+    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
         throw new UnsupportedOperationException();
     }
 

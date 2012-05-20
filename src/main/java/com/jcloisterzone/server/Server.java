@@ -231,11 +231,11 @@ public class Server extends GameSettings implements ServerIF {
     }
 
     @Override
-    public void selectTiles(Integer tiles, int count) {
-        assert tiles >= count && count > 0;
-        Integer[] result = new Integer[count];
-        for(int i = 0; i < count; i++) {
-            result[i] = random.nextInt(tiles--);
+    public void selectTiles(int tilesCount, int drawCount) {
+        assert tilesCount >= drawCount && drawCount > 0;
+        int[] result = new int[drawCount];
+        for(int i = 0; i < drawCount; i++) {
+            result[i] = random.nextInt(tilesCount--);
         }
         stub.drawTiles(result);
     }
@@ -279,6 +279,11 @@ public class Server extends GameSettings implements ServerIF {
     @Override
     public void bazaarBid(Integer supplyIndex, Integer price) {
         stub.bazaarBid(supplyIndex, price);
+    }
+
+    @Override
+    public void bazaarBuyOrSell(boolean buy) {
+    	stub.bazaarBuyOrSell(buy);
     }
 
 }

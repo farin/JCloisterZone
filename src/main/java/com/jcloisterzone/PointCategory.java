@@ -13,5 +13,6 @@ public enum PointCategory {
 	TOWER_RANSOM,
 	BIGGEST_CITY,
 	LONGEST_ROAD,
+	BAZAAR_AUCTION
 
 }

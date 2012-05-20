@@ -75,7 +75,7 @@ public class DrawPhase extends ServerAwarePhase {
 
 
     @Override
-    public void drawTiles(Integer[] tileIndex) {
+    public void drawTiles(int[] tileIndex) {
         assert tileIndex.length == 1;
         Tile tile = getTilePack().drawTile(tileIndex[0]);
         nextTile(tile);

@@ -18,6 +18,8 @@ import com.jcloisterzone.Application;
 
 public class AboutDialog extends JDialog {
 
+	private static final long serialVersionUID = 4697784648983290492L;
+
 	private final JPanel contentPanel = new JPanel();
 
 	/**

@@ -5,7 +5,11 @@ import java.util.EnumSet;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.PlayerSlot;
 
-
+/**
+ * Declares complete client API.
+ * In addition to Client2ClientIF this class ass messages which has orginin on server side.
+ *
+ */
 public interface ClientIF extends Client2ClientIF {
 
     public void updateSlot(PlayerSlot slot);
@@ -13,6 +17,6 @@ public interface ClientIF extends Client2ClientIF {
 
     /* ---------------------- STARTED GAME MESSAGES ------------------*/
 
-    void drawTiles(Integer[] tileIndexes);
+    void drawTiles(int[] tileIndexes);
 
 }

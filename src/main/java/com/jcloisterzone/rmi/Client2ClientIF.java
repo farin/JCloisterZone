@@ -8,6 +8,12 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 
+/**
+ * Declares broadcast messages called between clients.
+ * Technically all messges are passed through server but messages
+ * from this class has origin on the client side.
+ *
+ */
 public interface Client2ClientIF {
 
     /* ---------------------- NEW GAME MESSAGES ------------------*/
@@ -36,5 +42,5 @@ public interface Client2ClientIF {
     public void deployCastle(Position pos, Location loc);
 
     public void bazaarBid(Integer supplyIndex, Integer price);
-
+    public void bazaarBuyOrSell(boolean buy);
 }

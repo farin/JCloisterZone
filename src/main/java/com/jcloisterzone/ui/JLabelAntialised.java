@@ -6,17 +6,19 @@ import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
 
-public class JLabelWithAntialiasing extends JLabel { //TODO rename JLabelAntialised
+public class JLabelAntialised extends JLabel {
 
-	public JLabelWithAntialiasing() {
+	private static final long serialVersionUID = -619469286371707527L;
+
+	public JLabelAntialised() {
 		super();
 	}
 
-	public JLabelWithAntialiasing(String text) {
+	public JLabelAntialised(String text) {
 		super(text);
 	}
 
-	public JLabelWithAntialiasing(String text, int horizontalAlignment) {
+	public JLabelAntialised(String text, int horizontalAlignment) {
 		super(text, horizontalAlignment);
 	}
 

@@ -31,6 +31,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     public static final int PANEL_WIDTH = 250;
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
+    private static Font FONT_BUTTON = new Font(null, Font.BOLD, 17);
     private static Font FONT_ACTION = new Font(null, Font.PLAIN, 14);
 //
 //    private static String BID_LABEL = _("Bid");
@@ -47,10 +48,11 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     private int selectedItem = -1;
     private boolean selectable;
     private boolean bidable;
+    private boolean buyOrSell;
 
     private boolean refreshMouseRegions;
 
-    private JButton bidButton;
+    private JButton bidButton, buyButton, sellButton;
     private JSpinner bidAmount;
     private SpinnerNumberModel bidAmountModel;
 
@@ -75,7 +77,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     @Override
     public void registerSwingComponents(JComponent parent) {
          bidButton = new JButton(_("Bid"));
-         bidButton.setFont(new Font(null, Font.BOLD, 18));
+         bidButton.setFont(FONT_BUTTON);
          bidButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -85,6 +87,30 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
          });
          bidButton.setVisible(false);
          parent.add(bidButton);
+
+         buyButton = new JButton(_("Buy"));
+         buyButton.setFont(FONT_BUTTON);
+         buyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                assert buyOrSell;
+                client.getServer().bazaarBuyOrSell(true);
+            }
+         });
+         buyButton.setVisible(false);
+         parent.add(buyButton);
+
+         sellButton = new JButton(_("Sell"));
+         sellButton.setFont(FONT_BUTTON);
+         sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                assert buyOrSell;
+                client.getServer().bazaarBuyOrSell(false);
+            }
+         });
+         sellButton.setVisible(false);
+         parent.add(sellButton);
 
          bidAmount = new JSpinner(bidAmountModel);
          bidAmount.setFont(new Font(null, Font.BOLD, 14));
@@ -109,21 +135,42 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         computeBidButtonBounds();
     }
 
-    private void computeBidButtonBounds() {
+    public boolean isBuyOrSell() {
+		return buyOrSell;
+	}
+
+	public void setBuyOrSell(boolean buyOrSell) {
+		this.buyOrSell = buyOrSell;
+		computeBidButtonBounds();
+	}
+
+
+
+	private void computeBidButtonBounds() {
+		//TODO hardcoded offset - but no better solution for now
+		int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
+		int y = getRowY(selectedItem);
+
         if (!bidable || selectedItem == -1) {
             bidButton.setVisible(false);
             bidAmount.setVisible(false);
-            return;
+        } else {
+        	int width = BazaarPanel.PANEL_WIDTH-160;
+		    bidButton.setBounds(bazaarPanelX+140, y+45, width, 30);
+		    bidButton.setVisible(true);
+		    bidAmount.setBounds(bazaarPanelX+170, y+10, width-30, 25);
+		    bidAmount.setVisible(true);
         }
 
-        //TODO hardcoded offset - but no better solution for now
-        int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
-        int width = BazaarPanel.PANEL_WIDTH-160;
-        bidButton.setBounds(bazaarPanelX+140, 120+110*selectedItem, width, 30);
-        bidButton.setVisible(true);
-
-        bidAmount.setBounds(bazaarPanelX+170, 85+110*selectedItem, width-30, 25);
-        bidAmount.setVisible(true);
+        if (buyOrSell) {
+        	buyButton.setBounds(bazaarPanelX+115, y+45, 70, 30);
+		    buyButton.setVisible(true);
+		    sellButton.setBounds(bazaarPanelX+180, y+45, 70, 30);
+		    sellButton.setVisible(true);
+        } else {
+        	buyButton.setVisible(false);
+        	sellButton.setVisible(false);
+        }
     }
 
     public boolean isBidable() {
@@ -132,8 +179,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
 
     private void updateBidRange() {
-        int points = client.getGame().getActivePlayer().getPoints();
-        //int points = 0; //DEBUG ONLY
+        //int points = client.getGame().getActivePlayer().getPoints();
+        int points = 100; //DEBUG ONLY
 
         bidAmountModel.setMaximum(points);
         if (bcb.getCurrentBazaarAuction() == null) {
@@ -158,10 +205,13 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void forward() {
         if (selectable) {
-            selectedItem++;
-            if (selectedItem == bcb.getBazaarSupply().length) {
-                selectedItem = 0;
-            }
+        	BazaarItem[] supply = bcb.getBazaarSupply();
+        	do {
+	            selectedItem++;
+	            if (selectedItem == supply.length) {
+	                selectedItem = 0;
+	            }
+        	} while (supply[selectedItem].getOwner() != null);
             computeBidButtonBounds();
             client.getGridPanel().repaint();
         }
@@ -169,14 +219,21 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void backward() {
         if (selectable) {
-            selectedItem--;
-            if (selectedItem == 0) {
-                selectedItem = bcb.getBazaarSupply().length-1;
-            }
+        	BazaarItem[] supply = bcb.getBazaarSupply();
+        	do {
+	            selectedItem--;
+	            if (selectedItem == 0) {
+	                selectedItem = supply.length-1;
+	            }
+        	} while (supply[selectedItem].getOwner() != null);
+        	computeBidButtonBounds();
             client.getGridPanel().repaint();
         }
     }
 
+    private int getRowY(int item) {
+		return 75 + 110 * item;
+	}
 
     @Override
     public void paintComponent(Graphics2D g2) {
@@ -197,10 +254,11 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         String hint = null;
         if (selectable) {
             hint = _("Select tile for auction.");
-        } else {
-            if (bidable) {
-                hint = _("Place your offer or pass.");
-            }
+        } else if (bidable) {
+            hint = _("Place your offer or pass.");
+        } else if (buyOrSell) {
+        	//TODO parametrized message
+        	hint = _("Buy or sell tile from highest bidder.");
         }
 
         if (hint != null) {

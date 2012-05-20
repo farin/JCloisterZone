@@ -13,7 +13,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -252,9 +251,14 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void selectBazaarTile() {
         client.clearActions();
-        BazaarPanel bazaarPanel = new BazaarPanel(client);
-        bazaarPanel.registerSwingComponents(client.getGridPanel());
-        client.getGridPanel().setBazaarPanel(bazaarPanel);
+        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        if (bazaarPanel == null) {
+        	bazaarPanel = new BazaarPanel(client);
+        	bazaarPanel.registerSwingComponents(client.getGridPanel());
+        	client.getGridPanel().setBazaarPanel(bazaarPanel);
+        } else {
+        	bazaarPanel.setBuyOrSell(false);
+        }
         if (client.isClientActive()) {
             bazaarPanel.setSelectedItem(0);
             bazaarPanel.setSelectable(true);
@@ -275,24 +279,25 @@ public class ClientController implements GameEventListener, UserInterface {
     public void makeBazaarBid(int supplyIndex) {
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
+        bazaarPanel.setSelectable(false);
 
         if (client.isClientActive()) {
             bazaarPanel.setBidable(true);
-            bazaarPanel.setSelectable(false);
             client.getControlPanel().allowPassOnly();
         } else {
             bazaarPanel.setBidable(false);
-            bazaarPanel.setSelectable(false);
             client.getControlPanel().clearActions();
         }
         client.getGridPanel().repaint();
     }
 
     @Override
-    public void buyOrSellBazaarOffer(int supplyIndex) {
+    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
-        throw new UnsupportedOperationException("TODO not implemented");
+        bazaarPanel.setBidable(false);
+        bazaarPanel.setSelectable(false);
+        bazaarPanel.setBuyOrSell(client.isClientActive());
     }
 
 }

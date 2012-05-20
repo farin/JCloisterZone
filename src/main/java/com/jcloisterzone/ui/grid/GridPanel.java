@@ -42,7 +42,9 @@ import com.jcloisterzone.ui.theme.TileTheme;
 
 public class GridPanel extends JPanel {
 
-    public static int INITIAL_SQUARE_SIZE = 120;
+	private static final long serialVersionUID = -7013723613801929324L;
+
+	public static int INITIAL_SQUARE_SIZE = 120;
     private static final int STARTING_GRID_SIZE = 3;
 
     final Client client;

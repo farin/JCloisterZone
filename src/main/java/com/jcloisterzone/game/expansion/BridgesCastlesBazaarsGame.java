@@ -359,4 +359,11 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     public void setCurrentBazaarAuction(BazaarItem currentBazaarAuction) {
         this.currentBazaarAuction = currentBazaarAuction;
     }
+
+    public boolean hasTileAuctioned(Player p) {
+    	for(BazaarItem bi : bazaarSupply) {
+    		if (bi.getOwner() == p) return true;
+    	}
+    	return false;
+    }
 }

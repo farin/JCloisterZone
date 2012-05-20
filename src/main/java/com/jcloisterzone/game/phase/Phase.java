@@ -175,7 +175,7 @@ public abstract class Phase implements ClientIF {
 
 
     @Override
-    public void drawTiles(Integer[] tileIndex) {
+    public void drawTiles(int[] tileIndex) {
         logger.error(Application.ILLEGAL_STATE_MSG, "drawTiles");
     }
 
@@ -200,5 +200,9 @@ public abstract class Phase implements ClientIF {
         logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBid");
     }
 
+    @Override
+    public void bazaarBuyOrSell(boolean buy) {
+    	logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
+    }
 
 }

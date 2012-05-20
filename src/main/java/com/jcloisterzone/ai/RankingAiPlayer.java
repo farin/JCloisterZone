@@ -288,7 +288,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     @Override
-    public void buyOrSellBazaarOffer(int supplyIndex) {
+    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
         throw new UnsupportedOperationException();
     }
 

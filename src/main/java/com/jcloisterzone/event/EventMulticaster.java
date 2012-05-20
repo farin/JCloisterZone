@@ -149,9 +149,9 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
-    public void buyOrSellBazaarOffer(int supplyIndex) {
-        ((UserInterface)a).buyOrSellBazaarOffer(supplyIndex);
-        ((UserInterface)b).buyOrSellBazaarOffer(supplyIndex);
+    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
+        ((UserInterface)a).selectBuyOrSellBazaarOffer(supplyIndex);
+        ((UserInterface)b).selectBuyOrSellBazaarOffer(supplyIndex);
     }
 
     @Override
