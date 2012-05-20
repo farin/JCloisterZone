@@ -85,7 +85,7 @@ public abstract class Phase implements ClientIF {
     }
 
     protected Tile getTile() {
-        return game.getTilePack().getCurrentTile();
+        return game.getTile();
     }
 
     public Player getActivePlayer() {

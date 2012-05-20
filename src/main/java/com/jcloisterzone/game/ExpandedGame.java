@@ -37,14 +37,14 @@ public class ExpandedGame implements GameDelegation {
 		return game.getBoard();
 	}
 	protected Tile getTile() {
-		return getTilePack().getCurrentTile();
+		return game.getTile();
 	}
-	
-	/** 
+
+	/**
 	 * @return object copy or null if expansion is stateless
 	 */
 	public ExpandedGame copy() {
-		return null; 
+		return null;
 	}
 
 	public void saveToSnapshot(Document doc, Element node) {
@@ -89,9 +89,9 @@ public class ExpandedGame implements GameDelegation {
 	@Override
 	public void finalScoring() {
 	}
-	
+
 	@Override
-	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {		
+	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
 		return false;
 	}
 

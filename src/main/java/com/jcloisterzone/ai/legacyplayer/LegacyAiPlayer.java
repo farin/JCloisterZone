@@ -45,7 +45,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	private static final int OPEN_COUNT_FARM = 2;
 	private static final int OPEN_COUNT_CLOITSTER = 3;
 
-	private int[] openCount = new int[4]; //number of my open objects	
+	private int[] openCount = new int[4]; //number of my open objects
 
 	public static EnumSet<Expansion> supportedExpansions() {
 		return EnumSet.of(
@@ -65,8 +65,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 			Expansion.PLAGUE
 		);
 	}
-	
-	
+
+
 
 	protected void initVars() {
 		packSize = getTilePack().totalSize();
@@ -97,7 +97,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		//objectRatings.clear();
 
 		return ranking;
-	}	
+	}
 
 	protected double reducePoints(double points, Player p) {
 		if (isMe(p)) return points;
@@ -128,10 +128,10 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	class LegacyAiScoreAllCallback implements ScoreAllCallback {
 
 		private double rank = 0;
-		
+
 		@Override
 		public void scoreCastle(Meeple meeple, Castle castle) {
-			throw new UnsupportedOperationException();			
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
@@ -162,7 +162,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 		@Override
 		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-			//prefer barn placement - magic constant 
+			//prefer barn placement - magic constant
 			rank += reducePoints(1.2 * ctx.getBarnPoints(), meeple.getPlayer());
 		}
 
@@ -293,19 +293,19 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		if (fairyPos == null) return 0;
 
 		double rating = 0;
-		
-//		TODO more sophisticated rating		
+
+//		TODO more sophisticated rating
 		for(Meeple meeple : getGame().getDeployedMeeples()) {
 			if (meeple.getPosition() != fairyPos) continue;
 			if (! (meeple instanceof Follower)) continue;
 			if (meeple.getFeature() instanceof Castle) continue;
-			
+
 			rating += reducePoints(1.0, meeple.getPlayer());
 		}
-		
+
 		return rating;
 
-// 		//OLD legacy impl		
+// 		//OLD legacy impl
 //		Set<PlacedFigure> onTile = gc.getPlacedFiguresForTile(board.get(fairyPos.x,fairyPos.y));
 //		Set<Player> onePointPlayers = Sets.newHashSet();
 //		for(PlacedFigure pfi : onTile) {
@@ -334,7 +334,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	}
 
 	protected double rankConvexity() {
-		Position pos = getTilePack().getCurrentTile().getPosition();
+		Position pos = getGame().getTile().getPosition();
 		return 0.001 * getBoard().getAdjacentAndDiagonalTiles(pos).size();
 	}
 
@@ -467,7 +467,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 		double tensionX = 0, tensionY = 0;
 
 		for(Meeple m : getGame().getDeployedMeeples()) {
-			int distance = dragonPosition.squareDistance(m.getPosition());			
+			int distance = dragonPosition.squareDistance(m.getPosition());
 			if (distance == 0 || distance > movesLeft) continue;
 			if (m.getFeature() instanceof Castle) continue;
 

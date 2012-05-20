@@ -13,6 +13,7 @@ public interface TilePack {
 	Tile drawTile(int index);
 	Tile drawTile(String groupId, String tileId);
 	Tile drawTile(String tileId);
+	@Deprecated //keep ref on Game object
 	Tile getCurrentTile();
 	void cleanUpTurn();
 

@@ -366,4 +366,25 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     	}
     	return false;
     }
+
+    public Tile drawNextTile() {
+    	if (bazaarSupply == null) return null;
+    	Player p = game.getActivePlayer();
+    	Tile tile = null;
+    	boolean anotherTileExists = false;
+    	for(BazaarItem bi : bazaarSupply) {
+    		if (!bi.isDrawn()) {
+    			if (bi.getOwner() == p) {
+    				tile = bi.getTile();
+    				bi.setDrawn(true);
+    			} else {
+    				anotherTileExists = true;
+    			}
+    		}
+    	}
+    	if (!anotherTileExists) {
+    		bazaarSupply = null;
+    	}
+    	return tile;
+    }
 }

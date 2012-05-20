@@ -227,4 +227,10 @@ public class EventMulticaster implements GameEventListener, UserInterface {
         ((GameEventListener)b).castleDeployed(castle1, castle2);
     }
 
+    @Override
+    public void bazaarDepleted() {
+    	((GameEventListener)a).bazaarDepleted();
+        ((GameEventListener)b).bazaarDepleted();
+    }
+
 }

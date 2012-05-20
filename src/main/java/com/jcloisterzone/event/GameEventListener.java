@@ -61,5 +61,6 @@ public interface GameEventListener extends EventListener {
     void bridgeDeployed(Position pos, Location loc);
     void castleDeployed(Castle castle1, Castle castle2);
     void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem);
+    void bazaarDepleted();
 
 }

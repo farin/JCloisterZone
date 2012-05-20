@@ -112,4 +112,8 @@ public class GameEventAdapter implements GameEventListener {
     public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
     }
 
+    @Override
+    public void bazaarDepleted() {
+    }
+
 }

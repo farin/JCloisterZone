@@ -9,6 +9,7 @@ import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.RiverGame;
 import com.jcloisterzone.game.expansion.RiverIIGame;
 import com.jcloisterzone.rmi.ServerIF;
@@ -63,6 +64,15 @@ public class DrawPhase extends ServerAwarePhase {
             next(GameOverPhase.class);
             return;
         }
+        BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+        if (bcb != null) {
+        	Tile tile = bcb.drawNextTile();
+        	if (tile != null) {
+        		nextTile(tile);
+        		return;
+        	}
+        }
+
         if (makeDebugDraw()) {
             return;
         }
