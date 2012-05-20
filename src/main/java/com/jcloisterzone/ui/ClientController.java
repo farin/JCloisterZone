@@ -260,9 +260,19 @@ public class ClientController implements GameEventListener, UserInterface {
         	bazaarPanel.setBuyOrSell(false);
         }
         if (client.isClientActive()) {
-            bazaarPanel.setSelectedItem(0);
+        	BazaarItem[] supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
+        	for(int i = 0; i < supply.length; i++) {
+        		//find first allowed item
+        		if (supply[i].getOwner() == null) {
+        			bazaarPanel.setSelectedItem(i);
+        			break;
+        		}
+        	}
             bazaarPanel.setSelectable(true);
             bazaarPanel.setBidable(true);
+        } else {
+        	bazaarPanel.setSelectable(false);
+            bazaarPanel.setBidable(false);
         }
         client.getGridPanel().repaint();
     }
@@ -283,11 +293,10 @@ public class ClientController implements GameEventListener, UserInterface {
 
         if (client.isClientActive()) {
             bazaarPanel.setBidable(true);
-            client.getControlPanel().allowPassOnly();
         } else {
             bazaarPanel.setBidable(false);
-            client.getControlPanel().clearActions();
         }
+        client.getControlPanel().clearActions();
         client.getGridPanel().repaint();
     }
 

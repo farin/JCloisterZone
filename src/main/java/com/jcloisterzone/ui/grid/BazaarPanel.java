@@ -31,7 +31,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     public static final int PANEL_WIDTH = 250;
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
-    private static Font FONT_BUTTON = new Font(null, Font.BOLD, 17);
+    private static Font FONT_BUTTON = new Font(null, Font.BOLD, 15);
     private static Font FONT_ACTION = new Font(null, Font.PLAIN, 14);
 //
 //    private static String BID_LABEL = _("Bid");
@@ -52,7 +52,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     private boolean refreshMouseRegions;
 
-    private JButton bidButton, buyButton, sellButton;
+    private JButton leftButton, rightButton;
     private JSpinner bidAmount;
     private SpinnerNumberModel bidAmountModel;
 
@@ -76,41 +76,40 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     @Override
     public void registerSwingComponents(JComponent parent) {
-         bidButton = new JButton(_("Bid"));
-         bidButton.setFont(FONT_BUTTON);
-         bidButton.addActionListener(new ActionListener() {
+         leftButton = new JButton();
+         leftButton.setFont(FONT_BUTTON);
+         leftButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                assert bidable;
-                client.getServer().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
-            }
-         });
-         bidButton.setVisible(false);
-         parent.add(bidButton);
+            	assert bidable ^ buyOrSell;
+                if (bidable) {
+                	client.getServer().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
+                }
+                if (buyOrSell) {
+                	client.getServer().bazaarBuyOrSell(true);
+                }
 
-         buyButton = new JButton(_("Buy"));
-         buyButton.setFont(FONT_BUTTON);
-         buyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                assert buyOrSell;
-                client.getServer().bazaarBuyOrSell(true);
             }
          });
-         buyButton.setVisible(false);
-         parent.add(buyButton);
+         leftButton.setVisible(false);
+         parent.add(leftButton);
 
-         sellButton = new JButton(_("Sell"));
-         sellButton.setFont(FONT_BUTTON);
-         sellButton.addActionListener(new ActionListener() {
+         rightButton = new JButton();
+         rightButton.setFont(FONT_BUTTON);
+         rightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                assert buyOrSell;
-                client.getServer().bazaarBuyOrSell(false);
+            	assert bidable ^ buyOrSell;
+                if (bidable) {
+                	client.getServer().pass();
+                }
+                if (buyOrSell) {
+                	client.getServer().bazaarBuyOrSell(false);
+                }
             }
          });
-         sellButton.setVisible(false);
-         parent.add(sellButton);
+         rightButton.setVisible(false);
+         parent.add(rightButton);
 
          bidAmount = new JSpinner(bidAmountModel);
          bidAmount.setFont(new Font(null, Font.BOLD, 14));
@@ -151,25 +150,26 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 		int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
 		int y = getRowY(selectedItem);
 
-        if (!bidable || selectedItem == -1) {
-            bidButton.setVisible(false);
-            bidAmount.setVisible(false);
-        } else {
-        	int width = BazaarPanel.PANEL_WIDTH-160;
-		    bidButton.setBounds(bazaarPanelX+140, y+45, width, 30);
-		    bidButton.setVisible(true);
-		    bidAmount.setBounds(bazaarPanelX+170, y+10, width-30, 25);
-		    bidAmount.setVisible(true);
-        }
+		leftButton.setBounds(bazaarPanelX+115, y+55, 70, 30);
+		rightButton.setBounds(bazaarPanelX+180, y+55, 70,30);
 
-        if (buyOrSell) {
-        	buyButton.setBounds(bazaarPanelX+115, y+45, 70, 30);
-		    buyButton.setVisible(true);
-		    sellButton.setBounds(bazaarPanelX+180, y+45, 70, 30);
-		    sellButton.setVisible(true);
+		if (buyOrSell) {
+			leftButton.setText(_("Buy"));
+			rightButton.setText(_("Sell"));
+			leftButton.setVisible(true);
+		    rightButton.setVisible(true);
+			bidAmount.setVisible(false);
+		} else if (bidable) {
+			leftButton.setText(_("Bid"));
+			rightButton.setText(_("Pass"));
+			leftButton.setVisible(true);
+		    rightButton.setVisible(!selectable);
+			bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
+			bidAmount.setVisible(true);
         } else {
-        	buyButton.setVisible(false);
-        	sellButton.setVisible(false);
+        	leftButton.setVisible(false);
+        	rightButton.setVisible(false);
+        	bidAmount.setVisible(false);
         }
     }
 
@@ -257,14 +257,13 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         } else if (bidable) {
             hint = _("Place your offer or pass.");
         } else if (buyOrSell) {
-        	//TODO parametrized message
-        	hint = _("Buy or sell tile from highest bidder.");
+        	//TODO parameterized message
+        	hint = _("Buy or sell tile from latest bidder.");
         }
 
         if (hint != null) {
             g2.drawString(hint, 20, 55);
         }
-
 
         int y = 75;
 
@@ -297,6 +296,10 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
                 g2.drawImage(playerImage, 130, y+12, 32, 32, null);
 //                g2.setColor(Color.BLACK);
 //                g2.drawString(bi.getCurrentPrice() + "", 160, y);
+            } else if (bi.getOwner() != null) {
+            	Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getOwner()), null);
+            	//TODO smooth image
+                g2.drawImage(playerImage, 140, y+12, 64, 64, null);
             }
 
             i++;

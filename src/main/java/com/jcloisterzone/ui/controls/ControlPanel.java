@@ -210,10 +210,6 @@ public class ControlPanel extends FakeComponent {
         this.canPass = canPass;
     }
 
-    public void allowPassOnly() {
-        this.canPass = true;
-    }
-
     public void clearActions() {
         actionPanel.clearActions();
         canPass = false;
