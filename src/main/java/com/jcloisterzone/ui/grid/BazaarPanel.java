@@ -19,6 +19,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.ui.Client;
@@ -43,6 +44,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     private BazaarPanelState state = BazaarPanelState.INACTIVE;
 
     private boolean refreshMouseRegions;
+    private final boolean noAuction;
 
     private JLabel hint;
     private JButton leftButton, rightButton;
@@ -52,6 +54,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public BazaarPanel(Client client) {
        super(client);
+       noAuction = client.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
        bcb = client.getGame().getBridgesCastlesBazaarsGame();
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
@@ -110,13 +113,23 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
          rightButton.setVisible(false);
          parent.add(rightButton);
 
-         bidAmount = new JSpinner(bidAmountModel);
-         bidAmount.setFont(new Font(null, Font.BOLD, 14));
-         bidAmount.setVisible(false);
-
-         parent.add(bidAmount);
+         if (!noAuction) {
+             bidAmount = new JSpinner(bidAmountModel);
+             bidAmount.setFont(new Font(null, Font.BOLD, 14));
+             bidAmount.setVisible(false);
+             parent.add(bidAmount);
+         }
     }
 
+    @Override
+    public void destroySwingComponents(JComponent parent) {
+        parent.remove(hint);
+        parent.remove(leftButton);
+        parent.remove(rightButton);
+        if (bidAmount != null) {
+            parent.remove(bidAmount);
+        }
+    }
 
 
     public BazaarPanelState getState() {
@@ -131,8 +144,12 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             hint.setText("");
             break;
         case SELECT_TILE:
-            hint.setText( _("<html>Choose tile for next auction<br>and make initial offer.</html>"));
-            updateBidRange();
+            if (noAuction) {
+                hint.setText( _("Choose your tile."));
+            } else {
+                hint.setText( _("<html>Choose tile for next auction<br>and make initial offer.</html>"));
+                updateBidRange();
+            }
             break;
         case MAKE_BID:
             hint.setText( _("Raise bid or pass."));
@@ -160,7 +177,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             rightButton.setBounds(bazaarPanelX+182, y+55, 60, 25);
         }
 
-        bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
+        if (bidAmount != null) bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
 
         switch (state) {
         case BUY_OR_SELL:
@@ -168,25 +185,25 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             rightButton.setText(_("Sell"));
             leftButton.setVisible(true);
             rightButton.setVisible(true);
-            bidAmount.setVisible(false);
+            if (bidAmount != null) bidAmount.setVisible(false);
             break;
         case SELECT_TILE:
             leftButton.setText(_("Select"));
             leftButton.setVisible(true);
             rightButton.setVisible(false);
-            bidAmount.setVisible(true);
+            if (bidAmount != null) bidAmount.setVisible(true);
             break;
         case MAKE_BID:
             leftButton.setText(_("Bid"));
             rightButton.setText(_("Pass"));
             leftButton.setVisible(true);
             rightButton.setVisible(true);
-            bidAmount.setVisible(true);
+            if (bidAmount != null) bidAmount.setVisible(true);
             break;
         default:
             leftButton.setVisible(false);
             rightButton.setVisible(false);
-            bidAmount.setVisible(false);
+            if (bidAmount != null) bidAmount.setVisible(false);
             break;
         }
     }

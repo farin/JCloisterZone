@@ -38,6 +38,7 @@ import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
+import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
@@ -311,6 +312,8 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarAuctionsEnded() {
-        client.getGridPanel().setBazaarPanel(null);
+        GridPanel gp = client.getGridPanel();
+        gp.getBazaarPanel().destroySwingComponents(gp);
+        gp.setBazaarPanel(null);
     }
 }

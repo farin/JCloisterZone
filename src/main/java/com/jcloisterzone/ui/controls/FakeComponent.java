@@ -28,7 +28,9 @@ public abstract class FakeComponent extends ComponentAdapter {
     }
 
     public void registerSwingComponents(JComponent parent) {
+    }
 
+    public void destroySwingComponents(JComponent parent) {
     }
 
     protected List<MouseListeningRegion> getMouseRegions() {

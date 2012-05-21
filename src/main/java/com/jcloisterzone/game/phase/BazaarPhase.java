@@ -4,6 +4,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
@@ -76,6 +77,12 @@ public class BazaarPhase extends ServerAwarePhase {
         if (bi == null) {
             bi = bcb.getBazaarSupply()[supplyIndex];
             bcb.setCurrentBazaarAuction(bi);
+
+            if (game.hasRule(CustomRule.BAZAAR_NO_AUCTION)) {
+                bi.setOwner(getActivePlayer());
+                nextSelectingPlayer();
+                return;
+            }
         }
         bi.setCurrentPrice(price);
         bi.setCurrentBidder(getActivePlayer());
