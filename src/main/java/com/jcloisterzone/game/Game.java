@@ -52,16 +52,18 @@ public class Game extends GameSettings {
     private Ini config;
 
     /** pack of remaining tiles */
-    protected TilePack tilePack;
+    private TilePack tilePack;
+    /** pack of remaining tiles */
+    private Tile currentTile;
     /** game board, contains placed tiles */
-    protected Board board;
+    private Board board;
 
     /** list of players in game */
-    protected Player[] plist;
+    private Player[] plist;
     /** rules of current game */
 
     /** player in turn */
-    protected Player turnPlayer;
+    private Player turnPlayer;
 
     private final Map<Class<? extends Phase>, Phase> phases = Maps.newHashMap();
     private Phase phase;
@@ -83,6 +85,13 @@ public class Game extends GameSettings {
         this.config = config;
     }
 
+    public Tile getCurrentTile() {
+        return currentTile;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        this.currentTile = currentTile;
+    }
 
     public Phase getPhase() {
         return phase;
@@ -271,18 +280,14 @@ public class Game extends GameSettings {
         return expandedGamesDelegate;
     }
 
-    public Tile getTile() {
-        return getTilePack().getCurrentTile();
-    }
-
     public Sites prepareCommonSites() {
         Sites sites = new Sites();
         //on Volcano tile common figure cannot be placed when it comes into play
-        if (getTile().getTrigger() != TileTrigger.VOLCANO) {
+        if (getCurrentTile().getTrigger() != TileTrigger.VOLCANO) {
              //make shared sites
-            Set<Location> tileSites = prepareCommonForTile(getTile(), false);
+            Set<Location> tileSites = prepareCommonForTile(getCurrentTile(), false);
             if (! tileSites.isEmpty()) {
-                sites.put(getTile().getPosition(), tileSites);
+                sites.put(getCurrentTile().getPosition(), tileSites);
                 return sites;
             }
         }
@@ -291,7 +296,7 @@ public class Game extends GameSettings {
 
     public Set<Location> prepareCommonForTile(Tile tile, boolean excludeFinished) {
         Set<Location> locations = tile.getUnoccupiedScoreables(excludeFinished);
-        Tile nextTile = getTile(); //can be tile != nextTile
+        Tile nextTile = getCurrentTile(); //can be tile != nextTile
         //v pripade custom pravidla zakazeme pokladat na princeznu obyc figurku
         if (nextTile != null) { //nextTile muze byt null v pripade volani z AI, kde se muze predpripravovat figure rating pred polozenim
             City princessLoc = nextTile.getPrincessCityPiece();

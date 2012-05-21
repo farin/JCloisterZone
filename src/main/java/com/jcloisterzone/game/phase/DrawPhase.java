@@ -5,7 +5,6 @@ import java.util.List;
 import org.ini4j.Profile.Section;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
@@ -49,7 +48,7 @@ public class DrawPhase extends ServerAwarePhase {
                         ((RiverGame)game.getExpandedGameFor(Expansion.RIVER)).activateNonRiverTiles();
                     }
                     tilePack.deactivateGroup("river-start");
-                    ((DefaultTilePack)tilePack).setCurrentTile(tile); //recovery from lake placement
+                    game.setCurrentTile(tile); //recovery from lake placement
                 }
                 nextTile(tile);
                 return true;
@@ -66,11 +65,11 @@ public class DrawPhase extends ServerAwarePhase {
         }
         BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
         if (bcb != null) {
-        	Tile tile = bcb.drawNextTile();
-        	if (tile != null) {
-        		nextTile(tile);
-        		return;
-        	}
+            Tile tile = bcb.drawNextTile();
+            if (tile != null) {
+                nextTile(tile);
+                return;
+            }
         }
 
         if (makeDebugDraw()) {
@@ -92,6 +91,7 @@ public class DrawPhase extends ServerAwarePhase {
     }
 
     private void nextTile(Tile tile) {
+        game.setCurrentTile(tile);
         getBoard().refreshAvailablePlacements(tile);
         if (getBoard().getAvailablePlacementPositions().isEmpty()) {
             getBoard().discardTile(tile.getId());

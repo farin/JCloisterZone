@@ -151,7 +151,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     public void rankAction(List<PlayerAction> actions) {
-        Tile currTile = getGame().getTile();
+        Tile currTile = getGame().getCurrentTile();
         Position pos = currTile.getPosition();
         for(PlayerAction action : actions) {
             if (action instanceof MeepleAction) {

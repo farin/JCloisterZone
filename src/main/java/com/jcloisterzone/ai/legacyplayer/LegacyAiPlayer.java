@@ -334,7 +334,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 	}
 
 	protected double rankConvexity() {
-		Position pos = getGame().getTile().getPosition();
+		Position pos = getGame().getCurrentTile().getPosition();
 		return 0.001 * getBoard().getAdjacentAndDiagonalTiles(pos).size();
 	}
 

@@ -345,7 +345,7 @@ public class GridPanel extends JPanel {
         }
         boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
         if ((!initialPlacement && !client.isClientActive()) ||
-            (initialPlacement && tile.equals(client.getGame().getTile()))) {
+            (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
             getAnimationService().registerAnimation(tile.getPosition(), new RecentPlacement(tile.getPosition()));
         }
         repaint();

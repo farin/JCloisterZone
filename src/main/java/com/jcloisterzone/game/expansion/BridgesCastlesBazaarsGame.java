@@ -2,6 +2,7 @@ package com.jcloisterzone.game.expansion;
 
 import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -155,7 +156,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     }
 
     public BridgeAction prepareMandatoryBridgeAction() {
-        Tile tile = game.getTile();
+        Tile tile = game.getCurrentTile();
         for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             Tile adjacent = entry.getValue();
             Location rel = entry.getKey();
@@ -182,7 +183,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 
     private BridgeAction prepareBridgeAction() {
         BridgeAction action = null;
-        Tile tile = game.getTile();
+        Tile tile = game.getCurrentTile();
         action = prepareTileBridgeAction(tile, action, Location.NS);
         action = prepareTileBridgeAction(tile, action, Location.WE);
         for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
@@ -305,7 +306,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("bridgeUsed", bridgeUsed + "");
-        for(Player player: game.getAllPlayers()) {
+        for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);
             el.setAttribute("index", "" + player.getIndex());
@@ -319,7 +320,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     public void loadFromSnapshot(Document doc, Element node) {
         bridgeUsed = Boolean.parseBoolean(node.getAttribute("bridgeUsed"));
         NodeList nl = node.getElementsByTagName("player");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element playerEl = (Element) nl.item(i);
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             castles.put(player, Integer.parseInt(playerEl.getAttribute("castles")));
@@ -361,30 +362,47 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     }
 
     public boolean hasTileAuctioned(Player p) {
-    	for(BazaarItem bi : bazaarSupply) {
-    		if (bi.getOwner() == p) return true;
-    	}
-    	return false;
+        for (BazaarItem bi : bazaarSupply) {
+            if (bi.getOwner() == p) return true;
+        }
+        return false;
     }
 
     public Tile drawNextTile() {
-    	if (bazaarSupply == null) return null;
-    	Player p = game.getActivePlayer();
-    	Tile tile = null;
-    	boolean anotherTileExists = false;
-    	for(BazaarItem bi : bazaarSupply) {
-    		if (!bi.isDrawn()) {
-    			if (bi.getOwner() == p) {
-    				tile = bi.getTile();
-    				bi.setDrawn(true);
-    			} else {
-    				anotherTileExists = true;
-    			}
-    		}
-    	}
-    	if (!anotherTileExists) {
-    		bazaarSupply = null;
-    	}
-    	return tile;
+        if (bazaarSupply == null) return null;
+        Player p = game.getActivePlayer();
+        Tile tile = null;
+        boolean anotherTileExists = false;
+        for (BazaarItem bi : bazaarSupply) {
+            if (!bi.isDrawn()) {
+                if (bi.getOwner() == p) {
+                    tile = bi.getTile();
+                    bi.setDrawn(true);
+                } else {
+                    anotherTileExists = true;
+                }
+            }
+        }
+        if (!anotherTileExists) {
+            bazaarSupply = null;
+        }
+        return tile;
+    }
+
+    public List<Tile> getDrawQueue() {
+        if (bazaarSupply == null) return Collections.emptyList();
+        List<Tile> result = Lists.newArrayList();
+        Player turnPlayer = game.getTurnPlayer();
+        Player p = game.getNextPlayer(turnPlayer);
+        while (p != turnPlayer) {
+            for(BazaarItem bi : bazaarSupply) {
+                if (bi.getOwner() == p && !bi.isDrawn()) {
+                    result.add(bi.getTile());
+                    break;
+                }
+            }
+            p = game.getNextPlayer(p);
+        }
+        return result;
     }
 }

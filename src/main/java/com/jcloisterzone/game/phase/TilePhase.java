@@ -23,7 +23,7 @@ public class TilePhase extends Phase {
     @Override
     public void enter() {
         Map<Position, Set<Rotation>> freezed = Maps.newHashMap(getBoard().getAvailablePlacements());
-        notifyUI(new TilePlacementAction(game.getTile(), freezed), false);
+        notifyUI(new TilePlacementAction(game.getCurrentTile(), freezed), false);
     }
 
     @Override

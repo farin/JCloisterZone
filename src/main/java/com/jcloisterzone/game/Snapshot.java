@@ -152,8 +152,8 @@ public class Snapshot implements Serializable {
 	private void createTileElements(Game game) {
 		tileElemens = new HashMap<Position, Element>();
 		Element parent = doc.createElement("tiles");
-		if (game.getTile() != null) {
-			parent.setAttribute("next", game.getTile().getId());
+		if (game.getCurrentTile() != null) {
+			parent.setAttribute("next", game.getCurrentTile().getId());
 		}
 		root.appendChild(parent);
 		//for()

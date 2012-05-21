@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -15,6 +16,8 @@ import java.util.Map;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -171,10 +174,26 @@ public class ControlPanel extends FakeComponent {
 
         g2.translate(0, 44);
         actionPanel.paintComponent(g2);
-
 //		gp.profile("action panel");
 
         g2.translate(0, 60);
+
+        BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+        if (bcb != null && client.getGridPanel().getBazaarPanel() == null) { //show bazaar supply only if panel is hidden
+            List<Tile> queue = bcb.getDrawQueue();
+            if (!queue.isEmpty()) {
+                int x = 0;
+                for(Tile tile : queue) {
+                    Image img = client.getTileTheme().getTileImage(tile.getId());
+                    g2.drawImage(img, x, 0, 40, 40, null);
+                    x += 45;
+                }
+
+                g2.translate(0, 50);
+            }
+        }
+
+
         for (PlayerPanel pp : playerPanels) {
             pp.paintComponent(g2);
         }

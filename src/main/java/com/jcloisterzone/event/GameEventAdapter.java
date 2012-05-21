@@ -113,6 +113,10 @@ public class GameEventAdapter implements GameEventListener {
     }
 
     @Override
+    public void bazaarAuctionsEnded() {
+    }
+
+    @Override
     public void bazaarDepleted() {
     }
 

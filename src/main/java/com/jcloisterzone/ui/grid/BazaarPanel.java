@@ -5,6 +5,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +32,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     public static final int PANEL_WIDTH = 250;
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
-    private static Font FONT_BUTTON = new Font(null, Font.BOLD, 15);
+    private static Font FONT_BUTTON = new Font(null, Font.BOLD, 12);
     private static Font FONT_ACTION = new Font(null, Font.PLAIN, 12);
 
     public static enum BazaarPanelState { INACTIVE, SELECT_TILE, MAKE_BID, BUY_OR_SELL};
@@ -64,27 +65,28 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     @Override
     public void registerSwingComponents(JComponent parent) {
-    	 hint = new JLabel();
-    	 hint.setFont(FONT_ACTION);
-    	 parent.add(hint);
+         hint = new JLabel();
+         hint.setFont(FONT_ACTION);
+         parent.add(hint);
 
          leftButton = new JButton();
          leftButton.setFont(FONT_BUTTON);
          leftButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-            	switch (state) {
-            	case SELECT_TILE:
-            	case MAKE_BID:
-                	client.getServer().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
-                	break;
-            	case BUY_OR_SELL:
-                	client.getServer().bazaarBuyOrSell(true);
-                	break;
+                switch (state) {
+                case SELECT_TILE:
+                case MAKE_BID:
+                    client.getServer().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
+                    break;
+                case BUY_OR_SELL:
+                    client.getServer().bazaarBuyOrSell(true);
+                    break;
                 }
 
             }
          });
+         leftButton.setMargin(new Insets(1,1,1,1));
          leftButton.setVisible(false);
          parent.add(leftButton);
 
@@ -93,17 +95,18 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
          rightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-            	switch (state) {
-            	case SELECT_TILE:
-            	case MAKE_BID:
-                	client.getServer().pass();
-                	break;
-            	case BUY_OR_SELL:
-                	client.getServer().bazaarBuyOrSell(false);
-                	break;
+                switch (state) {
+                case SELECT_TILE:
+                case MAKE_BID:
+                    client.getServer().pass();
+                    break;
+                case BUY_OR_SELL:
+                    client.getServer().bazaarBuyOrSell(false);
+                    break;
                 }
             }
          });
+         rightButton.setMargin(new Insets(1,1,1,1));
          rightButton.setVisible(false);
          parent.add(rightButton);
 
@@ -117,83 +120,83 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
 
     public BazaarPanelState getState() {
-		return state;
-	}
+        return state;
+    }
 
-	public void setState(BazaarPanelState state) {
-		this.state = state;
-		refreshMouseRegions = true;
-		switch (state) {
-		case INACTIVE:
-			hint.setText("");
-			break;
-		case SELECT_TILE:
-			hint.setText( _("<html>Choose tile for next auction<br>and make initial offer.</html>"));
-			updateBidRange();
-			break;
-		case MAKE_BID:
-			hint.setText( _("Raise bid or pass."));
-			updateBidRange();
-			break;
-		case BUY_OR_SELL:
-			hint.setText(_("Buy or sell tile from latest bidder."));
-			break;
-		}
-		refreshComponentBounds();
-	}
+    public void setState(BazaarPanelState state) {
+        this.state = state;
+        refreshMouseRegions = true;
+        switch (state) {
+        case INACTIVE:
+            hint.setText("");
+            break;
+        case SELECT_TILE:
+            hint.setText( _("<html>Choose tile for next auction<br>and make initial offer.</html>"));
+            updateBidRange();
+            break;
+        case MAKE_BID:
+            hint.setText( _("Raise bid or pass."));
+            updateBidRange();
+            break;
+        case BUY_OR_SELL:
+            hint.setText(_("Buy or sell tile from latest bidder."));
+            break;
+        }
+        refreshComponentBounds();
+    }
 
 
-	private void refreshComponentBounds() {
-		//TODO hardcoded offset - but no better solution for now
-		int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
-		int y = getRowY(selectedItem);
+    private void refreshComponentBounds() {
+        //TODO hardcoded offset - but no better solution for now
+        int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
+        int y = getRowY(selectedItem);
 
-		hint.setBounds(bazaarPanelX+20, 24, ControlPanel.PANEL_WIDTH-10, 50);
+        hint.setBounds(bazaarPanelX+20, 24, ControlPanel.PANEL_WIDTH-10, 50);
 
-		if (state == BazaarPanelState.SELECT_TILE) {
-			leftButton.setBounds(bazaarPanelX+130, y+55, 100, 30);
-		} else {
-			leftButton.setBounds(bazaarPanelX+115, y+55, 70, 30);
-			rightButton.setBounds(bazaarPanelX+180, y+55, 70,30);
-		}
+        if (state == BazaarPanelState.SELECT_TILE) {
+            leftButton.setBounds(bazaarPanelX+130, y+55, 100, 25);
+        } else {
+            leftButton.setBounds(bazaarPanelX+118, y+55, 60, 25);
+            rightButton.setBounds(bazaarPanelX+182, y+55, 60, 25);
+        }
 
-		bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
+        bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
 
-		switch (state) {
-		case BUY_OR_SELL:
-			leftButton.setText(_("Buy"));
-			rightButton.setText(_("Sell"));
-			leftButton.setVisible(true);
-		    rightButton.setVisible(true);
-			bidAmount.setVisible(false);
-			break;
-		case SELECT_TILE:
-			leftButton.setText(_("Select"));
-			leftButton.setVisible(true);
-		    rightButton.setVisible(false);
-		    bidAmount.setVisible(true);
-			break;
-		case MAKE_BID:
-			leftButton.setText(_("Bid"));
-			rightButton.setText(_("Pass"));
-			leftButton.setVisible(true);
-		    rightButton.setVisible(true);
-			bidAmount.setVisible(true);
-			break;
+        switch (state) {
+        case BUY_OR_SELL:
+            leftButton.setText(_("Buy"));
+            rightButton.setText(_("Sell"));
+            leftButton.setVisible(true);
+            rightButton.setVisible(true);
+            bidAmount.setVisible(false);
+            break;
+        case SELECT_TILE:
+            leftButton.setText(_("Select"));
+            leftButton.setVisible(true);
+            rightButton.setVisible(false);
+            bidAmount.setVisible(true);
+            break;
+        case MAKE_BID:
+            leftButton.setText(_("Bid"));
+            rightButton.setText(_("Pass"));
+            leftButton.setVisible(true);
+            rightButton.setVisible(true);
+            bidAmount.setVisible(true);
+            break;
         default:
-        	leftButton.setVisible(false);
-        	rightButton.setVisible(false);
-        	bidAmount.setVisible(false);
-        	break;
-		}
+            leftButton.setVisible(false);
+            rightButton.setVisible(false);
+            bidAmount.setVisible(false);
+            break;
+        }
     }
 
 
     private void updateBidRange() {
         //int points = client.getGame().getActivePlayer().getPoints();
-        int points = 100; //DEBUG ONLY
+        //bidAmountModel.setMaximum(points);
+        bidAmountModel.setMaximum(999);
 
-        bidAmountModel.setMaximum(points);
         if (bcb.getCurrentBazaarAuction() == null) {
             bidAmountModel.setMinimum(0);
             bidAmountModel.setValue(0);
@@ -216,39 +219,41 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void forward() {
         if (state == BazaarPanelState.SELECT_TILE) {
-        	BazaarItem[] supply = bcb.getBazaarSupply();
-        	do {
-	            selectedItem++;
-	            if (selectedItem == supply.length) {
-	                selectedItem = 0;
-	            }
-        	} while (supply[selectedItem].getOwner() != null);
+            BazaarItem[] supply = bcb.getBazaarSupply();
+            do {
+                selectedItem++;
+                if (selectedItem == supply.length) {
+                    selectedItem = 0;
+                }
+            } while (supply[selectedItem].getOwner() != null);
             refreshComponentBounds();
             client.getGridPanel().repaint();
         }
     }
 
     public void backward() {
-    	if (state == BazaarPanelState.SELECT_TILE) {
-        	BazaarItem[] supply = bcb.getBazaarSupply();
-        	do {
-	            selectedItem--;
-	            if (selectedItem == 0) {
-	                selectedItem = supply.length-1;
-	            }
-        	} while (supply[selectedItem].getOwner() != null);
-        	refreshComponentBounds();
+        if (state == BazaarPanelState.SELECT_TILE) {
+            BazaarItem[] supply = bcb.getBazaarSupply();
+            do {
+                selectedItem--;
+                if (selectedItem == 0) {
+                    selectedItem = supply.length-1;
+                }
+            } while (supply[selectedItem].getOwner() != null);
+            refreshComponentBounds();
             client.getGridPanel().repaint();
         }
     }
 
     private int getRowY(int item) {
-		return 75 + 110 * item;
-	}
+        return 75 + 110 * item;
+    }
 
     @Override
     public void paintComponent(Graphics2D g2) {
         super.paintComponent(g2);
+
+        if (bcb.getBazaarSupply() == null) return;
 
         GridPanel gp = client.getGridPanel();
         int h = gp.getHeight();
@@ -271,7 +276,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
         int i = 0;
         for(BazaarItem bi : bcb.getBazaarSupply()) {
-            //TOOD caceh supply images ??
+            if (bi.isDrawn()) continue;
+            //TOOD cache supply images ??
             Image img =  client.getTileTheme().getTileImage(bi.getTile().getId());
 
             if (selectedItem == i) {
@@ -292,8 +298,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 ////                g2.setColor(Color.BLACK);
 ////                g2.drawString(bi.getCurrentPrice() + "", 160, y);
             } else if (bi.getOwner() != null) {
-            	Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getOwner()), null);
-            	//TODO smooth image
+                Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getOwner()), null);
+                //TODO smooth image
                 g2.drawImage(playerImage, 140, y+12, 64, 64, null);
             }
 

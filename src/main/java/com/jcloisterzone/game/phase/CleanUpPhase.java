@@ -13,14 +13,13 @@ public class CleanUpPhase extends Phase {
     public void enter() {
         boolean builderTakeAnotherTurn = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) && game.getTradersAndBuildersGame().hasPlayerAnotherTurn();
         game.expansionDelegate().turnCleanUp();
-        game.getTilePack().cleanUpTurn();
+        game.setCurrentTile(null);
         if (builderTakeAnotherTurn) {
             next(game.hasExpansion(Expansion.ABBEY_AND_MAYOR) ? AbbeyPhase.class : DrawPhase.class);
         } else {
             game.setTurnPlayer(game.getNextPlayer());
             next();
         }
-
     }
 
 }

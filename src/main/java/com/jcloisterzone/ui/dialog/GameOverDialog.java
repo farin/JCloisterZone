@@ -26,101 +26,103 @@ import com.jcloisterzone.ui.Client;
 
 public class GameOverDialog extends JDialog {
 
-	private final Client client;
+    private final Client client;
 
-	public GameOverDialog(Client client) {
-		super(client);
-		this.client = client;
+    public GameOverDialog(Client client) {
+        super(client);
+        this.client = client;
 
-		setTitle(_("Game overview"));
-		Point p = client.getLocation();
-		setLocation(p.x+200,p.y+150);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setTitle(_("Game overview"));
+        Point p = client.getLocation();
+        setLocation(p.x+200,p.y+150);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-		Container pane = getContentPane();
-		pane.setLayout(new MigLayout("", "[]", "[][]10[]10[]20[][][][][]20[][]20[][][]"));
-		int gridx = 0, gridy = 1;
+        Container pane = getContentPane();
+        pane.setLayout(new MigLayout("", "[]", "[][]10[]10[]20[][][][][]20[][]20[][][]"));
+        int gridx = 0, gridy = 1;
 
-		pane.add(new JLabel(_("Player")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Rank")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Total points")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Player")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Rank")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Total points")), getLegendSpec(0, gridy++));
 
-		pane.add(new JLabel(_("Roads")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Cities")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Cloisters")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Farms")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Castles")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Roads")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Cities")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Cloisters")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Farms")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Castles")), getLegendSpec(0, gridy++));
 
-		pane.add(new JLabel(_("The biggest city")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("The Longest road")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("The biggest city")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("The Longest road")), getLegendSpec(0, gridy++));
 
-		pane.add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
-		pane.add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Bazaar auctions")), getLegendSpec(0, gridy++));
 
-		Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
-		for(Player player : players) {
-			gridy = 0;
-			Color color = client.getPlayerColor(player);
-			Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);
-			Icon icon = new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
-			pane.add(new JLabel(icon, SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel(player.getNick(), SwingConstants.CENTER), getSpec(gridx, gridy++));
+        Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
+        for(Player player : players) {
+            gridy = 0;
+            Color color = client.getPlayerColor(player);
+            Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);
+            Icon icon = new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+            pane.add(new JLabel(icon, SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel(player.getNick(), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-			pane.add(new JLabel(getRank(players, gridx), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPoints(), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel(getRank(players, gridx), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPoints(), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.FARM), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CASTLE), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.FARM), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.CASTLE), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.BIGGEST_CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.LONGEST_ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.BIGGEST_CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.LONGEST_ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.TRADE_GOODS), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.TOWER_RANSOM), SwingConstants.CENTER), getSpec(gridx, gridy++));
-			gridx++;
-		}
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.TRADE_GOODS), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.TOWER_RANSOM), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.BAZAAR_AUCTION), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            gridx++;
+        }
 
-		pack();
-		setVisible(true);
-	}
+        pack();
+        setVisible(true);
+    }
 
-	private String getRank(Player[] players, int i) {
-		int endrank = i+1;
-		while(i > 0 && players[i-1].getPoints() == players[i].getPoints()) i--; //find start of group
-		while(endrank < players.length) {
-			if (players[endrank].getPoints() != players[i].getPoints()) break;
-			endrank++;
-		}
-		if (endrank == i+1) {
-			return "" + endrank;
-		}
-		return (i+1) + " - " + (endrank);
-	}
+    private String getRank(Player[] players, int i) {
+        int endrank = i+1;
+        while(i > 0 && players[i-1].getPoints() == players[i].getPoints()) i--; //find start of group
+        while(endrank < players.length) {
+            if (players[endrank].getPoints() != players[i].getPoints()) break;
+            endrank++;
+        }
+        if (endrank == i+1) {
+            return "" + endrank;
+        }
+        return (i+1) + " - " + (endrank);
+    }
 
-	private String getLegendSpec(int x, int y) {
-		return "cell " + x + " " + y + ", width 170::";
-	}
+    private String getLegendSpec(int x, int y) {
+        return "cell " + x + " " + y + ", width 170::";
+    }
 
-	private String getSpec(int x, int y) {
-		return "cell " + x + " " + y + ", width 120::, right";
-	}
+    private String getSpec(int x, int y) {
+        return "cell " + x + " " + y + ", width 120::, right";
+    }
 
-	private List<Player> getSortedPlayers() {
-		List<Player> players = Arrays.asList(client.getGame().getAllPlayers());
-		Collections.sort(players, new Comparator<Player>() {
-			@Override
-			public int compare(Player o1, Player o2) {
-				if (o1.getPoints() < o2.getPoints()) return 1;
-				if (o1.getPoints() > o2.getPoints()) return -1;
-				return o1.getNick().compareToIgnoreCase(o2.getNick());
-			}
-		});
-		return players;
-	}
+    private List<Player> getSortedPlayers() {
+        List<Player> players = Arrays.asList(client.getGame().getAllPlayers());
+        Collections.sort(players, new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                if (o1.getPoints() < o2.getPoints()) return 1;
+                if (o1.getPoints() > o2.getPoints()) return -1;
+                return o1.getNick().compareToIgnoreCase(o2.getNick());
+            }
+        });
+        return players;
+    }
 
 }

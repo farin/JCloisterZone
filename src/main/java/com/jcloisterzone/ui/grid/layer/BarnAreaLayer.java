@@ -21,7 +21,7 @@ public class BarnAreaLayer extends AbstractAreaLayer {
 	@Override
 	protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
 		//quick fix
-		if (getClient().getGame().getTile().getPosition().equals(p)) {
+		if (getClient().getGame().getCurrentTile().getPosition().equals(p)) {
 			return getClient().getTileTheme().getBarnTileAreas(tile, getSquareSize(), action.get(p));
 		}
 		return null;

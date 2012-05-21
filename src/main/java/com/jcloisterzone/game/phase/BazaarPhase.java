@@ -106,10 +106,10 @@ public class BazaarPhase extends ServerAwarePhase {
                 bcb.setBazaarBiddingPlayer(null);
                 BazaarItem bi = bcb.getCurrentBazaarAuction();
                 if (bcb.getBazaarTileSelectingPlayer() == bi.getCurrentBidder()) {
-                	bazaarBuyOrSell(true);
+                    bazaarBuyOrSell(true);
                 } else {
-                	game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                	game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+                    game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                    game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
                 }
                 return;
             }
@@ -121,22 +121,23 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     private void nextSelectingPlayer() {
-    	bcb.setCurrentBazaarAuction(null);
-    	bcb.setBazaarBiddingPlayer(null);
-    	Player currentPlayer = bcb.getBazaarTileSelectingPlayer();
-    	Player nextPlayer = game.getNextPlayer(currentPlayer);
-    	while (nextPlayer != currentPlayer) {
-    		if (! bcb.hasTileAuctioned(nextPlayer)) {
-    			bcb.setBazaarTileSelectingPlayer(nextPlayer);
-    			game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-    			game.getUserInterface().selectBazaarTile();
-    			return;
-    		}
-    		nextPlayer = game.getNextPlayer(nextPlayer);
-    	}
-    	//all tiles has been auctioned
-    	bcb.setBazaarTileSelectingPlayer(null);
-    	next();
+        bcb.setCurrentBazaarAuction(null);
+        bcb.setBazaarBiddingPlayer(null);
+        Player currentPlayer = bcb.getBazaarTileSelectingPlayer();
+        Player nextPlayer = game.getNextPlayer(currentPlayer);
+        while (nextPlayer != currentPlayer) {
+            if (! bcb.hasTileAuctioned(nextPlayer)) {
+                bcb.setBazaarTileSelectingPlayer(nextPlayer);
+                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                game.getUserInterface().selectBazaarTile();
+                return;
+            }
+            nextPlayer = game.getNextPlayer(nextPlayer);
+        }
+        //all tiles has been auctioned
+        bcb.setBazaarTileSelectingPlayer(null);
+        game.fireGameEvent().bazaarAuctionsEnded();
+        next();
     }
 
     @Override
@@ -150,21 +151,21 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public void bazaarBuyOrSell(boolean buy) {
-    	BazaarItem bi = bcb.getCurrentBazaarAuction();
-    	int points = bi.getCurrentPrice();
-    	Player pSelecting = bcb.getBazaarTileSelectingPlayer();
-    	Player pBidding = bi.getCurrentBidder();
+        BazaarItem bi = bcb.getCurrentBazaarAuction();
+        int points = bi.getCurrentPrice();
+        Player pSelecting = bcb.getBazaarTileSelectingPlayer();
+        Player pBidding = bi.getCurrentBidder();
 
-    	assert pSelecting != pBidding || buy; //if same, buy is flag expected
-    	if (!buy) points *= -1;
-    	pSelecting.addPoints(-points, PointCategory.BAZAAR_AUCTION);
-    	if (pSelecting != pBidding) {
-    		pBidding.addPoints(points, PointCategory.BAZAAR_AUCTION);
-    	}
+        assert pSelecting != pBidding || buy; //if same, buy is flag expected
+        if (!buy) points *= -1;
+        pSelecting.addPoints(-points, PointCategory.BAZAAR_AUCTION);
+        if (pSelecting != pBidding) {
+            pBidding.addPoints(points, PointCategory.BAZAAR_AUCTION);
+        }
 
-    	bi.setOwner(buy ? pSelecting : pBidding);
-    	bi.setCurrentBidder(null);
-    	nextSelectingPlayer();
+        bi.setOwner(buy ? pSelecting : pBidding);
+        bi.setCurrentBidder(null);
+        nextSelectingPlayer();
     }
 
 

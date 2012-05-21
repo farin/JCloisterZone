@@ -37,7 +37,7 @@ public class ExpandedGame implements GameDelegation {
 		return game.getBoard();
 	}
 	protected Tile getTile() {
-		return game.getTile();
+		return game.getCurrentTile();
 	}
 
 	/**

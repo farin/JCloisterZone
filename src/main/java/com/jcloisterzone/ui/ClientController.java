@@ -254,22 +254,22 @@ public class ClientController implements GameEventListener, UserInterface {
         client.clearActions();
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
         if (bazaarPanel == null) {
-        	bazaarPanel = new BazaarPanel(client);
-        	bazaarPanel.registerSwingComponents(client.getGridPanel());
-        	client.getGridPanel().setBazaarPanel(bazaarPanel);
+            bazaarPanel = new BazaarPanel(client);
+            bazaarPanel.registerSwingComponents(client.getGridPanel());
+            client.getGridPanel().setBazaarPanel(bazaarPanel);
         }
         if (client.isClientActive()) {
-        	BazaarItem[] supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
-        	for(int i = 0; i < supply.length; i++) {
-        		//find first allowed item
-        		if (supply[i].getOwner() == null) {
-        			bazaarPanel.setSelectedItem(i);
-        			break;
-        		}
-        	}
-        	bazaarPanel.setState(BazaarPanelState.SELECT_TILE);
+            BazaarItem[] supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
+            for(int i = 0; i < supply.length; i++) {
+                //find first allowed item
+                if (supply[i].getOwner() == null) {
+                    bazaarPanel.setSelectedItem(i);
+                    break;
+                }
+            }
+            bazaarPanel.setState(BazaarPanelState.SELECT_TILE);
         } else {
-        	bazaarPanel.setState(BazaarPanelState.INACTIVE);
+            bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
         client.getGridPanel().repaint();
     }
@@ -290,7 +290,7 @@ public class ClientController implements GameEventListener, UserInterface {
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-        client.getControlPanel().clearActions();
+        client.clearActions();
         client.getGridPanel().repaint();
     }
 
@@ -307,7 +307,10 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarDepleted() {
-    	client.getGridPanel().setBazaarPanel(null);
     }
 
+    @Override
+    public void bazaarAuctionsEnded() {
+        client.getGridPanel().setBazaarPanel(null);
+    }
 }
