@@ -38,11 +38,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
-    private static Font FONT_NICKNAME = new Font("Georgia", Font.BOLD, 18);
+//    private static Font FONT_NICKNAME = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
 
 //    private static Font FONT_POINTS = new Font(null, Font.BOLD, 30);
-//    private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
+    private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
 //    private static Font FONT_MEEPLE = new Font(null, Font.BOLD, 18);;
 
     private static final int PADDING_L = 9;

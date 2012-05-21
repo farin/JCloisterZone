@@ -21,81 +21,82 @@ import com.jcloisterzone.ui.MultiLineLabel;
 
 public class StartPanel extends JPanel {
 
-	static Font FONT_LARGE_BUTTON = new Font(null, Font.PLAIN, 25);
+    static Font FONT_LARGE_BUTTON = new Font(null, Font.PLAIN, 25);
 
-	private Client client;
+    private Client client;
 
-	/**
-	 * Create the panel.
-	 */
-	public StartPanel() {
-		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		setLayout(new MigLayout("", "[center, grow]20[center, grow]20[center, grow]", "[]20[]"));
+    /**
+     * Create the panel.
+     */
+    public StartPanel() {
+        setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        setLayout(new MigLayout("", "[center, grow]20[center, grow]20[center, grow]", "[]20[]10[]"));
 
-		JLabel lblNewLabel = new JLabel();
-		lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
-		add(lblNewLabel, "span 3, wrap, center");
+        JLabel lblNewLabel = new JLabel();
+        lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
+        add(lblNewLabel, "span 3, wrap, center");
+        add(new HelpPanel(), "span 3, wrap, center");
 
-		JPanel createPanel = new JPanel();
-		createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		add(createPanel, "grow, width :250:");
-				createPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        JPanel createPanel = new JPanel();
+        createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        add(createPanel, "grow, width :250:");
+                createPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
-				JButton create = new JButton(_("New game"));
-				createPanel.add(create, "wrap, alignx center,aligny top");
-				create.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						client.createGame();
-					}
-				});
-				create.setFont(FONT_LARGE_BUTTON);
-				createPanel.add(new MultiLineLabel(
-					_("Create a new local or network game. You can play against any number of computer player.")),
-				"wrap, grow");
-
-
-		JPanel connectPanel = new JPanel();
-		connectPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		add(connectPanel, "grow, width :250:");
-				connectPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
-
-				JButton connect = new JButton(_("Connect"));
-				connectPanel.add(connect, "wrap, alignx center,aligny top");
-				connect.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						client.showConnectGamePanel();
-					}
-				});
-				connect.setFont(FONT_LARGE_BUTTON);
-				connectPanel.add(new MultiLineLabel(
-					_("Connect to a remote JCloisterZone application with settled new game.")),
-				"wrap, grow");
+                JButton create = new JButton(_("New game"));
+                createPanel.add(create, "wrap, alignx center,aligny top");
+                create.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        client.createGame();
+                    }
+                });
+                create.setFont(FONT_LARGE_BUTTON);
+                createPanel.add(new MultiLineLabel(
+                    _("Create a new local or network game. You can play against any number of computer player.")),
+                "wrap, grow");
 
 
-		JPanel loadPanel = new JPanel();
-		loadPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		add(loadPanel, "grow, width :250:");
-				loadPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        JPanel connectPanel = new JPanel();
+        connectPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        add(connectPanel, "grow, width :250:");
+                connectPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
-				JButton load = new JButton(_("Load game"));
-				loadPanel.add(load, "wrap, alignx center,aligny top");
-				load.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						client.handleLoad();
-					}
-				});
-				load.setFont(FONT_LARGE_BUTTON);
-				loadPanel.add(new MultiLineLabel(
-					_("Load from a file previously saved game.")),
-				"wrap, grow");
-	}
+                JButton connect = new JButton(_("Connect"));
+                connectPanel.add(connect, "wrap, alignx center,aligny top");
+                connect.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        client.showConnectGamePanel();
+                    }
+                });
+                connect.setFont(FONT_LARGE_BUTTON);
+                connectPanel.add(new MultiLineLabel(
+                    _("Connect to a remote JCloisterZone application with settled new game.")),
+                "wrap, grow");
 
-	public Client getClient() {
-		return client;
-	}
 
-	public void setClient(Client client) {
-		this.client = client;
-	}
+        JPanel loadPanel = new JPanel();
+        loadPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        add(loadPanel, "grow, width :250:");
+                loadPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+
+                JButton load = new JButton(_("Load game"));
+                loadPanel.add(load, "wrap, alignx center,aligny top");
+                load.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        client.handleLoad();
+                    }
+                });
+                load.setFont(FONT_LARGE_BUTTON);
+                loadPanel.add(new MultiLineLabel(
+                    _("Load from a file previously saved game.")),
+                "wrap, grow");
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
 }

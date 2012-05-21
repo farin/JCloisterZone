@@ -57,7 +57,7 @@ public class GameOverDialog extends JDialog {
         pane.add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
-        pane.add(new JLabel(_("Bazaar auctions")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Bazaars")), getLegendSpec(0, gridy++));
 
         Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
         for(Player player : players) {

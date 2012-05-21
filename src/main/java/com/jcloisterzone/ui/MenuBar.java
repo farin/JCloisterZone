@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 
 @SuppressWarnings("serial")
@@ -233,6 +234,14 @@ public class MenuBar extends JMenuBar {
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     client.handleAbout();
+                }
+            });
+            menu.add(menuItem);
+
+            menuItem = new JMenuItem(_("Controls"));
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new HelpDialog();
                 }
             });
             menu.add(menuItem);

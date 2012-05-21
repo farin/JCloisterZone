@@ -44,6 +44,7 @@ import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.server.Server;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;

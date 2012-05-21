@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui;
+package com.jcloisterzone.ui.dialog;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.Application;
+import com.jcloisterzone.ui.MultiLineLabel;
 
 
 public class AboutDialog extends JDialog {
