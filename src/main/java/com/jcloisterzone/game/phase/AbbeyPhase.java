@@ -44,6 +44,7 @@ public class AbbeyPhase extends Phase {
         amGame.useAbbey(getActivePlayer());
 
         Tile nextTile = game.getTilePack().drawTile("inactive", Tile.ABBEY_TILE_ID);
+        game.setCurrentTile(nextTile);
         nextTile.setRotation(rotation);
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
