@@ -99,6 +99,7 @@ public class LoadGamePhase extends CreateGamePhase {
             //tile drawn but not placed yet
             String tileId = snapshot.getNextTile();
             Tile tile = game.getTilePack().drawTile(tileId);
+            game.setCurrentTile(tile);
             game.getBoard().refreshAvailablePlacements(tile);
             game.fireGameEvent().tileDrawn(tile);
         }
