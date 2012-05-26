@@ -30,6 +30,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
@@ -119,9 +120,17 @@ public class ClientController implements GameEventListener, UserInterface {
     }
 
     public void refreshWindowTitle() {
-        int packSize = client.getGame().getTilePack().totalSize();
-        String activePlayer = client.getGame().getActivePlayer().getNick();
-        client.setTitle(Client.BASE_TITLE + " ⋅ " + activePlayer + " ⋅ " + packSize + " " + _("tiles left") );
+        StringBuilder title = new StringBuilder(Client.BASE_TITLE);
+        Game game = client.getGame();
+        if (game != null) {
+        	Player activePlayer = game.getActivePlayer();
+        	if (activePlayer != null) {
+        		title.append(" ⋅ ").append(activePlayer.getNick());
+        	}
+        	int packSize = game.getTilePack().totalSize();
+        	title.append(" ⋅ ").append(packSize).append(_("tiles left"));
+        }
+        client.setTitle(title.toString());
     }
 
     @Override
