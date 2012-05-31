@@ -1,18 +1,22 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
@@ -23,23 +27,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class ControlPanel extends FakeComponent {
 
-    // public static final Color BG_COLOR = new Color(0, 0, 0, 30);
-    // public static final Color ACTIVE_BG_COLOR = new Color(0, 0, 0, 45);
-    // public static final Color BG_COLOR = new Color(223, 223, 223, 200);
-    // public static final Color ACTIVE_BG_COLOR = new Color(208, 208, 208,
-    // 200);
-    // public static final Color SHADOW_COLOR = new Color(0, 0, 0, 60);
-    // public static final int CORNER_DIAMETER = 20;
-
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
-    private static Font FONT_PASS_PLAIN = new Font(null, Font.PLAIN, 14);
-    private static Font FONT_PASS_UNDERLINE;
-
-    static {
-        Map<TextAttribute, Integer> fontAttributes = new HashMap<TextAttribute, Integer>();
-        fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-        FONT_PASS_UNDERLINE = FONT_PASS_PLAIN.deriveFont(fontAttributes);
-    }
 
     public static final Color HEADER_FONT_COLOR = new Color(170, 170, 170, 200);
     public static final Color PLAYER_BG_COLOR = new Color(210, 210, 210, 200);
@@ -57,31 +45,14 @@ public class ControlPanel extends FakeComponent {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
-
+    private JButton passButton;
     private boolean canPass;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
-    public static final String STR_CLICK_TO = "click to ";
-    public static final String STR_PASS = "pass";
-    private int clickToWidth, passWidth;
-
     public ControlPanel(final Client client) {
         super(client);
-
-        FontMetrics fm = client.getFontMetrics(FONT_PASS_PLAIN);
-        clickToWidth = fm.stringWidth(STR_CLICK_TO);
-        passWidth = fm.stringWidth(STR_PASS);
-
-        getMouseRegions().add(new MouseListeningRegion(
-            new Rectangle(2, 6, clickToWidth+passWidth+6, 19), new RegionMouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
-                    pass();
-                }
-            }, null
-        ));
 
         actionPanel = new ActionPanel(client);
 
@@ -91,6 +62,40 @@ public class ControlPanel extends FakeComponent {
 
         for (int i = 0; i < players.length; i++) {
             playerPanels[i] = new PlayerPanel(client, players[i], cache);
+        }
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        refreshComponents();
+        client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void registerSwingComponents(JComponent parent) {
+        passButton = new JButton(_("Skip"));
+        passButton.setMargin(new Insets(1,1,1,1));
+        passButton.setVisible(false);
+        passButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pass();
+            }
+        });
+        parent.add(passButton);
+    }
+
+    @Override
+    public void destroySwingComponents(JComponent parent) {
+        parent.remove(passButton);
+    }
+
+    private void refreshComponents() {
+        passButton.setVisible(canPass);
+        if (canPass) {
+            //TODO hardcoded offset - but no better solution for now
+            int x = client.getGridPanel().getWidth()-PANEL_WIDTH;
+            passButton.setBounds(x, 4, 90, 19);
         }
     }
 
@@ -165,13 +170,6 @@ public class ControlPanel extends FakeComponent {
         int packSize = client.getGame().getTilePack().totalSize();
         g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
 
-        if (canPass) {
-            g2.setFont(FONT_PASS_PLAIN);
-            g2.drawString(STR_CLICK_TO, 4, 21);
-            g2.setFont(FONT_PASS_UNDERLINE);
-            g2.drawString(STR_PASS, 4 + clickToWidth, 21);
-        }
-
         g2.translate(0, 44);
         actionPanel.paintComponent(g2);
 //		gp.profile("action panel");
@@ -227,11 +225,13 @@ public class ControlPanel extends FakeComponent {
         Arrays.sort(arr);
         actionPanel.setActions(arr);
         this.canPass = canPass;
+        refreshComponents();
     }
 
     public void clearActions() {
         actionPanel.clearActions();
         canPass = false;
+        refreshComponents();
     }
 
     public void playerActivated(Player turn, Player active) {
@@ -241,6 +241,7 @@ public class ControlPanel extends FakeComponent {
     public void closeGame() {
         clearActions();
         canPass = false;
+        refreshComponents();
     }
 
 }
