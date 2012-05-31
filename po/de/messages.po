@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 23:27+0200\n"
+"POT-Creation-Date: 2012-05-31 23:26+0200\n"
 "PO-Revision-Date: 2011-03-29 21:52+0100\n"
 "Last-Translator: Thomas\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,8 +121,7 @@ msgstr "Für jede Stadt wird nur eine Wiese gezählt."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:13
 msgid "The Builder and the pig cannot be placed on a volcano."
-msgstr ""
-"Der Baumeister und das Schwein können nicht auf einen Vulkan gesetzt werden."
+msgstr "Der Baumeister und das Schwein können nicht auf einen Vulkan gesetzt werden."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:14
 msgid "Princess MUST remove a knight from city."
@@ -149,8 +148,7 @@ msgstr ""
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr ""
-"Die verbundene JCloisterZone ist nicht kompatibel mit der lokal "
+msgstr "Die verbundene JCloisterZone ist nicht kompatibel mit der lokal "
 "installierten Version. Bitte beide Programme auf die gleiche Version "
 "aktualisieren."
 
@@ -192,8 +190,7 @@ msgstr "Abbruch"
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
-msgstr ""
-"Das Spiel läuft noch. Wollen Sie wirklich abbrechen? (Weitere Mitspieler "
+msgstr "Das Spiel läuft noch. Wollen Sie wirklich abbrechen? (Weitere Mitspieler "
 "sind verbunden!)"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:310
@@ -215,9 +212,10 @@ msgstr "Fehler"
 msgid "Load game"
 msgstr "Spiel laden"
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:124
-msgid "tiles left"
-msgstr ""
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+#, fuzzy
+msgid "%d tiles left"
+msgstr "nur Karten %d"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Game"
@@ -308,6 +306,10 @@ msgstr ""
 msgid "JCloisterZone saved games"
 msgstr "JCloisterZone gespeicherte Spiele"
 
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+msgid "Skip"
+msgstr ""
+
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 msgid "Pay ransom"
 msgstr ""
@@ -397,43 +399,49 @@ msgstr "Turmlösegeld"
 msgid "Bazaars"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
 msgid "Choose your tile."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
 msgid "Buy or sell tile from latest bidder."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:184
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+#, fuzzy
+msgid "points"
+msgstr "punkte"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
 msgid "Buy"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:185
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
 msgid "Sell"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:191
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "Select"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:197
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Bid"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
 msgid "Pass"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:283
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
 msgid "Bazaar supply"
 msgstr ""
 
@@ -462,8 +470,7 @@ msgstr "Einen Turm setzen"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr ""
-"Willst Du wirklich eine Figur auf den Turm setzn?\n"
+msgstr "Willst Du wirklich eine Figur auf den Turm setzn?\n"
 "(um mehrfaches Setzen von Figuren auf denTurm zu verhindern)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -572,8 +579,3 @@ msgstr "Mit einem entfernten JCloisterZone Programm verbinden."
 msgid "Load from a file previously saved game."
 msgstr "Ein gespeichertes Spiel laden."
 
-#~ msgid "La porxada"
-#~ msgstr "a Porxada"
-
-#~ msgid "The school"
-#~ msgstr "Die Schule"

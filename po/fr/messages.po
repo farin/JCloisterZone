@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 23:27+0200\n"
+"POT-Creation-Date: 2012-05-31 23:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,8 +134,7 @@ msgstr "Troupeau de cochon présent sur les tuiles comportant une ferme."
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
-msgstr ""
-"Permettre le placement d'une grange sur une ferme où une autre grange a déjà "
+msgstr "Permettre le placement d'une grange sur une ferme où une autre grange a déjà "
 "été placée."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
@@ -150,8 +149,7 @@ msgstr ""
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr ""
-"La version du serveur JCloisterZone n'est pas compatible avec la version du "
+msgstr "La version du serveur JCloisterZone n'est pas compatible avec la version du "
 "client."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
@@ -213,8 +211,8 @@ msgstr ""
 msgid "Load game"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:124
-msgid "tiles left"
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+msgid "%d tiles left"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
@@ -306,6 +304,10 @@ msgstr ""
 msgid "JCloisterZone saved games"
 msgstr ""
 
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+msgid "Skip"
+msgstr ""
+
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 msgid "Pay ransom"
 msgstr ""
@@ -395,43 +397,48 @@ msgstr ""
 msgid "Bazaars"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
 msgid "Choose your tile."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
 msgid "Buy or sell tile from latest bidder."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:184
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+msgid "points"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
 msgid "Buy"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:185
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
 msgid "Sell"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:191
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "Select"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:197
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Bid"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
 msgid "Pass"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:283
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
 msgid "Bazaar supply"
 msgstr ""
 
@@ -567,3 +574,4 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:90
 msgid "Load from a file previously saved game."
 msgstr ""
+

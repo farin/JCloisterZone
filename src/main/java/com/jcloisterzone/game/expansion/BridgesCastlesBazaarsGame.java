@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -23,6 +22,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Castle;
@@ -44,6 +44,8 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 
     /** castles deployed this turn - cannot be scored - refs to master feature  */
     private List<Castle> newCastles = Lists.newArrayList();
+    /** empty castles, already scored, keeping ref for game save */
+    private List<Castle> emptyCastles = Lists.newArrayList();
     /** castles from previous turns, can be scored - castle -> vinicity area */
     private Map<Castle, Position[]> scoreableCastleVicinity = Maps.newHashMap();
     private Map<Castle, Integer> castleScore = Maps.newHashMap();
@@ -67,6 +69,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
                 if (meeple.getFeature() instanceof Castle) {
                     Castle castle = (Castle) meeple.getFeature().getMaster();
                     scoreableCastleVicinity.remove(castle);
+                    emptyCastles.add(castle);
                 }
             }
         });
@@ -311,6 +314,13 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         return copy;
     }
 
+    private Element createCastleXmlElement(Document doc, Castle castle) {
+        Element el = doc.createElement("castle");
+        el.setAttribute("location", castle.getLocation().toString());
+        XmlUtils.injectPosition(el, castle.getTile().getPosition());
+        return el;
+    }
+
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("bridgeUsed", bridgeUsed + "");
@@ -320,8 +330,26 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
             el.setAttribute("index", "" + player.getIndex());
             el.setAttribute("castles", "" + getPlayerCastles(player));
             el.setAttribute("bridges", "" + getPlayerBridges(player));
-            //TODO save castle bases
         }
+
+        for (Castle castle : scoreableCastleVicinity.keySet()) {
+            node.appendChild(createCastleXmlElement(doc, castle));
+        }
+        for (Castle castle : newCastles) {
+            Element el = createCastleXmlElement(doc, castle);
+            el.setAttribute("new", "true");
+            node.appendChild(el);
+        }
+        for (Castle castle : emptyCastles) {
+            Element el = createCastleXmlElement(doc, castle);
+            el.setAttribute("completed", "true");
+            node.appendChild(el);
+        }
+
+      /*TODO save
+        current tile castle base
+        bazaar supply + draw queue
+      */
     }
 
     @Override
@@ -333,8 +361,27 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             castles.put(player, Integer.parseInt(playerEl.getAttribute("castles")));
             bridges.put(player, Integer.parseInt(playerEl.getAttribute("bridges")));
-            //TODO load castle bases
         }
+
+        nl = node.getElementsByTagName("castle");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element castleEl = (Element) nl.item(i);
+
+            Position pos = XmlUtils.extractPosition(castleEl);
+            Location loc = Location.valueOf(castleEl.getAttribute("location"));
+            //TODO convert city to Castle
+            Castle castle = (Castle) game.getBoard().get(pos).getFeature(loc);
+            boolean isNew = XmlUtils.attributeBoolValue(castleEl, "new");
+            boolean isCompleted = XmlUtils.attributeBoolValue(castleEl, "completed");
+            if (isNew) {
+                newCastles.add(castle);
+            } else if (isCompleted) {
+                emptyCastles.add(castle);
+            } else {
+                scoreableCastleVicinity.put(castle, castle.getVicinity());
+            }
+        }
+        //TODO load bazaar supply + queue
     }
 
     public void setBazaarSupply(BazaarItem[] bazaarSupply) {

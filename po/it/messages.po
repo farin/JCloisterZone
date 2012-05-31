@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 23:27+0200\n"
+"POT-Creation-Date: 2012-05-31 23:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -135,8 +135,7 @@ msgstr "La mandria di maiali è presente sulla tessera della fattoria"
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
-msgstr ""
-"Permetti il piazzamento diretto del fienile su una fattoria dove è già "
+msgstr "Permetti il piazzamento diretto del fienile su una fattoria dove è già "
 "presente un altro fienile."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
@@ -151,8 +150,7 @@ msgstr ""
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr ""
-"La versione di JCloisterZone remota non è compatibile con quella locale.Si "
+msgstr "La versione di JCloisterZone remota non è compatibile con quella locale.Si "
 "prega di aggiornare entrambe le applicazioni alla stessa versione."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
@@ -170,8 +168,7 @@ msgstr "Errore di caricamento"
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
 msgid ""
 "Saved game is incompatible or file is corrupted. Game couldn't work properly."
-msgstr ""
-"Il salvataggio è incompatibile o il file è corrotto. Il gioco non "
+msgstr "Il salvataggio è incompatibile o il file è corrotto. Il gioco non "
 "funzionerebbe correttamente."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:301
@@ -195,8 +192,7 @@ msgstr "Annulla"
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
-msgstr ""
-"Una partita è in corso. Vuoi davvero uscire e disconnettere tutti gli altri "
+msgstr "Una partita è in corso. Vuoi davvero uscire e disconnettere tutti gli altri "
 "giocatori?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:310
@@ -218,8 +214,8 @@ msgstr "Errore"
 msgid "Load game"
 msgstr "Carica partita"
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:124
-msgid "tiles left"
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+msgid "%d tiles left"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
@@ -312,6 +308,10 @@ msgstr ""
 msgid "JCloisterZone saved games"
 msgstr "Partite a JCloisterZone salvate"
 
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+msgid "Skip"
+msgstr ""
+
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 #, fuzzy
 msgid "Pay ransom"
@@ -333,8 +333,7 @@ msgstr "Versione"
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:68
 msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
-msgstr ""
-"Distribuito sotto i termini della GNU Affero General Public License version 3"
+msgstr "Distribuito sotto i termini della GNU Affero General Public License version 3"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:31
 msgid "Discarded tiles"
@@ -404,43 +403,49 @@ msgstr "Riscatto torre"
 msgid "Bazaars"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
 msgid "Choose your tile."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
 msgid "Buy or sell tile from latest bidder."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:184
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+#, fuzzy
+msgid "points"
+msgstr "Punteggio totale"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
 msgid "Buy"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:185
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
 msgid "Sell"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:191
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "Select"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:197
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Bid"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
 msgid "Pass"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:283
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
 msgid "Bazaar supply"
 msgstr ""
 
@@ -469,8 +474,7 @@ msgstr "Metti un pezzo di torre"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr ""
-"Sei sicuro di voler mettere un seguace sulla torre?\n"
+msgstr "Sei sicuro di voler mettere un seguace sulla torre?\n"
 "(Per impedire che siamo messi altri pezzi sulla torre)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -569,15 +573,14 @@ msgstr ""
 msgid ""
 "Create a new local or network game. You can play against any number of "
 "computer player."
-msgstr ""
-"Crea una nuova partita locale o in rete. Puoi giocare contro un numero "
+msgstr "Crea una nuova partita locale o in rete. Puoi giocare contro un numero "
 "qualsiasi di giocatori."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "Connect to a remote JCloisterZone application with settled new game."
-msgstr ""
-"Connettiti ad una applicazione JCloisterZone remota con partita organizzata"
+msgstr "Connettiti ad una applicazione JCloisterZone remota con partita organizzata"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:90
 msgid "Load from a file previously saved game."
 msgstr "Carica una partita salvata in precedenza."
+
