@@ -2,6 +2,7 @@ package com.jcloisterzone.game.expansion;
 
 import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -96,23 +98,29 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         }
     }
 
-    @Override
-    public void scoreCompleted(CompletableScoreContext ctx) {
-        for(Position p : ctx.getPositions()) {
+    private void checkCastleVicinity(Iterable<Position> triggerPositions, int score) {
+        for(Position p : triggerPositions) {
             for(Entry<Castle, Position[]> entry : scoreableCastleVicinity.entrySet()) {
                 Position[] vicinity = entry.getValue();
                 for(int i = 0; i < vicinity.length; i++) {
                     if (vicinity[i].equals(p)) {
                         Castle master = entry.getKey();
-                        Integer score = castleScore.get(master);
-                        if (score == null || score < ctx.getPoints()) {
-                            castleScore.put(master, ctx.getPoints());
+                        Integer currentCastleScore = castleScore.get(master);
+                        if (currentCastleScore == null || currentCastleScore < score) {
+                            castleScore.put(master, score);
+                            //chain reaction, one completed castle triggers another
+                            checkCastleVicinity(Arrays.asList(master.getCastleBase()), score);
                         }
                         break;
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public void scoreCompleted(CompletableScoreContext ctx) {
+        checkCastleVicinity(ctx.getPositions(), ctx.getPoints());
     }
 
     public Map<Castle, Integer> getCastleScore() {

@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.grid;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -197,7 +196,6 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             } else {
                 bidAmountLabel.setBounds(bazaarPanelX+190, y+15, 70, 24);
             }
-
         }
 
         switch (state) {
