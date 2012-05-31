@@ -123,12 +123,12 @@ public class ClientController implements GameEventListener, UserInterface {
         StringBuilder title = new StringBuilder(Client.BASE_TITLE);
         Game game = client.getGame();
         if (game != null) {
-        	Player activePlayer = game.getActivePlayer();
-        	if (activePlayer != null) {
-        		title.append(" ⋅ ").append(activePlayer.getNick());
-        	}
-        	int packSize = game.getTilePack().totalSize();
-        	title.append(" ⋅ ").append(packSize).append(_("tiles left"));
+            Player activePlayer = game.getActivePlayer();
+            if (activePlayer != null) {
+                title.append(" ⋅ ").append(activePlayer.getNick());
+            }
+            int packSize = game.getTilePack().totalSize();
+            title.append(" ⋅ ").append(String.format(_("%d tiles left"), packSize));
         }
         client.setTitle(title.toString());
     }

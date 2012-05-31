@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.grid;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -46,7 +47,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
     private boolean refreshMouseRegions;
     private final boolean noAuction;
 
-    private JLabel hint;
+    private JLabel hint, bidAmountLabel;
     private JButton leftButton, rightButton;
     private JSpinner bidAmount;
     private SpinnerNumberModel bidAmountModel;
@@ -118,6 +119,9 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
              bidAmount.setFont(new Font(null, Font.BOLD, 14));
              bidAmount.setVisible(false);
              parent.add(bidAmount);
+
+             bidAmountLabel = new JLabel();
+             parent.add(bidAmountLabel);
          }
     }
 
@@ -159,6 +163,14 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             hint.setText(_("Buy or sell tile from latest bidder."));
             break;
         }
+        if (bidAmountLabel != null) {
+            if (state == BazaarPanelState.BUY_OR_SELL) {
+                bidAmountLabel.setText(bcb.getCurrentBazaarAuction().getCurrentPrice() + "  " + _("points"));
+            } else {
+                bidAmountLabel.setText(_("points"));
+            }
+        }
+
         refreshComponentBounds();
     }
 
@@ -177,7 +189,16 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             rightButton.setBounds(bazaarPanelX+182, y+55, 60, 25);
         }
 
-        if (bidAmount != null) bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
+        if (bidAmount != null) {
+            //bidAmount.setBounds(bazaarPanelX+170, y+10, BazaarPanel.PANEL_WIDTH-190, 25);
+            bidAmount.setBounds(bazaarPanelX+130, y+15, 50, 24);
+            if (state == BazaarPanelState.BUY_OR_SELL) {
+                bidAmountLabel.setBounds(bazaarPanelX+130, y+15, 130, 24);
+            } else {
+                bidAmountLabel.setBounds(bazaarPanelX+190, y+15, 70, 24);
+            }
+
+        }
 
         switch (state) {
         case BUY_OR_SELL:
@@ -185,25 +206,37 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             rightButton.setText(_("Sell"));
             leftButton.setVisible(true);
             rightButton.setVisible(true);
-            if (bidAmount != null) bidAmount.setVisible(false);
+            if (bidAmount != null) {
+                bidAmount.setVisible(false);
+                bidAmountLabel.setVisible(true);
+            }
             break;
         case SELECT_TILE:
             leftButton.setText(_("Select"));
             leftButton.setVisible(true);
             rightButton.setVisible(false);
-            if (bidAmount != null) bidAmount.setVisible(true);
+            if (bidAmount != null) {
+                bidAmount.setVisible(true);
+                bidAmountLabel.setVisible(true);
+            }
             break;
         case MAKE_BID:
             leftButton.setText(_("Bid"));
             rightButton.setText(_("Pass"));
             leftButton.setVisible(true);
             rightButton.setVisible(true);
-            if (bidAmount != null) bidAmount.setVisible(true);
+            if (bidAmount != null) {
+                bidAmount.setVisible(true);
+                bidAmountLabel.setVisible(true);
+            }
             break;
         default:
             leftButton.setVisible(false);
             rightButton.setVisible(false);
-            if (bidAmount != null) bidAmount.setVisible(false);
+            if (bidAmount != null) {
+                bidAmount.setVisible(false);
+                bidAmountLabel.setVisible(false);
+            }
             break;
         }
     }
