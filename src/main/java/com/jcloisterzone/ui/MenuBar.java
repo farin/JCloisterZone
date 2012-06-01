@@ -226,9 +226,9 @@ public class MenuBar extends JMenuBar {
 
         this.add(menu);
 
-        if (! isMac) {
+        menu = new JMenu(_("Help"));
 
-            menu = new JMenu(_("Help"));
+        if (! isMac) {
 
             menuItem = new JMenuItem(_("About"));
             menuItem.addActionListener(new ActionListener() {
@@ -238,17 +238,18 @@ public class MenuBar extends JMenuBar {
             });
             menu.add(menuItem);
 
-            menuItem = new JMenuItem(_("Controls"));
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new HelpDialog();
-                }
-            });
-            menu.add(menuItem);
-
-            this.add(menu);
-
         }
+
+        menuItem = new JMenuItem(_("Controls"));
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new HelpDialog();
+            }
+        });
+        menu.add(menuItem);
+
+        this.add(menu);
+
     }
 
     //legacy methods - TODO refactor

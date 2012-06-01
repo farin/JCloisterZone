@@ -52,7 +52,4 @@ public class AbbeyPhase extends Phase {
         game.fireGameEvent().tilePlaced(nextTile);
         next(ActionPhase.class);
     }
-
-
-
 }
