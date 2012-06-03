@@ -131,6 +131,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         parent.remove(rightButton);
         if (bidAmount != null) {
             parent.remove(bidAmount);
+            parent.remove(bidAmountLabel);
         }
     }
 
