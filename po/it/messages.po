@@ -58,7 +58,7 @@ msgstr "solo le tessere"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:34
 msgid "Bridges, Castles and Bazaars"
-msgstr "Bazaar, Ponti e Castelli"
+msgstr "Bazar, Ponti e Castelli"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:37
 msgid "King and Scout"
