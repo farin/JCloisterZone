@@ -409,7 +409,7 @@ msgstr "Scegli la tua tessera"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>Scegli la tessera per la prossima asta<br>a fai l'offerta iniziale</html>"
+msgstr "<html>Scegli la tessera per la prossima asta<br>e fai la prima offerta</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
@@ -463,7 +463,7 @@ msgstr "Sei sicuro di voler mettere un seguace sulla fattoria?"
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:76
 msgid "Confirm follower placement"
-msgstr "Conferma di voler piazzare il seguace"
+msgstr "Conferma dove vuoi piazzare il seguace"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:63
 msgid "Place a tower piece"
@@ -491,7 +491,7 @@ msgstr "In connessione"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:86
 msgid "Invalid port number."
-msgstr "Numero di portga non valido."
+msgstr "Numero di porta non valido."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:88
 msgid "Connection failed. Unknown host."
@@ -549,25 +549,31 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr ""
+msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> direzionali per"
+"scorrere la mappa. Clicca il bottone <b>centrale</b> del mouse per centrare la mappa. "
+"Ingrandisci con i tasti <b>+</b> o <b>-</b> o con la <b>rotellina</b> del mouse.</html>"
+
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr ""
+msgstr "<html>Ruota una tessera premendo il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse. Piazzala "
+"premendo il tasto <b>sinistro</b> del mouse.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr ""
+msgstr "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse per "
+"selezionare l'azione desiderata.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr ""
+msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</b> per non fare "
+"azioni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
