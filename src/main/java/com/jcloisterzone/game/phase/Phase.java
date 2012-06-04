@@ -202,7 +202,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public void bazaarBuyOrSell(boolean buy) {
-    	logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
+        logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
     }
 
 }

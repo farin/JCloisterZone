@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -268,13 +269,13 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void forward() {
         if (state == BazaarPanelState.SELECT_TILE) {
-            BazaarItem[] supply = bcb.getBazaarSupply();
+            ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
             do {
                 selectedItem++;
-                if (selectedItem == supply.length) {
+                if (selectedItem == supply.size()) {
                     selectedItem = 0;
                 }
-            } while (supply[selectedItem].getOwner() != null);
+            } while (supply.get(selectedItem).getOwner() != null);
             refreshComponentBounds();
             client.getGridPanel().repaint();
         }
@@ -282,13 +283,13 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void backward() {
         if (state == BazaarPanelState.SELECT_TILE) {
-            BazaarItem[] supply = bcb.getBazaarSupply();
+            ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
             do {
                 selectedItem--;
                 if (selectedItem == 0) {
-                    selectedItem = supply.length-1;
+                    selectedItem = supply.size()-1;
                 }
-            } while (supply[selectedItem].getOwner() != null);
+            } while (supply.get(selectedItem).getOwner() != null);
             refreshComponentBounds();
             client.getGridPanel().repaint();
         }

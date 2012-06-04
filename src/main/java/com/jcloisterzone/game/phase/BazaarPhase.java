@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
@@ -55,9 +57,9 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public void drawTiles(int[] tileIndexes) {
-        BazaarItem[] supply = new BazaarItem[tileIndexes.length];
-        for(int i = 0; i < tileIndexes.length; i++) {
-            supply[i] = new BazaarItem(getTilePack().drawTile(tileIndexes[i]));
+        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(tileIndexes.length);
+        for(int tileIndex : tileIndexes) {
+            supply.add(new BazaarItem(getTilePack().drawTile(tileIndex)));
         }
         bcb.setBazaarSupply(supply);
         game.getUserInterface().selectBazaarTile();
@@ -75,7 +77,7 @@ public class BazaarPhase extends ServerAwarePhase {
         BazaarItem bi = bcb.getCurrentBazaarAuction();
         boolean isTileSelection = bi == null;
         if (bi == null) {
-            bi = bcb.getBazaarSupply()[supplyIndex];
+            bi = bcb.getBazaarSupply().get(supplyIndex);
             bcb.setCurrentBazaarAuction(bi);
 
             if (game.hasRule(CustomRule.BAZAAR_NO_AUCTION)) {
@@ -93,19 +95,9 @@ public class BazaarPhase extends ServerAwarePhase {
         nextBidder();
     }
 
-    private int getCurrentBazaarAuctionIndex() {
-        BazaarItem[] supply = bcb.getBazaarSupply();
-        for(int i = 0; i < supply.length; i++) {
-            if (supply[i] == bcb.getCurrentBazaarAuction()) {
-                return i;
-            }
-        }
-        throw new IllegalStateException();
-    }
-
     private void nextBidder() {
         Player nextBidder = getActivePlayer();
-        int supplyIdx = getCurrentBazaarAuctionIndex();
+        int supplyIdx = bcb.getBazaarSupply().indexOf(bcb.getCurrentBazaarAuction());
         do {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
