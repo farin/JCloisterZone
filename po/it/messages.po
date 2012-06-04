@@ -409,7 +409,7 @@ msgstr "Scegli la tua tessera"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>Scegli la tessera per la prossima asta<br>a fai l'offerta iniziale</html>"
+msgstr "<html>Scegli la tessera per la prossima asta<br>e fai la prima offerta</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
@@ -550,7 +550,7 @@ msgid ""
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
 msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> direzionali per"
-"scorrere la mappa. Clicca il bottone <b>centrale</b> del mouseper centrare la mappa. "
+"scorrere la mappa. Clicca il bottone <b>centrale</b> del mouse per centrare la mappa. "
 "Ingrandisci con i tasti <b>+</b> o <b>-</b> o con la <b>rotellina</b> del mouse.</html>"
 
 
@@ -558,7 +558,7 @@ msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> dir
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Ruota una tessera premendo il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse. Piazzalo "
+msgstr "<html>Ruota una tessera premendo il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse. Piazzala "
 "premendo il tasto <b>sinistro</b> del mouse.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
@@ -572,8 +572,8 @@ msgstr "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto 
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</ per saltare "
-"il turno.</html>"
+msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</ per non fare "
+"azioni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
