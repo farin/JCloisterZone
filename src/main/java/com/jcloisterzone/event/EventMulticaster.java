@@ -228,12 +228,6 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
-    public void bazaarDepleted() {
-        ((GameEventListener)a).bazaarDepleted();
-        ((GameEventListener)b).bazaarDepleted();
-    }
-
-    @Override
     public void bazaarAuctionsEnded() {
         ((GameEventListener)a).bazaarAuctionsEnded();
         ((GameEventListener)b).bazaarAuctionsEnded();

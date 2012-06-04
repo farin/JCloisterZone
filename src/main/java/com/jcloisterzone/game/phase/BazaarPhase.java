@@ -8,6 +8,7 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.rmi.ServerIF;
@@ -45,6 +46,25 @@ public class BazaarPhase extends ServerAwarePhase {
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
             getServer().selectTiles(getTilePack().size(), game.getAllPlayers().length);
+        }
+    }
+
+    @Override
+    public void loadGame(Snapshot snapshot) {
+        setEntered(true); //avoid call enter on load phase to this pahse switch
+        Player selecting = bcb.getBazaarTileSelectingPlayer();
+        if (selecting != null) {
+            Player bidding = bcb.getBazaarBiddingPlayer();
+            int supplyIdx = bcb.getBazaarSupply().indexOf(bcb.getCurrentBazaarAuction());
+            game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+
+            if (bidding == null) {
+                game.getUserInterface().selectBazaarTile();
+            } else if (selecting == bidding) {
+                game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+            } else {
+                game.getUserInterface().makeBazaarBid(supplyIdx);
+            }
         }
     }
 
@@ -102,11 +122,11 @@ public class BazaarPhase extends ServerAwarePhase {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
                 //all players makes bid
-                bcb.setBazaarBiddingPlayer(null);
                 BazaarItem bi = bcb.getCurrentBazaarAuction();
                 if (bcb.getBazaarTileSelectingPlayer() == bi.getCurrentBidder()) {
                     bazaarBuyOrSell(true);
                 } else {
+                    bcb.setBazaarBiddingPlayer(bcb.getBazaarTileSelectingPlayer()); //need for correct save&load
                     game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
                     game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
                 }

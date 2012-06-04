@@ -260,15 +260,20 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void selectBazaarTile() {
-        client.clearActions();
+    public BazaarPanel createOrGetBazaarPanel() {
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
         if (bazaarPanel == null) {
             bazaarPanel = new BazaarPanel(client);
             bazaarPanel.registerSwingComponents(client.getGridPanel());
             client.getGridPanel().setBazaarPanel(bazaarPanel);
         }
+        return bazaarPanel;
+    }
+
+    @Override
+    public void selectBazaarTile() {
+        client.clearActions();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         if (client.isClientActive()) {
             ArrayList<BazaarItem> supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
             for(int i = 0; i < supply.size(); i++) {
@@ -287,14 +292,14 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         client.getGridPanel().repaint();
     }
 
     @Override
     public void makeBazaarBid(int supplyIndex) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
@@ -307,17 +312,13 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void selectBuyOrSellBazaarOffer(int supplyIndex) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-    }
-
-    @Override
-    public void bazaarDepleted() {
     }
 
     @Override

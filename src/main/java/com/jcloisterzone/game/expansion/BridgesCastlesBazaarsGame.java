@@ -423,6 +423,9 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
             el.setAttribute("player", ""+bazaarBiddingPlayer.getIndex());
             node.appendChild(el);
         }
+
+        //TODO save bridges - add method to enrich tile element by expansions
+        // ??? move also fairy like elements ?
     }
 
     @Override
