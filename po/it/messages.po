@@ -572,7 +572,7 @@ msgstr "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto 
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</ per non fare "
+msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</b> per non fare "
 "azioni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
