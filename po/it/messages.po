@@ -283,7 +283,6 @@ msgstr "Conferma il piazzamento su una torre"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:205
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:286
-#, fuzzy
 msgid "Confirm ransom payment"
 msgstr "Conferma di voler piazzare il seguace"
 
@@ -313,12 +312,10 @@ msgid "Skip"
 msgstr "Salta"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
-#, fuzzy
 msgid "Pay ransom"
 msgstr "Riscatta"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:285
-#, fuzzy
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Sei sicuro di voler mettere un seguace sulla fattoria?"
 
@@ -421,9 +418,8 @@ msgstr "Compra o vendi la tessera dall'ultimo offerente"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
-#, fuzzy
 msgid "points"
-msgstr "Punteggio totale"
+msgstr "punteggio"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
 msgid "Buy"
@@ -552,7 +548,6 @@ msgid ""
 msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> direzionali per"
 "scorrere la mappa. Clicca il bottone <b>centrale</b> del mouse per centrare la mappa. "
 "Ingrandisci con i tasti <b>+</b> o <b>-</b> o con la <b>rotellina</b> del mouse.</html>"
-
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""

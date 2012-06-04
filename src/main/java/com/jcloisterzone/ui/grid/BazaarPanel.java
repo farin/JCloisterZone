@@ -326,7 +326,6 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
         int i = 0;
         for(BazaarItem bi : bcb.getBazaarSupply()) {
-            if (bi.isDrawn()) continue;
             //TOOD cache supply images ??
             Image img =  client.getTileTheme().getTileImage(bi.getTile().getId());
 

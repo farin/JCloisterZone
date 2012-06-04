@@ -401,8 +401,6 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
 
         if (bazaarSupply != null) {
             for (BazaarItem bi : bazaarSupply) {
-                if (bi.isDrawn()) continue;
-
                 Element el = doc.createElement("bazaar-supply");
                 el.setAttribute("tile", bi.getTile().getId());
                 if (bi.getOwner() != null) el.setAttribute("owner", ""+bi.getOwner().getIndex());
@@ -527,19 +525,16 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         if (bazaarSupply == null) return null;
         Player p = game.getActivePlayer();
         Tile tile = null;
-        boolean anotherTileExists = false;
-        //TODO remove from array instead of using flag
+        BazaarItem currentItem = null;
         for (BazaarItem bi : bazaarSupply) {
-            if (!bi.isDrawn()) {
-                if (bi.getOwner() == p) {
-                    tile = bi.getTile();
-                    bi.setDrawn(true);
-                } else {
-                    anotherTileExists = true;
-                }
+            if (bi.getOwner() == p) {
+                currentItem = bi;
+                tile = bi.getTile();
+                break;
             }
         }
-        if (!anotherTileExists) {
+        bazaarSupply.remove(currentItem);
+        if (bazaarSupply.isEmpty()) {
             bazaarSupply = null;
         }
         return tile;
@@ -552,7 +547,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         Player p = game.getNextPlayer(turnPlayer);
         while (p != turnPlayer) {
             for(BazaarItem bi : bazaarSupply) {
-                if (bi.getOwner() == p && !bi.isDrawn()) {
+                if (bi.getOwner() == p) {
                     result.add(bi.getTile());
                     break;
                 }
