@@ -7,7 +7,6 @@ public class BazaarItem {
 
     private final Tile tile;
     private Player owner;
-    private boolean drawn;
 
     private int currentPrice;
     private Player currentBidder;
@@ -29,14 +28,6 @@ public class BazaarItem {
         return tile;
     }
 
-    public boolean isDrawn() {
-        return drawn;
-    }
-
-    public void setDrawn(boolean drawn) {
-        this.drawn = drawn;
-    }
-
     public int getCurrentPrice() {
         return currentPrice;
     }
@@ -52,7 +43,4 @@ public class BazaarItem {
     public void setCurrentBidder(Player currentBidder) {
         this.currentBidder = currentBidder;
     }
-
-
-
 }

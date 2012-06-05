@@ -62,6 +62,4 @@ public interface GameEventListener extends EventListener {
     void castleDeployed(Castle castle1, Castle castle2);
     void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem);
     void bazaarAuctionsEnded();
-    void bazaarDepleted();
-
 }

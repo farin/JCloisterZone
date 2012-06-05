@@ -22,6 +22,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ClientIF;
 
 
@@ -99,6 +100,11 @@ public abstract class Phase implements ClientIF {
 
     protected void notifyUI(PlayerAction action, boolean canPass) {
         game.getUserInterface().selectAction(Collections.singletonList(action), canPass);
+    }
+
+    /** handler called after game is load if this phase is active */
+    public void loadGame(Snapshot snapshot) {
+        //do nothing by default
     }
 
     //adapter methods
@@ -202,7 +208,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public void bazaarBuyOrSell(boolean buy) {
-    	logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
+        logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
     }
 
 }

@@ -95,14 +95,7 @@ public class LoadGamePhase extends CreateGamePhase {
 
     @Override
     public void next() {
-        if (getDefaultNext() instanceof TilePhase) {
-            //tile drawn but not placed yet
-            String tileId = snapshot.getNextTile();
-            Tile tile = game.getTilePack().drawTile(tileId);
-            game.setCurrentTile(tile);
-            game.getBoard().refreshAvailablePlacements(tile);
-            game.fireGameEvent().tileDrawn(tile);
-        }
         super.next();
+        getDefaultNext().loadGame(snapshot); //call after super.next() to be able fake entered flag
     }
 }

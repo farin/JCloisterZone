@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -259,20 +260,25 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void selectBazaarTile() {
-        client.clearActions();
+    public BazaarPanel createOrGetBazaarPanel() {
         BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
         if (bazaarPanel == null) {
             bazaarPanel = new BazaarPanel(client);
             bazaarPanel.registerSwingComponents(client.getGridPanel());
             client.getGridPanel().setBazaarPanel(bazaarPanel);
         }
+        return bazaarPanel;
+    }
+
+    @Override
+    public void selectBazaarTile() {
+        client.clearActions();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         if (client.isClientActive()) {
-            BazaarItem[] supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
-            for(int i = 0; i < supply.length; i++) {
+            ArrayList<BazaarItem> supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
+            for(int i = 0; i < supply.size(); i++) {
                 //find first allowed item
-                if (supply[i].getOwner() == null) {
+                if (supply.get(i).getOwner() == null) {
                     bazaarPanel.setSelectedItem(i);
                     break;
                 }
@@ -286,14 +292,14 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         client.getGridPanel().repaint();
     }
 
     @Override
     public void makeBazaarBid(int supplyIndex) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
@@ -306,17 +312,13 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void selectBuyOrSellBazaarOffer(int supplyIndex) {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
+        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-    }
-
-    @Override
-    public void bazaarDepleted() {
     }
 
     @Override

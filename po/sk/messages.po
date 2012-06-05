@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: SK verzia\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-31 23:26+0200\n"
-"PO-Revision-Date: 2011-03-20 23:15+0100\n"
-"Last-Translator: pds\n"
+"PO-Revision-Date: 2012-06-03 20:08+0100\n"
+"Last-Translator: pds <ditrich@pdsoftware.sk>\n"
 "Language-Team: pd <ditrich@pdosftware.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,11 +107,11 @@ msgstr "Sprievod"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Phantom"
-msgstr ""
+msgstr "Fantóm"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "The Festival (10th an.)"
-msgstr ""
+msgstr "Festival"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
 msgid "Tiny city is scored only for 2 points."
@@ -134,8 +134,7 @@ msgid "The Pig herd is present on the farm tile."
 msgstr "Prasačia ohrada na kartičke s lúkou."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
-msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+msgid "Allow direct barn placement on a farm where another barn is already placed."
 msgstr "Povoliť priame umiestnenie stodoly na lúku s už položenou stodolou."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
@@ -144,14 +143,11 @@ msgstr "Povoliť pravidlá o tuneloch aj na tunely z ostatných rozšírení."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "No bidding on bazaar tile. Each players just choose one tile."
-msgstr ""
+msgstr "V bazáre žiadna ponuka. (iba výber kartičky)"
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
-msgid ""
-"Remote JCloisterZone is not compatible with local application. Please "
-"upgrade both applications to same version."
-msgstr "Vzdialené JCloisterZone nie je kompaktibilné s túto aplikáciuou. Musíte "
-"použiť rovnaké verzie."
+msgid "Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version."
+msgstr "Vzdialené JCloisterZone nie je kompaktibilné s touto verziou. Musíte použiť rovnaké verzie."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
 msgid "Incompatible versions"
@@ -163,12 +159,11 @@ msgstr "Pripojenie zlyhalo."
 
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
 msgid "Load error"
-msgstr ""
+msgstr "Chyba pri načítavaní"
 
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
-msgid ""
-"Saved game is incompatible or file is corrupted. Game couldn't work properly."
-msgstr ""
+msgid "Saved game is incompatible or file is corrupted. Game couldn't work properly."
+msgstr "Uložená hra nieje kompaktibilná, alebo je súbor poškodený."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:301
 #: src/main/java/com/jcloisterzone/ui/Client.java:304
@@ -188,14 +183,12 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:303
-msgid ""
-"Game is running. Do you really want to quit game and also disconnect all "
-"other players?"
-msgstr "Hra práve prebieha. Naozaj chcete hru ukončiť a odpojiť ostatných hráčov ?"
+msgid "Game is running. Do you really want to quit game and also disconnect all other players?"
+msgstr "Hra práve prebieha. Naozaj chceš hru ukončiť a odpojiť ostatných hráčov ?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:310
 msgid "Game is running. Do you really want to leave it?"
-msgstr "Hra práve prebieha. Naozaj ju chcete opustiť ?"
+msgstr "Hra práve prebieha. Naozaj ju chceš opustiť ?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:368
 msgid "Save game"
@@ -214,7 +207,7 @@ msgstr "Nahrať hru"
 
 #: src/main/java/com/jcloisterzone/ui/ClientController.java:131
 msgid "%d tiles left"
-msgstr ""
+msgstr "zostáva %d kartičiek"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Game"
@@ -282,7 +275,7 @@ msgstr "Potvrdiť položenie na vežu"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:205
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:286
 msgid "Confirm ransom payment"
-msgstr ""
+msgstr "Potvrdiť zaplatenie výkupného"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
 msgid "Confirm game close"
@@ -299,7 +292,7 @@ msgstr "O programe"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:241
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
-msgstr ""
+msgstr "Ovládanie"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -307,15 +300,15 @@ msgstr "Uložené hry JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
 msgid "Skip"
-msgstr ""
+msgstr "Preskočiť"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 msgid "Pay ransom"
-msgstr ""
+msgstr "Zaplatiť výkupné"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:285
 msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr ""
+msgstr "Naozaj zaplatiť 3 body za prepustenie vezňa ?"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
 msgid "About application"
@@ -326,9 +319,8 @@ msgid "Version"
 msgstr "Verzia"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:68
-msgid ""
-"Distributed under the terms of GNU Affero General Public License version 3"
-msgstr ""
+msgid "Distributed under the terms of GNU Affero General Public License version 3"
+msgstr "Distribuovaný pod licenciou GNU Affero General Public License verzie 3"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:31
 msgid "Discarded tiles"
@@ -372,7 +364,7 @@ msgstr "Lúk"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:52
 msgid "Castles"
-msgstr "Hrady"
+msgstr "Hradov"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:54
 msgid "The biggest city"
@@ -396,23 +388,23 @@ msgstr "Výkupné za vežu"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:60
 msgid "Bazaars"
-msgstr ""
+msgstr "Bazáre"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
 msgid "Choose your tile."
-msgstr ""
+msgstr "Vyber si kartičku"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr ""
+msgstr "<html>Vyber kartičku do dražby<br>a urob prvú ponuku.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
 msgid "Raise bid or pass."
-msgstr ""
+msgstr "Zvýš ponuku alebo sa vzdaj."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
 msgid "Buy or sell tile from latest bidder."
-msgstr ""
+msgstr "<html>Kúp alebo predaj kartičku<br>od posledného hráča</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
@@ -421,27 +413,27 @@ msgstr "bodov"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
 msgid "Buy"
-msgstr ""
+msgstr "Kúpiť"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
 msgid "Sell"
-msgstr ""
+msgstr "Predať"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "Select"
-msgstr ""
+msgstr "Vybrať"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Bid"
-msgstr ""
+msgstr "Zvýšiť"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
 msgid "Pass"
-msgstr ""
+msgstr "Vzdať sa"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
 msgid "Bazaar supply"
-msgstr ""
+msgstr "Bazár"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 msgid "Place a follower"
@@ -539,36 +531,24 @@ msgid "Open player slot"
 msgstr "Voľná pozícia"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:16
-msgid ""
-"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
-"scroll the board. Click with <b>middle</b> mouse button to center the board. "
-"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr ""
+msgid "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to scroll the board. Click with <b>middle</b> mouse button to center the board. Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr "<html>Použi <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> alebo <b>kurzorové</b> šípky na posúvanie plochy. Stlačením <b>stredného</b> tlačítka vycentrujete hraciu plochu. Zoomovanie <b>+</b> alebo <b>-</b>klávesy alebo koliesko <b>myši</b>.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
-msgid ""
-"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
-"by <b>left</b> click.</html>"
-msgstr ""
+msgid "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it by <b>left</b> click.</html>"
+msgstr "<html>Otočenie kartičky pomocou <b>Tab</b> alebo <b>pravým</b> tlačítkom. Položenie <b>ľavým</b> tlačítkom.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
-msgid ""
-"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
-"select appropriate action.</html>"
-msgstr ""
+msgid "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to select appropriate action.</html>"
+msgstr "<html>Po položení kartičky použi <b>Tab</b> alebo <b>pravé</b> tlačítko na výber požadovaniej akcie.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
-msgid ""
-"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
-"no action.</html>"
-msgstr ""
+msgid "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play no action.</html>"
+msgstr "<html>Môžeš sa vzdať aj pomocou klávesy <b>Enter</b> alebo <b>Medzerníkom</b> ukonči ťah bez žiadnej akcie.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid ""
-"Create a new local or network game. You can play against any number of "
-"computer player."
-msgstr "Vytvoriť novú lokálnu alebo sieťovú hru. Môžete hrať proti viacerým "
-"počítačovým hráčom."
+msgid "Create a new local or network game. You can play against any number of computer player."
+msgstr "Vytvor novú lokálnu alebo sieťovú hru. Môžeš hrať proti viacerým počítačovým hráčom."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "Connect to a remote JCloisterZone application with settled new game."

@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -165,10 +166,13 @@ public class ControlPanel extends FakeComponent {
 
         paintBackgroundBody(g2);
 
-        g2.setFont(FONT_PACK_SIZE);
-        g2.setColor(HEADER_FONT_COLOR);
-        int packSize = client.getGame().getTilePack().totalSize();
-        g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
+        TilePack tilePack = client.getGame().getTilePack();
+        if (tilePack != null) { //null is possible for just loaded game
+            g2.setFont(FONT_PACK_SIZE);
+            g2.setColor(HEADER_FONT_COLOR);
+            int packSize = tilePack.totalSize();
+            g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
+        }
 
         g2.translate(0, 44);
         actionPanel.paintComponent(g2);

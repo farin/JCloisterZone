@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 
 public class TilePhase extends Phase {
@@ -27,13 +28,22 @@ public class TilePhase extends Phase {
     }
 
     @Override
+    public void loadGame(Snapshot snapshot) {
+         String tileId = snapshot.getNextTile();
+         Tile tile = game.getTilePack().drawTile(tileId);
+         game.setCurrentTile(tile);
+         game.getBoard().refreshAvailablePlacements(tile);
+         game.fireGameEvent().tileDrawn(tile);
+    }
+
+    @Override
     public void placeTile(Rotation rotation, Position p) {
         Tile tile = getTile();
         tile.setRotation(rotation);
 
         boolean bridgeRequired = false;
         if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
-            bridgeRequired = ! getBoard().isPlacementAllowed(tile, p);
+            bridgeRequired = !getBoard().isPlacementAllowed(tile, p);
         }
 
         getBoard().add(tile, p);

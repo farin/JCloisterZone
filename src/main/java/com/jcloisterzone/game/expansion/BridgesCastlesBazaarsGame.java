@@ -2,9 +2,11 @@ package com.jcloisterzone.game.expansion;
 
 import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,6 +29,7 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
@@ -50,7 +53,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     private Map<Castle, Position[]> scoreableCastleVicinity = Maps.newHashMap();
     private Map<Castle, Integer> castleScore = Maps.newHashMap();
 
-    private BazaarItem[] bazaarSupply;
+    private ArrayList<BazaarItem> bazaarSupply;
     private BazaarItem currentBazaarAuction;
     private Player bazaarTileSelectingPlayer;
     private Player bazaarBiddingPlayer;
@@ -119,6 +122,56 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
                 }
             }
         }
+    }
+
+    private Castle replaceCityWithCastle(Tile tile, Location loc) {
+        ListIterator<Feature> iter = tile.getFeatures().listIterator();
+        City city = null;
+        while(iter.hasNext()) {
+            Feature feature =  iter.next();
+            if (feature.getLocation() == loc) {
+                city = (City) feature;
+                break;
+            }
+        }
+        Meeple m = city.getMeeple();
+        if (m != null) {
+            m.undeploy(false);
+        }
+        Castle castle = new Castle();
+        castle.setTile(tile);
+        castle.setId(game.idSequnceNextVal());
+        castle.setLocation(loc.rotateCCW(tile.getRotation()));
+        iter.set(castle);
+
+        for(Feature f : tile.getFeatures()) { //replace also city references
+            if (f instanceof Farm) {
+                Farm farm = (Farm) f;
+                Feature[] adjoining = farm.getAdjoiningCities();
+                if (adjoining != null) {
+                    for(int i = 0; i < adjoining.length; i++) {
+                        if (adjoining[i] == city) {
+                            adjoining[i] = castle;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (m != null) {
+            m.deploy(tile, loc);
+        }
+        return castle;
+    }
+
+    public Castle convertCityToCastle(Position pos, Location loc) {
+        Castle castle1 = replaceCityWithCastle(getBoard().get(pos), loc);
+        Castle castle2 = replaceCityWithCastle(getBoard().get(pos.add(loc)), loc.rev());
+        castle1.getEdges()[0] = castle2;
+        castle2.getEdges()[0] = castle1;
+        game.fireGameEvent().castleDeployed(castle1, castle2);
+        return castle1.getMaster();
     }
 
     @Override
@@ -346,10 +399,33 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
             node.appendChild(el);
         }
 
-      /*TODO save
-        current tile castle base
-        bazaar supply + draw queue
-      */
+        if (bazaarSupply != null) {
+            for (BazaarItem bi : bazaarSupply) {
+                Element el = doc.createElement("bazaar-supply");
+                el.setAttribute("tile", bi.getTile().getId());
+                if (bi.getOwner() != null) el.setAttribute("owner", ""+bi.getOwner().getIndex());
+                if (bi.getCurrentBidder() != null) el.setAttribute("bidder", ""+bi.getCurrentBidder().getIndex());
+                el.setAttribute("price", ""+bi.getCurrentPrice());
+
+                if (currentBazaarAuction == bi) {
+                    el.setAttribute("selected", "true");
+                }
+                node.appendChild(el);
+            }
+        }
+        if (bazaarTileSelectingPlayer != null) {
+            Element el = doc.createElement("bazaar-selecting-player");
+            el.setAttribute("player", ""+bazaarTileSelectingPlayer.getIndex());
+            node.appendChild(el);
+        }
+        if (bazaarBiddingPlayer != null) {
+            Element el = doc.createElement("bazaar-bidding-player");
+            el.setAttribute("player", ""+bazaarBiddingPlayer.getIndex());
+            node.appendChild(el);
+        }
+
+        //TODO save bridges - add method to enrich tile element by expansions
+        // ??? move also fairy like elements ?
     }
 
     @Override
@@ -366,11 +442,9 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         nl = node.getElementsByTagName("castle");
         for (int i = 0; i < nl.getLength(); i++) {
             Element castleEl = (Element) nl.item(i);
-
             Position pos = XmlUtils.extractPosition(castleEl);
             Location loc = Location.valueOf(castleEl.getAttribute("location"));
-            //TODO convert city to Castle
-            Castle castle = (Castle) game.getBoard().get(pos).getFeature(loc);
+            Castle castle = convertCityToCastle(pos, loc);
             boolean isNew = XmlUtils.attributeBoolValue(castleEl, "new");
             boolean isCompleted = XmlUtils.attributeBoolValue(castleEl, "completed");
             if (isNew) {
@@ -381,15 +455,42 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
                 scoreableCastleVicinity.put(castle, castle.getVicinity());
             }
         }
-        //TODO load bazaar supply + queue
+
+        nl = node.getElementsByTagName("bazaar-supply");
+        if (nl.getLength() > 0) {
+            bazaarSupply = new ArrayList<BazaarItem>(nl.getLength());
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element el = (Element) nl.item(i);
+                Tile tile = game.getTilePack().drawTile(el.getAttribute("tile"));
+                BazaarItem bi = new BazaarItem(tile);
+                bazaarSupply.add(bi);
+                if (el.hasAttribute("owner")) bi.setOwner(game.getPlayer(Integer.parseInt(el.getAttribute("owner"))));
+                if (el.hasAttribute("bidder")) bi.setCurrentBidder(game.getPlayer(Integer.parseInt(el.getAttribute("bidder"))));
+                bi.setCurrentPrice(XmlUtils.attributeIntValue(el, "price"));
+                if (XmlUtils.attributeBoolValue(el, "selected")) {
+                    currentBazaarAuction = bi;
+                }
+            }
+        }
+
+        nl = node.getElementsByTagName("bazaar-selecting-player");
+        if (nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            bazaarTileSelectingPlayer = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
+        }
+        nl = node.getElementsByTagName("bazaar-bidding-player");
+        if (nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            bazaarBiddingPlayer = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
+        }
     }
 
-    public void setBazaarSupply(BazaarItem[] bazaarSupply) {
-        this.bazaarSupply = bazaarSupply;
-    }
-
-    public BazaarItem[] getBazaarSupply() {
+    public ArrayList<BazaarItem> getBazaarSupply() {
         return bazaarSupply;
+    }
+
+    public void setBazaarSupply(ArrayList<BazaarItem> bazaarSupply) {
+        this.bazaarSupply = bazaarSupply;
     }
 
     public Player getBazaarTileSelectingPlayer() {
@@ -427,18 +528,16 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         if (bazaarSupply == null) return null;
         Player p = game.getActivePlayer();
         Tile tile = null;
-        boolean anotherTileExists = false;
+        BazaarItem currentItem = null;
         for (BazaarItem bi : bazaarSupply) {
-            if (!bi.isDrawn()) {
-                if (bi.getOwner() == p) {
-                    tile = bi.getTile();
-                    bi.setDrawn(true);
-                } else {
-                    anotherTileExists = true;
-                }
+            if (bi.getOwner() == p) {
+                currentItem = bi;
+                tile = bi.getTile();
+                break;
             }
         }
-        if (!anotherTileExists) {
+        bazaarSupply.remove(currentItem);
+        if (bazaarSupply.isEmpty()) {
             bazaarSupply = null;
         }
         return tile;
@@ -451,7 +550,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         Player p = game.getNextPlayer(turnPlayer);
         while (p != turnPlayer) {
             for(BazaarItem bi : bazaarSupply) {
-                if (bi.getOwner() == p && !bi.isDrawn()) {
+                if (bi.getOwner() == p) {
                     result.add(bi.getTile());
                     break;
                 }
@@ -460,4 +559,5 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
         }
         return result;
     }
+
 }

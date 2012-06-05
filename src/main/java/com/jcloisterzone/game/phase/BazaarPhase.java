@@ -1,11 +1,14 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.rmi.ServerIF;
@@ -46,6 +49,25 @@ public class BazaarPhase extends ServerAwarePhase {
         }
     }
 
+    @Override
+    public void loadGame(Snapshot snapshot) {
+        setEntered(true); //avoid call enter on load phase to this pahse switch
+        Player selecting = bcb.getBazaarTileSelectingPlayer();
+        if (selecting != null) {
+            Player bidding = bcb.getBazaarBiddingPlayer();
+            int supplyIdx = bcb.getBazaarSupply().indexOf(bcb.getCurrentBazaarAuction());
+            game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+
+            if (bidding == null) {
+                game.getUserInterface().selectBazaarTile();
+            } else if (selecting == bidding) {
+                game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+            } else {
+                game.getUserInterface().makeBazaarBid(supplyIdx);
+            }
+        }
+    }
+
     private boolean isBazaarTriggered() {
         if (getTile().getTrigger() != TileTrigger.BAZAAR) return false;
         if (getTilePack().size() < game.getAllPlayers().length) return false; //there isn't one tile for each player available
@@ -55,9 +77,9 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public void drawTiles(int[] tileIndexes) {
-        BazaarItem[] supply = new BazaarItem[tileIndexes.length];
-        for(int i = 0; i < tileIndexes.length; i++) {
-            supply[i] = new BazaarItem(getTilePack().drawTile(tileIndexes[i]));
+        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(tileIndexes.length);
+        for(int tileIndex : tileIndexes) {
+            supply.add(new BazaarItem(getTilePack().drawTile(tileIndex)));
         }
         bcb.setBazaarSupply(supply);
         game.getUserInterface().selectBazaarTile();
@@ -75,7 +97,7 @@ public class BazaarPhase extends ServerAwarePhase {
         BazaarItem bi = bcb.getCurrentBazaarAuction();
         boolean isTileSelection = bi == null;
         if (bi == null) {
-            bi = bcb.getBazaarSupply()[supplyIndex];
+            bi = bcb.getBazaarSupply().get(supplyIndex);
             bcb.setCurrentBazaarAuction(bi);
 
             if (game.hasRule(CustomRule.BAZAAR_NO_AUCTION)) {
@@ -93,28 +115,18 @@ public class BazaarPhase extends ServerAwarePhase {
         nextBidder();
     }
 
-    private int getCurrentBazaarAuctionIndex() {
-        BazaarItem[] supply = bcb.getBazaarSupply();
-        for(int i = 0; i < supply.length; i++) {
-            if (supply[i] == bcb.getCurrentBazaarAuction()) {
-                return i;
-            }
-        }
-        throw new IllegalStateException();
-    }
-
     private void nextBidder() {
         Player nextBidder = getActivePlayer();
-        int supplyIdx = getCurrentBazaarAuctionIndex();
+        int supplyIdx = bcb.getBazaarSupply().indexOf(bcb.getCurrentBazaarAuction());
         do {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bcb.getBazaarTileSelectingPlayer()) {
                 //all players makes bid
-                bcb.setBazaarBiddingPlayer(null);
                 BazaarItem bi = bcb.getCurrentBazaarAuction();
                 if (bcb.getBazaarTileSelectingPlayer() == bi.getCurrentBidder()) {
                     bazaarBuyOrSell(true);
                 } else {
+                    bcb.setBazaarBiddingPlayer(bcb.getBazaarTileSelectingPlayer()); //need for correct save&load
                     game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
                     game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
                 }
