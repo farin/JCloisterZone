@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-31 23:26+0200\n"
+"POT-Creation-Date: 2012-06-07 22:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,14 +101,10 @@ msgid "The Plague"
 msgstr "La Pestilenza"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:47
-msgid "The Entourage"
-msgstr "L'Entourage"
-
-#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Phantom"
 msgstr "Il Fantasma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Festival (10th an.)"
 msgstr "Il Festival (10mo an.)"
 
@@ -144,7 +140,8 @@ msgstr "Applica la regola del tunnel sui tunnel delle altre espansioni."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "No bidding on bazaar tile. Each players just choose one tile."
-msgstr "Non puoi fare offerte sui bazar. Ogni giocatore deve scegliere una sola tessera."
+msgstr "Non puoi fare offerte sui bazar. Ogni giocatore deve scegliere una sola "
+"tessera."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
@@ -214,7 +211,7 @@ msgstr "Errore"
 msgid "Load game"
 msgstr "Carica partita"
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:132
 msgid "%d tiles left"
 msgstr "%d tessere rimaste"
 
@@ -290,7 +287,7 @@ msgstr "Conferma di voler piazzare il seguace"
 msgid "Confirm game close"
 msgstr "Conferma chiusura partita"
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:231
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:229
 msgid "Help"
 msgstr "Aiuto"
 
@@ -298,7 +295,7 @@ msgstr "Aiuto"
 msgid "About"
 msgstr "Informazioni"
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:241
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
 msgstr "Controlli"
@@ -307,7 +304,7 @@ msgstr "Controlli"
 msgid "JCloisterZone saved games"
 msgstr "Partite a JCloisterZone salvate"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
 msgid "Skip"
 msgstr "Salta"
 
@@ -381,7 +378,7 @@ msgid "The biggest city"
 msgstr "La città più grande"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
-msgid "The Longest road"
+msgid "The longest road"
 msgstr "La strada più lunga"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
@@ -400,48 +397,48 @@ msgstr "Riscatto torre"
 msgid "Bazaars"
 msgstr "Bazar"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "Choose your tile."
 msgstr "Scegli la tua tessera"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr "<html>Scegli la tessera per la prossima asta<br>e fai la prima offerta</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:160
 msgid "Raise bid or pass."
 msgstr "Rilancia o passa"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:164
 msgid "Buy or sell tile from latest bidder."
-msgstr "Compra o vendi la tessera dall'ultimo offerente"
+msgstr "<html>Compra o vendi la tessera<br>dall'ultimo offerente</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:171
 msgid "points"
 msgstr "punteggio"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:205
 msgid "Buy"
 msgstr "Compra"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:206
 msgid "Sell"
 msgstr "Vendi"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Select"
 msgstr "Seleziona"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:224
 msgid "Bid"
 msgstr "Fai un'offerta"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:225
 msgid "Pass"
 msgstr "Passa"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:316
 msgid "Bazaar supply"
 msgstr "Riserva del bazar"
 
@@ -545,37 +542,35 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> direzionali per"
-"scorrere la mappa. Clicca il bottone <b>centrale</b> del mouse per centrare la mappa. "
-"Ingrandisci con i tasti <b>+</b> o <b>-</b> o con la <b>rotellina</b> del mouse.</html>"
+msgstr "<html> Usa <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o le <b>frecce</b> "
+"direzionali perscorrere la mappa. Clicca il bottone <b>centrale</b> del "
+"mouse per centrare la mappa. Ingrandisci con i tasti <b>+</b> o <b>-</b> o "
+"con la <b>rotellina</b> del mouse.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Ruota una tessera premendo il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse. Piazzala "
-"premendo il tasto <b>sinistro</b> del mouse.</html>"
+msgstr "<html>Ruota una tessera premendo il tasto <b>Tab</b> o il tasto <b>destro</"
+"b> del mouse. Piazzala premendo il tasto <b>sinistro</b> del mouse.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto <b>destro</b> del mouse per "
-"selezionare l'azione desiderata.</html>"
+msgstr "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto "
+"<b>destro</b> del mouse per selezionare l'azione desiderata.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</b> per non fare "
-"azioni.</html>"
+msgstr "<html>In alternativa, puoi passare premendo <b>Invio</b> o <b>Spazio</b> per "
+"non fare azioni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid ""
-"Create a new local or network game. You can play against any number of "
-"computer player."
-msgstr "Crea una nuova partita locale o in rete. Puoi giocare contro un numero "
-"qualsiasi di giocatori."
+msgid "Create a new local or network game. You can play against any number of computer players."
+msgstr "Crea una nuova partita locale o in rete. Puoi giocare contro un numero qualsiasi di giocatori."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "Connect to a remote JCloisterZone application with settled new game."

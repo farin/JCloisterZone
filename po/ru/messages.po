@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-31 23:26+0200\n"
-"PO-Revision-Date: 2011-04-11 10:08+0200\n"
+"POT-Creation-Date: 2012-06-07 22:05+0200\n"
+"PO-Revision-Date: 2012-06-07 11:40+0200\n"
 "Last-Translator: Andrew Mitrofanov <MrNumbers@inbox.lv>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -100,16 +100,12 @@ msgid "The Plague"
 msgstr "Чума"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:47
-msgid "The Entourage"
+msgid "The Phantom"
 msgstr "Фантом"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
-msgid "The Phantom"
-msgstr ""
-
-#: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "The Festival (10th an.)"
-msgstr ""
+msgstr "Фестиваль (Юбилейное изд.)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
 msgid "Tiny city is scored only for 2 points."
@@ -142,7 +138,8 @@ msgstr "Применять правило туннелей для туннеле
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "No bidding on bazaar tile. Each players just choose one tile."
-msgstr ""
+msgstr "Аукцион не проводится при карточке с базаром. Каждый игрок просто выбирает "
+"одну карточку."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
@@ -157,16 +154,17 @@ msgstr "Несовместимые версии"
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:85
 msgid "Connection error"
-msgstr "Соединение не установлено."
+msgstr "Соединение не установлено"
 
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
 msgid "Load error"
-msgstr ""
+msgstr "Ошибка загрузки"
 
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
 msgid ""
 "Saved game is incompatible or file is corrupted. Game couldn't work properly."
-msgstr ""
+msgstr "Сохранённая игра несовместима с данной версией или файл повреждён. Игра не "
+"может быть загружена."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:301
 #: src/main/java/com/jcloisterzone/ui/Client.java:304
@@ -211,9 +209,9 @@ msgstr "Ошибка"
 msgid "Load game"
 msgstr "Загрузить игру"
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:132
 msgid "%d tiles left"
-msgstr ""
+msgstr "Осталось %d карточек"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Game"
@@ -281,13 +279,13 @@ msgstr "Подтверждать выставление на башню"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:205
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:286
 msgid "Confirm ransom payment"
-msgstr ""
+msgstr "Подтверждать уплату выкупа"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
 msgid "Confirm game close"
 msgstr "Подтверждать выход из игры"
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:231
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:229
 msgid "Help"
 msgstr "Помощь"
 
@@ -295,26 +293,26 @@ msgstr "Помощь"
 msgid "About"
 msgstr "О программе"
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:241
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
-msgstr ""
+msgstr "Упревление"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
 msgstr "Сохранённые игры JCloisterZone"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
 msgid "Skip"
-msgstr ""
+msgstr "Пропустить"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 msgid "Pay ransom"
-msgstr ""
+msgstr "Заплатить выкуп"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:285
 msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr ""
+msgstr "Вы действительно хотите заплатить 3 очка для выкупа пленника?"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
 msgid "About application"
@@ -327,7 +325,7 @@ msgstr "Версия"
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:68
 msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
-msgstr ""
+msgstr "Распространяется по лицензии GNU Affero General Public License version 3"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:31
 msgid "Discarded tiles"
@@ -378,7 +376,7 @@ msgid "The biggest city"
 msgstr "Самый большой город"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
-msgid "The Longest road"
+msgid "The longest road"
 msgstr "Самая длинная дорога"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
@@ -395,52 +393,52 @@ msgstr "Выкупы (Дополнение \"Башня\")"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:60
 msgid "Bazaars"
-msgstr ""
-
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
-msgid "Choose your tile."
-msgstr ""
+msgstr "Базары"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
+msgid "Choose your tile."
+msgstr "Выберите карточку."
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr ""
+msgstr "<html>Выберите карточку для аукциона<br>и сделайте начальную ставку.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:160
 msgid "Raise bid or pass."
-msgstr ""
+msgstr "Поднять ставку или спасовать."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:164
 msgid "Buy or sell tile from latest bidder."
-msgstr ""
+msgstr "<html>Продать или купить карточку<br> у игрока, сделавшего самую высокую ставку.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:171
 msgid "points"
-msgstr ""
+msgstr "очков"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:205
 msgid "Buy"
-msgstr ""
+msgstr "Купить"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:206
 msgid "Sell"
-msgstr ""
+msgstr "Продать"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Select"
-msgstr ""
+msgstr "Выбрать"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:224
 msgid "Bid"
-msgstr ""
+msgstr "Сделать ставку"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:225
 msgid "Pass"
-msgstr ""
+msgstr "Спасовать"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:316
 msgid "Bazaar supply"
-msgstr ""
+msgstr "Предложение базара"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 msgid "Place a follower"
@@ -467,7 +465,7 @@ msgstr "Поставить башню"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr "Вы хотите поставить подданного на башню?\n"
+msgstr "Вы действительно хотите поставить подданного на башню?\n"
 "(Это не позволит добавлять новые фишки на башню)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -484,7 +482,7 @@ msgstr "Соединение..."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:86
 msgid "Invalid port number."
-msgstr "Неверный номер порта"
+msgstr "Неверный номер порта."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:88
 msgid "Connection failed. Unknown host."
@@ -542,32 +540,36 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr ""
+msgstr "<html>Используйте <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> или клавиши "
+"<b>курсора</b> для прокрутки игрового поля. Используйте <b>среднюю</b> "
+"кнопку<br>мышки для перемещения в центр игрового поля. Изменяйте масштаб "
+"клавишами <b>+</b> или <b>-</b> или используйте <b>колесо</b> мыши.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr ""
+msgstr "<html>Вращать карточку можно клавишей <b>Tab</b> или <b>правой</b> кнопкой "
+"мыши. Поставить карточку на поле можно <b>левой</b> кнопкой мыши.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr ""
+msgstr "<html>После выставления карточки используйте клавишу <b>Tab</b> или "
+"<b>правую</b> кнопку мыши для выбора соответствующего действия.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr ""
+msgstr "<html>Или же Вы можете ничего не делать и пропустить ход клавишей <b>Enter</"
+"b> или <b>Space</b>.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid ""
-"Create a new local or network game. You can play against any number of "
-"computer player."
-msgstr "Создать локальную или сетевую игру. Вы можете играть против любого числа "
-"компьютерных игроков."
+msgid "Create a new local or network game. You can play against any number of computer players."
+msgstr "Создать новую локальную или сетевую игру. Вы можете играть против любого "
+"числа компьютерных игроков."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "Connect to a remote JCloisterZone application with settled new game."
@@ -575,5 +577,5 @@ msgstr "Присоединиться к серверу JCloisterZone с созд
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:90
 msgid "Load from a file previously saved game."
-msgstr "Загрузить из файла ранее сохранённую игру"
+msgstr "Загрузить из файла ранее сохранённую игру."
 

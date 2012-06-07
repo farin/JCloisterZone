@@ -52,7 +52,7 @@ public class GameOverDialog extends JDialog {
         pane.add(new JLabel(_("Castles")), getLegendSpec(0, gridy++));
 
         pane.add(new JLabel(_("The biggest city")), getLegendSpec(0, gridy++));
-        pane.add(new JLabel(_("The Longest road")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("The longest road")), getLegendSpec(0, gridy++));
 
         pane.add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));

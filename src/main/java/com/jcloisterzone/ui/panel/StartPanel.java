@@ -51,7 +51,7 @@ public class StartPanel extends JPanel {
                 });
                 create.setFont(FONT_LARGE_BUTTON);
                 createPanel.add(new MultiLineLabel(
-                    _("Create a new local or network game. You can play against any number of computer player.")),
+                    _("Create a new local or network game. You can play against any number of computer players.")),
                 "wrap, grow");
 
 

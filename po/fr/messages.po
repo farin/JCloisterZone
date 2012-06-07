@@ -120,11 +120,6 @@ msgid "The Plague"
 msgstr "La peste"
 
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
-msgid "The Entourage"
-msgstr "Le pion fantôme"
-
-
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Phantom"
 msgstr "Le pion fantôme"
@@ -132,7 +127,7 @@ msgstr "Le pion fantôme"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "The Festival (10th an.)"
-msgstr "Le festival (10eme anniv.)"
+msgstr "Le festival (Edition 10eme anniverssaire)"
 
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
@@ -325,7 +320,7 @@ msgstr "Paramètres"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:175
 msgid "Beep alert at player turn"
-msgstr “Alerte sonore lors du tour de jeu"
+msgstr "Alerte sonore lors du tour de jeu"
 
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:187
@@ -341,7 +336,7 @@ msgstr "Confirmer le placement sur une tour"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:205
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:286
 msgid "Confirm ransom payment"
-msgstr "Confirmer le paiement de la rançon"
+msgstr "Confirmer le paiement de la rançon "
 
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
@@ -382,7 +377,7 @@ msgstr "Paiement de la rançon"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:285
 msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr "Voulez vous vraiment payer 3 points pour libérer le prisonnier"
+msgstr "Voulez vous vraiment payer 3 points pour libérer le prisonnier ?"
 
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
@@ -462,7 +457,7 @@ msgstr "Ville la plus grande"
 
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
-msgid "The Longest road"
+msgid "The longest road"
 msgstr "Route la plus longue"
 
 
@@ -493,7 +488,7 @@ msgstr "Choisissez votre tuile."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "Choisir une tuile bonus et faire la première enchère"
+msgstr "<html>Choisir une tuile bonus et faire<br> la première enchère.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
@@ -503,7 +498,7 @@ msgstr "Enchérir ou passer"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
 msgid "Buy or sell tile from latest bidder."
-msgstr "Acheter ou vendre la tuile au dernier enchérisseur."
+msgstr "<html>Acheter ou vendre la tuile<br> au dernier enchérisseur.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
@@ -571,7 +566,7 @@ msgstr "Placer un morceau de tour"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr "Voulez vous vraiment placer un partisan dans la tour ?"\n"
+msgstr "Voulez vous vraiment placer un partisan dans la tour ?\n"
 "(Pour éviter l’ajout d’autres pièces sur le dessus de la tour)"
 
 
@@ -663,34 +658,34 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les touches de déplacement du clavier pour se déplacer sur la zone de jeu. Cliquer avec la touche milieu de la souris pour <b>centrer</b> la zone de jeu. Zoomer en utilisant les touches <b>+</b> ou <b>-</b> ou en utilisant la molette de la souris.</html>"
+msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les touches de <b>déplacement</b> du clavier "
+"pour se déplacer sur la zone de jeu.<br>Cliquer avec la touche milieu de la souris pour centrer la zone de jeu. "
+"Zoomer en utilisant les touches <b>+</b> ou <b>-</b> ou en utilisant la molette de la souris.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Tourner la tuile par la touche <b>TAB</b> ou par le clic-droit de la souris. Placer la par un clic-gauche.</html>"
+msgstr "<html>Tourner la tuile par la touche <b>Tab</b> ou par le <b>clic-droit</b> de la souris. Placer la par un <b>clic-gauche</b>.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr "<html>Quand la tuile est posée, utilisez la touche <b>TAB</b> ou le <b>clic-droit</b> de nouveau pour sélectionner l’action appropriée.</html>"
+msgstr "<html>Quand la tuile est posée, utilisez la touche <b>Tab</b> ou le <b>clic-droit</b> de nouveau pour sélectionner l’action appropriée.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la <b>barre d’espace</b> pour n’effectuer aucune action.</html>"
+msgstr "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre d’<b>espace</b> pour n’effectuer aucune action.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid ""
-"Create a new local or network game. You can play against any number of "
-"computer player."
+msgid "Create a new local or network game. You can play against any number of computer players."
 msgstr "Créer une nouvelle partie local ou en réseau. Vous pouvez jouer contre plusieurs joueurs gérés par des ordinateurs."
 
 

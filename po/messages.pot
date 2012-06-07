@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-31 23:26+0200\n"
+"POT-Creation-Date: 2012-06-07 22:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,14 +100,10 @@ msgid "The Plague"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:47
-msgid "The Entourage"
-msgstr ""
-
-#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Phantom"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:49
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Festival (10th an.)"
 msgstr ""
 
@@ -209,7 +205,7 @@ msgstr ""
 msgid "Load game"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:131
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:132
 msgid "%d tiles left"
 msgstr ""
 
@@ -285,7 +281,7 @@ msgstr ""
 msgid "Confirm game close"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:231
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:229
 msgid "Help"
 msgstr ""
 
@@ -293,7 +289,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:241
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
 msgstr ""
@@ -302,7 +298,7 @@ msgstr ""
 msgid "JCloisterZone saved games"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
 msgid "Skip"
 msgstr ""
 
@@ -376,7 +372,7 @@ msgid "The biggest city"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
-msgid "The Longest road"
+msgid "The longest road"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
@@ -395,48 +391,48 @@ msgstr ""
 msgid "Bazaars"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:151
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "Choose your tile."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:158
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:160
 msgid "Raise bid or pass."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:164
 msgid "Buy or sell tile from latest bidder."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:167
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:171
 msgid "points"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:205
 msgid "Buy"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:206
 msgid "Sell"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Select"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:224
 msgid "Bid"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:225
 msgid "Pass"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:316
 msgid "Bazaar supply"
 msgstr ""
 
@@ -562,7 +558,7 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
 "Create a new local or network game. You can play against any number of "
-"computer player."
+"computer players."
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72

@@ -44,7 +44,6 @@ public enum Expansion {
     TUNNEL("TU", _("The Tunnel"), TunnelGame.class),
     CROP_CIRCLES("CC", _("Crop Circles") + " (" + _("tiles only") + ")"),
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
-    ENTOURAGE("EN", _("The Entourage"), false),
     PHANTOM("PH", _("The Phantom"), PhantomGame.class),
     FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class);
 
