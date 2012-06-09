@@ -429,6 +429,22 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     }
 
     @Override
+    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+        if (tile.getBridge() != null) {
+            Location realLoc = tile.getBridge().getLocation().rotateCW(tile.getRotation());
+            tileNode.setAttribute("bridge", realLoc.toString());
+        }
+    }
+
+    @Override
+    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
+        if (tileNode.hasAttribute("bridge")) {
+            Location loc =  Location.valueOf(tileNode.getAttribute("bridge"));
+            tile.placeBridge(loc);
+        }
+    }
+
+    @Override
     public void loadFromSnapshot(Document doc, Element node) {
         bridgeUsed = Boolean.parseBoolean(node.getAttribute("bridgeUsed"));
         NodeList nl = node.getElementsByTagName("player");

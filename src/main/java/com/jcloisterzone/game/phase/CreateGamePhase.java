@@ -42,11 +42,14 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     public CreateGamePhase(Game game, ServerIF server) {
         super(game, server);
-        slots = initPlayerSlots(game);
     }
 
-    protected PlayerSlot[] initPlayerSlots(Game game) {
-        return new PlayerSlot[PlayerSlot.COUNT];
+    public void setSlots(PlayerSlot[] slots) {
+        this.slots = slots;
+    }
+
+    public PlayerSlot[] getPlayerSlots() {
+        return slots;
     }
 
     @Override
@@ -167,9 +170,8 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void prepareAiPlayers() {
-        for(int i = 0; i < slots.length; i++) {
-            PlayerSlot slot = slots[i];
-            if (slot.getType() == SlotType.AI && isLocalSlot(slot)) {
+        for (PlayerSlot slot : slots) {
+            if (slot != null && slot.getType() == SlotType.AI && isLocalSlot(slot)) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
                     ai.setGame(game);

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Random;
 
 import org.ini4j.Ini;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -56,16 +54,16 @@ public class Server extends GameSettings implements ServerIF {
     public Server(Ini config)  {
         slots = new PlayerSlot[PlayerSlot.COUNT];
         slotSupportedExpansions = new EnumSet[slots.length];
-        for(int i = 0; i < slots.length; i++) {
+        for (int i = 0; i < slots.length; i++) {
             slots[i] = new PlayerSlot(i);
         }
         getExpansions().add(Expansion.BASIC);
-        for(Expansion exp: Expansion.values()) {
+        for (Expansion exp: Expansion.values()) {
             if (exp.isEnabled() && config.get("game-default-expansions", exp.name(), boolean.class)) {
                 getExpansions().add(exp);
             }
         }
-        for(CustomRule rule : CustomRule.values()) {
+        for (CustomRule rule : CustomRule.values()) {
             if (config.get("game-default-rules", rule.name(), boolean.class)) {
                 getCustomRules().add(rule);
             }
@@ -74,30 +72,17 @@ public class Server extends GameSettings implements ServerIF {
 
     @SuppressWarnings("unchecked")
     public Server(Snapshot snapshot) {
-        List<Player> players = snapshot.getPlayers();
-        slots = new PlayerSlot[players.size()];
-        slotSupportedExpansions = new EnumSet[slots.length]; //in fact not used during load
-        for(int i = 0; i < slots.length; i++) {
-            PlayerSlot slot = new PlayerSlot(i);
-            for(Player player : players) {
-                if (player.getSlot().getNumber() == i) {
-                    slot.setNick(player.getNick());
-                    slot.setType(player.getSlot().getType());
-                    slot.setAiClassName(player.getSlot().getAiClassName());
-                    break;
-                }
-            }
-            slots[i] = slot;
-        }
+        slots = snapshot.getPlayerSlots();
+        slotSupportedExpansions = new EnumSet[slots.length]; //not used during load
         getExpansions().addAll(snapshot.getExpansions());
         getCustomRules().addAll(snapshot.getCustomRules());
         this.snapshot = snapshot;
     }
 
     public void engageSlots(long clientId) {
-        for(int i = 0; i < slots.length; i++) {
-            if (slots[i].getType() != SlotType.OPEN) {
-                slots[i].setOwner(clientId);
+        for (PlayerSlot slot : slots) {
+            if (slot != null && slot.getType() != SlotType.OPEN) {
+                slot.setOwner(clientId);
             }
         }
     }
@@ -283,7 +268,7 @@ public class Server extends GameSettings implements ServerIF {
 
     @Override
     public void bazaarBuyOrSell(boolean buy) {
-    	stub.bazaarBuyOrSell(buy);
+        stub.bazaarBuyOrSell(buy);
     }
 
 }

@@ -20,84 +20,90 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
 public class ExpandedGame implements GameDelegation {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected Game game;
+    protected Game game;
 
-	public Game getGame() {
-		return game;
-	}
-	public void setGame(Game game) {
-		this.game = game;
-	}
-	protected TilePack getTilePack() {
-		return game.getTilePack();
-	}
-	protected Board getBoard() {
-		return game.getBoard();
-	}
-	protected Tile getTile() {
-		return game.getCurrentTile();
-	}
+    public Game getGame() {
+        return game;
+    }
+    public void setGame(Game game) {
+        this.game = game;
+    }
+    protected TilePack getTilePack() {
+        return game.getTilePack();
+    }
+    protected Board getBoard() {
+        return game.getBoard();
+    }
+    protected Tile getTile() {
+        return game.getCurrentTile();
+    }
 
-	/**
-	 * @return object copy or null if expansion is stateless
-	 */
-	public ExpandedGame copy() {
-		return null;
-	}
+    /**
+     * @return object copy or null if expansion is stateless
+     */
+    public ExpandedGame copy() {
+        return null;
+    }
 
-	public void saveToSnapshot(Document doc, Element node) {
-	}
+    public void saveToSnapshot(Document doc, Element node) {
+    }
 
-	public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-	}
+    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+    }
 
-	//--- delegation adapter methods ---
+    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+    }
 
-	@Override
-	public void initTile(Tile tile, Element xml) {
-	}
+    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
+    }
+
+    //--- delegation adapter methods ---
+
+    @Override
+    public void initTile(Tile tile, Element xml) {
+    }
 
 
-	@Override
-	public void initFeature(Tile tile, Feature feature, Element xml) {
-	}
+    @Override
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+    }
 
 
-	@Override
-	public void initPlayer(Player player) {
-	}
+    @Override
+    public void initPlayer(Player player) {
+    }
 
-	@Override
-	public void begin() {
-	}
+    @Override
+    public void begin() {
+    }
 
-	@Override
-	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-	}
+    @Override
+    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    }
 
-	@Override
-	public void scoreCompleted(CompletableScoreContext ctx) {
-	}
+    @Override
+    public void scoreCompleted(CompletableScoreContext ctx) {
+    }
 
-	@Override
-	public void turnCleanUp() {
+    @Override
+    public void turnCleanUp() {
 
-	}
+    }
 
-	@Override
-	public void finalScoring() {
-	}
+    @Override
+    public void finalScoring() {
+    }
 
-	@Override
-	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
-		return false;
-	}
+    @Override
+    public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
+        return false;
+    }
 
-	@Override
-	public boolean isPlacementAllowed(Tile tile, Position p) {
-		return true;
-	}
+    @Override
+    public boolean isPlacementAllowed(Tile tile, Position p) {
+        return true;
+    }
 
 }

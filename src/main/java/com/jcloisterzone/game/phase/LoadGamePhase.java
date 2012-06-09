@@ -10,7 +10,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
 
@@ -27,11 +26,6 @@ public class LoadGamePhase extends CreateGamePhase {
     @Override
     protected Snapshot getSnapshot() {
         return snapshot;
-    }
-
-    @Override
-    protected PlayerSlot[] initPlayerSlots(Game game) {
-        return new PlayerSlot[game.getAllPlayers().length];
     }
 
     @Override
@@ -63,6 +57,9 @@ public class LoadGamePhase extends CreateGamePhase {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
             game.fireGameEvent().tilePlaced(preplaced);
+            if (preplaced.getBridge() != null) {
+                game.fireGameEvent().bridgeDeployed(preplaced.getPosition(), preplaced.getBridge().getLocation());
+            }
         }
         for(Meeple m : tilePackFactory.getPreplacedMeeples()) {
             Tile tile = game.getBoard().get(m.getPosition());

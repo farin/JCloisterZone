@@ -22,15 +22,15 @@ public class LoadGameTilePackFactory extends TilePackFactory {
 
     private List<Meeple> preplacedMeeples = Lists.newArrayList();
 
+    //TODO is required to store information from snapshot outside ?
     class PreplacedTile {
         String tileId;
         Position pos;
         Rotation rot;
         Tile tile;
+        Element element;
     }
     PreplacedTile[] preplaced;
-
-
 
     public Snapshot getSnapshot() {
         return snapshot;
@@ -48,6 +48,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
             preplaced[i].tileId = el.getAttribute("name");
             preplaced[i].pos = XmlUtils.extractPosition(el);
             preplaced[i].rot = snapshot.extractTileRotation(el);
+            preplaced[i].element = el;
             preplacedMeeples.addAll(snapshot.extractTileMeeples(el, game, preplaced[i].pos));
         }
     }
@@ -74,8 +75,9 @@ public class LoadGameTilePackFactory extends TilePackFactory {
     public List<Tile> createTiles(Expansion expansion, String tileId, Element card, Map<String, Integer> discardList) {
         List<Tile> result =  super.createTiles(expansion, tileId, card, discardList);
         for(PreplacedTile pt : preplaced) {
-            if (pt.tileId.equals(tileId)) {
+            if (pt.tile == null && pt.tileId.equals(tileId)) {
                 pt.tile = result.remove(result.size()-1);
+                game.expansionDelegate().loadTileFromSnapshot(pt.tile, pt.element);
             }
             if (result.isEmpty()) {
                 break;

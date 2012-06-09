@@ -184,7 +184,8 @@ public class Game extends GameSettings {
      * @return
      */
     public Player getActivePlayer() {
-        return getPhase().getActivePlayer();
+        Phase phase = getPhase();
+        return phase == null ? null : phase.getActivePlayer();
     }
 
 

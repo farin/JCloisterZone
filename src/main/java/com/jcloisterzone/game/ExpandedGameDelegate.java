@@ -2,6 +2,7 @@ package com.jcloisterzone.game;
 
 import java.util.List;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
@@ -15,85 +16,95 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
 public class ExpandedGameDelegate implements GameDelegation {
 
-	private final Game game;
+    private final Game game;
 
-	public ExpandedGameDelegate(Game game) {
-		this.game = game;
-	}
+    public ExpandedGameDelegate(Game game) {
+        this.game = game;
+    }
 
-	@Override
-	public void initTile(Tile tile, Element xml) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.initTile(tile, xml);
-		}
-	}
+    @Override
+    public void initTile(Tile tile, Element xml) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.initTile(tile, xml);
+        }
+    }
 
-	@Override
-	public void initFeature(Tile tile, Feature feature, Element xml) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.initFeature(tile, feature, xml);
-		}
-	}
+    @Override
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.initFeature(tile, feature, xml);
+        }
+    }
 
-	@Override
-	public void initPlayer(Player player) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.initPlayer(player);
-		}
-	}
+    @Override
+    public void initPlayer(Player player) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.initPlayer(player);
+        }
+    }
 
-	@Override
-	public void begin() {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.begin();
-		}
-	}
+    @Override
+    public void begin() {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.begin();
+        }
+    }
 
-	@Override
-	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.prepareActions(actions, commonSites);
-		}
-	}
+    @Override
+    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.prepareActions(actions, commonSites);
+        }
+    }
 
-	@Override
-	public void scoreCompleted(CompletableScoreContext ctx) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.scoreCompleted(ctx);
-		}
-	}
+    @Override
+    public void scoreCompleted(CompletableScoreContext ctx) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.scoreCompleted(ctx);
+        }
+    }
 
-	@Override
-	public void turnCleanUp() {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.turnCleanUp();
-		}
+    @Override
+    public void turnCleanUp() {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.turnCleanUp();
+        }
 
-	}
+    }
 
-	@Override
-	public void finalScoring() {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			eg.finalScoring();
-		}
-	}
-	
-	@Override
-	public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			if (eg.isSpecialPlacementAllowed(tile, p)) return true;
-		}
-		return false;
-	}
+    @Override
+    public void finalScoring() {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.finalScoring();
+        }
+    }
 
-	@Override
-	public boolean isPlacementAllowed(Tile tile, Position p) {
-		for(GameDelegation eg: game.getExpandedGames()) {
-			if (! eg.isPlacementAllowed(tile, p)) return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            if (eg.isSpecialPlacementAllowed(tile, p)) return true;
+        }
+        return false;
+    }
 
+    @Override
+    public boolean isPlacementAllowed(Tile tile, Position p) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            if (! eg.isPlacementAllowed(tile, p)) return false;
+        }
+        return true;
+    }
 
+    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.saveTileToSnapshot(tile, doc, tileNode);
+        }
+    }
 
+    @Override
+    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.loadTileFromSnapshot(tile, tileNode);
+        }
+    }
 }

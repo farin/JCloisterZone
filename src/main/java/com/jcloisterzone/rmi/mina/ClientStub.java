@@ -114,12 +114,13 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     protected void controllMessageReceived(ControllMessage msg) {
         game = createGame(msg);
-        Phase phase;
+        CreateGamePhase phase;
         if (msg.getSnapshot() == null) {
             phase = new CreateGamePhase(game, getServerProxy());
         } else {
             phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
         }
+        phase.setSlots(msg.getSlots());
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
     }
