@@ -75,9 +75,9 @@ public class PlayerPanelImageCache {
         }
         TradersAndBuildersGame tb = client.getGame().getTradersAndBuildersGame();
         if (tb != null) {
-            scaledImages.put("cloth", scaleImage(theme.getNeutralImage("cloth")));
-            scaledImages.put("grain", scaleImage(theme.getNeutralImage("grain")));
-            scaledImages.put("wine", scaleImage(theme.getNeutralImage("wine")));
+            scaledImages.put("cloth", theme.getNeutralImage("cloth"));
+            scaledImages.put("grain", theme.getNeutralImage("grain"));
+            scaledImages.put("wine", theme.getNeutralImage("wine"));
         }
         AbbeyAndMayorGame ab = client.getGame().getAbbeyAndMayorGame();
         if (ab != null) {
