@@ -539,7 +539,10 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Pomocí <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> nebo <b>kurzorových</b"
+msgstr "<html>Pomocí <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> nebo <b>kurzorových</b> "
+"kláves lze posouvat s hrací plochou. Klik <b>prostředním </b> tlačítkem myši "
+"vystředí plochu. Zoomovat lze pomocí <b>+</b> a <b>-</b> nebo <b>prosředním</b> "
+"tlačítkem myši.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""

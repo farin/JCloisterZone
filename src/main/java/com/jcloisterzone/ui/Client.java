@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -458,7 +459,8 @@ public class Client extends JFrame {
     void beep() {
         if (settings.isPlayBeep()) {
             try {
-                AudioInputStream beepStream = AudioSystem.getAudioInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
+                BufferedInputStream fileInStream = new BufferedInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
+                AudioInputStream beepStream = AudioSystem.getAudioInputStream(fileInStream);
                 Clip c = AudioSystem.getClip();
                 c.open(beepStream);
                 c.start();
