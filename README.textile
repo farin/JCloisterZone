@@ -7,11 +7,10 @@ Game can be also played against computer AI.
 h2. Roadmap
 
 * graphics themes support
-* Bridges, Castles and Bazaars expansion
-* The Plague and The Entourage small expansions
-* optimize AI performance
+* optimize AI
+* full support The Plague and The Entourage small expansions
 * automated tests
-
+* mini expansions
 
 h3. nice to have
 
