@@ -8,23 +8,23 @@ import com.jcloisterzone.game.Game;
 
 public class MeepleUndeployedOperation implements Operation {
 
-	private final Meeple meeple;
-	private Tile tile;
-	private Location loc;
+    private final Meeple meeple;
+    private Tile tile;
+    private Location loc;
 
-	public MeepleUndeployedOperation(Meeple meeple) {
-		this.meeple = meeple;
-		this.tile = meeple.getFeature().getTile();
-		this.loc = meeple.getLocation();
-	}
+    public MeepleUndeployedOperation(Meeple meeple) {
+        this.meeple = meeple;
+        this.tile = meeple.getFeature().getTile();
+        this.loc = meeple.getLocation();
+    }
 
-	@Override
-	public void undo(Game game) {
-		Feature feature = tile.getFeature(loc);
-		feature.setMeeple(meeple);
-		meeple.setPosition(tile.getPosition());
-		meeple.setLocation(loc);
-		meeple.setFeature(feature);	
-	}
+    @Override
+    public void undo(Game game) {
+        Feature feature = meeple.getPieceForDeploy(tile, loc);
+        feature.setMeeple(meeple);
+        meeple.setPosition(tile.getPosition());
+        meeple.setLocation(loc);
+        meeple.setFeature(feature);
+    }
 
 }

@@ -39,7 +39,7 @@ public abstract class Meeple extends Figure {
         //empty
     }
 
-    protected Feature getPieceForDeploy(Tile tile, Location loc) {
+    public Feature getPieceForDeploy(Tile tile, Location loc) {
         Feature piece = tile.getFeature(loc);
         if (piece == null) {
             throw new IllegalArgumentException("No such feature");
