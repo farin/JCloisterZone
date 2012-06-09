@@ -334,7 +334,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
                 g2.fillRect(0, y-1, BazaarPanel.PANEL_WIDTH, 92);
             }
 
-            if (refreshMouseRegions && state == BazaarPanelState.SELECT_TILE) {
+            if (refreshMouseRegions && state == BazaarPanelState.SELECT_TILE && bi.getOwner() == null) {
                 getMouseRegions().add(new MouseListeningRegion(new Rectangle(0, y-1, BazaarPanel.PANEL_WIDTH, 102), this, i));
             }
 

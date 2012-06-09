@@ -11,7 +11,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
 
 public class ActionPanel extends FakeComponent implements RegionMouseListener {
@@ -19,7 +21,6 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     public static final int LINE_HEIGHT = 30;
     public static final int PADDING = 3;
     public static final int LEFT_MARGIN = 10;
-    public static final int MAX_ICON_SIZE = 40;
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
     private PlayerAction[] actions;
@@ -27,6 +28,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
 
     //cached scaled smooth images
     private Image[] selected, deselected;
+    private int imgOffset = 0;
     private boolean refreshImages, refreshMouseRegions;
 
     public ActionPanel(Client client) {
@@ -63,14 +65,27 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
     }
 
     private void doRefreshImageCache() {
-        if (actions == null) {
+        if (actions == null || actions.length == 0) {
             selected = null;
             deselected = null;
         }
 
+        int maxIconSize = 40;
+        imgOffset = 0;
+
+        if (actions[0] instanceof TilePlacementAction) {
+            imgOffset = -10;
+            maxIconSize = 62;
+        } else if (actions[0] instanceof AbbeyPlacementAction) {
+            imgOffset = 4;
+            maxIconSize = 52;
+        }  else {
+            maxIconSize = 40;
+        }
+
         int availableWidth = ControlPanel.PANEL_WIDTH - LEFT_MARGIN - (actions.length-1)*PADDING;
         double units = actions.length + (ACTIVE_SIZE_RATIO-1.0);
-        int baseSize = Math.min(MAX_ICON_SIZE, (int) Math.floor(availableWidth / units));
+        int baseSize = Math.min(maxIconSize, (int) Math.floor(availableWidth / units));
         int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
 
         Player activePlayer = client.getGame().getActivePlayer();
@@ -160,9 +175,9 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener {
             int iy = (LINE_HEIGHT-size) / 2;
 
             if (refreshMouseRegions) {
-                getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy, size, size), this, i));
+                getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
             }
-            g2.drawImage(img, x, iy, size, size, null);
+            g2.drawImage(img, x, iy+imgOffset, size, size, null);
             x += size + PADDING;
         }
     }

@@ -123,14 +123,14 @@ public class ControlPanel extends FakeComponent {
         GridPanel gp = client.getGridPanel();
         int h = gp.getHeight();
 
-        Player active = client.getGame().getActivePlayer();
-        if (active == null) {
+        Player player = client.getGame().getTurnPlayer();
+        if (player == null) {
             g2.setColor(PANEL_BG_COLOR);
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, h);
             g2.setColor(PANEL_BG_COLOR_SHADOW);
             g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
         } else {
-            int y = playerPanels[active.getIndex()].getCenterY();
+            int y = playerPanels[player.getIndex()].getCenterY();
 
             g2.setColor(PANEL_BG_COLOR);
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, y-ACTIVE_MARKER_SIZE);
@@ -144,15 +144,30 @@ public class ControlPanel extends FakeComponent {
                 new int[] { y+ACTIVE_MARKER_SIZE, y+ACTIVE_MARKER_SIZE, y, y}, 4
             );
             g2.setColor(PANEL_BG_COLOR_SHADOW);
+            //g2.setColor(Color.RED);
             g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, 0, PANEL_SHADOW_WIDTH, y-ACTIVE_MARKER_SIZE);
             g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, y+ACTIVE_MARKER_SIZE, PANEL_SHADOW_WIDTH, h-y+ACTIVE_MARKER_SIZE);
             g2.fillPolygon(
-                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, 0, -PANEL_SHADOW_WIDTH },
+                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, -ACTIVE_MARKER_PADDING, -PANEL_SHADOW_WIDTH-ACTIVE_MARKER_PADDING},
                 new int[] { y-ACTIVE_MARKER_SIZE, y-ACTIVE_MARKER_SIZE, y, y}, 4
             );
             g2.fillPolygon(
-                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, 0, -PANEL_SHADOW_WIDTH },
+                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -LEFT_PADDING, -ACTIVE_MARKER_PADDING, -PANEL_SHADOW_WIDTH-ACTIVE_MARKER_PADDING },
                 new int[] { y+ACTIVE_MARKER_SIZE, y+ACTIVE_MARKER_SIZE, y, y}, 4
+            );
+        }
+
+        player = client.getGame().getActivePlayer();
+        if (player != null) {
+            g2.setColor(Color.BLACK);
+            int y = playerPanels[player.getIndex()].getCenterY();
+//            g2.fillPolygon(
+//                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -PANEL_SHADOW_WIDTH-ACTIVE_MARKER_PADDING, -LEFT_PADDING-PANEL_SHADOW_WIDTH},
+//                new int[] { y-ACTIVE_MARKER_SIZE, y, y+ACTIVE_MARKER_SIZE,}, 3
+//            );
+            g2.fillPolygon(
+                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH-3, -PANEL_SHADOW_WIDTH-ACTIVE_MARKER_PADDING, -LEFT_PADDING-PANEL_SHADOW_WIDTH-3},
+                new int[] { y-ACTIVE_MARKER_SIZE-4, y, y+ACTIVE_MARKER_SIZE+4,}, 3
             );
         }
     }
@@ -174,7 +189,7 @@ public class ControlPanel extends FakeComponent {
             g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
         }
 
-        g2.translate(0, 44);
+        g2.translate(0, 46);
         actionPanel.paintComponent(g2);
 //		gp.profile("action panel");
 
