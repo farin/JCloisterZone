@@ -542,7 +542,7 @@ msgid "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to pl
 msgstr "<html>Ewentualnie możesz nacisnąć <b>Enter</b> lub <b>Spację</b> aby zrezygnować z akcji.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid "Create a new local or network game. You can play against any number of computer player."
+msgid "Create a new local or network game. You can play against any number of computer players."
 msgstr "Tworzenie nowej gry (lokalnej lub sieciowej). Możesz grać przeciwko dowolnej liczbie graczy komputerowych."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72

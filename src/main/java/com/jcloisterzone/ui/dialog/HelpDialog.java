@@ -37,8 +37,8 @@ public class HelpDialog extends JDialog {
      */
     public HelpDialog() {
         setTitle(_("Controls"));
-        centerDialog(450, 199);
-        contentPanel.setBounds(0, 0, 434, 167);
+        centerDialog(480, 300);
+        contentPanel.setBounds(0, 0, 480, 30);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPanel.setLayout(new BorderLayout());
         getContentPane().add(new HelpPanel());

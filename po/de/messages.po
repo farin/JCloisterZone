@@ -542,7 +542,7 @@ msgid "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to pl
 msgstr "<html>Alternativ mit <b>Enter</b> oder <b>Space</b> überspringen.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid "Create a new local or network game. You can play against any number of computer player."
+msgid "Create a new local or network game. You can play against any number of computer players."
 msgstr "Ein neues lokales oder Netzwerk-Spiel starten."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72

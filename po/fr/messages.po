@@ -207,7 +207,7 @@ msgstr "La sauvegarde du jeu est incompatible ou le fichier de sauvegarde est co
 #: src/main/java/com/jcloisterzone/ui/Client.java:311
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:64
 msgid "Close game"
-msgstr "Fermeture du jeu"
+msgstr "Quitter le partie"
 
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:301
@@ -217,7 +217,7 @@ msgstr "Fermeture du jeu"
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:62
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
 msgid "Cancel"
-msgstr "Annulation"
+msgstr "Annuler"
 
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:303
@@ -285,7 +285,7 @@ msgstr "Charger"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:98
 msgid "Quit"
-msgstr "Quitter"
+msgstr "Quitter le jeu"
 
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:111
@@ -423,7 +423,7 @@ msgstr "Niveau"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:46
 msgid "Total points"
-msgstr "Points totaux"
+msgstr "Score final"
 
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
@@ -534,7 +534,7 @@ msgstr "Passer"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
 msgid "Bazaar supply"
-msgstr "Approvisionnement du bazar"
+msgstr "Fournitures du bazar"
 
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
@@ -650,7 +650,7 @@ msgstr "Joueur géré par l’ordinateur"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:162
 msgid "Open player slot"
-msgstr "Emplacement libre pour joueur"
+msgstr "Emplacement libre pour un joueur"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:16
@@ -658,7 +658,7 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les touches de <b>déplacement</b> du clavier "
+msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les flèches du clavier "
 "pour se déplacer sur la zone de jeu.<br>Cliquer avec la touche milieu de la souris pour centrer la zone de jeu. "
 "Zoomer en utilisant les touches <b>+</b> ou <b>-</b> ou en utilisant la molette de la souris.</html>"
 
@@ -667,7 +667,7 @@ msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Tourner la tuile par la touche <b>Tab</b> ou par le <b>clic-droit</b> de la souris. Placer la par un <b>clic-gauche</b>.</html>"
+msgstr "<html>Tourner la tuile avec la touche <b>Tab</b> ou avec le <b>clic-droit</b> de la souris. Placer la avec un <b>clic-gauche</b>.</html>"
 
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24

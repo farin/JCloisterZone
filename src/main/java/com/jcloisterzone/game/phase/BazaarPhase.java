@@ -142,17 +142,17 @@ public class BazaarPhase extends ServerAwarePhase {
     private void nextSelectingPlayer() {
         bcb.setCurrentBazaarAuction(null);
         bcb.setBazaarBiddingPlayer(null);
-        Player currentPlayer = bcb.getBazaarTileSelectingPlayer();
-        Player nextPlayer = game.getNextPlayer(currentPlayer);
-        while (nextPlayer != currentPlayer) {
-            if (! bcb.hasTileAuctioned(nextPlayer)) {
-                bcb.setBazaarTileSelectingPlayer(nextPlayer);
+        Player currentSelectingPlayer = bcb.getBazaarTileSelectingPlayer();
+        Player player = currentSelectingPlayer;
+        do {
+            player = game.getNextPlayer(player);
+            if (! bcb.hasTileAuctioned(player)) {
+                bcb.setBazaarTileSelectingPlayer(player);
                 game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
                 game.getUserInterface().selectBazaarTile();
                 return;
             }
-            nextPlayer = game.getNextPlayer(nextPlayer);
-        }
+        } while (player != currentSelectingPlayer);
         //all tiles has been auctioned
         bcb.setBazaarTileSelectingPlayer(null);
         game.fireGameEvent().bazaarAuctionsEnded();

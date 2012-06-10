@@ -43,4 +43,12 @@ public class BazaarItem {
     public void setCurrentBidder(Player currentBidder) {
         this.currentBidder = currentBidder;
     }
+
+    @Override
+    public String toString() {
+        return "BazaarItem [tile=" + tile + ", owner=" + owner
+                + ", currentPrice=" + currentPrice + ", currentBidder="
+                + currentBidder + "]";
+    }
+
 }
