@@ -105,7 +105,7 @@ msgstr "A fantom"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Festival (10th an.)"
-msgstr ""
+msgstr "A fesztivál (10. évf.)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
 msgid "Tiny city is scored only for 2 points."
@@ -113,7 +113,7 @@ msgstr "Mini város csak 2 pontot ér."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:11
 msgid "Each city is scored with one farm only."
-msgstr "Városok csak farmmal együtt érnek pontot."
+msgstr "Minden város csak egy farmra kap pontot."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:13
 msgid "The Builder and the pig cannot be placed on a volcano."
@@ -139,7 +139,7 @@ msgstr "Csatorna szabály engedélyezése más kiegészítőkben is."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "No bidding on bazaar tile. Each players just choose one tile."
-msgstr ""
+msgstr "Bazár lapon nincs licit kör. Minden játékos csak választ egy lapot."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
@@ -193,7 +193,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:310
 msgid "Game is running. Do you really want to leave it?"
-msgstr "A játék még nem ért véget. Kilépsz?"
+msgstr "A játék még nem ért véget. Biztosan kilépsz?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:368
 msgid "Save game"
@@ -212,7 +212,7 @@ msgstr "Játék betöltése"
 
 #: src/main/java/com/jcloisterzone/ui/ClientController.java:132
 msgid "%d tiles left"
-msgstr ""
+msgstr "%d lap van hátra"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Game"
@@ -280,7 +280,7 @@ msgstr "Megerősítés toronyra helyezésnél"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:205
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:286
 msgid "Confirm ransom payment"
-msgstr ""
+msgstr "Megerősítés váltságdíj kifizetésekor"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
 msgid "Confirm game close"
@@ -297,7 +297,7 @@ msgstr "A programról"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
-msgstr ""
+msgstr "Irányítás"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -305,15 +305,15 @@ msgstr "Mentett JCloisterZone játékok"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
 msgid "Skip"
-msgstr ""
+msgstr "Passzolás"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:283
 msgid "Pay ransom"
-msgstr ""
+msgstr "Váltságdíj kifizetése"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:285
 msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr ""
+msgstr "Valóban fizetsz 3 pontot a fogoly kiszabadításáért?"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
 msgid "About application"
@@ -330,7 +330,7 @@ msgstr "Terjeszthető a GPL3 licenc szerint"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:31
 msgid "Discarded tiles"
-msgstr "WKihagyott lapok"
+msgstr "Kihagyott lapok"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:39
 msgid "These tiles have been discarded during the game"
@@ -338,7 +338,7 @@ msgstr "Kihagyott lapok a játék folyamán"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:35
 msgid "Game overview"
-msgstr "SJáték áttekintése"
+msgstr "Játék áttekintése"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
 msgid "Player"
@@ -395,52 +395,52 @@ msgstr "Torony váltságdíj"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:60
 msgid "Bazaars"
-msgstr ""
+msgstr "Bazárok"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:153
 msgid "Choose your tile."
-msgstr ""
+msgstr "Válassz lapot"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:155
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr ""
+msgstr "<html>Válassz lapot a következő licithez,<br>és tedd meg az induló ajánlatod.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:160
 msgid "Raise bid or pass."
-msgstr ""
+msgstr "Tét emelése vagy passzolás."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:164
 msgid "Buy or sell tile from latest bidder."
-msgstr ""
+msgstr "Vétel vagy eladás az utolsó licitálótól."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:169
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:171
 msgid "points"
-msgstr ""
+msgstr "pontok"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:205
 msgid "Buy"
-msgstr ""
+msgstr "Vétel"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:206
 msgid "Sell"
-msgstr ""
+msgstr "Eladás"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Select"
-msgstr ""
+msgstr "Kiválasztás"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:224
 msgid "Bid"
-msgstr ""
+msgstr "Licit tétel"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:225
 msgid "Pass"
-msgstr ""
+msgstr "Passzolás"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:316
 msgid "Bazaar supply"
-msgstr ""
+msgstr "Bazár készlet"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:48
 msgid "Place a follower"
@@ -448,7 +448,7 @@ msgstr "Követő elhelyezése"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
 msgid "Do you really want to place a follower on farm?"
-msgstr "A farmra szeretnéd helyezni?"
+msgstr "Biztosan a farmra szeretnéd helyezni?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:51
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:61
@@ -468,7 +468,7 @@ msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
 msgstr ""
-"WValóban a toronyra akarod helyezni?\n"
+"Valóban a toronyra akarod helyezni?\n"
 "(Ez meggátolja a torony továbbépítését)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -522,7 +522,7 @@ msgstr "Üres játékos"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:141
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:168
 msgid "Local player"
-msgstr "Helyi játék"
+msgstr "Helyi játékos"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:144
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:172
@@ -544,28 +544,37 @@ msgid ""
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
 msgstr ""
+"<html>Az <b>A</b, <b>S</b>, <b>W</b>, <b>D</b> vagy <b>nyíl</b> billentyűkkel "
+"mozoghatsz a táblán. Kattints a <b>középső</b> egér gombbal a középre ugráshoz. "
+"Zoom-olj a <b>+</b> vagy <b>-</b> gombokkal vagy az egér <b>görgővel</b>.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
 msgstr ""
+"<html>Forgasd a lapot a <b>Tab</b>-bal vagy a <b>jobb</b> kattintással. Helyezd "
+"el a lapot a <b>bal</b> kattintással.</html>
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
 msgstr ""
+"<html>Az elhelyezett lapon <b>Tab</b>-bal vagy a <b>jobb</b> kattintással "
+"választhatsz megfelelő cselekvést.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
 msgstr ""
+"<html>Egyébként passzolhatsz az <b>Enter</b> vagy <b>Szóköz</b> gombbal, ha "
+"nem kívánsz cselekedni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid "Create a new local or network game. You can play against any number of computer players."
-msgstr "Új helyi vagy távolis játék indítása."
+msgstr "Új helyi vagy távoli játék indítása."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "Connect to a remote JCloisterZone application with settled new game."
