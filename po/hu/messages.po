@@ -554,7 +554,7 @@ msgid ""
 "by <b>left</b> click.</html>"
 msgstr ""
 "<html>Forgasd a lapot a <b>Tab</b>-bal vagy a <b>jobb</b> kattintással. Helyezd "
-"el a lapot a <b>bal</b> kattintással.</html>
+"el a lapot a <b>bal</b> kattintással.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
