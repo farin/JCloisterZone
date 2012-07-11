@@ -126,10 +126,10 @@ public class ClientController implements GameEventListener, UserInterface {
         if (game != null) {
             Player activePlayer = game.getActivePlayer();
             if (activePlayer != null) {
-                title.append(" ⋅ ").append(activePlayer.getNick());
+                title.append(" \u22c5 ").append(activePlayer.getNick());
             }
             int packSize = game.getTilePack().totalSize();
-            title.append(" ⋅ ").append(String.format(_("%d tiles left"), packSize));
+            title.append(" \u22c5 ").append(String.format(_("%d tiles left"), packSize));
         }
         client.setTitle(title.toString());
     }
