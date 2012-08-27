@@ -27,131 +27,134 @@ import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
 
 public abstract class AiPlayer implements UserInterface {
-	
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private Game game;
-	private ServerIF server;
-	private Player player;
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void setGame(Game game) {
-		this.game = game;
-	}
+    private Game game;
+    private ServerIF server;
+    private ClientStub clientStub;
+    private Player player;
 
-	public Game getGame() {
-		return game;
-	}
+    public void setGame(Game game) {
+        this.game = game;
+    }
 
-	public ServerIF getServer() {
-		return server;
-	}
+    public Game getGame() {
+        return game;
+    }
 
-	public void setServer(ServerIF server) {
-		this.server = server;
-	}
+    public ServerIF getServer() {
+        return server;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public void setServer(ServerIF server) {
+        int placeTileDelay = game.getConfig().get("players", "ai_place_tile_delay", int.class);
+        this.server = new DelayedServer(server, placeTileDelay);
+        this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
+    }
 
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	protected Board getBoard() {
-		return game.getBoard();
-	}
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-	protected TilePack getTilePack() {
-		return game.getTilePack();
-	}
+    protected Board getBoard() {
+        return game.getBoard();
+    }
 
-	protected ClientStub getClientStub() {
-		return (ClientStub) Proxy.getInvocationHandler(server);
-	}
+    protected TilePack getTilePack() {
+        return game.getTilePack();
+    }
 
-	protected boolean isMe(Player p) {
-		//nestaci porovnavat ref ?
-		return p.getIndex() == player.getIndex();
-	}
+    protected ClientStub getClientStub() {
+        return clientStub;
+    }
 
-	public boolean isAiPlayerActive() {
-		if (server == null) return false;
-		Player activePlayer = game.getActivePlayer();
-		if (activePlayer.getIndex() != player.getIndex()) return false;
-		return getClientStub().isLocalPlayer(activePlayer);
-	}
-	
-	@Override
-	public void showWarning(String title, String message) {
-		//do nothing
-	}
-	
-	protected void handleRuntimeError(Exception e) {
-		logger.error("AI player exception", e);
-	}
-	
-	// dummy implementations
-	
-	protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {
-		for(PlayerAction action : actions) {
-			if (action instanceof TilePlacementAction) {
-				if (selectDummyTilePlacement((TilePlacementAction) action)) return;
-			}
-			if (action instanceof AbbeyPlacementAction) {
-				if (selectDummyAbbeyPlacement((AbbeyPlacementAction) action)) return;
-			}
-			if (action instanceof MeepleAction) {				
-				if (selectDummyMeepleAction((MeepleAction) action)) return;
-			}
-			if (action instanceof TakePrisonerAction) {
-				if (selectDummyTowerCapture((TakePrisonerAction) action)) return;
-			}
-		}
-		getServer().pass();
-	}
-	
-	protected boolean selectDummyAbbeyPlacement(AbbeyPlacementAction action) {
-		getServer().pass();
-		return true;
-	}
-	
-	protected boolean selectDummyTilePlacement(TilePlacementAction action) {
-		Position nearest = null, p0 = new Position(0, 0);
-		int min = Integer.MAX_VALUE;
-		for(Position pos : action.getAvailablePlacements().keySet()) {
-			int dist = pos.squareDistance(p0);
-			if (dist < min) {
-				min = dist;
-				nearest = pos;
-			}
-		}
-		getServer().placeTile(action.getAvailablePlacements().get(nearest).iterator().next(), nearest);
-		return true;
-	}
-	
-	protected boolean selectDummyMeepleAction(MeepleAction ma) {
-		Position p = ma.getSites().keySet().iterator().next();
-		for(Location loc : ma.getSites().get(p)) {
-			Feature f = getBoard().get(p).getFeature(loc);
-			if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-				getServer().deployMeeple(p, loc, ma.getMeepleType());
-				return true;
-			}
-		}
-		return false;
-	}
+    protected boolean isMe(Player p) {
+        //nestaci porovnavat ref ?
+        return p.getIndex() == player.getIndex();
+    }
 
-	protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
-		Position p = action.getSites().keySet().iterator().next();
-		Location loc = action.getSites().get(p).iterator().next();
-		getServer().takePrisoner(p, loc);
-		return true;
-	}
+    public boolean isAiPlayerActive() {
+        if (server == null) return false;
+        Player activePlayer = game.getActivePlayer();
+        if (activePlayer.getIndex() != player.getIndex()) return false;
+        return getClientStub().isLocalPlayer(activePlayer);
+    }
 
-	protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
-		getServer().moveDragon(positions.iterator().next());
-	}
+    @Override
+    public void showWarning(String title, String message) {
+        //do nothing
+    }
+
+    protected void handleRuntimeError(Exception e) {
+        logger.error("AI player exception", e);
+    }
+
+    // dummy implementations
+
+    protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {
+        for(PlayerAction action : actions) {
+            if (action instanceof TilePlacementAction) {
+                if (selectDummyTilePlacement((TilePlacementAction) action)) return;
+            }
+            if (action instanceof AbbeyPlacementAction) {
+                if (selectDummyAbbeyPlacement((AbbeyPlacementAction) action)) return;
+            }
+            if (action instanceof MeepleAction) {
+                if (selectDummyMeepleAction((MeepleAction) action)) return;
+            }
+            if (action instanceof TakePrisonerAction) {
+                if (selectDummyTowerCapture((TakePrisonerAction) action)) return;
+            }
+        }
+        getServer().pass();
+    }
+
+    protected boolean selectDummyAbbeyPlacement(AbbeyPlacementAction action) {
+        getServer().pass();
+        return true;
+    }
+
+    protected boolean selectDummyTilePlacement(TilePlacementAction action) {
+        Position nearest = null, p0 = new Position(0, 0);
+        int min = Integer.MAX_VALUE;
+        for(Position pos : action.getAvailablePlacements().keySet()) {
+            int dist = pos.squareDistance(p0);
+            if (dist < min) {
+                min = dist;
+                nearest = pos;
+            }
+        }
+        getServer().placeTile(action.getAvailablePlacements().get(nearest).iterator().next(), nearest);
+        return true;
+    }
+
+    protected boolean selectDummyMeepleAction(MeepleAction ma) {
+        Position p = ma.getSites().keySet().iterator().next();
+        for(Location loc : ma.getSites().get(p)) {
+            Feature f = getBoard().get(p).getFeature(loc);
+            if (f instanceof City || f instanceof Road || f instanceof Cloister) {
+                getServer().deployMeeple(p, loc, ma.getMeepleType());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
+        Position p = action.getSites().keySet().iterator().next();
+        Location loc = action.getSites().get(p).iterator().next();
+        getServer().takePrisoner(p, loc);
+        return true;
+    }
+
+    protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
+        getServer().moveDragon(positions.iterator().next());
+    }
 
 
 }

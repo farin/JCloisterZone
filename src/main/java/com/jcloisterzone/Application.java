@@ -6,8 +6,8 @@ package com.jcloisterzone;
  */
 public interface Application {
 
-    public String VERSION = "2.1";
-    public String BUILD_DATE = "2012-06-09";
+    public String VERSION = "2.1.2";
+    public String BUILD_DATE = "2012-08-27";
 
     public int PROTCOL_VERSION = 11;
 
