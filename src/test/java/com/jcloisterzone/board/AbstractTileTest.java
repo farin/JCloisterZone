@@ -10,32 +10,32 @@ import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {
 
-	protected Game game = new Game();
-	protected TilePackFactory packFactory = new TilePackFactory();
-	protected TileFactory tileFactory = new TileFactory();
-	
-	protected void setUpGame(Game game) {
-		game.getExpansions().add(Expansion.BASIC);
-	}
+    protected Game game = new Game();
+    protected TilePackFactory packFactory = new TilePackFactory();
+    protected TileFactory tileFactory = new TileFactory();
 
-	@Before
-	public void initFactories() {
-		game.setConfig(new Ini());
-		setUpGame(game);
-		packFactory.setGame(game);
-		tileFactory.setGame(game);
-	}
+    protected void setUpGame(Game game) {
+        game.getExpansions().add(Expansion.BASIC);
+    }
 
-	protected Tile createTile(Expansion exp, String id) {
-		Element el = packFactory.getExpansionDefinition(exp);
-		NodeList nl = el.getElementsByTagName("card");
-		for(int i = 0; i < nl.getLength(); i++) {
-			Element card = (Element) nl.item(i);
-			if (id.equals(card.getAttribute("id"))) {
-				return tileFactory.createTile(id, card, false);
-			}
-		}
-		throw new IllegalArgumentException("Invalid tile id");
-	}	
+    @Before
+    public void initFactories() {
+        game.setConfig(new Ini());
+        setUpGame(game);
+        packFactory.setGame(game);
+        tileFactory.setGame(game);
+    }
+
+    protected Tile createTile(Expansion exp, String id) {
+        Element el = packFactory.getExpansionDefinition(exp);
+        NodeList nl = el.getElementsByTagName("card");
+        for(int i = 0; i < nl.getLength(); i++) {
+            Element card = (Element) nl.item(i);
+            if (id.equals(card.getAttribute("id"))) {
+                return tileFactory.createTile(id, card, false);
+            }
+        }
+        throw new IllegalArgumentException("Invalid tile id");
+    }
 
 }
