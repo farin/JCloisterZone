@@ -75,7 +75,7 @@ public class MeepleLayer extends AbstractGridLayer {
         Color c = getClient().getPlayerColor(m.getPlayer());
         FigureTheme theme = getClient().getFigureTheme();
 
-        ImmutablePoint offset = getClient().getTileTheme().getFigurePlacement(gridPanel.getTile(m.getPosition()), m);
+        ImmutablePoint offset = getClient().getResourceManager().getFigurePlacement(gridPanel.getTile(m.getPosition()), m);
         Image image = theme.getFigureImage(m.getClass(), c,  getExtraDecoration(m));
         images.put(m, new PositionedImage(m.getPosition(), offset, image));
     }

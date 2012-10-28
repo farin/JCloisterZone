@@ -28,7 +28,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
     @Override
     protected Image createPreviewIcon() {
         String tileId = action.getTile().getId();
-        return getClient().getTileTheme().getTileImage(tileId);
+        return getClient().getResourceManager().getTileImage(tileId);
     }
 
     @Override

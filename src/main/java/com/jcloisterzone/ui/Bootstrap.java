@@ -4,6 +4,8 @@ import java.beans.IntrospectionException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -15,19 +17,19 @@ import org.slf4j.LoggerFactory;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
+import com.google.common.collect.Lists;
+import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Ini config = new Ini();
-    //private URLClassLoader pluginClassLoader;
-
     public static boolean isMac() {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    public void loadConfig() {
+    public Ini loadConfig() {
+        Ini config = new Ini();
         String configFile = System.getProperty("config");
         if (configFile == null) {
             configFile = "config.ini";
@@ -38,50 +40,23 @@ public class Bootstrap  {
             logger.error("Unable to read config.ini", ex);
             System.exit(1);
         }
+        return config;
     }
 
-    public static void addURLToSystemClassLoader(URL url) throws IntrospectionException {
-        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
-
-        try {
-            java.lang.reflect.Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[] { URL.class });
-            method.setAccessible(true);
-            method.invoke(systemClassLoader, new Object[] { url });
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw new IntrospectionException("Error when adding url to system ClassLoader ");
-        }
-    }
-
-    public URL fixPluginURL(URL url) throws MalformedURLException {
-        //TODO do not add / for jar files
-        return new URL(url.toString()+"/");
-    }
-
-    public void loadPlugins() {
-        //List<URL> plugins = Lists.newArrayList();
+    public List<Plugin> loadPlugins(Ini config) {
+        LinkedList<Plugin> plugins = Lists.newLinkedList();
 
         for (String pluginPath : config.get("plugins").getAll("plugin")) {
             try {
-                URL pluginURL = Bootstrap.class.getClassLoader().getResource(pluginPath);
-                pluginURL = fixPluginURL(pluginURL);
-                //plugins.add(pluginURL);
-
-                //temporaru solution
-                addURLToSystemClassLoader(pluginURL);
-                logger.info("plugin {} loaded", pluginURL);
-                //devel
-                //File plugin = new File(pluginURL.toURI());
-                //System.out.println(plugin.getAbsoluteFile());
+                Plugin plugin = Plugin.loadPlugin(pluginPath);
+                plugins.addFirst(plugin);
+                logger.info("plugin <{}> loaded", plugin);
             } catch (Exception e) {
                 logger.error("Unable to load plugin " + pluginPath, e);
             }
         }
 
-//        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-//        pluginClassLoader = new URLClassLoader(plugins.toArray(new URL[plugins.size()]), currentThreadClassLoader);
-//        Thread.currentThread().setContextClassLoader(pluginClassLoader);
+        return plugins;
     }
 
     public void run() {
@@ -89,12 +64,12 @@ public class Bootstrap  {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        loadConfig();
-        loadPlugins();
+        final Ini config = loadConfig();
+        final List<Plugin> plugins = loadPlugins(config);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Client client = new Client(config);
+                Client client = new Client(config, plugins);
 
                 if (isMac()) {
                     Application macApplication = Application.getApplication();

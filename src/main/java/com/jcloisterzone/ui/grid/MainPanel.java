@@ -139,7 +139,7 @@ public class MainPanel extends BackgroundPanel {
             new ScoreAnimation(
                     pos,
                     points,
-                    client.getTileTheme().getFigurePlacement(client.getGame().getBoard().get(pos), m),
+                    client.getResourceManager().getFigurePlacement(client.getGame().getBoard().get(pos), m),
                     client.getPlayerColor(m.getPlayer()),
                     finalScoring ? null : getScoreAnimationDuration()
             )
@@ -172,7 +172,7 @@ public class MainPanel extends BackgroundPanel {
             c = client.getPlayerColor(player);
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
-        ImmutablePoint offset = client.getTileTheme().getFigurePlacement(gridPanel.getTile(p), Road.class, loc);
+        ImmutablePoint offset = client.getResourceManager().getFigurePlacement(gridPanel.getTile(p), Road.class, loc);
         meepleLayer.addPermanentImage(p, offset, tunnelPiece);
     }
 

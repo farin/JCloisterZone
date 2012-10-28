@@ -44,7 +44,7 @@ public class TilePlacementAction extends PlayerAction {
 
     @Override
     public Image getImage(Player player, boolean active) {
-        Image img =  client.getTileTheme().getTileImage(tile.getId());
+        Image img =  client.getResourceManager().getTileImage(tile.getId());
         int w = img.getWidth(null), h = img.getHeight(null);
         BufferedImage bi = UiUtils.newTransparentImage(w, h);
         AffineTransform at = tileRotation.getAffineTransform(w);

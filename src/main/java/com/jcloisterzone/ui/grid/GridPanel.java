@@ -42,9 +42,9 @@ import com.jcloisterzone.ui.theme.TileTheme;
 
 public class GridPanel extends JPanel {
 
-	private static final long serialVersionUID = -7013723613801929324L;
+    private static final long serialVersionUID = -7013723613801929324L;
 
-	public static int INITIAL_SQUARE_SIZE = 120;
+    public static int INITIAL_SQUARE_SIZE = 120;
     private static final int STARTING_GRID_SIZE = 3;
 
     final Client client;
@@ -171,10 +171,6 @@ public class GridPanel extends JPanel {
 
     public Tile getTile(Position p) {
         return client.getGame().getBoard().get(p);
-    }
-
-    public TileTheme getTileTheme() {
-        return client.getTileTheme();
     }
 
     public Client getClient() {

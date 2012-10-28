@@ -11,6 +11,7 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
+import org.apache.mina.filter.logging.LogLevel;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
@@ -47,7 +48,10 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         connector = new NioSocketConnector();
         connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
         if (logger.isInfoEnabled()) {
-            connector.getFilterChain().addLast("logger", new LoggingFilter() );
+            LoggingFilter logFilter = new LoggingFilter();
+            logFilter.setMessageSentLogLevel(LogLevel.DEBUG);
+            logFilter.setMessageReceivedLogLevel(LogLevel.DEBUG);
+            connector.getFilterChain().addLast("logger", logFilter);
         }
         connector.setHandler(this);
 

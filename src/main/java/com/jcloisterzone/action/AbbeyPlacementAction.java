@@ -13,23 +13,23 @@ import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 
 public class AbbeyPlacementAction extends SelectTileAction {
 
-	public AbbeyPlacementAction(Set<Position> sites) {
-		super(sites);
-	}
-	
-	@Override
-	public Image getImage(Player player, boolean active) {
-		return client.getTileTheme().getTileImage(Tile.ABBEY_TILE_ID);
-	}
+    public AbbeyPlacementAction(Set<Position> sites) {
+        super(sites);
+    }
 
-	@Override
-	public void perform(Client2ClientIF server, Position p) {
-		server.placeTile(Rotation.R0, p);
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new AbbeyPlacementLayer(client.getGridPanel(), this);		
-	}
+    @Override
+    public Image getImage(Player player, boolean active) {
+        return client.getResourceManager().getTileImage(Tile.ABBEY_TILE_ID);
+    }
+
+    @Override
+    public void perform(Client2ClientIF server, Position p) {
+        server.placeTile(Rotation.R0, p);
+    }
+
+    @Override
+    protected GridLayer createGridLayer() {
+        return new AbbeyPlacementLayer(client.getGridPanel(), this);
+    }
 
 }

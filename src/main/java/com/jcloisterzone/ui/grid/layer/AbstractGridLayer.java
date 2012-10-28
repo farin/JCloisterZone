@@ -55,7 +55,7 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     @Override
     public void layerAdded() {
-        if (this instanceof GridMouseListener && gridPanel.getClient().isClientActive()) {
+        if (this instanceof GridMouseListener && getClient().isClientActive()) {
             mouseAdapter = createGridMouserAdapter((GridMouseListener) this);
             gridPanel.addMouseListener(mouseAdapter);
             gridPanel.addMouseMotionListener(mouseAdapter);

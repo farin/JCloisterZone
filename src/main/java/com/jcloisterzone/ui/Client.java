@@ -53,6 +53,9 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.ui.panel.StartPanel;
+import com.jcloisterzone.ui.plugin.PlugableResourceManager;
+import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.plugin.ResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.ui.theme.TileTheme;
@@ -68,8 +71,11 @@ public class Client extends JFrame {
 
     private final Ini config;
     private final ClientSettings settings;
-    private TileTheme tileTheme;
+    private final ResourceManager resourceManager;
+
+    @Deprecated
     private FigureTheme figureTheme;
+    @Deprecated
     private ControlsTheme controlsTheme;
     private Color[] playerColors;
 
@@ -134,7 +140,7 @@ public class Client extends JFrame {
         super.setLocale(l);
     }
 
-    public Client(Ini config) {
+    public Client(Ini config, List<Plugin> plugins) {
         this.config = config;
         setLocale(getLocaleFromConfig());
         settings = new ClientSettings(config);
@@ -143,9 +149,10 @@ public class Client extends JFrame {
         for(int i = 0; i < playerColors.length; i++ ) {
             playerColors[i] = stringToColor(colorNames.get(i));
         }
-        tileTheme = new TileTheme(this);
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
+
+        resourceManager = new PlugableResourceManager(this, plugins);
 
         resetWindowIcon();
 
@@ -209,14 +216,21 @@ public class Client extends JFrame {
         return settings;
     }
 
-    public TileTheme getTileTheme() {
-        return tileTheme;
+    public ResourceManager getResourceManager() {
+        return resourceManager;
     }
 
+//    @Deprecated
+//    public TileTheme getTileTheme() {
+//        return tileTheme;
+//    }
+
+    @Deprecated
     public FigureTheme getFigureTheme() {
         return figureTheme;
     }
 
+    @Deprecated
     public ControlsTheme getControlsTheme() {
         return controlsTheme;
     }
