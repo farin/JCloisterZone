@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.jcloisterzone.plugin.hig" version="1.0">
+    <title>HIG tiles</title>
+    <description>Graphics from original board game</description>
+</plugin>

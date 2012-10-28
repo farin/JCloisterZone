@@ -24,7 +24,8 @@ import com.jcloisterzone.ui.legacy.FigureImageFilter;
 
 public abstract class Theme {
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory
+            .getLogger(getClass());
 
     private final Client client;
     private final String baseDir;
@@ -47,9 +48,10 @@ public abstract class Theme {
     protected List<URL> getResourceLayers(String name) {
         int i = 0;
         List<URL> layers = Lists.newArrayList();
-        for(;;) {
+        for (;;) {
             URL url = getResource(name + "_" + i + ".png", i > 0);
-            if (url == null) break;
+            if (url == null)
+                break;
             layers.add(url);
             i++;
         }
@@ -61,9 +63,10 @@ public abstract class Theme {
     }
 
     private URL getResource(String relativePath, boolean silent) {
-        //System.err.println(baseDir + "/" + relativePath);
-        URL result = Theme.class.getClassLoader().getResource(baseDir + "/" + relativePath);
-        if (result == null && ! silent) {
+        // System.err.println(baseDir + "/" + relativePath);
+        URL result = Theme.class.getClassLoader().getResource(
+                baseDir + "/" + relativePath);
+        if (result == null && !silent) {
             logger.error("Unable to load resource \"" + relativePath + "\"");
         }
         return result;
@@ -83,7 +86,7 @@ public abstract class Theme {
         Image image = imageCache.get(key);
         if (image == null) {
             List<URL> layers = getResourceLayers(name);
-            image =  composeImages(layers, color);
+            image = composeImages(layers, color);
             imageCache.put(key, image);
         }
         return image;
@@ -98,7 +101,6 @@ public abstract class Theme {
         return image;
     }
 
-
     protected Image composeImages(Iterable<URL> layers, Color color) {
         BufferedImage result = null;
         Graphics2D g = null;
@@ -108,24 +110,25 @@ public abstract class Theme {
             colorfilter = new FigureImageFilter(color);
         }
 
-        for(URL layer : layers) {
-            //Image img = new ImageIcon(getResource(path)).getImage();
+        for (URL layer : layers) {
+            // Image img = new ImageIcon(getResource(path)).getImage();
             Image img = Toolkit.getDefaultToolkit().createImage(layer);
             if (colorfilter != null) {
-                img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(img.getSource(), colorfilter));
+                img = Toolkit.getDefaultToolkit().createImage(
+                        new FilteredImageSource(img.getSource(), colorfilter));
             }
-            img = (new ImageIcon(img)).getImage(); //wait for load
+            img = (new ImageIcon(img)).getImage(); // wait for load
             if (g == null) {
-                result = UiUtils.newTransparentImage(img.getWidth(null), img.getHeight(null));
+                result = UiUtils.newTransparentImage(img.getWidth(null),
+                        img.getHeight(null));
                 g = result.createGraphics();
             }
-            //bez new ImgIcon nefunguje - vyzkoumat proc
+            // bez new ImgIcon nefunguje - vyzkoumat proc
             g.drawImage(img, 0, 0, null);
         }
 
         g.dispose();
         return result;
     }
-
 
 }

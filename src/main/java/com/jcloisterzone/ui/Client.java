@@ -134,14 +134,8 @@ public class Client extends JFrame {
         super.setLocale(l);
     }
 
-    public Client(String configFile) {
-        config = new Ini();
-        try {
-            config.load(Client.class.getClassLoader().getResource(configFile));
-        } catch (Exception ex) {
-            logger.error("Unable to read config.ini", ex);
-            System.exit(1);
-        }
+    public Client(Ini config) {
+        this.config = config;
         setLocale(getLocaleFromConfig());
         settings = new ClientSettings(config);
         List<String> colorNames = config.get("players").getAll("color");
