@@ -20,9 +20,11 @@ public class AbstractTileTest {
 
     @Before
     public void initFactories() {
-        game.setConfig(new Ini());
+        Ini config = new Ini();
+        game.setConfig(config);
         setUpGame(game);
         packFactory.setGame(game);
+        packFactory.setConfig(config);
         tileFactory.setGame(game);
     }
 

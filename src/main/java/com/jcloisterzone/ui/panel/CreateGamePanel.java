@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.panel;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
@@ -90,7 +92,11 @@ public class CreateGamePanel extends JPanel {
         expansionPanel = new JPanel();
         expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        expansionPanel.setLayout(new MigLayout("", "[]", "[]"));
+
+        TilePackFactory tilePackFactory = new TilePackFactory();
+        tilePackFactory.setConfig(client.getConfig());
+
+        expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
             if (!exp.isEnabled())
                 continue;
@@ -98,10 +104,13 @@ public class CreateGamePanel extends JPanel {
             JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
             if (exp == Expansion.KING_AND_SCOUT
                     || exp == Expansion.INNS_AND_CATHEDRALS) {
-                expansionPanel.add(chbox, "wrap,gaptop 10");
+                expansionPanel.add(chbox, "gaptop 10");
             } else {
-                expansionPanel.add(chbox, "wrap");
+                expansionPanel.add(chbox, "");
             }
+            JLabel expansionSize = new JLabel(tilePackFactory.getExpansionSize(exp)+"");
+            expansionSize.setForeground(Color.GRAY);
+            expansionPanel.add(expansionSize, "wrap");
             expansionCheckboxes.put(exp, chbox);
         }
         add(expansionPanel, "cell 1 1,grow");

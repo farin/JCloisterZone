@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -39,6 +40,7 @@ public class TilePackFactory {
     private final TileFactory tileFactory = new TileFactory();
 
     protected Game game;
+    protected Ini config;
     protected Map<Expansion, Element> defs;
 
     private Set<String> usedIds = Sets.newHashSet(); //for assertion only
@@ -49,6 +51,10 @@ public class TilePackFactory {
         tileFactory.setGame(game);
     }
 
+    public void setConfig(Ini config) {
+        this.config = config;
+    }
+
     public void setExpansions(Set<Expansion> expansions) {
         defs = Maps.newLinkedHashMap();
         for(Expansion expansion : expansions) {
@@ -56,8 +62,22 @@ public class TilePackFactory {
         }
     }
 
+    public int getExpansionSize(Expansion expansion) {
+        Element el = getExpansionDefinition(expansion);
+        NodeList nl = el.getElementsByTagName("card");
+        int size = 0;
+        for(int i = 0; i < nl.getLength(); i++) {
+            Element tileElement = (Element) nl.item(i);
+            String tileId = getTileId(expansion, tileElement);
+            if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
+                size += getTileCount(tileElement, tileId);
+            }
+        }
+        return size;
+    }
+
     private InputStream getCardsConfig(Expansion expansion) {
-        String fileName = game.getConfig().get("debug", "cards_"+expansion.name());
+        String fileName = config.get("debug", "cards_"+expansion.name());
         if (fileName == null) {
             fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
         }

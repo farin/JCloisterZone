@@ -155,6 +155,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void prepareTilePack() {
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setGame(game);
+        tilePackFactory.setConfig(game.getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
         getTilePack().activateGroup("default");
