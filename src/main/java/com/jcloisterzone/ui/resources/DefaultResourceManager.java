@@ -22,7 +22,7 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(String tileId) {
-        return null;
+        return (new DefaultImageFactory()).getTileImage(tileId);
     }
 
     @Override

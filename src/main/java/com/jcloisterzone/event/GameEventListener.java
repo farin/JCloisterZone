@@ -35,7 +35,8 @@ public interface GameEventListener extends EventListener {
     //void scoreAssigned(int score, Tile tile, Player player); //non-feature score (fairy?)
 
     void tileDrawn(Tile tile);
-    void tileDiscarded(String tileId);
+
+    void tileDiscarded(Tile tile);
     void tilePlaced(Tile tile);
 
     void dragonMoved(Position p);

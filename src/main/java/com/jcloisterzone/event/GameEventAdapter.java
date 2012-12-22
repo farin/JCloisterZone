@@ -53,7 +53,7 @@ public class GameEventAdapter implements GameEventListener {
     }
 
     @Override
-    public void tileDiscarded(String tileId) {
+    public void tileDiscarded(Tile tile) {
     }
 
     @Override

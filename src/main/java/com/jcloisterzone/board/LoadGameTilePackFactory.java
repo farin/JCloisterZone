@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Snapshot;
@@ -53,18 +52,6 @@ public class LoadGameTilePackFactory extends TilePackFactory {
         }
     }
 
-    @Override
-    protected Map<String, Integer> getDiscardTiles() {
-        Map<String, Integer> discard = Maps.newHashMap();
-        for(String tileId : snapshot.getDiscardedTiles()) {
-            if (discard.containsKey(tileId)) {
-                discard.put(tileId, 1 + discard.get(tileId));
-            } else {
-                discard.put(tileId, 1);
-            }
-        }
-        return discard;
-    }
 
     @Override
     public LinkedList<Position> getPreplacedPositions(String tileId, Element card) {

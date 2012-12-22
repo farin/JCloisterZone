@@ -94,7 +94,7 @@ public class DrawPhase extends ServerAwarePhase {
         game.setCurrentTile(tile);
         getBoard().refreshAvailablePlacements(tile);
         if (getBoard().getAvailablePlacementPositions().isEmpty()) {
-            getBoard().discardTile(tile.getId());
+            getBoard().discardTile(tile);
             next(DrawPhase.class);
             return;
         }

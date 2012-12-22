@@ -85,9 +85,11 @@ public class LoadGamePhase extends CreateGamePhase {
         tilePackFactory.setConfig(game.getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         tilePackFactory.setSnapshot(snapshot);
-        game.setTilePack(tilePackFactory.createTilePack());
+        DefaultTilePack tilePack = tilePackFactory.createTilePack();
+        game.setTilePack(tilePack);
         for(String tileId : snapshot.getDiscardedTiles()) {
-            game.getBoard().discardTile(tileId);
+            Tile tile = tilePack.drawTile(tileId);
+            game.getBoard().discardTile(tile);
         }
     }
 

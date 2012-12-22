@@ -92,9 +92,9 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
-    public void tileDiscarded(String tileId) {
-        ((GameEventListener)a).tileDiscarded(tileId);
-        ((GameEventListener)b).tileDiscarded(tileId);
+    public void tileDiscarded(Tile tile) {
+        ((GameEventListener)a).tileDiscarded(tile);
+        ((GameEventListener)b).tileDiscarded(tile);
     }
 
     @Override

@@ -156,14 +156,13 @@ public class Snapshot implements Serializable {
             parent.setAttribute("next", game.getCurrentTile().getId());
         }
         root.appendChild(parent);
-        //for()
-        for(String group : game.getTilePack().getGroups()) {
+        for (String group : game.getTilePack().getGroups()) {
             Element el = doc.createElement("group");
             el.setAttribute("name", group);
             el.setAttribute("active", "" + game.getTilePack().isGroupActive(group));
             parent.appendChild(el);
         }
-        for(Tile tile : game.getBoard().getAllTiles()) {
+        for (Tile tile : game.getBoard().getAllTiles()) {
             Element el = doc.createElement("tile");
             el.setAttribute("name", tile.getId());
             el.setAttribute("rotation", tile.getRotation().name());
@@ -172,9 +171,9 @@ public class Snapshot implements Serializable {
             tileElemens.put(tile.getPosition(), el);
             game.expansionDelegate().saveTileToSnapshot(tile, doc, el);
         }
-        for(String tileId : game.getBoard().getDiscardedTiles()) {
+        for (Tile tile : game.getBoard().getDiscardedTiles()) {
             Element el = doc.createElement("discard");
-            el.setAttribute("name", tileId);
+            el.setAttribute("name", tile.getId());
             parent.appendChild(el);
         }
     }

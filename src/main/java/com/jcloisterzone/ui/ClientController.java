@@ -140,14 +140,14 @@ public class ClientController implements GameEventListener, UserInterface {
     }
 
     @Override
-    public void tileDiscarded(String tileId) {
+    public void tileDiscarded(Tile tile) {
         DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
         if (discardedTilesDialog == null) {
             discardedTilesDialog = new DiscardedTilesDialog(client);
             client.setDiscardedTilesDialog(discardedTilesDialog);
             client.getJMenuBar().setShowDiscardedEnabled(true);
         }
-        discardedTilesDialog.addTile(tileId);
+        discardedTilesDialog.addTile(tile);
         discardedTilesDialog.setVisible(true);
     }
 
