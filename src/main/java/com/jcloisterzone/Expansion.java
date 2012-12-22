@@ -22,6 +22,7 @@ import com.jcloisterzone.game.expansion.TunnelGame;
 public enum Expansion {
     //Basic sets
     BASIC("BA", _("Basic game")),
+    WINTER("WI", _("Winter Edition")),
     WHEEL_OF_FORTUNE("WF", _("Wheel of Fortune"), false),
 
     //Big expansions

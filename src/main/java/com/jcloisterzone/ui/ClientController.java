@@ -14,7 +14,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;

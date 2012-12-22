@@ -58,7 +58,6 @@ import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.plugin.ResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
-import com.jcloisterzone.ui.theme.TileTheme;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {

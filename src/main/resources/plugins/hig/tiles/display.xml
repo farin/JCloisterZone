@@ -10,6 +10,7 @@
         <x-points>340, 340, 510, 640, 640, 810, 810, 680</x-points>
         <y-points>700, 300, 190, 290, 430, 480, 580, 700</y-points>
         <apply>BA.LR CLOISTER CLOISTER</apply>
+        <apply>WI.LR CLOISTER CLOISTER</apply>
         <apply>GQ.LRRRR CLOISTER CLOISTER</apply>
         <apply>AM.LRRRR CLOISTER CLOISTER</apply>
         <apply>FE.LRR CLOISTER CLOISTER</apply>
@@ -103,6 +104,7 @@
         <apply rotate="3">GQ.CRRr ROAD SW</apply>
         <apply rotate="2">IC.CcRr+.i ROAD SE</apply>
         <apply rotate="3">IC.RrRr ROAD SW</apply>
+        <apply rotate="3">WI.RrRr ROAD SW</apply>
         <apply rotate="1">FE.RrRr ROAD NE</apply>
         <apply rotate="2">KS.CRrR ROAD SE</apply>
         <apply rotate="2">DG.RrRr.g ROAD SE</apply>
@@ -121,6 +123,7 @@
         <apply rotate="3">FE.RrC ROAD SW</apply>
         <apply rotate="1">CA.RRr.2 ROAD NE</apply>
         <apply rotate="1">IC.RrRr ROAD NE</apply>
+        <apply rotate="1">WI.RrRr ROAD NE</apply>
         <apply rotate="3">FE.RrRr ROAD SW</apply>
         <apply rotate="0">DG.RrRr.g ROAD NW</apply>
         <apply rotate="3">DG.Rr.v ROAD SW</apply>
@@ -137,13 +140,17 @@
         <x-points>0, 170, 220, 350, 390, 400, 600, 560, 460, 340, 240, 150, 80, 0</x-points>
         <y-points>400, 250, 240, 250, 210, 0, 0, 310, 410, 430, 430, 520, 570, 600</y-points>
         <apply rotate="3">IC.RrC.i ROAD SW</apply>
+        <apply rotate="3">WI.RrC.i ROAD SW</apply>
     </area>
     <area> <!-- long -->
         <rectangle h="650" w="200" x="400" y="0"/>
         <apply rotate="2">AM.R ROAD S</apply>
+        <apply rotate="2">WI.R ROAD S</apply>
         <apply rotate="2">IC.CFR ROAD S</apply>
+        <apply rotate="2">WI.CFR ROAD S</apply>
         <apply rotate="2">FE.CFR ROAD S</apply>
         <apply rotate="1">IC.CcR ROAD E</apply>
+        <apply rotate="1">WI.CcR ROAD E</apply>
         <apply rotate="2">R1.CIRI ROAD S</apply>
         <apply rotate="2">R2.CIRI ROAD S</apply>
         <apply rotate="1">TB.CcR.c ROAD E</apply>
@@ -160,6 +167,7 @@
         <apply rotate="2">AM.LRRRR ROAD S</apply>
         <apply rotate="1">AM.LRRRR ROAD E</apply>
         <apply rotate="2">BA.LR ROAD S</apply>
+        <apply rotate="2">WI.LR ROAD S</apply>
         <apply rotate="2">BA.CccR+ ROAD S</apply>
         <apply rotate="0">BA.CccR ROAD N</apply>
         <apply rotate="2">BA.CRRR ROAD S</apply>
@@ -173,6 +181,7 @@
         <apply rotate="2">GQ.CRcR.1 ROAD S</apply>
         <apply rotate="0">GQ.CRcR.1 ROAD N</apply>
         <apply rotate="1">IC.LRFR ROAD E</apply>
+        <apply rotate="1">WI.LRFR ROAD E</apply>
         <apply rotate="2">IC.CRcR+ ROAD S</apply>
         <apply rotate="2">IC.RRR.i ROAD S</apply>
         <apply rotate="2">KS.CcRR! ROAD S</apply>
@@ -231,6 +240,7 @@
         <x-points>400, 600, 500, 300</x-points>
         <y-points>0, 0, 300, 300</y-points>
         <apply rotate="3">IC.LRFR ROAD W</apply>
+        <apply rotate="3">WI.LRFR ROAD W</apply>
         <apply rotate="3">DG.LRRR.d ROAD W</apply>
         <apply rotate="3">TB.LRRR ROAD W</apply>
     </area>
@@ -246,11 +256,13 @@
         <x-points>400, 600, 600, 630, 740, 740, 600, 400</x-points>
         <y-points>0, 0, 370, 400, 400, 600, 600, 400</y-points>
         <apply rotate="2">AM.RC ROAD S</apply>
+        <apply rotate="2">WI.RC ROAD S</apply>
         <apply rotate="3">FE.RC ROAD W</apply>
         <apply rotate="2">GQ.RCc ROAD S</apply>
         <apply rotate="2">GQ.CcRR ROAD S</apply>
         <apply rotate="2">GQ.CcCR ROAD S</apply>
         <apply rotate="2">IC.RCc.i ROAD S</apply>
+        <apply rotate="2">WI.RCc.i ROAD S</apply>
         <apply rotate="3">KS.RC ROAD W</apply>
         <apply rotate="3">KS.CRrR ROAD W</apply>
         <apply rotate="2">TB.CcRR.w ROAD S</apply>
@@ -267,6 +279,7 @@
         <apply rotate="1">TB.CcRC.g ROAD E</apply>
         <apply rotate="1">TB.CR ROAD E</apply>
         <apply rotate="1">FE.CR ROAD E</apply>
+        <apply rotate="1">WI.CR ROAD E</apply>
     </area>
     <area>
         <!-- rcurved-short -->
@@ -311,6 +324,7 @@
         <x-points>385, 282, 250, 265, 347, 430, 487, 527, 547, 580, 605, 642, 750, 797, 870, 912, 995, 995, 892, 827, 750, 650, 622, 562, 475, 445, 430, 440, 555, 585</x-points>
         <y-points>1000, 895, 807, 602, 495, 432, 370, 365, 372, 375, 360, 315, 325, 345, 397, 415, 425, 590, 590, 580, 527, 492, 507, 580, 637, 670, 757, 800, 900, 1000</y-points>
         <apply>AM.CRr ROAD SE</apply>
+        <apply>WI.CRr ROAD SE</apply>
     </area>
 
     <!--  City areas -->
@@ -373,6 +387,7 @@
         <apply>IC.CRCR CITY N</apply>
         <apply>FE.CRCR CITY N</apply>
         <apply>IC.RrC.i CITY N</apply>
+        <apply>WI.RrC.i CITY N</apply>
         <apply>CC.RrC CITY N</apply>
     </area>
     <area> <!-- N_hR -->
@@ -394,7 +409,9 @@
         <apply rotate="2">TO.CRCr.2 CITY S</apply>
         <apply rotate="0">TB.CR CITY N</apply>
         <apply rotate="0">FE.CR CITY N</apply>
+        <apply rotate="0">WI.CR CITY N</apply>
         <apply rotate="3">AM.RC CITY W</apply>
+        <apply rotate="3">WI.RC CITY W</apply>
         <apply rotate="0">FE.RC CITY N</apply>
         <apply rotate="3">AM.RrC CITY W</apply>
         <apply>CC.CR CITY N</apply>
@@ -405,6 +422,7 @@
         <apply>BA.CRRR CITY N</apply>
         <apply>CA.C CITY N</apply>
         <apply>IC.CFR CITY N</apply>
+        <apply>WI.CFR CITY N</apply>
         <apply>FE.CFR CITY N</apply>
         <apply>DG.CRRR.p CITY N</apply>
     </area>
@@ -505,6 +523,7 @@
         <apply>GQ.RCc CITY NW</apply>
         <apply>GQ.CcRR CITY NW</apply>
         <apply>IC.RCc.i CITY NW</apply>
+        <apply>WI.RCc.i CITY NW</apply>
         <apply>TB.CcCC.c CITY NW</apply>
         <apply>TB.CcRR.w CITY NW</apply>
         <apply>TB.RCc.g CITY NW</apply>
@@ -704,6 +723,7 @@
         <apply rotate="3">GQ.CRRr FARM SR,WL</apply>
         <apply rotate="2">IC.CcRr+.i FARM ER,SL</apply>
         <apply rotate="3">IC.RrRr FARM SR,WL</apply>
+        <apply rotate="3">WI.RrRr FARM SR,WL</apply>
         <apply rotate="1">FE.RrRr FARM NR,EL</apply>
         <apply rotate="2">KS.CRrR FARM ER,SL</apply>
         <apply rotate="2">DG.LCcc.d FARM ER,SL</apply>
@@ -732,9 +752,11 @@
         <apply rotate="3">FE.RrC FARM WL,SR</apply>
         <apply rotate="1">CA.RRr.2 FARM NR,EL</apply>
         <apply rotate="3">IC.RrC.i FARM SR,WL</apply>
+        <apply rotate="3">WI.RrC.i FARM SR,WL</apply>
         <apply rotate="3">IC.RRR.i FARM WL,SR</apply>
         <apply rotate="2">IC.RRR.i FARM ER,SL</apply>
         <apply rotate="1">IC.RrRr FARM NR,EL</apply>
+        <apply rotate="1">WI.RrRr FARM NR,EL</apply>
         <apply rotate="3">FE.RrRr FARM SR,WL</apply>
         <apply rotate="0">DG.RrRr.g FARM NL,WR</apply>
         <apply rotate="2">DG.RRR.g FARM ER,SL</apply>
@@ -770,6 +792,7 @@
         <x-points>502, 342, 360, 597, 745, 1000, 1000</x-points>
         <y-points>1000, 815, 610, 407, 425, 515, 1000</y-points>
         <apply>AM.CRr FARM ER,SL</apply>
+        <apply>WI.CRr FARM ER,SL</apply>
     </area>
     <area>
         <x-points>0, 275, 342, 342, 500, 502</x-points>
@@ -786,6 +809,7 @@
     <area> <!-- center -->
         <rectangle h="200" w="200" x="400" y="400"/>
         <substract>BA.RRR</substract>
+        <substract>WI.RRR</substract>
         <substract>BA.RRRR</substract>
         <substract>DG.CRRR</substract>
         <substract>DG.RRR.d</substract>
@@ -817,9 +841,12 @@
         <apply>IC.CCC FARM SL,SR</apply>
         <apply>IC.CCc+ FARM EL,ER</apply>
         <apply>IC.RCc.i FARM SL,EL,ER</apply>
+        <apply>WI.RCc.i FARM SL,EL,ER</apply>
         <apply>IC.RrC.i FARM WR,EL,ER,SL</apply>
+        <apply>WI.RrC.i FARM WR,EL,ER,SL</apply>
         <apply>IC.CcRr+.i FARM SR,EL</apply>
         <apply>IC.RrRr FARM NL,WR,SL,ER</apply>
+        <apply>WI.RrRr FARM NL,WR,SL,ER</apply>
         <apply>FE.RrRr FARM NL,WR,SL,ER</apply>
         <apply>TB.Ccc.g FARM SL,SR</apply>
         <apply>TB.CcRR.w FARM SL,ER</apply>
@@ -827,6 +854,7 @@
         <apply>TB.CcRC.g FARM ER</apply>
         <apply>TB.CcR.c FARM ER,SL,SR</apply>
         <apply>TB.CR FARM WL,WR,SL,SR,ER</apply>
+        <apply>WI.CR FARM WL,WR,SL,SR,ER</apply>
         <apply>FE.CR FARM WL,WR,SL,SR,ER</apply>
         <apply>TB.RCc.g FARM SL,EL,ER</apply>
         <apply>TB.RRC FARM EL,ER,SL</apply>
@@ -843,6 +871,7 @@
         <apply>AM.CCRR FARM WL,SR</apply>
         <apply>PL.CCRR FARM NL,WR</apply>
         <apply>AM.RC FARM NL,NR,EL,ER,SL</apply>
+        <apply>WI.RC FARM NL,NR,EL,ER,SL</apply>
         <apply>FE.RC FARM EL,ER,SL,SR,WL</apply>
         <apply>AM.RrC FARM ER,SL</apply>
         <apply>KS.RC FARM EL,ER,SL,SR,WL</apply>

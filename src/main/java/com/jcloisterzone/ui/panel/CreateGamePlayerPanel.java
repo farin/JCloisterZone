@@ -19,10 +19,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import net.miginfocom.swing.MigLayout;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;

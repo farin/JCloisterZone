@@ -32,20 +32,20 @@ public class PlugableResourceManager implements ResourceManager {
     //LEGACY
     TileTheme tileTheme;
 
-      @Deprecated
-      public static void addURLToSystemClassLoader(URL url) throws IntrospectionException {
-          URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-          Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
+    @Deprecated
+    public static void addURLToSystemClassLoader(URL url) throws IntrospectionException {
+        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
 
-          try {
-              java.lang.reflect.Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[] { URL.class });
-              method.setAccessible(true);
-              method.invoke(systemClassLoader, new Object[] { url });
-          } catch (Throwable t) {
-              t.printStackTrace();
-              throw new IntrospectionException("Error when adding url to system ClassLoader ");
-          }
-      }
+        try {
+            java.lang.reflect.Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[] { URL.class });
+            method.setAccessible(true);
+            method.invoke(systemClassLoader, new Object[] { url });
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new IntrospectionException("Error when adding url to system ClassLoader ");
+        }
+    }
 
     public PlugableResourceManager(Client client, List<Plugin> plugins) {
         this.client = client;
