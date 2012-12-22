@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.jcloisterzone.plugin.fallback" version="1.0">
+    <title>Default tiles</title>
+    <description>Fallback graphics if no plugin is present </description>
+</plugin>

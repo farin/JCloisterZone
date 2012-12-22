@@ -7,19 +7,20 @@ import com.jcloisterzone.figure.Meeple;
 
 public interface Feature {
 
-	int getId();
+    int getId();
 
-	Location getLocation();
-	Tile getTile();
-	Feature[] getNeighbouring();
+    Location getLocation();
+    Location getRawLocation();
+    Tile getTile();
+    Feature[] getNeighbouring();
 
-	void setMeeple(Meeple meeple);
-	Meeple getMeeple();
+    void setMeeple(Meeple meeple);
+    Meeple getMeeple();
 
-	<T> T walk(FeatureVisitor<T> visitor);
-	/**
-	 * Returns feature part with minimal ID. 
-	 */
-	Feature getMaster();
+    <T> T walk(FeatureVisitor<T> visitor);
+    /**
+     * Returns feature part with minimal ID.
+     */
+    Feature getMaster();
 
 }

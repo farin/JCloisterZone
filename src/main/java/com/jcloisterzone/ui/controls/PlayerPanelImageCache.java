@@ -81,7 +81,7 @@ public class PlayerPanelImageCache {
         }
         AbbeyAndMayorGame ab = client.getGame().getAbbeyAndMayorGame();
         if (ab != null) {
-            scaledImages.put("abbey", scaleImage(client.getResourceManager().getTileImage(Tile.ABBEY_TILE_ID)));
+            scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage()));
         }
     }
 

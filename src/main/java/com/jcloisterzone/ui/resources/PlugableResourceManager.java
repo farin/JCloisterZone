@@ -43,18 +43,27 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Image getTileImage(String tileId) {
+    public Image getTileImage(Tile tile) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getTileImage(tileId);
+            Image result = manager.getTileImage(tile);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Area getFeatureArea(String tileId, Feature piece, Location loc) {
+    public Image getAbbeyImage() {
         for (ResourceManager manager : managers) {
-            Area result = manager.getFeatureArea(tileId, piece, loc);
+            Image result = manager.getAbbeyImage();
+            if (result != null) return result;
+        }
+        return null;
+    }
+
+    @Override
+    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
+        for (ResourceManager manager : managers) {
+            Area result = manager.getFeatureArea(tile, piece, loc);
             if (result != null) return result;
         }
         return null;

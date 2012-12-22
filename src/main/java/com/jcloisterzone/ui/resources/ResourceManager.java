@@ -13,10 +13,11 @@ import com.jcloisterzone.ui.ImmutablePoint;
 
 public interface ResourceManager {
 
-     Image getTileImage(String tileId);
+     Image getTileImage(Tile tile);
+     Image getAbbeyImage();
 
      //NOT used yet
-     Area getFeatureArea(String tileId, Feature piece, Location loc);
+     Area getFeatureArea(Tile tile, Feature piece, Location loc);
 
 
      //TODO use tile id instead?? but rotation must be also passed. API revision needed

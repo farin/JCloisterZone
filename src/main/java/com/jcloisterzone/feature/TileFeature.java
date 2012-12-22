@@ -9,83 +9,87 @@ import com.jcloisterzone.game.Game;
 
 public abstract class TileFeature implements Feature {
 
-	private int id; //unique feature identifier
-	private Tile tile;
-	private Location location;
-	private Feature[] neighbouring;
+    private int id; //unique feature identifier
+    private Tile tile;
+    private Location location;
+    private Feature[] neighbouring;
 
-	private Meeple meeple;
+    private Meeple meeple;
 
-	protected Game getGame() {
-		return tile.getGame();
-	}
-	
-	@Override
-	public <T> T walk(FeatureVisitor<T> visitor) {
-		visitor.visit(this);
-		return visitor.getResult();
-	}
-	
-	@Override
-	public Feature getMaster() {
-		return this;
-	}
+    protected Game getGame() {
+        return tile.getGame();
+    }
 
-	public void setMeeple(Meeple meeple) {
-		this.meeple = meeple;
-	}
+    @Override
+    public <T> T walk(FeatureVisitor<T> visitor) {
+        visitor.visit(this);
+        return visitor.getResult();
+    }
 
-	public Meeple getMeeple() {
-		return meeple;
-	}
+    @Override
+    public Feature getMaster() {
+        return this;
+    }
 
-	public Feature[] getNeighbouring() {
-		return neighbouring;
-	}
-	
-	public void addNeighbouring(Feature[] neighbouring) {
-		if (this.neighbouring == null) {
-			this.neighbouring = neighbouring;
-		} else {
-			this.neighbouring = ObjectArrays.concat(this.neighbouring, neighbouring, Feature.class);
-		}
-	}
+    public void setMeeple(Meeple meeple) {
+        this.meeple = meeple;
+    }
 
-	public Tile getTile() {
-		return tile;
-	}
-	
-	public void setTile(Tile tile) {
-		assert this.tile == null;
-		this.tile = tile;
-	}
+    public Meeple getMeeple() {
+        return meeple;
+    }
 
-	public Location getLocation() {
-		return location.rotateCW(tile.getRotation());
-	}
-	
-	public void setLocation(Location location) {
-		assert this.location == null;
-		this.location = location;
-	}
+    public Feature[] getNeighbouring() {
+        return neighbouring;
+    }
 
-	@Override
-	public int getId() {
-		return id;
-	}
+    public void addNeighbouring(Feature[] neighbouring) {
+        if (this.neighbouring == null) {
+            this.neighbouring = neighbouring;
+        } else {
+            this.neighbouring = ObjectArrays.concat(this.neighbouring, neighbouring, Feature.class);
+        }
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Tile getTile() {
+        return tile;
+    }
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
+    public void setTile(Tile tile) {
+        assert this.tile == null;
+        this.tile = tile;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+"@"+getId();
-	}
+    public Location getLocation() {
+        return location.rotateCW(tile.getRotation());
+    }
+
+    public Location getRawLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        assert this.location == null;
+        this.location = location;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"@"+getId();
+    }
 
 }

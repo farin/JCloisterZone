@@ -50,7 +50,7 @@ public class DiscardedTilesDialog extends JDialog {
     }
 
     public void addTile(Tile tile) {
-        Image icon = client.getResourceManager().getTileImage(tile.getId()).getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_FAST);
+        Image icon = client.getResourceManager().getTileImage(tile).getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_FAST);
         panel.add(new JLabel(new ImageIcon(icon)), "");
         scroll.getViewport().setViewPosition(new Point(panel.getWidth(), 0));
     }

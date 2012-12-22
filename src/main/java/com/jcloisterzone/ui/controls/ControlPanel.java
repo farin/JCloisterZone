@@ -201,7 +201,7 @@ public class ControlPanel extends FakeComponent {
             if (!queue.isEmpty()) {
                 int x = 0;
                 for(Tile tile : queue) {
-                    Image img = client.getResourceManager().getTileImage(tile.getId());
+                    Image img = client.getResourceManager().getTileImage(tile);
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;
                 }

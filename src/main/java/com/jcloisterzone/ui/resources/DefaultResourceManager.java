@@ -21,12 +21,17 @@ public class DefaultResourceManager implements ResourceManager {
 
 
     @Override
-    public Image getTileImage(String tileId) {
-        return (new DefaultImageFactory()).getTileImage(tileId);
+    public Image getTileImage(Tile tile) {
+        return (new TileImageFactory()).getTileImage(tile);
     }
 
     @Override
-    public Area getFeatureArea(String tileId, Feature piece, Location loc) {
+    public Image getAbbeyImage() {
+        return (new TileImageFactory()).getAbbeyImage();
+    }
+
+    @Override
+    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
         //TODO
         throw new NotImplementedException();
     }

@@ -21,7 +21,7 @@ public class TileLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g2) {
         for(Tile tile : placedTiles) {
-            Image img = getClient().getResourceManager().getTileImage(tile.getId());
+            Image img = getClient().getResourceManager().getTileImage(tile);
             g2.drawImage(img, getAffineTransform(img.getWidth(null), tile.getPosition(), tile.getRotation()), null);
         }
     }

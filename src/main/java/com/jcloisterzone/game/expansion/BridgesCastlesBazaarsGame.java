@@ -431,7 +431,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     @Override
     public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
         if (tile.getBridge() != null) {
-            Location realLoc = tile.getBridge().getLocation().rotateCW(tile.getRotation());
+            Location realLoc = tile.getBridge().getRawLocation();
             tileNode.setAttribute("bridge", realLoc.toString());
         }
     }

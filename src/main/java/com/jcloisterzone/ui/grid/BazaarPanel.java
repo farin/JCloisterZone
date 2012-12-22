@@ -327,7 +327,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         int i = 0;
         for(BazaarItem bi : bcb.getBazaarSupply()) {
             //TOOD cache supply images ??
-            Image img =  client.getResourceManager().getTileImage(bi.getTile().getId());
+            Image img =  client.getResourceManager().getTileImage(bi.getTile());
 
             if (selectedItem == i) {
                 g2.setColor(ControlPanel.PLAYER_BG_COLOR);

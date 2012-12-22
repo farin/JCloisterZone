@@ -79,7 +79,17 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public Image getTileImage(String tileId) {
+    public Image getTileImage(Tile tile) {
+        return getTileImage(tile.getId());
+    }
+
+    @Override
+    public Image getAbbeyImage() {
+        return getTileImage(Tile.ABBEY_TILE_ID);
+    }
+
+    private Image getTileImage(String tileId) {
+        //return null;
         if (!containsTile(tileId)) return null;
         String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
         Image img = getImageResource(fileName);
@@ -87,9 +97,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return (new ImageIcon(img)).getImage();
     }
 
+
     @Override
-    public Area getFeatureArea(String tileId, Feature piece, Location loc) {
-        if (!containsTile(tileId)) return null;
+    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
+        if (!containsTile(tile.getId())) return null;
         return null;
     }
 
