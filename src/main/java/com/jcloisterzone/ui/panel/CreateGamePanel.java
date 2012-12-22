@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -45,7 +46,7 @@ public class CreateGamePanel extends JPanel {
     private JPanel rulesPanel;
     private JPanel panel;
 
-    private Map<Expansion, JCheckBox> expansionCheckboxes = Maps.newHashMap();
+    private Map<Expansion, JComponent[]> expansionComponents = Maps.newHashMap();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = Maps.newHashMap();
 
     /**
@@ -111,7 +112,7 @@ public class CreateGamePanel extends JPanel {
             JLabel expansionSize = new JLabel(tilePackFactory.getExpansionSize(exp)+"");
             expansionSize.setForeground(Color.GRAY);
             expansionPanel.add(expansionSize, "wrap");
-            expansionCheckboxes.put(exp, chbox);
+            expansionComponents.put(exp, new JComponent[] {chbox, expansionSize});
         }
         add(expansionPanel, "cell 1 1,grow");
 
@@ -190,7 +191,7 @@ public class CreateGamePanel extends JPanel {
     }
 
     public void updateExpansion(Expansion expansion, Boolean enabled) {
-        expansionCheckboxes.get(expansion).setSelected(enabled);
+        ((JCheckBox)expansionComponents.get(expansion)[0]).setSelected(enabled);
     }
 
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
@@ -200,10 +201,10 @@ public class CreateGamePanel extends JPanel {
         for (Expansion exp : Expansion.values()) {
             if (exp.isEnabled()) {
                 boolean isSupported = expansions.contains(exp);
-                JCheckBox chbox = expansionCheckboxes.get(exp);
-                // chbox.setEnabled(isSupported);
-                chbox.setVisible(isSupported);
-                // chbox.setForeground(isSupported ? null : Color.RED);
+                JComponent[] components = expansionComponents.get(exp);
+                for (JComponent comp : components) {
+                    comp.setVisible(isSupported);
+                }
             }
         }
     }

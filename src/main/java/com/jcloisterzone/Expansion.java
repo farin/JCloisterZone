@@ -46,10 +46,21 @@ public enum Expansion {
     CROP_CIRCLES("CC", _("Crop Circles") + " (" + _("tiles only") + ")"),
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
     PHANTOM("PH", _("The Phantom"), PhantomGame.class),
-    FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class);
+    FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class),
+    HOUSES("HO", _("The Houses"), false),
+    WIND_ROSE("WR", _("The Wind Rose"), false),
+
+    //minis
+    FLIER("FL", "1 - " + _("The Flier"), false),
+    MESSAGES("ME", "2 - " + _("The Messages"), false),
+    FERRIES("FR", "3 - " + _("The Ferries"), false),
+    GOLDMINES("GO", "4 - " + _("The Goldmines"), false),
+    MAGE_WITHC("MW", "5 - " + _("Mage & Witch"), false),
+    ROBBER("RO", "6 - " + _("The Robber"), false),
+    CORN_CIRCLES_II("C2", "7 - " + _("The Corn circles 2"), false);
 
     //promo/one tile expansions
-    //LA_PORXADA("PH", _("La porxada"), false),
+    //LA_PORXADA("PX", _("La porxada"), false),
     //SCHOOL("SC", _("The school"), false);
 
     String code;
