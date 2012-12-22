@@ -1,15 +1,22 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.plugin;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.swing.ImageIcon;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
@@ -23,64 +30,75 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.legacy.FigurePositionProvider;
+import com.jcloisterzone.ui.resources.ResourceManager;
+import com.jcloisterzone.ui.theme.AreaProvider;
 
-public class TileTheme extends Theme {
+public class ResourcePlugin extends Plugin implements ResourceManager {
 
-    //TODO merge with legacy tile info provider
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final int NORMALIZED_SIZE = 1000;
 
     private AreaProvider areaProvider;
+    private FigurePositionProvider figurePositionProvider; //legacy
 
-    //legacy
-    private FigurePositionProvider figurePositionProvider;
-
-
-    public static boolean isBrightColor(Color c) {
-        return c.getRed() > 192 && c.getGreen() > 192 && c.getBlue() < 64;
+    public ResourcePlugin(URL url) throws MalformedURLException {
+        super(url);
+        areaProvider = new AreaProvider(getLoader().getResource("tiles/display.xml"));
+        figurePositionProvider = new FigurePositionProvider(areaProvider);
+//        try {
+//            addURLToSystemClassLoader(getUrl()); //use get URL to get sanitized URL
+//        } catch (IntrospectionException e) {
+//            logger.error(e.getMessage(), e);
+//        }
     }
 
+//    @Deprecated
+//    public static void addURLToSystemClassLoader(URL url) throws IntrospectionException {
+//        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+//        Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
+//
+//        try {
+//            java.lang.reflect.Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[] { URL.class });
+//            method.setAccessible(true);
+//            method.invoke(systemClassLoader, new Object[] { url });
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            throw new IntrospectionException("Error when adding url to system ClassLoader ");
+//        }
+//    }
 
-    public TileTheme(Client client) {
-        super("tiles", client);
-        areaProvider = new AreaProvider(getResource("display.xml"));
-
-        //legacy TODO remove
-        figurePositionProvider = new FigurePositionProvider(this);
+    protected Image getImageResource(String path) {
+        return Toolkit.getDefaultToolkit().getImage(getLoader().getResource(path));
     }
 
-    public AreaProvider getAreaProvider() {
-        return areaProvider;
+    protected boolean containsTile(String tileId) {
+        return true;
     }
 
+    @Override
     public Image getTileImage(String tileId) {
-        //TODO cache directly under tileID without pathname conversion
-        String name = tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
-        return getImage(name);
+        if (!containsTile(tileId)) return null;
+        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
+        Image img = getImageResource(fileName);
+        if (img == null) return null;
+        return (new ImageIcon(img)).getImage();
     }
 
-    public ImmutablePoint getFigurePlacement(Tile tile, Meeple m) {
-        if (m instanceof Barn) {
-            return getBarnPlacement(m.getLocation());
-        }
-        return getFigurePlacement(tile, m.getFeature().getClass(), m.getLocation());
+    @Override
+    public Area getFeatureArea(String tileId, Feature piece, Location loc) {
+        if (!containsTile(tileId)) return null;
+        return null;
     }
 
-    public ImmutablePoint getFigurePlacement(Tile tile, Class<? extends Feature> piece, Location loc) {
-        return figurePositionProvider.getFigurePlacement(tile, piece, loc);
+    @Override
+    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
+        if (!containsTile(tile.getId())) return null;
+        if (type.equals(Barn.class)) return null;
+        return figurePositionProvider.getFigurePlacement(tile, piece.getClass(), piece.getLocation());
     }
-
-    public ImmutablePoint getBarnPlacement(Location loc) {
-        if (loc.intersect(Location.NL.union(Location.WR)) != null) return new ImmutablePoint(0, 0);
-        if (loc.intersect(Location.NR.union(Location.EL)) != null) return new ImmutablePoint(100, 0);
-        if (loc.intersect(Location.SL.union(Location.ER)) != null) return new ImmutablePoint(100, 100);
-        if (loc.intersect(Location.SR.union(Location.WL)) != null) return new ImmutablePoint(0, 100);
-        throw new IllegalArgumentException("Corner location expected");
-    }
-
 
     public Area getMeepleTileArea(Tile tile, int size, Location d) {
         Map<Location, Area> areas = getMeepleTileAreas(tile, size, Collections.singleton(d));
@@ -139,17 +157,9 @@ public class TileTheme extends Theme {
         return transformed;
     }
 
+    @Override
     public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
-        Map<Location, Area> result = Maps.newHashMap();
-        for(Location corner : corners) {
-            int r = size/2;
-            Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
-            if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
-            if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
-            if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
-            result.put(corner, a);
-        }
-        return result;
+        return null;
     }
 
     public Map<Location, Area> getBridgeAreas(int size, Set<Location> locations) {
@@ -162,7 +172,6 @@ public class TileTheme extends Theme {
 
     //TODO move to Area Provider ???
     public Area getBridgeArea(int size, Location loc) {
-
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
@@ -229,5 +238,7 @@ public class TileTheme extends Theme {
         }
         return base;
     }
+
+
 
 }

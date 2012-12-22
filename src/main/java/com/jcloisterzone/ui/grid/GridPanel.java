@@ -38,7 +38,6 @@ import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
-import com.jcloisterzone.ui.theme.TileTheme;
 
 public class GridPanel extends JPanel {
 

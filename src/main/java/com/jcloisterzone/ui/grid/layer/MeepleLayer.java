@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
@@ -75,7 +76,8 @@ public class MeepleLayer extends AbstractGridLayer {
         Color c = getClient().getPlayerColor(m.getPlayer());
         FigureTheme theme = getClient().getFigureTheme();
 
-        ImmutablePoint offset = getClient().getResourceManager().getFigurePlacement(gridPanel.getTile(m.getPosition()), m);
+        Tile tile = gridPanel.getTile(m.getPosition());
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getFeature());
         Image image = theme.getFigureImage(m.getClass(), c,  getExtraDecoration(m));
         images.put(m, new PositionedImage(m.getPosition(), offset, image));
     }

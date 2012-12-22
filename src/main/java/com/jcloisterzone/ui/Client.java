@@ -53,9 +53,9 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.ui.panel.StartPanel;
-import com.jcloisterzone.ui.plugin.PlugableResourceManager;
 import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.ResourceManager;
+import com.jcloisterzone.ui.resources.PlugableResourceManager;
+import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 

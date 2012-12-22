@@ -29,7 +29,7 @@ public class Plugin {
         return new URL(url.toString()+"/");
     }
 
-    private void loadMetadata() throws Exception {
+    protected void loadMetadata() throws Exception {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
         Element plugin = docBuilder.parse(loader.getResource("plugin.xml").openStream()).getDocumentElement();
@@ -57,6 +57,10 @@ public class Plugin {
         return description;
     }
 
+    public URLClassLoader getLoader() {
+        return loader;
+    }
+
     @Override
     public String toString() {
         return title;
@@ -64,7 +68,7 @@ public class Plugin {
 
     public static Plugin loadPlugin(String path) throws Exception {
          URL pluginURL = Plugin.class.getClassLoader().getResource(path);
-         Plugin plugin = new Plugin(pluginURL);
+         ResourcePlugin plugin = new ResourcePlugin(pluginURL);
          plugin.loadMetadata();
          return plugin;
     }

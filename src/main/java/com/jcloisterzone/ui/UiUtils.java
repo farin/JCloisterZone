@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui;
 
+import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
@@ -14,6 +15,10 @@ public final class UiUtils {
 
     public static BufferedImage newTransparentImage(int w, int h) {
         return graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+    }
+
+    public static boolean isBrightColor(Color c) {
+        return c.getRed() > 192 && c.getGreen() > 192 && c.getBlue() < 64;
     }
 
 

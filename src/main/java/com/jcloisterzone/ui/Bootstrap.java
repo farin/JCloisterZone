@@ -41,14 +41,17 @@ public class Bootstrap  {
 
     public List<Plugin> loadPlugins(Ini config) {
         LinkedList<Plugin> plugins = Lists.newLinkedList();
+        List<String> pluginPaths = config.get("plugins").getAll("plugin");
 
-        for (String pluginPath : config.get("plugins").getAll("plugin")) {
-            try {
-                Plugin plugin = Plugin.loadPlugin(pluginPath);
-                plugins.addFirst(plugin);
-                logger.info("plugin <{}> loaded", plugin);
-            } catch (Exception e) {
-                logger.error("Unable to load plugin " + pluginPath, e);
+        if (pluginPaths != null) {
+            for (String pluginPath : pluginPaths) {
+                try {
+                    Plugin plugin = Plugin.loadPlugin(pluginPath);
+                    plugins.addFirst(plugin);
+                    logger.info("plugin <{}> loaded", plugin);
+                } catch (Exception e) {
+                    logger.error("Unable to load plugin " + pluginPath, e);
+                }
             }
         }
 

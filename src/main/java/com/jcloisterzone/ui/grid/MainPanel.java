@@ -13,6 +13,8 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -62,6 +64,10 @@ public class MainPanel extends BackgroundPanel {
         return animationService;
     }
 
+    private Game getGame() {
+        return client.getGame();
+    }
+
 
     public void started(Snapshot snapshot) {
         animationService.clearAll();
@@ -78,17 +84,17 @@ public class MainPanel extends BackgroundPanel {
 
         animationService.setGridPanel(gridPanel);
 
-        if (client.getGame().hasExpansion(Expansion.TOWER)) {
+        if (getGame().hasExpansion(Expansion.TOWER)) {
             towerLayer = new TowerLayer(gridPanel);
             gridPanel.addLayer(towerLayer);
         }
-        if (client.getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
+        if (getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
             dragonLayer = new DragonLayer(gridPanel, null);
             fairyLayer = new FairyLayer(gridPanel, null);
             gridPanel.addLayer(dragonLayer);
             gridPanel.addLayer(fairyLayer);
         }
-        if (client.getGame().hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+        if (getGame().hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
             bridgeLayer = new BridgeLayer(gridPanel);
             gridPanel.addLayer(bridgeLayer);
             castleLayer = new CastleLayer(gridPanel);
@@ -135,11 +141,13 @@ public class MainPanel extends BackgroundPanel {
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
         Position pos = m.getPosition();
+        Tile tile = getGame().getBoard().get(pos);
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getFeature());
         animationService.registerAnimation(pos,
             new ScoreAnimation(
                     pos,
                     points,
-                    client.getResourceManager().getFigurePlacement(client.getGame().getBoard().get(pos), m),
+                    offset,
                     client.getPlayerColor(m.getPlayer()),
                     finalScoring ? null : getScoreAnimationDuration()
             )
@@ -172,7 +180,8 @@ public class MainPanel extends BackgroundPanel {
             c = client.getPlayerColor(player);
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
-        ImmutablePoint offset = client.getResourceManager().getFigurePlacement(gridPanel.getTile(p), Road.class, loc);
+        Tile tile = gridPanel.getTile(p);
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, tile.getFeature(loc));
         meepleLayer.addPermanentImage(p, offset, tunnelPiece);
     }
 
