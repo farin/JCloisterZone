@@ -6,16 +6,20 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 
-/** extends resource manager with convenient methods */
+/** extends resource manager with convenient methods
+ * and add tile image caching
+ */
 public class ConvenientResourceManager implements ResourceManager {
 
     private final ResourceManager manager;
+    private final Map<String, Image> imageCache = Maps.newHashMap();
 
     public ConvenientResourceManager(ResourceManager manager) {
         this.manager = manager;
@@ -37,14 +41,23 @@ public class ConvenientResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
-        return manager.getTileImage(tile);
+        Image img = imageCache.get(tile.getId());
+        if (img == null) {
+            img = manager.getTileImage(tile);
+            imageCache.put(tile.getId(), img);
+        }
+        return img;
     }
 
     @Override
     public Image getAbbeyImage() {
-        return manager.getAbbeyImage();
+        Image img = imageCache.get(Tile.ABBEY_TILE_ID);
+        if (img == null) {
+            img = manager.getAbbeyImage();
+            imageCache.put(Tile.ABBEY_TILE_ID, img);
+        }
+        return img;
     }
-
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
