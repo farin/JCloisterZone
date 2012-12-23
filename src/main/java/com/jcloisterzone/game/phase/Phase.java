@@ -126,12 +126,12 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public void deployMeeple(Position p,  Location d, Class<? extends Meeple> meepleType) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "placeFigure");
+        logger.error(Application.ILLEGAL_STATE_MSG, "deployMeeple");
     }
 
     @Override
     public void moveFairy(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "placeFairy");
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveFairy");
     }
 
     @Override
@@ -209,6 +209,11 @@ public abstract class Phase implements ClientIF {
     @Override
     public void bazaarBuyOrSell(boolean buy) {
         logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
+    }
+
+    @Override
+    public void cornCiclesRemoveOrDeploy(boolean remove) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "cornCiclesRemoveOrDeploy");
     }
 
 }

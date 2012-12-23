@@ -14,6 +14,8 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
@@ -257,6 +259,13 @@ public class ClientController implements GameEventListener, UserInterface {
             client.getControlPanel().selectAction(actions, canPass);
         }
         client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void selectCornCircleOption() {
+        client.clearActions();
+        client.getServer().cornCiclesRemoveOrDeploy(false);
+        System.err.println("NOT PROPERLY IMPLEMENTED");
     }
 
     public BazaarPanel createOrGetBazaarPanel() {

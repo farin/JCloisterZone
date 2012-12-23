@@ -14,6 +14,7 @@ public interface UserInterface extends EventListener {
     void selectBazaarTile();
     void makeBazaarBid(int supplyIndex);
     void selectBuyOrSellBazaarOffer(int supplyIndex);
+    void selectCornCircleOption();
 
     void showWarning(String title, String message);
 

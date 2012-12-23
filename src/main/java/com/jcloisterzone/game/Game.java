@@ -33,6 +33,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
+import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 import com.jcloisterzone.game.expansion.TowerGame;
@@ -139,37 +140,6 @@ public class Game extends GameSettings {
         });
     }
 
-//	public Set<Scoreable> getOccupiedScoreables() {
-//		return getOccupiedScoreables(Predicates.alwaysTrue());
-//	}
-//
-//	public Set<Scoreable> getOccupiedScoreables(Predicate<Object> predicate) {
-//		Set<Scoreable> owned = Sets.newHashSet();
-//		for (Meeple m : deployedMeeples) {
-//			Feature feature = m.getPiece().getFeature();
-//			if (feature instanceof Scoreable) {
-//				Scoreable sc = (Scoreable) feature;
-//				if (predicate.apply(sc)) {
-//					owned.add(sc);
-//				}
-//			}
-//		}
-//		return owned;
-//	}
-
-//	/**
-//	 * Unlike simple get() this method returns player on which server waiting for action.
-//	 * For example during dragon move each player take action but simple method get still return the player who placed last tile
-//	 * and this method the player who performing dragon move
-//	 */
-//	public Player getPlayerWithToken() {
-//		if (hasExpansion(Expansion.PRINCESS_AND_DRAGON) && dragon.dragonMoveInProgress()) {
-//			return getPlayer(dragon.activePlayer);
-//		}
-//		return get();
-//	}
-
-
     public Player getTurnPlayer() {
         return turnPlayer;
     }
@@ -234,7 +204,7 @@ public class Game extends GameSettings {
 
 
     public Meeple getMeeple(final Position p, final Location loc) {
-        for(Meeple m : getDeployedMeeples()) {
+        for (Meeple m : getDeployedMeeples()) {
             if (m.getPosition().equals(p) && m.getLocation().equals(loc)) {
                 return m;
             }
@@ -249,21 +219,30 @@ public class Game extends GameSettings {
     }
 
     public void start() {
-        for(Expansion expansion: getExpansions()) {
-            if (expansion.getExpandedBy() != null) {
-                try {
-                    ExpandedGame eg = expansion.getExpandedBy().newInstance();
-                    eg.setGame(this);
-                    expandedGames.put(expansion, eg);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e); //should never happen
+        Map<Class<? extends ExpandedGame>, ExpandedGame> instances = Maps.newHashMap();
+        for (Expansion expansion: getExpansions()) {
+            Class<? extends ExpandedGame> clazz = expansion.getExpandedBy();
+            if (clazz != null) {
+                /* Expansions can share clas of expandedBy - e.g Crop Circles 1 & 2
+                 * in such case only one instace must be created
+                 */
+                ExpandedGame eg = instances.get(clazz);
+                if (eg == null) {
+                    try {
+                        eg = clazz.newInstance();
+                        eg.setGame(this);
+                        instances.put(clazz, eg);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e); //should never happen
+                    }
                 }
+                expandedGames.put(expansion, eg);
             }
         }
         board = new Board(this);
     }
 
-    //TODO refactor and clear
+    //TODO refactor and clear ?
 
     public Collection<ExpandedGame> getExpandedGames() {
         return expandedGames.values();
@@ -329,7 +308,7 @@ public class Game extends GameSettings {
         Set<Player> players = ctx.getMajorOwners();
         if (players.isEmpty()) return;
         int points = ctx.getPoints();
-        for(Player p : players) {
+        for (Player p : players) {
             scoreFeature(points, ctx, p);
         }
     }
@@ -362,6 +341,13 @@ public class Game extends GameSettings {
     }
     public BridgesCastlesBazaarsGame getBridgesCastlesBazaarsGame() {
         return (BridgesCastlesBazaarsGame) expandedGames.get(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
+    }
+    public CornCirclesGame getCornCirclesGame() {
+        ExpandedGame eg = expandedGames.get(Expansion.CORN_CIRCLES);
+        if (eg == null) {
+            eg = expandedGames.get(Expansion.CORN_CIRCLES_II);
+        }
+        return (CornCirclesGame) eg;
     }
 
 }

@@ -63,7 +63,12 @@ public class ActionPhase extends Phase {
 
     @Override
     public void pass() {
-        next();
+        if (getDefaultNext() instanceof PhantomPhase) {
+            //skip PhantomPhase if user pass turn
+            getDefaultNext().next();
+        } else {
+            next();
+        }
     }
 
     private int doPlaceTowerPiece(Position p) {

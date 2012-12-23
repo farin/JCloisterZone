@@ -155,6 +155,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void selectCornCircleOption() {
+        ((UserInterface)a).selectCornCircleOption();
+        ((UserInterface)b).selectCornCircleOption();
+    }
+
+    @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         ((UserInterface)a).selectDragonMove(positions, movesLeft);
         ((UserInterface)b).selectDragonMove(positions, movesLeft);

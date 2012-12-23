@@ -271,4 +271,10 @@ public class Server extends GameSettings implements ServerIF {
         stub.bazaarBuyOrSell(buy);
     }
 
+    @Override
+    public void cornCiclesRemoveOrDeploy(boolean remove) {
+        stub.cornCiclesRemoveOrDeploy(remove);
+
+    }
+
 }

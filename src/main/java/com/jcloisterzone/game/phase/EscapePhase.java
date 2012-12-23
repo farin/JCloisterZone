@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.EscapeAction;
 import com.jcloisterzone.board.Location;
@@ -80,7 +81,8 @@ public class EscapePhase extends Phase {
     public void undeployMeeple(Position p, Location loc) {
         Meeple m = game.getMeeple(p, loc);
         if (! (m.getFeature() instanceof City)) {
-            throw new IllegalArgumentException("Feature must be a city");
+            logger.error("Feature for escape action must be a city");
+            return;
         }
         m.undeploy();
         next();

@@ -53,6 +53,11 @@ public class AiUserInterfaceAdapter implements UserInterface {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void selectCornCircleOption() {
+        throw new UnsupportedOperationException();
+    }
+
 
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {

@@ -43,4 +43,6 @@ public interface Client2ClientIF {
 
     public void bazaarBid(Integer supplyIndex, Integer price);
     public void bazaarBuyOrSell(boolean buy);
+
+    public void cornCiclesRemoveOrDeploy(boolean remove);
 }

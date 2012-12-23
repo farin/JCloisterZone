@@ -6,6 +6,7 @@ import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
+import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.CountGame;
 import com.jcloisterzone.game.expansion.CultGame;
 import com.jcloisterzone.game.expansion.FestivalGame;
@@ -43,7 +44,7 @@ public enum Expansion {
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
     CULT("CU", _("The Cult"), CultGame.class),
     TUNNEL("TU", _("The Tunnel"), TunnelGame.class),
-    CORN_CIRCLES("CC", _("The Corn Circles") + " (" + _("tiles only") + ")"),
+    CORN_CIRCLES("CC", _("The Corn Circles"), CornCirclesGame.class),
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
     PHANTOM("PH", _("The Phantom"), PhantomGame.class),
     FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class),
@@ -57,7 +58,7 @@ public enum Expansion {
     GOLDMINES("GO", "4 - " + _("The Goldmines"), false),
     MAGE_WITHC("MW", "5 - " + _("Mage & Witch"), false),
     ROBBER("RO", "6 - " + _("The Robber"), false),
-    CORN_CIRCLES_II("C2", "7 - " + _("The Corn circles 2"), false);
+    CORN_CIRCLES_II("C2", /*"7 - " +*/ _("The Corn circles 2"), CornCirclesGame.class); //shares expanded game class!
 
     //promo/one tile expansions
     //LA_PORXADA("PX", _("La porxada"), false),

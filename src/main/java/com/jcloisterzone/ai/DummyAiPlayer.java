@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
+import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 public class DummyAiPlayer extends AiPlayer {
 
@@ -30,6 +31,11 @@ public class DummyAiPlayer extends AiPlayer {
 
     @Override
     public void selectBuyOrSellBazaarOffer(int supplyIndex) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void selectCornCircleOption() {
         throw new UnsupportedOperationException();
     }
 

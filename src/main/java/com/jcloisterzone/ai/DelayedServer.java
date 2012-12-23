@@ -105,4 +105,9 @@ public class DelayedServer implements ServerIF {
         server.bazaarBuyOrSell(buy);
     }
 
+    @Override
+    public void cornCiclesRemoveOrDeploy(boolean remove) {
+        server.cornCiclesRemoveOrDeploy(remove);
+    }
+
 }

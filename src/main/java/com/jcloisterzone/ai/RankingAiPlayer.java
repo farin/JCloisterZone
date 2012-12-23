@@ -292,6 +292,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void selectCornCircleOption() {
+        throw new UnsupportedOperationException();
+    }
+
     abstract protected double rank();
 
     @Override

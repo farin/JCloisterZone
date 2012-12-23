@@ -101,6 +101,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                addPhase(next, new GameOverPhase(game));
         next = addPhase(next, new CleanUpPhase(game));
         next = addPhase(next, new BazaarPhase(game, getServer()));
+        next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
         next = addPhase(next, new WagonPhase(game));
         next = addPhase(next, new ScorePhase(game));
