@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display>
+    <!-- Road areas -->
+    <area> <!-- NW -->
+        <x-points>600, 560, 490, 380, 310, 120, 0, 0, 160, 220, 350, 400, 400</x-points>
+        <y-points>0, 110, 250, 310, 450, 560, 600, 400, 330, 220, 120, 60, 0</y-points>
+        <apply rotate="2">* ROAD SE</apply>
+    </area>
+    <area> <!-- WE -->
+        <rectangle h="200" w="1000" x="0" y="400"/>
+        <apply>* ROAD WE</apply>
+        <apply rotate="1">* ROAD NS</apply>
+    </area>
+
+    <!--  City areas -->
+    <area> <!-- N -->
+        <x-points>0, 290, 390, 610, 690, 1000</x-points>
+        <y-points>0, 290, 350, 350, 290, 0</y-points>
+        <apply>* CITY N</apply>
+    </area>
+    <area> <!-- NW -->
+        <x-points>0, 1000, 950, 550, 340, 250, 80, 0</x-points>
+        <y-points>0, 0, 80, 280, 560, 850, 980, 1000</y-points>
+        <apply>* CITY NW</apply>
+        <apply rotate="1">* CITY NE</apply>
+        <apply rotate="2">* CITY SE</apply>
+        <apply rotate="3">* CITY SW</apply>
+    </area>
+
+    <!--  Farm areas -->
+    <area>  <!-- upper-left quarter -->
+        <rectangle h="500" w="500" x="0" y="0"/>
+        <apply>* FARM WR,NL</apply>
+        <apply>* FARM WR</apply>
+        <apply>* FARM NL</apply>
+        <apply rotate="1">* FARM NR,EL</apply>
+        <apply rotate="1">* FARM NR</apply>
+        <apply rotate="1">* FARM EL</apply>
+        <apply rotate="2">* FARM ER,SL</apply>
+        <apply rotate="2">* FARM ER</apply>
+        <apply rotate="2">* FARM SL</apply>
+        <apply rotate="3">* FARM SR,WL</apply>
+        <apply rotate="3">* FARM SR</apply>
+        <apply rotate="3">* FARM WL</apply>
+    </area>
+    <area>  <!-- upper-half -->
+        <rectangle h="500" w="1000" x="0" y="0"/>
+        <apply>* FARM WR,NL,NR,EL</apply>
+        <apply>* FARM WR,NL,NR</apply>
+        <apply>* FARM NL,NR,EL</apply>
+        <apply rotate="1">* FARM NR,EL,ER,SL</apply>
+        <apply rotate="1">* FARM NR,EL,ER</apply>
+        <apply rotate="1">* FARM EL,ER,SL</apply>
+        <apply rotate="2">* FARM ER,SL,SR,WL</apply>
+        <apply rotate="2">* FARM ER,SL,SR</apply>
+        <apply rotate="2">* FARM SL,SR,WL</apply>
+        <apply rotate="3">* FARM SR,WL,WR,NL</apply>
+        <apply rotate="3">* FARM SR,WL,WR</apply>
+        <apply rotate="3">* FARM WL,WR,NL</apply>
+        <apply>* FARM NL,NR</apply>
+        <apply rotate="1">* FARM EL,ER</apply>
+        <apply rotate="2">* FARM SL,SR</apply>
+        <apply rotate="3">* FARM WL,WR</apply>
+        <apply>* FARM WR,EL</apply>
+        <apply rotate="1">* FARM NR,SL</apply>
+        <apply rotate="2">* FARM ER,WL</apply>
+        <apply rotate="3">* FARM SR,NL</apply>
+    </area>
+    <area> <!-- oblique-NL,WR -->
+        <x-points>0, 500, 0</x-points>
+        <y-points>0, 0, 500</y-points>
+        <apply rotate="2">SI.CcRr FARM ER,SL</apply>
+    </area>
+    <complement-farm>
+        <apply>* FARM WL,WR,SL,SR,EL,ER</apply>
+        <apply>* FARM SL,SR,EL,ER</apply>
+        <apply>SI.CcRr FARM EL,SR</apply>
+        <apply>SI.RCr FARM WR,EL</apply>
+    </complement-farm>
+</display>

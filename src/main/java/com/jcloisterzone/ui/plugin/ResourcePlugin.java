@@ -37,7 +37,7 @@ import com.jcloisterzone.ui.theme.AreaProvider;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+
 
     public static final int NORMALIZED_SIZE = 1000;
 
@@ -71,7 +71,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 //    }
 
     protected Image getImageResource(String path) {
-        return Toolkit.getDefaultToolkit().getImage(getLoader().getResource(path));
+        logger.debug("Trying to load image resource {}:{}", getTitle(), path);
+        URL url = getLoader().getResource(path);
+        if (url == null) return null;
+        return Toolkit.getDefaultToolkit().getImage(url);
     }
 
     protected boolean containsTile(String tileId) {

@@ -7,10 +7,14 @@ import java.net.URLClassLoader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class Plugin {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private URL url;
     private URLClassLoader loader;
@@ -21,6 +25,7 @@ public class Plugin {
 
     public Plugin(URL url) throws MalformedURLException {
         this.url = fixPluginURL(url);
+        logger.debug("Creating plugin loader for URL {}", this.url);
         loader = new URLClassLoader(new URL[] { this.url });
     }
 
