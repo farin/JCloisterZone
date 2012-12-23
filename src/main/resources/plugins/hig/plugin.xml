@@ -2,4 +2,26 @@
 <plugin id="com.jcloisterzone.plugin.hig" version="1">
     <title>HIG tiles</title>
     <description>Graphics from original board game</description>
+    <expansions>
+        <expansion>BASIC</expansion>
+        <expansion>WINTER</expansion>
+        <expansion>INNS_AND_CATHEDRALS</expansion>
+        <expansion>TRADERS_AND_BUILDERS</expansion>
+        <expansion>PRINCESS_AND_DRAGON</expansion>
+        <expansion>TOWER</expansion>
+        <expansion>ABBEY_AND_MAYOR</expansion>
+        <expansion>CATAPULT</expansion>
+        <expansion>BRIDGES_CASTLES_AND_BAZAARS</expansion>
+        <expansion>KING_AND_SCOUT</expansion>
+        <expansion>RIVER</expansion>
+        <expansion>RIVER_II</expansion>
+        <expansion>CATHARS</expansion>
+        <expansion>COUNT</expansion>
+        <expansion>GQ11</expansion>
+        <expansion>CULT</expansion>
+        <expansion>TUNNEL</expansion>
+        <expansion>CORN_CIRCLES</expansion>
+        <expansion>PLAGUE</expansion>
+        <expansion>FESTIVAL</expansion>
+    </expansions>
 </plugin>

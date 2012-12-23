@@ -43,7 +43,7 @@ public enum Expansion {
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
     CULT("CU", _("The Cult"), CultGame.class),
     TUNNEL("TU", _("The Tunnel"), TunnelGame.class),
-    CROP_CIRCLES("CC", _("Crop Circles") + " (" + _("tiles only") + ")"),
+    CORN_CIRCLES("CC", _("The Corn Circles") + " (" + _("tiles only") + ")"),
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")"),
     PHANTOM("PH", _("The Phantom"), PhantomGame.class),
     FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class),

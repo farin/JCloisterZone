@@ -34,16 +34,20 @@ public class Plugin {
         return new URL(url.toString()+"/");
     }
 
-    protected void loadMetadata() throws Exception {
+    protected final void loadMetadata() throws Exception {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
         Element plugin = docBuilder.parse(loader.getResource("plugin.xml").openStream()).getDocumentElement();
-        id = plugin.getAttribute("id");
-        NodeList nl = plugin.getElementsByTagName("title");
+        parseMetadate(plugin);
+    }
+
+    protected void parseMetadate(Element rootElement) throws Exception {
+        id = rootElement.getAttribute("id");
+        NodeList nl = rootElement.getElementsByTagName("title");
         if (nl.getLength() > 0) {
             title = nl.item(0).getTextContent();
         }
-        nl = plugin.getElementsByTagName("description");
+        nl = rootElement.getElementsByTagName("description");
         if (nl.getLength() > 0) {
             description = nl.item(0).getTextContent();
         }

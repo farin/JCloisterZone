@@ -5,22 +5,21 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
@@ -37,38 +36,34 @@ import com.jcloisterzone.ui.theme.AreaProvider;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
-
-
     public static final int NORMALIZED_SIZE = 1000;
 
     private AreaProvider areaProvider;
     private FigurePositionProvider figurePositionProvider; //legacy
 
+    private Set<String> supportedExpansions = Sets.newHashSet(); //expansion codes
+
     public ResourcePlugin(URL url) throws MalformedURLException {
         super(url);
         areaProvider = new AreaProvider(getLoader().getResource("tiles/display.xml"));
         figurePositionProvider = new FigurePositionProvider(areaProvider);
-//        try {
-//            addURLToSystemClassLoader(getUrl()); //use get URL to get sanitized URL
-//        } catch (IntrospectionException e) {
-//            logger.error(e.getMessage(), e);
-//        }
     }
 
-//    @Deprecated
-//    public static void addURLToSystemClassLoader(URL url) throws IntrospectionException {
-//        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-//        Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
-//
-//        try {
-//            java.lang.reflect.Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[] { URL.class });
-//            method.setAccessible(true);
-//            method.invoke(systemClassLoader, new Object[] { url });
-//        } catch (Throwable t) {
-//            t.printStackTrace();
-//            throw new IntrospectionException("Error when adding url to system ClassLoader ");
-//        }
-//    }
+    @Override
+    protected void parseMetadate(Element rootElement) throws Exception {
+        super.parseMetadate(rootElement);
+        NodeList nl = rootElement.getElementsByTagName("expansions");
+        if (nl.getLength() == 0) throw new Exception("Supported expansions missing in plugin.xml for " + getId());
+        Element expansion = (Element) nl.item(0);
+        nl = expansion.getElementsByTagName("expansion");
+        if (nl.getLength() == 0) throw new Exception("No expansion is supported by " + getId());
+        for (int i = 0; i < nl.getLength(); i++) {
+            String expName = nl.item(i).getFirstChild().getNodeValue().trim();
+            Expansion exp = Expansion.valueOf(expName);
+            supportedExpansions.add(exp.getCode());
+        }
+    }
+
 
     protected Image getImageResource(String path) {
         logger.debug("Trying to load image resource {}:{}", getTitle(), path);
@@ -78,7 +73,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     protected boolean containsTile(String tileId) {
-        return true;
+        String expCode = tileId.substring(0, 2);
+        return supportedExpansions.contains(expCode);
     }
 
     @Override

@@ -110,7 +110,7 @@ public class FigurePositionProvider {
             .put("R1.LIRI CLOISTER CLOISTER", new ImmutablePoint(CENTER,30))
             .put("R1.LIRI FARM WR+N+EL", new ImmutablePoint(MAX-BORDER,BORDER))
             .put("R1.LIRI ROAD S", new ImmutablePoint(30,MAX-BORDER))
-            .put("R1.IFI.1 FARM WR+N+EL", new ImmutablePoint(BORDER,BORDER))
+            .put("R1.IFI FARM WR+N+EL", new ImmutablePoint(BORDER,BORDER))
             .put("R1.RIrI ROAD NS", new ImmutablePoint(CENTER,QUARTER))
         //river 2
             .put("R2.LIFI CLOISTER CLOISTER", new ImmutablePoint(CENTER,30))

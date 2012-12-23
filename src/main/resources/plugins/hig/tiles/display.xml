@@ -735,8 +735,7 @@
         <apply rotate="3">R1.CcII FARM WL,SR</apply>
         <apply rotate="1">R1.RrII FARM NR,EL</apply>
         <apply rotate="1">R2.RrII FARM NR,EL</apply>
-        <apply rotate="3">R1.II.1 FARM WL,SR</apply>
-        <apply rotate="3">R1.II.2 FARM WL,SR</apply>
+        <apply rotate="3">R1.II FARM WL,SR</apply>
         <apply rotate="3">R1.RrII FARM WL,SR</apply>
         <apply rotate="3">R2.RrII FARM WL,SR</apply>
         <apply rotate="2">TO.RrRr.2 FARM ER,SL</apply>
@@ -963,8 +962,7 @@
         <y-points>380, 380, 620, 620</y-points>
         <substract>R1.CICI</substract>
         <substract>R1.RIrI</substract>
-        <substract>R1.IFI.1</substract>
-        <substract>R1.IFI.2</substract>
+        <substract>R1.IFI</substract>
         <substract rotate="1">R2.RIrI</substract>
     </area>
     <area>
@@ -972,8 +970,7 @@
         <y-points>380, 470, 680, 1000, 1000, 930, 680, 620</y-points>
         <substract>R1.CcII</substract>
         <substract>R1.RrII</substract>
-        <substract>R1.II.1</substract>
-        <substract>R1.II.2</substract>
+        <substract>R1.II</substract>
         <substract>R2.CcII+</substract>
         <substract>R2.II</substract>
         <substract rotate="1">R2.II+</substract>
