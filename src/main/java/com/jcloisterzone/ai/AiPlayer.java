@@ -22,6 +22,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -148,7 +149,8 @@ public abstract class AiPlayer implements UserInterface {
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         Position p = action.getSites().keySet().iterator().next();
         Location loc = action.getSites().get(p).iterator().next();
-        getServer().takePrisoner(p, loc);
+        Class<? extends Meeple> meepleType = getBoard().get(p).getFeature(loc).getMeeples().get(0).getClass();
+        getServer().takePrisoner(p, loc, meepleType);
         return true;
     }
 

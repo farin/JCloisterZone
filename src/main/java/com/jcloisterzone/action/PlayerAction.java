@@ -9,11 +9,17 @@ import com.jcloisterzone.ui.grid.GridLayer;
 
 public abstract class PlayerAction implements Comparable<PlayerAction> {
 
+    private final String name;
+
     protected Client client;
     private GridLayer gridLayer;
 
+    public PlayerAction(String name) {
+        this.name = name;
+    }
+
     public String getName() {
-        return getClass().getSimpleName().toLowerCase().replace("action", "");
+        return name;
     }
 
     public Image getImage(Player player, boolean active) {

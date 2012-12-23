@@ -8,24 +8,23 @@ import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 
 
-public class BarnAction extends SelectFeatureAction {	
+public class BarnAction extends SelectFeatureAction {
 
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.deployMeeple(p, d, Barn.class);
-	}
+    public BarnAction() {
+        super("barn");
+    }
 
-	@Override
-	public String getName() {
-		return "barn";
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new BarnAreaLayer(client.getGridPanel(), this);
-	}
+    public void perform(Client2ClientIF server, Position p, Location d) {
+        server.deployMeeple(p, d, Barn.class);
+    }
 
-	@Override
-	protected int getSortOrder() {
-		return 9;
-	}
+    @Override
+    protected GridLayer createGridLayer() {
+        return new BarnAreaLayer(client.getGridPanel(), this);
+    }
+
+    @Override
+    protected int getSortOrder() {
+        return 9;
+    }
 }

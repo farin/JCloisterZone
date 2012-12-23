@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.action.FestivalUndeployAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
@@ -25,7 +25,7 @@ public class FestivalGame extends ExpandedGame {
     public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
         if (getTile().getTrigger() != TileTrigger.FESTIVAL) return;
 
-        FestivalUndeployAction action = new FestivalUndeployAction();
+        UndeployAction action = new UndeployAction("festival");
 
         for(Meeple m : getGame().getActivePlayer().getFollowers()) {
             if (m.isDeployed()) {

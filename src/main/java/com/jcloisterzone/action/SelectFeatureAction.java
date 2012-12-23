@@ -12,44 +12,45 @@ import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 
 public abstract class SelectFeatureAction extends PlayerAction {
 
-	private final Sites sites;
+    private final Sites sites;
 
-	public SelectFeatureAction() {
-		this(new Sites());
-	}
-	
-	public SelectFeatureAction(Position p, Set<Location> locations) {
-		this();
-		sites.put(p, locations);
-	}
+    public SelectFeatureAction(String name) {
+        this(name, new Sites());
+    }
 
-	public SelectFeatureAction(Sites sites) {
-		this.sites = sites;
-	}
+    public SelectFeatureAction(String name, Position p, Set<Location> locations) {
+        this(name);
+        sites.put(p, locations);
+    }
 
-	public Sites getSites() {
-		return sites;
-	}	
-	
-	public Set<Location> get(Position p) {
-		Set<Location> locs = sites.get(p);
-		return locs != null ? locs : Collections.<Location>emptySet();
-	}
+    public SelectFeatureAction(String name, Sites sites) {
+        super(name);
+        this.sites = sites;
+    }
 
-	public Set<Location> getOrCreate(Position p) {
-		return sites.getOrCreate(p);
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new FeatureAreaLayer(client.getGridPanel(), this);
-	}
+    public Sites getSites() {
+        return sites;
+    }
 
-	public abstract void perform(Client2ClientIF server, Position p, Location d);
+    public Set<Location> get(Position p) {
+        Set<Location> locs = sites.get(p);
+        return locs != null ? locs : Collections.<Location>emptySet();
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + '=' + sites.toString();
-	}
+    public Set<Location> getOrCreate(Position p) {
+        return sites.getOrCreate(p);
+    }
+
+    @Override
+    protected GridLayer createGridLayer() {
+        return new FeatureAreaLayer(client.getGridPanel(), this);
+    }
+
+    public abstract void perform(Client2ClientIF server, Position p, Location loc);
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '=' + sites.toString();
+    }
 
 }

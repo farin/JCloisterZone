@@ -130,8 +130,8 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc) {
-        Meeple m = game.getMeeple(p, loc);
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+        Meeple m = game.getMeeple(p, loc, meepleType);
         if (isFestivalUndeploy(m) || isPrincessUndeploy(m)) {
             m.undeploy();
             next();

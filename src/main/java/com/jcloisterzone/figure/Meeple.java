@@ -13,6 +13,7 @@ public abstract class Meeple extends Figure {
 
     private transient final Player player;
     private transient Feature feature;
+    private transient Integer index; //index distinguish meeples on same feature
     private Location location;
 
     public Meeple(Game game, Player player) {
@@ -50,11 +51,11 @@ public abstract class Meeple extends Figure {
     public void deploy(Tile tile, Location loc) {
         Feature feature = getPieceForDeploy(tile, loc);
         checkDeployment(feature);
-        doDeployment(tile, loc, feature);
+        deployUnchecked(tile, loc, feature);
         game.fireGameEvent().deployed(this);
     }
 
-    protected void doDeployment(Tile tile, Location loc, Feature feature) {
+    public void deployUnchecked(Tile tile, Location loc, Feature feature) {
         feature.addMeeple(this);
         setPosition(tile.getPosition());
         setLocation(loc);
@@ -92,9 +93,17 @@ public abstract class Meeple extends Figure {
         this.location = location;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public int hashCode() {
-        return 47 * getPlayer().getIndex() + (location == null ? 1 : location.hashCode());
+        return 47 * getPlayer().getIndex() + 13 * (index == null ? 0 : (int) index) + (location == null ? 1 : location.hashCode());
     }
 
     @Override
@@ -103,6 +112,7 @@ public abstract class Meeple extends Figure {
         if (! (obj instanceof Meeple)) return false;
         if (! super.equals(obj)) return false;
         Meeple o = (Meeple) obj;
+        if (! Objects.equal(index, o.index)) return false;
         if (! Objects.equal(location, o.location)) return false;
         //do not compare feature - location is enough - feature is changing during time
         return true;

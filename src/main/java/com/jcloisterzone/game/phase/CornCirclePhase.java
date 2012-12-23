@@ -8,12 +8,13 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.EscapeAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
+import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -133,7 +134,7 @@ public class CornCirclePhase extends Phase {
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             if (action == null) {
-                action = new EscapeAction(); //TODO use another action then escape
+                action = new UndeployAction("corn"); //TODO use another action then escape
             }
             action.getOrCreate(m.getPosition()).add(m.getLocation());
         }
@@ -142,12 +143,12 @@ public class CornCirclePhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc) {
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
         if (ccg.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
-        Meeple m = game.getMeeple(p, loc);
+        Meeple m = game.getMeeple(p, loc, meepleType);
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (!cornType.isInstance(m.getFeature())) {
             logger.error("Improper feature type");
@@ -158,12 +159,34 @@ public class CornCirclePhase extends Phase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location d, Class<? extends Meeple> meepleType) {
-        if (ccg.getCornCircleOption() != CornCicleOption.REMOVAL) {
+    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+        if (ccg.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
             logger.error("Deployment not selected as corn options.");
             return;
         }
-        //TODO solve how to store more meeples on on site
-        throw new NotImplementedException();
+        List<Meeple> meeples = getBoard().get(p).getFeature(loc).getMeeples();
+        if (meeples.isEmpty()) {
+            logger.error("Feature must be occupies");
+            return;
+        }
+        if (meeples.get(0).getPlayer() != getActivePlayer()) {
+            logger.error("Feature must be occupies with own follower");
+            return;
+        }
+
+        Meeple m = getActivePlayer().getUndeployedMeeple(meepleType);
+        Tile tile = getBoard().get(p);
+        m.deployUnchecked(tile, loc, tile.getFeature(loc));
+        game.fireGameEvent().deployed(m);
+        nextCornPlayer();
+    }
+
+    @Override
+    public void pass() {
+        if (ccg.getCornCircleOption() == CornCicleOption.REMOVAL) {
+            logger.error("Removal cannot be passed");
+            return;
+        }
+        nextCornPlayer();
     }
 }

@@ -203,10 +203,12 @@ public class Game extends GameSettings {
     }
 
 
-    public Meeple getMeeple(final Position p, final Location loc) {
+    public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType) {
         for (Meeple m : getDeployedMeeples()) {
             if (m.getPosition().equals(p) && m.getLocation().equals(loc)) {
-                return m;
+                if (m.getClass().equals(meepleType)) {
+                    return m;
+                }
             }
         }
         return null;

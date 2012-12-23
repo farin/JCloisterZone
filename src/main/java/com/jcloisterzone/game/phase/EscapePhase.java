@@ -1,8 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.action.EscapeAction;
+import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -26,7 +25,7 @@ public class EscapePhase extends Phase {
 
     @Override
     public void enter() {
-        EscapeAction action = prepareEscapeAction();
+        UndeployAction action = prepareEscapeAction();
         if (prepareEscapeAction() != null) {
             notifyUI(action, true);
         } else {
@@ -61,14 +60,14 @@ public class EscapePhase extends Phase {
     }
 
 
-    public EscapeAction prepareEscapeAction() {
-        EscapeAction escapeAction = null;
+    public UndeployAction prepareEscapeAction() {
+        UndeployAction escapeAction = null;
         for(Meeple m : game.getDeployedMeeples()) {
             if (m.getPlayer() != getActivePlayer()) continue;
             if (! (m.getFeature() instanceof City)) continue;
             if (m.getFeature().walk(new FindNearbyCloister())) {
                 if (escapeAction == null) {
-                    escapeAction = new EscapeAction();
+                    escapeAction = new UndeployAction("escape");
                 }
                 escapeAction.getOrCreate(m.getPosition()).add(m.getLocation());
             }
@@ -78,8 +77,8 @@ public class EscapePhase extends Phase {
 
 
     @Override
-    public void undeployMeeple(Position p, Location loc) {
-        Meeple m = game.getMeeple(p, loc);
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+        Meeple m = game.getMeeple(p, loc, meepleType);
         if (! (m.getFeature() instanceof City)) {
             logger.error("Feature for escape action must be a city");
             return;

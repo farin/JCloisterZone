@@ -22,31 +22,38 @@ public class DelayedServer implements ServerIF {
         this.placeTileDelay = placeTileDelay;
     }
 
+    @Override
     public void updateSlot(PlayerSlot slot,
             EnumSet<Expansion> supportedExpansions) {
         server.updateSlot(slot, supportedExpansions);
     }
 
+    @Override
     public void selectTiles(int tilesCount, int drawCount) {
         server.selectTiles(tilesCount, drawCount);
     }
 
+    @Override
     public void updateExpansion(Expansion expansion, Boolean enabled) {
         server.updateExpansion(expansion, enabled);
     }
 
+    @Override
     public void updateCustomRule(CustomRule rule, Boolean enabled) {
         server.updateCustomRule(rule, enabled);
     }
 
+    @Override
     public void startGame() {
         server.startGame();
     }
 
+    @Override
     public void pass() {
         server.pass();
     }
 
+    @Override
     public void placeTile(Rotation rotation, Position position) {
         try {
             Thread.sleep(placeTileDelay);
@@ -54,53 +61,65 @@ public class DelayedServer implements ServerIF {
         server.placeTile(rotation, position);
     }
 
+    @Override
     public void deployMeeple(Position pos, Location loc,
             Class<? extends Meeple> meepleType) {
         server.deployMeeple(pos, loc, meepleType);
     }
 
-    public void undeployMeeple(Position pos, Location loc) {
-        server.undeployMeeple(pos, loc);
+    @Override
+    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType) {
+        server.undeployMeeple(pos, loc, meepleType);
     }
 
+    @Override
     public void placeTowerPiece(Position pos) {
         server.placeTowerPiece(pos);
     }
 
-    public void takePrisoner(Position pos, Location loc) {
-        server.takePrisoner(pos, loc);
+    @Override
+    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType) {
+        server.takePrisoner(pos, loc, meepleType);
     }
 
+    @Override
     public void placeTunnelPiece(Position pos, Location loc,
             boolean isSecondPiece) {
         server.placeTunnelPiece(pos, loc, isSecondPiece);
     }
 
+    @Override
     public void moveFairy(Position pos) {
         server.moveFairy(pos);
     }
 
+    @Override
     public void moveDragon(Position pos) {
         server.moveDragon(pos);
     }
 
+    @Override
     public void payRansom(Integer playerIndexToPay,
             Class<? extends Follower> meepleType) {
         server.payRansom(playerIndexToPay, meepleType);
     }
 
+    @Override
     public void deployBridge(Position pos, Location loc) {
         server.deployBridge(pos, loc);
     }
 
+    @Override
     public void deployCastle(Position pos, Location loc) {
         server.deployCastle(pos, loc);
     }
 
+    @Override
     public void bazaarBid(Integer supplyIndex, Integer price) {
         server.bazaarBid(supplyIndex, price);
     }
 
+    @Override
     public void bazaarBuyOrSell(boolean buy) {
         server.bazaarBuyOrSell(buy);
     }

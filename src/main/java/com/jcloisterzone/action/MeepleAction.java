@@ -20,17 +20,17 @@ public class MeepleAction extends SelectFeatureAction {
     private final Class<? extends Meeple> meepleType;
 
     public MeepleAction(Class<? extends Meeple> meepleType) {
-        super();
+        super(meepleType.getSimpleName().toLowerCase());
         this.meepleType = meepleType;
     }
 
     public MeepleAction(Class<? extends Meeple> meepleType, Sites sites) {
-        super(sites);
+        super(meepleType.getSimpleName().toLowerCase(), sites);
         this.meepleType = meepleType;
     }
 
     public MeepleAction(Class<? extends Meeple> meepleType, Position p, Set<Location> locations) {
-        super(p, locations);
+        super(meepleType.getSimpleName().toLowerCase(), p, locations);
         this.meepleType = meepleType;
     }
 
@@ -41,11 +41,6 @@ public class MeepleAction extends SelectFeatureAction {
     @Override
     public void perform(Client2ClientIF server, Position p, Location d) {
         server.deployMeeple(p, d, meepleType);
-    }
-
-    @Override
-    public String getName() {
-        return getMeepleType().getSimpleName().toLowerCase();
     }
 
     @Override

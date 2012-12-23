@@ -40,11 +40,16 @@ public abstract class TileFeature implements Feature {
     public void addMeeple(Meeple meeple) {
         if (meeples.isEmpty()) {
             meeples = Collections.singletonList(meeple);
-            return;
+            meeple.setIndex(0);
         } else {
             //rare case (eg. Crop circles allows this) when more then one followe stay on same feature
+            int index = -1;
+            for (Meeple m : meeples) {
+                if (m.getIndex() > index) index = m.getIndex();
+            }
             meeples = Lists.newLinkedList(meeples);
             meeples.add(meeple);
+            meeple.setIndex(index+1);
         }
     }
 
@@ -56,6 +61,7 @@ public abstract class TileFeature implements Feature {
         } else {
             meeples.remove(meeple);
         }
+        meeple.setIndex(null);
     }
 
     @Override

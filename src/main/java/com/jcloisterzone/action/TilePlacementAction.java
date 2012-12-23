@@ -26,6 +26,7 @@ public class TilePlacementAction extends PlayerAction {
     private Rotation tileRotation = Rotation.R0;
 
     public TilePlacementAction(Tile tile, Map<Position, Set<Rotation>> placements) {
+        super("tileplacement");
         this.tile = tile;
         this.placements = placements;
     }

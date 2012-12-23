@@ -12,44 +12,44 @@ import com.jcloisterzone.game.Game;
 
 public abstract class Follower extends Meeple {
 
-	private static final long serialVersionUID = -659337195197201811L;
+    private static final long serialVersionUID = -659337195197201811L;
 
-	public Follower(Game game, Player player) {
-		super(game, player);
-	}
+    public Follower(Game game, Player player) {
+        super(game, player);
+    }
 
-	public int getPower() {
-		return 1;
-	}
-	
-	@Override
-	public boolean canBeEatenByDragon() {
-		return !(getFeature() instanceof Castle);
-	}
+    public int getPower() {
+        return 1;
+    }
 
-	@Override
-	protected void checkDeployment(Feature f) {			
-		if (f.walk(new IsOccupied())) {
-			throw new IllegalArgumentException("Feature is occupied.");
-		}
-		super.checkDeployment(f);
-	}
+    @Override
+    public boolean canBeEatenByDragon() {
+        return !(getFeature() instanceof Castle);
+    }
+
+    @Override
+    protected void checkDeployment(Feature f) {
+        if (f.walk(new IsOccupied())) {
+            throw new IllegalArgumentException("Feature is occupied.");
+        }
+        super.checkDeployment(f);
+    }
 
 
-	//TODO ??? can be this in score visitor instead of here ???
-	public void undeploy(boolean checkForLonelyBuilderOrPig) {
-		//store ref which is lost be super call 
-		Feature piece = getFeature();		
-		super.undeploy(checkForLonelyBuilderOrPig); //clear piece
-		if (checkForLonelyBuilderOrPig &&
-				game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) &&
-				(piece instanceof City || piece instanceof Farm)) {			
-			Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
-			if (toRemove != null) {
-				toRemove.undeploy(false);
-			}
-		}
-	}
+    //TODO ??? can be this in score visitor instead of here ???
+    public void undeploy(boolean checkForLonelyBuilderOrPig) {
+        //store ref which is lost be super call
+        Feature piece = getFeature();
+        super.undeploy(checkForLonelyBuilderOrPig); //clear piece
+        if (checkForLonelyBuilderOrPig &&
+                game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) &&
+                (piece instanceof City || piece instanceof Farm)) {
+            Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
+            if (toRemove != null) {
+                toRemove.undeploy(false);
+            }
+        }
+    }
 
 
 }

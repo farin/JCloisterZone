@@ -10,35 +10,35 @@ import com.jcloisterzone.rmi.Client2ClientIF;
 
 public class TunnelAction extends SelectFeatureAction {
 
-	private final boolean secondTunnelPiece;
+    private final boolean secondTunnelPiece;
 
-	public TunnelAction(boolean secondTunnelPiece, Sites sites) {
-		super(sites);
-		this.secondTunnelPiece = secondTunnelPiece;
-	}
-	
-	@Override
-	public Image getImage(Player player, boolean active) {					
-		if (active && isSecondTunnelPiece()) {
-			return getImage(client.getPlayerSecondTunelColor(player));			
-		} else {
-			return super.getImage(player, active);
-		}
-	}
+    public TunnelAction(boolean secondTunnelPiece, Sites sites) {
+        super("tunnel", sites);
+        this.secondTunnelPiece = secondTunnelPiece;
+    }
 
-	public boolean isSecondTunnelPiece() {
-		return secondTunnelPiece;
-	}
+    @Override
+    public Image getImage(Player player, boolean active) {
+        if (active && isSecondTunnelPiece()) {
+            return getImage(client.getPlayerSecondTunelColor(player));
+        } else {
+            return super.getImage(player, active);
+        }
+    }
 
-	@Override
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.placeTunnelPiece(p, d, secondTunnelPiece);
+    public boolean isSecondTunnelPiece() {
+        return secondTunnelPiece;
+    }
 
-	}
+    @Override
+    public void perform(Client2ClientIF server, Position p, Location d) {
+        server.placeTunnelPiece(p, d, secondTunnelPiece);
 
-	@Override
-	protected int getSortOrder() {
-		return secondTunnelPiece ? 41 : 40;
-	}
+    }
+
+    @Override
+    protected int getSortOrder() {
+        return secondTunnelPiece ? 41 : 40;
+    }
 
 }

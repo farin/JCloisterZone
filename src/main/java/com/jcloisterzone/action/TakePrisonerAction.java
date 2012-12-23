@@ -4,11 +4,15 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class TakePrisonerAction extends SelectFeatureAction {
+public class TakePrisonerAction extends SelectFollowerAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.takePrisoner(p, d);
-	}
+    public TakePrisonerAction() {
+        super("takeprisoner");
+    }
+
+    @Override
+    public void perform(Client2ClientIF server, Position pos, Location loc) {
+        server.takePrisoner(pos, loc, getMeepleType(pos, loc));
+    }
 
 }

@@ -90,11 +90,11 @@ public class Player implements Serializable {
     public Meeple getUndeployedMeeple(Class<? extends Meeple> clazz) {
         assert !Modifier.isAbstract(clazz.getModifiers());
         if (Follower.class.isAssignableFrom(clazz)) {
-            for(Follower m : followers) {
+            for (Follower m : followers) {
                 if (!m.isDeployed() && clazz.equals(m.getClass())) return m;
             }
         } else {
-            for(Special m : specialMeeples) {
+            for (Special m : specialMeeples) {
                 if (!m.isDeployed() && clazz.equals(m.getClass())) return m;
             }
         }

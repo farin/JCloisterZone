@@ -1,19 +1,18 @@
 package com.jcloisterzone.action;
 
-import java.util.Set;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class CastleAction extends SelectFeatureAction {
+public class UndeployAction extends SelectFollowerAction {
 
-    public CastleAction( Position position, Set<Location> sites) {
-        super("castle", position, sites);
+    public UndeployAction(String name) {
+        super(name);
     }
 
+    @Override
     public void perform(Client2ClientIF server, Position pos, Location loc) {
-        server.deployCastle(pos, loc);
+        server.undeployMeeple(pos, loc, getMeepleType(pos, loc));
     }
 
 }

@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
@@ -72,13 +73,22 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
+    private ImmutablePoint getMeeplePlacement(Tile tile, Meeple m) {
+        Feature feature = m.getFeature();
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), feature);
+        int meepleCount = feature.getMeeples().size();
+        if (meepleCount == 1) return offset;
+        return new ImmutablePoint(offset.getX() + 10*(meepleCount-1), offset.getY());
+    }
+
     public void meepleDeployed(Meeple m) {
         Color c = getClient().getPlayerColor(m.getPlayer());
         FigureTheme theme = getClient().getFigureTheme();
 
         Tile tile = gridPanel.getTile(m.getPosition());
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getFeature());
+        ImmutablePoint offset = getMeeplePlacement(tile, m);
         Image image = theme.getFigureImage(m.getClass(), c,  getExtraDecoration(m));
+        assert !images.containsKey(m);
         images.put(m, new PositionedImage(m.getPosition(), offset, image));
     }
 

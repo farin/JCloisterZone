@@ -9,20 +9,24 @@ import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 
 public class FairyAction extends SelectTileAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p) {
-		server.moveFairy(p);
-	}
+    public FairyAction() {
+        super("fairy");
+    }
 
-	@Override
-	protected int getSortOrder() {
-		return 30;
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		Image gd = client.getControlsTheme().getActionDecoration("fairy");
-		return new TileActionLayer(client.getGridPanel(), this, gd);
-	}
+    @Override
+    public void perform(Client2ClientIF server, Position p) {
+        server.moveFairy(p);
+    }
+
+    @Override
+    protected int getSortOrder() {
+        return 30;
+    }
+
+    @Override
+    protected GridLayer createGridLayer() {
+        Image gd = client.getControlsTheme().getActionDecoration("fairy");
+        return new TileActionLayer(client.getGridPanel(), this, gd);
+    }
 
 }
