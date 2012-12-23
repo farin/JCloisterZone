@@ -54,6 +54,7 @@ import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
@@ -70,7 +71,7 @@ public class Client extends JFrame {
 
     private final Ini config;
     private final ClientSettings settings;
-    private final ResourceManager resourceManager;
+    private final ConvenientResourceManager resourceManager;
 
     @Deprecated
     private FigureTheme figureTheme;
@@ -151,7 +152,7 @@ public class Client extends JFrame {
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
 
-        resourceManager = new PlugableResourceManager(this, plugins);
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
 
         resetWindowIcon();
 
@@ -215,14 +216,9 @@ public class Client extends JFrame {
         return settings;
     }
 
-    public ResourceManager getResourceManager() {
+    public ConvenientResourceManager getResourceManager() {
         return resourceManager;
     }
-
-//    @Deprecated
-//    public TileTheme getTileTheme() {
-//        return tileTheme;
-//    }
 
     @Deprecated
     public FigureTheme getFigureTheme() {

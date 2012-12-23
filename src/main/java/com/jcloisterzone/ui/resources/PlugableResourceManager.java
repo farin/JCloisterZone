@@ -60,14 +60,6 @@ public class PlugableResourceManager implements ResourceManager {
         return null;
     }
 
-    @Override
-    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
-        for (ResourceManager manager : managers) {
-            Area result = manager.getFeatureArea(tile, piece, loc);
-            if (result != null) return result;
-        }
-        return null;
-    }
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
@@ -88,36 +80,19 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Area getBridgeArea(int size, Location loc) {
+    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Area result = manager.getBridgeArea(size, loc);
+            Map<Location, Area> result = manager.getBridgeAreas(tile, size, locations);
             if (result != null) return result;
         }
         return null;
     }
 
-    @Override
-    public Map<Location, Area> getBridgeAreas(int size, Set<Location> locations) {
-        for (ResourceManager manager : managers) {
-            Map<Location, Area> result = manager.getBridgeAreas(size, locations);
-            if (result != null) return result;
-        }
-        return null;
-    }
 
     @Override
-    public Area getMeepleTileArea(Tile tile, int size, Location d) {
+    public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Area result = manager.getMeepleTileArea(tile, size, d);
-            if (result != null) return result;
-        }
-        return null;
-    }
-
-    @Override
-    public Map<Location, Area> getMeepleTileAreas(Tile tile, int size, Set<Location> locations) {
-        for (ResourceManager manager : managers) {
-            Map<Location, Area> result = manager.getMeepleTileAreas(tile, size, locations);
+            Map<Location, Area> result = manager.getFeatureAreas(tile, size, locations);
             if (result != null) return result;
         }
         return null;

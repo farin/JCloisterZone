@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class BridgeLayer extends AbstractGridLayer {
@@ -24,18 +25,19 @@ public class BridgeLayer extends AbstractGridLayer {
     }
 
     //TODO store direct images as in Meeple layer???
-    private Map<Position, Location> bridges = Maps.newHashMap();
+    private Map<Tile, Location> bridges = Maps.newHashMap();
 
     @Override
     public void paint(Graphics2D g2) {
         Composite oldComposite = g2.getComposite();
 //		Stroke oldStroke = g2.getStroke();
 //		g2.setStroke(new BasicStroke(getSquareSize() * 0.015f));
-        for(Entry<Position, Location> entry : bridges.entrySet()) {
+        for(Entry<Tile, Location> entry : bridges.entrySet()) {
             //devel code only - use image instead
+            Tile tile = entry.getKey();
             Location loc = entry.getValue();
-            Position pos = entry.getKey();
-            Area a = getClient().getResourceManager().getBridgeArea(getSquareSize(), loc);
+            Position pos = tile.getPosition();
+            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc);
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
             g2.setColor(Color.BLACK);
             g2.setComposite(BRIDGE_FILL_COMPOSITE);
@@ -56,7 +58,8 @@ public class BridgeLayer extends AbstractGridLayer {
     }
 
     public void bridgeDeployed(Position pos, Location loc) {
-        bridges.put(pos, loc);
+        Tile tile = getClient().getGame().getBoard().get(pos);
+        bridges.put(tile, loc);
     }
 
 }

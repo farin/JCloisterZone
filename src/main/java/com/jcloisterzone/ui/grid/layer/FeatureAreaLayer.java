@@ -37,9 +37,9 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         Set<Location> locations = action.getSites().get(p);
         if (locations == null) return null;
         if (action instanceof BridgeAction) {
-            return getClient().getResourceManager().getBridgeAreas(getSquareSize(), locations);
+            return getClient().getResourceManager().getBridgeAreas(tile, getSquareSize(), locations);
         } else {
-            return getClient().getResourceManager().getMeepleTileAreas(tile, getSquareSize(), locations);
+            return getClient().getResourceManager().getFeatureAreas(tile, getSquareSize(), locations);
         }
     }
 

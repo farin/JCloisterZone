@@ -99,25 +99,16 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
 
     @Override
-    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
-        if (!containsTile(tile.getId())) return null;
-        return null;
-    }
-
-    @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
         if (!containsTile(tile.getId())) return null;
         if (type.equals(Barn.class)) return null;
         return figurePositionProvider.getFigurePlacement(tile, piece.getClass(), piece.getLocation());
     }
 
-    public Area getMeepleTileArea(Tile tile, int size, Location d) {
-        Map<Location, Area> areas = getMeepleTileAreas(tile, size, Collections.singleton(d));
-        if (areas.isEmpty()) return null;
-        return areas.values().iterator().next();
-    }
+    @Override
+    public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+        if (!containsTile(tile.getId())) return null;
 
-    public Map<Location, Area> getMeepleTileAreas(Tile tile, int size, Set<Location> locations) {
         Map<Location, Area> areas = Maps.newHashMap();
         Area subsBridge = getBaseRoadAndCitySubstractions(tile);
         Area subsRoadCity = new Area(subsBridge);
@@ -173,7 +164,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return null;
     }
 
-    public Map<Location, Area> getBridgeAreas(int size, Set<Location> locations) {
+    //TODO Move to default provider ???
+    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         Map<Location, Area> result = Maps.newHashMap();
         for(Location loc : locations) {
             result.put(loc, getBridgeArea(size, loc));
@@ -182,7 +174,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     //TODO move to Area Provider ???
-    public Area getBridgeArea(int size, Location loc) {
+    private Area getBridgeArea(int size, Location loc) {
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();

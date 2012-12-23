@@ -6,8 +6,6 @@ import java.awt.geom.Ellipse2D;
 import java.util.Map;
 import java.util.Set;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
@@ -28,12 +26,6 @@ public class DefaultResourceManager implements ResourceManager {
     @Override
     public Image getAbbeyImage() {
         return (new TileImageFactory()).getAbbeyImage();
-    }
-
-    @Override
-    public Area getFeatureArea(Tile tile, Feature piece, Location loc) {
-        //TODO
-        throw new NotImplementedException();
     }
 
 
@@ -66,23 +58,14 @@ public class DefaultResourceManager implements ResourceManager {
         return result;
     }
 
+
     @Override
-    public Area getBridgeArea(int size, Location loc) {
+    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         return null;
     }
 
     @Override
-    public Map<Location, Area> getBridgeAreas(int size, Set<Location> locations) {
-        return null;
-    }
-
-    @Override
-    public Area getMeepleTileArea(Tile tile, int size, Location d) {
-        return null;
-    }
-
-    @Override
-    public Map<Location, Area> getMeepleTileAreas(Tile tile, int size,
+    public Map<Location, Area> getFeatureAreas(Tile tile, int size,
             Set<Location> locations) {
         return null;
     }
