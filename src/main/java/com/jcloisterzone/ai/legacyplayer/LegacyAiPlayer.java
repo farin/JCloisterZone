@@ -2,6 +2,7 @@ package com.jcloisterzone.ai.legacyplayer;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;
@@ -395,7 +396,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double getUnfinishedCloisterPoints(Cloister cloister, LegacyAiScoreContext ctx) {
-        if (isMe(cloister.getMeeple().getPlayer())) {
+        List<Meeple> followers = cloister.getMeeples();
+        if (!followers.isEmpty() && isMe(followers.get(0).getPlayer())) {
             openCount[OPEN_COUNT_CLOITSTER]++;
         }
         double chanceToClose = ctx.getChanceToClose();

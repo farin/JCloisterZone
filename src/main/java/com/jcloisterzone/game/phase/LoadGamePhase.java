@@ -71,7 +71,7 @@ public class LoadGamePhase extends CreateGamePhase {
                 f = tile.getFeature(m.getLocation());
             }
             m.setFeature(f);
-            f.setMeeple(m);
+            f.addMeeple(m);
             game.fireGameEvent().deployed(m);
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());

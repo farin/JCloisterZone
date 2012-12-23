@@ -55,7 +55,7 @@ public abstract class Meeple extends Figure {
     }
 
     protected void doDeployment(Tile tile, Location loc, Feature feature) {
-        feature.setMeeple(this);
+        feature.addMeeple(this);
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
@@ -67,7 +67,7 @@ public abstract class Meeple extends Figure {
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
         game.fireGameEvent().undeployed(this);
-        feature.setMeeple(null);
+        feature.removeMeeple(this);
         clearDeployment();
     }
 

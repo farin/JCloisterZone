@@ -21,7 +21,7 @@ public class MeepleUndeployedOperation implements Operation {
     @Override
     public void undo(Game game) {
         Feature feature = meeple.getPieceForDeploy(tile, loc);
-        feature.setMeeple(meeple);
+        feature.addMeeple(meeple);
         meeple.setPosition(tile.getPosition());
         meeple.setLocation(loc);
         meeple.setFeature(feature);

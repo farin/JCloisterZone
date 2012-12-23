@@ -134,8 +134,8 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
                 break;
             }
         }
-        Meeple m = city.getMeeple();
-        if (m != null) {
+        List<Meeple> meeples = city.getMeeples();
+        for (Meeple m : meeples) {
             m.undeploy(false);
         }
         Castle castle = new Castle();
@@ -159,7 +159,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
             }
         }
 
-        if (m != null) {
+        for (Meeple m : meeples) {
             m.deploy(tile, loc);
         }
         return castle;

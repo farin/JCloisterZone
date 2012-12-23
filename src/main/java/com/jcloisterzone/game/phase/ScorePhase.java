@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -131,8 +132,9 @@ public class ScorePhase extends Phase {
     }
 
     private void scoreCastle(Castle castle, int points) {
-        Meeple m = castle.getMeeple();
-        if (m == null) m = castle.getSecondFeature().getMeeple();
+        List<Meeple> meeples = castle.getMeeples();
+        if (meeples.isEmpty()) meeples = castle.getSecondFeature().getMeeples();
+        Meeple m = meeples.get(0); //all meeples must share same owner
         m.getPlayer().addPoints(points, PointCategory.CASTLE);
         game.fireGameEvent().scored(m.getFeature(), points, points+"", m, false);
         m.undeploy(false);

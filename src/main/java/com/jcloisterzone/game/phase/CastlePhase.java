@@ -107,8 +107,10 @@ public class CastlePhase extends Phase {
                 castleBase = false;
                 return false;
             }
-            if (c.getMeeple() instanceof Follower) {
-                owner = c.getMeeple().getPlayer();
+            //if more then one follower is on caste, all has same owner
+            //possible scenario - deploy on city - add by crop circle another follower - deploy castle
+            if (!c.getMeeples().isEmpty()) {
+                owner = c.getMeeples().get(0).getPlayer();
             }
             size++;
             if (size > 2) return false;

@@ -1,5 +1,7 @@
 package com.jcloisterzone.feature;
 
+import java.util.List;
+
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -14,8 +16,9 @@ public interface Feature {
     Tile getTile();
     Feature[] getNeighbouring();
 
-    void setMeeple(Meeple meeple);
-    Meeple getMeeple();
+    void addMeeple(Meeple meeple);
+    void removeMeeple(Meeple meeple);
+    List<Meeple> getMeeples();
 
     <T> T walk(FeatureVisitor<T> visitor);
     /**

@@ -17,68 +17,78 @@ import com.jcloisterzone.game.Game;
 
 public class CloisterScoreContext extends SelfReturningVisitor implements CompletableScoreContext {
 
-	private int neigbouringTiles;
-	private Cloister cloister;
-	private Game game;
+    private int neigbouringTiles;
+    private Cloister cloister;
+    private Game game;
 
-	public CloisterScoreContext(Game game) {
-		this.game = game;
-	}
+    public CloisterScoreContext(Game game) {
+        this.game = game;
+    }
 
-	@Override
-	public Cloister getMasterFeature() {
-		return cloister;
-	}
+    @Override
+    public Cloister getMasterFeature() {
+        return cloister;
+    }
 
-	@Override
-	public int getPoints() {
-		return neigbouringTiles + 1;
-	}
+    @Override
+    public int getPoints() {
+        return neigbouringTiles + 1;
+    }
 
-	@Override
-	public Set<Position> getPositions() {
-		return Collections.singleton(cloister.getTile().getPosition());
-	}
+    @Override
+    public Set<Position> getPositions() {
+        return Collections.singleton(cloister.getTile().getPosition());
+    }
 
-	@Override
-	public boolean visit(Feature feature) {
-		cloister = (Cloister) feature;
-		Position pos = cloister.getTile().getPosition();
-		neigbouringTiles = game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
-		return true;
-	}
+    @Override
+    public boolean visit(Feature feature) {
+        cloister = (Cloister) feature;
+        Position pos = cloister.getTile().getPosition();
+        neigbouringTiles = game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
+        return true;
+    }
 
-	@Override
-	public Follower getSampleFollower(Player player) {
-		if (cloister.getMeeple().getPlayer() == player) return (Follower) cloister.getMeeple();
-		return null;
-	}
+    /**
+     * Currently there can be only one follower on cloister feature ( in comparison with other features like City, ...)
+     * So nowdays this helper method can be used
+     */
+    private Meeple getCloisterMeeple() {
+        List<Meeple> meeples = cloister.getMeeples();
+        if (meeples.isEmpty()) return null;
+        return meeples.get(0);
+    }
 
-	@Override
-	public Set<Player> getMajorOwners() {
-		if (cloister.getMeeple() == null) return Collections.emptySet();
-		return Collections.singleton(cloister.getMeeple().getPlayer());
-	}
+    @Override
+    public Follower getSampleFollower(Player player) {
+        if (getCloisterMeeple().getPlayer() == player) return (Follower) getCloisterMeeple();
+        return null;
+    }
 
-	@Override
-	public List<Follower> getFollowers() {
-		if (cloister.getMeeple() == null) return Collections.emptyList();
-		return Collections.singletonList((Follower) cloister.getMeeple());
-	}
+    @Override
+    public Set<Player> getMajorOwners() {
+        if (getCloisterMeeple() == null) return Collections.emptySet();
+        return Collections.singleton(getCloisterMeeple().getPlayer());
+    }
 
-	@Override
-	public List<Special> getSpecialMeeples() {
-		return Collections.emptyList();
-	}
+    @Override
+    public List<Follower> getFollowers() {
+        if (getCloisterMeeple() == null) return Collections.emptyList();
+        return Collections.singletonList((Follower) getCloisterMeeple());
+    }
 
-	@Override
-	public Iterable<Meeple> getMeeples() {
-		return Iterables.<Meeple>concat(getFollowers(), getSpecialMeeples());
-	}
+    @Override
+    public List<Special> getSpecialMeeples() {
+        return Collections.emptyList();
+    }
 
-	@Override
-	public boolean isCompleted() {
-		return neigbouringTiles == 8;
-	}
+    @Override
+    public Iterable<Meeple> getMeeples() {
+        return Iterables.<Meeple>concat(getFollowers(), getSpecialMeeples());
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return neigbouringTiles == 8;
+    }
 
 }

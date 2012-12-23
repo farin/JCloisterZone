@@ -1,5 +1,10 @@
 package com.jcloisterzone.feature;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
@@ -14,7 +19,7 @@ public abstract class TileFeature implements Feature {
     private Location location;
     private Feature[] neighbouring;
 
-    private Meeple meeple;
+    private List<Meeple> meeples = Collections.emptyList();
 
     protected Game getGame() {
         return tile.getGame();
@@ -31,12 +36,31 @@ public abstract class TileFeature implements Feature {
         return this;
     }
 
-    public void setMeeple(Meeple meeple) {
-        this.meeple = meeple;
+    @Override
+    public void addMeeple(Meeple meeple) {
+        if (meeples.isEmpty()) {
+            meeples = Collections.singletonList(meeple);
+            return;
+        } else {
+            //rare case (eg. Crop circles allows this) when more then one followe stay on same feature
+            meeples = Lists.newLinkedList(meeples);
+            meeples.add(meeple);
+        }
     }
 
-    public Meeple getMeeple() {
-        return meeple;
+    @Override
+    public void removeMeeple(Meeple meeple) {
+        if (meeples.size() == 1) {
+            assert meeples.get(0) == meeple;
+            meeples = Collections.emptyList();
+        } else {
+            meeples.remove(meeple);
+        }
+    }
+
+    @Override
+    public List<Meeple> getMeeples() {
+        return meeples;
     }
 
     public Feature[] getNeighbouring() {
