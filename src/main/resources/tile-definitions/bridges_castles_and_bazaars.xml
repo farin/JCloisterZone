@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card count="2" id="Cccc.b">
+	<tile count="2" id="Cccc.b">
 		<bazaar/>
 		<city>N E S W</city>
-	</card>
-	<card id="CCCR">
+	</tile>
+	<tile id="CCCR">
 		<city castle-base="true">W</city>
 		<city castle-base="true">N</city>
 		<city castle-base="true">E</city>
@@ -14,14 +14,14 @@
 		<wagon-move>
 			<neighbouring>S E</neighbouring>
 		</wagon-move>		
-	</card>
-	<card id="CFc.b">
+	</tile>
+	<tile id="CFc.b">
 		<bazaar/>
 		<city>W E</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W">SL SR</farm>		
-	</card>
-	<card id="CFR!">
+	</tile>
+	<tile id="CFR!">
 		<city>W</city>
 		<road>E</road>
 		<farm city="W">NL NR</farm>
@@ -30,35 +30,35 @@
 		<wagon-move>
 			<neighbouring>W E</neighbouring>
 		</wagon-move>		
-	</card>
-	<card id="CFR.b">
+	</tile>
+	<tile id="CFR.b">
 		<bazaar/>
 		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm>EL ER SL SR WL WR</farm>	
-	</card>
-	<card id="F.b">
+	</tile>
+	<tile id="F.b">
 		<bazaar/>
 		<farm>NL NR EL ER SL SR WL WR</farm>
-	</card>
-	<card id="LCFc">
+	</tile>
+	<tile id="LCFc">
 		<cloister/>
 		<city>W E</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W">SL SR</farm>
-	</card>
-	<card id="LRFr">
+	</tile>
+	<tile id="LRFr">
 		<cloister/>
 		<road>W E</road>
 		<farm>WR NL NR EL</farm>
 		<farm>ER SL SR WL</farm>	
-	</card>
-	<card id="R.bi">
+	</tile>
+	<tile id="R.bi">
 		<bazaar/>
 		<road inn="yes">S</road>
 		<farm>NL NR EL ER SL SR WL WR</farm>	
-	</card>
-	<card id="RFR.b">
+	</tile>
+	<tile id="RFR.b">
 		<bazaar/>
 		<road>N</road>		
 		<road>S</road>
@@ -67,8 +67,8 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>	
-	</card>
-	<card id="RFR.bi">
+	</tile>
+	<tile id="RFR.bi">
 		<bazaar/>
 		<road>N</road>		
 		<road inn="yes">S</road>
@@ -77,5 +77,5 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>		
-	</card>
+	</tile>
 </pack>

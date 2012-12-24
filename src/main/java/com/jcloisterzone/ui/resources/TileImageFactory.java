@@ -1,13 +1,8 @@
 package com.jcloisterzone.ui.resources;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.Toolkit;
-import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,9 +14,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.ResourcePlugin;
 
 public class TileImageFactory {
 
@@ -76,7 +69,7 @@ public class TileImageFactory {
 
     private void drawFeature(Graphics2D g2, Feature feature) {
         Location loc = feature.getRawLocation();
-        System.out.println(feature + " / " + loc);
+        //System.out.println(feature + " / " + loc);
         for (Location base : BASE_ROTATIONS) {
             Rotation rot = loc.getRotationOf(base);
             if (rot != null) {

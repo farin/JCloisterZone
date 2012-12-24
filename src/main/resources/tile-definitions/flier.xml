@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="F.d">
+        <flier>NW</flier>
+        <farm>NL NR SL SR WL WR EL ER</farm>
+    </tile>
+    <tile id="F.o">
+        <flier>W</flier>
+        <farm>NL NR SL SR WL WR EL ER</farm>
+    </tile>
+    <tile id="RFr.d">
+        <flier>NW</flier>
+        <road>W E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="RFr.NS.o">
+        <flier>W</flier>
+        <road>N S</road>
+        <farm>SR WL WR NL</farm>
+        <farm>NR EL ER SL</farm>
+    </tile>
+    <tile id="RFr.WE.o">
+        <flier>W</flier>
+        <road>W E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="Rr.d">
+        <flier>NW</flier>
+        <road>S E</road>
+        <farm>SR WL WR NL NR EL</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="Rr.NW.o">
+        <flier>W</flier>
+        <road>N W</road>
+        <farm>WR NL</farm>
+        <farm>NR EL ER SL SR WL</farm>
+    </tile>
+    <tile id="Rr.SW.o">
+        <flier>W</flier>
+        <road>S W</road>
+        <farm>SR WL</farm>
+        <farm>WR NL NR EL ER SL</farm>
+    </tile>
+</pack>

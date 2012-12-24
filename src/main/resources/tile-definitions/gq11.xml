@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<discard tile="R1.I.s"/>
-	<discard tile="R2.I.s"/>
+	<distile tile="R1.I.s"/>
+	<distile tile="R2.I.s"/>
 
-	<card id="RFI" group="river-start">
+	<tile id="RFI" group="river-start">
 		<river>E</river>
 		<road>W</road>
 		<farm>WR NL NR EL</farm>
 		<farm>ER SL SR WL</farm>
 		<position x="0" y="0"/>
-	</card>
-	<card id="CICI" group="river">
+	</tile>
+	<tile id="CICI" group="river">
 		<river>W E</river>
 		<city castle-base="true">N</city>
 		<city castle-base="true">S</city>
 		<farm city="N">WR EL</farm>
 		<farm city="S">WL ER</farm>
-	</card>
-	<card id="LRRRR">
+	</tile>
+	<tile id="LRRRR">
 		<cloister/>
 		<road>N</road>
 		<road>W</road>
@@ -33,11 +33,11 @@
 			<neighbouring>CLOISTER E</neighbouring>
 			<neighbouring>CLOISTER S</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="F">
+	</tile>
+	<tile id="F">
 		<farm pig="yes">NL NR SL SR WL WR EL ER</farm>
-	</card>
-	<card id="CRc">
+	</tile>
+	<tile id="CRc">
 		<city>W E</city>
 		<road>S</road>
 		<farm city="W">NL NR</farm>
@@ -46,8 +46,8 @@
 		<wagon-move>
 			<neighbouring>W S</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CRcR.1">
+	</tile>
+	<tile id="CRcR.1">
 		<city>W E</city>
 		<road>S</road>
 		<road>N</road>
@@ -59,15 +59,15 @@
 			<neighbouring>W S</neighbouring>
 			<neighbouring>W N</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CRCr.2">
+	</tile>
+	<tile id="CRCr.2">
 		<road>W E</road>
 		<city castle-base="true">N</city>
 		<city castle-base="true">S</city>
 		<farm city="N">WR EL</farm>
 		<farm city="S">ER WL</farm>
-	</card>
-	<card id="CRRr">
+	</tile>
+	<tile id="CRRr">
 		<road>E</road>
 		<road>S W</road>
 		<city castle-base="true">N</city>
@@ -77,13 +77,13 @@
 		<wagon-move>
 			<neighbouring>N E</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="Cc!">
+	</tile>
+	<tile id="Cc!">
 		<city>N W</city>
 		<farm city="N">SL SR</farm>
 		<farm city="N">EL ER</farm>
-	</card>
-	<card id="RCc">
+	</tile>
+	<tile id="RCc">
 		<city>N W</city>
 		<road>S</road>
 		<farm city="N">SR</farm>
@@ -91,8 +91,8 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CcRR">
+	</tile>
+	<tile id="CcRR">
 		<city>N W</city>
 		<road>S</road>
 		<road>E</road>
@@ -103,8 +103,8 @@
 			<neighbouring>N S</neighbouring>
 			<neighbouring>N E</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CcCR">
+	</tile>
+	<tile id="CcCR">
 		<city>N W</city>
 		<city castle-base="true">E</city>
 		<road>S</road>
@@ -113,5 +113,5 @@
 		<wagon-move>
 			<neighbouring>W S</neighbouring>
 		</wagon-move>
-	</card>
+	</tile>
 </pack>

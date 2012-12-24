@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <card id="A" group="inactive" count="">
+    <tile id="A" group="inactive" count="">
         <cloister/>
-    </card>
-    <card id="C++">
+    </tile>
+    <tile id="C++">
         <city pennant="2">N E S W</city>
-    </card>
-    <card id="CCcc+">
+    </tile>
+    <tile id="CCcc+">
         <city>N S</city>
         <city pennant="yes">W E</city>
-    </card>
-    <card id="CCc+">
+    </tile>
+    <tile id="CCc+">
         <city pennant="yes">N</city>
         <city>W E</city>
         <farm city="N W">SL SR</farm>
-    </card>
-    <card id="CCRR">
+    </tile>
+    <tile id="CCRR">
         <city castle-base="true">N</city>
         <city castle-base="true">E</city>
         <road>W</road>
@@ -27,8 +27,8 @@
             <neighbouring>N W</neighbouring>
             <neighbouring>S E</neighbouring>
         </wagon-move>
-    </card>
-    <card id="LRRRR">
+    </tile>
+    <tile id="LRRRR">
         <cloister/>
         <road>N</road>
         <road>W</road>
@@ -44,8 +44,8 @@
             <neighbouring>CLOISTER E</neighbouring>
             <neighbouring>CLOISTER S</neighbouring>
         </wagon-move>
-    </card>
-    <card id="RC">
+    </tile>
+    <tile id="RC">
         <city castle-base="true">W</city>
         <road>S</road>
         <farm city="W">SR</farm>
@@ -53,42 +53,42 @@
         <wagon-move>
             <neighbouring>W S</neighbouring>
         </wagon-move>
-    </card>
-    <card id="CRr">
+    </tile>
+    <tile id="CRr">
         <city castle-base="true">N</city>
         <road>S E</road>
         <farm city="N">WL WR SR</farm>
         <farm city="N">EL</farm>
         <farm>ER SL</farm>
-    </card>
-    <card id="RrC">
+    </tile>
+    <tile id="RrC">
         <city castle-base="true">W</city>
         <road>S E</road>
         <farm city="W">NL NR EL</farm>
         <farm city="W">SR</farm>
         <farm>ER SL</farm>
-    </card>
-    <card id="C!+">
+    </tile>
+    <tile id="C!+">
         <city pennant="yes">W</city>
         <farm city="W">NL NR</farm>
         <farm city="W">EL ER</farm>
         <farm city="W">SL SR</farm>
-    </card>
-    <card id="R">
+    </tile>
+    <tile id="R">
         <road>S</road>
         <farm>NL NR EL ER SL SR WL WR</farm>
-    </card>
-    <card id="RRR">
+    </tile>
+    <tile id="RRR">
         <road>N W S</road>
         <farm>WR NL</farm>
         <farm>NR EL ER SL</farm>
         <farm>SR WL</farm>
-    </card>
-    <card id="CRcr+">
+    </tile>
+    <tile id="CRcr+">
         <city pennant="yes">E W</city>
         <road tunnel="yes">N S</road>
         <farm city="W">NL NR</farm>
         <farm city="W">SL</farm>
         <farm city="W">SR</farm>
-    </card>
+    </tile>
 </pack>

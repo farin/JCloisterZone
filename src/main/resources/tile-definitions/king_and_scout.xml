@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card id="LC">
+	<tile id="LC">
 		<cloister/>
 		<city castle-base="true">N</city>
 		<farm city="N">EL ER SL SR WL WR</farm>
-	</card>
-	<card id="RC">
+	</tile>
+	<tile id="RC">
 		<road>W</road>
 		<city castle-base="true">N</city>
 		<farm city="N">WR</farm>
@@ -13,8 +13,8 @@
 		<wagon-move>
 			<neighbouring>N W</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CRrR">
+	</tile>
+	<tile id="CRrR">
 		<road>W</road>
 		<road>S E</road>
 		<city castle-base="true">N</city>
@@ -24,8 +24,8 @@
 		<wagon-move>
 			<neighbouring>N W</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CcRR!">
+	</tile>
+	<tile id="CcRR!">
 		<road>S</road>
 		<road>E</road>
 		<city>N W</city>
@@ -37,9 +37,9 @@
 			<neighbouring>N E</neighbouring>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="CCcc">
+	</tile>
+	<tile id="CCcc">
 		<city>W E</city>
 		<city>N S</city>
-	</card>
+	</tile>
 </pack>

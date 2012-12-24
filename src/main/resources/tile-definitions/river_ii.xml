@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<discard tile="R1.I.s"/>
-	<discard tile="R1.I.e"/>
+	<distile tile="R1.I.s"/>
+	<distile tile="R1.I.e"/>
 
-	<card id="I.s" group="river-start">
+	<tile id="I.s" group="river-start">
 		<farm>NL NR EL ER SL SR WL WR</farm>
 		<river>E</river>
 		<position x="0" y="0"/>
-	</card>
-	<card id="IFC" group="river">
+	</tile>
+	<tile id="IFC" group="river">
 		<city castle-base="true">E</city>
 		<farm city="E">NL NR WR</farm>
 		<farm city="E">SL SR WL</farm>
 		<river>W</river>
-	</card>
-	<card id="I.v" group="inactive">
+	</tile>
+	<tile id="I.v" group="inactive">
 		<volcano/>
 		<farm>NL NR EL ER SL SR WL WR</farm>
 		<river>W</river>
-	</card>
-	<card id="III" group="river-start">
+	</tile>
+	<tile id="III" group="river-start">
 		<farm>WR NL</farm>
 		<farm>NR EL</farm>
 		<farm>ER SL SR WL</farm>
 		<river>W N E</river>
-	</card>
-	<card id="CIcI" group="river">
+	</tile>
+	<tile id="CIcI" group="river">
 		<city>W E</city>
 		<farm city="W">NR</farm>
 		<farm city="W">NL</farm>
 		<farm city="W">SL</farm>
 		<farm city="W">SR</farm>
 		<river>N S</river>
-	</card>
-	<card id="LIFI" group="river">
+	</tile>
+	<tile id="LIFI" group="river">
 		<cloister/>
 		<farm>WR NL NR EL</farm>
 		<farm>WL SL SR ER</farm>
 		<river>W E</river>
-	</card>
-	<card id="RIrI" group="river">
+	</tile>
+	<tile id="RIrI" group="river">
 		<road inn="yes">W E</road>
 		<farm>WR NL</farm>
 		<farm>NR EL</farm>
 		<farm>ER SL</farm>
 		<farm>WL SR</farm>
 		<river>N S</river>
-	</card>
-	<card id="CIRI" group="river">
+	</tile>
+	<tile id="CIRI" group="river">
 		<city castle-base="true">N</city>
 		<road>S</road>
 		<farm city="N">EL</farm>
@@ -58,28 +58,28 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
-	</card>
-	<card id="II" group="river">
+	</tile>
+	<tile id="II" group="river">
 		<farm>WR NL NR EL ER SL</farm>
 		<farm>WL SR</farm>
 		<river>W S</river>
-	</card>
-	<card id="CcII+" group="river">
+	</tile>
+	<tile id="CcII+" group="river">
 		<city pennant="yes">N E</city>
 		<farm city="N">WR SL</farm>
 		<farm>WL SR</farm>
 		<river>W S</river>
-	</card>
-	<card id="II+" group="river">
+	</tile>
+	<tile id="II+" group="river">
 		<farm pig="yes">WL SL SR EL ER NR</farm>
 		<farm>WR NL</farm>
 		<river>W N</river>
-	</card>
-	<card id="RrII" group="river">
+	</tile>
+	<tile id="RrII" group="river">
 		<road>N E</road>
 		<farm>WR NL ER SL</farm>
 		<farm>NR EL</farm>
 		<farm>WL SR</farm>
 		<river>W S</river>
-	</card>
+	</tile>
 </pack>

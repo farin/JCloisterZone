@@ -7,5 +7,6 @@ public enum TileTrigger {
     PORTAL,
     BESIEGED,
     BAZAAR,
-    FESTIVAL;
+    FESTIVAL,
+    PLAGUE;
 }

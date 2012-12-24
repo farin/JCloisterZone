@@ -64,7 +64,7 @@ public class TilePackFactory {
 
     public int getExpansionSize(Expansion expansion) {
         Element el = getExpansionDefinition(expansion);
-        NodeList nl = el.getElementsByTagName("card");
+        NodeList nl = el.getElementsByTagName("tile");
         int size = 0;
         for(int i = 0; i < nl.getLength(); i++) {
             Element tileElement = (Element) nl.item(i);
@@ -172,7 +172,7 @@ public class TilePackFactory {
 
         for(Entry<Expansion, Element> entry: defs.entrySet()) {
             Expansion expansion = entry.getKey();
-            NodeList nl = entry.getValue().getElementsByTagName("card");
+            NodeList nl = entry.getValue().getElementsByTagName("tile");
             for(int i = 0; i < nl.getLength(); i++) {
                 Element tileElement = (Element) nl.item(i);
                 String tileId = getTileId(expansion, tileElement);

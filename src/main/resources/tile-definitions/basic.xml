@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card count="4" id="L" >
+	<tile count="4" id="L" >
 		<cloister/>
 		<farm>NL NR EL ER SL SR WL WR</farm>
-	</card>
-	<card count="2" id="LR">
+	</tile>
+	<tile count="2" id="LR">
 		<cloister/>
 		<road>S</road>
 		<farm>NL NR EL ER SL SR WL WR</farm>
 		<wagon-move>
 			<neighbouring>CLOISTER S</neighbouring>
 		</wagon-move>
-	</card>
+	</tile>
 
-	<card count="4" id="RCr">
+	<tile count="4" id="RCr">
 		<road>W E</road>
 		<city castle-base="true">N</city>
 		<farm city="N">EL WR</farm>
 		<farm>ER SL SR WL</farm>
 		<position x="0" y="0"/>
-	</card>
+	</tile>
 
-	<card count="1" id="Cccc+">
+	<tile count="1" id="Cccc+">
 		<city pennant="yes">N W S E</city>
-	</card>
-	<card count="2" id="CccR+">
+	</tile>
+	<tile count="2" id="CccR+">
 		<road>S</road>
 		<city pennant="yes">N W E</city>
 		<farm city="N">SL</farm>
@@ -32,8 +32,8 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
-	</card>
-	<card count="1" id="CccR">
+	</tile>
+	<tile count="1" id="CccR">
 		<road>S</road>
 		<city>N W E</city>
 		<farm city="N">SL</farm>
@@ -41,52 +41,52 @@
 		<wagon-move>
 			<neighbouring>N S</neighbouring>
 		</wagon-move>
-	</card>
-	<card count="2" id="CFc+">
+	</tile>
+	<tile count="2" id="CFc+">
 		<city pennant="yes">W E</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W">SL SR</farm>
-	</card>
-	<card count="1" id="CFc.1">
+	</tile>
+	<tile count="1" id="CFc.1">
 		<city>W E</city>
 		<farm city="W">NL NR</farm>
 		<farm city="W">SL SR</farm>
-	</card>
-	<card count="3" id="Cc.1">
+	</tile>
+	<tile count="3" id="Cc.1">
 		<city>N W</city>
 		<farm city="N">SL SR EL ER</farm>
-	</card>
-	<card count="2" id="Cc+">
+	</tile>
+	<tile count="2" id="Cc+">
 		<city pennant="yes">N W</city>
 		<farm city="N">SL SR EL ER</farm>
-	</card>
-	<card count="3" id="CcRr">
+	</tile>
+	<tile count="3" id="CcRr">
 		<road>E S</road>
 		<city>N W</city>
 		<farm city="N">EL SR</farm>
 		<farm>ER SL</farm>
-	</card>
-	<card count="2" id="CcRr+">
+	</tile>
+	<tile count="2" id="CcRr+">
 		<road>E S</road>
 		<city pennant="yes">N W</city>
 		<farm city="N">EL SR</farm>
 		<farm>ER SL</farm>
-	</card>
-	<card count="3" id="Ccc">
+	</tile>
+	<tile count="3" id="Ccc">
 		<city>N E W</city>
 		<farm city="N">SL SR</farm>
-	</card>
-	<card count="1" id="Ccc+">
+	</tile>
+	<tile count="1" id="Ccc+">
 		<city pennant="yes">N E W</city>
 		<farm city="N">SL SR</farm>
-	</card>
-	<card count="3" id="CRr">
+	</tile>
+	<tile count="3" id="CRr">
 		<road>E S</road>
 		<city castle-base="true">N</city>
 		<farm city="N">EL WL WR SR</farm>
 		<farm>ER SL</farm>
-	</card>
-	<card count="3" id="CRRR">
+	</tile>
+	<tile count="3" id="CRRR">
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
@@ -97,28 +97,28 @@
 		<wagon-move>
 			<neighbouring>W S E</neighbouring>
 		</wagon-move>
-	</card>
-	<card count="3" id="RrC">
+	</tile>
+	<tile count="3" id="RrC">
 		<road>S W</road>
 		<city castle-base="true">N</city>
 		<farm city="N">WR EL ER SL</farm>
 		<farm>WL SR</farm>
-	</card>
-	<card count="5" id="C">
+	</tile>
+	<tile count="5" id="C">
 		<city castle-base="true">N</city>
 		<farm city="N">WL WR SL SR EL ER</farm>
-	</card>
-	<card count="3" id="CFC.2">
+	</tile>
+	<tile count="3" id="CFC.2">
 		<city castle-base="true">N</city>
 		<city castle-base="true">S</city>
 		<farm city="N S">WL WR EL ER</farm>
-	</card>
-	<card count="2" id="CC.2">
+	</tile>
+	<tile count="2" id="CC.2">
 		<city castle-base="true">N</city>
 		<city castle-base="true">W</city>
 		<farm city="N W">EL ER SL SR</farm>
-	</card>
-	<card count="1" id="RRRR">
+	</tile>
+	<tile count="1" id="RRRR">
 		<road>N</road>
 		<road>E</road>
 		<road>S</road>
@@ -130,8 +130,8 @@
 		<wagon-move>
 			<neighbouring>N E S W</neighbouring>
 		</wagon-move>
-	</card>
-	<card count="4" id="RRR">
+	</tile>
+	<tile count="4" id="RRR">
 		<road>E</road>
 		<road>S</road>
 		<road>W</road>
@@ -141,15 +141,15 @@
 		<wagon-move>
 			<neighbouring>E S W</neighbouring>
 		</wagon-move>
-	</card>
-	<card count="9" id="Rr">
+	</tile>
+	<tile count="9" id="Rr">
 		<road>W S</road>
 		<farm>WR NL NR EL ER SL</farm>
 		<farm>SR WL</farm>
-	</card>
-	<card count="8" id="RFr">
+	</tile>
+	<tile count="8" id="RFr">
 		<road>W E</road>
 		<farm>WR NL NR EL</farm>
 		<farm>ER SL SR WL</farm>
-	</card>
+	</tile>
 </pack>
