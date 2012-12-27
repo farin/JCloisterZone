@@ -85,7 +85,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
 
     private Phase addPhase(Phase next, Phase phase) {
-        if (! phase.isActive()) return next;
+        if (!phase.isActive()) return next;
 
         Map<Class<? extends Phase>, Phase> phases = game.getPhases();
         phases.put(phase.getClass(), phase);

@@ -14,8 +14,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
@@ -41,6 +39,7 @@ import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
+import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
@@ -264,8 +263,21 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void selectCornCircleOption() {
         client.clearActions();
-        client.getServer().cornCiclesRemoveOrDeploy(false);
-        System.err.println("NOT PROPERLY IMPLEMENTED");
+        CornCirclesPanel panel = createOrGetCornCirclesPanel();
+        //client.getServer().cornCiclesRemoveOrDeploy(false);
+        //System.err.println("NOT PROPERLY IMPLEMENTED");
+        client.getGridPanel().repaint();
+    }
+
+    //TODO DRY - same as createOrGetBazaarPanel
+    public CornCirclesPanel createOrGetCornCirclesPanel() {
+    	CornCirclesPanel panel = client.getGridPanel().getCornCirclesPanel();
+        if (panel == null) {
+            panel = new CornCirclesPanel(client);
+            panel.registerSwingComponents(client.getGridPanel());
+            client.getGridPanel().setCornCirclesPanel(panel);
+        }
+        return panel;
     }
 
     public BazaarPanel createOrGetBazaarPanel() {

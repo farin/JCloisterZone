@@ -49,6 +49,7 @@ public class GridPanel extends JPanel {
     final Client client;
     final ControlPanel controlPanel;
     private BazaarPanel bazaarPanel;
+    private CornCirclesPanel cornCirclesPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -184,7 +185,18 @@ public class GridPanel extends JPanel {
         this.bazaarPanel = bazaarPanel;
     }
 
-    public AnimationService getAnimationService() {
+
+    public CornCirclesPanel getCornCirclesPanel() {
+		return cornCirclesPanel;
+	}
+
+
+	public void setCornCirclesPanel(CornCirclesPanel cornCirclesPanel) {
+		this.cornCirclesPanel = cornCirclesPanel;
+	}
+
+
+	public AnimationService getAnimationService() {
         return client.getMainPanel().getAnimationService();
     }
 
@@ -422,6 +434,12 @@ public class GridPanel extends JPanel {
             g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
             //System.err.println("GP " + g2.getTransform());
             bazaarPanel.paintComponent(g2);
+        }
+
+        if (cornCirclesPanel != null) {
+            g2.translate(-CornCirclesPanel.PANEL_WIDTH-60, 0);
+            //System.err.println("GP " + g2.getTransform());
+            cornCirclesPanel.paintComponent(g2);
         }
 
         //jb.paint(g2);

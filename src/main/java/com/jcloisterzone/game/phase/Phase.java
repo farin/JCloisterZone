@@ -216,4 +216,9 @@ public abstract class Phase implements ClientIF {
         logger.error(Application.ILLEGAL_STATE_MSG, "cornCiclesRemoveOrDeploy");
     }
 
+    @Override
+    public String toString() {
+    	return getClass().getSimpleName();
+    }
+
 }

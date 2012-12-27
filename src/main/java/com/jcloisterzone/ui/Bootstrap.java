@@ -41,7 +41,11 @@ public class Bootstrap  {
 
     public List<Plugin> loadPlugins(Ini config) {
         LinkedList<Plugin> plugins = Lists.newLinkedList();
-        List<String> pluginPaths = config.get("plugins").getAll("plugin");
+        List<String> pluginPaths = null;
+
+        if (config.get("plugins") != null) {
+        	pluginPaths = config.get("plugins").getAll("plugin");
+        }
 
         if (pluginPaths != null) {
             for (String pluginPath : pluginPaths) {
