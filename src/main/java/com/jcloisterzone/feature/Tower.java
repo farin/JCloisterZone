@@ -1,5 +1,7 @@
 package com.jcloisterzone.feature;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.util.List;
 
 import com.jcloisterzone.figure.Meeple;
@@ -27,5 +29,8 @@ public class Tower extends TileFeature {
         return meeples.get(0);
     }
 
+    public static String name() {
+        return _("Tower");
+    }
 
 }

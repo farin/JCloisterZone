@@ -1,5 +1,6 @@
 package com.jcloisterzone.feature;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -120,6 +121,15 @@ public abstract class TileFeature implements Feature {
     @Override
     public String toString() {
         return getClass().getSimpleName()+"@"+getId();
+    }
+
+    public static String getLocalizedNameFor(Class<? extends Feature> feature) {
+        try {
+            Method m = feature.getMethod("name");
+            return (String) m.invoke(null);
+        } catch (Exception e) {
+            return feature.getSimpleName();
+        }
     }
 
 }

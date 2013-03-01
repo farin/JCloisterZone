@@ -134,7 +134,7 @@ public class CornCirclePhase extends Phase {
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             if (action == null) {
-                action = new UndeployAction("corn"); //TODO use another action then escape
+                action = new UndeployAction("undeploy");
             }
             action.getOrCreate(m.getPosition()).add(m.getLocation());
         }
