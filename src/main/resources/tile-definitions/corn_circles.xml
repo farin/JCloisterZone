@@ -30,9 +30,11 @@
         <farm city="N">WR EL ER SL</farm>
         <farm>WL SR</farm>
     </tile>
-    <tile id="Rrr">
+    <tile id="RRR">
         <corn-circle type="Road"/>
-        <road>N W S</road>
+        <road>N</road>
+        <road>W</road>
+        <road>S</road>
         <farm>NR EL ER SL</farm>
         <farm>SR WL</farm>
         <farm>WR NL</farm>
