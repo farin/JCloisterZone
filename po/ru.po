@@ -296,7 +296,7 @@ msgstr "О программе"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
-msgstr "Упревление"
+msgstr "Управление"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
