@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.MeepleAction;
@@ -213,7 +214,7 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
 	}
 	
 	@Override
-	public void saveToSnapshot(Document doc, Element node) {
+	public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
 		for(Entry<Player, Feature> rv : returnedWagons.entrySet()) {
 			Element el = doc.createElement("wagon");
 			el.setAttribute("player", "" + rv.getKey().getIndex());

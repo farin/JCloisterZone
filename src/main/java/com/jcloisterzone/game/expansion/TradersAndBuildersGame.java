@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
@@ -163,7 +164,7 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 	}
 
 	@Override
-	public void saveToSnapshot(Document doc, Element node) {
+	public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
 		node.setAttribute("builderState", builderState.name());
 		for(Player player: game.getAllPlayers()) {
 			Element el = doc.createElement("player");

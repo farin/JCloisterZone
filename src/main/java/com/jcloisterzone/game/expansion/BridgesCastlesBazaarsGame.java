@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -375,7 +376,7 @@ public class BridgesCastlesBazaarsGame extends ExpandedGame {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node) {
+    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
         node.setAttribute("bridgeUsed", bridgeUsed + "");
         for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");

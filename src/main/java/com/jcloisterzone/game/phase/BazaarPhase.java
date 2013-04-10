@@ -51,7 +51,7 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public void loadGame(Snapshot snapshot) {
-        setEntered(true); //avoid call enter on load phase to this pahse switch
+        setEntered(true); //avoid call enter on load phase to this phase switch
         Player selecting = bcb.getBazaarTileSelectingPlayer();
         if (selecting != null) {
             Player bidding = bcb.getBazaarBiddingPlayer();

@@ -12,6 +12,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TunnelAction;
@@ -142,7 +143,7 @@ public final class TunnelGame extends ExpandedGame {
 	}
 
 	@Override
-	public void saveToSnapshot(Document doc, Element node) {
+	public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
 		for(Road tunnel : tunnels) {
 			if (tunnel.getTile().getPosition() != null && tunnel.getTunnelEnd() != Road.OPEN_TUNNEL) {
 				Element el = doc.createElement("tunnel");

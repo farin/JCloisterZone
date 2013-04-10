@@ -124,7 +124,7 @@ public class Snapshot implements Serializable {
             root.appendChild(el);
             ExpandedGame expandedBy = game.getExpandedGameFor(exp);
             if (expandedBy != null) {
-                expandedBy.saveToSnapshot(doc, el);
+                expandedBy.saveToSnapshot(doc, el, exp);
             }
         }
     }

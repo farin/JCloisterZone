@@ -3,6 +3,7 @@ package com.jcloisterzone.game.expansion;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.event.GameEventAdapter;
@@ -104,7 +105,7 @@ public final class KingAndScoutGame extends ExpandedGame {
 	}
 
 	@Override
-	public void saveToSnapshot(Document doc, Element node) {
+	public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
 		if (king != null) {
 			node.setAttribute("king", king.getIndex() + "");
 		}

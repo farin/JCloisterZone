@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
@@ -47,7 +48,7 @@ public class ExpandedGame implements GameDelegation {
         return null;
     }
 
-    public void saveToSnapshot(Document doc, Element node) {
+    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
     }
 
     public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {

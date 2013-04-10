@@ -11,6 +11,4 @@ public class PrincessAction extends UndeployAction {
     protected int getSortOrder() {
         return 1;
     }
-
-
 }

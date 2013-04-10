@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
@@ -205,7 +206,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 	
 
 	@Override
-	public void saveToSnapshot(Document doc, Element node) {
+	public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
 		if (dragonPosition != null) {
 			Element dragon = doc.createElement("dragon");
 			XmlUtils.injectPosition(dragon, dragonPosition);

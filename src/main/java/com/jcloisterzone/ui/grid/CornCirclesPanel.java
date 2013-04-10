@@ -50,7 +50,7 @@ public class CornCirclesPanel extends FakeComponent {
 
         deploymentOption = new JButton();
         //deploymentOption.setFont(FONT_BUTTON);
-        deploymentOption.setText(_("may deploy follower"));
+        deploymentOption.setText(_("may deploy additional follower"));
         deploymentOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +75,7 @@ public class CornCirclesPanel extends FakeComponent {
         parent.add(removalOption);
 
         String feature = TileFeature.getLocalizedNameFor(client.getGame().getCurrentTile().getCornCircle());
-        footer = new JLabel(_("Applied to feature:") + " " + feature);
+        footer = new JLabel(_("on/from a {0}.", feature.toLowerCase()));
         footer.setBounds(left, 134, ControlPanel.PANEL_WIDTH-10, 30);
         parent.add(footer);
     }

@@ -1,8 +1,10 @@
 package com.jcloisterzone.game.expansion;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
@@ -51,7 +53,27 @@ public class CornCirclesGame extends ExpandedGame {
         this.cornCircleOption = cornCircleOption;
     }
 
+    @Override
+    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+        //don't duplicate arguments
+        if (nodeFor == Expansion.CORN_CIRCLES_II && game.hasExpansion(Expansion.CORN_CIRCLES)) return;
 
+        if (cornCircleOption != null) {
+            node.setAttribute("selectedOption", cornCircleOption.name());
+        }
+        if (cornCirclePlayer != null) {
+            node.setAttribute("cornPlayer", "" + cornCirclePlayer.getIndex());
+        }
+    }
 
-
+    @Override
+    public void loadFromSnapshot(Document doc, Element node) {
+        if (node.hasAttribute("selectedOption")) {
+            cornCircleOption =  CornCicleOption.valueOf(node.getAttribute("selectedOption"));
+        }
+        if (node.hasAttribute("cornPlayer")) {
+            Player player = game.getPlayer(Integer.parseInt(node.getAttribute("cornPlayer")));
+            cornCirclePlayer = player;
+        }
+    }
 }

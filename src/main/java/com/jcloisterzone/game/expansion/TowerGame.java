@@ -206,7 +206,7 @@ public final class TowerGame extends ExpandedGame {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node) {
+    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
         for(Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();

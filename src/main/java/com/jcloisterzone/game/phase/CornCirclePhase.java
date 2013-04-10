@@ -3,8 +3,6 @@ package com.jcloisterzone.game.phase;
 import java.util.Collections;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -26,6 +24,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.CornCirclesGame.CornCicleOption;
 
@@ -188,5 +187,15 @@ public class CornCirclePhase extends Phase {
             return;
         }
         nextCornPlayer();
+    }
+
+    @Override
+    public void loadGame(Snapshot snapshot) {
+        setEntered(true); //avoid call enter on load phase to this phase switch
+        if (ccg.getCornCircleOption() == null) {
+            game.getUserInterface().selectCornCircleOption();
+        } else {
+            prepareCornAction();
+        }
     }
 }

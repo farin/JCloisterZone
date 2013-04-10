@@ -6,10 +6,10 @@ package com.jcloisterzone;
  */
 public interface Application {
 
-    public String VERSION = "2.1.2";
-    public String BUILD_DATE = "2012-08-27";
+    public String VERSION = "2.2";
+    public String BUILD_DATE = "2013-XX-XX";
 
-    public int PROTCOL_VERSION = 11;
+    public int PROTCOL_VERSION = 12;
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }
