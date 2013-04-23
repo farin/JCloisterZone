@@ -3,10 +3,11 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,6 +19,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.theme.FigureTheme;
@@ -26,7 +28,11 @@ public class MeepleLayer extends AbstractGridLayer {
 
     protected double FIGURE_SIZE_RATIO = 0.35;
 
-    private Map<Meeple, PositionedImage> images = Maps.newHashMap();
+    /**
+     * Corn circles allows multiple meeples on single feature.
+     * In such case double meeple should be displayed after common ones.
+     */
+    private LinkedHashMap<Meeple, PositionedImage> images = Maps.newLinkedHashMap();
     //TODO own layer ???
     private List<PositionedImage> permanentImages = Lists.newArrayList();
 
@@ -53,10 +59,10 @@ public class MeepleLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g) {
         int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
-        for(PositionedImage mi : images.values()) {
+        for (PositionedImage mi : images.values()) {
             paintPositionedImage(g, mi, boxSize );
         }
-        for(PositionedImage mi : permanentImages) {
+        for (PositionedImage mi : permanentImages) {
             paintPositionedImage(g, mi, boxSize );
         }
 
@@ -73,27 +79,59 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-    private ImmutablePoint getMeeplePlacement(Tile tile, Meeple m) {
+//    private ImmutablePoint getMeeplePlacement(Tile tile, Meeple m) {
+//        Feature feature = m.getFeature();
+//        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), feature);
+//        int meepleCount = feature.getMeeples().size();
+//        if (meepleCount == 1) return offset;
+//        return new ImmutablePoint(offset.getX() + 10*(meepleCount-1), offset.getY());
+//    }
+
+    private PositionedImage createMeepleImage(Meeple m, int order) {
         Feature feature = m.getFeature();
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), feature);
-        int meepleCount = feature.getMeeples().size();
-        if (meepleCount == 1) return offset;
-        return new ImmutablePoint(offset.getX() + 10*(meepleCount-1), offset.getY());
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), feature);
+        if (order > 0) {
+            offset = new ImmutablePoint(offset.getX() + 10*order, offset.getY());
+        }
+        Color c = getClient().getPlayerColor(m.getPlayer());
+        Image image = getClient().getFigureTheme().getFigureImage(m.getClass(), c,  getExtraDecoration(m));
+        return new PositionedImage(m.getPosition(), offset, image);
+    }
+
+    /**
+     * recompute offset, keep big follower on top
+     */
+    private void rearrangeMeeples(final Feature feature) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                for (Meeple m : feature.getMeeples()) {
+                    images.remove(m);
+                }
+
+                int i = 0;
+                //clone meeples to freeze its state
+                for (Meeple m : feature.getMeeples()) {
+                    if (!(m instanceof SmallFollower)) continue;
+                    images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+
+                }
+                for (Meeple m : feature.getMeeples()) {
+                    if (m instanceof SmallFollower) continue;
+                    images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                }
+            }
+        });
     }
 
     public void meepleDeployed(Meeple m) {
-        Color c = getClient().getPlayerColor(m.getPlayer());
-        FigureTheme theme = getClient().getFigureTheme();
-
-        Tile tile = gridPanel.getTile(m.getPosition());
-        ImmutablePoint offset = getMeeplePlacement(tile, m);
-        Image image = theme.getFigureImage(m.getClass(), c,  getExtraDecoration(m));
         assert !images.containsKey(m);
-        images.put(m, new PositionedImage(m.getPosition(), offset, image));
+        rearrangeMeeples(m.getFeature());
     }
 
     public void meepleUndeployed(Meeple m) {
         images.remove(m);
+        rearrangeMeeples(m.getFeature());
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
