@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridLayer;
@@ -112,6 +113,10 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     protected Client getClient() {
         return gridPanel.getClient();
+    }
+
+    protected Game getGame() {
+        return getClient().getGame();
     }
 
     protected Area transformArea(Area area, Position pos) {

@@ -4,9 +4,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
+import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -66,8 +68,20 @@ public abstract class TileFeature implements Feature {
     }
 
     @Override
-    public List<Meeple> getMeeples() {
+    public final List<Meeple> getMeeples() {
         return meeples;
+    }
+
+    @Override
+    public final Set<Class<? extends Meeple>> getMeepleTypes() {
+        if (meeples.size() == 1) {
+            return Collections.<Class<? extends Meeple>>singleton(meeples.get(0).getClass());
+        }
+        Set<Class<? extends Meeple>> types = Sets.newHashSet();
+        for (Meeple m : meeples) {
+            types.add(m.getClass());
+        }
+        return types;
     }
 
     public Feature[] getNeighbouring() {

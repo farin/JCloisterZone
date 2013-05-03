@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.geom.Area;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
+import com.jcloisterzone.action.SelectFollowerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -21,6 +23,9 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog;
+import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog.AmbiguousUndeployDialogEvent;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 
@@ -91,18 +96,30 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     }
 
     @Override
-    protected void performAction(Position pos, Location loc) {
+    protected void performAction(final Position pos, final Location loc) {
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
             Feature piece = gridPanel.getTile(pos).getFeature(loc);
             if (piece instanceof Farm) {
                 if (Follower.class.isAssignableFrom(ma.getMeepleType()) && getClient().getSettings().isConfirmFarmPlacement()) {
-                    if (! confirmFarmPlacement()) return;
+                    if (!confirmFarmPlacement()) return;
                 }
             } else if (piece instanceof Tower) {
                 if (getClient().getSettings().isConfirmTowerPlacement()) {
-                    if (! confirmTowerPlacement(pos)) return;
+                    if (!confirmTowerPlacement(pos)) return;
                 }
+            }
+        }
+        if (action instanceof SelectFollowerAction) {
+            Set<Class<? extends Meeple>> meeples = getGame().getBoard().get(pos).getFeature(loc).getMeepleTypes();
+            if (meeples.size() > 1) {
+                new AmbiguousUndeployDialog(getClient(), meeples, new AmbiguousUndeployDialogEvent() {
+                    @Override
+                    public void meepleTypeSelected(Class<? extends Meeple> meepleType) {
+                        ((SelectFollowerAction)action).perform(getClient().getServer(), pos, loc, meepleType);
+                    }
+                });
+                return;
             }
         }
         action.perform(getClient().getServer(), pos, loc);

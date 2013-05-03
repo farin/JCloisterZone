@@ -1,6 +1,7 @@
 package com.jcloisterzone.feature;
 
 import java.util.List;
+import java.util.Set;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
@@ -19,6 +20,7 @@ public interface Feature {
     void addMeeple(Meeple meeple);
     void removeMeeple(Meeple meeple);
     List<Meeple> getMeeples();
+    Set<Class<? extends Meeple>> getMeepleTypes();
 
     <T> T walk(FeatureVisitor<T> visitor);
     /**
