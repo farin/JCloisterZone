@@ -9,7 +9,10 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -95,6 +98,24 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         return result == JOptionPane.YES_OPTION;
     }
 
+    private List<Meeple> getDistinctFeatureMeeples(PlayerRestriction allowed, Feature feature) {
+        //little optimalization, almost all time size is 1
+        if (feature.getMeeples().size() == 1) {
+            return feature.getMeeples();
+        }
+        Set<String> used = Sets.newHashSet();
+        List<Meeple> result = Lists.newArrayList();
+        for (Meeple m : feature.getMeeples()) {
+            if (!allowed.isAllowed(m.getPlayer())) continue;
+            String key = m.getPlayer().getIndex() + m.getClass().getSimpleName();
+            if (!used.contains(key)) {
+                result.add(m);
+                used.add(key);
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void performAction(final Position pos, final Location loc) {
         if (action instanceof MeepleAction) {
@@ -111,12 +132,13 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
             }
         }
         if (action instanceof SelectFollowerAction) {
-            Set<Class<? extends Meeple>> meeples = getGame().getBoard().get(pos).getFeature(loc).getMeepleTypes();
+            final SelectFollowerAction selectFollowerAction = (SelectFollowerAction) action;
+            List<Meeple> meeples = getDistinctFeatureMeeples(selectFollowerAction.getPlayers(), getGame().getBoard().get(pos).getFeature(loc));
             if (meeples.size() > 1) {
                 new AmbiguousUndeployDialog(getClient(), meeples, new AmbiguousUndeployDialogEvent() {
                     @Override
-                    public void meepleTypeSelected(Class<? extends Meeple> meepleType) {
-                        ((SelectFollowerAction)action).perform(getClient().getServer(), pos, loc, meepleType);
+                    public void meepleTypeSelected(Meeple meeple) {
+                       selectFollowerAction.perform(getClient().getServer(), pos, loc, meeple.getClass(), meeple.getPlayer());
                     }
                 });
                 return;

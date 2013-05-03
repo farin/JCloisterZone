@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
@@ -133,7 +134,7 @@ public class CornCirclePhase extends Phase {
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             if (action == null) {
-                action = new UndeployAction("undeploy");
+                action = new UndeployAction("undeploy", PlayerRestriction.only(getActivePlayer()));
             }
             action.getOrCreate(m.getPosition()).add(m.getLocation());
         }
@@ -142,12 +143,12 @@ public class CornCirclePhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         if (ccg.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
-        Meeple m = game.getMeeple(p, loc, meepleType);
+        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (!cornType.isInstance(m.getFeature())) {
             logger.error("Improper feature type");

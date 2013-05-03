@@ -6,7 +6,6 @@ import java.util.Set;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;

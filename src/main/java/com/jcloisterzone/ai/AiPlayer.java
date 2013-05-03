@@ -149,8 +149,8 @@ public abstract class AiPlayer implements UserInterface {
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         Position p = action.getSites().keySet().iterator().next();
         Location loc = action.getSites().get(p).iterator().next();
-        Class<? extends Meeple> meepleType = getBoard().get(p).getFeature(loc).getMeeples().get(0).getClass();
-        getServer().takePrisoner(p, loc, meepleType);
+        Meeple m = getBoard().get(p).getFeature(loc).getMeeples().get(0);
+        getServer().takePrisoner(p, loc, m.getClass(), m.getPlayer().getIndex());
         return true;
     }
 

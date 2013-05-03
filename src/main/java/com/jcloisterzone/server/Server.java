@@ -241,14 +241,14 @@ public class Server extends GameSettings implements ServerIF {
     }
 
     @Override
-    public void takePrisoner(Position p, Location d, Class<? extends Meeple> meepleType) {
-        stub.takePrisoner(p, d, meepleType);
+    public void takePrisoner(Position p, Location d, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        stub.takePrisoner(p, d, meepleType, meepleOwner);
 
     }
 
     @Override
-    public void undeployMeeple(Position p, Location d, Class<? extends Meeple> meepleType) {
-        stub.undeployMeeple(p, d, meepleType);
+    public void undeployMeeple(Position p, Location d, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        stub.undeployMeeple(p, d, meepleType, meepleOwner);
     }
 
     @Override

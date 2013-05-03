@@ -20,7 +20,6 @@ public interface Feature {
     void addMeeple(Meeple meeple);
     void removeMeeple(Meeple meeple);
     List<Meeple> getMeeples();
-    Set<Class<? extends Meeple>> getMeepleTypes();
 
     <T> T walk(FeatureVisitor<T> visitor);
     /**

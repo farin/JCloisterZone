@@ -68,8 +68,8 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType) {
-        server.undeployMeeple(pos, loc, meepleType);
+    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        server.undeployMeeple(pos, loc, meepleType, meepleOwner);
     }
 
     @Override
@@ -78,8 +78,8 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType) {
-        server.takePrisoner(pos, loc, meepleType);
+    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        server.takePrisoner(pos, loc, meepleType, meepleOwner);
     }
 
     @Override

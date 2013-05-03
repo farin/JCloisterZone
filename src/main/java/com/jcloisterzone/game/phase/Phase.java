@@ -145,7 +145,7 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         logger.error(Application.ILLEGAL_STATE_MSG, "undeployMeeple");
     }
 
@@ -186,7 +186,7 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
 
@@ -218,7 +218,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public String toString() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
 
 }

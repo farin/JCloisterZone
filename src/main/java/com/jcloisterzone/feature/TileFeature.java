@@ -72,17 +72,17 @@ public abstract class TileFeature implements Feature {
         return meeples;
     }
 
-    @Override
-    public final Set<Class<? extends Meeple>> getMeepleTypes() {
-        if (meeples.size() == 1) {
-            return Collections.<Class<? extends Meeple>>singleton(meeples.get(0).getClass());
-        }
-        Set<Class<? extends Meeple>> types = Sets.newHashSet();
-        for (Meeple m : meeples) {
-            types.add(m.getClass());
-        }
-        return types;
-    }
+//    @Override
+//    public final Set<Class<? extends Meeple>> getMeepleTypes() {
+//        if (meeples.size() == 1) {
+//            return Collections.<Class<? extends Meeple>>singleton(meeples.get(0).getClass());
+//        }
+//        Set<Class<? extends Meeple>> types = Sets.newHashSet();
+//        for (Meeple m : meeples) {
+//            types.add(m.getClass());
+//        }
+//        return types;
+//    }
 
     public Feature[] getNeighbouring() {
         return neighbouring;

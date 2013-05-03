@@ -28,9 +28,9 @@ public interface Client2ClientIF {
     public void placeTile(Rotation rotation, Position position);
 
     public void deployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType);
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType);
+    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner);
     public void placeTowerPiece(Position pos);
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType);
+    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner);
     public void placeTunnelPiece(Position pos, Location loc, boolean isSecondPiece);
 
     public void moveFairy(Position pos);

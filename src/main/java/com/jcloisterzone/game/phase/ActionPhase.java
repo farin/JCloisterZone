@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -84,7 +85,8 @@ public class ActionPhase extends Phase {
     }
 
     public TakePrisonerAction prepareCapture(Position p, int range) {
-        TakePrisonerAction captureAction = new TakePrisonerAction();
+        //TODO custom rule - opponent only
+        TakePrisonerAction captureAction = new TakePrisonerAction(PlayerRestriction.any());
         for(Meeple pf : game.getDeployedMeeples()) {
             if (! (pf instanceof Follower)) continue;
             if (pf.getPosition().x != p.x && pf.getPosition().y != p.y) continue; //check if is in same row or column
@@ -130,8 +132,9 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-        Meeple m = game.getMeeple(p, loc, meepleType);
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        assert meepleOwner == getActivePlayer().getIndex();
+        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
         if (isFestivalUndeploy(m) || isPrincessUndeploy(m)) {
             m.undeploy();
             next();

@@ -1,7 +1,10 @@
 package com.jcloisterzone.action;
 
+import java.util.List;
 import java.util.Set;
 
+import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Meeple;
@@ -9,21 +12,30 @@ import com.jcloisterzone.rmi.Client2ClientIF;
 
 public abstract class SelectFollowerAction extends SelectFeatureAction {
 
-    public SelectFollowerAction(String name) {
+    /** set null if anybody is allowed */
+    private final PlayerRestriction players;
+
+    public SelectFollowerAction(String name, PlayerRestriction players) {
         super(name);
+        this.players = players;
+    }
+
+    public PlayerRestriction getPlayers() {
+        return players;
     }
 
     @Override
     public final void perform(Client2ClientIF server, Position pos, Location loc) {
-        perform(server, pos, loc, getMeepleType(pos, loc));
+        List<Meeple> meeples = client.getGame().getBoard().get(pos).getFeature(loc).getMeeples();
+        for (Meeple m : meeples) {
+            if (players.isAllowed(m.getPlayer())) {
+                perform(server, pos, loc, m.getClass(), m.getPlayer());
+                return;
+            }
+        }
+        throw new IllegalStateException("No legal meeple is placed on feature.");
     }
 
-    public abstract void perform(Client2ClientIF server, Position pos, Location loc, Class<? extends Meeple> meepleType);
-
-    protected Class<? extends Meeple> getMeepleType(Position pos, Location loc) {
-        Set<Class<? extends Meeple>> meeples = client.getGame().getBoard().get(pos).getFeature(loc).getMeepleTypes();
-        if (meeples.isEmpty()) return null;
-        return meeples.iterator().next();
-    }
+    public abstract void perform(Client2ClientIF server, Position pos, Location loc, Class<? extends Meeple> meepleType, Player owner);
 
 }

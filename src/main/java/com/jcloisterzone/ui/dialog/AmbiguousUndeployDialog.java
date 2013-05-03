@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -18,6 +19,7 @@ import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.Client;
 
@@ -27,7 +29,7 @@ public class AmbiguousUndeployDialog extends JDialog {
 
     private final int ICON_SIZE = 80;
 
-    public AmbiguousUndeployDialog(Client client, Set<Class<? extends Meeple>> meeples, final AmbiguousUndeployDialogEvent handler) {
+    public AmbiguousUndeployDialog(Client client, List<Meeple> meeples, final AmbiguousUndeployDialogEvent handler) {
         super(client);
         //this.client = client;
 
@@ -41,16 +43,16 @@ public class AmbiguousUndeployDialog extends JDialog {
         pane.add(new JLabel(_("Select meeple to undeploy")), "wrap, gapbottom 15");
 
         int gridx = 0;
-        Color color = client.getPlayerColor();
-        for (final Class<? extends Meeple> meepleType : meeples) {
-            Image img = client.getFigureTheme().getFigureImage(meepleType, color, null);
+        for (final Meeple meeple : meeples) {
+            Color color = client.getPlayerColor(meeple.getPlayer());
+            Image img = client.getFigureTheme().getFigureImage(meeple.getClass(), color, null);
             img = img.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
             JButton button = new JButton(new ImageIcon(img));
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ev) {
                     dispose();
-                    handler.meepleTypeSelected(meepleType);
+                    handler.meepleTypeSelected(meeple);
                 }
             });
             pane.add(button, "cell " + (gridx++) + " 1, height ::" + ICON_SIZE + ", width ::" + ICON_SIZE);
@@ -62,7 +64,7 @@ public class AmbiguousUndeployDialog extends JDialog {
     }
 
     public static abstract class AmbiguousUndeployDialogEvent {
-        public abstract void meepleTypeSelected(Class<? extends Meeple> meepleType);
+        public abstract void meepleTypeSelected(Meeple meeple);
     }
 
     //TODO copy&paste from About dialog
