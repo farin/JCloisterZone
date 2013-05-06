@@ -50,7 +50,7 @@ public enum Expansion {
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", PlagueGame.class),
     PHANTOM("PH", _("The Phantom"), PhantomGame.class),
     FESTIVAL("FE", _("The Festival (10th an.)"), FestivalGame.class),
-    HOUSES("HO", _("The Houses"), false),
+    HOUSES("LB", _("Little Buildings"), false),
     WIND_ROSE("WR", _("The Wind Rose"), false),
 
     //minis expansion line
@@ -60,7 +60,7 @@ public enum Expansion {
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),
     MAGE_WITHC("MW", "#5 - " + _("Mage & Witch"), false),
     ROBBER("RO", "#6 - " + _("The Robber"), false),
-    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles 2"), CornCirclesGame.class); //shares expanded game class with CC!
+    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), CornCirclesGame.class); //shares expanded game class with CC!
 
     //promo/one tile expansions
     //LA_PORXADA("PX", _("La porxada"), false),
