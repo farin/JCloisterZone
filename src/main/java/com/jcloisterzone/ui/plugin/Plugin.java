@@ -30,7 +30,8 @@ public class Plugin {
     }
 
     private URL fixPluginURL(URL url) throws MalformedURLException {
-        //TODO do not add / for jar files
+        boolean isFile = url.toString().endsWith(".jar") || url.toString().endsWith(".zip");
+        if (isFile) return url;
         return new URL(url.toString()+"/");
     }
 

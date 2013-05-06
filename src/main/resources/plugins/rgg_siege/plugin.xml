@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugin.rgg_siege" version="1">
+<plugin id="com.jcloisterzone.plugins.rgg_siege" version="1">
     <title>RGG's siege</title>
     <description>Graphics from RGG's version of The Cathars expansion</description>
     <expansions>
