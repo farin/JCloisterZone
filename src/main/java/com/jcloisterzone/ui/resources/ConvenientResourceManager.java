@@ -60,8 +60,8 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
-        return manager.getMeeplePlacement(tile, type, piece);
+    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
+        return manager.getMeeplePlacement(tile, type, loc);
     }
 
     @Override

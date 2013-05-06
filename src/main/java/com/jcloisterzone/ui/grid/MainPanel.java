@@ -142,7 +142,7 @@ public class MainPanel extends BackgroundPanel {
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
         Position pos = m.getPosition();
         Tile tile = getGame().getBoard().get(pos);
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getFeature());
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getLocation());
         animationService.registerAnimation(pos,
             new ScoreAnimation(
                     pos,
@@ -181,7 +181,7 @@ public class MainPanel extends BackgroundPanel {
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
         Tile tile = gridPanel.getTile(p);
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, tile.getFeature(loc));
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, loc);
         meepleLayer.addPermanentImage(p, offset, tunnelPiece);
     }
 

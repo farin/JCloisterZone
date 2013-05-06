@@ -21,7 +21,7 @@ public interface ResourceManager {
      Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations);
 
      /** returns meeple offset on tile, normalized to 100x100 tile size */
-     ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece);
+     ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc);
 
 
 

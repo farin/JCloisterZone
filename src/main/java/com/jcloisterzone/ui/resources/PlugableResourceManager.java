@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -62,9 +61,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
         for (ResourceManager manager : managers) {
-            ImmutablePoint result = manager.getMeeplePlacement(tile, type, piece);
+            ImmutablePoint result = manager.getMeeplePlacement(tile, type, loc);
             if (result != null) return result;
         }
         return null;

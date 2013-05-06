@@ -12,7 +12,6 @@ import javax.swing.SwingUtilities;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
@@ -22,7 +21,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class MeepleLayer extends AbstractGridLayer {
 
@@ -79,17 +77,9 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-//    private ImmutablePoint getMeeplePlacement(Tile tile, Meeple m) {
-//        Feature feature = m.getFeature();
-//        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, m.getClass(), feature);
-//        int meepleCount = feature.getMeeples().size();
-//        if (meepleCount == 1) return offset;
-//        return new ImmutablePoint(offset.getX() + 10*(meepleCount-1), offset.getY());
-//    }
-
     private PositionedImage createMeepleImage(Meeple m, int order) {
         Feature feature = m.getFeature();
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), feature);
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), m.getLocation());
         if (order > 0) {
             offset = new ImmutablePoint(offset.getX() + 10*order, offset.getY());
         }
@@ -112,13 +102,15 @@ public class MeepleLayer extends AbstractGridLayer {
                 int i = 0;
                 //clone meeples to freeze its state
                 for (Meeple m : feature.getMeeples()) {
-                    if (!(m instanceof SmallFollower)) continue;
-                    images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                    if (m instanceof SmallFollower) {
+                        images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                    }
 
                 }
                 for (Meeple m : feature.getMeeples()) {
-                    if (m instanceof SmallFollower) continue;
-                    images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                    if (!(m instanceof SmallFollower)) {
+                        images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                    }
                 }
             }
         });

@@ -38,9 +38,9 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Feature piece) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
         if (type.equals(Barn.class)) {
-            return getBarnPlacement(piece.getLocation());
+            return getBarnPlacement(loc);
         }
         return null;
     }
