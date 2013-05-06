@@ -85,6 +85,10 @@ public class ExpandedGame implements GameDelegation {
     }
 
     @Override
+    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+    }
+
+    @Override
     public void scoreCompleted(CompletableScoreContext ctx) {
     }
 

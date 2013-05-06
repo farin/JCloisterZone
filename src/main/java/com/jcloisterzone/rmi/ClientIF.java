@@ -15,8 +15,9 @@ public interface ClientIF extends Client2ClientIF {
     public void updateSlot(PlayerSlot slot);
     public void updateSupportedExpansions(EnumSet<Expansion> expansions);
 
-    /* ---------------------- STARTED GAME MESSAGES ------------------*/
+    /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/
 
     void drawTiles(int[] tileIndexes);
+    void setFlierDistance(int distance);
 
 }

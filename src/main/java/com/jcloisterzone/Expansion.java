@@ -10,6 +10,7 @@ import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.CountGame;
 import com.jcloisterzone.game.expansion.CultGame;
 import com.jcloisterzone.game.expansion.FestivalGame;
+import com.jcloisterzone.game.expansion.FlierGame;
 import com.jcloisterzone.game.expansion.InnsAndCathedralsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.PhantomGame;
@@ -53,7 +54,7 @@ public enum Expansion {
     WIND_ROSE("WR", _("The Wind Rose"), false),
 
     //minis expansion line
-    FLIER("FL", "#1 - " + _("The Flier") + " (" + _("tiles only") + ")"),
+    FLIER("FL", "#1 - " + _("The Flier"), FlierGame.class),
     MESSAGES("ME", "#2 - " + _("The Messages"), false),
     FERRIES("FR", "#3 - " + _("The Ferries"), false),
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),

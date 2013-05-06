@@ -24,6 +24,7 @@ public interface GameDelegation {
     void begin();
     //void start();
     void prepareActions(List<PlayerAction> actions, Sites commonSites);
+    void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites);
     void scoreCompleted(CompletableScoreContext ctx);
     void turnCleanUp();
     void finalScoring();

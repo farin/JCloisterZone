@@ -19,6 +19,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.expansion.FlierGame;
 import com.jcloisterzone.game.expansion.TowerGame;
 
 
@@ -34,7 +35,7 @@ public class ActionPhase extends Phase {
         List<PlayerAction> actions = Lists.newArrayList();
 
         Sites commonSites = game.prepareCommonSites();
-        if (getActivePlayer().hasFollower(SmallFollower.class)  && ! commonSites.isEmpty()) {
+        if (getActivePlayer().hasFollower(SmallFollower.class)  && !commonSites.isEmpty()) {
             actions.add(new MeepleAction(SmallFollower.class, commonSites));
         }
         game.expansionDelegate().prepareActions(actions, commonSites);
@@ -51,11 +52,17 @@ public class ActionPhase extends Phase {
     }
 
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
-        if (! actions.isEmpty()) return false;
+        if (!actions.isEmpty()) return false;
         if (game.hasExpansion(Expansion.TOWER)) {
             TowerGame tg = game.getTowerGame();
             if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
                 //player can return figure immediately
+                return false;
+            }
+        }
+        if (game.hasExpansion(Expansion.FLIER)) {
+            FlierGame fg = game.getFlierGame();
+            if (fg.isFlierRollAllowed()) {
                 return false;
             }
         }
@@ -163,6 +170,12 @@ public class ActionPhase extends Phase {
         bcb.decreaseBridges(getActivePlayer());
         bcb.deployBridge(pos, loc);
         next(ActionPhase.class);
+    }
+
+    @Override
+    public void setFlierDistance(int distance) {
+        game.getFlierGame().setFlierDistance(distance);
+        next(FlierActionPhase.class);
     }
 
 }

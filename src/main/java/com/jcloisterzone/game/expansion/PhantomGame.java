@@ -17,10 +17,16 @@ public class PhantomGame extends ExpandedGame {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
         if (game.getActivePlayer().hasFollower(Phantom.class) && ! commonSites.isEmpty()) {
             actions.add(new MeepleAction(Phantom.class, commonSites));
         }
     }
+
+    @Override
+    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+        prepareFollowerActions(actions, commonSites);
+    }
+
 
 }

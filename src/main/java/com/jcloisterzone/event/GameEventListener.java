@@ -18,6 +18,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.phase.Phase;
 
 public interface GameEventListener extends EventListener {
 
@@ -46,6 +47,8 @@ public interface GameEventListener extends EventListener {
     void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece);
 
     void gameOver();
+
+    void phaseEntered(Phase phase);
 
     //feature events
     void completed(Completable feature, CompletableScoreContext ctx);

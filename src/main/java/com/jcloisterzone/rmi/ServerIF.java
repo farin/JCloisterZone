@@ -19,5 +19,6 @@ public interface ServerIF extends Client2ClientIF {
      * Generates random tiles indexes. For security reasons all random selections are made on server side.
      */
     public void selectTiles(int tilesCount, int drawCount); //generate random numbers
+    public void rollFlierDice();
 
 }

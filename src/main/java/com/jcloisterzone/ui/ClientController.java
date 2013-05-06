@@ -34,12 +34,15 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.expansion.FlierGame;
+import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
+import com.jcloisterzone.ui.grid.FlierPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
@@ -177,6 +180,30 @@ public class ClientController implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void phaseEntered(Phase phase) {
+        if (client.getGridPanel() == null) return;
+
+        FlierGame flierGame = client.getGame().getFlierGame();
+        FlierPanel flierPanel;
+        boolean rollAllowed = false, rollMade = false;
+        if (flierGame != null) {
+            rollAllowed = flierGame.isFlierRollAllowed() && client.isClientActive();
+            rollMade = flierGame.getFlierDistance() > 0;
+        }
+        if (rollAllowed || rollMade) {
+            flierPanel = createOrGetFlierPanel();
+            if (rollMade) {
+               flierPanel.setFlierDistance(flierGame.getFlierDistance());
+            }
+        } else {
+            flierPanel = client.getGridPanel().getFlierPanel();
+            if (flierPanel != null) {
+                flierPanel.destroy();
+            }
+        }
+    }
+
+    @Override
     public void fairyMoved(Position p) {
         client.getMainPanel().fairyMoved(p);
     }
@@ -270,8 +297,19 @@ public class ClientController implements GameEventListener, UserInterface {
     }
 
     //TODO DRY - same as createOrGetBazaarPanel
+    public FlierPanel createOrGetFlierPanel() {
+        FlierPanel panel = client.getGridPanel().getFlierPanel();
+        if (panel == null) {
+            panel = new FlierPanel(client);
+            panel.registerSwingComponents(client.getGridPanel());
+            client.getGridPanel().setFlierPanel(panel);
+        }
+        return panel;
+    }
+
+    //TODO DRY - same as createOrGetBazaarPanel
     public CornCirclesPanel createOrGetCornCirclesPanel() {
-    	CornCirclesPanel panel = client.getGridPanel().getCornCirclesPanel();
+        CornCirclesPanel panel = client.getGridPanel().getCornCirclesPanel();
         if (panel == null) {
             panel = new CornCirclesPanel(client);
             panel.registerSwingComponents(client.getGridPanel());

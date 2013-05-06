@@ -20,26 +20,31 @@ import com.jcloisterzone.game.ExpandedGame;
 
 public final class InnsAndCathedralsGame extends ExpandedGame {
 
-	@Override
-	public void initFeature(Tile tile, Feature feature, Element xml) {
-		if (feature instanceof City) {
-			((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));
-		}
-		if (feature instanceof Road) {
-			((Road) feature).setInn(attributeBoolValue(xml, "inn"));
-		}
-	}
+    @Override
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+        if (feature instanceof City) {
+            ((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));
+        }
+        if (feature instanceof Road) {
+            ((Road) feature).setInn(attributeBoolValue(xml, "inn"));
+        }
+    }
 
-	@Override
-	public void initPlayer(Player player) {
-		player.addMeeple(new BigFollower(game, player));
-	}
+    @Override
+    public void initPlayer(Player player) {
+        player.addMeeple(new BigFollower(game, player));
+    }
 
-	@Override
-	public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-		if (game.getActivePlayer().hasFollower(BigFollower.class) && ! commonSites.isEmpty()) {
-			actions.add(new MeepleAction(BigFollower.class, commonSites));
-		}
-	}
+    @Override
+    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+        if (game.getActivePlayer().hasFollower(BigFollower.class) && ! commonSites.isEmpty()) {
+            actions.add(new MeepleAction(BigFollower.class, commonSites));
+        }
+    }
+
+    @Override
+    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+        prepareFollowerActions(actions, commonSites);
+    }
 
 }

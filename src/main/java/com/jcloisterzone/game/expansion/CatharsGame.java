@@ -13,14 +13,14 @@ import com.jcloisterzone.game.ExpandedGame;
 
 public final class CatharsGame extends ExpandedGame {
 
-	@Override
-	public void initFeature(Tile tile, Feature feature, Element xml) {
-		if (feature instanceof City && attributeBoolValue(xml, "besieged")) {
-			City city = (City) feature;
-			city.setBesieged(true);
-			tile.setTrigger(TileTrigger.BESIEGED);
-		}
-	}
+    @Override
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+        if (feature instanceof City && attributeBoolValue(xml, "besieged")) {
+            City city = (City) feature;
+            city.setBesieged(true);
+            tile.setTrigger(TileTrigger.BESIEGED);
+        }
+    }
 
 
 }

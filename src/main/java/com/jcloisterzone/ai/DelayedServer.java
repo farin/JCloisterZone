@@ -34,6 +34,11 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
+    public void rollFlierDice() {
+        server.rollFlierDice();
+    }
+
+    @Override
     public void updateExpansion(Expansion expansion, Boolean enabled) {
         server.updateExpansion(expansion, enabled);
     }

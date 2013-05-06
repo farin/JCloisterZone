@@ -48,8 +48,11 @@ public class GridPanel extends JPanel {
 
     final Client client;
     final ControlPanel controlPanel;
+
+    //TODO generalize panels
     private BazaarPanel bazaarPanel;
     private CornCirclesPanel cornCirclesPanel;
+    private FlierPanel flierPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -187,16 +190,25 @@ public class GridPanel extends JPanel {
 
 
     public CornCirclesPanel getCornCirclesPanel() {
-		return cornCirclesPanel;
-	}
+        return cornCirclesPanel;
+    }
 
 
-	public void setCornCirclesPanel(CornCirclesPanel cornCirclesPanel) {
-		this.cornCirclesPanel = cornCirclesPanel;
-	}
+    public void setCornCirclesPanel(CornCirclesPanel cornCirclesPanel) {
+        this.cornCirclesPanel = cornCirclesPanel;
+    }
+
+    public FlierPanel getFlierPanel() {
+        return flierPanel;
+    }
 
 
-	public AnimationService getAnimationService() {
+    public void setFlierPanel(FlierPanel flierPanel) {
+        this.flierPanel = flierPanel;
+    }
+
+
+    public AnimationService getAnimationService() {
         return client.getMainPanel().getAnimationService();
     }
 
@@ -428,18 +440,20 @@ public class GridPanel extends JPanel {
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
         controlPanel.paintComponent(g2);
-//        profile("control panel");
 
         if (bazaarPanel != null) {
             g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
-            //System.err.println("GP " + g2.getTransform());
             bazaarPanel.paintComponent(g2);
         }
 
         if (cornCirclesPanel != null) {
             g2.translate(-CornCirclesPanel.PANEL_WIDTH-60, 0);
-            //System.err.println("GP " + g2.getTransform());
             cornCirclesPanel.paintComponent(g2);
+        }
+
+        if (flierPanel != null) {
+            g2.translate(-FlierPanel.PANEL_WIDTH-60, 0);
+            flierPanel.paintComponent(g2);
         }
 
         //jb.paint(g2);

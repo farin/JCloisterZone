@@ -63,7 +63,6 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.CATAPULT,
             //only cards
             Expansion.COUNT,
-            Expansion.CORN_CIRCLES,
             Expansion.PLAGUE
         );
     }

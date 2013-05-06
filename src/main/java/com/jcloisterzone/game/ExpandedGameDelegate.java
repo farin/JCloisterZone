@@ -58,6 +58,13 @@ public class ExpandedGameDelegate implements GameDelegation {
     }
 
     @Override
+    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+        for(GameDelegation eg: game.getExpandedGames()) {
+            eg.prepareFollowerActions(actions, commonSites);
+        }
+    }
+
+    @Override
     public void scoreCompleted(CompletableScoreContext ctx) {
         for(GameDelegation eg: game.getExpandedGames()) {
             eg.scoreCompleted(ctx);

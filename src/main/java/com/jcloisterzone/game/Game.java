@@ -34,6 +34,7 @@ import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
 import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.game.expansion.CatharsGame;
 import com.jcloisterzone.game.expansion.CornCirclesGame;
+import com.jcloisterzone.game.expansion.FlierGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 import com.jcloisterzone.game.expansion.TowerGame;
@@ -350,6 +351,9 @@ public class Game extends GameSettings {
             eg = expandedGames.get(Expansion.CORN_CIRCLES_II);
         }
         return (CornCirclesGame) eg;
+    }
+    public FlierGame getFlierGame() {
+        return (FlierGame) expandedGames.get(Expansion.FLIER);
     }
 
 }

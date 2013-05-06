@@ -219,10 +219,15 @@ public class Server extends GameSettings implements ServerIF {
     public void selectTiles(int tilesCount, int drawCount) {
         assert tilesCount >= drawCount && drawCount > 0;
         int[] result = new int[drawCount];
-        for(int i = 0; i < drawCount; i++) {
+        for (int i = 0; i < drawCount; i++) {
             result[i] = random.nextInt(tilesCount--);
         }
         stub.drawTiles(result);
+    }
+
+    @Override
+    public void rollFlierDice() {
+        stub.setFlierDistance(1+random.nextInt(3));
     }
 
     @Override

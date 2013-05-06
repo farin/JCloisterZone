@@ -22,6 +22,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.phase.Phase;
 
 
 public class EventMulticaster implements GameEventListener, UserInterface {
@@ -176,6 +177,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     public void gameOver() {
         ((GameEventListener)a).gameOver();
         ((GameEventListener)b).gameOver();
+    }
+
+    @Override
+    public void phaseEntered(Phase phase) {
+        ((GameEventListener)a).phaseEntered(phase);
+        ((GameEventListener)b).phaseEntered(phase);
     }
 
     @Override

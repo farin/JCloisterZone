@@ -217,6 +217,11 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
+    public void setFlierDistance(int distance) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "setFlierDistance");
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName();
     }

@@ -88,7 +88,7 @@ public final class TowerGame extends ExpandedGame {
     }
 
     private boolean hasSmallOrBigFollower(Player p) {
-        for(Follower m : p.getFollowers()) {
+        for (Follower m : p.getFollowers()) {
             if (!m.isDeployed() && (m instanceof SmallFollower || m instanceof BigFollower)) {
                 return true;
             }
@@ -103,7 +103,7 @@ public final class TowerGame extends ExpandedGame {
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
-            if (! availTowers.isEmpty()) {
+            if (!availTowers.isEmpty()) {
                 actions.add(new TowerPieceAction(availTowers));
             }
         }
@@ -111,7 +111,7 @@ public final class TowerGame extends ExpandedGame {
 
     public void prepareCommonOnTower(Sites commonTileSites) {
         Set<Position> towerActions = getOpenTowers(1);
-        if (! towerActions.isEmpty()) {
+        if (!towerActions.isEmpty()) {
             if (getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
                 Position dragonPosition = getGame().getPrincessAndDragonGame().getDragonPosition();
                 if (dragonPosition != null) {
@@ -127,7 +127,7 @@ public final class TowerGame extends ExpandedGame {
 
     protected Set<Position> getOpenTowers(int minHeight) {
         Set<Position> availTower = Sets.newHashSet();
-        for(Position p : getTowers()) {
+        for (Position p : getTowers()) {
             Tower t = getBoard().get(p).getTower();
             if (t.getMeeple() == null && t.getHeight() >= minHeight) {
                 availTower.add(p);
@@ -141,8 +141,8 @@ public final class TowerGame extends ExpandedGame {
     }
 
     public boolean hasImprisonedFollower(Player followerOwner) {
-        for(List<Follower> list : prisoners.values()) {
-            for(Follower m : list) {
+        for (List<Follower> list : prisoners.values()) {
+            for (Follower m : list) {
                 if (m.getPlayer() == followerOwner) return true;
             }
         }
@@ -150,8 +150,8 @@ public final class TowerGame extends ExpandedGame {
     }
 
     public boolean hasImprisonedFollower(Player followerOwner, Class<? extends Follower> followerClass) {
-        for(List<Follower> list : prisoners.values()) {
-            for(Follower m : list) {
+        for (List<Follower> list : prisoners.values()) {
+            for (Follower m : list) {
                 if (m.getPlayer() == followerOwner && m.getClass().equals(followerClass)) return true;
             }
         }
@@ -170,7 +170,7 @@ public final class TowerGame extends ExpandedGame {
         Player opponent = game.getAllPlayers()[playerIndexToPay];
 
         Iterator<Follower> i = prisoners.get(opponent).iterator();
-        while(i.hasNext()) {
+        while (i.hasNext()) {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
@@ -199,7 +199,7 @@ public final class TowerGame extends ExpandedGame {
         copy.towerPieces = Maps.newHashMap(towerPieces);
         copy.ransomPaidThisTurn = ransomPaidThisTurn;
         copy.prisoners = Maps.newHashMap();
-        for(Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
+        for (Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
             copy.prisoners.put(entry.getKey(), Lists.newArrayList(entry.getValue()));
         }
         return copy;
@@ -208,14 +208,14 @@ public final class TowerGame extends ExpandedGame {
     @Override
     public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
-        for(Position towerPos : towers) {
+        for (Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();
             Element el = doc.createElement("tower");
             node.appendChild(el);
             XmlUtils.injectPosition(el, towerPos);
             el.setAttribute("height", "" + tower.getHeight());
         }
-        for(Player player: game.getAllPlayers()) {
+        for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);
             el.setAttribute("index", "" + player.getIndex());
@@ -234,7 +234,7 @@ public final class TowerGame extends ExpandedGame {
     public void loadFromSnapshot(Document doc, Element node) {
         ransomPaidThisTurn = Boolean.parseBoolean(node.getAttribute("ransomPaid"));
         NodeList nl = node.getElementsByTagName("tower");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element te = (Element) nl.item(i);
             Position towerPos = XmlUtils.extractPosition(te);
             Tower tower = getBoard().get(towerPos).getTower();
@@ -245,7 +245,7 @@ public final class TowerGame extends ExpandedGame {
             }
         }
         nl = node.getElementsByTagName("player");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element playerEl = (Element) nl.item(i);
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             towerPieces.put(player, Integer.parseInt(playerEl.getAttribute("pieces")));

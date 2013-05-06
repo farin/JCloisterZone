@@ -35,8 +35,9 @@ public class Tile /*implements Cloneable*/ {
     private final String id;
 
     private ArrayList<Feature> features;
-    private Bridge bridge; //direct ref to bridge feature
+    private Bridge bridge; //direct reference to bridge feature
     private Location river;
+    private Location flier;
 
     protected TileSymmetry symmetry;
     protected Position position = null;
@@ -237,7 +238,7 @@ public class Tile /*implements Cloneable*/ {
 
     public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
         Set<Location> locations = Sets.newHashSet();
-        for(Feature f : features) {
+        for (Feature f : features) {
             if (f instanceof Scoreable) {
                 IsOccupied visitor;
                 if (excludeCompleted && f instanceof Completable) {
@@ -255,7 +256,7 @@ public class Tile /*implements Cloneable*/ {
 
     public Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass) {
         Set<Location> locations = Sets.newHashSet();
-        for(Feature f : features) {
+        for (Feature f : features) {
             if (! featureClass.isInstance(f)) continue;
             if (f.walk(new IsOccupied().with(player).with(Follower.class))) {
                 locations.add(f.getLocation());
@@ -304,6 +305,15 @@ public class Tile /*implements Cloneable*/ {
 
     public void setRiver(Location river) {
         this.river = river;
+    }
+
+
+    public Location getFlier() {
+        return flier;
+    }
+
+    public void setFlier(Location flier) {
+        this.flier = flier;
     }
 
     public boolean isBridgeAllowed(Location bridgeLoc) {

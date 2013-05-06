@@ -106,7 +106,7 @@ public class ScorePhase extends Phase {
             }
         }
 
-        for(Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
+        for (Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
             Cloister cloister = neighbour.getCloister();
             if (cloister != null) {
                 scoreCompleted(cloister);
@@ -126,7 +126,7 @@ public class ScorePhase extends Phase {
     }
 
     protected void undeployMeeples(CompletableScoreContext ctx) {
-        for(Meeple m : ctx.getMeeples()) {
+        for (Meeple m : ctx.getMeeples()) {
             m.undeploy(false);
         }
     }
@@ -155,7 +155,7 @@ public class ScorePhase extends Phase {
         }
         if (ctx.isCompleted()) {
             Completable master = (Completable) ctx.getMasterFeature();
-            if (! alredyScored.contains(master)) {
+            if (!alredyScored.contains(master)) {
                 alredyScored.add(master);
                 game.expansionDelegate().scoreCompleted(ctx);
                 game.scoreCompletableFeature(ctx);

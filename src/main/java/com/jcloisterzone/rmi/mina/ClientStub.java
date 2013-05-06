@@ -137,6 +137,7 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
                 phase.setEntered(true);
                 phase.enter();
                 phase = game.getPhase();
+                game.fireGameEvent().phaseEntered(phase);
             }
         } catch (InvocationTargetException ie) {
             logger.error(ie.getMessage(), ie.getCause());

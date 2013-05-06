@@ -17,6 +17,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.phase.Phase;
 
 public class GameEventAdapter implements GameEventListener {
 
@@ -78,6 +79,10 @@ public class GameEventAdapter implements GameEventListener {
 
     @Override
     public void gameOver() {
+    }
+
+    @Override
+    public void phaseEntered(Phase phase) {
     }
 
     @Override
