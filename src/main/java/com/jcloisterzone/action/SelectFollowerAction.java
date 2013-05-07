@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
 import java.util.List;
-import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerRestriction;

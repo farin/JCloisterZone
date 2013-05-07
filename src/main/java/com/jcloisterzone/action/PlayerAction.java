@@ -5,9 +5,10 @@ import java.awt.Image;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 
-public abstract class PlayerAction implements Comparable<PlayerAction> {
+public abstract class PlayerAction implements Comparable<PlayerAction>, ForwardBackwardListener {
 
     private final String name;
 

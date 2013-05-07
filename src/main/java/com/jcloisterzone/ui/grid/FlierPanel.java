@@ -17,7 +17,6 @@ import com.jcloisterzone.ui.controls.FakeComponent;
 
 public class FlierPanel extends FakeComponent {
 
-    public static final int PANEL_WIDTH = 250;
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
 
     private JLabel header;
@@ -28,19 +27,10 @@ public class FlierPanel extends FakeComponent {
         super(client);
     }
 
-    //TODO should be outside this
-    public void destroy() {
-        this.destroySwingComponents(client.getGridPanel());
-        client.getGridPanel().setFlierPanel(null);
-    }
-
     @Override
     public void registerSwingComponents(JComponent parent) {
-        int panelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-FlierPanel.PANEL_WIDTH-60,
-            left = panelX + 20;
-
         header = new JLabel(_("Place follower as a flier"));
-        header.setBounds(left, 34, ControlPanel.PANEL_WIDTH-10, 30);
+
         parent.add(header);
 
         rollButton = new JButton();
@@ -52,13 +42,21 @@ public class FlierPanel extends FakeComponent {
             }
         });
 
-        rollButton.setBounds(left, 64, ControlPanel.PANEL_WIDTH-10, 30);
         parent.add(rollButton);
 
         rollResult = new JLabel();
-        rollResult.setBounds(left, 64, ControlPanel.PANEL_WIDTH-10, 30);
         rollResult.setVisible(false);
         parent.add(rollResult);
+    }
+
+    @Override
+    public void layoutSwingComponents(JComponent parent) {
+        int panelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60,
+            left = panelX + 20;
+
+        header.setBounds(left, 34, ControlPanel.PANEL_WIDTH-10, 30);
+        rollButton.setBounds(left, 64, ControlPanel.PANEL_WIDTH-10, 30);
+        rollResult.setBounds(left, 64, ControlPanel.PANEL_WIDTH-10, 30);
     }
 
     public void setFlierDistance(int distance) {
@@ -82,7 +80,7 @@ public class FlierPanel extends FakeComponent {
         int h = gp.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
-        g2.fillRect(0 , 0, PANEL_WIDTH, h);
+        g2.fillRect(0 , 0, getWidth(), h);
 
         g2.setColor(ControlPanel.HEADER_FONT_COLOR);
         g2.setFont(FONT_HEADER);

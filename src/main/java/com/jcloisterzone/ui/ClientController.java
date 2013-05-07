@@ -37,12 +37,14 @@ import com.jcloisterzone.game.expansion.BazaarItem;
 import com.jcloisterzone.game.expansion.FlierGame;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.FlierPanel;
+import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
@@ -180,7 +182,8 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void phaseEntered(Phase phase) {
-        if (client.getGridPanel() == null) return;
+        GridPanel grid = client.getGridPanel();
+        if (grid == null) return;
 
         FlierGame flierGame = client.getGame().getFlierGame();
         FlierPanel flierPanel;
@@ -190,14 +193,13 @@ public class ClientController implements GameEventListener, UserInterface {
             rollMade = flierGame.getFlierDistance() > 0;
         }
         if (rollAllowed || rollMade) {
-            flierPanel = createOrGetFlierPanel();
+            flierPanel = createSecondPanel(FlierPanel.class);
             if (rollMade) {
                flierPanel.setFlierDistance(flierGame.getFlierDistance());
             }
         } else {
-            flierPanel = client.getGridPanel().getFlierPanel();
-            if (flierPanel != null) {
-                flierPanel.destroy();
+            if (grid.getSecondPanel() instanceof FlierPanel) {
+                grid.setSecondPanel(null);
             }
         }
     }
@@ -289,46 +291,36 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void selectCornCircleOption() {
         client.clearActions();
-        createOrGetCornCirclesPanel();
+        createSecondPanel(CornCirclesPanel.class);
         client.getGridPanel().repaint();
     }
 
-    //TODO DRY - same as createOrGetBazaarPanel
-    public FlierPanel createOrGetFlierPanel() {
-        FlierPanel panel = client.getGridPanel().getFlierPanel();
-        if (panel == null) {
-            panel = new FlierPanel(client);
-            panel.registerSwingComponents(client.getGridPanel());
-            client.getGridPanel().setFlierPanel(panel);
+    @SuppressWarnings("unchecked")
+    public <T extends FakeComponent> T createSecondPanel(Class<T> type) {
+        GridPanel grid = client.getGridPanel();
+        FakeComponent panel = grid.getSecondPanel();
+        if (type.isInstance(panel)) {
+            return (T) panel;
         }
-        return panel;
+        T newPanel;
+        try {
+            newPanel = type.getConstructor(Client.class).newInstance(client);
+        } catch (Exception e) {
+            //should never happen;
+            e.printStackTrace();
+            return null;
+        }
+        newPanel.registerSwingComponents(grid);
+        newPanel.layoutSwingComponents(grid);
+        grid.setSecondPanel(newPanel);
+        return newPanel;
     }
 
-    //TODO DRY - same as createOrGetBazaarPanel
-    public CornCirclesPanel createOrGetCornCirclesPanel() {
-        CornCirclesPanel panel = client.getGridPanel().getCornCirclesPanel();
-        if (panel == null) {
-            panel = new CornCirclesPanel(client);
-            panel.registerSwingComponents(client.getGridPanel());
-            client.getGridPanel().setCornCirclesPanel(panel);
-        }
-        return panel;
-    }
-
-    public BazaarPanel createOrGetBazaarPanel() {
-        BazaarPanel bazaarPanel = client.getGridPanel().getBazaarPanel();
-        if (bazaarPanel == null) {
-            bazaarPanel = new BazaarPanel(client);
-            bazaarPanel.registerSwingComponents(client.getGridPanel());
-            client.getGridPanel().setBazaarPanel(bazaarPanel);
-        }
-        return bazaarPanel;
-    }
 
     @Override
     public void selectBazaarTile() {
         client.clearActions();
-        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
+        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (client.isClientActive()) {
             ArrayList<BazaarItem> supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
             for(int i = 0; i < supply.size(); i++) {
@@ -347,14 +339,14 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
-        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
+        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         client.getGridPanel().repaint();
     }
 
     @Override
     public void makeBazaarBid(int supplyIndex) {
-        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
+        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
@@ -367,7 +359,7 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void selectBuyOrSellBazaarOffer(int supplyIndex) {
-        BazaarPanel bazaarPanel = createOrGetBazaarPanel();
+        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setSelectedItem(supplyIndex);
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
@@ -378,6 +370,6 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarAuctionsEnded() {
-        client.getGridPanel().getBazaarPanel().destroy();
+        client.getGridPanel().setSecondPanel(null);
     }
 }

@@ -11,7 +11,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -109,10 +108,7 @@ public class MainPanel extends BackgroundPanel {
     public void closeGame() {
         gridPanel.clearActionDecorations();
         gridPanel.removeLayer(AbstractTilePlacementLayer.class);
-        //TODO DRY
-        if (gridPanel.getFlierPanel() != null) gridPanel.getFlierPanel().destroy();
-        if (gridPanel.getBazaarPanel() != null) gridPanel.getBazaarPanel().destroy();
-        if (gridPanel.getCornCirclesPanel() != null) gridPanel.getCornCirclesPanel().destroy();
+        gridPanel.setSecondPanel(null);
     }
 
     public void tilePlaced(Tile tile) {

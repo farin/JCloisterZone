@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.controls;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -15,6 +16,8 @@ import com.jcloisterzone.ui.Client;
 
 public abstract class FakeComponent extends ComponentAdapter {
 
+    private static final int DEFAULT_PANEL_WIDTH = 250;
+
     protected final Client client;
     private List<MouseListeningRegion> mouseRegions = Lists.newArrayList();
     private AffineTransform transform;
@@ -23,8 +26,18 @@ public abstract class FakeComponent extends ComponentAdapter {
         this.client = client;
     }
 
+    public int getWidth() {
+        return DEFAULT_PANEL_WIDTH;
+    }
+
     public void paintComponent(Graphics2D g) {
         transform = g.getTransform();
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        layoutSwingComponents((JComponent) e.getComponent());
+        e.getComponent().repaint();
     }
 
     public void registerSwingComponents(JComponent parent) {
@@ -33,12 +46,15 @@ public abstract class FakeComponent extends ComponentAdapter {
     public void destroySwingComponents(JComponent parent) {
     }
 
+    public void layoutSwingComponents(JComponent parent) {
+    }
+
     protected List<MouseListeningRegion> getMouseRegions() {
         return mouseRegions;
     }
 
     public void dispatchMouseEvent(MouseEvent e) {
-        for(MouseListeningRegion mlr : mouseRegions) {
+        for (MouseListeningRegion mlr : mouseRegions) {
             Area a = transformRegion(mlr.getRegion());
             if (a.contains(e.getX(), e.getY())) {
                 mlr.getListener().mouseClicked(e, mlr);

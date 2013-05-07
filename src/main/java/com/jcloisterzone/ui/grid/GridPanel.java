@@ -32,6 +32,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
@@ -39,7 +40,7 @@ import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 
-public class GridPanel extends JPanel {
+public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     private static final long serialVersionUID = -7013723613801929324L;
 
@@ -49,10 +50,7 @@ public class GridPanel extends JPanel {
     final Client client;
     final ControlPanel controlPanel;
 
-    //TODO generalize panels
-    private BazaarPanel bazaarPanel;
-    private CornCirclesPanel cornCirclesPanel;
-    private FlierPanel flierPanel;
+    private FakeComponent secondPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -95,16 +93,22 @@ public class GridPanel extends JPanel {
     }
 
 
+    @Override
     public void forward() {
         if (client.isClientActive()) {
-            if (bazaarPanel != null) bazaarPanel.forward();
+            if (secondPanel instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) secondPanel).forward();
+            }
             client.getControlPanel().getActionPanel().forward();
         }
     }
 
+    @Override
     public void backward() {
         if (client.isClientActive()) {
-            if (bazaarPanel != null) bazaarPanel.backward();
+            if (secondPanel instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) secondPanel).backward();
+            }
             client.getControlPanel().getActionPanel().backward();
         }
     }
@@ -140,8 +144,8 @@ public class GridPanel extends JPanel {
 
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (bazaarPanel != null) {
-                    bazaarPanel.dispatchMouseEvent(e);
+                if (secondPanel != null) {
+                    secondPanel.dispatchMouseEvent(e);
                     if (e.isConsumed()) return;
                 }
                 controlPanel.dispatchMouseEvent(e);
@@ -152,22 +156,22 @@ public class GridPanel extends JPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 controlPanel.componentResized(e);
-                if (bazaarPanel != null) bazaarPanel.componentResized(e);
+                if (secondPanel != null) secondPanel.componentResized(e);
             }
             @Override
             public void componentMoved(ComponentEvent e) {
                 controlPanel.componentMoved(e);
-                if (bazaarPanel != null) bazaarPanel.componentMoved(e);
+                if (secondPanel != null) secondPanel.componentMoved(e);
             }
             @Override
             public void componentShown(ComponentEvent e) {
                 controlPanel.componentShown(e);
-                if (bazaarPanel != null) bazaarPanel.componentShown(e);
+                if (secondPanel != null) secondPanel.componentShown(e);
             }
             @Override
             public void componentHidden(ComponentEvent e) {
                 controlPanel.componentHidden(e);
-                if (bazaarPanel != null) bazaarPanel.componentHidden(e);
+                if (secondPanel != null) secondPanel.componentHidden(e);
             }
         });
     }
@@ -180,33 +184,17 @@ public class GridPanel extends JPanel {
         return client;
     }
 
-    public BazaarPanel getBazaarPanel() {
-        return bazaarPanel;
+    public FakeComponent getSecondPanel() {
+        return secondPanel;
     }
 
-    public void setBazaarPanel(BazaarPanel bazaarPanel) {
-        this.bazaarPanel = bazaarPanel;
+    public void setSecondPanel(FakeComponent secondPanel) {
+        if (this.secondPanel != null && this.secondPanel != secondPanel) {
+            //destroy previoud panel
+            this.secondPanel.destroySwingComponents(this);
+        }
+        this.secondPanel = secondPanel;
     }
-
-
-    public CornCirclesPanel getCornCirclesPanel() {
-        return cornCirclesPanel;
-    }
-
-
-    public void setCornCirclesPanel(CornCirclesPanel cornCirclesPanel) {
-        this.cornCirclesPanel = cornCirclesPanel;
-    }
-
-    public FlierPanel getFlierPanel() {
-        return flierPanel;
-    }
-
-
-    public void setFlierPanel(FlierPanel flierPanel) {
-        this.flierPanel = flierPanel;
-    }
-
 
     public AnimationService getAnimationService() {
         return client.getMainPanel().getAnimationService();
@@ -441,19 +429,9 @@ public class GridPanel extends JPanel {
 
         controlPanel.paintComponent(g2);
 
-        if (bazaarPanel != null) {
-            g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
-            bazaarPanel.paintComponent(g2);
-        }
-
-        if (cornCirclesPanel != null) {
-            g2.translate(-CornCirclesPanel.PANEL_WIDTH-60, 0);
-            cornCirclesPanel.paintComponent(g2);
-        }
-
-        if (flierPanel != null) {
-            g2.translate(-FlierPanel.PANEL_WIDTH-60, 0);
-            flierPanel.paintComponent(g2);
+        if (secondPanel != null) {
+            g2.translate(-secondPanel.getWidth()-60, 0);
+            secondPanel.paintComponent(g2);
         }
 
         //jb.paint(g2);

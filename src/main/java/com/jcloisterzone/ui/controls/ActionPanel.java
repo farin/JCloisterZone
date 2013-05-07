@@ -15,8 +15,9 @@ import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 
-public class ActionPanel extends FakeComponent implements RegionMouseListener {
+public class ActionPanel extends FakeComponent implements RegionMouseListener, ForwardBackwardListener {
 
     public static final int LINE_HEIGHT = 30;
     public static final int PADDING = 3;

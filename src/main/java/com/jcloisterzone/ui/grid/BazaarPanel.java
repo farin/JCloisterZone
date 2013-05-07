@@ -29,9 +29,7 @@ import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.controls.MouseListeningRegion;
 import com.jcloisterzone.ui.controls.RegionMouseListener;
 
-public class BazaarPanel extends FakeComponent implements RegionMouseListener {
-
-    public static final int PANEL_WIDTH = 250;
+public class BazaarPanel extends FakeComponent implements RegionMouseListener, ForwardBackwardListener {
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
     private static Font FONT_BUTTON = new Font(null, Font.BOLD, 12);
@@ -60,16 +58,10 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
 
-    public void destroy() {
-        this.destroySwingComponents(client.getGridPanel());
-        client.getGridPanel().setBazaarPanel(null);
-    }
-
     @Override
     public void componentResized(ComponentEvent e) {
         refreshMouseRegions = true;
-        refreshComponentBounds();
-        client.getGridPanel().repaint();
+        super.componentResized(e);
     }
 
     @Override
@@ -177,13 +169,14 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             }
         }
 
-        refreshComponentBounds();
+        layoutSwingComponents(client.getGridPanel());
     }
 
 
-    private void refreshComponentBounds() {
+    @Override
+    public void layoutSwingComponents(JComponent parent) {
         //TODO hardcoded offset - but no better solution for now
-        int bazaarPanelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-BazaarPanel.PANEL_WIDTH-60;
+        int bazaarPanelX = parent.getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60;
         int y = getRowY(selectedItem);
 
         hint.setBounds(bazaarPanelX+20, 24, ControlPanel.PANEL_WIDTH-10, 50);
@@ -265,7 +258,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
     public void setSelectedItem(int selectedItem) {
         this.selectedItem = selectedItem;
-        refreshComponentBounds();
+        layoutSwingComponents(client.getGridPanel());
     }
 
     public int getSelectedItem() {
@@ -281,7 +274,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
                     selectedItem = 0;
                 }
             } while (supply.get(selectedItem).getOwner() != null);
-            refreshComponentBounds();
+            layoutSwingComponents(client.getGridPanel());
             client.getGridPanel().repaint();
         }
     }
@@ -295,7 +288,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
                     selectedItem = supply.size()-1;
                 }
             } while (supply.get(selectedItem).getOwner() != null);
-            refreshComponentBounds();
+            layoutSwingComponents(client.getGridPanel());
             client.getGridPanel().repaint();
         }
     }
@@ -314,7 +307,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
         int h = gp.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
-        g2.fillRect(0 , 0, PANEL_WIDTH, h);
+        g2.fillRect(0 , 0, getWidth(), h);
 
         g2.setColor(ControlPanel.HEADER_FONT_COLOR);
         g2.setFont(FONT_HEADER);
@@ -326,9 +319,6 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             getMouseRegions().clear();
         }
 
-        //System.out.println("B " + isTransormChanged() + " " + g2.getTransform());
-        //System.out.println(g2.getTransform());
-
         int i = 0;
         for(BazaarItem bi : bcb.getBazaarSupply()) {
             //TOOD cache supply images ??
@@ -336,22 +326,16 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
 
             if (selectedItem == i) {
                 g2.setColor(ControlPanel.PLAYER_BG_COLOR);
-                g2.fillRect(0, y-1, BazaarPanel.PANEL_WIDTH, 92);
+                g2.fillRect(0, y-1, getWidth(), 92);
             }
 
             if (refreshMouseRegions && state == BazaarPanelState.SELECT_TILE && bi.getOwner() == null) {
-                getMouseRegions().add(new MouseListeningRegion(new Rectangle(0, y-1, BazaarPanel.PANEL_WIDTH, 102), this, i));
+                getMouseRegions().add(new MouseListeningRegion(new Rectangle(0, y-1, getWidth(), 102), this, i));
             }
 
             g2.drawImage(img, 20, y, 90, 90, null);
 
-            if (bi.getCurrentBidder() != null) {
-//                Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getCurrentBidder()), null);
-//                //TODO smooth image
-//                g2.drawImage(playerImage, 130, y+12, 32, 32, null);
-////                g2.setColor(Color.BLACK);
-////                g2.drawString(bi.getCurrentPrice() + "", 160, y);
-            } else if (bi.getOwner() != null) {
+            if (bi.getCurrentBidder() == null && bi.getOwner() != null) {
                 Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getOwner()), null);
                 //TODO smooth image
                 g2.drawImage(playerImage, 140, y+12, 64, 64, null);
@@ -370,7 +354,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
             int idx = (Integer) data;
             if (selectedItem != -1 && selectedItem != idx) {
                 selectedItem = idx;
-                refreshComponentBounds();
+                layoutSwingComponents(client.getGridPanel());
                 client.getGridPanel().repaint();
             }
             return;
