@@ -109,6 +109,10 @@ public class MainPanel extends BackgroundPanel {
     public void closeGame() {
         gridPanel.clearActionDecorations();
         gridPanel.removeLayer(AbstractTilePlacementLayer.class);
+        //TODO DRY
+        if (gridPanel.getFlierPanel() != null) gridPanel.getFlierPanel().destroy();
+        if (gridPanel.getBazaarPanel() != null) gridPanel.getBazaarPanel().destroy();
+        if (gridPanel.getCornCirclesPanel() != null) gridPanel.getCornCirclesPanel().destroy();
     }
 
     public void tilePlaced(Tile tile) {

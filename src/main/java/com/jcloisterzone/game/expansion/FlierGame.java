@@ -1,12 +1,15 @@
 package com.jcloisterzone.game.expansion;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -39,4 +42,19 @@ public class FlierGame extends ExpandedGame {
         }
         return false;
     }
+
+    @Override
+    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+        if (flierDistance > 0) {
+            node.setAttribute("flierDistance", ""+flierDistance);
+        }
+    }
+
+    @Override
+    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+        if (node.hasAttribute("flierDistance")) {
+             flierDistance = Integer.parseInt(node.getAttribute("flierDistance"));
+        }
+    }
+
 }

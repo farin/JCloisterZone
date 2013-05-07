@@ -43,7 +43,6 @@ import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.FlierPanel;
-import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
@@ -290,9 +289,7 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void selectCornCircleOption() {
         client.clearActions();
-        CornCirclesPanel panel = createOrGetCornCirclesPanel();
-        //client.getServer().cornCiclesRemoveOrDeploy(false);
-        //System.err.println("NOT PROPERLY IMPLEMENTED");
+        createOrGetCornCirclesPanel();
         client.getGridPanel().repaint();
     }
 
@@ -381,8 +378,6 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void bazaarAuctionsEnded() {
-        GridPanel gp = client.getGridPanel();
-        gp.getBazaarPanel().destroySwingComponents(gp);
-        gp.setBazaarPanel(null);
+        client.getGridPanel().getBazaarPanel().destroy();
     }
 }

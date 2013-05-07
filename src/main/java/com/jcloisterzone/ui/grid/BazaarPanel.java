@@ -60,6 +60,11 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener {
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
 
+    public void destroy() {
+        this.destroySwingComponents(client.getGridPanel());
+        client.getGridPanel().setBazaarPanel(null);
+    }
+
     @Override
     public void componentResized(ComponentEvent e) {
         refreshMouseRegions = true;
