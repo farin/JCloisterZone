@@ -113,6 +113,7 @@
         <apply rotate="1">R2.RrII ROAD NE</apply>
         <apply rotate="0">TO.RrRr.2 ROAD NW</apply>
         <apply rotate="2">TO.RrRr.2 ROAD SE</apply>
+        <apply rotate="3">FL.Rr.SW.o ROAD SW</apply>
     </area>
     <area> <!-- half-oblique -->
         <x-points>600, 600, 560, 370, 200, 0, 0, 230, 400, 400</x-points>
@@ -325,6 +326,31 @@
         <y-points>1000, 895, 807, 602, 495, 432, 370, 365, 372, 375, 360, 315, 325, 345, 397, 415, 425, 590, 590, 580, 527, 492, 507, 580, 637, 670, 757, 800, 900, 1000</y-points>
         <apply>AM.CRr ROAD SE</apply>
         <apply>WI.CRr ROAD SE</apply>
+    </area>
+    <area>
+        <x-points>0, 112, 255, 325, 355, 382, 460, 600, 672, 712, 820, 852, 1000, 1000, 885, 857, 812, 742, 697, 522, 417, 370, 292, 242, 170, 85, 0</x-points>
+        <y-points>427, 430, 500, 587, 622, 627, 577, 542, 457, 400, 347, 342, 387, 562, 527, 527, 567, 657, 690, 745, 810, 820, 805, 772, 670, 607, 595</y-points>
+        <apply>FL.RFr.d ROAD WE</apply>
+    </area>
+    <area>
+        <x-points>425, 585, 585, 540, 535, 572, 680, 702, 727, 802, 810, 785, 750, 662, 587, 437, 502, 630, 645, 595, 555, 532, 462, 372, 360</x-points>
+        <y-points>5, 10, 45, 187, 225, 287, 360, 410, 522, 652, 712, 817, 857, 910, 997, 992, 847, 760, 712, 610, 480, 455, 420, 285, 212</y-points>
+        <apply>FL.RFr.NS.o ROAD NS</apply>
+    </area>
+    <area>
+        <x-points>0, 82, 175, 230, 272, 325, 427, 462, 570, 625, 672, 702, 772, 880, 942, 1000, 1000, 970, 862, 840, 812, 772, 725, 625, 600, 437, 350, 302, 205, 180, 112, 87, 2</x-points>
+        <y-points>405, 430, 490, 562, 622, 640, 630, 630, 662, 650, 615, 545, 487, 430, 407, 407, 535, 540, 607, 637, 697, 755, 797, 835, 835, 795, 805, 802, 782, 762, 650, 627, 572</y-points>
+        <apply>FL.RFr.WE.o ROAD WE</apply>
+    </area>
+    <area>
+        <x-points>0, 87, 140, 185, 317, 342, 380, 420, 580, 570, 510, 482, 432, 320, 262, 197, 135, 85, 0</x-points>
+        <y-points>420, 447, 437, 355, 220, 112, 52, 0, 0, 90, 175, 287, 347, 455, 557, 615, 630, 632, 600</y-points>
+        <apply>FL.Rr.NW.o ROAD NW</apply>
+    </area>
+    <area>
+        <x-points>422, 390, 390, 430, 475, 580, 682, 732, 832, 927, 1000, 1000, 950, 905, 802, 782, 667, 647, 570, 557, 590</x-points>
+        <y-points>1000, 910, 872, 765, 720, 670, 557, 530, 500, 435, 420, 582, 625, 657, 675, 690, 807, 820, 865, 885, 1000</y-points>
+        <apply>FL.Rr.d ROAD SE</apply>
     </area>
 
     <!--  City areas -->
@@ -739,6 +765,7 @@
         <apply rotate="3">R1.RrII FARM WL,SR</apply>
         <apply rotate="3">R2.RrII FARM WL,SR</apply>
         <apply rotate="2">TO.RrRr.2 FARM ER,SL</apply>
+        <apply rotate="3">FL.Rr.SW.o FARM SR,WL</apply>
     </area>
     <area> <!-- half-oblique-NL,WR -->
         <x-points>0, 400, 400, 250, 0</x-points>
@@ -804,7 +831,31 @@
         <apply>AM.CCRR FARM WR</apply>
         <apply rotate="1">PL.CCRR FARM NR</apply>
     </area>
-
+    <area>
+        <x-points>0, 142, 360, 692, 825, 1000, 1000, 0</x-points>
+        <y-points>495, 535, 722, 585, 437, 485, 1000, 1000</y-points>
+        <apply>FL.RFr.d FARM ER,SL,SR,WL</apply>
+    </area>
+    <area>
+        <x-points>517, 432, 632, 737, 492, 1000, 1000</x-points>
+        <y-points>0, 262, 445, 730, 995, 1000, 0</y-points>
+        <apply>FL.RFr.NS.o FARM NR,EL,ER,SL</apply>
+    </area>
+    <area>
+        <x-points>0, 242, 697, 802, 997, 1000, 0</x-points>
+        <y-points>482, 705, 710, 552, 477, 1000, 1000</y-points>
+        <apply>FL.RFr.WE.o FARM ER,SL,SR,WL</apply>
+    </area>
+    <area>
+        <x-points>522, 477, 1000, 1000</x-points>
+        <y-points>1000, 835, 492, 1000</y-points>
+        <apply>FL.Rr.d FARM ER,SL</apply>
+    </area>
+    <area>
+        <x-points>0, 522, 200, 0</x-points>
+        <y-points>0, 2, 540, 515</y-points>
+        <apply>FL.Rr.NW.o FARM WR,NL</apply>
+    </area>
     <area> <!-- center -->
         <rectangle h="200" w="200" x="400" y="400"/>
         <substract>BA.RRR</substract>
@@ -887,6 +938,11 @@
         <apply>GQ.CcRR FARM SL,ER</apply>
         <apply>GQ.CcCR FARM SL</apply>
         <apply>CC.RrC FARM WR,EL,ER,SL</apply>
+        <apply>FL.RFr.d FARM WR,NL,NR,EL</apply>
+        <apply>FL.RFr.NS.o FARM SR,WL,WR,NL</apply>
+        <apply>FL.RFr.WE.o FARM WR,NL,NR,EL</apply>
+        <apply>FL.Rr.d FARM SR,WL,WR,NL,NR,EL</apply>
+        <apply>FL.Rr.NW.o FARM NR,EL,ER,SL,SR,WL</apply>
     </complement-farm>
 
     <!-- Tower areas -->

@@ -115,9 +115,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         substractBridge(subsRoadCity, tile);
         Area subsFarm = getFarmSubstractions(tile);
 
-        for(Feature piece : tile.getFeatures()) {
+        for (Feature piece : tile.getFeatures()) {
             Location loc = piece.getLocation();
-            if (! locations.contains(loc)) {
+            if (!locations.contains(loc)) {
                 continue;
             }
 
@@ -167,7 +167,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     //TODO Move to default provider ???
     public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         Map<Location, Area> result = Maps.newHashMap();
-        for(Location loc : locations) {
+        for (Location loc : locations) {
             result.put(loc, getBridgeArea(size, loc));
         }
         return result;
@@ -226,8 +226,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Area base;
         if (areaProvider.isFarmComplement(tile, farm)) { //is complement farm
             base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
-            for(Feature piece : tile.getFeatures()) {
-                if (piece instanceof Farm && ! piece.getLocation().isRotationOf(farm)) {
+            for (Feature piece : tile.getFeatures()) {
+                if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = areaProvider.getArea(tile, Farm.class, piece.getLocation());
                     base.subtract(area);
                 }
@@ -236,7 +236,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             base = areaProvider.getArea(tile, Farm.class, farm);
             base = new Area(base); //copy area to not substract from original
         }
-        if (! sub.isEmpty()) {
+        if (!sub.isEmpty()) {
             base.subtract(sub);
         }
         return base;

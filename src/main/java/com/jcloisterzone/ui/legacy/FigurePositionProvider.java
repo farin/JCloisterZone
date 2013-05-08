@@ -108,27 +108,27 @@ public class FigurePositionProvider {
         specialPlacements = new ImmutableMap.Builder<String,ImmutablePoint>()
         //river
             .put("R1.LIRI CLOISTER CLOISTER", new ImmutablePoint(CENTER,30))
-            .put("R1.LIRI FARM WR+N+EL", new ImmutablePoint(MAX-BORDER,BORDER))
+            .put("R1.LIRI FARM NL,NR,EL,WR", new ImmutablePoint(MAX-BORDER,BORDER))
             .put("R1.LIRI ROAD S", new ImmutablePoint(30,MAX-BORDER))
-            .put("R1.IFI FARM WR+N+EL", new ImmutablePoint(BORDER,BORDER))
+            .put("R1.IFI FARM NL,NR,EL,WR", new ImmutablePoint(BORDER,BORDER))
             .put("R1.RIrI ROAD NS", new ImmutablePoint(CENTER,QUARTER))
         //river 2
             .put("R2.LIFI CLOISTER CLOISTER", new ImmutablePoint(CENTER,30))
-            .put("R2.LIFI FARM WR+N+EL", new ImmutablePoint(MAX-BORDER,BORDER))
-            .put("R2.IFC FARM ER+NR", new ImmutablePoint(BORDER, BORDER))
+            .put("R2.LIFI FARM NL,NR,EL,WR", new ImmutablePoint(MAX-BORDER,BORDER))
+            .put("R2.IFC FARM NR,ER", new ImmutablePoint(BORDER, BORDER))
             .put("R2.RIrI ROAD WE", new ImmutablePoint(MAX-QUARTER,CENTER))
-            .put("R2.RIrI FARM NR+EL", new ImmutablePoint(MAX-NEAR_CENTER,TINY_BORDER))
+            .put("R2.RIrI FARM NR,EL", new ImmutablePoint(MAX-NEAR_CENTER,TINY_BORDER))
             .put("R2.CIcI CITY WE", new ImmutablePoint(BORDER, CENTER))
         //king and scount
             .put("KS.LC CLOISTER CLOISTER", new ImmutablePoint(CENTER,65))
-            .put("KS.LC FARM _N", new ImmutablePoint(MAX-BORDER,MAX-BORDER))
+            .put("KS.LC FARM EL,ER,SL,SR,WL,WR", new ImmutablePoint(MAX-BORDER,MAX-BORDER))
             .put("KS.CcRR! ROAD E", new ImmutablePoint(MAX-TINY_BORDER,CENTER-10))
             .put("KS.CCcc CITY WE", new ImmutablePoint(BORDER, CENTER))
             .put("KS.CCcc CITY NS", new ImmutablePoint(CENTER, MAX-BORDER))
         //traders and builders
-            .put("TB.CCc.w FARM CENTER", new ImmutablePoint(MAX-QUARTER, MAX-QUARTER))
-            .put("TB.CCc.c FARM CENTER", new ImmutablePoint(MAX-QUARTER, MAX-QUARTER))
-            .put("TB.LRRR FARM WR+N+EL", new ImmutablePoint(MAX-QUARTER, QUARTER))
+            .put("TB.CCc.w FARM INNER_FARM", new ImmutablePoint(MAX-QUARTER, MAX-QUARTER))
+            .put("TB.CCc.c FARM INNER_FARM", new ImmutablePoint(MAX-QUARTER, MAX-QUARTER))
+            .put("TB.LRRR FARM NL,NR,EL,WR", new ImmutablePoint(MAX-QUARTER, QUARTER))
             .put("TB.CcRR!.c CITY NW", new ImmutablePoint(NEAR_CENTER, NEAR_CENTER))
             .put("TB.CcR!.w CITY NW", new ImmutablePoint(NEAR_CENTER, NEAR_CENTER))
             .put("TB.RRrr ROAD WE", new ImmutablePoint(QUARTER, CENTER))
@@ -137,61 +137,60 @@ public class FigurePositionProvider {
             .put("TB.RRC ROAD S", new ImmutablePoint(CENTER, MAX-20))
         //carhars
             .put("SI.RCr ROAD WE", new ImmutablePoint(50,75))
-            .put("SI.RCr FARM WL+S+ER", new ImmutablePoint(BORDER,MAX-BORDER))
+            .put("SI.RCr FARM WL,S,ER", new ImmutablePoint(BORDER,MAX-BORDER))
             .put("SI.CcRr ROAD SE", new ImmutablePoint(70,70))
         //dragon tiles
             .put("DG.CRcr.d ROAD NS", new ImmutablePoint(CENTER,BORDER))
-            .put("DG.CRcr.d FARM N", new ImmutablePoint(QUARTER,BORDER))
-            .put("DG.CRcr.d FARM S", new ImmutablePoint(QUARTER,MAX-BORDER))
+            .put("DG.CRcr.d FARM NL,NR", new ImmutablePoint(QUARTER,BORDER))
+            .put("DG.CRcr.d FARM SL,SR", new ImmutablePoint(QUARTER,MAX-BORDER))
             .put("DG.LCcc.d CLOISTER CLOISTER", new ImmutablePoint(18,33))
-            .put("DG.CCc+.p FARM W", new ImmutablePoint(8,30))
+            .put("DG.CCc+.p FARM WL,WR", new ImmutablePoint(8,30))
             .put("DG.CCc+.p CITY N", new ImmutablePoint(30,20))
-            .put("DG.LRRR.d FARM WR+N+EL", new ImmutablePoint(20, 20))
+            .put("DG.LRRR.d FARM NL,NR,EL,WR", new ImmutablePoint(20, 20))
             .put("DG.LCcc.d CITY _S", new ImmutablePoint(MAX-QUARTER, QUARTER))
         //tower tiles
             .put("TO.L CLOISTER CLOISTER", new ImmutablePoint(30,70))
-            .put("TO.L FARM NWSE", P_QUARTER)
+            .put("TO.L FARM NL,NR,WL,WR,SL,SR,EL,ER", P_QUARTER)
             .put("TO.CcR! CITY NW", new ImmutablePoint(CENTER+5, CENTER+5))
-            .put("TO.RrRr.2 FARM D102", new ImmutablePoint(BORDER, MAX-BORDER))
-            .put("TO.C FARM _N", new ImmutablePoint(QUARTER,CENTER))
+            .put("TO.RrRr.2 FARM NR,EL,SR,WL", new ImmutablePoint(BORDER, MAX-BORDER))
+            .put("TO.C FARM EL,ER,SL,SR,WL,WR", new ImmutablePoint(QUARTER,CENTER))
             .put("TO.Cc FARM SE", new ImmutablePoint(MAX-QUARTER,CENTER-5))
             .put("TO.CccC+ FARM CENTER", new ImmutablePoint(MAX-QUARTER, MAX-QUARTER))
             .put("TO.CC.2 FARM SE", new ImmutablePoint(NEAR_CENTER, MAX-QUARTER))
-            .put("TO.CFR FARM D224", new ImmutablePoint(QUARTER,MAX-BORDER))
+            .put("TO.CFR FARM SR,WL,WR", new ImmutablePoint(QUARTER,MAX-BORDER))
             .put("TO.CRcr ROAD NS", new ImmutablePoint(CENTER, MAX-QUARTER))
             .put("TO.CRcr CITY WE", new ImmutablePoint(MAX-BORDER, CENTER))
             .put("TO.RCr ROAD WE", new ImmutablePoint(MAX-QUARTER, CENTER))
-            .put("TO.RCr FARM WL+S+ER", new ImmutablePoint(MAX-BORDER, MAX-QUARTER))
+            .put("TO.RCr FARM SL,SR,ER,WL", new ImmutablePoint(MAX-BORDER, MAX-QUARTER))
             .put("TO.CccR CITY _S", new ImmutablePoint(QUARTER, QUARTER))
         //abbey and mayor
             .put("AM.RrC ROAD SE", new ImmutablePoint(MAX-QUARTER, CENTER))
             .put("AM.CCcc+ CITY WE", new ImmutablePoint(MAX-QUARTER, CENTER))
             .put("AM.CCcc+ CITY NS", new ImmutablePoint(CENTER, QUARTER))
             .put("AM.CCc+ CITY WE", new ImmutablePoint(MAX-QUARTER, CENTER))
-            .put("AM.CCc+ FARM S", new ImmutablePoint(MAX-NEAR_CENTER, MAX-BORDER))
+            .put("AM.CCc+ FARM SL,SR", new ImmutablePoint(MAX-NEAR_CENTER, MAX-BORDER))
             .put("AM.CRr ROAD SE", new ImmutablePoint(NEAR_CENTER, MAX-QUARTER))
             .put("AM.CRcr+ ROAD NS", new ImmutablePoint(CENTER, MAX-BORDER))
-            .put("AM.CRcr+ FARM N", new ImmutablePoint(QUARTER, BORDER))
+            .put("AM.CRcr+ FARM NL,NR", new ImmutablePoint(QUARTER, BORDER))
             .put("AM.CRcr+ CITY WE", new ImmutablePoint(QUARTER, CENTER))
         //GQ
             .put("GQ.CcRR ROAD E", new ImmutablePoint(MAX-BORDER, CENTER-10))
             .put("GQ.CcRR FARM EL", new ImmutablePoint(MAX-TINY_BORDER, QUARTER-3))
             .put("GQ.RFI ROAD W", new ImmutablePoint(BORDER, CENTER))
         //Cult
-            .put("CU.SC FARM _N", new ImmutablePoint(BORDER, MAX-BORDER))
-            .put("CU.SCFR FARM _N", new ImmutablePoint(BORDER, MAX-BORDER))
-            .put("CU.SR FARM NWSE", new ImmutablePoint(BORDER, BORDER))
-            .put("CU.SRCR FARM WL+S+ER", new ImmutablePoint(MAX-BORDER, MAX-BORDER))
-            .put("CU.SRFR FARM SR+W+NL", new ImmutablePoint(MAX-BORDER, MAX-BORDER))
-            .put("CU.SRFR FARM NR+E+SL", new ImmutablePoint(BORDER, BORDER))
+            .put("CU.SC FARM EL,ER,SL,SR,WL,WR", new ImmutablePoint(BORDER, MAX-BORDER))
+            .put("CU.SCFR FARM EL,ER,SL,SR,WL,WR", new ImmutablePoint(BORDER, MAX-BORDER))
+            .put("CU.SR FARM NL,NR,WL,WR,SL,SR,EL,ER", new ImmutablePoint(BORDER, BORDER))
+            .put("CU.SRCR FARM ER,SL,SR,WL", new ImmutablePoint(MAX-BORDER, MAX-BORDER))
+            .put("CU.SRFR FARM NL,SR,WL,WR", new ImmutablePoint(MAX-BORDER, MAX-BORDER))
+            .put("CU.SRFR FARM NR,EL,ER,SL", new ImmutablePoint(BORDER, BORDER))
         //Tunnel
             .put("TU.RCR ROAD E", new ImmutablePoint(MAX-ROAD_DIST, CENTER+10))
-            .put("TU.RRRR FARM WR+N+EL", new ImmutablePoint(BORDER, BORDER))
+            .put("TU.RRRR FARM NL,NR,EL,WR", new ImmutablePoint(BORDER, BORDER))
         //Catapult
             .put("CA.L CLOISTER CLOISTER", new ImmutablePoint(34, 40))
         //Bridges, Castles & Bazaars
             .put("BB.LRFr ROAD WE", new ImmutablePoint(50,75))
-
             .put("BA.CcRr ROAD SE", P_OBLIQUE_SE)
             .put("BA.CcRr+ ROAD SE", P_OBLIQUE_SE)
             .put("CA.RrR.1 ROAD SE", P_OBLIQUE_SE)
@@ -205,7 +204,10 @@ public class FigurePositionProvider {
             .put("R2.RrII ROAD NE", P_OBLIQUE_NE)
             .put("TO.RrRr.2 ROAD NW", P_OBLIQUE_NW)
             .put("TO.RrRr.2 ROAD SE", P_OBLIQUE_SE)
-
+        //Flier
+            .put("FL.RFr.WE.o FARM ER,SL,SR,WL", new ImmutablePoint(MAX-BORDER,BORDER))
+            .put("FL.RFr.d FARM ER,SL,SR,WL", new ImmutablePoint(MAX-BORDER,BORDER))
+            .put("FL.RFr.NS.o FARM NR,EL,ER,SL", new ImmutablePoint(MAX-BORDER,BORDER))
             .build();
     }
 
@@ -216,8 +218,8 @@ public class FigurePositionProvider {
 
         StringBuilder key = new StringBuilder();
         key.append(tile.getId()).append(" ");
-        key.append(piece.getSimpleName().replace("Piece", "").toUpperCase()).append(" ");
-        key.append(d.rotateCCW(tileRotation).toString());
+        key.append(piece.getSimpleName().toUpperCase()).append(" ");
+        key.append(d.rotateCCW(tileRotation).toString().replace('.', ','));
 
         //System.out.println(key.toString());
 

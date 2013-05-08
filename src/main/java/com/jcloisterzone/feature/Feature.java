@@ -1,7 +1,6 @@
 package com.jcloisterzone.feature;
 
 import java.util.List;
-import java.util.Set;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
