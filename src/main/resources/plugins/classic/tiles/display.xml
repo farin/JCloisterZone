@@ -44,10 +44,13 @@
     <area> <!-- shrine -->
         <circle r="250" x="500" y="500"/>
         <apply>CU.S CLOISTER CLOISTER</apply>
-        <apply>CU.SC CLOISTER CLOISTER</apply>
         <apply>CU.SR CLOISTER CLOISTER</apply>
-        <apply>CU.SCFR CLOISTER CLOISTER</apply>
         <apply>CU.SRFR CLOISTER CLOISTER</apply>
+    </area>
+    <area> <!-- shrine -->
+        <circle r="250" x="500" y="600"/>
+        <apply>CU.SC CLOISTER CLOISTER</apply>
+        <apply>CU.SCFR CLOISTER CLOISTER</apply>
         <apply>CU.SRCR CLOISTER CLOISTER</apply>
     </area>
     <area>
@@ -214,6 +217,15 @@
         <apply rotate="2">BB.CFR.b ROAD S</apply>
         <apply rotate="2">BB.RFR.b ROAD S</apply>
         <apply rotate="0">BB.RFR.bi ROAD N</apply>
+        <apply rotate="1">CU.SRCR ROAD E</apply>
+        <apply rotate="3">CU.SRCR ROAD W</apply>
+        <apply rotate="2">CU.SR ROAD S</apply>
+        <apply rotate="0">CU.SRFR ROAD N</apply>
+        <apply rotate="2">CU.SRFR ROAD S</apply>
+    </area>
+    <area> <!-- shorter -->
+        <rectangle h="200" w="200" x="400" y="0"/>
+        <apply rotate="2">CU.SCFR ROAD S</apply>
     </area>
     <area> <!-- tiny -->
         <x-points>400, 600, 650, 450</x-points>
@@ -506,6 +518,9 @@
         <apply rotate="1">TB.CcCC.c CITY E</apply>
         <apply>TU.CRRR CITY N</apply>
         <apply>TU.RCR CITY N</apply>
+        <apply>CU.SCFR CITY N</apply>
+        <apply>CU.SC CITY N</apply>
+        <apply>CU.SRCR CITY N</apply>
     </area>
     <area> <!-- tiny3 -->
         <x-points>1000, 890, 640, 600, 550, 340, 130, 90, 0</x-points>
