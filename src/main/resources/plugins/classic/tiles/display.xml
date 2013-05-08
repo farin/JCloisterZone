@@ -88,11 +88,17 @@
         <apply rotate="2">* ROAD SE</apply>
         <apply rotate="3">* ROAD SW</apply>
     </area>
-    <area> <!-- WE -->
+    <area> <!--WE-->
         <rectangle h="200" w="1000" x="0" y="400"/>
         <apply>* ROAD WE</apply>
         <apply rotate="1">* ROAD NS</apply>
     </area>
+    <!--area> (WE alternative)
+        <x-points>0, 142, 357, 430, 510, 575, 685, 820, 1000, 1000, 885, 787, 727, 610, 497, 442, 372, 185, 75, 0</x-points>
+        <y-points>410, 415, 477, 452, 370, 350, 385, 375, 410, 590, 560, 570, 585, 567, 650, 680, 682, 630, 597, 605</y-points>
+        <apply>* ROAD WE</apply>
+        <apply rotate="1">* ROAD NS</apply>
+    </area-->
     <area> <!-- NWSE -->
         <x-points>400, 600, 600, 800, 1000, 1000, 800, 600, 600, 400, 400, 200, 0, 0, 200, 400</x-points>
         <y-points>0, 0, 200, 400, 400, 600, 600, 800, 1000, 1000, 800, 600, 600, 400, 400, 200</y-points>
@@ -105,7 +111,6 @@
         <apply rotate="2">BA.CcRr+ ROAD SE</apply>
         <apply rotate="2">CA.RrR.1 ROAD SE</apply>
         <apply rotate="3">GQ.CRRr ROAD SW</apply>
-        <apply rotate="2">IC.CcRr+.i ROAD SE</apply>
         <apply rotate="3">IC.RrRr ROAD SW</apply>
         <apply rotate="3">WI.RrRr ROAD SW</apply>
         <apply rotate="1">FE.RrRr ROAD NE</apply>
@@ -186,7 +191,6 @@
         <apply rotate="0">GQ.CRcR.1 ROAD N</apply>
         <apply rotate="1">IC.LRFR ROAD E</apply>
         <apply rotate="1">WI.LRFR ROAD E</apply>
-        <apply rotate="2">IC.CRcR+ ROAD S</apply>
         <apply rotate="2">IC.RRR.i ROAD S</apply>
         <apply rotate="2">KS.CcRR! ROAD S</apply>
         <apply rotate="1">KS.CcRR! ROAD E</apply>
@@ -194,14 +198,7 @@
         <apply rotate="2">DG.RRR.g ROAD S</apply>
         <apply rotate="2">DG.CRRR.p ROAD S</apply>
         <apply rotate="2">TO.CccR ROAD S</apply>
-        <apply rotate="2">TB.CcRR!.c ROAD S</apply>
-        <apply rotate="2">TB.CccR.w ROAD S</apply>
-        <apply rotate="2">TB.CRc.g ROAD S</apply>
-        <apply rotate="2">TB.CRc.w ROAD S</apply>
-        <apply rotate="0">TB.CRcR.w ROAD N</apply>
-        <apply rotate="2">TB.CRcR.w ROAD S</apply>
         <apply rotate="1">TB.LRRR ROAD E</apply>
-        <apply rotate="2">TB.RCc!.g ROAD S</apply>
         <apply rotate="3">TU.CRRR ROAD W</apply>
         <apply rotate="1">TU.CRRR ROAD E</apply>
         <apply rotate="2">TU.CRRR ROAD S</apply>
@@ -224,8 +221,17 @@
         <apply rotate="2">CU.SRFR ROAD S</apply>
     </area>
     <area> <!-- shorter -->
-        <rectangle h="200" w="200" x="400" y="0"/>
+        <rectangle h="210" w="200" x="400" y="0"/>
         <apply rotate="2">CU.SCFR ROAD S</apply>
+        <apply rotate="2">TB.CRc.w ROAD S</apply>
+        <apply rotate="2">TB.CRc.g ROAD S</apply>
+        <apply rotate="0">TB.CRcR.w ROAD N</apply>
+        <apply rotate="2">TB.CRcR.w ROAD S</apply>
+
+        <!-- TODO own polygon -->
+        <apply rotate="2">TB.RCc!.g ROAD S</apply>
+        <apply rotate="2">TB.CcRR!.c ROAD S</apply>
+        <apply rotate="2">TB.CccR.w ROAD S</apply>
     </area>
     <area> <!-- tiny -->
         <x-points>400, 600, 650, 450</x-points>
@@ -271,15 +277,19 @@
         <apply rotate="2">AM.RC ROAD S</apply>
         <apply rotate="2">WI.RC ROAD S</apply>
         <apply rotate="3">FE.RC ROAD W</apply>
-        <apply rotate="2">GQ.RCc ROAD S</apply>
-        <apply rotate="2">GQ.CcRR ROAD S</apply>
         <apply rotate="2">GQ.CcCR ROAD S</apply>
-        <apply rotate="2">IC.RCc.i ROAD S</apply>
-        <apply rotate="2">WI.RCc.i ROAD S</apply>
         <apply rotate="3">KS.RC ROAD W</apply>
         <apply rotate="3">KS.CRrR ROAD W</apply>
-        <apply rotate="2">TB.CcRR.w ROAD S</apply>
-        <apply rotate="2">TB.RCc.g ROAD S</apply>
+    </area>
+    <area> <!-- lcurved to NW city -->
+        <x-points>417, 412, 322, 260, 345, 410, 560, 582, 570, 585</x-points>
+        <y-points>1000, 787, 647, 620, 495, 517, 682, 740, 877, 1000</y-points>
+        <apply>IC.RCc.i ROAD S</apply>
+        <apply>WI.RCc.i ROAD S</apply>
+        <apply>TB.RCc.g ROAD S</apply>
+        <apply>TB.CcRR.w ROAD S</apply>
+        <apply>GQ.RCc ROAD S</apply>
+        <apply>GQ.CcRR ROAD S</apply>
     </area>
     <area> <!-- rcurved -->
         <x-points>600, 400, 400, 370, 260, 260, 400, 600</x-points>
@@ -364,6 +374,16 @@
         <y-points>1000, 910, 872, 765, 720, 670, 557, 530, 500, 435, 420, 582, 625, 657, 675, 690, 807, 820, 865, 885, 1000</y-points>
         <apply>FL.Rr.d ROAD SE</apply>
     </area>
+    <area>
+        <x-points>420, 432, 520, 667, 795, 830, 1000, 1000, 972, 955, 937, 865, 677, 652, 610, 605</x-points>
+        <y-points>1000, 927, 760, 657, 600, 530, 410, 627, 655, 667, 710, 780, 852, 872, 945, 1000</y-points>
+        <apply>IC.CcRr+.i ROAD SE</apply>
+    </area>
+    <area>
+        <x-points>327, 497, 565, 585, 585, 405, 405, 325</x-points>
+        <y-points>770, 765, 862, 907, 1000, 1000, 955, 862</y-points>
+        <apply>IC.CRcR+ ROAD S</apply>
+    </area>
 
     <!--  City areas -->
     <area> <!-- NWSE -->
@@ -420,7 +440,7 @@
         <apply>BA.C CITY N</apply>
         <apply>BA.CFC.2 CITY N</apply>
         <apply>CA.CFC CITY N</apply>
-        <apply rotate="2">IC.CCCC CITY S</apply>
+        <apply rotate="3">IC.CCCC CITY W</apply>
         <apply rotate="1">IC.CCC CITY E</apply>
         <apply>IC.CRCR CITY N</apply>
         <apply>FE.CRCR CITY N</apply>
@@ -490,10 +510,10 @@
         <apply>BA.CC.2 CITY N</apply>
         <apply rotate="1">CC.CC.1 CITY E</apply>
         <apply rotate="1">GQ.CcCR CITY E</apply>
-        <apply>IC.CCCC CITY N</apply>
         <apply>TO.CC.2 CITY N</apply>
         <apply>R1.CICI CITY N</apply>
         <apply rotate="3">IC.CCC CITY W</apply>
+        <apply rotate="1">IC.CCCC CITY E</apply>
         <apply rotate="2">IC.CCc+ CITY S</apply>
         <apply rotate="1">DG.CC.v CITY E</apply>
         <apply rotate="1">AM.CCRR CITY E</apply>
@@ -508,9 +528,9 @@
         <y-points>0, 100, 210, 220, 210, 160, 110, 90, 0</y-points>
         <apply rotate="3">BA.CC.2 CITY W</apply>
         <apply>CC.CC.1 CITY N</apply>
-        <apply rotate="3">IC.CCCC CITY W</apply>
-        <apply rotate="1">IC.CCCC CITY E</apply>
         <apply>IC.CCC CITY N</apply>
+        <apply>IC.CCCC CITY N</apply>
+        <apply rotate="2">IC.CCCC CITY S</apply>
         <apply>DG.CC.v CITY N</apply>
         <apply>AM.CCRR CITY N</apply>
         <apply rotate="1">PL.CCRR CITY E</apply>
@@ -813,6 +833,16 @@
         <apply rotate="3">TO.RrC FARM WL,SR</apply>
         <apply rotate="3">CC.RrC FARM WL,SR</apply>
     </area>
+    <area> <!-- under lcurved-NW -->
+        <x-points>0, 500, 500, 0</x-points>
+        <y-points>300, 745, 1000, 1000</y-points>
+        <apply>IC.RCc.i FARM SR</apply>
+        <apply>WI.RCc.i FARM SR</apply>
+        <apply>TB.RCc.g FARM SR</apply>
+        <apply>TB.CcRR.w FARM SR</apply>
+        <apply>GQ.RCc FARM SR</apply>
+        <apply>GQ.CcRR FARM SR</apply>
+    </area>
     <area>
         <x-points>997, 792, 742, 995</x-points>
         <y-points>480, 417, 250, 0</y-points>
@@ -871,6 +901,7 @@
         <y-points>0, 2, 540, 515</y-points>
         <apply>FL.Rr.NW.o FARM WR,NL</apply>
     </area>
+
     <area> <!-- center -->
         <rectangle h="200" w="200" x="400" y="400"/>
         <substract>BA.RRR</substract>
@@ -880,6 +911,12 @@
         <substract>DG.RRR.d</substract>
         <substract>DG.RRR.g</substract>
     </area>
+    <area>
+        <rectangle h="350" w="200" x="400" y="360"/>
+        <substract>IC.CRCR</substract>
+        <substract>FE.CRCR</substract>
+    </area>
+
     <complement-farm>
         <apply>* FARM NL,NR,WL,WR,SL,SR,EL,ER</apply>
         <apply>* FARM INNER_FARM</apply>
