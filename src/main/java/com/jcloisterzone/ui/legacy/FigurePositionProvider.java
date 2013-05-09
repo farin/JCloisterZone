@@ -136,7 +136,7 @@ public class FigurePositionProvider {
             .put("TB.RRC ROAD W", new ImmutablePoint(20, CENTER))
             .put("TB.RRC ROAD S", new ImmutablePoint(CENTER, MAX-20))
         //carhars
-            .put("SI.RCr ROAD WE", new ImmutablePoint(50,75))
+            .put("SI.RCr ROAD WE", new ImmutablePoint(BORDER, 55)) //different shape in rgg_siege!
             .put("SI.RCr FARM WL,S,ER", new ImmutablePoint(BORDER,MAX-BORDER))
             .put("SI.CcRr ROAD SE", new ImmutablePoint(70,70))
         //dragon tiles

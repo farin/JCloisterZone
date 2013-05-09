@@ -92,28 +92,23 @@ public class MeepleLayer extends AbstractGridLayer {
      * recompute offset, keep big follower on top
      */
     private void rearrangeMeeples(final Feature feature) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (Meeple m : feature.getMeeples()) {
-                    images.remove(m);
-                }
+        for (Meeple m : feature.getMeeples()) {
+            images.remove(m);
+        }
 
-                int i = 0;
-                //clone meeples to freeze its state
-                for (Meeple m : feature.getMeeples()) {
-                    if (m instanceof SmallFollower) {
-                        images.put((Meeple) m.clone(), createMeepleImage(m, i++));
-                    }
-
-                }
-                for (Meeple m : feature.getMeeples()) {
-                    if (!(m instanceof SmallFollower)) {
-                        images.put((Meeple) m.clone(), createMeepleImage(m, i++));
-                    }
-                }
+        int i = 0;
+        //clone meeples to freeze its state
+        for (Meeple m : feature.getMeeples()) {
+            if (m instanceof SmallFollower) {
+                images.put((Meeple) m.clone(), createMeepleImage(m, i++));
             }
-        });
+
+        }
+        for (Meeple m : feature.getMeeples()) {
+            if (!(m instanceof SmallFollower)) {
+                images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+            }
+        }
     }
 
     public void meepleDeployed(Meeple m) {
