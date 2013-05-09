@@ -264,7 +264,7 @@ public class Location implements Serializable {
     /** Creates instance according to name */
     public static Location valueOf(String name) {
         Location value = null;
-        for(String part : name.split("\\+")) {
+        for (String part : name.split("\\.")) {
             try {
                 Location item = (Location) Location.class.getField(part).get(null);
                 value = item.union(value);
