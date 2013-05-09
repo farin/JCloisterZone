@@ -41,6 +41,7 @@ import com.google.common.collect.Sets;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -54,6 +55,8 @@ import com.jcloisterzone.game.phase.Phase;
 public class Snapshot implements Serializable {
 
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
+
+    public static final String COMPATIBLE_FROM = "2.2";
 
     private Document doc;
     private Element root;
@@ -222,6 +225,10 @@ public class Snapshot implements Serializable {
             root = doc.getDocumentElement();
         } catch (Exception e) {
             throw new SnapshotCorruptedException(e);
+        }
+        String snapshotVersion = root.getAttribute("app-version");
+        if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
+            throw new SnapshotCorruptedException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
         }
     }
 

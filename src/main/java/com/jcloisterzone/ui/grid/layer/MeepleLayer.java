@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
