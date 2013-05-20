@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2012-06-03 19:25+0100\n"
 "Last-Translator: pds <ditrich@pdsoftware.sk>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Poedit-Language: Czech\n"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:27
@@ -213,7 +213,8 @@ msgstr "Bazar bez aukce (pouze výběr kartičky)"
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr "Vzdálené JCloisterZone není kompatibilní s touto aplikací. Použijte stejné "
+msgstr ""
+"Vzdálené JCloisterZone není kompatibilní s touto aplikací. Použijte stejné "
 "verze na obou stranách."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
@@ -254,7 +255,8 @@ msgstr "Zrušít"
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
-msgstr "Hra není dohrána. Opravdu si přejete hru ukončit a odpojit tak také ostatní "
+msgstr ""
+"Hra není dohrána. Opravdu si přejete hru ukončit a odpojit tak také ostatní "
 "hráče?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:313
@@ -573,7 +575,8 @@ msgstr "Položit dílek věže"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr "Opravdu chcete položit figurku na věž? \n"
+msgstr ""
+"Opravdu chcete položit figurku na věž? \n"
 "(tedy zabránit dalšímu pokládání dílků)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -648,7 +651,8 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Pomocí <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> nebo <b>kurzorových</b> "
+msgstr ""
+"<html>Pomocí <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> nebo <b>kurzorových</b> "
 "kláves lze posouvat s hrací plochou. Klik <b>prostředním </b> tlačítkem myši "
 "vystředí plochu. Zoomovat lze pomocí <b>+</b> a <b>-</b> nebo <b>prosředním</"
 "b> tlačítkem myši.</html>"
@@ -657,28 +661,32 @@ msgstr "<html>Pomocí <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> nebo <b>kurzorovýc
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Kartička se otáčí klávesou <b>Tab</b> nebo <b>pravým</b> tlačítkemyši. "
+msgstr ""
+"<html>Kartička se otáčí klávesou <b>Tab</b> nebo <b>pravým</b> tlačítkemyši. "
 "Pokládá se potom kliknutím <b>levým</b> tlačítkem.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr "<html>Poté co je kartička položena použijte opět <b>Tab</b> nebo <b>pravé<b> "
+msgstr ""
+"<html>Poté co je kartička položena použijte opět <b>Tab</b> nebo <b>pravé<b> "
 "kliknutí pro výběr příslušné akce.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>Eventuelně lze pasovat pomocí kláves <b>Enter</b> nebo <b>mezerník</"
+msgstr ""
+"<html>Eventuelně lze pasovat pomocí kláves <b>Enter</b> nebo <b>mezerník</"
 "bpro ukončení tahu bez akce.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
 "Create a new local or network game. You can play against any number of "
 "computer players."
-msgstr "Vytvoření nové hry nebo založení hry po síti. Je možné hrát protlibovolnému "
+msgstr ""
+"Vytvoření nové hry nebo založení hry po síti. Je možné hrát protlibovolnému "
 "počtu počítačových hráčů."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
@@ -688,4 +696,3 @@ msgstr "Připojení ke vzdálené JCloisteZone aplikace se založenou novou hrou
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:90
 msgid "Load from a file previously saved game."
 msgstr "Nahrání dříve uložené hry ze souboru."
-

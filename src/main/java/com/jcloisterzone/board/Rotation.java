@@ -11,19 +11,19 @@ public enum Rotation {
 
     public AffineTransform getAffineTransform(int size) {
         AffineTransform at;
-        switch (ordinal()) {
-        case 0:
+        switch (this) {
+        case R0:
             at = new AffineTransform();
             return at;
-        case 1:
+        case R90:
             at = AffineTransform.getRotateInstance(Math.PI * 0.5);
             at.translate(0, -size);
             return at;
-        case 2:
+        case R180:
             at = AffineTransform.getRotateInstance(Math.PI);
             at.translate(-size, -size);
             return at;
-        case 3:
+        case R270:
             at = AffineTransform.getRotateInstance(Math.PI * 1.5);
             at.translate(-size, 0);
             return at;

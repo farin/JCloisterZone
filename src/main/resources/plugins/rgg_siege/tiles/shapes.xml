@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display>
+    <shape feature="ROAD" baseLocation="NW">
+        <svg:polygon points="600,0 560,110 490,250 380,310 310,450 120,560 0,600 0,400 160,330 220,220 350,120 400,60 400,0"/>
+        <apply>* SE</apply>
+    </shape>
+    <shape feature="ROAD" baseLocation="WE">
+        <svg:rect x="0" y="400" width="1000" height="200"/>
+        <apply>* WE</apply>
+        <apply>* NS</apply>
+    </shape>
+
+    <shape feature="CITY" baseLocation="N">
+        <svg:polygon points="0,0 290,290 390,350 610,350 690,290 999,0"/>
+        <apply>* N</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="NW">
+        <svg:polygon points="0,0 999,0 950,80 550,280 340,560 250,850 80,980 0,999"/>
+        <apply>* NW</apply>
+        <apply>* NE</apply>
+        <apply>* SE</apply>
+        <apply>* SW</apply>
+    </shape>
+
+    <shape feature="FARM">
+        <svg:rect x="0" y="0" width="500" height="500"/>
+        <apply>* NL.WR</apply>
+        <apply>* WR</apply>
+        <apply>* NL</apply>
+        <g svg:transform="rotate(90 500 500)">
+            <apply>* NR.EL</apply>
+            <apply>* NR</apply>
+            <apply>* EL</apply>
+        </g>
+        <g svg:transform="rotate(180 500 500)">
+            <apply>* ER.SL</apply>
+            <apply>* ER</apply>
+            <apply>* SL</apply>
+        </g>
+        <g svg:transform="rotate(270 500 500)">
+            <apply>* SR.WL</apply>
+            <apply>* SR</apply>
+            <apply>* WL</apply>
+        </g>
+    </shape>
+    <shape feature="FARM">
+        <svg:rect x="0" y="0" width="1000" height="500"/>
+        <apply>* NL.NR.EL.WR</apply>
+        <apply>* NL.NR.WR</apply>
+        <apply>* NL.NR.EL</apply>
+        <apply>* NL.NR</apply>
+        <apply>* EL.WR</apply>
+        <g svg:transform="rotate(90 500 500)">
+            <apply>* NR.EL.ER.SL</apply>
+            <apply>* NR.EL.ER</apply>
+            <apply>* EL.ER.SL</apply>
+            <apply>* EL.ER</apply>
+            <apply>* NR.SL</apply>
+        </g>
+        <g svg:transform="rotate(180 500 500)">
+            <apply>* ER.SL.SR.WL</apply>
+            <apply>* ER.SL.SR</apply>
+            <apply>* SL.SR.WL</apply>
+            <apply>* SL.SR</apply>
+            <apply>* ER.WL</apply>
+        </g>
+        <g svg:transform="rotate(270 500 500)">
+            <apply>* NL.SR.WL.WR</apply>
+            <apply>* SR.WL.WR</apply>
+            <apply>* NL.WL.WR</apply>
+            <apply>* WL.WR</apply>
+            <apply>* NL.SR</apply>
+        </g>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,0 500,0 0,500"/>
+        <apply svg:transform="rotate(180 500 500)">SI.CcRr ER.SL</apply>
+    </shape>
+
+    <complement-farm>
+        <apply>* EL.ER.SL.SR.WL.WR</apply>
+        <apply>* EL.ER.SL.SR</apply>
+        <apply>SI.CcRr EL.SR</apply>
+        <apply>SI.RCr EL.WR</apply>
+    </complement-farm>
+</display>

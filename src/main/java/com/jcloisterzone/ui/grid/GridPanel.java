@@ -418,7 +418,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         //paint layers
         synchronized (layers) {
-            for(GridLayer layer : layers) {
+            for (GridLayer layer : layers) {
                 layer.paint(g2);
 //                profile(layer.getClass().getSimpleName());
             }

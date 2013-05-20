@@ -484,7 +484,7 @@ public class Client extends JFrame {
 
 
     //------------------- LEGACY: TODO refactor ---------------
-    //TODO move getColor on player - ale je to potreba i u slotu, pozor na to
+    //TODO move getColor on player
 
 
     public Color getPlayerSecondTunelColor(Player player) {
@@ -501,7 +501,12 @@ public class Client extends JFrame {
     }
 
     public Color getPlayerColor() {
-        return playerColors[game.getActivePlayer().getSlot().getNumber()];
+        Player player = game.getActivePlayer();
+        if (player == null) { //awt thread is not synced
+            return Color.BLACK;
+        } else {
+            return playerColors[player.getSlot().getNumber()];
+        }
     }
 
 }

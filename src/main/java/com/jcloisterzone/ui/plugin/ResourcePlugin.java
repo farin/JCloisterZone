@@ -45,7 +45,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     public ResourcePlugin(URL url) throws MalformedURLException {
         super(url);
-        areaProvider = new AreaProvider(getLoader().getResource("tiles/display.xml"));
+        areaProvider = new AreaProvider(getLoader().getResource("tiles/shapes.xml"));
         figurePositionProvider = new FigurePositionProvider(areaProvider);
     }
 

@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -12,10 +12,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:27
 msgid "Basic game"
@@ -199,7 +199,8 @@ msgstr "Troupeau de cochon présent sur les tuiles comportant un pré."
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
-msgstr "Permettre le placement d'une grange sur un pré où une autre grange a déjà "
+msgstr ""
+"Permettre le placement d'une grange sur un pré où une autre grange a déjà "
 "été placée."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
@@ -208,14 +209,16 @@ msgstr "Utiliser la règle du Tunnel pour les tunnels des autres extensions."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "No bidding on bazaar tile. Each players just choose one tile."
-msgstr "Pas d’enchères après le placement d’une tuile bazar. Chaque joueur choisit "
+msgstr ""
+"Pas d’enchères après le placement d’une tuile bazar. Chaque joueur choisit "
 "juste une tuile."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:74
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
-msgstr "La version du serveur JCloisterZone n'est pas compatible avec la version du "
+msgstr ""
+"La version du serveur JCloisterZone n'est pas compatible avec la version du "
 "client. Veuillez mettre les logiciels dans la même version"
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:75
@@ -233,7 +236,8 @@ msgstr "Erreur de chargement"
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
 msgid ""
 "Saved game is incompatible or file is corrupted. Game couldn't work properly."
-msgstr "La sauvegarde du jeu est incompatible ou le fichier de sauvegarde est "
+msgstr ""
+"La sauvegarde du jeu est incompatible ou le fichier de sauvegarde est "
 "corrompu. Le jeu ne peut pas fonctionner correctement."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:304
@@ -257,7 +261,8 @@ msgstr "Annuler"
 msgid ""
 "Game is running. Do you really want to quit game and also disconnect all "
 "other players?"
-msgstr "Une partie est en cours. Voulez vous vraiment quitter la partie et "
+msgstr ""
+"Une partie est en cours. Voulez vous vraiment quitter la partie et "
 "déconnecter tout les autres joueurs ?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:313
@@ -576,7 +581,8 @@ msgstr "Placer un morceau de tour"
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
-msgstr "Voulez vous vraiment placer un partisan dans la tour ?\n"
+msgstr ""
+"Voulez vous vraiment placer un partisan dans la tour ?\n"
 "(Pour éviter l’ajout d’autres pièces sur le dessus de la tour)"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:45
@@ -651,7 +657,8 @@ msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les "
+msgstr ""
+"<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les "
 "flèches du clavier pour se déplacer sur la zone de jeu.<br>Cliquer avec la "
 "touche milieu de la souris pour centrer la zone de jeu. Zoomer en utilisant "
 "les touches <b>+</b> ou <b>-</b> ou en utilisant la molette de la souris.</"
@@ -661,28 +668,32 @@ msgstr "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
-msgstr "<html>Tourner la tuile avec la touche <b>Tab</b> ou avec le <b>clic-droit</"
+msgstr ""
+"<html>Tourner la tuile avec la touche <b>Tab</b> ou avec le <b>clic-droit</"
 "b> de la souris. Placer la avec un <b>clic-gauche</b>.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
-msgstr "<html>Quand la tuile est posée, utilisez la touche <b>Tab</b> ou le <b>clic-"
+msgstr ""
+"<html>Quand la tuile est posée, utilisez la touche <b>Tab</b> ou le <b>clic-"
 "droit</b> de nouveau pour sélectionner l’action appropriée.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
-msgstr "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre "
+msgstr ""
+"<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre "
 "d’<b>espace</b> pour n’effectuer aucune action.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
 "Create a new local or network game. You can play against any number of "
 "computer players."
-msgstr "Créer une nouvelle partie local ou en réseau. Vous pouvez jouer contre "
+msgstr ""
+"Créer une nouvelle partie local ou en réseau. Vous pouvez jouer contre "
 "plusieurs joueurs gérés par des ordinateurs."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
@@ -692,4 +703,3 @@ msgstr "Connexion à une nouvelle partie JCloisterZone distante."
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:90
 msgid "Load from a file previously saved game."
 msgstr "Charger une partie depuis un fichier de sauvegarde."
-
