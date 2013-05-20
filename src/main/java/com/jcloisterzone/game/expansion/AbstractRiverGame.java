@@ -6,13 +6,13 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.game.ExpandedGame;
 
 

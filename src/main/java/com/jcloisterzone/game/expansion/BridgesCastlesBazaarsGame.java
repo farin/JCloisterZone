@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.expansion;
 
-import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
+import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,13 +19,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Castle;

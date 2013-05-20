@@ -11,24 +11,28 @@ import org.w3c.dom.Element;
 
 public class SvgToShapeConverter {
 
-    private Shape shape;
-    private String transformation;
-
-    public SvgToShapeConverter(Element shapeSvgNode) {
+    public Area convert(Element shapeSvgNode) {
+        Shape s;
         switch (shapeSvgNode.getNodeName()) {
         case "svg:polygon":
-            shape = createPolygon(shapeSvgNode);
+            s = createPolygon(shapeSvgNode);
             break;
         case "svg:rect":
-            shape = createRectangle(shapeSvgNode);
+            s = createRectangle(shapeSvgNode);
             break;
         case "svg:circle":
-            shape = createCircle(shapeSvgNode);
+            s = createCircle(shapeSvgNode);
             break;
         default:
-            throw new IllegalArgumentException("Unable to convert "+shapeSvgNode);
+            throw new IllegalArgumentException("Unable to convert "+shapeSvgNode.getNodeName());
         }
+        return new Area(s);
     }
+
+//    public Area convert(Element shapeSvgNode, AffineTransform transform) {
+//        Area area = convert(shapeSvgNode);
+//        return area.createTransformedArea(transform);
+//    }
 
     private Rectangle createRectangle(Element shapeSvgNode) {
         int x = Integer.valueOf(shapeSvgNode.getAttribute("x"));
@@ -54,37 +58,5 @@ public class SvgToShapeConverter {
             p.addPoint(Integer.valueOf(xy[0]), Integer.valueOf(xy[1]));
         }
         return p;
-    }
-
-    private Area transformArea(Area area, String svgTransformation) {
-        if (svgTransformation == null) return area;
-        AffineTransform at = null;
-        switch (svgTransformation) {
-        case "rotate(90 500 500)": at = AffineTransform.getRotateInstance(Math.PI * 0.5, 500, 500); break;
-        case "rotate(180 500 500)": at = AffineTransform.getRotateInstance(Math.PI, 500, 500); break;
-        case "rotate(270 500 500)": at = AffineTransform.getRotateInstance(Math.PI * 1.5, 500, 500); break;
-        default: throw new IllegalArgumentException("Unsupported transform: "+transformation);
-        }
-        return area.createTransformedArea(at);
-    }
-
-    public Area convert() {
-        return convert(null);
-    }
-
-    public Area convert(String svgTransformation) {
-        Area area = new Area(shape);
-        area = transformArea(area, transformation);
-        area = transformArea(area, svgTransformation);
-        return area;
-    }
-
-
-    public String getTransformation() {
-        return transformation;
-    }
-
-    public void setTransformation(String transformation) {
-        this.transformation = transformation;
     }
 }

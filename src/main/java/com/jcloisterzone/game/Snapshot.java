@@ -18,9 +18,6 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -42,11 +39,11 @@ import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.phase.Phase;
@@ -97,14 +94,7 @@ public class Snapshot implements Serializable {
 
 
     private void createRootStructure(Game game) {
-        DocumentBuilder builder = null;
-        try {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            logger.error(e.getMessage(), e);
-            System.exit(1);
-        }
-        doc = builder.newDocument();
+        doc = XmlUtils.newDocument();
         root = doc.createElement("game");
         root.setAttribute("app-version", Application.VERSION);
         root.setAttribute("phase", game.getPhase().getClass().getName());
@@ -213,19 +203,8 @@ public class Snapshot implements Serializable {
 
 
     public void load(InputStream is) throws SnapshotCorruptedException {
-        DocumentBuilder builder = null;
-        try {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            logger.error(e.getMessage(), e);
-            System.exit(1);
-        }
-        try {
-            doc = builder.parse(is);
-            root = doc.getDocumentElement();
-        } catch (Exception e) {
-            throw new SnapshotCorruptedException(e);
-        }
+        doc = XmlUtils.parseDocument(is);
+        root = doc.getDocumentElement();
         String snapshotVersion = root.getAttribute("app-version");
         if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
             throw new SnapshotCorruptedException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");

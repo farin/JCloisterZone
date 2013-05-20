@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.expansion;
 
-import static com.jcloisterzone.board.XmlUtils.asLocation;
+import static com.jcloisterzone.XmlUtils.asLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -15,13 +15,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;

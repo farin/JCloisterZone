@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.expansion;
 
-import static com.jcloisterzone.board.XmlUtils.attributeBoolValue;
+import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
 import org.w3c.dom.Element;
 

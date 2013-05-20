@@ -4,13 +4,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.jcloisterzone.XmlUtils;
 
 public class Plugin {
 
@@ -36,13 +35,11 @@ public class Plugin {
     }
 
     protected final void loadMetadata() throws Exception {
-        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-        Element plugin = docBuilder.parse(loader.getResource("plugin.xml").openStream()).getDocumentElement();
-        parseMetadate(plugin);
+        Element plugin = XmlUtils.parseDocument(loader.getResource("plugin.xml")).getDocumentElement();
+        parseMetadata(plugin);
     }
 
-    protected void parseMetadate(Element rootElement) throws Exception {
+    protected void parseMetadata(Element rootElement) throws Exception {
         id = rootElement.getAttribute("id");
         NodeList nl = rootElement.getElementsByTagName("title");
         if (nl.getLength() > 0) {

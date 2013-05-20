@@ -1,32 +1,41 @@
 package com.jcloisterzone.ui.theme;
 
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
+import com.jcloisterzone.ui.theme.SvgTransformationCollector.GeometryHandler;
 
 
-public class AreaProvider {
+public class ThemeGeometry {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -34,6 +43,8 @@ public class AreaProvider {
     private final Map<FeatureDescriptor, Area> areas = Maps.newHashMap();
     private final Map<String, Area> substraction = Maps.newHashMap(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
+    private final Map<FeatureDescriptor, ImmutablePoint> points = Maps.newHashMap();
+
 
     private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
 
@@ -45,24 +56,24 @@ public class AreaProvider {
         BRIDGE_AREA_WE = a;
     }
 
-    public AreaProvider(URL areaDef) {
-        try {
-            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            Element display = docBuilder.parse(areaDef.openStream()).getDocumentElement();
-            NodeList nl = display.getElementsByTagName("shape");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processShapeElement((Element) nl.item(i));
-            }
-            nl = display.getElementsByTagName("complement-farm");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processComplementFarm((Element) nl.item(i));
-            }
+    public ThemeGeometry(ClassLoader loader) throws IOException, SAXException, ParserConfigurationException {
+        Element shapes = XmlUtils.parseDocument(loader.getResource("tiles/shapes.xml")).getDocumentElement();
+        Element points = XmlUtils.parseDocument(loader.getResource("tiles/points.xml")).getDocumentElement();
 
-        } catch (Exception e) {
-            logger.error("Unable to read theme definitions from " + areaDef.toString(), e);
-            System.exit(1);
+        NodeList nl = shapes.getElementsByTagName("shape");
+        for (int i = 0; i < nl.getLength(); i++) {
+            processShapeElement((Element) nl.item(i));
         }
+        nl = shapes.getElementsByTagName("complement-farm");
+        for (int i = 0; i < nl.getLength(); i++) {
+            processComplementFarm((Element) nl.item(i));
+        }
+
+        nl = points.getElementsByTagName("point");
+        for (int i = 0; i < nl.getLength(); i++) {
+            processPointElement((Element) nl.item(i));
+        }
+
     }
 
     private FeatureDescriptor createFeatureDescriptor(String featureName, String tileAndLocation) {
@@ -70,57 +81,63 @@ public class AreaProvider {
         return FeatureDescriptor.valueOf(tokens[0], featureName, tokens[1]);
     }
 
-    private void processApplyAndSubstractChilds(Element node, SvgToShapeConverter shapeConverter, String featureName, Location baseLocation) {
-        NodeList nl = node.getElementsByTagName("apply");
-        //Area[] areas = new Area[4];
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element applyElemenet = (Element) nl.item(i);
-            String elementTransform = applyElemenet.hasAttribute("svg:transform") ? applyElemenet.getAttribute("svg:transform") : null;
-            assert elementTransform == null || shapeConverter.getTransformation() == null;
-            FeatureDescriptor desc = createFeatureDescriptor(featureName, applyElemenet.getTextContent());
-            Area area = shapeConverter.convert(elementTransform);
-            if (baseLocation != null) {
-                Rotation rotate = desc.getLocation().getRotationOf(baseLocation);
-                area = area.createTransformedArea(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
-            }
-            areas.put(desc, area);
-        }
-        nl = node.getElementsByTagName("substract");
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element substractElement = (Element) nl.item(i);
-            String tileId = substractElement.getTextContent().trim();
-            //TODO merge if already exists
-            substraction.put(tileId, shapeConverter.convert());
-        }
-    }
-
-    private void processShapeElement(Element shapeNode) {
-        SvgToShapeConverter shapeConverter = null;
-        Location baseLocation = null;
-        String featureName = shapeNode.getAttribute("feature");
-        NodeList nl;
-
-        nl = shapeNode.getChildNodes();
+    private Area createArea(Element shapeNode) {
+        NodeList nl = shapeNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             if (nl.item(i) instanceof Element) {
                 Element el = (Element) nl.item(i);
                 if (el.getNodeName().startsWith("svg:")) {
-                    shapeConverter = new SvgToShapeConverter(el);
-                    break;
+                    return new SvgToShapeConverter().convert(el);
                 }
             }
         }
-        if (shapeNode.hasAttribute("baseLocation")) {
-            baseLocation = Location.valueOf(shapeNode.getAttribute("baseLocation"));
-        }
-        processApplyAndSubstractChilds(shapeNode, shapeConverter, featureName, baseLocation);
-        nl = shapeNode.getElementsByTagName("g");
-        assert baseLocation == null || nl.getLength() == 0;
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element gNode = (Element) nl.item(i);
-            shapeConverter.setTransformation(gNode.getAttribute("svg:transform"));
-            processApplyAndSubstractChilds(gNode, shapeConverter, featureName, null);
-        }
+        throw new IllegalArgumentException("Node doesn't contains svg shape.");
+    }
+
+    private void processShapeElement(Element shapeNode) {
+        final Area area = createArea(shapeNode);
+
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode);
+        transformCollector.collect(new GeometryHandler() {
+
+            @Override
+            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
+                assert !areas.containsKey(fd);
+                areas.put(fd, area.createTransformedArea(transform));
+            }
+
+            @Override
+            public void processSubstract(Element node, String tileId, AffineTransform transform) {
+                //TODO merge if already exists
+                assert !substraction.containsKey(tileId);
+                substraction.put(tileId, area.createTransformedArea(transform));
+            }
+
+        });
+    }
+
+    private void processPointElement(Element pointNode) {
+        int cx = Integer.parseInt(pointNode.getAttribute("cx"));
+        int cy = Integer.parseInt(pointNode.getAttribute("cy"));
+        final Point destPoint = new Point(), srcPoint = new Point(cx, cy);
+
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode);
+        transformCollector.collect(new GeometryHandler() {
+
+            @Override
+            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
+                assert !points.containsKey(fd);
+                transform.transform(srcPoint, destPoint);
+                //TODO use 1000-pixel standard
+                points.put(fd, new ImmutablePoint(destPoint.x/10, destPoint.y/10));
+            }
+
+            @Override
+            public void processSubstract(Element node, String tileId, AffineTransform transform) {
+                throw new UnsupportedOperationException("<substract> not allowed for points.xml");
+            }
+
+        });
     }
 
     private void processComplementFarm(Element xml) {
@@ -181,5 +198,16 @@ public class AreaProvider {
         fd = new FeatureDescriptor(FeatureDescriptor.EVERY, Farm.class, loc);
         if (complementFarms.contains(fd)) return true;
         return false;
+    }
+
+    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
+        FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), feature, location);
+        ImmutablePoint point = points.get(fd);
+        if (point != null) return point;
+        fd = new FeatureDescriptor(FeatureDescriptor.EVERY, feature, location);
+        point = points.get(fd);
+        if (point != null) return point;
+        logger.error("No point defined for <" + fd + ">");
+        return new ImmutablePoint(0, 0);
     }
 }

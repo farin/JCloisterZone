@@ -5,9 +5,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;

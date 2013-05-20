@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,28 +29,25 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
-import com.jcloisterzone.ui.legacy.FigurePositionProvider;
 import com.jcloisterzone.ui.resources.ResourceManager;
-import com.jcloisterzone.ui.theme.AreaProvider;
+import com.jcloisterzone.ui.theme.ThemeGeometry;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
     public static final int NORMALIZED_SIZE = 1000;
 
-    private AreaProvider areaProvider;
-    private FigurePositionProvider figurePositionProvider; //legacy
+    private ThemeGeometry areaProvider;
 
     private Set<String> supportedExpansions = Sets.newHashSet(); //expansion codes
 
-    public ResourcePlugin(URL url) throws MalformedURLException {
+    public ResourcePlugin(URL url) throws Exception {
         super(url);
-        areaProvider = new AreaProvider(getLoader().getResource("tiles/shapes.xml"));
-        figurePositionProvider = new FigurePositionProvider(areaProvider);
+        areaProvider = new ThemeGeometry(getLoader());
     }
 
     @Override
-    protected void parseMetadate(Element rootElement) throws Exception {
-        super.parseMetadate(rootElement);
+    protected void parseMetadata(Element rootElement) throws Exception {
+        super.parseMetadata(rootElement);
         NodeList nl = rootElement.getElementsByTagName("expansions");
         if (nl.getLength() == 0) throw new Exception("Supported expansions missing in plugin.xml for " + getId());
         Element expansion = (Element) nl.item(0);
@@ -102,7 +98,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (!containsTile(tile.getId())) return null;
         if (type.equals(Barn.class)) return null;
         Feature piece = tile.getFeature(loc);
-        return figurePositionProvider.getFigurePlacement(tile, piece.getClass(), piece.getLocation());
+        return areaProvider.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
     }
 
     @Override

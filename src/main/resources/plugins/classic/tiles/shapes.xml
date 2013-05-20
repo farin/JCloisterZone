@@ -1031,7 +1031,7 @@
         <substract>R2.CcII+</substract>
         <substract>R2.II</substract>
         <substract>R2.RrII</substract>
-        <substract svg:transform="rotate(9 500 500)">R2.II+</substract>
+        <substract svg:transform="rotate(90 500 500)">R2.II+</substract>
     </shape>
     <shape>
         <svg:polygon points="0,602 592,712 999,592 999,350 727,325 650,267 635,0 395,0 375,217 247,335 0,332"/>
@@ -1047,11 +1047,11 @@
         <svg:polygon points="77,422 150,320 590,250 730,270 867,430 672,595 802,700 617,805 380,832 160,790 120,690 207,600"/>
         <substract>TU.CRRR</substract>
     </shape>
-    <shape feature="">
+    <shape>
         <svg:polygon points="77,420 27,590 75,637 275,675 592,607 645,572 695,562 915,395 910,322 842,212 777,185 592,192 500,217 385,357 227,322"/>
         <substract>TU.RR</substract>
     </shape>
-    <shape feature="">
+    <shape>
         <svg:polygon points="335,277 470,365 607,350 722,352 790,372 795,415 872,492 867,535 682,667 677,710 650,735 652,802 332,900 232,865 127,855 87,800 105,722 187,652 187,592 100,487 70,432 130,367 132,312 195,325"/>
         <substract>TU.RRRR</substract>
     </shape>

@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Snapshot;
 

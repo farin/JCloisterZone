@@ -24,9 +24,9 @@ import javax.swing.UIManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.XmlUtils;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;

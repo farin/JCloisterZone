@@ -211,12 +211,6 @@ public class Location implements Serializable {
         return ((mask ^ d.mask) & mask) == 0;
     }
 
-    @Deprecated
-    public int  getMask() {
-        return mask;
-    }
-
-
     @Override
     public String toString() {
         if (name != null) return name;
@@ -303,5 +297,4 @@ public class Location implements Serializable {
     public boolean isSpecialLocation() {
         return (mask & ~65535) > 0;
     }
-
 }

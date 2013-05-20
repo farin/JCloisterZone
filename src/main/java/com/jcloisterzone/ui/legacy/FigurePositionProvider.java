@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.legacy;
 
-import java.awt.geom.Area;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,9 +16,7 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.ui.ImmutablePoint;
-import com.jcloisterzone.ui.theme.AreaProvider;
 
 
 /**
@@ -33,7 +30,7 @@ public class FigurePositionProvider {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private AreaProvider areaProvider;
+    //private AreaProvider areaProvider;
 
     /** farm mapping for directions */
     private ImmutablePoint map[] = new ImmutablePoint[256];
@@ -64,8 +61,8 @@ public class FigurePositionProvider {
     public static final ImmutablePoint P_OBLIQUE_SW = new ImmutablePoint(FIG_QBLIQUE_ROAD_PLACE, 100-FIG_QBLIQUE_ROAD_PLACE);
     public static final ImmutablePoint P_OBLIQUE_SE = new ImmutablePoint(100-FIG_QBLIQUE_ROAD_PLACE, 100-FIG_QBLIQUE_ROAD_PLACE);
 
-    public FigurePositionProvider(AreaProvider areaProvider) {
-        this.areaProvider = areaProvider;
+    public FigurePositionProvider(/*AreaProvider areaProvider*/) {
+        //this.areaProvider = areaProvider;
 
         map[0] = P_CENTER;
 
@@ -243,12 +240,12 @@ public class FigurePositionProvider {
         if (piece.equals(Farm.class)) {
             return getFarmPlacement(d, tileRotation);
         }
-        if (piece.equals(Tower.class)) {
-            Area a = areaProvider.getArea(tile, Tower.class, Location.TOWER);
-            int x = a.getBounds().x + a.getBounds().width / 2;
-            int y = a.getBounds().y + a.getBounds().height / 2;
-            return new ImmutablePoint(x / 10, y / 10); //normalize to old value 100px
-        }
+//        if (piece.equals(Tower.class)) {
+//            Area a = areaProvider.getArea(tile, Tower.class, Location.TOWER);
+//            int x = a.getBounds().x + a.getBounds().width / 2;
+//            int y = a.getBounds().y + a.getBounds().height / 2;
+//            return new ImmutablePoint(x / 10, y / 10); //normalize to old value 100px
+//        }
         if (piece.equals(Castle.class)) {
             return getCastlePlacement(tile, d);
         }
@@ -303,27 +300,27 @@ public class FigurePositionProvider {
      * @return coordinates of figure
      */
     private ImmutablePoint getFarmPlacement(Location farmShape, Rotation tileRotation) {
-        int mask = farmShape.getMask();
-        mask = (mask & 255) | ((mask & 65280) >> 8);
-        if (map[mask] != null) return map[mask];
-        if (mask == 255) {
-            /*
-             * whole farm, it must be cloister with road
-             * so placing up to cloister
-             */
-            return map[Location.N.rotateCW(tileRotation).getMask() >> 8];
-        }
+        //int mask = farmShape.getMask();
+//        mask = (mask & 255) | ((mask & 65280) >> 8);
+//        if (map[mask] != null) return map[mask];
+//        if (mask == 255) {
+//            /*
+//             * whole farm, it must be cloister with road
+//             * so placing up to cloister
+//             */
+//            //return map[Location.N.rotateCW(tileRotation).getMask() >> 8];
+//        }
         return new ImmutablePoint(0,0);
     }
 
     private void generateRotations(int mask, ImmutablePoint p) {
-        Location d = Location.create(mask);
-        for(int i = 0; i < 4; i++) {
-            int m = d.getMask();
-            m = (m & 255) | ((m & 65280) >> 8);
-            map[m] = p;
-            d = d.next();
-            p = p.rotate();
-        }
+//        Location d = Location.create(mask);
+//        for(int i = 0; i < 4; i++) {
+//            int m = d.getMask();
+//            m = (m & 255) | ((m & 65280) >> 8);
+//            map[m] = p;
+//            d = d.next();
+//            p = p.rotate();
+//        }
     }
 }

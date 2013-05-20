@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<display>
+<shapes xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
     <shape feature="ROAD" baseLocation="NW">
         <svg:polygon points="600,0 560,110 490,250 380,310 310,450 120,560 0,600 0,400 160,330 220,220 350,120 400,60 400,0"/>
         <apply>* SE</apply>
@@ -83,4 +83,4 @@
         <apply>SI.CcRr EL.SR</apply>
         <apply>SI.RCr EL.WR</apply>
     </complement-farm>
-</display>
+</shapes>

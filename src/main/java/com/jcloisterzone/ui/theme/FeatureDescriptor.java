@@ -1,6 +1,8 @@
 package com.jcloisterzone.ui.theme;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.feature.Bridge;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
@@ -44,6 +46,8 @@ public class FeatureDescriptor {
         case "FARM": featureType = Farm.class; break;
         case "CLOISTER": featureType = Cloister.class; break;
         case "TOWER": featureType = Tower.class; break;
+        case "CASTLE": featureType = Castle.class; break;
+        case "BRIDGE": featureType = Bridge.class; break;
         default: throw new IllegalArgumentException("Unsupported feature "+featureName);
         }
         Location location = Location.valueOf(locationName);

@@ -1,10 +1,10 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.board.XmlUtils.attributeIntValue;
-import static com.jcloisterzone.board.XmlUtils.attributeStringValue;
-import static com.jcloisterzone.board.XmlUtils.getTileId;
+import static com.jcloisterzone.XmlUtils.attributeIntValue;
+import static com.jcloisterzone.XmlUtils.attributeStringValue;
+import static com.jcloisterzone.XmlUtils.getTileId;
 
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.ini4j.Ini;
 import org.slf4j.Logger;
@@ -25,6 +22,7 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -36,7 +34,6 @@ public class TilePackFactory {
 
     public static final String DEFAULT_TILE_GROUP = "default";
 
-    private final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     private final TileFactory tileFactory = new TileFactory();
 
     protected Game game;
@@ -76,23 +73,16 @@ public class TilePackFactory {
         return size;
     }
 
-    private InputStream getCardsConfig(Expansion expansion) {
+    private URL getCardsConfig(Expansion expansion) {
         String fileName = config.get("debug", "cards_"+expansion.name());
         if (fileName == null) {
             fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
         }
-        return TilePackFactory.class.getClassLoader().getResourceAsStream(fileName);
+        return TilePackFactory.class.getClassLoader().getResource(fileName);
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
-        try {
-            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            return docBuilder.parse(getCardsConfig(expansion)).getDocumentElement();
-        } catch (Exception ex) {
-            logger.error("Cannot load card definitions for expansion " + expansion, ex);
-            System.exit(1);
-            return null;
-        }
+        return XmlUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
     }
 
     protected Map<String, Integer> getDiscardTiles() {
