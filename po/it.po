@@ -23,7 +23,7 @@ msgstr "Gioco base"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:28
 msgid "Winter Edition"
-msgstr ""
+msgstr "Edizione Invernale"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:29
 msgid "Wheel of Fortune"
@@ -113,11 +113,11 @@ msgstr "Il Festival (10mo an.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:53
 msgid "Little Buildings"
-msgstr ""
+msgstr "Piccoli edifici"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "The Wind Rose"
-msgstr ""
+msgstr "La Rosa dei Venti"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:57
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:89
@@ -150,7 +150,7 @@ msgstr "Cerchi nel Grano II"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
-msgstr ""
+msgstr "Ponte"
 
 #: src/main/java/com/jcloisterzone/feature/Castle.java:58
 msgid "Castle"
@@ -158,7 +158,7 @@ msgstr "Castello"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
-msgstr ""
+msgstr "Città"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:41
 msgid "Cloister"
@@ -166,11 +166,11 @@ msgstr "Monastero"
 
 #: src/main/java/com/jcloisterzone/feature/Farm.java:47
 msgid "Farm"
-msgstr ""
+msgstr "Fattoria"
 
 #: src/main/java/com/jcloisterzone/feature/Road.java:67
 msgid "Road"
-msgstr ""
+msgstr "Strada"
 
 #: src/main/java/com/jcloisterzone/feature/Tower.java:33
 msgid "Tower"
@@ -409,7 +409,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:43
 msgid "Select meeple to undeploy"
-msgstr ""
+msgstr "Seleziona il seguace da ritirare"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
@@ -527,20 +527,20 @@ msgstr "Riserva del bazar"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:43
 msgid "Each player…"
-msgstr ""
+msgstr "Ogni giocatore…"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:49
 msgid "may deploy additional follower"
-msgstr ""
+msgstr "può schierare seguaci addizionali"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:61
 msgid "must remove follower"
-msgstr ""
+msgstr "deve rimuovere il seguace"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:74
 #, java-format
 msgid "on/from a {0}."
-msgstr ""
+msgstr "su/da un {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:99
 msgid "Corn circle"
@@ -548,15 +548,15 @@ msgstr "Cerchi nel Grano"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:42
 msgid "Place follower as a flier"
-msgstr ""
+msgstr "Posizione il seguace come un'ala"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:47
 msgid "Roll a dice"
-msgstr ""
+msgstr "Tira un dado"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:66
 msgid "distance"
-msgstr ""
+msgstr "distanza"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:56
 msgid "Place a follower"
