@@ -486,7 +486,7 @@ msgstr "Wybierz swój kafelek."
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 "<html>Wybierz kafelek do następnej licytacji<br>i przygotuj wstępną ofertę."
-"</ html>"
+"</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:160
 msgid "Raise bid or pass."
