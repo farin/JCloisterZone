@@ -51,7 +51,7 @@ public class FeatureDescriptor {
         default: throw new IllegalArgumentException("Unsupported feature "+featureName);
         }
         Location location = Location.valueOf(locationName);
-        assert location.isFarmLocation() ^ !featureType.equals(Farm.class);
+        assert location.isFarmLocation() ^ !featureType.equals(Farm.class) : "improper location "+locationName;
         return new FeatureDescriptor(tileId, featureType, location);
     }
 

@@ -73,7 +73,6 @@ public class ThemeGeometry {
         for (int i = 0; i < nl.getLength(); i++) {
             processPointElement((Element) nl.item(i));
         }
-
     }
 
     private FeatureDescriptor createFeatureDescriptor(String featureName, String tileAndLocation) {
@@ -165,7 +164,7 @@ public class ThemeGeometry {
             }
             return a;
         }
-        loc = loc.rotateCCW(tile.getRotation());
+        loc = loc.rotateCCW(tileRotation);
         FeatureDescriptor descriptor = new FeatureDescriptor(tile.getId(), featureClass, loc);
         Area area = areas.get(descriptor);
         if (area == null) {
@@ -201,13 +200,18 @@ public class ThemeGeometry {
     }
 
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
-        FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), feature, location);
+        Location normalizedLoc = location.rotateCCW(tile.getRotation());
+        FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), feature, normalizedLoc);
         ImmutablePoint point = points.get(fd);
-        if (point != null) return point;
-        fd = new FeatureDescriptor(FeatureDescriptor.EVERY, feature, location);
-        point = points.get(fd);
-        if (point != null) return point;
-        logger.error("No point defined for <" + fd + ">");
-        return new ImmutablePoint(0, 0);
+        if (point == null) {
+            fd = new FeatureDescriptor(FeatureDescriptor.EVERY, feature, normalizedLoc);
+            point = points.get(fd);
+            if (point == null) {
+                logger.error("No point defined for <" + fd + ">");
+                point =  new ImmutablePoint(0, 0);
+            }
+        }
+        //System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
+        return point.rotate(tile.getRotation());
     }
 }

@@ -182,7 +182,12 @@
             <apply>* WR.NL.NR.SL</apply>
         </g>
     </point>
-    <!-- >point feature="FARM" cx="" cy="">
-        <apply></apply>
-    </point-->
+
+    <!-- tile specific places -->
+
+    <point feature="ROAD" cx="280" cy="280" baseLocation="NW"> <!-- oblique -->
+        <apply>SI.CcRr SE</apply>
+    </point>
+
+
 </points>

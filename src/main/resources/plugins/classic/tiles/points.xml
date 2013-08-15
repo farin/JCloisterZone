@@ -185,7 +185,202 @@
             <apply>* WR.NL.NR.SL</apply>
         </g>
     </point>
-    <!-- >point feature="FARM" cx="" cy="">
-        <apply></apply>
-    </point-->
+
+    <!-- tile specific places -->
+
+    <point feature="CLOISTER" cx="500" cy="300">
+        <apply>R1.LIRI CLOISTER</apply>
+        <apply>R2.LIFI CLOISTER</apply>
+    </point>
+    <point feature="CLOISTER" cx="500" cy="650">
+        <apply>KS.LC CLOISTER</apply>
+    </point>
+    <point feature="CLOISTER" cx="180" cy="330">
+        <apply>DG.LCcc.d CLOISTER</apply>
+    </point>
+    <point feature="CLOISTER" cx="300" cy="700">
+        <apply>TO.L CLOISTER</apply>
+    </point>
+    <point feature="CLOISTER" cx="340" cy="400">
+        <apply>CA.L CLOISTER</apply>
+    </point>
+
+    <point feature="ROAD" cx="300" cy="820">
+        <apply>R1.LIRI S</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="250" baseLocation="NS"> <!-- vertical road, but not allowed in center -->
+        <apply>R1.RIrI NS</apply>
+        <apply>R2.RIrI WE</apply>
+        <apply>TB.RRrr NS</apply>
+        <apply>TB.RRrr WE</apply>
+        <apply>TO.CRcr NS</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="820" baseLocation="NS"> <!-- vertical road, with only short parts near border -->
+        <apply>DG.CRcr.d NS</apply>
+        <apply>TO.RCr WE</apply>
+        <apply>AM.CRcr+ NS</apply>
+    </point>
+    <point feature="ROAD" cx="200" cy="500" baseLocation="W">
+        <apply>TB.RRC W</apply>
+        <apply>TB.RRC S</apply>
+    </point>
+    <point feature="ROAD" cx="850" cy="400">
+        <apply>KS.CcRR! E</apply>
+    </point>
+    <point feature="ROAD" cx="180" cy="550">
+        <apply>SI.RCr WE</apply>
+    </point>
+    <point feature="ROAD" cx="700" cy="700">
+        <apply>SI.CcRr SE</apply>
+    </point>
+    <point feature="ROAD" cx="750" cy="500">
+        <apply>AM.RrC SE</apply>
+    </point>
+    <point feature="ROAD" cx="350" cy="750">
+        <apply>AM.CRr SE</apply>
+    </point>
+    <point feature="ROAD" cx="820" cy="400">
+        <apply>GQ.CcRR E</apply>
+    </point>
+    <point feature="ROAD" cx="180" cy="500">
+        <apply>GQ.RFI W</apply>
+    </point>
+    <point feature="ROAD" cx="800" cy="600">
+        <apply>TU.RCR E</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="750">
+        <apply>BB.LRFr WE</apply>
+    </point>
+    <point feature="ROAD" cx="720" cy="720" baseLocation="SE"> <!-- oblique -->
+        <apply>BA.CcRr SE</apply>
+        <apply>BA.CcRr+ SE</apply>
+        <apply>CA.RrR.1 SE</apply>
+        <apply>IC.CcRr+.i SE</apply>
+        <apply>KS.CRrR SE</apply>
+        <apply>DG.RrRr.g SE</apply>
+        <apply>DG.CcRr.p SE</apply>
+        <apply>TO.RrRr.2 SE</apply>
+        <apply>GQ.CRRr SW</apply>
+        <apply>IC.RrRr SW</apply>
+        <apply>R1.RrII NE</apply>
+        <apply>R2.RrII NE</apply>
+        <apply>TO.RrRr.2 NW</apply>
+    </point>
+
+    <point feature="CITY" cx="300" cy="200">
+        <apply>DG.CCc+.p N</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="820" baseLocation="NS">
+        <apply>KS.CCcc NS</apply>
+        <apply>R2.CIcI WE</apply>
+        <apply>KS.CCcc WE</apply>
+        <apply>TO.CRcr WE</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="250">
+        <apply>AM.CCcc+ NS</apply>
+    </point>
+    <point feature="CITY" cx="750" cy="500">
+        <apply>AM.CCcc+ WE</apply>
+        <apply>AM.CCc+ WE</apply>
+    </point>
+    <point feature="CITY" cx="250" cy="500">
+        <apply>AM.CRcr+ WE</apply>
+    </point>
+    <point feature="CITY" cx="350" cy="350">
+        <apply>TB.CcRR!.c NW</apply>
+        <apply>TB.CcR!.w NW</apply>
+    </point>
+    <point feature="CITY" cx="550" cy="550">
+        <apply>TO.CcR! NW</apply>
+    </point>
+    <point feature="CITY" cx="750" cy="250">
+        <apply>DG.LCcc.d _S</apply>
+    </point>
+    <point feature="CITY" cx="250" cy="250">
+        <apply>TO.CccR _S</apply>
+    </point>
+
+    <point feature="FARM" cx="820" cy="180">
+        <apply>R1.LIRI NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="180">
+        <apply>R1.IFI NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="820" cy="180">
+        <apply>R2.LIFI NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="180">
+        <apply>R2.IFC NR.ER</apply>
+    </point>
+    <point feature="FARM" cx="650" cy="150">
+        <apply>R2.RIrI NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="820" cy="820">
+        <apply>KS.LC EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="750">
+        <apply>TB.CCc.w INNER_FARM</apply>
+        <apply>TB.CCc.c INNER_FARM</apply>
+        <apply>TO.CccC+ INNER_FARM</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="250">
+        <apply>TB.LRRR NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="820">
+        <apply>SI.RCr WL.SL.SR.ER</apply>
+        <apply>TO.RrRr.2 NR.EL.SR.WL</apply>
+        <apply>CU.SCFR EL.ER.SL.SR.WL.WR</apply>
+        <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="180">
+        <apply>DG.CRcr.d NL.NR</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="820">
+        <apply>DG.CRcr.d SL.SR</apply>
+        <apply>TO.CFR SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="80" cy="300">
+        <apply>DG.CCc+.p WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>DG.LRRR.d NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="250">
+        <apply>TO.L NL.NR.WL.WR.SL.SR.EL.ER</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="500">
+        <apply>TO.C EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="450">
+        <apply>TO.Cc SL.SR.EL.ER</apply>
+    </point>
+    <point feature="FARM" cx="350" cy="750">
+        <apply>TO.CC.2 SL.SR.EL.ER</apply>
+    </point>
+    <point feature="FARM" cx="820" cy="750">
+        <apply>TO.RCr SL.SR.ER.WL</apply>
+    </point>
+    <point feature="FARM" cx="650" cy="820">
+        <apply>AM.CCc+ SL.SR</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="180">
+        <apply>AM.CRcr+ NL.NR</apply>
+    </point>
+    <point feature="FARM" cx="850" cy="220">
+        <apply>GQ.CcRR EL</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="180">
+        <apply>CU.SR NL.NR.WL.WR.SL.SR.EL.ER</apply>
+        <apply>CU.SRFR NR.EL.ER.SL</apply>
+        <apply>TU.RRRR NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="820" cy="820">
+        <apply>CU.SRCR ER.SL.SR.WL</apply>
+        <apply>CU.SRFR NL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="820" cy="180">
+        <apply>FL.RFr.WE.o ER.SL.SR.WL</apply>
+        <apply>FL.RFr.d ER.SL.SR.WL</apply>
+        <apply>FL.RFr.NS.o NR.EL.ER.SL</apply>
+    </point>
 </points>
