@@ -3,14 +3,19 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
+
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -19,13 +24,22 @@ import com.jcloisterzone.ui.grid.GridPanel;
 public abstract class AbstractAreaLayer extends AbstractGridLayer implements GridMouseListener {
 
     private static final AlphaComposite AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
+    private static final AlphaComposite FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .75f);
 
     private Map<Location, Area> areas;
     private Location selectedLocation;
     private Position selectedPosition;
 
+    /*if true, area is displayed as placed meeple
+     this method is intended for tile placement debugging and is not optimized for performace
+     */
+    private boolean figureHighlight = false;
+
     public AbstractAreaLayer(GridPanel gridPanel) {
         super(gridPanel);
+        if ("figure".equals(getClient().getConfig().get("debug", "area_highlight"))) {
+            figureHighlight = true;
+        }
     }
 
     private class MoveTrackingGridMouseAdapter extends GridMouseAdapter {
@@ -121,12 +135,34 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     @Override
     public void paint(Graphics2D g2) {
         if (selectedLocation != null && areas != null) {
-            g2.setColor(getClient().getPlayerColor());
             Composite old = g2.getComposite();
-            g2.setComposite(AREA_ALPHA_COMPOSITE);
-            g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
+            if (figureHighlight) {
+                paintFigureHighlight(g2);
+            } else {
+                paintAreaHighlight(g2);
+            }
             g2.setComposite(old);
         }
+    }
+
+    /** debug purposes highlight - it always shows basic follower (doesn't important for dbg */
+    private void paintFigureHighlight(Graphics2D g2) {
+        //ugly copy pasted code from Meeple but uncached here
+        g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
+        Tile tile = getGame().getBoard().get(selectedPosition);
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
+        Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, getClient().getPlayerColor(), null);
+        int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
+        Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        scaled = new ImageIcon(scaled).getImage();
+        ImmutablePoint scaledOffset = point.scale(getSquareSize(), (int)(getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO));
+        g2.drawImage(scaled, getOffsetX(selectedPosition) + scaledOffset.getX(), getOffsetY(selectedPosition) + scaledOffset.getY(), gridPanel);
+    }
+
+    /** standard highlight **/
+    private void paintAreaHighlight(Graphics2D g2) {
+        g2.setComposite(AREA_ALPHA_COMPOSITE);
+        g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
     }
 
     @Override

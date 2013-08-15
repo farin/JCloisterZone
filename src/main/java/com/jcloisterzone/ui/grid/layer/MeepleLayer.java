@@ -23,7 +23,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class MeepleLayer extends AbstractGridLayer {
 
-    protected double FIGURE_SIZE_RATIO = 0.35;
+    public static final double FIGURE_SIZE_RATIO = 0.35;
 
     /**
      * Corn circles allows multiple meeples on single feature.
