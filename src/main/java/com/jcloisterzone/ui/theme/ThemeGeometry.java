@@ -125,7 +125,7 @@ public class ThemeGeometry {
 
             @Override
             public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
-                assert !points.containsKey(fd);
+                assert !points.containsKey(fd) : fd + " already defined";
                 transform.transform(srcPoint, destPoint);
                 //TODO use 1000-pixel standard
                 points.put(fd, new ImmutablePoint(destPoint.x/10, destPoint.y/10));
