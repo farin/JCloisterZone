@@ -1,18 +1,13 @@
 package com.jcloisterzone.ui.theme;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
@@ -43,8 +38,9 @@ public class ThemeGeometry {
     private final Map<FeatureDescriptor, Area> areas = Maps.newHashMap();
     private final Map<String, Area> substraction = Maps.newHashMap(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
-    private final Map<FeatureDescriptor, ImmutablePoint> points = Maps.newHashMap();
+    private final Map<FeatureDescriptor, ImmutablePoint> points;
 
+    static private final Map<FeatureDescriptor, ImmutablePoint> defaultPoints;
 
     private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
 
@@ -54,11 +50,12 @@ public class ThemeGeometry {
         BRIDGE_AREA_NS = new Area(a);
         a.transform(Rotation.R270.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
         BRIDGE_AREA_WE = a;
+
+        defaultPoints = (new PointsParser(ThemeGeometry.class.getClassLoader().getResource("defaults/points.xml"))).parse();
     }
 
     public ThemeGeometry(ClassLoader loader) throws IOException, SAXException, ParserConfigurationException {
         Element shapes = XmlUtils.parseDocument(loader.getResource("tiles/shapes.xml")).getDocumentElement();
-        Element points = XmlUtils.parseDocument(loader.getResource("tiles/points.xml")).getDocumentElement();
 
         NodeList nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
@@ -69,10 +66,7 @@ public class ThemeGeometry {
             processComplementFarm((Element) nl.item(i));
         }
 
-        nl = points.getElementsByTagName("point");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processPointElement((Element) nl.item(i));
-        }
+        points = (new PointsParser(loader.getResource("tiles/points.xml"))).parse();
     }
 
     private FeatureDescriptor createFeatureDescriptor(String featureName, String tileAndLocation) {
@@ -110,30 +104,6 @@ public class ThemeGeometry {
                 //TODO merge if already exists
                 assert !substraction.containsKey(tileId);
                 substraction.put(tileId, area.createTransformedArea(transform));
-            }
-
-        });
-    }
-
-    private void processPointElement(Element pointNode) {
-        int cx = Integer.parseInt(pointNode.getAttribute("cx"));
-        int cy = Integer.parseInt(pointNode.getAttribute("cy"));
-        final Point destPoint = new Point(), srcPoint = new Point(cx, cy);
-
-        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode);
-        transformCollector.collect(new GeometryHandler() {
-
-            @Override
-            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
-                assert !points.containsKey(fd) : fd + " already defined";
-                transform.transform(srcPoint, destPoint);
-                //TODO use 1000-pixel standard
-                points.put(fd, new ImmutablePoint(destPoint.x/10, destPoint.y/10));
-            }
-
-            @Override
-            public void processSubstract(Element node, String tileId, AffineTransform transform) {
-                throw new UnsupportedOperationException("<substract> not allowed for points.xml");
             }
 
         });
@@ -202,16 +172,24 @@ public class ThemeGeometry {
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
         Location normalizedLoc = location.rotateCCW(tile.getRotation());
         FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), feature, normalizedLoc);
-        ImmutablePoint point = points.get(fd);
+        ImmutablePoint point = getMeeplePlacement(points, fd);
         if (point == null) {
-            fd = new FeatureDescriptor(FeatureDescriptor.EVERY, feature, normalizedLoc);
-            point = points.get(fd);
+            point = getMeeplePlacement(defaultPoints, fd);
             if (point == null) {
-                logger.error("No point defined for <" + fd + ">");
+                logger.warn("No point defined for <" + fd + ">");
                 point =  new ImmutablePoint(0, 0);
             }
         }
         //System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
         return point.rotate(tile.getRotation());
+    }
+
+    private ImmutablePoint getMeeplePlacement(Map<FeatureDescriptor, ImmutablePoint> source, FeatureDescriptor fd) {
+        ImmutablePoint point = source.get(fd);
+        if (point == null) {
+            fd = new FeatureDescriptor(FeatureDescriptor.EVERY, fd.getFeatureType(), fd.getLocation());
+            point = source.get(fd);
+        }
+        return point;
     }
 }
