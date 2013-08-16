@@ -46,9 +46,10 @@
         <apply>* NS</apply>
         <apply>* WE</apply>
     </point>
-
-    <point feature="FARM" cx="300" cy="150">
+    <point feature="FARM" cx="300" cy="120">
         <apply allRotations="1">* NL</apply>
+    </point>
+    <point feature="FARM" cx="300" cy="150">
         <apply allRotations="1">* NL.SR</apply>
         <apply allRotations="1">* NL.ER</apply>
     </point>
@@ -71,7 +72,7 @@
         <apply allRotations="1">* NL.NR.EL.ER.SL.WR</apply>
         <apply allRotations="1">* NL.NR.EL.ER.SL</apply>
     </point>
-    <point feature="FARM" cx="700" cy="150">
+    <point feature="FARM" cx="700" cy="120">
         <apply allRotations="1">* NR</apply>
     </point>
     <point feature="FARM" cx="750" cy="400">
