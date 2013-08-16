@@ -59,6 +59,16 @@ public class SvgTransformationCollector {
                     af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
                 }
                 handler.processApply(child, fd, af);
+                if (XmlUtils.attributeBoolValue(child, "allRotations")) {
+                    Rotation rot = Rotation.R90;
+                    for (int ri = 0; ri < 3; ri++) {
+                        Location rotatedLoc = fd.getLocation().rotateCW(rot);
+                        FeatureDescriptor rotatedFd = new FeatureDescriptor(fd.getTileId(), fd.getFeatureType(), rotatedLoc);
+                        af.concatenate(Rotation.R90.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
+                        handler.processApply(child, rotatedFd, af);
+                        rot = rot.next();
+                    }
+                }
                 break;
             case "substract":
                 assert baseLocation == null;

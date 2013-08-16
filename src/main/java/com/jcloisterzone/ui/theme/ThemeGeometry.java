@@ -180,7 +180,7 @@ public class ThemeGeometry {
                 point =  new ImmutablePoint(0, 0);
             }
         }
-        System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
+        //System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
         return point.rotate(tile.getRotation());
     }
 
