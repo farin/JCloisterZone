@@ -142,51 +142,68 @@
             <apply>* ER.SL.WR.NL</apply>
         </g>
     </point>
+    <point feature="FARM" cx="800" cy="300" baseLocation="NR.EL.ER">
+        <apply>* NR.EL.ER</apply>
+        <apply>* ER.SL.SR</apply>
+        <apply>* SR.WL.WR</apply>
+        <apply>* WR.NL.NR</apply>
+    </point>
     <point feature="FARM" cx="750" cy="250"> <!--  MAX-QUARTER, QUARTER -->
         <apply>* NL.NR.EL</apply>
         <apply>* NL.NR.EL.ER</apply>
         <apply>* NL.NR.EL.ER.SL.WR</apply>
-        <apply>* NR.EL.ER</apply>
-
         <g svg:transform="rotate(90 500 500)">
             <apply>* EL.ER.SL</apply>
             <apply>* EL.ER.SL.SR</apply>
             <apply>* EL.ER.SL.SR.WL.NR</apply>
-            <apply>* ER.SL.SR</apply>
         </g>
         <g svg:transform="rotate(180 500 500)">
             <apply>* SL.SR.WL</apply>
             <apply>* SL.SR.WL.WR</apply>
             <apply>* SL.SR.WL.WR.NL.ER</apply>
-            <apply>* SR.WL.WR</apply>
         </g>
         <g svg:transform="rotate(270 500 500)">
             <apply>* WL.WR.NL</apply>
             <apply>* WL.WR.NL.NR</apply>
             <apply>* WL.WR.NL.NR.EL.SR</apply>
-            <apply>* WR.NL.NR</apply>
+        </g>
+    </point>
+    <point feature="FARM" cx="750" cy="750">
+        <apply>* NR.EL.ER.SL.SR</apply>
+        <g svg:transform="rotate(90 500 500)">
+            <apply>* ER.SL.SR.WL.WR</apply>
+        </g>
+        <g svg:transform="rotate(180 500 500)">
+            <apply>* SR.WL.WR.NL.NR</apply>
+        </g>
+        <g svg:transform="rotate(270 500 500)">
+            <apply>* WR.NL.NR.EL.ER</apply>
+        </g>
+    </point>
+    <point feature="FARM" cx="750" cy="250">
+        <apply>* NL.NR.EL.ER.SL</apply>
+        <g svg:transform="rotate(90 500 500)">
+            <apply>* EL.ER.SL.SR.WL</apply>
+        </g>
+        <g svg:transform="rotate(180 500 500)">
+            <apply>* SL.SR.WL.WR.NL</apply>
+        </g>
+        <g svg:transform="rotate(270 500 500)">
+            <apply>* WL.WR.NL.NR.EL</apply>
         </g>
     </point>
     <point feature="FARM" cx="750" cy="500">
-        <apply>* NR.EL.ER.SL.SR</apply>
-        <apply>* NL.NR.EL.ER.SL</apply>
         <apply>* NL.NR.EL.ER.SL.SR</apply>
         <apply>* WR.EL.ER.SL</apply>
         <g svg:transform="rotate(90 500 500)">
-            <apply>* ER.SL.SR.WL.WR</apply>
-            <apply>* EL.ER.SL.SR.WL</apply>
             <apply>* EL.ER.SL.SR.WL.WR</apply>
             <apply>* NR.SL.SR.WL</apply>
         </g>
         <g svg:transform="rotate(180 500 500)">
-            <apply>* SR.WL.WR.NL.NR</apply>
-            <apply>* SL.SR.WL.WR.NL</apply>
             <apply>* SL.SR.WL.WR.NL.NR</apply>
             <apply>* ER.WL.WR.NL</apply>
         </g>
         <g svg:transform="rotate(270 500 500)">
-            <apply>* WR.NL.NR.EL.ER</apply>
-            <apply>* WL.WR.NL.NR.EL</apply>
             <apply>* WL.WR.NL.NR.EL.ER</apply>
             <apply>* SR.NL.NR.EL</apply>
         </g>

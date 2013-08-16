@@ -63,6 +63,7 @@
     </point>
     <point feature="ROAD" cx="350" cy="750">
         <apply>AM.CRr SE</apply>
+        <apply>WI.CRr SE</apply>
     </point>
     <point feature="ROAD" cx="500" cy="750">
         <apply>BB.LRFr WE</apply>
@@ -78,6 +79,7 @@
         <apply>TO.RrRr.2 SE</apply>
         <apply>GQ.CRRr SW</apply>
         <apply>IC.RrRr SW</apply>
+        <apply>WI.RrRr SW</apply>
         <apply>R1.RrII NE</apply>
         <apply>R2.RrII NE</apply>
         <apply>TO.RrRr.2 NW</apply>
@@ -128,6 +130,9 @@
     <point feature="FARM" cx="800" cy="200">
         <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>WI.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>AM.R NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>WI.R NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>R1.LIRI NL.NR.EL.WR</apply>
     </point>
     <point feature="FARM" cx="500" cy="150" baseLocation="NL.NR.EL.WR">
@@ -137,6 +142,8 @@
     </point>
     <point feature="FARM" cx="820" cy="180">
         <apply>R2.LIFI NL.NR.EL.WR</apply>
+        <apply>IC.LRFR NL.NR.EL.WR</apply>
+        <apply>WI.LRFR NL.NR.EL.WR</apply>
     </point>
     <point feature="FARM" cx="650" cy="150">
         <apply>R2.RIrI NR.EL</apply>
@@ -158,6 +165,10 @@
         <apply>TO.RrRr.2 NR.EL.SR.WL</apply>
         <apply>CU.SCFR EL.ER.SL.SR.WL.WR</apply>
         <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="450">
+        <apply>AM.CRr SR.WL.WR</apply>
+        <apply>WI.CRr SR.WL.WR</apply>
     </point>
     <point feature="FARM" cx="250" cy="180">
         <apply>DG.CRcr.d NL.NR</apply>
@@ -209,5 +220,21 @@
         <apply>FL.RFr.WE.o ER.SL.SR.WL</apply>
         <apply>FL.RFr.d ER.SL.SR.WL</apply>
         <apply>FL.RFr.NS.o NR.EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="840" cy="840" baseLocation="SL.ER"> <!-- oblique -->
+        <apply>BA.CcRr SL.ER</apply>
+        <apply>BA.CcRr+ SL.ER</apply>
+        <apply>CA.RrR.1 SL.ER</apply>
+        <apply>IC.CcRr+.i SL.ER</apply>
+        <apply>KS.CRrR SL.ER</apply>
+        <apply>DG.RrRr.g SL.ER</apply>
+        <apply>DG.CcRr.p SL.ER</apply>
+        <apply>TO.RrRr.2 SL.ER</apply>
+        <apply>GQ.CRRr SR.WL</apply>
+        <apply>IC.RrRr SR.WL</apply>
+        <apply>WI.RrRr SR.WL</apply>
+        <apply>R1.RrII NR.EL</apply>
+        <apply>R2.RrII NR.EL</apply>
+        <apply>TO.RrRr.2 NL.WR</apply>
     </point>
 </points>
