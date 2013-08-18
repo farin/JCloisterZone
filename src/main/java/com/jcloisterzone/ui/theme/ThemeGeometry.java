@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class ThemeGeometry {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    //TODO descriptor type!
+    private final Map<String, String> aliases = Maps.newHashMap();
     private final Map<FeatureDescriptor, Area> areas = Maps.newHashMap();
     private final Map<String, Area> substraction = Maps.newHashMap(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
@@ -55,9 +56,19 @@ public class ThemeGeometry {
     }
 
     public ThemeGeometry(ClassLoader loader) throws IOException, SAXException, ParserConfigurationException {
-        Element shapes = XmlUtils.parseDocument(loader.getResource("tiles/shapes.xml")).getDocumentElement();
+        NodeList nl;
+        URL aliasesResource = loader.getResource("tiles/aliases.xml");
+        if (aliasesResource != null) {
+            Element aliasesEl = XmlUtils.parseDocument(aliasesResource).getDocumentElement();
+            nl = aliasesEl.getElementsByTagName("alias");
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element alias = (Element) nl.item(i);
+                aliases.put(alias.getAttribute("treat"), alias.getAttribute("as"));
+            }
+        }
 
-        NodeList nl = shapes.getElementsByTagName("shape");
+        Element shapes = XmlUtils.parseDocument(loader.getResource("tiles/shapes.xml")).getDocumentElement();
+        nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
             processShapeElement((Element) nl.item(i));
         }
@@ -122,6 +133,12 @@ public class ThemeGeometry {
         return getArea(tile, feature.getClass(), loc);
     }
 
+    private String getLookupTileId(Tile tile) {
+        String alias = aliases.get(tile.getId());
+        if (alias == null) return tile.getId();
+        return alias;
+    }
+
     public Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
         Rotation tileRotation = tile.getRotation();
         if (featureClass.equals(Bridge.class)) {
@@ -135,7 +152,7 @@ public class ThemeGeometry {
             return a;
         }
         loc = loc.rotateCCW(tileRotation);
-        FeatureDescriptor descriptor = new FeatureDescriptor(tile.getId(), featureClass, loc);
+        FeatureDescriptor descriptor = new FeatureDescriptor(getLookupTileId(tile), featureClass, loc);
         Area area = areas.get(descriptor);
         if (area == null) {
             //try generic descriptor
@@ -157,12 +174,12 @@ public class ThemeGeometry {
     }
 
     public Area getSubstractionArea(Tile tile) {
-        return substraction.get(tile.getId());
+        return substraction.get(getLookupTileId(tile));
     }
 
     public boolean isFarmComplement(Tile tile, Location loc) {
         loc = loc.rotateCCW(tile.getRotation());
-        FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), Farm.class, loc);
+        FeatureDescriptor fd = new FeatureDescriptor(getLookupTileId(tile), Farm.class, loc);
         if (complementFarms.contains(fd)) return true;
         fd = new FeatureDescriptor(FeatureDescriptor.EVERY, Farm.class, loc);
         if (complementFarms.contains(fd)) return true;
@@ -171,7 +188,7 @@ public class ThemeGeometry {
 
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
         Location normalizedLoc = location.rotateCCW(tile.getRotation());
-        FeatureDescriptor fd = new FeatureDescriptor(tile.getId(), feature, normalizedLoc);
+        FeatureDescriptor fd = new FeatureDescriptor(getLookupTileId(tile), feature, normalizedLoc);
         ImmutablePoint point = getMeeplePlacement(points, fd);
         if (point == null) {
             point = getMeeplePlacement(defaultPoints, fd);
