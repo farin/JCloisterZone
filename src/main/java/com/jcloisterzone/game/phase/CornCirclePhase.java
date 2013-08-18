@@ -19,6 +19,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
@@ -102,6 +103,7 @@ public class CornCirclePhase extends Phase {
     private List<PlayerAction> prepareDeploymentAction(Class<? extends Feature> cornType) {
         Sites sites = new Sites();
         for (Meeple m : game.getDeployedMeeples()) {
+            if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             sites.getOrCreate(m.getPosition()).add(m.getLocation());
@@ -131,6 +133,7 @@ public class CornCirclePhase extends Phase {
     private List<PlayerAction> prepareRemovalAction(Class<? extends Feature> cornType) {
         SelectFeatureAction action = null;
         for (Meeple m : game.getDeployedMeeples()) {
+            if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             if (action == null) {

@@ -40,12 +40,12 @@
         </wagon-move>
     </tile>
     <tile id="RIrI" group="river">
-        <road>N S</road>
+        <road>W E</road>
         <farm>WR NL</farm>
         <farm>NR EL</farm>
         <farm>ER SL</farm>
         <farm>WL SR</farm>
-        <river>W E</river>
+        <river>N S</river>
     </tile>
     <tile count="2" id="IFI" group="river">
         <farm>WR NL NR EL</farm>
@@ -53,10 +53,10 @@
         <river>W E</river>
     </tile>
     <tile id="CcII" group="river">
-        <city>N E</city>
-        <farm city="N">WR SL</farm>
-        <farm>WL SR</farm>
-        <river>W S</river>
+        <city>N W</city>
+        <farm city="N">SR EL</farm>
+        <farm>ER SL</farm>
+        <river>S E</river>
     </tile>
     <tile id="RrII" group="river">
         <road>N E</road>

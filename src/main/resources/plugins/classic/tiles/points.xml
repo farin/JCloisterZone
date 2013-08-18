@@ -86,14 +86,13 @@
         <apply>TU.RCR E</apply>
     </point>
     <point feature="ROAD" cx="200" cy="400">
-        <apply>AM.CCRR W</apply>
+        <apply>AM.CCRR S</apply>
     </point>
     <point feature="ROAD" cx="500" cy="600">
         <apply>DG.RFr.v WE</apply>
     </point>
     <point feature="ROAD" cx="500" cy="220" baseLocation="NS"> <!-- vertical road, but not allowed in center -->
-        <apply>R1.RIrI NS</apply>
-        <apply>R2.RIrI WE</apply>
+        <apply>R1.RIrI WE</apply>
         <apply>TB.RRrr NS</apply>
         <apply>TB.RRrr WE</apply>
         <apply>TO.CRcr NS</apply>
@@ -112,7 +111,7 @@
         <apply>SI.CcRr SE</apply>
     </point>
     <point feature="ROAD" cx="750" cy="500">
-        <apply>AM.RrC SE</apply>
+        <apply>AM.RrC SW</apply>
     </point>
     <point feature="ROAD" cx="350" cy="750">
         <apply>AM.CRr SE</apply>
@@ -153,16 +152,12 @@
     </point>
     <point feature="CITY" cx="480" cy="840" baseLocation="NS">
         <apply>R2.CIcI WE</apply>
-        <apply>KS.CCcc WE</apply>
-    </point>
-    <point feature="CITY" cx="500" cy="160">
-        <apply>KS.CCcc NS</apply>
     </point>
     <point feature="CITY" cx="450" cy="120" baseLocation="N"> <!-- tiny -->
         <apply>BA.CC.2 W</apply>
         <apply>BA.RrC N</apply>
         <apply>AM.CCc+ N</apply>
-        <apply>AM.CCRR N</apply>
+        <apply>AM.CCRR W</apply>
         <apply>BB.CCCR N</apply>
         <apply>C2.CFC N</apply>
         <apply>CC.CC.1 N</apply>
@@ -175,8 +170,6 @@
         <apply>IC.CCCC S</apply>
         <apply>IC.CCC N</apply>
         <apply>KS.CRrR N</apply>
-        <apply>PL.CCRR E</apply>
-        <apply>PL.CC.2 E</apply>
         <apply>TB.CcCC.c E</apply>
         <apply>TO.CccC+ S</apply>
         <apply>TO.CC.2 W</apply>
@@ -189,7 +182,7 @@
     </point>
 
     <point feature="CITY" cx="500" cy="250">
-        <apply>AM.CCcc+ NS</apply>
+        <apply>AM.CCcc+ WE</apply>
     </point>
     <point feature="CITY" cx="500" cy="400">
         <apply>TB.CCc.w WE</apply>
@@ -199,7 +192,7 @@
         <apply>AM.CCc+ WE</apply>
     </point>
     <point feature="CITY" cx="840" cy="500">
-        <apply>AM.CCcc+ WE</apply>
+        <apply>AM.CCcc+ NS</apply>
         <apply>BB.LCFc WE</apply>
     </point>
     <point feature="CITY" cx="250" cy="500">

@@ -133,10 +133,15 @@ public class ThemeGeometry {
         return getArea(tile, feature.getClass(), loc);
     }
 
-    private String getLookupTileId(Tile tile) {
+    private FeatureDescriptor[] getLookups(Tile tile, Class<? extends Feature> featureType, Location location) {
         String alias = aliases.get(tile.getId());
-        if (alias == null) return tile.getId();
-        return alias;
+        FeatureDescriptor[] fd = new FeatureDescriptor[alias == null ? 2 : 3];
+        fd[0] = new FeatureDescriptor(tile.getId(), featureType, location);
+        if (alias != null) {
+            fd[1] = new FeatureDescriptor(alias, featureType, location);
+        }
+        fd[alias == null ? 1 : 2] = new FeatureDescriptor(FeatureDescriptor.EVERY, featureType, location);
+        return fd;
     }
 
     public Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
@@ -152,18 +157,14 @@ public class ThemeGeometry {
             return a;
         }
         loc = loc.rotateCCW(tileRotation);
-        FeatureDescriptor descriptor = new FeatureDescriptor(getLookupTileId(tile), featureClass, loc);
-        Area area = areas.get(descriptor);
-        if (area == null) {
-            //try generic descriptor
-            FeatureDescriptor genericDescriptor = new FeatureDescriptor(FeatureDescriptor.EVERY, featureClass, loc);
-            area = areas.get(genericDescriptor);
-            if (area == null) {
-                logger.error("No shape defined for <" + descriptor + ">");
-                area = new Area(); //return empty Area
-            }
+        FeatureDescriptor lookups[] = getLookups(tile, featureClass, loc);
+        Area area;
+        for (FeatureDescriptor fd : lookups) {
+            area = areas.get(fd);
+            if (area != null) return area;
         }
-        return area;
+        logger.error("No shape defined for <" + lookups[0] + ">");
+        return new Area();
     }
 
     public Area getBridgeArea(Location loc) {
@@ -174,39 +175,42 @@ public class ThemeGeometry {
     }
 
     public Area getSubstractionArea(Tile tile) {
-        return substraction.get(getLookupTileId(tile));
+        Area area = substraction.get(tile.getId());
+        if (area == null) {
+            String alias = aliases.get(tile.getId());
+            if (alias != null) {
+                area = substraction.get(alias);
+            }
+        }
+        return area;
     }
 
     public boolean isFarmComplement(Tile tile, Location loc) {
         loc = loc.rotateCCW(tile.getRotation());
-        FeatureDescriptor fd = new FeatureDescriptor(getLookupTileId(tile), Farm.class, loc);
-        if (complementFarms.contains(fd)) return true;
-        fd = new FeatureDescriptor(FeatureDescriptor.EVERY, Farm.class, loc);
-        if (complementFarms.contains(fd)) return true;
+        FeatureDescriptor lookups[] = getLookups(tile, Farm.class, loc);
+        for (FeatureDescriptor fd : lookups) {
+            if (complementFarms.contains(fd)) return true;
+        }
         return false;
     }
 
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
         Location normalizedLoc = location.rotateCCW(tile.getRotation());
-        FeatureDescriptor fd = new FeatureDescriptor(getLookupTileId(tile), feature, normalizedLoc);
-        ImmutablePoint point = getMeeplePlacement(points, fd);
+        FeatureDescriptor lookups[] = getLookups(tile, feature, normalizedLoc);
+        ImmutablePoint point = null;
+        for (FeatureDescriptor fd : lookups) {
+            if (point != null) break;
+            point = points.get(fd);
+        }
+        for (FeatureDescriptor fd : lookups) {
+            if (point != null) break;
+            point = defaultPoints.get(fd);
+        }
         if (point == null) {
-            point = getMeeplePlacement(defaultPoints, fd);
-            if (point == null) {
-                logger.warn("No point defined for <" + fd + ">");
-                point =  new ImmutablePoint(0, 0);
-            }
+            logger.warn("No point defined for <" + lookups[0] + ">");
+            point =  new ImmutablePoint(0, 0);
         }
         //System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
         return point.rotate(tile.getRotation());
-    }
-
-    private ImmutablePoint getMeeplePlacement(Map<FeatureDescriptor, ImmutablePoint> source, FeatureDescriptor fd) {
-        ImmutablePoint point = source.get(fd);
-        if (point == null) {
-            fd = new FeatureDescriptor(FeatureDescriptor.EVERY, fd.getFeatureType(), fd.getLocation());
-            point = source.get(fd);
-        }
-        return point;
     }
 }

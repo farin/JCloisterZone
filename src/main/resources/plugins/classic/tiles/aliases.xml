@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aliases xmlns="http://www.jcloisterzone.com/aliases">
+    <alias treat="R2.I.s" as="R1.I.s" />
+    <alias treat="R2.II" as="R1.II" />
+    <alias treat="R2.RIrI" as="R1.RIrI" />
+    <alias treat="R2.CcII+" as="R1.CcII" />
+    <alias treat="R2.CIRI" as="R1.CIRI" />
+    <alias treat="R2.RrII" as="R1.RrII" />
+
     <alias treat="GQ.LRRRR" as="AM.LRRRR" />
     <alias treat="GQ.CICI" as="R1.CICI" />
     <alias treat="GQ.Cc!" as="DG.Cc!.p" />
     <alias treat="GQ.CcRR" as="TB.CcRR.w" />
+
+    <alias treat="KS.CCcc" as="AM.CCcc+" />
+
+    <alias treat="PL.Cc+" as="BA.Cc+" />
+    <alias treat="PL.CC" as="BA.CC.2" />
+    <alias treat="PL.CCRR" as="AM.CCRR" />
+    <alias treat="PL.Rr" as="BA.Rr" />
+    <alias treat="PL.RRC" as="TB.RRC" />
+    <alias treat="PL.RRRR" as="BA.RRRR" />
 
     <alias treat="WI.R" as="AM.R" />
     <alias treat="WI.CRr" as="AM.CRr" />
@@ -20,14 +36,13 @@
 
     <alias treat="FE.CR" as="TB.CR" />
     <alias treat="FE.CRCR" as="IC.CRCR" />
-    <alias treat="FE.RC" as="KS.RC" /> <!-- TODO rotate AM.RC or KS.RC -->
+    <alias treat="FE.RC" as="KS.RC" />
     <alias treat="FE.RrC" as="BA.RrC" />
     <alias treat="FE.CCc" as="TB.CCc.c" />
     <alias treat="FE.CFR" as="IC.CFR" />
-    <!--alias treat="FE.CcCc" as="TB.CcCc" /-->  <!-- TODO rotate -->
+    <alias treat="FE.CcCc" as="TB.CcCc.w" />
     <alias treat="FE.CRr" as="BA.CRr" />
-    <!--alias treat="FE.RrRr" as="IC.RrRc" /-->  <!-- TODO rotate -->
+    <alias treat="FE.RrRr" as="IC.RrRc" />
 
 
 </aliases>
-

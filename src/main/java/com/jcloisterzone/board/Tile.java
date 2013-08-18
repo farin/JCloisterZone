@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Bridge;
@@ -28,6 +31,8 @@ import com.jcloisterzone.game.Game;
  * @author Roman Krejcik
  */
 public class Tile /*implements Cloneable*/ {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final String ABBEY_TILE_ID = "AM.A";
 
@@ -114,6 +119,7 @@ public class Tile /*implements Cloneable*/ {
 
     /** merge this to another tile - method argument is tile placed before */
     protected void merge(Tile tile, Location loc) {
+        if (logger.isDebugEnabled()) logger.debug("Merging " + id + " with " + tile.getId());
         Location oppositeLoc = loc.rev();
         MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
         if (oppositePiece != null) {

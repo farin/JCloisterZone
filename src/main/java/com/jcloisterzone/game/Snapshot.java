@@ -206,8 +206,10 @@ public class Snapshot implements Serializable {
         doc = XmlUtils.parseDocument(is);
         root = doc.getDocumentElement();
         String snapshotVersion = root.getAttribute("app-version");
-        if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
-            throw new SnapshotCorruptedException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
+        if (!snapshotVersion.equals(Application.VERSION)) { //first check simple equality (useful for dev version without numbers)
+            if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
+                throw new SnapshotCorruptedException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
+            }
         }
     }
 

@@ -12,12 +12,12 @@
         </wagon-move>
     </tile>
     <tile id="RC">
-        <city castle-base="true">W</city>
-        <road>S</road>
-        <farm city="W">SR</farm>
-        <farm city="W">NL NR EL ER SL</farm>
+        <city castle-base="true">N</city>
+        <road>W</road>
+        <farm city="N">WR</farm>
+        <farm city="N">EL ER SL SR WL</farm>
         <wagon-move>
-            <neighbouring>W S</neighbouring>
+            <neighbouring>N W</neighbouring>
         </wagon-move>
     </tile>
     <tile id="CR">
