@@ -41,8 +41,6 @@ public class ThemeGeometry {
     private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
     private final Map<FeatureDescriptor, ImmutablePoint> points;
 
-    static private final Map<FeatureDescriptor, ImmutablePoint> defaultPoints;
-
     private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
 
     static {
@@ -51,13 +49,11 @@ public class ThemeGeometry {
         BRIDGE_AREA_NS = new Area(a);
         a.transform(Rotation.R270.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
         BRIDGE_AREA_WE = a;
-
-        defaultPoints = (new PointsParser(ThemeGeometry.class.getClassLoader().getResource("defaults/points.xml"))).parse();
     }
 
-    public ThemeGeometry(ClassLoader loader) throws IOException, SAXException, ParserConfigurationException {
+    public ThemeGeometry(ClassLoader loader, String folder) throws IOException, SAXException, ParserConfigurationException {
         NodeList nl;
-        URL aliasesResource = loader.getResource("tiles/aliases.xml");
+        URL aliasesResource = loader.getResource(folder + "/aliases.xml");
         if (aliasesResource != null) {
             Element aliasesEl = XmlUtils.parseDocument(aliasesResource).getDocumentElement();
             nl = aliasesEl.getElementsByTagName("alias");
@@ -67,7 +63,7 @@ public class ThemeGeometry {
             }
         }
 
-        Element shapes = XmlUtils.parseDocument(loader.getResource("tiles/shapes.xml")).getDocumentElement();
+        Element shapes = XmlUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
         nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
             processShapeElement((Element) nl.item(i));
@@ -77,7 +73,7 @@ public class ThemeGeometry {
             processComplementFarm((Element) nl.item(i));
         }
 
-        points = (new PointsParser(loader.getResource("tiles/points.xml"))).parse();
+        points = (new PointsParser(loader.getResource(folder + "/points.xml"))).parse();
     }
 
     private FeatureDescriptor createFeatureDescriptor(String featureName, String tileAndLocation) {
@@ -129,10 +125,6 @@ public class ThemeGeometry {
         }
     }
 
-    public Area getArea(Tile tile, Feature feature, Location loc) {
-        return getArea(tile, feature.getClass(), loc);
-    }
-
     private FeatureDescriptor[] getLookups(Tile tile, Class<? extends Feature> featureType, Location location) {
         String alias = aliases.get(tile.getId());
         FeatureDescriptor[] fd = new FeatureDescriptor[alias == null ? 2 : 3];
@@ -163,8 +155,7 @@ public class ThemeGeometry {
             area = areas.get(fd);
             if (area != null) return area;
         }
-        logger.error("No shape defined for <" + lookups[0] + ">");
-        return new Area();
+        return null;
     }
 
     public Area getBridgeArea(Location loc) {
@@ -199,18 +190,10 @@ public class ThemeGeometry {
         FeatureDescriptor lookups[] = getLookups(tile, feature, normalizedLoc);
         ImmutablePoint point = null;
         for (FeatureDescriptor fd : lookups) {
-            if (point != null) break;
             point = points.get(fd);
-        }
-        for (FeatureDescriptor fd : lookups) {
             if (point != null) break;
-            point = defaultPoints.get(fd);
         }
-        if (point == null) {
-            logger.warn("No point defined for <" + lookups[0] + ">");
-            point =  new ImmutablePoint(0, 0);
-        }
-        //System.out.println(fd + " | " + point + " | " + point.rotate(tile.getRotation()) + " | " + tile.getRotation());
+        if (point == null) return null;
         return point.rotate(tile.getRotation());
     }
 }

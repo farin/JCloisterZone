@@ -5,15 +5,19 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -30,19 +34,29 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.ResourceManager;
+import com.jcloisterzone.ui.theme.FeatureDescriptor;
 import com.jcloisterzone.ui.theme.ThemeGeometry;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
     public static final int NORMALIZED_SIZE = 1000;
 
-    private ThemeGeometry areaProvider;
+    private static ThemeGeometry defaultGeometry;
+    private ThemeGeometry pluginGeometry;
 
     private Set<String> supportedExpansions = Sets.newHashSet(); //expansion codes
 
+    static {
+        try {
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
+        }
+    }
+
     public ResourcePlugin(URL url) throws Exception {
         super(url);
-        areaProvider = new ThemeGeometry(getLoader());
+        pluginGeometry = new ThemeGeometry(getLoader(), "tiles");
     }
 
     @Override
@@ -98,7 +112,43 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (!containsTile(tile.getId())) return null;
         if (type.equals(Barn.class)) return null;
         Feature piece = tile.getFeature(loc);
-        return areaProvider.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
+        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
+        if (point == null) {
+            point = defaultGeometry.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
+        }
+        if (point == null) {
+            logger.warn("No point defined for <" + (new FeatureDescriptor(tile, piece.getClass(), loc)) + ">");
+            point =  new ImmutablePoint(0, 0);
+        }
+        return point;
+    }
+
+    private Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+        Area area = pluginGeometry.getArea(tile, featureClass, loc);
+        if (area == null) {
+            area  = defaultGeometry.getArea(tile, featureClass, loc);
+        }
+        if (area == null) {
+            logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
+            area = new Area();
+        }
+        return area;
+    }
+
+    private Area getSubstractionArea(Tile tile) {
+        Area d = defaultGeometry.getSubstractionArea(tile),
+             p = pluginGeometry.getSubstractionArea(tile),
+             area = new Area();
+
+        if (d != null) area.add(d);
+        if (p != null) area.add(p);
+        return area;
+    }
+
+    private boolean isFarmComplement(Tile tile, Location loc) {
+        if (pluginGeometry.isFarmComplement(tile, loc)) return true;
+        if (defaultGeometry.isFarmComplement(tile, loc)) return true;
+        return false;
     }
 
     @Override
@@ -121,7 +171,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 areas.put(loc, getFarmArea(loc, tile, subsFarm));
                 continue;
             }
-            Area a = areaProvider.getArea(tile, piece, loc);
+            Area a = getArea(tile, piece.getClass(), loc);
             if (piece instanceof City || piece instanceof Road) {
                 Area subs = subsRoadCity;
                 if (piece instanceof Bridge) {
@@ -178,14 +228,14 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             double ratio = size/(double)NORMALIZED_SIZE;
             transform1 = AffineTransform.getScaleInstance(ratio,ratio);
         }
-        return areaProvider.getBridgeArea(loc).createTransformedArea(transform1);
+        return pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
     }
 
     private void substractBridge(Area substractions, Tile tile) {
         Bridge bridge = tile.getBridge();
         if (bridge != null) {
             Area area;
-            area = areaProvider.getArea(tile, Bridge.class, bridge.getLocation());
+            area = getArea(tile, Bridge.class, bridge.getLocation());
             substractions.add(area);
         }
     }
@@ -193,12 +243,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private Area getBaseRoadAndCitySubstractions(Tile tile) {
         Area sub = new Area();
         if (tile.getTower() != null) {
-            sub.add(areaProvider.getArea(tile, Tower.class, Location.TOWER));
+            sub.add(getArea(tile, Tower.class, Location.TOWER));
         }
-        Area substraction = areaProvider.getSubstractionArea(tile);
-        if (substraction != null) {
-            sub.add(substraction);
-        }
+        sub.add(getSubstractionArea(tile));
         return sub;
     }
 
@@ -206,30 +253,27 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Area sub = new Area();
         for(Feature piece : tile.getFeatures()) {
             if (! (piece instanceof Farm)) {
-                Area area = areaProvider.getArea(tile, piece.getClass(), piece.getLocation());
+                Area area = getArea(tile, piece.getClass(), piece.getLocation());
                 sub.add(area);
             }
         }
-        Area substraction = areaProvider.getSubstractionArea(tile);
-        if (substraction != null) {
-            sub.add(substraction);
-        }
+        sub.add(getSubstractionArea(tile));
         return sub;
     }
 
 
     private Area getFarmArea(Location farm, Tile tile, Area sub) {
         Area base;
-        if (areaProvider.isFarmComplement(tile, farm)) { //is complement farm
+        if (isFarmComplement(tile, farm)) { //is complement farm
             base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
-                    Area area = areaProvider.getArea(tile, Farm.class, piece.getLocation());
+                    Area area = getArea(tile, Farm.class, piece.getLocation());
                     base.subtract(area);
                 }
             }
         } else {
-            base = areaProvider.getArea(tile, Farm.class, farm);
+            base = getArea(tile, Farm.class, farm);
             base = new Area(base); //copy area to not substract from original
         }
         if (!sub.isEmpty()) {

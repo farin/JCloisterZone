@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.theme;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -22,6 +23,10 @@ public class FeatureDescriptor {
         this.tileId = tileId;
         this.featureType = featureType;
         this.location = location;
+    }
+
+    public FeatureDescriptor(Tile tile, Class<? extends Feature> featureType, Location location) {
+        this(tile.getId(), featureType, location);
     }
 
     @Override
