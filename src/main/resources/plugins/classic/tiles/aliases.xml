@@ -21,6 +21,8 @@
     <alias treat="PL.RRC" as="TB.RRC" />
     <alias treat="PL.RRRR" as="BA.RRRR" />
 
+    <alias treat="CC.RrC" as="BA.RrC" />
+
     <alias treat="WI.R" as="AM.R" />
     <alias treat="WI.CRr" as="AM.CRr" />
     <alias treat="WI.RC" as="AM.RC" />

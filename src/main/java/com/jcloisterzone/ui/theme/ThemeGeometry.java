@@ -103,7 +103,7 @@ public class ThemeGeometry {
 
             @Override
             public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
-                assert !areas.containsKey(fd);
+                assert !areas.containsKey(fd) : "Duplicate key " + fd;
                 areas.put(fd, area.createTransformedArea(transform));
             }
 

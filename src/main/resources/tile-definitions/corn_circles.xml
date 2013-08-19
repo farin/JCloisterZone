@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <tile id="CC.1">
+    <tile id="Cc.1">
+        <corn-circle type="City"/>
+        <city>N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="CC.2">
         <corn-circle type="City"/>
         <city castle-base="true">N</city>
         <city castle-base="true">E</city>
         <farm city="N E">SL SR WL WR</farm>
-    </tile>
-    <tile id="Cc.2">
-        <corn-circle type="City"/>
-        <city>N W</city>
-        <farm city="N">SL SR EL ER</farm>
     </tile>
     <tile id="CR">
         <corn-circle type="Farm"/>
