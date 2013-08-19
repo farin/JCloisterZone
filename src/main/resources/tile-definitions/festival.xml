@@ -84,6 +84,7 @@
         <farm>WL SR</farm>
     </tile>
     <tile id="RrRr">
+        <festival/>
         <road>N W</road>
         <road>S E</road>
         <farm>NL WR</farm>

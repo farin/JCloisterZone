@@ -58,7 +58,6 @@
     </shape>
 
 
-
     <!-- Road shapes -->
 
     <shape feature="ROAD">
@@ -157,7 +156,6 @@
         <apply>TU.CRRR E</apply>
         <apply>TU.CRRR S</apply>
         <apply>TU.RCR W</apply>
-        <apply>TU.RCR E</apply>
         <apply>TU.RR E</apply>
         <apply>TU.RRRR N</apply>
         <apply>TU.RRRR W</apply>
@@ -233,7 +231,6 @@
         <svg:polygon points="400,0 600,0 600,370 630,400 740,400 740,600 600,600 400,400"/>
         <apply>AM.RC W</apply>
         <apply>GQ.CcCR S</apply>
-        <apply>KS.RC W</apply>
         <apply>KS.CRrR W</apply>
     </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- turn R -->
@@ -254,6 +251,10 @@
     <shape feature="ROAD">
         <svg:polygon points="999,400 870,365 830,332 812,227 690,232 685,352 700,450 750,515 812,545 999,600"/>
         <apply>TB.CcRR.w E</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="995,440 965,467 845,610 797,617 570,677 665,765 762,780 855,770 952,702 997,652"/>
+        <apply>TU.RCR E</apply>
     </shape>
 
     <shape feature="ROAD">
@@ -398,10 +399,6 @@
         <apply>DG.CRr.g N</apply>
         <apply>TO.RrC N</apply>
         <apply>TB.RRC N</apply>
-    </shape>
-    <shape feature="CITY" baseLocation="N"> <!-- maybe duplicated area -->
-        <svg:polygon points="20,0 90,100 260,200 270,230 380,280 470,290 570,270 740,270 999,0"/>
-        <apply>KS.RC N</apply>
     </shape>
     <shape feature="CITY" baseLocation="N">
         <svg:polygon points="0,0 120,120 300,230 380,260 620,260 700,230 870,120 999,0"/>
@@ -688,6 +685,10 @@
         <apply>AM.CCRR SR</apply>
     </shape>
     <shape feature="FARM">
+        <svg:polygon points="0,522 820,685 999,550 999,999 0,999"/>
+        <apply>TU.RCR ER.SL.SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
         <svg:polygon points="0,495 142,535 360,722 692,585 825,437 999,485 999,999 0,999"/>
         <apply>FL.RFr.d ER.SL.SR.WL</apply>
     </shape>
@@ -794,7 +795,6 @@
         <apply>AM.CCRR SL.ER</apply>
         <apply>AM.RC EL.ER.SL.SR.WL</apply>
         <apply>AM.RrC SR.WL</apply>
-        <apply>KS.RC EL.ER.SL.SR.WL</apply>
         <apply>KS.CRrR EL.SR.WL</apply>
         <apply>R1.CcII SR.EL</apply>
         <apply>R1.RrII WR.NL.ER.SL</apply>
@@ -810,6 +810,7 @@
         <apply>FL.Rr.d SR.WL.WR.NL.NR.EL</apply>
         <apply>FL.Rr.NW.o NR.EL.ER.SL.SR.WL</apply>
         <apply>C2.RRRr WR.NL.ER.SL</apply>
+        <apply>TU.RCR EL.WR</apply>
     </complement-farm>
 
     <shape> <!-- center -->
@@ -832,7 +833,10 @@
         <svg:rect x="400" y="360" width="200" height="350"/>
         <substract>IC.CRCR</substract>
     </shape>
-
+    <shape>
+        <svg:polygon points="342,202 342,470 490,635 752,642 757,195"/>
+        <substract>C2.RRRr</substract>
+    </shape>
     <!-- River areas -->
     <shape feature="FARM">
         <svg:polygon points="0,380 999,380 999,620 580,900 420,900 0,620"/>
@@ -867,16 +871,20 @@
     </shape>
 
     <!--  Tunnel substractions -->
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="77,422 150,320 590,250 730,270 867,430 672,595 802,700 617,805 380,832 160,790 120,690 207,600"/>
         <substract>TU.CRRR</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="77,420 27,590 75,637 275,675 592,607 645,572 695,562 915,395 910,322 842,212 777,185 592,192 500,217 385,357 227,322"/>
         <substract>TU.RR</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="335,277 470,365 607,350 722,352 790,372 795,415 872,492 867,535 682,667 677,710 650,735 652,802 332,900 232,865 127,855 87,800 105,722 187,652 187,592 100,487 70,432 130,367 132,312 195,325"/>
         <substract>TU.RRRR</substract>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="75,505 80,482 95,477 107,427 172,377 180,317 225,327 285,317 300,302 332,300 362,280 377,280 402,297 437,295 500,312 522,330 562,332 647,410 667,410 777,450 797,450 805,465 847,512 890,565 897,597 870,627 792,642 577,697 530,720 512,707 480,702 465,680 442,680 435,670 390,670 342,675 337,652 297,642 272,610 147,510 115,522"/>
+        <substract>TU.RCR</substract>
     </shape>
 </shapes>

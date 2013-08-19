@@ -78,7 +78,7 @@
         <road>S</road>
         <farm>NL NR EL ER SL SR WL WR</farm>
     </tile>
-    <tile id="RRR">
+    <tile id="Rrr">
         <road>N W E</road>
         <farm>WR NL</farm>
         <farm>NR EL</farm>
