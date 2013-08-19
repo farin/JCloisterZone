@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
 
 public class SvgTransformationCollector {
@@ -71,8 +72,10 @@ public class SvgTransformationCollector {
                 }
                 break;
             case "substract":
-                assert baseLocation == null;
-                handler.processSubstract(child, child.getTextContent(), getTransform());
+                assert baseLocation == null : "baseLocation is not allowed together with substraction element";
+                String feature = root.getAttribute("feature");
+                assert feature.equals("") || feature.equals("FARM") : "Substraction area can be declared only generic or for FARM";
+                handler.processSubstract(child, child.getTextContent(), getTransform(), feature.equals("FARM"));
                 break;
             case "g":
                 assert baseLocation == null;
@@ -105,7 +108,7 @@ public class SvgTransformationCollector {
 
     public interface GeometryHandler {
         public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform);
-        public void processSubstract(Element node, String tileId, AffineTransform transform);
+        public void processSubstract(Element node, String tileId, AffineTransform transform, boolean isFarm);
     }
 
 }

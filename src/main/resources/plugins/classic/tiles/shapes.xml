@@ -308,6 +308,10 @@
         <svg:polygon points="327,770 497,765 565,862 585,907 585,999 405,999 405,955 325,862"/>
         <apply>IC.CRcR+ S</apply>
     </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="472,505 627,505 620,530 487,650 387,690 277,752 272,785 455,845 542,905 557,932 560,992 415,995 405,960 195,890 140,832 132,760 157,697 347,575 387,567"/>
+        <apply>R1.LIRI S</apply>
+    </shape>
 
 
 
@@ -700,7 +704,7 @@
         <substract>DG.RRR.d</substract>
         <substract>DG.RRR.g</substract>
     </shape>
-    <shape feature="">
+    <shape>
         <svg:rect x="400" y="360" width="200" height="350"/>
         <substract>IC.CRCR</substract>
         <substract>FE.CRCR</substract>
@@ -814,34 +818,34 @@
     </shape>
 
     <!-- River areas -->
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="0,380 999,380 999,620 580,900 420,900 0,620"/>
         <substract>R1.LIRI</substract>
         <substract>R2.LIFI</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="0,380 500,480 999,380 999,620 500,720 0,620"/>
         <substract>R1.CIRI</substract>
         <substract svg:transform="rotate(270 500 500)">R2.CIcI</substract>
     </shape>
-    <shape>
-         <svg:polygon points="0,380 999,380 999,620 0,620"/>
+    <shape feature="FARM">
+        <svg:polygon points="0,380 999,380 999,620 0,620"/>
         <substract>R1.CICI</substract>
         <substract>R1.IFI</substract>
         <substract svg:transform="rotate(90 500 500)">R1.RIrI</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="0,380 340,470 570,680 620,999 380,999 320,930 70,680 0,620"/>
         <substract>R1.RrII</substract>
         <substract>R1.II</substract>
         <substract svg:transform="rotate(90 500 500)">R2.II+</substract>
         <substract svg:transform="rotate(270 500 500)">R1.CcII</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="0,602 592,712 999,592 999,350 727,325 650,267 635,0 395,0 375,217 247,335 0,332"/>
         <substract>R2.III</substract>
     </shape>
-    <shape>
+    <shape feature="FARM">
         <svg:polygon points="0,627 80,647 137,610 165,607 210,630 215,677 260,687 282,735 305,750 352,737 387,737 400,802 430,835 455,830 462,845 455,880 582,915 657,880 820,870 820,840 675,627 637,600 635,572 645,555 645,417 635,395 635,367 757,317 752,285 667,217 667,195 685,170 660,112 602,142 537,225 515,227 467,172 432,160 392,182 402,222 447,307 445,340 487,370 427,402 375,375 340,350 305,357 290,405 242,412 185,365 152,355 110,370 80,385 65,370 37,367 0,385"/>
         <substract>R2.IFC</substract>
     </shape>

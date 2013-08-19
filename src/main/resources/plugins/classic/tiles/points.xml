@@ -234,6 +234,9 @@
     <point feature="FARM" cx="80" cy="300">
         <apply>DG.CCc+.p WL.WR</apply>
     </point>
+    <point feature="FARM" cx="80" cy="840">
+        <apply>R1.LIRI SR.WL</apply>
+    </point>
     <point feature="FARM" cx="160" cy="280">
         <apply>TO.RrC WR.EL.ER.SL</apply>
     </point>
@@ -251,6 +254,7 @@
         <apply>CU.SCFR EL.ER.SL.SR.WL.WR</apply>
         <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
         <apply>CA.C! WL.WR.SL.SR</apply>
+
     </point>
     <point feature="FARM" cx="200" cy="200">
         <apply>DG.LRRR.d NL.NR.EL.WR</apply>

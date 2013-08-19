@@ -135,9 +135,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return area;
     }
 
-    private Area getSubstractionArea(Tile tile) {
-        Area d = defaultGeometry.getSubstractionArea(tile),
-             p = pluginGeometry.getSubstractionArea(tile),
+    private Area getSubstractionArea(Tile tile, boolean farm) {
+        Area d = defaultGeometry.getSubstractionArea(tile, farm),
+             p = pluginGeometry.getSubstractionArea(tile, farm),
              area = new Area();
 
         if (d != null) area.add(d);
@@ -245,7 +245,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (tile.getTower() != null) {
             sub.add(getArea(tile, Tower.class, Location.TOWER));
         }
-        sub.add(getSubstractionArea(tile));
+        sub.add(getSubstractionArea(tile, false));
         return sub;
     }
 
@@ -257,7 +257,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 sub.add(area);
             }
         }
-        sub.add(getSubstractionArea(tile));
+        sub.add(getSubstractionArea(tile, true));
         return sub;
     }
 

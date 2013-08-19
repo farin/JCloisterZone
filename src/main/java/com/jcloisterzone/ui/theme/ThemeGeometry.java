@@ -37,7 +37,8 @@ public class ThemeGeometry {
 
     private final Map<String, String> aliases = Maps.newHashMap();
     private final Map<FeatureDescriptor, Area> areas = Maps.newHashMap();
-    private final Map<String, Area> substraction = Maps.newHashMap(); //key tile ID
+    private final Map<String, Area> substractionAll = Maps.newHashMap(); //key tile ID
+    private final Map<String, Area> substractionFarm = Maps.newHashMap(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
     private final Map<FeatureDescriptor, ImmutablePoint> points;
 
@@ -107,10 +108,11 @@ public class ThemeGeometry {
             }
 
             @Override
-            public void processSubstract(Element node, String tileId, AffineTransform transform) {
+            public void processSubstract(Element node, String tileId, AffineTransform transform, boolean isFarm) {
+                Map<String, Area> target = isFarm ? substractionFarm : substractionAll;
                 //TODO merge if already exists
-                assert !substraction.containsKey(tileId);
-                substraction.put(tileId, area.createTransformedArea(transform));
+                assert !target.containsKey(tileId);
+                target.put(tileId, area.createTransformedArea(transform));
             }
 
         });
@@ -165,12 +167,20 @@ public class ThemeGeometry {
         throw new IllegalArgumentException("Incorrect location");
     }
 
-    public Area getSubstractionArea(Tile tile) {
-        Area area = substraction.get(tile.getId());
+    public Area getSubstractionArea(Tile tile, boolean isFarm) {
+        if (isFarm) {
+            Area area = getSubstractionArea(substractionFarm, tile);
+            if (area != null) return area;
+        }
+        return getSubstractionArea(substractionAll, tile);
+    }
+
+    private Area getSubstractionArea(Map<String, Area> substractions, Tile tile) {
+        Area area = substractions.get(tile.getId());
         if (area == null) {
             String alias = aliases.get(tile.getId());
             if (alias != null) {
-                area = substraction.get(alias);
+                area = substractions.get(alias);
             }
         }
         return area;
