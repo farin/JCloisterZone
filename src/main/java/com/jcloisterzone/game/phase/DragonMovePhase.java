@@ -12,8 +12,11 @@ import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 
 public class DragonMovePhase extends Phase {
 
+    final PrincessAndDragonGame pdg;
+
     public DragonMovePhase(Game game) {
         super(game);
+        pdg = game.getPrincessAndDragonGame();
     }
 
     @Override
@@ -23,41 +26,39 @@ public class DragonMovePhase extends Phase {
 
     @Override
     public Player getActivePlayer() {
-        PrincessAndDragonGame pdGame = game.getPrincessAndDragonGame();
-        return game.getPlayer(pdGame.getDragonPlayer());
+        return pdg.getDragonPlayer();
     }
 
     @Override
     public void enter() {
-        PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-        if (pd.getDragonMovesLeft() > 0) {
-            Set<Position> moves = pd.getAvailDragonMoves();
+        selectDragonMove();
+    }
+
+    private void selectDragonMove() {
+        if (pdg.getDragonMovesLeft() > 0) {
+            Set<Position> moves = pdg.getAvailDragonMoves();
             if (!moves.isEmpty()) {
-                game.getUserInterface().selectDragonMove(moves, pd.getDragonMovesLeft());
+                game.getUserInterface().selectDragonMove(moves, pdg.getDragonMovesLeft());
                 return;
             }
         }
-        pd.endDragonMove();
+        pdg.endDragonMove();
         next();
     }
 
     @Override
     public void moveDragon(Position p) {
-        PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-        if (!pd.getAvailDragonMoves().contains(p)) {
+        if (!pdg.getAvailDragonMoves().contains(p)) {
             throw new IllegalArgumentException("Invalid dragon move.");
         }
-        pd.getDragonVisitedTiles().add(p);
-        pd.setDragonPosition(p);
-        pd.nextDragonPlayer();
+        pdg.moveDragon(p);
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.getPosition().equals(p) && m.canBeEatenByDragon()) {
                 m.undeploy();
             }
         }
         game.fireGameEvent().dragonMoved(p);
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-        next(DragonMovePhase.class);
+        selectDragonMove();
     }
 
 }

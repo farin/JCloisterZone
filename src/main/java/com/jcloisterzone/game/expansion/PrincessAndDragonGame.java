@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -37,7 +38,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 
     public Position dragonPosition;
     public int dragonMovesLeft;
-    public int dragonPlayer; //TODO player obj ?
+    public Player dragonPlayer;
     public Set<Position> dragonVisitedTiles;
 
     public Position fairyPosition;
@@ -74,8 +75,11 @@ public final class PrincessAndDragonGame extends ExpandedGame {
         this.dragonPosition = dragonPosition;
     }
 
-    public int getDragonPlayer() {
+    public Player getDragonPlayer() {
         return dragonPlayer;
+    }
+    public void setDragonPlayer(Player dragonPlayer) {
+        this.dragonPlayer = dragonPlayer;
     }
 
     public int getDragonMovesLeft() {
@@ -89,22 +93,22 @@ public final class PrincessAndDragonGame extends ExpandedGame {
 
     public void triggerDragonMove() {
         dragonMovesLeft = DRAGON_MOVES;
-        dragonPlayer = game.getTurnPlayer().getIndex();
+        dragonPlayer = game.getTurnPlayer();
         dragonVisitedTiles = Sets.newHashSet();
         dragonVisitedTiles.add(dragonPosition);
-    }
-
-    public void nextDragonPlayer() {
-        dragonMovesLeft--;
-        //TODO metoda na Game pro cycle
-        dragonPlayer =
-            dragonPlayer == (getGame().getAllPlayers().length - 1) ? 0 : dragonPlayer + 1;
     }
 
     public void endDragonMove() {
         dragonMovesLeft = 0;
         dragonVisitedTiles = null;
-        dragonPlayer = -1;
+        dragonPlayer = null;
+    }
+
+    public void moveDragon(Position p) {
+        dragonVisitedTiles.add(p);
+        dragonPosition = p;
+        dragonPlayer = game.getNextPlayer(dragonPlayer);
+        dragonMovesLeft--;
     }
 
     public Set<Position> getAvailDragonMoves() {
@@ -212,7 +216,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
             XmlUtils.injectPosition(dragon, dragonPosition);
             if (dragonMovesLeft > 0) {
                 dragon.setAttribute("moves", "" + dragonMovesLeft);
-                dragon.setAttribute("movingPlayer", "" + dragonPlayer);
+                dragon.setAttribute("movingPlayer", "" + dragonPlayer.getIndex());
                 if (dragonVisitedTiles != null) {
                     for(Position visited : dragonVisitedTiles) {
                         Element ve = doc.createElement("visited");
@@ -239,7 +243,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
             game.fireGameEvent().dragonMoved(dragonPosition);
             if (dragon.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
-                dragonPlayer = Integer.parseInt(dragon.getAttribute("movingPlayer"));
+                dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));
                 dragonVisitedTiles = Sets.newHashSet();
                 NodeList vl = dragon.getElementsByTagName("visited");
                 for(int i = 0; i < vl.getLength(); i++) {
