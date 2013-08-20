@@ -6,13 +6,10 @@ Game can be also played against computer AI.
 
 h2. Roadmap
 
-* graphics themes support
 * optimize AI
-* full support The Plague and The Entourage small expansions
-* automated tests
+* full support for The Plague  expansions
 * mini expansions
+* automated tests
 
-h3. nice to have
 
-* clear Feature class naming (isOccupies vs isFeautureOccupied)
 

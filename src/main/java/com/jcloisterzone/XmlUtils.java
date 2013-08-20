@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 
-import javax.management.RuntimeErrorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.board.Location;
@@ -61,6 +61,12 @@ public class XmlUtils {
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String childValue(Element parent, String childName) {
+        NodeList nl = parent.getElementsByTagName(childName);
+        if (nl.getLength() == 0) return null;
+        return nl.item(0).getTextContent();
     }
 
     public static String nodeToString(Node node) {

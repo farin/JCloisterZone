@@ -5,7 +5,11 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
@@ -13,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,9 +27,11 @@ import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
@@ -32,6 +39,7 @@ import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.event.GameEventListener;
@@ -40,6 +48,7 @@ import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -52,6 +61,7 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
+import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
@@ -79,8 +89,10 @@ public class Client extends JFrame {
     private Color[] playerColors;
 
     //private MenuBar menuBar;
+    private StartPanel startPanel;
     private ControlPanel controlPanel;
     private MainPanel mainPanel;
+
 
     private CreateGamePanel createGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
@@ -141,8 +153,13 @@ public class Client extends JFrame {
 
     public Client(Ini config, List<Plugin> plugins) {
         this.config = config;
-        setLocale(getLocaleFromConfig());
         settings = new ClientSettings(config);
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+    }
+
+    public void init() {
+        setLocale(getLocaleFromConfig());
+
         List<String> colorNames = config.get("players").getAll("color");
         playerColors = new Color[colorNames.size()];
         for(int i = 0; i < playerColors.length; i++ ) {
@@ -150,8 +167,6 @@ public class Client extends JFrame {
         }
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
-
-        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
 
         resetWindowIcon();
 
@@ -175,22 +190,15 @@ public class Client extends JFrame {
 
         //Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
 
-        //replace default pane with layered
         Container pane = getContentPane();
 
         pane.setLayout(new BorderLayout());
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         pane.add(envelope, BorderLayout.CENTER);
 
-        StartPanel panel = new StartPanel();
-        panel.setClient(this);
-        //panel.setPreferredSize(new Dimension(800, 600));
-        envelope.add(panel);
-
-        /*controlPanel = new ControlPanel(this);
-        pane.add(controlPanel, BorderLayout.EAST);
-        gridPanel = new GridPanel(this);
-        pane.add(new JScrollPane(gridPanel), BorderLayout.CENTER);*/
+        startPanel = new StartPanel();
+        startPanel.setClient(this);
+        envelope.add(startPanel);
 
         this.pack();
         this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
@@ -274,6 +282,7 @@ public class Client extends JFrame {
         Container pane = this.getContentPane();
         pane.setVisible(false);
         pane.removeAll();
+        this.startPanel = null;
         this.mainPanel = null;
         this.controlPanel = null;
         if (createGamePanel != null) {
@@ -426,6 +435,9 @@ public class Client extends JFrame {
                     localServer = new Server(new Snapshot(file));
                     localServer.start(getServerPort());
                     connect(InetAddress.getLocalHost(), getServerPort());
+                } catch (SnapshotVersionException ex1) {
+                    //do not create error.log
+                    JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -480,6 +492,48 @@ public class Client extends JFrame {
 
     public DiscardedTilesDialog getDiscardedTilesDialog() {
         return discardedTilesDialog;
+    }
+
+    public void showUpdateIsAvailable(final AppUpdate appUpdate) {
+        if (isVisible() && startPanel != null) {
+            Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
+            HelpPanel hp = startPanel.getHelpPanel();
+            hp.removeAll();
+            hp.setOpaque(true);
+            hp.setBackground(bg);
+            Font font = new Font(null, Font.BOLD, 14);
+            JLabel label;
+            label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is avaiable for download."));
+            label.setFont(font);
+            hp.add(label, "wrap");
+            label = new JLabel(appUpdate.getDescription());
+            hp.add(label, "wrap");
+
+            final JTextField link = new JTextField(appUpdate.getDownloadUrl());
+            link.setEditable(false);
+            link.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+            link.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    link.setSelectionStart(0);
+                    link.setSelectionEnd(link.getText().length());
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    link.setSelectionStart(0);
+                    link.setSelectionEnd(0);
+                }
+            });
+
+            hp.add(link, "wrap, growx");
+            hp.repaint();
+        } else {
+            //probably it shouln't happen
+            System.out.println("JCloisterZone " + appUpdate.getVersion() + " is avaiable for download.");
+            System.out.println(appUpdate.getDescription());
+            System.out.println(appUpdate.getDownloadUrl());
+        }
     }
 
 

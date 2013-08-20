@@ -53,7 +53,7 @@ public class Snapshot implements Serializable {
 
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String COMPATIBLE_FROM = "2.2";
+    public static final String COMPATIBLE_FROM = "2.3";
 
     private Document doc;
     private Element root;
@@ -208,7 +208,7 @@ public class Snapshot implements Serializable {
         String snapshotVersion = root.getAttribute("app-version");
         if (!snapshotVersion.equals(Application.VERSION)) { //first check simple equality (useful for dev version without numbers)
             if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
-                throw new SnapshotCorruptedException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
+                throw new SnapshotVersionException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
             }
         }
     }

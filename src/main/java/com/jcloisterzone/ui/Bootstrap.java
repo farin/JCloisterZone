@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +16,8 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.google.common.collect.Lists;
+import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
@@ -44,7 +48,7 @@ public class Bootstrap  {
         List<String> pluginPaths = null;
 
         if (config.get("plugins") != null) {
-        	pluginPaths = config.get("plugins").getAll("plugin");
+            pluginPaths = config.get("plugins").getAll("plugin");
         }
 
         if (pluginPaths != null) {
@@ -62,17 +66,42 @@ public class Bootstrap  {
         return plugins;
     }
 
+    private void checkForUpdate(Ini config, final Client client) {
+        final String updateUrlStr = config.get("update", "url");
+        if (updateUrlStr != null && !com.jcloisterzone.Application.VERSION.contains("dev")) {
+            (new Thread() {
+                public void run() {
+                    try {
+                        URL url = new URL(updateUrlStr);
+                        final AppUpdate update = AppUpdate.fetch(url);
+                        if (update != null && (new VersionComparator()).compare(com.jcloisterzone.Application.VERSION, update.getVersion()) < 0) {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    client.showUpdateIsAvailable(update);
+                                };
+                            });
+                        }
+                    } catch (MalformedURLException e) {
+                        logger.error("Malformed key update.url in config file.", e);
+                    }
+                };
+            }).start();
+        }
+    }
+
     public void run() {
         System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        final Ini config = loadConfig();
-        final List<Plugin> plugins = loadPlugins(config);
+        Ini config = loadConfig();
+        List<Plugin> plugins = loadPlugins(config);
+
+        final Client client = new Client(config, plugins);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Client client = new Client(config, plugins);
+                client.init();
 
                 if (isMac()) {
                     Application macApplication = Application.getApplication();
@@ -85,6 +114,8 @@ public class Bootstrap  {
                 }
             }
         });
+
+        checkForUpdate(config, client);
     }
 
     public static void main(String[] args) {

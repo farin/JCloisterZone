@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -25,6 +26,8 @@ public class StartPanel extends JPanel {
 
     private Client client;
 
+    private HelpPanel helpPanel;
+
     /**
      * Create the panel.
      */
@@ -35,7 +38,8 @@ public class StartPanel extends JPanel {
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
         add(lblNewLabel, "span 3, wrap, center");
-        add(new HelpPanel(), "span 3, wrap, center");
+        helpPanel = new HelpPanel();
+        add(helpPanel, "span 3, wrap, grow, gap 30 30");
 
         JPanel createPanel = new JPanel();
         createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -97,6 +101,10 @@ public class StartPanel extends JPanel {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public HelpPanel getHelpPanel() {
+        return helpPanel;
     }
 
 }

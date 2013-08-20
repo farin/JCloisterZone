@@ -140,7 +140,6 @@ public class ActionPhase extends Phase {
 
     @Override
     public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        assert meepleOwner == getActivePlayer().getIndex();
         Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
         if (isFestivalUndeploy(m) || isPrincessUndeploy(m)) {
             m.undeploy();
