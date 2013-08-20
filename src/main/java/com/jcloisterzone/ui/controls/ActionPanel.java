@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.controls;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -193,9 +194,14 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
 
     @Override
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
+        Integer i = (Integer) origin.getData();
+        if (i != selectedActionIndex) {
+            client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
+        client.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 }
