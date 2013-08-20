@@ -36,9 +36,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
+    private static final Color KING_SCOUT_OVERLAY = new Color(0f,0f,0f,0.4f);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
+    private static Font FONT_KING_SCOUT_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
 
     private static final int PADDING_L = 9;
@@ -55,6 +57,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     //context coordinates variables
     private int bx, by;
+    private String mouseOverKey = null;
 
     public PlayerPanel(Client client, Player player, PlayerPanelImageCache cache) {
         super(client);
@@ -80,16 +83,16 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.drawString(text, x, y);
     }
 
-    private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count) {
-        drawMeepleBox(g2, playerKey, imgKey, count, false, null);
+    private Rectangle drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count) {
+        return drawMeepleBox(g2, playerKey, imgKey, count, false, null);
     }
 
-    private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne) {
-        drawMeepleBox(g2, playerKey, imgKey, count, showOne, null);
+    private Rectangle drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne) {
+        return drawMeepleBox(g2, playerKey, imgKey, count, showOne, null);
     }
 
-    private void drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne, Object regionData) {
-        if (count == 0) return;
+    private Rectangle drawMeepleBox(Graphics2D g2, Player playerKey, String imgKey, int count, boolean showOne, Object regionData) {
+        if (count == 0) return null;
 
         int w = 30;
         if (count > 1 || (count == 1 && showOne)) {
@@ -104,8 +107,10 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.fillRoundRect(bx, by, w, h, 8, 8);
         g2.drawImage(cache.get(playerKey, imgKey), bx, by-4, null);
 
+        Rectangle rect = null;
         if (regionData != null) {
-            getMouseRegions().add(new MouseListeningRegion(new Rectangle(bx, by, w, h), this, regionData));
+            rect = new Rectangle(bx, by-4, w, h+8);
+            getMouseRegions().add(new MouseListeningRegion(rect, this, regionData));
         }
 
         if (count > 1 || (count == 1 && showOne)) {
@@ -113,6 +118,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             g2.drawString(""+count, bx+LINE_HEIGHT, by+17);
         }
         bx += w + 8;
+        return rect;
     }
 
     @Override
@@ -197,10 +203,28 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         if (ks != null) {
             if (ks.getKing() == player) {
-                drawMeepleBox(g2, null, "king", 1);
+                Rectangle r = drawMeepleBox(g2, null, "king", 1, false, "king");
+                if ("king".equals(mouseOverKey)) {
+                    g2.setFont(FONT_KING_SCOUT_OVERLAY);
+                    g2.setColor(KING_SCOUT_OVERLAY);
+                    g2.fillRect(r.x, r.y, r.width, r.height);
+                    g2.setColor(Color.WHITE);
+                    int size = ks.getBiggestCitySize();
+                    g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
+                    g2.setFont(FONT_MEEPLE);
+                }
             }
             if (ks.getRobberBaron() == player) {
-                drawMeepleBox(g2, null, "robber", 1);
+                Rectangle r = drawMeepleBox(g2, null, "robber", 1, false, "robber");
+                if ("robber".equals(mouseOverKey)) {
+                    g2.setFont(FONT_KING_SCOUT_OVERLAY);
+                    g2.setColor(KING_SCOUT_OVERLAY);
+                    g2.fillRect(r.x, r.y, r.width, r.height);
+                    g2.setColor(Color.WHITE);
+                    int size = ks.getLongestRoadLength();
+                    g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
+                    g2.setFont(FONT_MEEPLE);
+                }
             }
         }
         if (tb != null) {
@@ -235,26 +259,13 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 //		gp.profile(" > expansions");
 
 
-//		//debug counts
-//		drawMeepleBox(g2, BigFollower.class, 1);
-//		drawMeepleBox(g2, Builder.class, 1);
-//		drawMeepleBox(g2, Pig.class, 1);
-//		drawMeepleBox(g2, Mayor.class, 1);
-//		drawMeepleBox(g2, Wagon.class, 1);
-//		drawMeepleBox(g2, Barn.class, 1);
-//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("towerpiece"), 5);
-//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("king"), 1);
-//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("robber"), 1);
-//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("bridge"), 3);
-//		drawMeepleBox(g2, client.getFigureTheme().getNeutralImage("castle"), 3);
-
         int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 
-        if (isActive) {
-            //TODO
-            //parentGraphics.setColor(Color.BLACK);
-            //parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
-        }
+//        if (isActive) {
+//            //TODO
+//            //parentGraphics.setColor(Color.BLACK);
+//            //parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
+//        }
 
         parentGraphics.setColor(PLAYER_BG_COLOR);
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
@@ -274,6 +285,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     @SuppressWarnings("unchecked")
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
+        if (!(origin.getData() instanceof Class)) return;
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
         TowerGame tg = client.getGame().getTowerGame();
         if (!tg.isRansomPaidThisTurn()) {
@@ -287,6 +299,20 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             }
             client.getServer().payRansom(player.getIndex(), followerClass);
         }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
+        if (origin.getData() instanceof String) {
+            mouseOverKey = (String) origin.getData();
+        }
+        client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
+        mouseOverKey = null;
+        client.getGridPanel().repaint();
     }
 
 }

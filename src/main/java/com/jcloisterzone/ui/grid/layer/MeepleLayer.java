@@ -42,7 +42,7 @@ public class MeepleLayer extends AbstractGridLayer {
         return 50;
     }
 
-    private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize ) {
+    private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {
         ImmutablePoint scaledOffset = mi.offset.scale(getSquareSize(), boxSize);
         //TODO optimize also for scrolling
         if (mi.scaledImage == null) {
@@ -99,13 +99,17 @@ public class MeepleLayer extends AbstractGridLayer {
         //clone meeples to freeze its state
         for (Meeple m : feature.getMeeples()) {
             if (m instanceof SmallFollower) {
-                images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                Meeple c = (Meeple) m.clone();
+                if (c.getPosition() == null) continue; //synchronization issue, because reading directly from Feature, not from args passed to ui layer
+                images.put(c, createMeepleImage(c, i++));
             }
 
         }
         for (Meeple m : feature.getMeeples()) {
             if (!(m instanceof SmallFollower)) {
-                images.put((Meeple) m.clone(), createMeepleImage(m, i++));
+                Meeple c = (Meeple) m.clone();
+                if (c.getPosition() == null) continue; //synchronization issue, because reading directly from Feature, not from args passed to ui layer
+                images.put(c, createMeepleImage(c, i++));
             }
         }
     }

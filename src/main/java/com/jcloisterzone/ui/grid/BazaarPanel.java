@@ -361,4 +361,12 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
         }
         throw new IllegalStateException();
     }
+
+    @Override
+    public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
+    }
 }

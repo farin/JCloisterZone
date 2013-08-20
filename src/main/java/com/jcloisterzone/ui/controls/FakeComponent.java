@@ -20,6 +20,7 @@ public abstract class FakeComponent extends ComponentAdapter {
 
     protected final Client client;
     private List<MouseListeningRegion> mouseRegions = Lists.newArrayList();
+    private MouseListeningRegion mouseOver = null;
     private AffineTransform transform;
 
     public FakeComponent(Client client) {
@@ -54,14 +55,49 @@ public abstract class FakeComponent extends ComponentAdapter {
     }
 
     public void dispatchMouseEvent(MouseEvent e) {
+        switch (e.getID()) {
+        case MouseEvent.MOUSE_CLICKED:
+            dispatchMouseClick(e);
+            break;
+        case MouseEvent.MOUSE_MOVED:
+            dispatchMouseMove(e);
+            break;
+        }
+    }
+
+    public void dispatchMouseClick(MouseEvent e) {
         for (MouseListeningRegion mlr : mouseRegions) {
             Area a = transformRegion(mlr.getRegion());
             if (a.contains(e.getX(), e.getY())) {
-                mlr.getListener().mouseClicked(e, mlr);
-                e.consume();
-                break;
+                 mlr.getListener().mouseClicked(e, mlr);
+                 e.consume();
+                 break;
             }
         }
+    }
+
+    public void dispatchMouseMove(MouseEvent e) {
+        if (mouseOver == null) {
+             for (MouseListeningRegion mlr : mouseRegions) {
+                 Area a = transformRegion(mlr.getRegion());
+                 if (a.contains(e.getX(), e.getY())) {
+                     mouseOver = mlr;
+                     mouseOver.getListener().mouseEntered(e, mouseOver);
+                     e.consume();
+                     break;
+                 }
+             }
+        } else {
+            Area a = transformRegion(mouseOver.getRegion());
+            if (a.contains(e.getX(), e.getY())) {
+                e.consume();
+                return;
+            } else {
+                mouseOver.getListener().mouseExited(e, mouseOver);
+                mouseOver = null;
+            }
+        }
+
     }
 
     protected Area transformRegion(Rectangle r) {

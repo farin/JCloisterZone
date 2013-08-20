@@ -142,15 +142,23 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         });
 
-        addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
+        MouseAdapter childDelegation = new MouseAdapter() {
+            private void dispatch(MouseEvent e) {
                 if (secondPanel != null) {
                     secondPanel.dispatchMouseEvent(e);
                     if (e.isConsumed()) return;
                 }
                 controlPanel.dispatchMouseEvent(e);
             }
-        });
+            public void mouseClicked(MouseEvent e) {
+                dispatch(e);
+            }
+            public void mouseMoved(MouseEvent e) {
+                dispatch(e);
+            }
+        };
+        addMouseListener(childDelegation);
+        addMouseMotionListener(childDelegation);
 
         addComponentListener(new ComponentListener() {
             @Override
