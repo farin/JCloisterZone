@@ -44,12 +44,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
         return scoreCache;
     }
 
-    @Override
-    public void setGame(Game game) {
-        super.setGame(game);
-        //spm = new SavePointManager(game);
-    }
-
     /* TEMPORARY COPIED FROM CLIENT STUB */
     @Deprecated
     private void phaseLoop() {

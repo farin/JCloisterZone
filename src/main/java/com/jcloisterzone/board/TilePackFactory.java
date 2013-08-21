@@ -89,7 +89,7 @@ public class TilePackFactory {
         Map<String, Integer> discard = Maps.newHashMap();
         for(Element expansionDef: defs.values()) {
             NodeList nl = expansionDef.getElementsByTagName("discard");
-            for(int i = 0; i < nl.getLength(); i++) {
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
                 String tileId = el.getAttribute("tile");
                 if (discard.containsKey(tileId)) {
@@ -160,14 +160,14 @@ public class TilePackFactory {
 
         Map<String, Integer> discardList = getDiscardTiles();
 
-        for(Entry<Expansion, Element> entry: defs.entrySet()) {
+        for (Entry<Expansion, Element> entry: defs.entrySet()) {
             Expansion expansion = entry.getKey();
             NodeList nl = entry.getValue().getElementsByTagName("tile");
-            for(int i = 0; i < nl.getLength(); i++) {
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element tileElement = (Element) nl.item(i);
                 String tileId = getTileId(expansion, tileElement);
                 LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
-                for(Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
+                for (Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
                     tilePack.addTile(tile, getTileGroup(tile, tileElement));
                     if (positions != null && ! positions.isEmpty()) {
                         Position pos = positions.removeFirst();

@@ -31,7 +31,8 @@ public abstract class AiPlayer implements UserInterface {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Game game;
+    protected Game game;
+
     private ServerIF server;
     private ClientStub clientStub;
     private Player player;
@@ -81,9 +82,7 @@ public abstract class AiPlayer implements UserInterface {
 
     public boolean isAiPlayerActive() {
         if (server == null) return false;
-        Player activePlayer = game.getActivePlayer();
-        if (activePlayer.getIndex() != player.getIndex()) return false;
-        return getClientStub().isLocalPlayer(activePlayer);
+        return game.getActivePlayer() == player;
     }
 
     @Override
@@ -98,7 +97,7 @@ public abstract class AiPlayer implements UserInterface {
     // dummy implementations
 
     protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {
-        for(PlayerAction action : actions) {
+        for (PlayerAction action : actions) {
             if (action instanceof TilePlacementAction) {
                 if (selectDummyTilePlacement((TilePlacementAction) action)) return;
             }

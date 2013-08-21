@@ -14,6 +14,9 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
@@ -51,6 +54,8 @@ import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 
 public class ClientController implements GameEventListener, UserInterface {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
     private KeyController keyController;
@@ -273,7 +278,9 @@ public class ClientController implements GameEventListener, UserInterface {
         DragonLayer dragonDecoration = client.getGridPanel().findDecoration(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
         client.getGridPanel().repaint();
+        logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
         if (client.isClientActive()) {
+            logger.debug("client is active");
             client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
             client.beep();
         }

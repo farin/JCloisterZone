@@ -49,7 +49,7 @@ public class TileFactory {
         features = Lists.newArrayList();
         tile.setGame(game);
 
-        logger.debug(">>> Creating " + tile.getId());
+        logger.debug("Creating " + tile.getId());
 
         NodeList nl;
         nl = xml.getElementsByTagName("cloister");

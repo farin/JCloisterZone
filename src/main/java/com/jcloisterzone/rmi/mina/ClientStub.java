@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.Game;
@@ -47,7 +49,7 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
     public void connect(InetAddress ia, int port) {
         connector = new NioSocketConnector();
         connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             LoggingFilter logFilter = new LoggingFilter();
             logFilter.setMessageSentLogLevel(LogLevel.DEBUG);
             logFilter.setMessageReceivedLogLevel(LogLevel.DEBUG);
@@ -131,9 +133,12 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     protected void callMessageReceived(CallMessage msg) {
         try {
-            msg.call(game.getPhase(), ClientIF.class);
-            Phase phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
+            Phase phase = game.getPhase();
+            logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
+            msg.call(phase, ClientIF.class);
+            phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
             while (phase != null && !phase.isEntered()) {
+                logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
                 phase.setEntered(true);
                 phase.enter();
                 phase = game.getPhase();

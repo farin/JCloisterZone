@@ -71,7 +71,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
     protected void initVars() {
         packSize = getTilePack().totalSize();
-        enemyPlayers = getGame().getAllPlayers().length - 1;
+        enemyPlayers = game.getAllPlayers().length - 1;
         myTurnsLeft = ((packSize-1) / (enemyPlayers+1)) + 1;
     }
 
@@ -81,8 +81,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         initVars();
 
         //trigger score
-        getGame().getPhase().next(ScorePhase.class);
-        getGame().getPhase().enter();
+        game.getPhase().next(ScorePhase.class);
+        game.getPhase().enter();
 
         Arrays.fill(openCount, 0);
 
@@ -108,7 +108,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double meepleRating() {
         double rating = 0;
 
-        for(Player p : getGame().getAllPlayers()) {
+        for(Player p : game.getAllPlayers()) {
             double meeplePoints = 0;
             int limit = 0;
             for(Follower f : p.getFollowers()) {
@@ -142,7 +142,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //			if (ctx != null && ctx.isValid()) {
 //				return (CompletableScoreContext) ctx;
 //			}
-            return new LegacyAiScoreContext(getGame(), completable.getScoreContext(), getScoreCache());
+            return new LegacyAiScoreContext(game, completable.getScoreContext(), getScoreCache());
         }
 
         @Override
@@ -152,7 +152,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //			if (ctx != null && ctx.isValid()) {
 //				return (FarmScoreContext) ctx;
 //			}
-            return new LegacyAiFarmScoreContext(getGame(), getScoreCache());
+            return new LegacyAiFarmScoreContext(game, getScoreCache());
         }
 
         @Override
@@ -183,13 +183,13 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double pointRating() {
         double rating = 0;
 
-        for(Player p : getGame().getAllPlayers()) {
+        for(Player p : game.getAllPlayers()) {
             rating += reducePoints(p.getPoints(), p);
         }
 
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
         LegacyAiScoreAllCallback callback = new LegacyAiScoreAllCallback();
-        scoreAll.scoreAll(getGame(), callback);
+        scoreAll.scoreAll(game, callback);
         rating += callback.getRanking();
 
         return rating;
@@ -288,15 +288,15 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double rankFairy() {
-        if (! getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) return 0;
-        PrincessAndDragonGame pd = getGame().getPrincessAndDragonGame();
+        if (! game.hasExpansion(Expansion.PRINCESS_AND_DRAGON)) return 0;
+        PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
         Position fairyPos = pd.getFairyPosition();
         if (fairyPos == null) return 0;
 
         double rating = 0;
 
 //		TODO more sophisticated rating
-        for(Meeple meeple : getGame().getDeployedMeeples()) {
+        for(Meeple meeple : game.getDeployedMeeples()) {
             if (meeple.getPosition() != fairyPos) continue;
             if (! (meeple instanceof Follower)) continue;
             if (meeple.getFeature() instanceof Castle) continue;
@@ -335,7 +335,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double rankConvexity() {
-        Position pos = getGame().getCurrentTile().getPosition();
+        Position pos = game.getCurrentTile().getPosition();
         return 0.001 * getBoard().getAdjacentAndDiagonalTiles(pos).size();
     }
 
@@ -434,7 +434,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             rating += 0.5;
         }
 
-        TradersAndBuildersGame tb = getGame().getTradersAndBuildersGame();
+        TradersAndBuildersGame tb = game.getTradersAndBuildersGame();
         //builder used on object
         if (tb.getBuilderState() == BuilderState.ACTIVATED) {
             rating += 3.5;
@@ -465,10 +465,10 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         initVars();
-        Position dragonPosition = getGame().getPrincessAndDragonGame().getDragonPosition();
+        Position dragonPosition = game.getPrincessAndDragonGame().getDragonPosition();
         double tensionX = 0, tensionY = 0;
 
-        for(Meeple m : getGame().getDeployedMeeples()) {
+        for (Meeple m : game.getDeployedMeeples()) {
             int distance = dragonPosition.squareDistance(m.getPosition());
             if (distance == 0 || distance > movesLeft) continue;
             if (m.getFeature() instanceof Castle) continue;
@@ -483,7 +483,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
         double minDiff = Double.MAX_VALUE;
         Position result = null;
-        for(Position p : positions) {
+        for (Position p : positions) {
             double diff =
                 Math.abs(p.x - dragonPosition.x - tensionX) + Math.abs(p.y - dragonPosition.y - tensionY);
             if (diff < minDiff) {
@@ -491,6 +491,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
                 result = p;
             }
         }
+        logger.info("Selected dragon move: {}", result);
         getServer().moveDragon(result);
     }
 

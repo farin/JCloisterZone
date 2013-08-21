@@ -246,7 +246,7 @@ public final class PrincessAndDragonGame extends ExpandedGame {
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));
                 dragonVisitedTiles = Sets.newHashSet();
                 NodeList vl = dragon.getElementsByTagName("visited");
-                for(int i = 0; i < vl.getLength(); i++) {
+                for (int i = 0; i < vl.getLength(); i++) {
                     dragonVisitedTiles.add(XmlUtils.extractPosition((Element) vl.item(i)));
                 }
             }

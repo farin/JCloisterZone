@@ -100,6 +100,9 @@ public class DelayedServer implements ServerIF {
 
     @Override
     public void moveDragon(Position pos) {
+        try {
+            Thread.sleep(placeTileDelay / 2);
+        } catch (InterruptedException e) {}
         server.moveDragon(pos);
     }
 

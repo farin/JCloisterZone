@@ -38,6 +38,8 @@ public class DragonMovePhase extends Phase {
         if (pdg.getDragonMovesLeft() > 0) {
             Set<Position> moves = pdg.getAvailDragonMoves();
             if (!moves.isEmpty()) {
+
+                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
                 game.getUserInterface().selectDragonMove(moves, pdg.getDragonMovesLeft());
                 return;
             }
