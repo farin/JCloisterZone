@@ -308,7 +308,8 @@ public class Client extends JFrame {
     }
 
     public boolean closeGame(boolean force) {
-        if (settings.isConfirmGameClose() && game != null && !(game.getPhase() instanceof GameOverPhase)) {
+        boolean isGameRunning = getJMenuBar().isGameRunning();
+        if (settings.isConfirmGameClose() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,

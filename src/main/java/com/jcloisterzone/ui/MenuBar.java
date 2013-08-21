@@ -25,6 +25,7 @@ public class MenuBar extends JMenuBar {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
+    private boolean isGameRunning = false;
 
     private JMenuItem create, connect, close, showDiscard, save, load;
     private JMenuItem zoomIn, zoomOut;
@@ -262,13 +263,18 @@ public class MenuBar extends JMenuBar {
     }
 
     public void setIsGameRunning(boolean isGameRunning) {
-        create.setEnabled(! isGameRunning);
-        connect.setEnabled(! isGameRunning);
+        this.isGameRunning = isGameRunning;
+        create.setEnabled(!isGameRunning);
+        connect.setEnabled(!isGameRunning);
         close.setEnabled(isGameRunning);
         if (! isGameRunning) {
             showDiscard.setEnabled(false);
         }
         save.setEnabled(isGameRunning);
+    }
+
+    public boolean isGameRunning() {
+        return isGameRunning;
     }
 
     public void setShowDiscardedEnabled(boolean enabled) {

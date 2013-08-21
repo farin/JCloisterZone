@@ -139,6 +139,7 @@
                                         <exclude>debug.ini</exclude>
                                         <exclude>log4j.debug.properties</exclude>
                                         <exclude>**/.gitignore</exclude>
+                                        <exclude>plugins</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
