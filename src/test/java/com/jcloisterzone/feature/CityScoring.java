@@ -74,14 +74,17 @@ public class CityScoring extends AbstractScoringTest {
 
 	@Test
 	public void twoPennantTile() {
-		Tile t;
+		Tile t; 
 		t = putTile(new Position(0,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "C++");
-		putTile(new Position(-1,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "CCRR");
+		putTile(new Position(-1,0), Rotation.R180, Expansion.ABBEY_AND_MAYOR, "CCRR");
 		putTile(new Position(1,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "C!+");
 		putTile(new Position(0,1), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "CCc+");
 		putTile(new Position(0,-1), Rotation.R180, Expansion.ABBEY_AND_MAYOR, "CRr");
 
 		assertScore(18, t, Location.N);
+        assertScore(18, t, Location.E);
+        assertScore(18, t, Location.S);
+        assertScore(18, t, Location.W);
 	}
 
 	@Test
