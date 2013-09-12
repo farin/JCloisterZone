@@ -78,12 +78,14 @@ public class RoadScoring extends AbstractScoringTest {
 	@Test
 	public void well() {
 		Tile t;
-		t = putTile(new Position(0,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "RRR");
+		t = putTile(new Position(0,0), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "Rrr");
 		putTile(new Position(0,-1), Rotation.R0, Expansion.ABBEY_AND_MAYOR, "R");
 		putTile(new Position(-1, 0), Rotation.R270, Expansion.ABBEY_AND_MAYOR, "R");
-		putTile(new Position(0, 1), Rotation.R180, Expansion.ABBEY_AND_MAYOR, "R");
+		putTile(new Position(1, 0), Rotation.R90, Expansion.ABBEY_AND_MAYOR, "R");
 
 		assertScore(4, t, Location.W);
+        assertScore(4, t, Location.N);
+        assertScore(4, t, Location.E);
 	}
 
 }
