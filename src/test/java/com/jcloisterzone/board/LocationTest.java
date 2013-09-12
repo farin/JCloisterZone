@@ -2,6 +2,7 @@ package com.jcloisterzone.board;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -73,9 +74,17 @@ public class LocationTest {
 		assertEquals(Location.NL, Location.SR.rev());
 		assertEquals(Location.NW, Location.SE.rev());
 		assertEquals(Location._N, Location._S.rev());
-		assertEquals(Location.N.union(Location.EL), Location.S.union(Location.WR).rev());
 	}
-
+	
+   @Test
+   public void revUnion() {
+       Location l1 = Location.NR.union(Location.EL);
+       assertNotNull(l1);
+       Location l2 = Location.SL.union(Location.WR).rev();
+       assertNotNull(l2);
+       assertEquals(l1, l2);
+   }
+   
 	@Test
 	public void rotate() {
 		assertEquals(Location.E, Location.N.rotateCW(Rotation.R90));
