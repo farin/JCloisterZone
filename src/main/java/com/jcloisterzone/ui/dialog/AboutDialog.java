@@ -70,7 +70,7 @@ public class AboutDialog extends JDialog {
 		license.setRows(3);
 		contentPanel.add(license);
 
-		JLabel lblAuthor = new JLabel("Roman Krejčík <farin@farin.cz>");
+		JLabel lblAuthor = new JLabel("Roman K <farin@farin.cz>");
 		lblAuthor.setVerticalAlignment(SwingConstants.TOP);
 		lblAuthor.setBounds(167, 98, 267, 26);
 		contentPanel.add(lblAuthor);
