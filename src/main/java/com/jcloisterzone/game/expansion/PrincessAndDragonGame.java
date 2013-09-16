@@ -27,8 +27,10 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 
 
 public final class PrincessAndDragonGame extends ExpandedGame {
@@ -47,16 +49,25 @@ public final class PrincessAndDragonGame extends ExpandedGame {
     public void setGame(Game game) {
         super.setGame(game);
 
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void tilePlaced(Tile tile) {
-                if (tile.getTrigger() == TileTrigger.VOLCANO) {
-                    setDragonPosition(tile.getPosition());
-                    getTilePack().activateGroup("dragon");
-                    getGame().fireGameEvent().dragonMoved(tile.getPosition());
+        if (game.hasCapability(Capability.DRAGON)) {
+            game.addGameListener(new GameEventAdapter() {
+                @Override
+                public void tilePlaced(Tile tile) {
+                    if (tile.getTrigger() == TileTrigger.VOLCANO) {
+                        setDragonPosition(tile.getPosition());
+                        getTilePack().activateGroup("dragon");
+                        getGame().fireGameEvent().dragonMoved(tile.getPosition());
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            game.addGameListener(new GameEventAdapter() {
+                @Override
+                public void started(Snapshot snapshot) {
+                    getTilePack().activateGroup("dragon");
+                }
+            });
+        }
     }
 
     public Position getFairyPosition() {

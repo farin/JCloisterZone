@@ -6,6 +6,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 
@@ -21,7 +22,7 @@ public class DragonMovePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON);
+        return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON) && game.hasCapability(Capability.DRAGON);
     }
 
     @Override

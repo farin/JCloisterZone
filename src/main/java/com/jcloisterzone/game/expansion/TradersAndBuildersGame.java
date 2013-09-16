@@ -30,6 +30,7 @@ import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
@@ -45,8 +46,12 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Builder(game, player));
-        player.addMeeple(new Pig(game, player));
+        if (game.hasCapability(Capability.BUILDER)) {
+            player.addMeeple(new Builder(game, player));
+        }
+        if (game.hasCapability(Capability.PIG)) {
+            player.addMeeple(new Pig(game, player));
+        }
         tradeResources.put(player, new int[TradeResource.values().length]);
     }
 

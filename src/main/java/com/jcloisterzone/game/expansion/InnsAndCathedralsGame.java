@@ -15,6 +15,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ExpandedGame;
 
 
@@ -32,7 +33,9 @@ public final class InnsAndCathedralsGame extends ExpandedGame {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new BigFollower(game, player));
+        if (game.hasCapability(Capability.BIG_FOLLOWER)) {
+            player.addMeeple(new BigFollower(game, player));
+        }
     }
 
     @Override

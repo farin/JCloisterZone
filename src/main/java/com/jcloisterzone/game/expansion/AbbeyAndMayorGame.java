@@ -35,6 +35,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
@@ -51,8 +52,12 @@ public final class AbbeyAndMayorGame extends ExpandedGame {
     public void initPlayer(Player player) {
         player.addMeeple(new Wagon(game, player));
         player.addMeeple(new Mayor(game, player));
-        player.addMeeple(new Barn(game, player));
-        unusedAbbey.add(player);
+        if (game.hasCapability(Capability.FARM_PLACEMENT)) {
+            player.addMeeple(new Barn(game, player));
+        }
+        if (game.hasCapability(Capability.ABBEY)) {
+            unusedAbbey.add(player);
+        }
     }
 
     public boolean hasUnusedAbbey(Player player) {

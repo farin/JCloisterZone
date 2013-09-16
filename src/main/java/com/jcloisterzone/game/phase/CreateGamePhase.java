@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
@@ -15,6 +16,7 @@ import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -194,8 +196,26 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
+    protected void prepareCapabilities() {
+        for (Expansion exp : game.getExpansions()) {
+            game.getCapabilities().addAll(Arrays.asList(exp.getCapabilities()));
+        }
+
+        String offVal = game.getConfig().get("debug", "off_capabilities");
+        Set<Capability> off = EnumSet.noneOf(Capability.class);
+        if (offVal != null) {
+            for (String tok : offVal.split(",")) {
+                off.add(Capability.valueOf(tok.trim()));
+            }
+        }
+        game.getCapabilities().removeAll(off);
+    }
+
     @Override
     public void startGame() {
+        //temporary code should be configured by player as rules
+        prepareCapabilities();
+
         game.start();
         preparePlayers();
         preparePhases();

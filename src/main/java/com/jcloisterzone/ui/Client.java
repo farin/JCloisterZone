@@ -504,7 +504,7 @@ public class Client extends JFrame {
             hp.setBackground(bg);
             Font font = new Font(null, Font.BOLD, 14);
             JLabel label;
-            label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is avaiable for download."));
+            label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
             label.setFont(font);
             hp.add(label, "wrap");
             label = new JLabel(appUpdate.getDescription());
