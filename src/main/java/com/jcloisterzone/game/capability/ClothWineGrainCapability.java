@@ -1,8 +1,6 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,45 +11,21 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.ExpandedGame;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.GameExtension;
 
-
-public final class TradersAndBuildersGame extends ExpandedGame {
-
-    public enum BuilderState { INACTIVE, ACTIVATED, BUILDER_TURN; }
-
-    protected BuilderState builderState = BuilderState.INACTIVE;
-
+public class ClothWineGrainCapability extends GameExtension {
     protected Map<Player,int[]> tradeResources = Maps.newHashMap();
 
     @Override
     public void initPlayer(Player player) {
-        if (game.hasCapability(Capability.BUILDER)) {
-            player.addMeeple(new Builder(game, player));
-        }
-        if (game.hasCapability(Capability.PIG)) {
-            player.addMeeple(new Pig(game, player));
-        }
         tradeResources.put(player, new int[TradeResource.values().length]);
     }
 
@@ -82,20 +56,6 @@ public final class TradersAndBuildersGame extends ExpandedGame {
         return tradeResources.get(p)[res.ordinal()];
     }
 
-    public BuilderState getBuilderState() {
-        return builderState;
-    }
-
-    public void builderUsed() {
-        if (builderState == BuilderState.INACTIVE) {
-            builderState = BuilderState.ACTIVATED;
-        }
-    }
-
-    public boolean hasPlayerAnotherTurn() {
-        return builderState == BuilderState.ACTIVATED;
-    }
-
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof City && xml.hasAttribute("resource")) {
@@ -105,28 +65,6 @@ public final class TradersAndBuildersGame extends ExpandedGame {
         }
     }
 
-    @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        if (getTile().getTrigger() == TileTrigger.VOLCANO &&
-            getGame().hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return;
-
-        Player player = game.getActivePlayer();
-        Position pos = getTile().getPosition();
-        if (player.hasSpecialMeeple(Builder.class)) {
-            MeepleAction meepleAction = new MeepleAction(Builder.class);
-            Set<Location> dirs = getTile().getPlayerFeatures(player, Road.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            dirs = getTile().getPlayerFeatures(player, City.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            if (! meepleAction.getSites().isEmpty()) actions.add(meepleAction);
-        }
-        if (player.hasSpecialMeeple(Pig.class)) {
-            MeepleAction meepleAction = new MeepleAction(Pig.class);
-            Set<Location> dirs = getTile().getPlayerFeatures(player, Farm.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            if (! meepleAction.getSites().isEmpty()) actions.add(meepleAction);
-        }
-    }
 
     @Override
     public void finalScoring() {
@@ -149,29 +87,16 @@ public final class TradersAndBuildersGame extends ExpandedGame {
     }
 
     @Override
-    public void turnCleanUp() {
-        if (builderState == BuilderState.ACTIVATED) {
-            builderState = BuilderState.BUILDER_TURN;
-            return;
-        }
-        if (builderState == BuilderState.BUILDER_TURN) {
-            builderState = BuilderState.INACTIVE;
-        }
-    }
-
-    @Override
-    public TradersAndBuildersGame copy() {
-        TradersAndBuildersGame copy = new TradersAndBuildersGame();
+    public ClothWineGrainCapability copy() {
+        ClothWineGrainCapability copy = new ClothWineGrainCapability();
         copy.game = game;
-        copy.builderState = builderState;
         copy.tradeResources = Maps.newHashMap(tradeResources);
         return copy;
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
-        node.setAttribute("builderState", builderState.name());
-        for(Player player: game.getAllPlayers()) {
+        for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);
             el.setAttribute("index", "" + player.getIndex());
@@ -183,7 +108,6 @@ public final class TradersAndBuildersGame extends ExpandedGame {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
-        builderState = BuilderState.valueOf(node.getAttribute("builderState"));
         NodeList nl = node.getElementsByTagName("player");
         for(int i = 0; i < nl.getLength(); i++) {
             Element playerEl = (Element) nl.item(i);
@@ -192,6 +116,5 @@ public final class TradersAndBuildersGame extends ExpandedGame {
             addTradeResources(player, TradeResource.WINE, Integer.parseInt(playerEl.getAttribute("wine")));
             addTradeResources(player, TradeResource.CLOTH, Integer.parseInt(playerEl.getAttribute("cloth")));
         }
-
     }
 }

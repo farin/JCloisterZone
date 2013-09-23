@@ -4,9 +4,9 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
-public class PlagueGame extends ExpandedGame {
+public class PlagueGame extends GameExtension {
 
     @Override
     public void initTile(Tile tile, Element xml) {

@@ -13,7 +13,8 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BridgeCapability;
 
 public class TilePhase extends Phase {
 
@@ -48,12 +49,12 @@ public class TilePhase extends Phase {
 
         getBoard().add(tile, p);
         if (tile.getTower() != null) {
-            game.getTowerGame().registerTower(p);
+            game.getTowerCapability().registerTower(p);
         }
         game.fireGameEvent().tilePlaced(tile);
 
         if (bridgeRequired) {
-            BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+            BridgeCapability bcb = game.getBridgeCapability();
             Sites sites = bcb.prepareMandatoryBridgeAction().getSites();
 
             assert sites.size() == 1;

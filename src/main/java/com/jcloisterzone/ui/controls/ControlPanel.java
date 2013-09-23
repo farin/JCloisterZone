@@ -22,7 +22,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -196,7 +196,7 @@ public class ControlPanel extends FakeComponent {
 
         g2.translate(0, 60);
 
-        BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+        BazaarCapability bcb = client.getGame().getBazaarCapability();
         if (bcb != null && !(client.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
             List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {

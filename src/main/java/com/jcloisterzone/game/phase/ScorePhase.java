@@ -27,7 +27,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.CastleCapability;
 
 public class ScorePhase extends Phase {
 
@@ -114,8 +114,8 @@ public class ScorePhase extends Phase {
         }
 
         if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
-            BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-            for(Entry<Castle, Integer> entry : bcb.getCastleScore().entrySet()) {
+            CastleCapability cCap = game.getCastleCapability();
+            for(Entry<Castle, Integer> entry : cCap.getCastleScore().entrySet()) {
                 scoreCastle(entry.getKey(), entry.getValue());
             }
         }
@@ -147,7 +147,7 @@ public class ScorePhase extends Phase {
             for(Meeple m : ctx.getSpecialMeeples()) {
                 if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
                     if (! m.getPosition().equals(getTile().getPosition())) {
-                        game.getTradersAndBuildersGame().builderUsed();
+                        game.getBuilderCapability().builderUsed();
                     }
                     break;
                 }
@@ -157,7 +157,7 @@ public class ScorePhase extends Phase {
             Completable master = (Completable) ctx.getMasterFeature();
             if (!alredyScored.contains(master)) {
                 alredyScored.add(master);
-                game.expansionDelegate().scoreCompleted(ctx);
+                game.extensionsDelegate().scoreCompleted(ctx);
                 game.scoreCompletableFeature(ctx);
                 undeployMeeples(ctx);
                 game.fireGameEvent().completed(master, ctx);

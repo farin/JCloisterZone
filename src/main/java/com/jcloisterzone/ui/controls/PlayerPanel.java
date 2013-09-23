@@ -25,11 +25,14 @@ import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
-import com.jcloisterzone.game.expansion.TowerGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 
@@ -183,12 +186,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
 //		gp.profile(" > special");
 
-        AbbeyAndMayorGame ab = client.getGame().getAbbeyAndMayorGame();
-        TowerGame tower = client.getGame().getTowerGame();
-        BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+        AbbeyCapability ab = client.getGame().getAbbeyCapability();
+        TowerCapability tower = client.getGame().getTowerCapability();
+        BridgeCapability bc = client.getGame().getBridgeCapability();
+        CastleCapability cc = client.getGame().getCastleCapability();
         KingAndScoutGame ks = client.getGame().getKingAndScoutGame();
-        TradersAndBuildersGame tb = client.getGame().getTradersAndBuildersGame();
-
+        ClothWineGrainCapability cwg = client.getGame().getClothWineGrainCapability();
 
         if (ab != null) {
             drawMeepleBox(null, "abbey", ab.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -199,9 +202,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             getMouseRegions().clear();
         }
 
-        if (bcb != null) {
-            drawMeepleBox(null, "bridge", bcb.getPlayerBridges(player), true);
-            drawMeepleBox(null, "castle", bcb.getPlayerCastles(player), true);
+        if (bc != null) {
+            drawMeepleBox(null, "bridge", bc.getPlayerBridges(player), true);
+        }
+        if (cc != null) {
+            drawMeepleBox(null, "castle", cc.getPlayerCastles(player), true);
         }
 
 
@@ -231,10 +236,10 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                 }
             }
         }
-        if (tb != null) {
-            drawMeepleBox(null, "cloth", tb.getTradeResources(player, TradeResource.CLOTH), true);
-            drawMeepleBox(null, "grain", tb.getTradeResources(player, TradeResource.GRAIN), true);
-            drawMeepleBox(null, "wine", tb.getTradeResources(player, TradeResource.WINE), true);
+        if (cwg != null) {
+            drawMeepleBox(null, "cloth", cwg.getTradeResources(player, TradeResource.CLOTH), true);
+            drawMeepleBox(null, "grain", cwg.getTradeResources(player, TradeResource.GRAIN), true);
+            drawMeepleBox(null, "wine", cwg.getTradeResources(player, TradeResource.WINE), true);
         }
         if (tower != null) {
             List<Follower> capturedFigures = tower.getPrisoners().get(player);
@@ -294,7 +299,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (!(origin.getData() instanceof Class)) return;
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
-        TowerGame tg = client.getGame().getTowerGame();
+        TowerCapability tg = client.getGame().getTowerCapability();
         if (!tg.isRansomPaidThisTurn()) {
             if (client.getSettings().isConfirmRansomPayment()) {
                 String options[] = {_("Pay ransom"), _("Cancel") };
@@ -314,7 +319,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             mouseOverKey = (String) origin.getData();
             client.getGridPanel().repaint();
         } else {
-            TowerGame tg = client.getGame().getTowerGame();
+            TowerCapability tg = client.getGame().getTowerCapability();
             if (!tg.isRansomPaidThisTurn()) {
                 client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }

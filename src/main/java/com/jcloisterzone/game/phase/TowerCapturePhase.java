@@ -10,7 +10,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.TowerGame;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 
 public class TowerCapturePhase extends Phase {
@@ -36,7 +36,7 @@ public class TowerCapturePhase extends Phase {
         //unplace figure returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
-            TowerGame tg = game.getTowerGame();
+            TowerCapability tg = game.getTowerCapability();
             List<Follower> myCapturedFollowers = Lists.newArrayList();
             for(Follower f : tg.getPrisoners().get(m.getPlayer())) {
                 if (f.getPlayer() == me) {

@@ -11,9 +11,9 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
-public class CornCirclesGame extends ExpandedGame {
+public class CornCirclesGame extends GameExtension {
 
     public static enum CornCicleOption {
         DEPLOYMENT,

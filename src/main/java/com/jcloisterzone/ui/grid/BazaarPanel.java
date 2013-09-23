@@ -21,8 +21,8 @@ import javax.swing.SpinnerNumberModel;
 
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.expansion.BazaarItem;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -37,7 +37,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
 
     public static enum BazaarPanelState { INACTIVE, SELECT_TILE, MAKE_BID, BUY_OR_SELL};
 
-    final BridgesCastlesBazaarsGame bcb;
+    final BazaarCapability bcb;
 
     private int selectedItem = -1;
     private BazaarPanelState state = BazaarPanelState.INACTIVE;
@@ -54,7 +54,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
     public BazaarPanel(Client client) {
        super(client);
        noAuction = client.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
-       bcb = client.getGame().getBridgesCastlesBazaarsGame();
+       bcb = client.getGame().getBazaarCapability();
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
 

@@ -54,11 +54,11 @@ public class Board {
             for(Rotation rotation: Rotation.values()) {
                 tile.setRotation(rotation);
                 if (! isPlacementAllowed(tile, p)) {
-                    if (! game.expansionDelegate().isSpecialPlacementAllowed(tile, p)) {
+                    if (! game.extensionsDelegate().isSpecialPlacementAllowed(tile, p)) {
                         continue;
                     }
                 }
-                if (! game.expansionDelegate().isPlacementAllowed(tile, p)) continue;
+                if (! game.extensionsDelegate().isPlacementAllowed(tile, p)) continue;
                 allowed.add(rotation);
             }
             if (! allowed.isEmpty()) {

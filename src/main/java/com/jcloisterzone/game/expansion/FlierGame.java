@@ -8,12 +8,12 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 
-public class FlierGame extends ExpandedGame {
+public class FlierGame extends GameExtension {
 
     private int flierDistance;
 

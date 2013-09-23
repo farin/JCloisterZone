@@ -64,7 +64,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     private boolean confirmTowerPlacement(Position pos) {
         int result;
         Player activePlayer = getClient().getGame().getActivePlayer();
-        if (getClient().getGame().getTowerGame().getTowerPieces(activePlayer) > 0) {
+        if (getClient().getGame().getTowerCapability().getTowerPieces(activePlayer) > 0) {
             String options[] = {
                 _("Confirm follower placement"),
                 _("Cancel"),

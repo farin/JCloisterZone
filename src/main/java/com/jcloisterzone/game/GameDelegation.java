@@ -19,6 +19,7 @@ public interface GameDelegation {
     void initTile(Tile tile, Element xml);
     void initFeature(Tile tile, Feature feature, Element xml);
     void initPlayer(Player player);
+    String getTileGroup(Tile tile);
 
     //TODO merge with UI events ??? - asi ne
     void begin();

@@ -12,7 +12,7 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.TowerGame;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 public class PhantomPhase extends Phase {
 
@@ -37,7 +37,7 @@ public class PhantomPhase extends Phase {
         Sites commonSites = game.prepareCommonSites();
         if (getActivePlayer().hasFollower(Phantom.class)) {
             if (game.hasExpansion(Expansion.TOWER)) {
-                TowerGame tg = game.getTowerGame();
+                TowerCapability tg = game.getTowerCapability();
                 tg.prepareCommonOnTower(commonSites);
             }
             if (!commonSites.isEmpty()) {
@@ -54,7 +54,7 @@ public class PhantomPhase extends Phase {
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (! actions.isEmpty()) return false;
         if (game.hasExpansion(Expansion.TOWER)) {
-            TowerGame tg = game.getTowerGame();
+            TowerCapability tg = game.getTowerCapability();
             if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
                 //player can return phantom figure immediately
                 return false;

@@ -10,10 +10,10 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
 
-public final class CultGame extends ExpandedGame {
+public final class CultGame extends GameExtension {
 
 
     @Override

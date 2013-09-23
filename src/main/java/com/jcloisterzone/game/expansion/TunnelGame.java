@@ -23,10 +23,10 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
 
-public final class TunnelGame extends ExpandedGame {
+public final class TunnelGame extends GameExtension {
 
 	private Road placedTunnelCurrentTurn;
 

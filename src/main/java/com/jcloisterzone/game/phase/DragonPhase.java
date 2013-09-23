@@ -1,10 +1,9 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
+import com.jcloisterzone.game.capability.DragonCapability;
 
 public class DragonPhase extends Phase {
 
@@ -14,15 +13,15 @@ public class DragonPhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON) && game.hasCapability(Capability.DRAGON);
+        return game.hasCapability(Capability.DRAGON);
     }
 
     @Override
     public void enter() {
         if (getTile().getTrigger() == TileTrigger.DRAGON) {
-            PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-            if (pd.getDragonPosition() != null) {
-                pd.triggerDragonMove();
+            DragonCapability dgCap = game.getDragonCapability();
+            if (dgCap.getDragonPosition() != null) {
+                dgCap.triggerDragonMove();
                 next(DragonMovePhase.class);
                 return;
             }

@@ -2,7 +2,6 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Map;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
@@ -13,93 +12,97 @@ import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
+import com.jcloisterzone.game.capability.WagonCapability;
 
 
 public class WagonPhase extends Phase {
 
+    final WagonCapability wagonCap;
 
-	public WagonPhase(Game game) {
-		super(game);
-	}
 
-	@Override
-	public boolean isActive() {
-		return game.hasExpansion(Expansion.ABBEY_AND_MAYOR);
-	}
+    public WagonPhase(Game game) {
+        super(game);
+        wagonCap = game.getWagonCapability();
+    }
 
-	@Override
-	public void enter() {
-		if (! existsLegalMove()) next();
-	}
 
-	@Override
-	public void pass() {
-		enter();
-	}
+    @Override
+    public boolean isActive() {
+        return game.hasCapability(Capability.WAGON);
+    }
 
-	@Override
-	public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-		if (! meepleType.equals(Wagon.class)) {
-			logger.error("Illegal figure type.");
-			return;
-		}
-		Meeple m = getActivePlayer().getUndeployedMeeple(Wagon.class);
-		m.deploy(getBoard().get(p), loc);
-		enter();
-	}
+    @Override
+    public void enter() {
+        if (!existsLegalMove()) next();
+    }
 
-	@Override
-	public Player getActivePlayer() {
-		Player p = game.getAbbeyAndMayorGame().getWagonPlayer();
-		return p == null ? game.getTurnPlayer() : p;
-	}
+    @Override
+    public void pass() {
+        enter();
+    }
 
-	private boolean existsLegalMove() {
-		AbbeyAndMayorGame amGame = game.getAbbeyAndMayorGame();
-		Map<Player, Feature> rw = amGame.getReturnedWagons();
-		while(! rw.isEmpty()) {
-			int pi = game.getTurnPlayer().getIndex();
-			while(! rw.containsKey(game.getAllPlayers()[pi])) {
-				pi++;
-				if (pi == game.getAllPlayers().length) pi = 0;
-			}
-			Player player = game.getAllPlayers()[pi];
-			Feature f = rw.remove(player);
-			Sites wagonMoves = prepareWagonMoves(f);
-			if (! wagonMoves.isEmpty()) {
-				amGame.setWagonPlayer(player);				
-				game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-				notifyUI(new MeepleAction(Wagon.class, wagonMoves), true);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private Sites prepareWagonMoves(Feature source) {		
-		return source.walk(new FindUnoccupiedNeighbours());
-	}
+    @Override
+    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+        if (!meepleType.equals(Wagon.class)) {
+            logger.error("Illegal figure type.");
+            return;
+        }
+        Meeple m = getActivePlayer().getUndeployedMeeple(Wagon.class);
+        m.deploy(getBoard().get(p), loc);
+        enter();
+    }
 
-	private class FindUnoccupiedNeighbours implements FeatureVisitor<Sites> {
+    @Override
+    public Player getActivePlayer() {
+        Player p = wagonCap.getWagonPlayer();
+        return p == null ? game.getTurnPlayer() : p;
+    }
 
-		private Sites wagonMoves = new Sites();
+    private boolean existsLegalMove() {
+        Map<Player, Feature> rw = wagonCap.getReturnedWagons();
+        while (!rw.isEmpty()) {
+            int pi = game.getTurnPlayer().getIndex();
+            while(! rw.containsKey(game.getAllPlayers()[pi])) {
+                pi++;
+                if (pi == game.getAllPlayers().length) pi = 0;
+            }
+            Player player = game.getAllPlayers()[pi];
+            Feature f = rw.remove(player);
+            Sites wagonMoves = prepareWagonMoves(f);
+            if (!wagonMoves.isEmpty()) {
+                wagonCap.setWagonPlayer(player);
+                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                notifyUI(new MeepleAction(Wagon.class, wagonMoves), true);
+                return true;
+            }
+        }
+        return false;
+    }
 
-		@Override
-		public boolean visit(Feature feature) {
-			if (feature.getNeighbouring() != null) {
-				for(Feature nei : feature.getNeighbouring()) {
-					if (nei.walk(new IsOccupiedOrCompleted())) continue;									
-					wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
-				}
-			}
-			return true;
-		}
+    private Sites prepareWagonMoves(Feature source) {
+        return source.walk(new FindUnoccupiedNeighbours());
+    }
 
-		public Sites getResult() {
-			return wagonMoves;
-		}
-	}
+    private class FindUnoccupiedNeighbours implements FeatureVisitor<Sites> {
+
+        private Sites wagonMoves = new Sites();
+
+        @Override
+        public boolean visit(Feature feature) {
+            if (feature.getNeighbouring() != null) {
+                for (Feature nei : feature.getNeighbouring()) {
+                    if (nei.walk(new IsOccupiedOrCompleted())) continue;
+                    wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
+                }
+            }
+            return true;
+        }
+
+        public Sites getResult() {
+            return wagonMoves;
+        }
+    }
 
 }

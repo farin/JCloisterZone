@@ -67,6 +67,7 @@ public class Snapshot implements Serializable {
         createRootStructure(game);
         createRuleElements(game);
         createExpansionElements(game);
+        createCapabilityElements(game);
         createPlayerElements(game, clientId);
         createTileElements(game);
         createMeepleElements(game);
@@ -103,7 +104,7 @@ public class Snapshot implements Serializable {
     }
 
     private void createRuleElements(Game game) {
-        for(CustomRule cr : game.getCustomRules()) {
+        for (CustomRule cr : game.getCustomRules()) {
             Element el = doc.createElement("rule");
             el.setAttribute("name", cr.name());
             root.appendChild(el);
@@ -111,13 +112,26 @@ public class Snapshot implements Serializable {
     }
 
     private void createExpansionElements(Game game) {
-        for(Expansion exp : game.getExpansions()) {
+        for (Expansion exp : game.getExpansions()) {
             Element el = doc.createElement("expansion");
             el.setAttribute("name", exp.name());
             root.appendChild(el);
-            ExpandedGame expandedBy = game.getExpandedGameFor(exp);
-            if (expandedBy != null) {
-                expandedBy.saveToSnapshot(doc, el, exp);
+            GameExtension impl = game.getExpandedGameFor(exp);
+            if (impl != null) {
+                impl.saveToSnapshot(doc, el, exp);
+            }
+        }
+    }
+
+    private void createCapabilityElements(Game game) {
+        for (Capability cap : game.getCapabilities()) {
+            Element el = doc.createElement("capability");
+            el.setAttribute("name", cap.name());
+            root.appendChild(el);
+            GameExtension impl = game.getCapabilityFor(cap);
+            if (impl != null) {
+                //TODO fix Expansion specific third attr
+                impl.saveToSnapshot(doc, el, null);
             }
         }
     }
@@ -162,7 +176,7 @@ public class Snapshot implements Serializable {
             XmlUtils.injectPosition(el, tile.getPosition());
             parent.appendChild(el);
             tileElemens.put(tile.getPosition(), el);
-            game.expansionDelegate().saveTileToSnapshot(tile, doc, el);
+            game.extensionsDelegate().saveTileToSnapshot(tile, doc, el);
         }
         for (Tile tile : game.getBoard().getDiscardedTiles()) {
             Element el = doc.createElement("discard");
@@ -233,7 +247,7 @@ public class Snapshot implements Serializable {
         for(int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Expansion exp = Expansion.valueOf(el.getAttribute("name"));
-            ExpandedGame eg = game.getExpandedGameFor(exp);
+            GameExtension eg = game.getExpandedGameFor(exp);
             if (eg != null) {
                 try {
                     eg.loadFromSnapshot(doc, el);

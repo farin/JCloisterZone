@@ -27,9 +27,10 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame.BuilderState;
+import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
+import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.phase.ScorePhase;
 
 public class LegacyAiPlayer extends RankingAiPlayer {
@@ -288,9 +289,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double rankFairy() {
-        if (! game.hasExpansion(Expansion.PRINCESS_AND_DRAGON)) return 0;
-        PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-        Position fairyPos = pd.getFairyPosition();
+        if (! game.hasCapability(Capability.FAIRY)) return 0;
+        FairyCapability fc = game.getFairyCapability();
+        Position fairyPos = fc.getFairyPosition();
         if (fairyPos == null) return 0;
 
         double rating = 0;
@@ -434,9 +435,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             rating += 0.5;
         }
 
-        TradersAndBuildersGame tb = game.getTradersAndBuildersGame();
+        BuilderCapability bc = game.getBuilderCapability();
         //builder used on object
-        if (tb.getBuilderState() == BuilderState.ACTIVATED) {
+        if (bc.getBuilderState() == BuilderState.ACTIVATED) {
             rating += 3.5;
         }
         return rating;
@@ -465,7 +466,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         initVars();
-        Position dragonPosition = game.getPrincessAndDragonGame().getDragonPosition();
+        Position dragonPosition = game.getDragonCapability().getDragonPosition();
         double tensionX = 0, tensionY = 0;
 
         for (Meeple m : game.getDeployedMeeples()) {

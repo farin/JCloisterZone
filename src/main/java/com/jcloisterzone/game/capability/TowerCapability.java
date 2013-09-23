@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +30,11 @@ import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.GameExtension;
 
 
-public final class TowerGame extends ExpandedGame {
+public final class TowerCapability extends GameExtension {
 
     private static final int RANSOM_POINTS = 3;
 
@@ -112,8 +113,8 @@ public final class TowerGame extends ExpandedGame {
     public void prepareCommonOnTower(Sites commonTileSites) {
         Set<Position> towerActions = getOpenTowers(1);
         if (!towerActions.isEmpty()) {
-            if (getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
-                Position dragonPosition = getGame().getPrincessAndDragonGame().getDragonPosition();
+            if (getGame().hasCapability(Capability.DRAGON)) {
+                Position dragonPosition = getGame().getDragonCapability().getDragonPosition();
                 if (dragonPosition != null) {
                     //cannot place meeple on tile with dragon
                     towerActions.remove(dragonPosition);
@@ -192,8 +193,8 @@ public final class TowerGame extends ExpandedGame {
     }
 
     @Override
-    public TowerGame copy() {
-        TowerGame copy = new TowerGame();
+    public TowerCapability copy() {
+        TowerCapability copy = new TowerCapability();
         copy.game = game;
         copy.towers = Sets.newHashSet(towers);
         copy.towerPieces = Maps.newHashMap(towerPieces);
@@ -220,7 +221,7 @@ public final class TowerGame extends ExpandedGame {
             node.appendChild(el);
             el.setAttribute("index", "" + player.getIndex());
             el.setAttribute("pieces", "" + getTowerPieces(player));
-            for(Follower follower : prisoners.get(player)) {
+            for (Follower follower : prisoners.get(player)) {
                 Element prisoner = doc.createElement("prisoner");
                 el.appendChild(prisoner);
                 prisoner.setAttribute("player", "" + follower.getPlayer().getIndex());

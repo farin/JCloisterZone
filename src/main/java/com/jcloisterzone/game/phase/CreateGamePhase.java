@@ -147,7 +147,7 @@ public class CreateGamePhase extends ServerAwarePhase {
             for(int i = 0; i < SmallFollower.QUANTITY; i++) {
                 player.addMeeple(new SmallFollower(game, player));
             }
-            game.expansionDelegate().initPlayer(player);
+            game.extensionsDelegate().initPlayer(player);
         }
     }
 
@@ -163,7 +163,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
         getTilePack().activateGroup("default");
-        game.expansionDelegate().begin();
+        game.extensionsDelegate().begin();
     }
 
     protected void preplaceTiles() {

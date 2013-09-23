@@ -19,7 +19,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
 
-public class ExpandedGame implements GameDelegation {
+public class GameExtension implements GameDelegation {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,7 +44,7 @@ public class ExpandedGame implements GameDelegation {
     /**
      * @return object copy or null if expansion is stateless
      */
-    public ExpandedGame copy() {
+    public GameExtension copy() {
         return null;
     }
 
@@ -71,6 +71,10 @@ public class ExpandedGame implements GameDelegation {
     public void initFeature(Tile tile, Feature feature, Element xml) {
     }
 
+    @Override
+    public String getTileGroup(Tile tile) {
+        return null;
+    }
 
     @Override
     public void initPlayer(Player player) {

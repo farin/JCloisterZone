@@ -54,7 +54,7 @@ public class TilePackFactory {
 
     public void setExpansions(Set<Expansion> expansions) {
         defs = Maps.newLinkedHashMap();
-        for(Expansion expansion : expansions) {
+        for (Expansion expansion : expansions) {
             defs.put(expansion, getExpansionDefinition(expansion));
         }
     }
@@ -63,7 +63,7 @@ public class TilePackFactory {
         Element el = getExpansionDefinition(expansion);
         NodeList nl = el.getElementsByTagName("tile");
         int size = 0;
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element tileElement = (Element) nl.item(i);
             String tileId = getTileId(expansion, tileElement);
             if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
@@ -87,7 +87,7 @@ public class TilePackFactory {
 
     protected Map<String, Integer> getDiscardTiles() {
         Map<String, Integer> discard = Maps.newHashMap();
-        for(Element expansionDef: defs.values()) {
+        for (Element expansionDef: defs.values()) {
             NodeList nl = expansionDef.getElementsByTagName("discard");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
@@ -115,6 +115,9 @@ public class TilePackFactory {
     }
 
     protected String getTileGroup(Tile tile, Element card) {
+        String group = game.extensionsDelegate().getTileGroup(tile);
+        if (group != null) return group;
+        //TODO remove group from xml completely
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
 
@@ -135,9 +138,9 @@ public class TilePackFactory {
         }
 
         List<Tile> tiles = new ArrayList<Tile>(count);
-        for(int j = 0; j < count; j++) {
+        for (int j = 0; j < count; j++) {
             Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
-            game.expansionDelegate().initTile(tile, card); //must be called before rotation!
+            game.extensionsDelegate().initTile(tile, card); //must be called before rotation!
             tiles.add(tile);
         }
         return tiles;
@@ -148,7 +151,7 @@ public class TilePackFactory {
         if (nl.getLength() == 0) return null;
 
         LinkedList<Position> result = new LinkedList<Position>();
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element posEl = (Element) nl.item(i);
             result.add(new Position(attributeIntValue(posEl, "x"), attributeIntValue(posEl, "y")));
         }

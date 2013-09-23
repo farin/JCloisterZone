@@ -157,7 +157,7 @@ public abstract class Phase implements ClientIF {
     @Override
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
         //pay ransom is valid anytime
-        game.getTowerGame().payRansom(playerIndexToPay, meepleType);
+        game.getTowerCapability().payRansom(playerIndexToPay, meepleType);
     }
 
     @Override

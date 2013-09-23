@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public class CleanUpPhase extends Phase {
@@ -11,11 +11,11 @@ public class CleanUpPhase extends Phase {
 
     @Override
     public void enter() {
-        boolean builderTakeAnotherTurn = game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) && game.getTradersAndBuildersGame().hasPlayerAnotherTurn();
-        game.expansionDelegate().turnCleanUp();
+        boolean builderTakeAnotherTurn = game.hasCapability(Capability.BUILDER) && game.getBuilderCapability().hasPlayerAnotherTurn();
+        game.extensionsDelegate().turnCleanUp();
         game.setCurrentTile(null);
         if (builderTakeAnotherTurn) {
-            next(game.hasExpansion(Expansion.ABBEY_AND_MAYOR) ? AbbeyPhase.class : DrawPhase.class);
+            next(game.hasCapability(Capability.ABBEY) ? AbbeyPhase.class : DrawPhase.class);
         } else {
             game.setTurnPlayer(game.getNextPlayer());
             next();

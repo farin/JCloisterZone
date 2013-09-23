@@ -13,10 +13,10 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
 
-public abstract class AbstractRiverGame extends ExpandedGame {
+public abstract class AbstractRiverGame extends GameExtension {
 
     @Override
     public void initTile(Tile tile, Element xml) {

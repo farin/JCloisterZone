@@ -30,15 +30,21 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.expansion.CatharsGame;
 import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.FlierGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
-import com.jcloisterzone.game.expansion.TowerGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.game.expansion.TunnelGame;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
@@ -73,8 +79,8 @@ public class Game extends GameSettings {
     private GameEventListener eventListener;
     private UserInterface userInterface;
 
-    private Map<Expansion, ExpandedGame> expandedGames = Maps.newHashMap();
-    private final GameDelegation expandedGamesDelegate = new ExpandedGameDelegate(this);
+    private Map<Object, GameExtension> extensions = Maps.newHashMap();
+    private final GameDelegation extensionsDelegate = new ExtensionsDelegate(this);
 
     private int idSequenceCurrVal = 0;
 
@@ -221,46 +227,53 @@ public class Game extends GameSettings {
         this.turnPlayer = getPlayer(turnPlayer);
     }
 
+    private void createGameExtensions(Object key, Class<? extends GameExtension> clazz) {
+        if (clazz == null) return;
+        /* Expansions can share implementations - e.g Crop Circles 1 & 2
+         * in such case only one instance must be created
+         */
+        for (GameExtension ge : extensions.values()) {
+            if (ge.getClass().equals(clazz)) return;
+        }
+        try {
+            GameExtension eg = clazz.newInstance();
+            eg.setGame(this);
+            extensions.put(key, eg);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e); //should never happen
+        }
+    }
+
     public void start() {
-        Map<Class<? extends ExpandedGame>, ExpandedGame> instances = Maps.newHashMap();
         for (Expansion expansion: getExpansions()) {
-            Class<? extends ExpandedGame> clazz = expansion.getExpandedBy();
-            if (clazz != null) {
-                /* Expansions can share clas of expandedBy - e.g Crop Circles 1 & 2
-                 * in such case only one instace must be created
-                 */
-                ExpandedGame eg = instances.get(clazz);
-                if (eg == null) {
-                    try {
-                        eg = clazz.newInstance();
-                        eg.setGame(this);
-                        instances.put(clazz, eg);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage(), e); //should never happen
-                    }
-                }
-                expandedGames.put(expansion, eg);
-            }
+            createGameExtensions(expansion, expansion.getImplemetedBy());
+        }
+        for (Capability capability: getCapabilities()) {
+            createGameExtensions(capability, capability.getImplementedBy());
         }
         board = new Board(this);
     }
 
     //TODO refactor and clear ?
 
-    public Collection<ExpandedGame> getExpandedGames() {
-        return expandedGames.values();
+    public Collection<GameExtension> getExtensions() {
+        return extensions.values();
     }
 
-    public Map<Expansion, ExpandedGame> getExpandedGamesMap() {
-        return expandedGames;
+    public Map<Object, GameExtension> getExtensionMap() {
+        return extensions;
     }
 
-    public ExpandedGame getExpandedGameFor(Expansion expansion) {
-        return expandedGames.get(expansion);
+    public GameExtension getExpandedGameFor(Expansion expansion) {
+        return extensions.get(expansion);
     }
 
-    public GameDelegation expansionDelegate() {
-        return expandedGamesDelegate;
+    public GameExtension getCapabilityFor(Capability cap) {
+        return extensions.get(cap);
+    }
+
+    public GameDelegation extensionsDelegate() {
+        return extensionsDelegate;
     }
 
     public Sites prepareCommonSites() {
@@ -296,11 +309,11 @@ public class Game extends GameSettings {
         p.addPoints(points, ctx.getMasterFeature().getPointCategory());
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
-        PrincessAndDragonGame princessAndDragonGame = getPrincessAndDragonGame();
-        if (princessAndDragonGame != null && follower.getPosition().equals(princessAndDragonGame.getFairyPosition())) {
-            p.addPoints(PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            fireGameEvent().scored(follower.getFeature(), points+PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT,
-                    points+" + "+PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT, follower,
+        FairyCapability fairyCap = getFairyCapability();
+        if (fairyCap != null && follower.getPosition().equals(fairyCap.getFairyPosition())) {
+            p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+            fireGameEvent().scored(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
+                    points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, follower,
                     isFinalScoring);
         } else {
             fireGameEvent().scored(follower.getFeature(), points, points+"", follower, isFinalScoring);
@@ -321,39 +334,59 @@ public class Game extends GameSettings {
     }
 
     //shortcut methods
-    public PrincessAndDragonGame getPrincessAndDragonGame() {
-        return (PrincessAndDragonGame) expandedGames.get(Expansion.PRINCESS_AND_DRAGON);
-    }
-    public TowerGame getTowerGame() {
-        return (TowerGame) expandedGames.get(Expansion.TOWER);
-    }
-    public AbbeyAndMayorGame getAbbeyAndMayorGame() {
-        return (AbbeyAndMayorGame) expandedGames.get(Expansion.ABBEY_AND_MAYOR);
-    }
-    public TradersAndBuildersGame getTradersAndBuildersGame() {
-        return (TradersAndBuildersGame) expandedGames.get(Expansion.TRADERS_AND_BUILDERS);
-    }
+
     public KingAndScoutGame getKingAndScoutGame() {
-        return (KingAndScoutGame) expandedGames.get(Expansion.KING_AND_SCOUT);
+        return (KingAndScoutGame) extensions.get(Expansion.KING_AND_SCOUT);
     }
     public CatharsGame getCatharsGame() {
-        return (CatharsGame) expandedGames.get(Expansion.CATHARS);
+        return (CatharsGame) extensions.get(Expansion.CATHARS);
     }
     public TunnelGame getTunnelGame() {
-        return (TunnelGame) expandedGames.get(Expansion.TUNNEL);
-    }
-    public BridgesCastlesBazaarsGame getBridgesCastlesBazaarsGame() {
-        return (BridgesCastlesBazaarsGame) expandedGames.get(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
+        return (TunnelGame) extensions.get(Expansion.TUNNEL);
     }
     public CornCirclesGame getCornCirclesGame() {
-        ExpandedGame eg = expandedGames.get(Expansion.CORN_CIRCLES);
+        GameExtension eg = extensions.get(Expansion.CORN_CIRCLES);
         if (eg == null) {
-            eg = expandedGames.get(Expansion.CORN_CIRCLES_II);
+            eg = extensions.get(Expansion.CORN_CIRCLES_II);
         }
         return (CornCirclesGame) eg;
     }
     public FlierGame getFlierGame() {
-        return (FlierGame) expandedGames.get(Expansion.FLIER);
+        return (FlierGame) extensions.get(Expansion.FLIER);
+    }
+
+    public BuilderCapability getBuilderCapability() {
+        return (BuilderCapability) extensions.get(Capability.BUILDER);
+    }
+    public ClothWineGrainCapability getClothWineGrainCapability() {
+        return (ClothWineGrainCapability) extensions.get(Capability.CLOTH_WINE_GRAIN);
+    }
+    public FairyCapability getFairyCapability() {
+        return (FairyCapability) extensions.get(Capability.FAIRY);
+    }
+    public DragonCapability getDragonCapability() {
+        return (DragonCapability) extensions.get(Capability.DRAGON);
+    }
+    public AbbeyCapability getAbbeyCapability() {
+        return (AbbeyCapability) extensions.get(Capability.ABBEY);
+    }
+    public TowerCapability getTowerCapability() {
+        return (TowerCapability) extensions.get(Capability.TOWER);
+    }
+    public WagonCapability getWagonCapability() {
+        return (WagonCapability) extensions.get(Capability.WAGON);
+    }
+    public BarnCapability getBarnCapability() {
+        return (BarnCapability) extensions.get(Capability.BARN);
+    }
+    public BridgeCapability getBridgeCapability() {
+        return (BridgeCapability) extensions.get(Capability.BRIDGE);
+    }
+    public CastleCapability getCastleCapability() {
+        return (CastleCapability) extensions.get(Capability.CASTLE);
+    }
+    public BazaarCapability getBazaarCapability() {
+        return (BazaarCapability) extensions.get(Capability.BAZAAR);
     }
 
 }

@@ -5,9 +5,9 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerRestriction;
-import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
@@ -18,9 +18,10 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.expansion.FlierGame;
-import com.jcloisterzone.game.expansion.TowerGame;
 
 
 public class ActionPhase extends Phase {
@@ -38,7 +39,7 @@ public class ActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)  && !commonSites.isEmpty()) {
             actions.add(new MeepleAction(SmallFollower.class, commonSites));
         }
-        game.expansionDelegate().prepareActions(actions, commonSites);
+        game.extensionsDelegate().prepareActions(actions, commonSites);
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
@@ -54,7 +55,7 @@ public class ActionPhase extends Phase {
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (!actions.isEmpty()) return false;
         if (game.hasExpansion(Expansion.TOWER)) {
-            TowerGame tg = game.getTowerGame();
+            TowerCapability tg = game.getTowerCapability();
             if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
                 //player can return figure immediately
                 return false;
@@ -87,7 +88,7 @@ public class ActionPhase extends Phase {
         if (tower.getMeeple() != null) {
             throw new IllegalArgumentException("The tower is sealed");
         }
-        game.getTowerGame().decreaseTowerPieces(getActivePlayer());
+        game.getTowerCapability().decreaseTowerPieces(getActivePlayer());
         return tower.increaseHeight();
     }
 
@@ -118,9 +119,9 @@ public class ActionPhase extends Phase {
 
     @Override
     public void moveFairy(Position p) {
-        for(Follower f : getActivePlayer().getFollowers()) {
+        for (Follower f : getActivePlayer().getFollowers()) {
             if (p.equals(f.getPosition())) {
-                game.getPrincessAndDragonGame().setFairyPosition(p);
+                game.getFairyCapability().setFairyPosition(p);
                 game.fireGameEvent().fairyMoved(p);
                 next();
                 return;
@@ -165,7 +166,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void deployBridge(Position pos, Location loc) {
-        BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
+        BridgeCapability bcb = game.getBridgeCapability();
         bcb.decreaseBridges(getActivePlayer());
         bcb.deployBridge(pos, loc);
         next(ActionPhase.class);

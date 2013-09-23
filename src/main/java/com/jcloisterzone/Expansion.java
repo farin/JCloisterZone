@@ -1,27 +1,38 @@
 package com.jcloisterzone;
 
-import static com.jcloisterzone.game.Capability.*;
+import static com.jcloisterzone.game.Capability.ABBEY;
+import static com.jcloisterzone.game.Capability.BARN;
+import static com.jcloisterzone.game.Capability.BAZAAR;
+import static com.jcloisterzone.game.Capability.BIG_FOLLOWER;
+import static com.jcloisterzone.game.Capability.BRIDGE;
+import static com.jcloisterzone.game.Capability.BUILDER;
+import static com.jcloisterzone.game.Capability.CASTLE;
+import static com.jcloisterzone.game.Capability.CATHEDRAL;
+import static com.jcloisterzone.game.Capability.CLOTH_WINE_GRAIN;
+import static com.jcloisterzone.game.Capability.DRAGON;
+import static com.jcloisterzone.game.Capability.FAIRY;
+import static com.jcloisterzone.game.Capability.FARM_PLACEMENT;
+import static com.jcloisterzone.game.Capability.INN;
+import static com.jcloisterzone.game.Capability.MAYOR;
+import static com.jcloisterzone.game.Capability.PIG;
+import static com.jcloisterzone.game.Capability.PORTAL;
+import static com.jcloisterzone.game.Capability.PRINCESS;
+import static com.jcloisterzone.game.Capability.WAGON;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ExpandedGame;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.GameExtension;
 import com.jcloisterzone.game.expansion.CatharsGame;
 import com.jcloisterzone.game.expansion.CornCirclesGame;
 import com.jcloisterzone.game.expansion.CountGame;
 import com.jcloisterzone.game.expansion.CultGame;
 import com.jcloisterzone.game.expansion.FestivalGame;
 import com.jcloisterzone.game.expansion.FlierGame;
-import com.jcloisterzone.game.expansion.InnsAndCathedralsGame;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.game.expansion.PhantomGame;
 import com.jcloisterzone.game.expansion.PlagueGame;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 import com.jcloisterzone.game.expansion.RiverGame;
 import com.jcloisterzone.game.expansion.RiverIIGame;
-import com.jcloisterzone.game.expansion.TowerGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.game.expansion.TunnelGame;
 
 public enum Expansion {
@@ -32,17 +43,19 @@ public enum Expansion {
     WHEEL_OF_FORTUNE("WF", _("Wheel of Fortune"), false),
 
     //Big expansions
-    INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"), InnsAndCathedralsGame.class,
-            new Capability[] { BIG_FOLLOWER /*,INN, CATHEDRAL*/ }),
-    TRADERS_AND_BUILDERS("TB", _("Traders & Builders"), TradersAndBuildersGame.class,
-            new Capability[] { PIG, BUILDER/*, CITY_RESOURCE*/ }),
-    PRINCESS_AND_DRAGON("DG", _("The Princess & the Dragon"), PrincessAndDragonGame.class,
-            new Capability[] { FAIRY, DRAGON /*, PRINCESS, MAGIC_GATE*/ }),
-    TOWER("TO", _("The Tower"), TowerGame.class),
-    ABBEY_AND_MAYOR("AM", _("Abbey & Mayor"), AbbeyAndMayorGame.class,
-            new Capability[] { ABBEY }),
+    INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
+            new Capability[] { BIG_FOLLOWER ,INN, CATHEDRAL }),
+    TRADERS_AND_BUILDERS("TB", _("Traders & Builders"),
+            new Capability[] { PIG, BUILDER, CLOTH_WINE_GRAIN }),
+    PRINCESS_AND_DRAGON("DG", _("The Princess & the Dragon"),
+            new Capability[] { FAIRY, DRAGON, PORTAL, PRINCESS }),
+    TOWER("TO", _("The Tower"),
+            new Capability[] { Capability.TOWER }),
+    ABBEY_AND_MAYOR("AM", _("Abbey & Mayor"),
+            new Capability[] { ABBEY, WAGON, MAYOR, BARN }),
     CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
-    BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"), BridgesCastlesBazaarsGame.class),
+    BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"),
+            new Capability[] { BRIDGE, CASTLE, BAZAAR }),
 
     //Small expansion
     KING_AND_SCOUT("KS", _("King and Scout"), KingAndScoutGame.class),
@@ -76,14 +89,14 @@ public enum Expansion {
     String code;
     String label;
     boolean enabled = true;
-    Class<? extends ExpandedGame> expandedBy;
+    Class<? extends GameExtension> impl;
     Capability[] capabilities;
 
     Expansion(String code, String label) {
         this(code, label, null, null);
     }
-    Expansion(String code, String label, Class<? extends ExpandedGame> expandedBy) {
-        this(code, label, expandedBy, null);
+    Expansion(String code, String label, Class<? extends GameExtension> impl) {
+        this(code, label, impl, null);
     }
 
     Expansion(String code, String label, boolean enabled) {
@@ -91,10 +104,14 @@ public enum Expansion {
         this.enabled = enabled;
     }
 
-    Expansion(String code, String label, Class<? extends ExpandedGame> expandedBy, Capability[] capabilities) {
+    Expansion(String code, String label, Capability[] capabilities) {
+        this(code, label, null, capabilities);
+    }
+
+    Expansion(String code, String label, Class<? extends GameExtension> impl, Capability[] capabilities) {
         this.code = code;
         this.label = label;
-        this.expandedBy = expandedBy;
+        this.impl = impl;
         this.capabilities = capabilities == null ? new Capability[0] : capabilities;
     }
 
@@ -105,8 +122,8 @@ public enum Expansion {
     public boolean isEnabled() {
         return enabled;
     }
-    public Class<? extends ExpandedGame> getExpandedBy() {
-        return expandedBy;
+    public Class<? extends GameExtension> getImplemetedBy() {
+        return impl;
     }
 
     public Capability[] getCapabilities() {

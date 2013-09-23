@@ -9,13 +9,12 @@ import javax.swing.ImageIcon;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.expansion.KingAndScoutGame;
-import com.jcloisterzone.game.expansion.TowerGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.theme.FigureTheme;
 
@@ -59,7 +58,7 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
         }
-        TowerGame tower = client.getGame().getTowerGame();
+        TowerCapability tower = client.getGame().getTowerCapability();
         if (tower != null) {
             scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
         }
@@ -68,18 +67,18 @@ public class PlayerPanelImageCache {
             scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));
             scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));
         }
-        BridgesCastlesBazaarsGame bcb = client.getGame().getBridgesCastlesBazaarsGame();
+        BazaarCapability bcb = client.getGame().getBazaarCapability();
         if (bcb != null) {
             scaledImages.put("bridge", scaleImage(theme.getNeutralImage("bridge")));
             scaledImages.put("castle", scaleImage(theme.getNeutralImage("castle")));
         }
-        TradersAndBuildersGame tb = client.getGame().getTradersAndBuildersGame();
-        if (tb != null) {
+        ClothWineGrainCapability cwg = client.getGame().getClothWineGrainCapability();
+        if (cwg != null) {
             scaledImages.put("cloth", theme.getNeutralImage("cloth"));
             scaledImages.put("grain", theme.getNeutralImage("grain"));
             scaledImages.put("wine", theme.getNeutralImage("wine"));
         }
-        AbbeyAndMayorGame ab = client.getGame().getAbbeyAndMayorGame();
+        BarnCapability ab = client.getGame().getBarnCapability();
         if (ab != null) {
             scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage()));
         }

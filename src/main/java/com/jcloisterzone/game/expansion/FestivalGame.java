@@ -11,9 +11,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.ExpandedGame;
+import com.jcloisterzone.game.GameExtension;
 
-public class FestivalGame extends ExpandedGame {
+public class FestivalGame extends GameExtension {
 
     @Override
     public void initTile(Tile tile, Element xml) {

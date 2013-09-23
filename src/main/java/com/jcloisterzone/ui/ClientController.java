@@ -329,7 +329,7 @@ public class ClientController implements GameEventListener, UserInterface {
         client.clearActions();
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (client.isClientActive()) {
-            ArrayList<BazaarItem> supply = client.getGame().getBridgesCastlesBazaarsGame().getBazaarSupply();
+            ArrayList<BazaarItem> supply = client.getGame().getBazaarCapability().getBazaarSupply();
             for(int i = 0; i < supply.size(); i++) {
                 //find first allowed item
                 if (supply.get(i).getOwner() == null) {

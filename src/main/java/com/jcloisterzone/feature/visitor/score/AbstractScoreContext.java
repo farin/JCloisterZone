@@ -8,7 +8,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
@@ -17,6 +16,7 @@ import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public abstract class AbstractScoreContext extends SelfReturningVisitor implements ScoreContext {
@@ -36,8 +36,8 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
 
     public AbstractScoreContext(Game game) {
         this.game = game;
-        if (game.hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
-            preferedPos = game.getPrincessAndDragonGame().getFairyPosition();
+        if (game.hasCapability(Capability.FAIRY)) {
+            preferedPos = game.getFairyCapability().getFairyPosition();
         }
     }
 

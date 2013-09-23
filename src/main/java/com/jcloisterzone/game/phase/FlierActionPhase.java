@@ -17,8 +17,8 @@ import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.expansion.FlierGame;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
 
 public class FlierActionPhase extends Phase {
 
@@ -39,9 +39,9 @@ public class FlierActionPhase extends Phase {
             pos = pos.add(direction);
         }
         Tile target = getBoard().get(pos);
-        PrincessAndDragonGame pg = game.getPrincessAndDragonGame();
+        DragonCapability dgCap = game.getDragonCapability();
 
-        if (target == null || (pg != null && pos.equals(pg.getDragonPosition()))) {
+        if (target == null || (dgCap != null && pos.equals(dgCap.getDragonPosition()))) {
             next();
             return;
         }
@@ -63,7 +63,7 @@ public class FlierActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
             actions.add(new MeepleAction(SmallFollower.class, sites));
         }
-        game.expansionDelegate().prepareFollowerActions(actions, sites);
+        game.extensionsDelegate().prepareFollowerActions(actions, sites);
         notifyUI(actions, false);
     }
 
