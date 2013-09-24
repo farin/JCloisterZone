@@ -18,7 +18,6 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.TowerCapability;

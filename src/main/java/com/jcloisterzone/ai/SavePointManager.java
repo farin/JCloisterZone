@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
 import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;

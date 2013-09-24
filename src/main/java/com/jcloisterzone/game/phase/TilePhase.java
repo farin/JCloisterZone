@@ -13,7 +13,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 
 public class TilePhase extends Phase {

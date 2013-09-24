@@ -6,8 +6,8 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.ai.operation.Operation;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
 public class SavePoint {

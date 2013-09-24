@@ -75,7 +75,6 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
 
     @Override
     public void mouseClicked(MouseEvent e, Position p) {
-
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null) {
                 if (getClient().isClientActive()) {

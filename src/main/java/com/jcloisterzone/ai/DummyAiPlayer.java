@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
-import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 public class DummyAiPlayer extends AiPlayer {
 
