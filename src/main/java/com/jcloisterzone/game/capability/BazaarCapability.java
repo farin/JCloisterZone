@@ -9,15 +9,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.GameExtension;
-import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.CapabilityController;
 
-public class BazaarCapability extends GameExtension {
+public class BazaarCapability extends CapabilityController {
 
     private ArrayList<BazaarItem> bazaarSupply;
     private BazaarItem currentBazaarAuction;
@@ -33,7 +31,7 @@ public class BazaarCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         if (bazaarSupply != null) {
             for (BazaarItem bi : bazaarSupply) {
                 Element el = doc.createElement("bazaar-supply");

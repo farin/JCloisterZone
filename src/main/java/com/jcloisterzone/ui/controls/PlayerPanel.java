@@ -31,8 +31,8 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.KingScoutCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.expansion.KingAndScoutGame;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 
@@ -190,7 +190,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         TowerCapability tower = client.getGame().getTowerCapability();
         BridgeCapability bc = client.getGame().getBridgeCapability();
         CastleCapability cc = client.getGame().getCastleCapability();
-        KingAndScoutGame ks = client.getGame().getKingAndScoutGame();
+        KingScoutCapability ks = client.getGame().getKingScoutCapability();
         ClothWineGrainCapability cwg = client.getGame().getClothWineGrainCapability();
 
         if (ab != null) {

@@ -17,7 +17,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.phase.Phase;
 
 public interface GameEventListener extends EventListener {

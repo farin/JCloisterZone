@@ -18,11 +18,11 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
-import com.jcloisterzone.game.expansion.FlierGame;
+import com.jcloisterzone.game.capability.FlierCapability;
 
 public class FlierActionPhase extends Phase {
 
-    final FlierGame flierGame;
+    final FlierCapability flierGame;
 
     public FlierActionPhase(Game game) {
         super(game);
@@ -63,7 +63,7 @@ public class FlierActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
             actions.add(new MeepleAction(SmallFollower.class, sites));
         }
-        game.extensionsDelegate().prepareFollowerActions(actions, sites);
+        game.getDelegate().prepareFollowerActions(actions, sites);
         notifyUI(actions, false);
     }
 

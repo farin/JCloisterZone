@@ -12,7 +12,7 @@ public class CleanUpPhase extends Phase {
     @Override
     public void enter() {
         boolean builderTakeAnotherTurn = game.hasCapability(Capability.BUILDER) && game.getBuilderCapability().hasPlayerAnotherTurn();
-        game.extensionsDelegate().turnCleanUp();
+        game.getDelegate().turnCleanUp();
         game.setCurrentTile(null);
         if (builderTakeAnotherTurn) {
             next(game.hasCapability(Capability.ABBEY) ? AbbeyPhase.class : DrawPhase.class);

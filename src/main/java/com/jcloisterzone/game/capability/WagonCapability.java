@@ -4,8 +4,8 @@ import static com.jcloisterzone.XmlUtils.asLocation;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,7 +13,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MeepleAction;
@@ -28,14 +27,13 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.TileFeature;
-import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.phase.ScorePhase;
 
-public class WagonCapability extends GameExtension {
+public class WagonCapability extends CapabilityController {
 
      private Map<Player, Feature> returnedWagons = Maps.newHashMap();
      private Player wagonPlayer;
@@ -140,7 +138,7 @@ public class WagonCapability extends GameExtension {
      }
 
      @Override
-     public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+     public void saveToSnapshot(Document doc, Element node) {
          for (Entry<Player, Feature> rv : returnedWagons.entrySet()) {
              Element el = doc.createElement("wagon");
              el.setAttribute("player", "" + rv.getKey().getIndex());

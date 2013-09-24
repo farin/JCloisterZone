@@ -51,6 +51,10 @@ public class TileFactory {
 
         logger.debug("Creating " + tile.getId());
 
+        if (attributeBoolValue(xml, "forbidden")) {
+            tile.setForbidden(true);
+        }
+
         NodeList nl;
         nl = xml.getElementsByTagName("cloister");
         for(int i = 0; i < nl.getLength(); i++) {
@@ -88,7 +92,7 @@ public class TileFactory {
         cloister.setTile(tile);
         cloister.setLocation(Location.CLOISTER);
         features.add(cloister);
-        game.extensionsDelegate().initFeature(tile, cloister, e);
+        game.getDelegate().initFeature(tile, cloister, e);
     }
 
     private void processTowerElement(Element e) {
@@ -97,7 +101,7 @@ public class TileFactory {
         tower.setTile(tile);
         tower.setLocation(Location.TOWER);
         features.add(tower);
-        game.extensionsDelegate().initFeature(tile, tower, e);
+        game.getDelegate().initFeature(tile, tower, e);
     }
 
 
@@ -122,7 +126,7 @@ public class TileFactory {
             road.setTunnelEnd(Road.OPEN_TUNNEL);
         }
         initFromDirList(road, sides);
-        game.extensionsDelegate().initFeature(tile, road, e);
+        game.getDelegate().initFeature(tile, road, e);
     }
 
     private void processCityElement(Element e) {
@@ -131,7 +135,7 @@ public class TileFactory {
         c.setId(game.idSequnceNextVal());
         c.setPennants(attributeIntValue(e, "pennant", 0));
         initFromDirList(c, sides);
-        game.extensionsDelegate().initFeature(tile, c, e);
+        game.getDelegate().initFeature(tile, c, e);
     }
 
     //TODO move expansion specific stuff
@@ -162,7 +166,7 @@ public class TileFactory {
             }
         }
         initFromDirList(farm, sides);
-        game.extensionsDelegate().initFeature(tile, farm, e);
+        game.getDelegate().initFeature(tile, farm, e);
     }
 
     private void initFromDirList(TileFeature piece, String[] sides) {

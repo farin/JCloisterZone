@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
@@ -15,9 +14,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class DragonCapability extends GameExtension {
+public class DragonCapability extends CapabilityController {
 
     public static final int DRAGON_MOVES = 6;
 
@@ -127,7 +126,7 @@ public class DragonCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         if (dragonPosition != null) {
             Element dragon = doc.createElement("dragon");
             XmlUtils.injectPosition(dragon, dragonPosition);

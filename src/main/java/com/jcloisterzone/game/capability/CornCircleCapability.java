@@ -1,19 +1,18 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class CornCirclesGame extends GameExtension {
+public class CornCircleCapability extends CapabilityController {
 
     public static enum CornCicleOption {
         DEPLOYMENT,
@@ -54,10 +53,7 @@ public class CornCirclesGame extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
-        //don't duplicate arguments
-        if (nodeFor == Expansion.CORN_CIRCLES_II && game.hasExpansion(Expansion.CORN_CIRCLES)) return;
-
+    public void saveToSnapshot(Document doc, Element node) {
         if (cornCircleOption != null) {
             node.setAttribute("selectedOption", cornCircleOption.name());
         }

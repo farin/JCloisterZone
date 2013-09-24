@@ -6,7 +6,6 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -18,9 +17,9 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class BuilderCapability extends GameExtension {
+public class BuilderCapability extends CapabilityController {
 
     public enum BuilderState { INACTIVE, ACTIVATED, BUILDER_TURN; }
 
@@ -82,7 +81,7 @@ public class BuilderCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("builderState", builderState.name());
     }
 

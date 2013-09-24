@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
@@ -19,9 +18,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class ClothWineGrainCapability extends GameExtension {
+public class ClothWineGrainCapability extends CapabilityController {
     protected Map<Player,int[]> tradeResources = Maps.newHashMap();
 
     @Override
@@ -95,7 +94,7 @@ public class ClothWineGrainCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);

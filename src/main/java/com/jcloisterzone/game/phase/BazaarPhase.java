@@ -10,7 +10,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.rmi.ServerIF;
 
 public class BazaarPhase extends ServerAwarePhase {

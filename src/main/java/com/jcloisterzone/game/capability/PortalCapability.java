@@ -11,9 +11,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class PortalCapability extends GameExtension {
+public class PortalCapability extends CapabilityController {
 
     @Override
     public void initTile(Tile tile, Element xml) {

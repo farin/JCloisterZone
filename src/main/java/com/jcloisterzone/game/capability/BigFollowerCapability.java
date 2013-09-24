@@ -7,9 +7,9 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class BigFollowerCapability extends GameExtension {
+public class BigFollowerCapability extends CapabilityController {
 
 
     @Override

@@ -65,7 +65,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
         for(PreplacedTile pt : preplaced) {
             if (pt.tile == null && pt.tileId.equals(tileId)) {
                 pt.tile = result.remove(result.size()-1);
-                game.extensionsDelegate().loadTileFromSnapshot(pt.tile, pt.element);
+                game.getDelegate().loadTileFromSnapshot(pt.tile, pt.element);
             }
             if (result.isEmpty()) {
                 break;

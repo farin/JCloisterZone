@@ -1,19 +1,18 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 
-public class FlierGame extends GameExtension {
+public class FlierCapability extends CapabilityController {
 
     private int flierDistance;
 
@@ -44,7 +43,7 @@ public class FlierGame extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         if (flierDistance > 0) {
             node.setAttribute("flierDistance", ""+flierDistance);
         }

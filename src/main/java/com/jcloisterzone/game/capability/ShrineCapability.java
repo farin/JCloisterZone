@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
@@ -10,10 +10,10 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
 
-public final class CultGame extends GameExtension {
+public final class ShrineCapability extends CapabilityController {
 
 
     @Override
@@ -37,7 +37,7 @@ public final class CultGame extends GameExtension {
 
     public void resolveChallengedCloisters(Cloister cloister) {
         Position p = cloister.getTile().getPosition();
-        for(Tile nt : game.getBoard().getAdjacentAndDiagonalTiles(p)) {
+        for (Tile nt : game.getBoard().getAdjacentAndDiagonalTiles(p)) {
             if (nt.hasCloister()) {
                 Cloister nextCloister = nt.getCloister();
                 if (cloister.isShrine() ^ nextCloister.isShrine()) {
@@ -62,7 +62,7 @@ public final class CultGame extends GameExtension {
         if (tile.hasCloister()) {
             int opositeCount = 0;
             int sameCount = 0;
-            for(Tile nt: getBoard().getAdjacentAndDiagonalTiles(p)) {
+            for (Tile nt: getBoard().getAdjacentAndDiagonalTiles(p)) {
                 if (nt.hasCloister()) {
                     if  (tile.getCloister().isShrine() ^ nt.getCloister().isShrine()) {
                         opositeCount++;

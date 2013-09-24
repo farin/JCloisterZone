@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.UserInterface;
@@ -37,15 +36,15 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
-import com.jcloisterzone.game.expansion.CatharsGame;
-import com.jcloisterzone.game.expansion.CornCirclesGame;
-import com.jcloisterzone.game.expansion.FlierGame;
-import com.jcloisterzone.game.expansion.KingAndScoutGame;
-import com.jcloisterzone.game.expansion.TunnelGame;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -79,8 +78,8 @@ public class Game extends GameSettings {
     private GameEventListener eventListener;
     private UserInterface userInterface;
 
-    private Map<Object, GameExtension> extensions = Maps.newHashMap();
-    private final GameDelegation extensionsDelegate = new ExtensionsDelegate(this);
+    private Map<Capability, CapabilityController> extensions = Maps.newHashMap();
+    private final GameDelegation controllersDelegate = new ExtensionsDelegate(this);
 
     private int idSequenceCurrVal = 0;
 
@@ -227,53 +226,46 @@ public class Game extends GameSettings {
         this.turnPlayer = getPlayer(turnPlayer);
     }
 
-    private void createGameExtensions(Object key, Class<? extends GameExtension> clazz) {
+    private void createGameExtensions(Capability cap, Class<? extends CapabilityController> clazz) {
         if (clazz == null) return;
         /* Expansions can share implementations - e.g Crop Circles 1 & 2
          * in such case only one instance must be created
          */
-        for (GameExtension ge : extensions.values()) {
+        for (CapabilityController ge : extensions.values()) {
             if (ge.getClass().equals(clazz)) return;
         }
         try {
-            GameExtension eg = clazz.newInstance();
+            CapabilityController eg = clazz.newInstance();
             eg.setGame(this);
-            extensions.put(key, eg);
+            extensions.put(cap, eg);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }
     }
 
     public void start() {
-        for (Expansion expansion: getExpansions()) {
-            createGameExtensions(expansion, expansion.getImplemetedBy());
-        }
         for (Capability capability: getCapabilities()) {
-            createGameExtensions(capability, capability.getImplementedBy());
+            createGameExtensions(capability, capability.getController());
         }
         board = new Board(this);
     }
 
     //TODO refactor and clear ?
 
-    public Collection<GameExtension> getExtensions() {
+    public Collection<CapabilityController> getCapabilityControllers() {
         return extensions.values();
     }
 
-    public Map<Object, GameExtension> getExtensionMap() {
+    public Map<Capability, CapabilityController> getCapabilityMap() {
         return extensions;
     }
 
-    public GameExtension getExpandedGameFor(Expansion expansion) {
-        return extensions.get(expansion);
-    }
-
-    public GameExtension getCapabilityFor(Capability cap) {
+    public CapabilityController getCapabilityController(Capability cap) {
         return extensions.get(cap);
     }
 
-    public GameDelegation extensionsDelegate() {
-        return extensionsDelegate;
+    public GameDelegation getDelegate() {
+        return controllersDelegate;
     }
 
     public Sites prepareCommonSites() {
@@ -335,26 +327,6 @@ public class Game extends GameSettings {
 
     //shortcut methods
 
-    public KingAndScoutGame getKingAndScoutGame() {
-        return (KingAndScoutGame) extensions.get(Expansion.KING_AND_SCOUT);
-    }
-    public CatharsGame getCatharsGame() {
-        return (CatharsGame) extensions.get(Expansion.CATHARS);
-    }
-    public TunnelGame getTunnelGame() {
-        return (TunnelGame) extensions.get(Expansion.TUNNEL);
-    }
-    public CornCirclesGame getCornCirclesGame() {
-        GameExtension eg = extensions.get(Expansion.CORN_CIRCLES);
-        if (eg == null) {
-            eg = extensions.get(Expansion.CORN_CIRCLES_II);
-        }
-        return (CornCirclesGame) eg;
-    }
-    public FlierGame getFlierGame() {
-        return (FlierGame) extensions.get(Expansion.FLIER);
-    }
-
     public BuilderCapability getBuilderCapability() {
         return (BuilderCapability) extensions.get(Capability.BUILDER);
     }
@@ -388,5 +360,19 @@ public class Game extends GameSettings {
     public BazaarCapability getBazaarCapability() {
         return (BazaarCapability) extensions.get(Capability.BAZAAR);
     }
-
+    public KingScoutCapability getKingScoutCapability() {
+        return (KingScoutCapability) extensions.get(Capability.KING_SCOUT);
+    }
+    public RiverCapability getRiverCapability() {
+        return (RiverCapability) extensions.get(Capability.RIVER);
+    }
+    public TunnelCapability getTunnelCapability() {
+        return (TunnelCapability) extensions.get(Capability.TUNNEL);
+    }
+    public CornCircleCapability getCornCircleCapability() {
+        return (CornCircleCapability) extensions.get(Capability.CORN_CIRCLE);
+    }
+    public FlierCapability getFlierGame() {
+        return (FlierCapability) extensions.get(Capability.FLIER);
+    }
 }

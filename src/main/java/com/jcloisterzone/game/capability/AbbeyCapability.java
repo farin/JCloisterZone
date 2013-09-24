@@ -7,12 +7,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class AbbeyCapability extends GameExtension {
+public class AbbeyCapability extends CapabilityController {
 
     private Set<Player> unusedAbbey = Sets.newHashSet();
 
@@ -45,7 +44,7 @@ public class AbbeyCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);

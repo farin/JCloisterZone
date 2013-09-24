@@ -9,7 +9,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -17,9 +16,9 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class BridgeCapability extends GameExtension {
+public class BridgeCapability extends CapabilityController {
 
     private boolean bridgeUsed;
     private Map<Player, Integer> bridges = Maps.newHashMap();
@@ -203,7 +202,7 @@ public class BridgeCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("bridgeUsed", bridgeUsed + "");
         for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
@@ -19,7 +18,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
 
-public class GameExtension implements GameDelegation {
+public class CapabilityController implements GameDelegation {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,11 +43,11 @@ public class GameExtension implements GameDelegation {
     /**
      * @return object copy or null if expansion is stateless
      */
-    public GameExtension copy() {
+    public CapabilityController copy() {
         return null;
     }
 
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
     }
 
     public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {

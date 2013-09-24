@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.ini4j.Profile.Section;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.game.expansion.RiverGame;
-import com.jcloisterzone.game.expansion.RiverIIGame;
 import com.jcloisterzone.rmi.ServerIF;
 
 
@@ -39,14 +37,8 @@ public class DrawPhase extends ServerAwarePhase {
             if (tile == null) {
                 logger.warn("Invalid debug draw id: " + tileId);
             } else {
-                if (tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
-                    //helper code for better behavior when debug draw is "river-invalid"
-                    //river II must be checke first!
-                    if (game.hasExpansion(Expansion.RIVER_II)) {
-                        ((RiverIIGame)game.getExpandedGameFor(Expansion.RIVER_II)).activateNonRiverTiles();
-                    } else if (game.hasExpansion(Expansion.RIVER)) {
-                        ((RiverGame)game.getExpandedGameFor(Expansion.RIVER)).activateNonRiverTiles();
-                    }
+                if (game.hasCapability(Capability.RIVER) && tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
+                    game.getRiverCapability().activateNonRiverTiles();
                     tilePack.deactivateGroup("river-start");
                     game.setCurrentTile(tile); //recovery from lake placement
                 }

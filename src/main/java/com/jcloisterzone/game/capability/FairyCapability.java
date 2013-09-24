@@ -6,16 +6,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class FairyCapability extends GameExtension {
+public class FairyCapability extends CapabilityController {
 
     public static final int FAIRY_POINTS_FINISHED_OBJECT = 3;
 
@@ -52,7 +51,7 @@ public class FairyCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         if (fairyPosition != null) {
             Element fairy = doc.createElement("fairy");
             XmlUtils.injectPosition(fairy, fairyPosition);

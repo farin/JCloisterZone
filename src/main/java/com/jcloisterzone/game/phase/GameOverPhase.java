@@ -30,7 +30,7 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
         scoreAll.scoreAll(game, this);
 
-        game.extensionsDelegate().finalScoring();
+        game.getDelegate().finalScoring();
         game.fireGameEvent().gameOver();
     }
 

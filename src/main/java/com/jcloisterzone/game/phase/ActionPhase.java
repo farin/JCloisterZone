@@ -20,8 +20,8 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.expansion.FlierGame;
 
 
 public class ActionPhase extends Phase {
@@ -39,7 +39,7 @@ public class ActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)  && !commonSites.isEmpty()) {
             actions.add(new MeepleAction(SmallFollower.class, commonSites));
         }
-        game.extensionsDelegate().prepareActions(actions, commonSites);
+        game.getDelegate().prepareActions(actions, commonSites);
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
@@ -62,7 +62,7 @@ public class ActionPhase extends Phase {
             }
         }
         if (game.hasExpansion(Expansion.FLIER)) {
-            FlierGame fg = game.getFlierGame();
+            FlierCapability fg = game.getFlierGame();
             if (fg.isFlierRollAllowed()) {
                 return false;
             }
@@ -152,7 +152,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void placeTunnelPiece(Position p, Location loc, boolean isB) {
-        game.getTunnelGame().placeTunnelPiece(p, loc, isB);
+        game.getTunnelCapability().placeTunnelPiece(p, loc, isB);
         next(ActionPhase.class);
     }
 

@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;

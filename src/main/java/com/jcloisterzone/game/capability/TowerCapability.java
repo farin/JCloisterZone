@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
@@ -31,10 +30,10 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
 
-public final class TowerCapability extends GameExtension {
+public final class TowerCapability extends CapabilityController {
 
     private static final int RANSOM_POINTS = 3;
 
@@ -207,7 +206,7 @@ public final class TowerCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
         for (Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();

@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class FestivalGame extends GameExtension {
+public class FestivalCapability extends CapabilityController {
 
     @Override
     public void initTile(Tile tile, Element xml) {

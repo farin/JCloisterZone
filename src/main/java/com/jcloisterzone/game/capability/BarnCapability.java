@@ -14,10 +14,10 @@ import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
 
-public final class BarnCapability extends GameExtension {
+public final class BarnCapability extends CapabilityController {
 
     @Override
     public void initPlayer(Player player) {

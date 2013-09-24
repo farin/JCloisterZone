@@ -116,10 +116,6 @@ public class Snapshot implements Serializable {
             Element el = doc.createElement("expansion");
             el.setAttribute("name", exp.name());
             root.appendChild(el);
-            GameExtension impl = game.getExpandedGameFor(exp);
-            if (impl != null) {
-                impl.saveToSnapshot(doc, el, exp);
-            }
         }
     }
 
@@ -128,10 +124,10 @@ public class Snapshot implements Serializable {
             Element el = doc.createElement("capability");
             el.setAttribute("name", cap.name());
             root.appendChild(el);
-            GameExtension impl = game.getCapabilityFor(cap);
+            CapabilityController impl = game.getCapabilityController(cap);
             if (impl != null) {
                 //TODO fix Expansion specific third attr
-                impl.saveToSnapshot(doc, el, null);
+                impl.saveToSnapshot(doc, el);
             }
         }
     }
@@ -176,7 +172,7 @@ public class Snapshot implements Serializable {
             XmlUtils.injectPosition(el, tile.getPosition());
             parent.appendChild(el);
             tileElemens.put(tile.getPosition(), el);
-            game.extensionsDelegate().saveTileToSnapshot(tile, doc, el);
+            game.getDelegate().saveTileToSnapshot(tile, doc, el);
         }
         for (Tile tile : game.getBoard().getDiscardedTiles()) {
             Element el = doc.createElement("discard");
@@ -242,17 +238,17 @@ public class Snapshot implements Serializable {
         return result;
     }
 
-    public void loadExpansionData(Game game) {
-        NodeList nl = root.getElementsByTagName("expansion");
+    public void loadCapabilities(Game game) {
+        NodeList nl = root.getElementsByTagName("capability");
         for(int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            Expansion exp = Expansion.valueOf(el.getAttribute("name"));
-            GameExtension eg = game.getExpandedGameFor(exp);
-            if (eg != null) {
+            Capability cap = Capability.valueOf(el.getAttribute("name"));
+            CapabilityController capImpl = game.getCapabilityController(cap);
+            if (capImpl != null) {
                 try {
-                    eg.loadFromSnapshot(doc, el);
+                    capImpl.loadFromSnapshot(doc, el);
                 } catch (Exception e) {
-                    logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + exp.name(), e);
+                    logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + cap.name(), e);
                     game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
                 }
             }

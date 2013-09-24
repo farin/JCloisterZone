@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
@@ -29,9 +28,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class CastleCapability extends GameExtension {
+public class CastleCapability extends CapabilityController {
 
     private Map<Player, Integer> castles = Maps.newHashMap();
 
@@ -216,7 +215,7 @@ public class CastleCapability extends GameExtension {
     }
 
     @Override
-    public void saveToSnapshot(Document doc, Element node, Expansion nodeFor) {
+    public void saveToSnapshot(Document doc, Element node) {
         for (Player player: game.getAllPlayers()) {
             Element el = doc.createElement("player");
             node.appendChild(el);

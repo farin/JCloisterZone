@@ -20,7 +20,8 @@ import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -66,8 +67,8 @@ public class SavePointManager {
             //logger.info("      < undo {}", item);
             operations.pollLast().undo(game);
         }
-        for (Entry<Object, GameExtension> entry : sp.getFrozenExtensions().entrySet()) {
-            game.getExtensionMap().put(entry.getKey(), entry.getValue().copy());
+        for (Entry<Capability, CapabilityController> entry : sp.getFrozenCapabilities().entrySet()) {
+            game.getCapabilityMap().put(entry.getKey(), entry.getValue().copy());
         }
         Phase phase = sp.getPhase();
         game.setPhase(phase);

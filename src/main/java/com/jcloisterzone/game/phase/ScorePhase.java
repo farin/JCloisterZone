@@ -100,7 +100,7 @@ public class ScorePhase extends Phase {
         }
 
         if (game.hasExpansion(Expansion.TUNNEL)) {
-            Road r = game.getTunnelGame().getPlacedTunnel();
+            Road r = game.getTunnelCapability().getPlacedTunnel();
             if (r != null) {
                 scoreCompleted(r);
             }
@@ -157,7 +157,7 @@ public class ScorePhase extends Phase {
             Completable master = (Completable) ctx.getMasterFeature();
             if (!alredyScored.contains(master)) {
                 alredyScored.add(master);
-                game.extensionsDelegate().scoreCompleted(ctx);
+                game.getDelegate().scoreCompleted(ctx);
                 game.scoreCompletableFeature(ctx);
                 undeployMeeples(ctx);
                 game.fireGameEvent().completed(master, ctx);

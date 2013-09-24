@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import java.util.Map.Entry;
 import java.util.Set;
@@ -6,6 +6,7 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -13,10 +14,13 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
 
-public abstract class AbstractRiverGame extends GameExtension {
+public class RiverCapability extends CapabilityController {
+
+    private static final String R1_LAKE_ID = "R1.I.e";
+    private static final String R2_LAKE_ID = "R2.I.v";
 
     @Override
     public void initTile(Tile tile, Element xml) {
@@ -36,14 +40,17 @@ public abstract class AbstractRiverGame extends GameExtension {
         }
     };
 
-
-
-    abstract protected String getLakeId();
+    private String getLakeId() {
+        return game.hasExpansion(Expansion.RIVER_II) ? R2_LAKE_ID : R1_LAKE_ID;
+    }
 
     @Override
     public void begin() {
         getTilePack().deactivateGroup("default");
         getTilePack().activateGroup("river-start");
+        if (!getGame().hasExpansion(Expansion.RIVER_II)) {
+            getTilePack().activateGroup("river");
+        }
     }
 
     public void activateNonRiverTiles() {

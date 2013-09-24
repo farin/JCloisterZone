@@ -36,8 +36,8 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.expansion.BazaarItem;
-import com.jcloisterzone.game.expansion.FlierGame;
+import com.jcloisterzone.game.capability.BazaarItem;
+import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -190,7 +190,7 @@ public class ClientController implements GameEventListener, UserInterface {
         GridPanel grid = client.getGridPanel();
         if (grid == null) return;
 
-        FlierGame flierGame = client.getGame().getFlierGame();
+        FlierCapability flierGame = client.getGame().getFlierGame();
         FlierPanel flierPanel;
         boolean rollAllowed = false, rollMade = false;
         if (flierGame != null) {

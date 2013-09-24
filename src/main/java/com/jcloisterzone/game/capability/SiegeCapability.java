@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
@@ -8,10 +8,10 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
 
-public final class CatharsGame extends GameExtension {
+public final class SiegeCapability extends CapabilityController {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

@@ -115,9 +115,8 @@ public class TilePackFactory {
     }
 
     protected String getTileGroup(Tile tile, Element card) {
-        String group = game.extensionsDelegate().getTileGroup(tile);
+        String group = game.getDelegate().getTileGroup(tile);
         if (group != null) return group;
-        //TODO remove group from xml completely
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
 
@@ -140,7 +139,7 @@ public class TilePackFactory {
         List<Tile> tiles = new ArrayList<Tile>(count);
         for (int j = 0; j < count; j++) {
             Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
-            game.extensionsDelegate().initTile(tile, card); //must be called before rotation!
+            game.getDelegate().initTile(tile, card); //must be called before rotation!
             tiles.add(tile);
         }
         return tiles;

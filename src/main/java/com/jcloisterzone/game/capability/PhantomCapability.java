@@ -1,4 +1,4 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class PhantomGame extends GameExtension {
+public class PhantomCapability extends CapabilityController {
 
     @Override
     public void initPlayer(Player player) {

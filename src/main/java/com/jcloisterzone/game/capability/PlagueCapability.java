@@ -1,12 +1,12 @@
-package com.jcloisterzone.game.expansion;
+package com.jcloisterzone.game.capability;
 
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.GameExtension;
+import com.jcloisterzone.game.CapabilityController;
 
-public class PlagueGame extends GameExtension {
+public class PlagueCapability extends CapabilityController {
 
     @Override
     public void initTile(Tile tile, Element xml) {

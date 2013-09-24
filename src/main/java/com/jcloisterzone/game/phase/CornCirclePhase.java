@@ -27,16 +27,16 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.expansion.CornCirclesGame;
-import com.jcloisterzone.game.expansion.CornCirclesGame.CornCicleOption;
+import com.jcloisterzone.game.capability.CornCircleCapability;
+import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
 
 public class CornCirclePhase extends Phase {
 
-    final CornCirclesGame ccg;
+    final CornCircleCapability ccg;
 
     public CornCirclePhase(Game game) {
         super(game);
-        ccg = game.getCornCirclesGame();
+        ccg = game.getCornCircleCapability();
     }
 
     @Override

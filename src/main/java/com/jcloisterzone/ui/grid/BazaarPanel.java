@@ -22,7 +22,7 @@ import javax.swing.SpinnerNumberModel;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.game.expansion.BazaarItem;
+import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
