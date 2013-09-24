@@ -325,13 +325,22 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     synchronized
     public <T extends GridLayer> T findDecoration(Class<T> type) {
         synchronized (layers) {
-            for(GridLayer layer : layers) {
+            for (GridLayer layer : layers) {
                 if (type.isInstance(layer)) {
                     return (T) layer;
                 }
             }
         }
         return null;
+    }
+
+    public boolean containsDecoration(Class<? extends GridLayer> type) {
+        for (GridLayer layer : layers) {
+            if (type.isInstance(layer)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clearActionDecorations() {
@@ -382,21 +391,21 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //        last = now;
 //    }
 
-    private void paintGrid(Graphics2D g2) {
-        g2.setColor(UIManager.getColor("Panel.background"));
-        g2.fillRect(left*squareSize, top*squareSize, (right+2)*squareSize-1, (bottom+2)*squareSize-1);
-        g2.setColor(Color.LIGHT_GRAY);
-        for (int i = left; i <= right; i++) {
-            g2.drawLine(i*squareSize, top*squareSize, i*squareSize, (bottom+1)*squareSize);
-            g2.drawLine((i+1)*squareSize-1, top*squareSize, (i+1)*squareSize-1, (bottom+1)*squareSize);
-        }
-        for (int i = top; i <= bottom; i++) {
-            g2.drawLine(left*squareSize, i*squareSize, (right+1)*squareSize, i*squareSize);
-            g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
-        }
+//    private void paintGrid(Graphics2D g2) {
+//        g2.setColor(UIManager.getColor("Panel.background"));
+//        g2.fillRect(left*squareSize, top*squareSize, (right+2)*squareSize-1, (bottom+2)*squareSize-1);
+//        g2.setColor(Color.LIGHT_GRAY);
+//        for (int i = left; i <= right; i++) {
+//            g2.drawLine(i*squareSize, top*squareSize, i*squareSize, (bottom+1)*squareSize);
+//            g2.drawLine((i+1)*squareSize-1, top*squareSize, (i+1)*squareSize-1, (bottom+1)*squareSize);
+//        }
+//        for (int i = top; i <= bottom; i++) {
+//            g2.drawLine(left*squareSize, i*squareSize, (right+1)*squareSize, i*squareSize);
+//            g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
+//        }
 
 //        profile("grid");
-    }
+//    }
 
     @Override
     protected void paintChildren(Graphics g) {
@@ -422,7 +431,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         g2.translate(offsetX, offsetY);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        paintGrid(g2);
+        //paintGrid(g2);
 
         //paint layers
         synchronized (layers) {

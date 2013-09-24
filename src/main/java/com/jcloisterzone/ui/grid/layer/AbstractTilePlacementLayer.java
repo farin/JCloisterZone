@@ -31,7 +31,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
     @Override
     public int getZIndex() {
-        return 2;
+        return 3;
     }
 
     public Position getPreviewPosition() {
@@ -44,6 +44,21 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
     @Override
     public void paint(Graphics2D g2) {
+        int borderSize = getSquareSize() - 4,
+            shift = 2,
+            thickness = borderSize/14;
+
+        g2.setColor(Color.LIGHT_GRAY);
+        for (Position p : availablePositions) {
+            if (previewPosition == null || !previewPosition.equals(p)) {
+                int x = getOffsetX(p)+shift, y = getOffsetY(p)+shift;
+                g2.fillRect(x, y, borderSize, thickness);
+                g2.fillRect(x, y+borderSize-thickness, borderSize, thickness);
+                g2.fillRect(x, y, thickness, borderSize);
+                g2.fillRect(x+borderSize-thickness, y, thickness, borderSize);
+            }
+        }
+
         if (previewPosition != null) {
             if (previewIcon == null) {
                 previewIcon = createPreviewIcon();
@@ -51,10 +66,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
             drawPreviewIcon(g2, previewIcon, previewPosition);
         }
         g2.setColor(getClient().isClientActive() ? Color.BLACK : Color.GRAY);
-        int s = getSquareSize() - 1;
-        for (Position p : availablePositions) {
-            g2.drawRect(getOffsetX(p),getOffsetY(p),s,s);
-        }
+
     }
 
     @Override
@@ -72,5 +84,4 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
             gridPanel.repaint();
         }
     }
-
 }
