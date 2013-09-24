@@ -58,6 +58,7 @@ public class GameOverDialog extends JDialog {
         pane.add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Bazaars")), getLegendSpec(0, gridy++));
+        pane.add(new JLabel(_("Wind rose")), getLegendSpec(0, gridy++));
 
         Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
         for(Player player : players) {
@@ -84,6 +85,7 @@ public class GameOverDialog extends JDialog {
             pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));
             pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.TOWER_RANSOM), SwingConstants.CENTER), getSpec(gridx, gridy++));
             pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.BAZAAR_AUCTION), SwingConstants.CENTER), getSpec(gridx, gridy++));
+            pane.add(new JLabel("" +player.getPointsInCategory(PointCategory.WIND_ROSE), SwingConstants.CENTER), getSpec(gridx, gridy++));
             gridx++;
         }
 

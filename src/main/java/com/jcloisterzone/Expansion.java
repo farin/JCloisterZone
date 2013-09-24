@@ -40,7 +40,7 @@ public enum Expansion {
     PHANTOM("PH", _("The Phantom"),  new Capability[] { Capability.PHANTOM }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Capability[] { Capability.FESTIVAL }),
     HOUSES("LB", _("Little Buildings"), false),
-    WIND_ROSE("WR", _("The Wind Rose"), false),
+    WIND_ROSE("WR", _("The Wind Rose"), new Capability[] { Capability.WIND_ROSE }),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Capability[] { Capability.FLIER }),

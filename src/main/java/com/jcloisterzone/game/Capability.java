@@ -28,6 +28,7 @@ import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.game.capability.WindRoseCapability;
 
 /* experimental - more granular game settings, now only for debug purposes */
 public enum Capability {
@@ -66,6 +67,7 @@ public enum Capability {
     PLAGUE(PlagueCapability.class),
     PHANTOM(PhantomCapability.class),
     FESTIVAL(FestivalCapability.class),
+    WIND_ROSE(WindRoseCapability.class),
 
     FLIER(FlierCapability.class);
 

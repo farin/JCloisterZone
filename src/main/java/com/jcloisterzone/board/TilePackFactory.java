@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -171,7 +172,7 @@ public class TilePackFactory {
                 LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
                 for (Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
                     tilePack.addTile(tile, getTileGroup(tile, tileElement));
-                    if (positions != null && ! positions.isEmpty()) {
+                    if (positions != null && !positions.isEmpty()) {
                         Position pos = positions.removeFirst();
                         //hard coded exceptions - should be declared in pack def
                         if (game.hasExpansion(Expansion.COUNT)) {
@@ -180,6 +181,16 @@ public class TilePackFactory {
                                 tile.getId().equals("R2.I.s") ||
                                 tile.getId().equals("GQ.RFI")) {
                                 pos = new Position(1, 2);
+                            }
+                            if (tile.getId().equals("WR.CFR")) {
+                                pos = new Position(-2, -2);
+                            }
+                        } else if (game.hasExpansion(Expansion.WIND_ROSE)) {
+                            if (tile.getId().equals("BA.RCr")) continue;
+                            if (game.hasCapability(Capability.RIVER)) {
+                                if (tile.getId().equals("WR.CFR")) {
+                                    pos = new Position(0, 1);
+                                }
                             }
                         }
                         logger.info("Setting initial placement {} for {}", pos, tile);

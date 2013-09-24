@@ -164,6 +164,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         game.setTilePack(tilePackFactory.createTilePack());
         getTilePack().activateGroup("default");
         getTilePack().activateGroup("count");
+        getTilePack().activateGroup("wind-rose-initial");
         game.getDelegate().begin();
     }
 

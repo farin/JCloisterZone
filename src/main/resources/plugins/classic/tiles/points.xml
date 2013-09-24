@@ -156,6 +156,9 @@
         <apply>BB.LRFr WE</apply>
         <apply>SI.RCr WE</apply>
     </point>
+    <point feature="ROAD" cx="215" cy="625">
+        <apply>WR.CFR W</apply>
+    </point>
     <point feature="ROAD" cx="720" cy="720" baseLocation="SE"> <!-- oblique -->
         <apply>BA.CcRr SE</apply>
         <apply>BA.CcRr+ SE</apply>
@@ -172,6 +175,8 @@
         <apply>TO.RrRr.2 NW</apply>
         <apply>FL.Rr.SW.o SW</apply>
         <apply>C2.RRRr SW</apply>
+        <apply>WR.Rr SW</apply>
+        <apply>WR.RrC SW</apply>
     </point>
 
     <point feature="CITY" cx="300" cy="200">
@@ -217,6 +222,7 @@
     <point feature="CITY" cx="550" cy="120" baseLocation="N"> <!-- tiny rev -->
         <apply>TB.CCc.w S</apply>
         <apply>TB.CCc.c S</apply>
+        <apply>WR.CFR E</apply>
     </point>
 
     <point feature="CITY" cx="480" cy="820">
@@ -295,6 +301,7 @@
         <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
         <apply>CA.C! WL.WR.SL.SR</apply>
         <apply>C2.RCR WL.SL.SR.ER</apply>
+        <apply>WR.CFR WL.SL.SR</apply>
     </point>
     <point feature="FARM" cx="200" cy="200">
         <apply>DG.LRRR.d NL.NR.EL.WR</apply>
@@ -353,6 +360,7 @@
         <apply>TB.CCc.w NL.NR</apply>
         <apply>TB.CFc.w NL.NR</apply>
         <apply>TB.CRc.g NL.NR</apply>
+        <apply>WR.CFc WL.WR</apply>
     </point>
     <point feature="FARM" cx="650" cy="150">
         <apply>R2.RIrI NR.EL</apply>
@@ -428,6 +436,8 @@
         <apply>FL.Rr.SW.o SR.WL</apply>
         <apply>FL.Rr.NW.o WR.NL</apply>
         <apply>FL.Rr.d ER.SL</apply>
+        <apply>WR.RrC SR.WL</apply>
+        <apply>WR.Rr SR.WL</apply>
     </point>
     <point feature="TOWER" cx="545" cy="455">
         <apply>* TOWER</apply>

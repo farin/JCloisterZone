@@ -94,6 +94,8 @@
         <apply>TO.RrRr.2 SE</apply>
         <apply>FL.Rr.SW.o SW</apply>
         <apply>C2.RRRr SW</apply>
+        <apply>WR.Rr SW</apply>
+        <apply>WR.RrC SW</apply>
     </shape>
     <shape feature="ROAD" baseLocation="NW">
         <svg:polygon points="600,0 600,210 560,300 370,500 200,600 0,600 0,400 230,400 400,190 400,0"/>
@@ -284,6 +286,10 @@
         <apply>AM.CCRR S</apply>
     </shape>
     <shape feature="ROAD">
+        <svg:polygon points="0,440 172,500 445,670 595,697 797,610 852,760 650,862 455,850 135,732 70,660 0,632"/>
+        <apply>WR.CFR W</apply>
+    </shape>
+    <shape feature="ROAD">
         <svg:polygon points="385,999 282,895 250,807 265,602 347,495 430,432 487,370 527,365 547,372 580,375 605,360 642,315 750,325 797,345 870,397 912,415 995,425 995,590 892,590 827,580 750,527 650,492 622,507 562,580 475,637 445,670 430,757 440,800 555,900 585,999"/>
         <apply>AM.CRr SE</apply>
     </shape>
@@ -303,7 +309,7 @@
         <svg:polygon points="0,420 87,447 140,437 185,355 317,220 342,112 380,52 420,0 580,0 570,90 510,175 482,287 432,347 320,455 262,557 197,615 135,630 85,632 0,600"/>
         <apply>FL.Rr.NW.o NW</apply>
     </shape>
-    <shape feature="ROAD">
+    <shape feature="ROAD" baseLocation="SE">
         <svg:polygon points="422,999 390,910 390,872 430,765 475,720 580,670 682,557 732,530 832,500 927,435 999,420 999,582 950,625 905,657 802,675 782,690 667,807 647,820 570,865 557,885 590,999"/>
         <apply>FL.Rr.d SE</apply>
     </shape>
@@ -334,10 +340,10 @@
         <svg:polygon points="999,999 0,999 0,0 300,300 530,300 680,190 840,150 999,0"/>
         <apply allRotations="1">* _N</apply>
     </shape>
-    <shape feature="CITY" baseLocation="WE">
+    <shape feature="CITY">
         <svg:polygon points="0,0 390,160 840,160 999,30 999,999 800,750 710,740 590,810 280,790 0,999"/>
         <apply>* WE</apply>
-        <apply>* NS</apply>
+        <apply svg:transform="rotate(270 500 500)">* NS</apply>
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 40,0 310,200 350,220 550,220 580,200 690,210 730,230 850,200 900,100 999,10 990,990 770,710 700,720 600,790 490,780 460,760 300,770 260,810 210,800 0,999"/>
@@ -360,6 +366,7 @@
         <apply>IC.RrC.i N</apply>
         <apply>R2.IFC E</apply>
         <apply>CC.RrC N</apply> <!-- override alias -->
+        <apply>WR.RrC N</apply>
     </shape>
     <shape feature="CITY" baseLocation="N">
         <svg:polygon points="970,0 830,180 770,210 690,250 670,310 640,350 450,360 390,340 200,200 0,0"/>
@@ -447,6 +454,11 @@
         <apply>C2.CFR N</apply>
         <apply>C2.CFC S</apply>
     </shape>
+    <shape feature="CITY" baseLocation="E">
+        <svg:polygon points="999,20 915,150 870,340 857,362 867,377 820,572 805,617 820,650 830,657 840,732 912,922 987,997 995,999"/>
+        <apply>WR.CFR E</apply>
+    </shape>
+
     <shape feature="CITY" baseLocation="NW">
         <svg:polygon points="0,0 999,0 999,50 930,100 780,170 730,230 680,270 540,340 510,370 480,410 450,450 380,490 330,530 300,630 300,750 290,810 260,860 170,950 100,999 0,999"/>
         <apply>BA.Cc.1 NW</apply>
@@ -623,6 +635,8 @@
         <apply>R1.RrII SR.WL</apply>
         <apply>FL.Rr.SW.o SR.WL</apply>
         <apply>C2.RRRr SR.WL</apply>
+        <apply>WR.Rr SR.WL</apply>
+        <apply>WR.RrC SR.WL</apply>
     </shape>
     <shape feature="FARM" baseLocation="NL.WR">
         <title>half-oblique-NL,WR</title>
@@ -707,6 +721,10 @@
     <shape feature="FARM">
         <svg:polygon points="0,0 522,2 200,540 0,515"/>
         <apply>FL.Rr.NW.o NL.WR</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,512 527,775 999,580 999,999 0,999"/>
+        <apply>WR.CFR SL.SR.WL</apply>
     </shape>
 
     <!-- Tower areas ? TODO what about define as translate -->
@@ -811,6 +829,8 @@
         <apply>FL.Rr.NW.o NR.EL.ER.SL.SR.WL</apply>
         <apply>C2.RRRr WR.NL.ER.SL</apply>
         <apply>TU.RCR EL.WR</apply>
+        <apply>WR.CFR WR.NL.NR</apply>
+        <apply>WR.RrC EL.ER.SL.WR</apply>
     </complement-farm>
 
     <shape> <!-- center -->

@@ -47,5 +47,8 @@
     <alias treat="FE.CRr" as="BA.CRr" />
     <alias treat="FE.RrRr" as="IC.RrRr" />
 
+    <alias treat="WR.Cc.1" as="BA.Cc.1" />
+    <alias treat="WR.CC.2" as="BA.CC.2" />
+
 
 </aliases>
