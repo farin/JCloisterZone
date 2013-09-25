@@ -6,8 +6,10 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.RemoveLonelyBuilderAndPig;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public abstract class Follower extends Meeple {
@@ -41,12 +43,14 @@ public abstract class Follower extends Meeple {
         //store ref which is lost be super call
         Feature piece = getFeature();
         super.undeploy(checkForLonelyBuilderOrPig); //clear piece
-        if (checkForLonelyBuilderOrPig &&
-                game.hasExpansion(Expansion.TRADERS_AND_BUILDERS) &&
-                (piece instanceof City || piece instanceof Farm)) {
-            Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
-            if (toRemove != null) {
-                toRemove.undeploy(false);
+        if (checkForLonelyBuilderOrPig) {
+            boolean builder = game.hasCapability(Capability.BUILDER) && (piece instanceof City || piece instanceof Road);
+            boolean pig = game.hasCapability(Capability.PIG) && piece instanceof Farm;
+            if (builder || pig) {
+                Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
+                if (toRemove != null) {
+                    toRemove.undeploy(false);
+                }
             }
         }
     }

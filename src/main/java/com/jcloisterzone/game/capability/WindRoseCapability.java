@@ -3,10 +3,12 @@ package com.jcloisterzone.game.capability;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -14,6 +16,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.SnapshotCorruptedException;
 
 public class WindRoseCapability extends CapabilityController {
 
@@ -68,6 +71,18 @@ public class WindRoseCapability extends CapabilityController {
             return pos.x >= rosePosition.x && pos.y >= rosePosition.y;
         }
         throw new IllegalArgumentException("Wrong rose argument");
+    }
+
+    @Override
+    public void saveToSnapshot(Document doc, Element node) {
+        node.setAttribute("rotation", roseRotation.name());
+        XmlUtils.injectPosition(node, rosePosition);
+    }
+
+    @Override
+    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+        roseRotation = Rotation.valueOf(node.getAttribute("rotation"));
+        rosePosition = XmlUtils.extractPosition(node);
     }
 
 }

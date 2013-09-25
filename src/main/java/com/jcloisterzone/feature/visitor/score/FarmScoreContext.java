@@ -13,6 +13,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public class FarmScoreContext extends AbstractScoreContext {
@@ -103,7 +104,7 @@ public class FarmScoreContext extends AbstractScoreContext {
 
     private int getPlayerPoints(Player player, int pointsPerCity) {
         //optimalization
-        if (scoredCities == null && ! getGame().hasExpansion(Expansion.CATHARS)) {
+        if (scoredCities == null && !getGame().hasCapability(Capability.SIEGE)) {
             return pointsPerCity * adjoiningCompletedCities.size() +
                    (pointsPerCity + 1) * adjoiningCastles.size();
         }
@@ -126,7 +127,7 @@ public class FarmScoreContext extends AbstractScoreContext {
     }
 
     public int getBarnPoints() {
-        if (getGame().hasExpansion(Expansion.CATHARS)) {
+        if (getGame().hasCapability(Capability.SIEGE)) {
             int points = 0;
             for(CityScoreContext ctx : adjoiningCompletedCities.values()) {
                 points += 4;

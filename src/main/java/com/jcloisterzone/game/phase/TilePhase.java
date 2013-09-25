@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -42,7 +43,7 @@ public class TilePhase extends Phase {
         tile.setRotation(rotation);
 
         boolean bridgeRequired = false;
-        if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+        if (game.hasCapability(Capability.BRIDGE)) {
             bridgeRequired = !getBoard().isPlacementAllowed(tile, p);
         }
 

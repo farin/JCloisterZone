@@ -11,6 +11,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.event.MouseInputListener;
+
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Game;
@@ -25,8 +27,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 public abstract class AbstractGridLayer implements GridLayer {
 
     protected final GridPanel gridPanel;
-    private GridMouseAdapter mouseAdapter;
-    private DragInsensitiveMouseClickListener mouseListener; //must keep ref for listener unregister
+    private MouseInputListener mouseListener;
 
     public AbstractGridLayer(GridPanel gridPanel) {
         this.gridPanel = gridPanel;
@@ -35,7 +36,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     private void triggerFakeMouseEvent() {
         Point pt = gridPanel.getMousePosition();
         if (pt != null) {
-            mouseAdapter.mouseMoved(
+            mouseListener.mouseMoved(
                 new MouseEvent(gridPanel, 0, System.currentTimeMillis(), 0, pt.x, pt.y, -1, -1, 0, false, 0)
             );
         }
@@ -43,7 +44,7 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     @Override
     public void zoomChanged(int squareSize) {
-        if (mouseAdapter != null) {
+        if (mouseListener != null) {
             triggerFakeMouseEvent();
         }
     }
@@ -59,20 +60,19 @@ public abstract class AbstractGridLayer implements GridLayer {
     @Override
     public void layerAdded() {
         if (this instanceof GridMouseListener && getClient().isClientActive()) {
-            mouseAdapter = createGridMouserAdapter((GridMouseListener) this);
-            mouseListener = new DragInsensitiveMouseClickListener(mouseAdapter);
+            mouseListener = new DragInsensitiveMouseClickListener(createGridMouserAdapter((GridMouseListener) this));
             gridPanel.addMouseListener(mouseListener);
-            gridPanel.addMouseMotionListener(mouseAdapter);
+            gridPanel.addMouseMotionListener(mouseListener);
             triggerFakeMouseEvent();
         }
     }
 
     @Override
     public void layerRemoved() {
-        if (mouseAdapter != null) {
-            gridPanel.removeMouseMotionListener(mouseAdapter);
+        if (mouseListener != null) {
+            gridPanel.removeMouseMotionListener(mouseListener);
             gridPanel.removeMouseListener(mouseListener);
-            mouseAdapter = null;
+            mouseListener = null;
         }
     }
     public AffineTransform getAffineTransform(int scaleFrom, Position pos) {

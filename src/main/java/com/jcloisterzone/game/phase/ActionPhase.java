@@ -17,6 +17,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
@@ -53,14 +54,14 @@ public class ActionPhase extends Phase {
 
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (!actions.isEmpty()) return false;
-        if (game.hasExpansion(Expansion.TOWER)) {
+        if (game.hasCapability(Capability.TOWER)) {
             TowerCapability tg = game.getTowerCapability();
             if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
                 //player can return figure immediately
                 return false;
             }
         }
-        if (game.hasExpansion(Expansion.FLIER)) {
+        if (game.hasCapability(Capability.FLIER)) {
             FlierCapability fg = game.getFlierGame();
             if (fg.isFlierRollAllowed()) {
                 return false;

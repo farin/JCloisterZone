@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Location;
@@ -14,6 +13,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.CastleCapability;
 
@@ -28,7 +28,7 @@ public class CastlePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
+        return game.hasCapability(Capability.CASTLE);
     }
 
     @Override

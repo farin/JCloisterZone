@@ -26,6 +26,7 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.CastleCapability;
 
@@ -38,7 +39,7 @@ public class ScorePhase extends Phase {
     }
 
     private void scoreCompletedOnTile(Tile tile) {
-        for(Feature feature : tile.getFeatures()) {
+        for (Feature feature : tile.getFeatures()) {
             if (feature instanceof Completable) {
                 scoreCompleted((Completable) feature);
             }
@@ -61,18 +62,18 @@ public class ScorePhase extends Phase {
         farm.walk(ctx);
 
         boolean hasBarn = false;
-        for(Meeple m : ctx.getSpecialMeeples()) {
+        for (Meeple m : ctx.getSpecialMeeples()) {
             if (m instanceof Barn) {
                 hasBarn = true;
                 break;
             }
         }
         if (hasBarn) {
-            for(Player p : ctx.getMajorOwners()) {
+            for (Player p : ctx.getMajorOwners()) {
                 int points = ctx.getPointsWhenBarnIsConnected(p);
                 game.scoreFeature(points, ctx, p);
             }
-            for(Meeple m : ctx.getMeeples()) {
+            for (Meeple m : ctx.getMeeples()) {
                 if (! (m instanceof Barn)) {
                     m.undeploy(false);
                 }
@@ -85,9 +86,9 @@ public class ScorePhase extends Phase {
         Position pos = getTile().getPosition();
 
         //TODO separate event here ??? and move this code to abbey and mayor game
-        if (game.hasExpansion(Expansion.ABBEY_AND_MAYOR)) {
+        if (game.hasCapability(Capability.BARN)) {
             Map<City, CityScoreContext> cityCache = Maps.newHashMap();
-            for(Feature feature : getTile().getFeatures()) {
+            for (Feature feature : getTile().getFeatures()) {
                 if (feature instanceof Farm) {
                     scoreFollowersOnBarnFarm((Farm) feature, cityCache);
                 }
@@ -99,7 +100,7 @@ public class ScorePhase extends Phase {
             scoreCompletedNearAbbey(pos);
         }
 
-        if (game.hasExpansion(Expansion.TUNNEL)) {
+        if (game.hasCapability(Capability.TUNNEL)) {
             Road r = game.getTunnelCapability().getPlacedTunnel();
             if (r != null) {
                 scoreCompleted(r);
@@ -113,9 +114,9 @@ public class ScorePhase extends Phase {
             }
         }
 
-        if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+        if (game.hasCapability(Capability.CASTLE)) {
             CastleCapability cCap = game.getCastleCapability();
-            for(Entry<Castle, Integer> entry : cCap.getCastleScore().entrySet()) {
+            for (Entry<Castle, Integer> entry : cCap.getCastleScore().entrySet()) {
                 scoreCastle(entry.getKey(), entry.getValue());
             }
         }
@@ -143,8 +144,8 @@ public class ScorePhase extends Phase {
     private void scoreCompleted(Completable completable) {
         CompletableScoreContext ctx = completable.getScoreContext();
         completable.walk(ctx);
-        if (game.hasExpansion(Expansion.TRADERS_AND_BUILDERS)) {
-            for(Meeple m : ctx.getSpecialMeeples()) {
+        if (game.hasCapability(Capability.BUILDER)) {
+            for (Meeple m : ctx.getSpecialMeeples()) {
                 if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
                     if (! m.getPosition().equals(getTile().getPosition())) {
                         game.getBuilderCapability().builderUsed();

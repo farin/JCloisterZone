@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
@@ -10,6 +9,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 
@@ -21,7 +21,7 @@ public class EscapePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.CATHARS);
+        return game.hasCapability(Capability.SIEGE);
     }
 
     @Override

@@ -3,12 +3,12 @@ package com.jcloisterzone.game.phase;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.TowerCapability;
 
@@ -21,7 +21,7 @@ public class TowerCapturePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.TOWER);
+        return game.hasCapability(Capability.TOWER);
     }
 
     @Override

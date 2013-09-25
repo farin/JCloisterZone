@@ -13,6 +13,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
@@ -67,7 +68,6 @@ public class MainPanel extends BackgroundPanel {
         return client.getGame();
     }
 
-
     public void started(Snapshot snapshot) {
         animationService.clearAll();
         animationService.setGridPanel(null);
@@ -83,23 +83,26 @@ public class MainPanel extends BackgroundPanel {
 
         animationService.setGridPanel(gridPanel);
 
-        if (getGame().hasExpansion(Expansion.TOWER)) {
+        if (getGame().hasCapability(Capability.TOWER)) {
             towerLayer = new TowerLayer(gridPanel);
             gridPanel.addLayer(towerLayer);
         }
-        if (getGame().hasExpansion(Expansion.PRINCESS_AND_DRAGON)) {
+        if (getGame().hasCapability(Capability.DRAGON)) {
             dragonLayer = new DragonLayer(gridPanel, null);
-            fairyLayer = new FairyLayer(gridPanel, null);
             gridPanel.addLayer(dragonLayer);
+        }
+        if (getGame().hasCapability(Capability.FAIRY)) {
+            fairyLayer = new FairyLayer(gridPanel, null);
             gridPanel.addLayer(fairyLayer);
         }
-        if (getGame().hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
+        if (getGame().hasCapability(Capability.BRIDGE)) {
             bridgeLayer = new BridgeLayer(gridPanel);
             gridPanel.addLayer(bridgeLayer);
+        }
+        if (getGame().hasCapability(Capability.CASTLE)) {
             castleLayer = new CastleLayer(gridPanel);
             gridPanel.addLayer(castleLayer);
         }
-
         add(gridPanel);
 
         setVisible(true);

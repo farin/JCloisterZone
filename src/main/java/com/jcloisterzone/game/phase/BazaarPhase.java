@@ -2,10 +2,10 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
@@ -25,7 +25,7 @@ public class BazaarPhase extends ServerAwarePhase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
+        return game.hasCapability(Capability.BAZAAR);
     }
 
     @Override

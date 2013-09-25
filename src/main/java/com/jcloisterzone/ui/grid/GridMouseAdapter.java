@@ -3,9 +3,11 @@ package com.jcloisterzone.ui.grid;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.event.MouseInputListener;
+
 import com.jcloisterzone.board.Position;
 
-public class GridMouseAdapter extends MouseAdapter {
+public class GridMouseAdapter extends MouseAdapter implements MouseInputListener {
 
     final GridPanel gridPanel;
     final GridMouseListener listener;

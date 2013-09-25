@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -17,7 +17,7 @@ public class AbbeyPhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.ABBEY_AND_MAYOR);
+        return game.hasCapability(Capability.ABBEY);
     }
 
     @Override

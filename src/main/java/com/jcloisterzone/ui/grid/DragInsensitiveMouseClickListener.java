@@ -2,17 +2,18 @@ package com.jcloisterzone.ui.grid;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
+import javax.swing.event.MouseInputListener;
 
-public class DragInsensitiveMouseClickListener implements MouseListener {
+public class DragInsensitiveMouseClickListener implements MouseInputListener {
 
-    public static final int PRECISION = 15;
-    private final MouseListener target;
+    protected static final int MAX_CLICK_DISTANCE = 15;
+
+    private final MouseInputListener target;
 
     public MouseEvent pressed;
 
-    public DragInsensitiveMouseClickListener(MouseListener target) {
+    public DragInsensitiveMouseClickListener(MouseInputListener target) {
         this.target = target;
     }
 
@@ -22,20 +23,27 @@ public class DragInsensitiveMouseClickListener implements MouseListener {
         target.mousePressed(e);
     }
 
+    private int getDragDistance(MouseEvent e) {
+        int distance = 0;
+        distance += Math.abs(pressed.getXOnScreen() - e.getXOnScreen());
+        distance += Math.abs(pressed.getYOnScreen() - e.getYOnScreen());
+        return distance;
+    }
+
     @Override
     public final void mouseReleased(MouseEvent e) {
-        double horizontalTravel = Math.abs(pressed.getXOnScreen() - e.getXOnScreen());
-        double verticalTravel = Math.abs(pressed.getYOnScreen() - e.getYOnScreen());
-
         target.mouseReleased(e);
-        if (horizontalTravel + verticalTravel < PRECISION) {
-            MouseEvent clickEvent = new MouseEvent((Component) pressed.getSource(),
-                    MouseEvent.MOUSE_CLICKED, e.getWhen(), pressed.getModifiers(),
-                    pressed.getX(), pressed.getY(), pressed.getXOnScreen(), pressed.getYOnScreen(),
-                    pressed.getClickCount(), pressed.isPopupTrigger(), pressed.getButton());
-            target.mouseClicked(clickEvent);
+
+        if (pressed != null) {
+            if (getDragDistance(e) < MAX_CLICK_DISTANCE) {
+                MouseEvent clickEvent = new MouseEvent((Component) pressed.getSource(),
+                        MouseEvent.MOUSE_CLICKED, e.getWhen(), pressed.getModifiers(),
+                        pressed.getX(), pressed.getY(), pressed.getXOnScreen(), pressed.getYOnScreen(),
+                        pressed.getClickCount(), pressed.isPopupTrigger(), pressed.getButton());
+                target.mouseClicked(clickEvent);
+            }
+            pressed = null;
         }
-        pressed = null;
     }
 
     @Override
@@ -51,5 +59,19 @@ public class DragInsensitiveMouseClickListener implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         target.mouseExited(e);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (pressed != null) {
+            if (getDragDistance(e) < MAX_CLICK_DISTANCE) return; //do not trigger drag yet (distance is in "click" perimeter
+            pressed = null;
+        }
+        target.mouseDragged(e);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        target.mouseMoved(e);
     }
 }

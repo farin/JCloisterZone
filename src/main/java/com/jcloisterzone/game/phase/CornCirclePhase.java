@@ -25,6 +25,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
@@ -41,7 +42,7 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.CORN_CIRCLES) || game.hasExpansion(Expansion.CORN_CIRCLES_II);
+        return game.hasCapability(Capability.CORN_CIRCLE);
     }
 
     @Override
