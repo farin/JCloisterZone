@@ -47,6 +47,7 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (positions.contains(selected)) {
+                e.consume();
                 getClient().getServer().moveDragon(selected);
             }
         }

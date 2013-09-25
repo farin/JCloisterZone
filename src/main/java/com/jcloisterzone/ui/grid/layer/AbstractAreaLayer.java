@@ -127,10 +127,10 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selectedLocation != null) {
                 performAction(pos, selectedLocation);
+                e.consume();
             }
         }
     }
-
 
     @Override
     public void paint(Graphics2D g2) {

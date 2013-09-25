@@ -1,12 +1,11 @@
 package com.jcloisterzone.ui.grid;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import com.jcloisterzone.board.Position;
 
-public class GridMouseAdapter extends DragInsensitiveMouseClickListener implements MouseListener, MouseMotionListener {
+public class GridMouseAdapter extends MouseAdapter {
 
     final GridPanel gridPanel;
     final GridMouseListener listener;
@@ -14,7 +13,6 @@ public class GridMouseAdapter extends DragInsensitiveMouseClickListener implemen
     private Position currentPosition;
 
     public GridMouseAdapter(GridPanel gridPanel, GridMouseListener listener) {
-        super(10);
         this.gridPanel = gridPanel;
         this.listener = listener;
     }

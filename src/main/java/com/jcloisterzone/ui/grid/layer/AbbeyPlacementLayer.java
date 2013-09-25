@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class AbbeyPlacementLayer extends AbstractTilePlacementLayer {
@@ -35,11 +34,9 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer {
     @Override
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (getPreviewPosition() != null) {
-                if (getClient().isClientActive()) {
-                    assert p.equals(getPreviewPosition()) : "Expected " + getPreviewPosition() + ", get " + p;
-                    action.perform(getClient().getServer(), p);
-                }
+            if (getPreviewPosition() != null && getClient().isClientActive()) {
+                e.consume();
+                action.perform(getClient().getServer(), p);
             }
         }
     }

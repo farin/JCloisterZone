@@ -37,6 +37,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (action.getSites().contains(p)) {
+                e.consume();
                 action.perform(getClient().getServer(), p);
             }
         }

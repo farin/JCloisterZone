@@ -16,6 +16,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
@@ -25,6 +26,7 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     protected final GridPanel gridPanel;
     private GridMouseAdapter mouseAdapter;
+    private DragInsensitiveMouseClickListener mouseListener; //must keep ref for listener unregister
 
     public AbstractGridLayer(GridPanel gridPanel) {
         this.gridPanel = gridPanel;
@@ -58,7 +60,8 @@ public abstract class AbstractGridLayer implements GridLayer {
     public void layerAdded() {
         if (this instanceof GridMouseListener && getClient().isClientActive()) {
             mouseAdapter = createGridMouserAdapter((GridMouseListener) this);
-            gridPanel.addMouseListener(mouseAdapter);
+            mouseListener = new DragInsensitiveMouseClickListener(mouseAdapter);
+            gridPanel.addMouseListener(mouseListener);
             gridPanel.addMouseMotionListener(mouseAdapter);
             triggerFakeMouseEvent();
         }
@@ -68,7 +71,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     public void layerRemoved() {
         if (mouseAdapter != null) {
             gridPanel.removeMouseMotionListener(mouseAdapter);
-            gridPanel.removeMouseListener(mouseAdapter);
+            gridPanel.removeMouseListener(mouseListener);
             mouseAdapter = null;
         }
     }

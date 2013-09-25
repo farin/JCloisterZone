@@ -1,33 +1,55 @@
 package com.jcloisterzone.ui.grid;
 
-import java.awt.Point;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 
-public abstract class DragInsensitiveMouseClickListener implements MouseListener {
+public class DragInsensitiveMouseClickListener implements MouseListener {
 
-    private final int allowedTravel;
+    public static final int PRECISION = 15;
+    private final MouseListener target;
 
-    public Point mouseDownPoint;
+    public MouseEvent pressed;
 
-    public DragInsensitiveMouseClickListener(int allowedTravel) {
-        this.allowedTravel = allowedTravel;
+    public DragInsensitiveMouseClickListener(MouseListener target) {
+        this.target = target;
     }
 
     @Override
     public final void mousePressed(MouseEvent e) {
-        mouseDownPoint = e.getPoint();
+        pressed = e;
+        target.mousePressed(e);
     }
 
     @Override
     public final void mouseReleased(MouseEvent e) {
-        double horizontalTravel = Math.abs(mouseDownPoint.getX() - e.getX());
-        double verticalTravel = Math.abs(mouseDownPoint.getY() - e.getY());
+        double horizontalTravel = Math.abs(pressed.getXOnScreen() - e.getXOnScreen());
+        double verticalTravel = Math.abs(pressed.getYOnScreen() - e.getYOnScreen());
 
-        if (horizontalTravel < allowedTravel && verticalTravel < allowedTravel) {
-            mouseClicked(e);
+        target.mouseReleased(e);
+        if (horizontalTravel + verticalTravel < PRECISION) {
+            MouseEvent clickEvent = new MouseEvent((Component) pressed.getSource(),
+                    MouseEvent.MOUSE_CLICKED, e.getWhen(), pressed.getModifiers(),
+                    pressed.getX(), pressed.getY(), pressed.getXOnScreen(), pressed.getYOnScreen(),
+                    pressed.getClickCount(), pressed.isPopupTrigger(), pressed.getButton());
+            target.mouseClicked(clickEvent);
         }
+        pressed = null;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        //do nothing, handled by pressed/released handlers
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        target.mouseEntered(e);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        target.mouseExited(e);
+    }
 }
