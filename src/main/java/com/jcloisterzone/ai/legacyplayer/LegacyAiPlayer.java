@@ -298,8 +298,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 //		TODO more sophisticated rating
         for(Meeple meeple : game.getDeployedMeeples()) {
-            if (meeple.getPosition() != fairyPos) continue;
-            if (! (meeple instanceof Follower)) continue;
+            if (!meeple.at(fairyPos)) continue;
+            if (!(meeple instanceof Follower)) continue;
             if (meeple.getFeature() instanceof Castle) continue;
 
             rating += reducePoints(1.0, meeple.getPlayer());

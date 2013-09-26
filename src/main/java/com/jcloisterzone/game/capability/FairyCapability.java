@@ -32,7 +32,7 @@ public class FairyCapability extends Capability {
     public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
         FairyAction fairyAction = null;
         for (Follower m : game.getActivePlayer().getFollowers()) {
-            if (m.getPosition() != null && !m.getPosition().equals(fairyPosition)) {
+            if (m.getPosition() != null && !m.at(fairyPosition)) {
                 if (fairyAction == null) {
                     fairyAction = new FairyAction();
                     actions.add(fairyAction);

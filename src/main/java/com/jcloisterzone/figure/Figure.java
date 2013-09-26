@@ -26,6 +26,11 @@ public abstract class Figure implements Serializable, Cloneable {
         this.position = position;
     }
 
+    public boolean at(Position p) {
+        if (position == null) return false;
+        return position.equals(p);
+    }
+
     @Override
     public String toString() {
         if (position == null) {

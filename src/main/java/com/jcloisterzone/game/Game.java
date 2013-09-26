@@ -202,7 +202,7 @@ public class Game extends GameSettings {
 
     public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
         for (Meeple m : getDeployedMeeples()) {
-            if (m.getPosition().equals(p) && m.getLocation().equals(loc)) {
+            if (m.at(p) && m.getLocation().equals(loc)) {
                 if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
                     return m;
                 }
@@ -281,7 +281,7 @@ public class Game extends GameSettings {
         p.addPoints(points, ctx.getMasterFeature().getPointCategory());
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
-        if (fairyCapability != null && follower.getPosition().equals(fairyCapability.getFairyPosition())) {
+        if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
             fireGameEvent().scored(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
                     points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, follower,

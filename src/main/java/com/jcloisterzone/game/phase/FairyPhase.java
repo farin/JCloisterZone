@@ -26,7 +26,7 @@ public class FairyPhase extends Phase {
         Position fairyPos = fairyCap.getFairyPosition();
         if (fairyPos != null) {
             for (Meeple m : game.getDeployedMeeples()) {
-                if (m.getPosition().equals(fairyPos) && m.getPlayer() == getActivePlayer()) {
+                if (m.at(fairyPos) && m.getPlayer() == getActivePlayer()) {
                     m.getPlayer().addPoints(1, PointCategory.FAIRY);
                     game.fireGameEvent().scored(m.getPosition(), m.getPlayer(), 1, "1", false);
                     break;

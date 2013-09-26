@@ -61,7 +61,7 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
                 power.put(follower.getPlayer(), curr);
                 if (curr > bestPower) bestPower = curr;
                 if (sample.containsKey(follower.getPlayer())) {
-                    if (follower.getPosition().equals(preferedPos)) {
+                    if (follower.at(preferedPos)) {
                         sample.put(follower.getPlayer(), follower);
                     }
                 } else {
@@ -70,10 +70,8 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
             }
             if (meeple instanceof Follower) {
                 followers.add((Follower) meeple);
-            } else {
-                if (meeple instanceof Special) {
-                    specialMeeples.add((Special) meeple);
-                }
+            } else if (meeple instanceof Special) {
+                specialMeeples.add((Special) meeple);
             }
         }
         if (this.feature == null || this.feature.getId() > feature.getId()) {

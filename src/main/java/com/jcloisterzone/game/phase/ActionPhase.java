@@ -119,7 +119,7 @@ public class ActionPhase extends Phase {
     @Override
     public void moveFairy(Position p) {
         for (Follower f : getActivePlayer().getFollowers()) {
-            if (p.equals(f.getPosition())) {
+            if (f.at(p)) {
                 game.getCapability(FairyCapability.class).setFairyPosition(p);
                 game.fireGameEvent().fairyMoved(p);
                 next();
