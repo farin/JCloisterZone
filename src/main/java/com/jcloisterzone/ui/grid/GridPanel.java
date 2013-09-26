@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.grid;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.event.MouseInputListener;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -113,28 +112,67 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
     }
 
-    private void registerMouseListeners() {
-        addMouseListener(
-            new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    switch (e.getButton()) {
-                    case MouseEvent.BUTTON2:
-                        int clickX = e.getX()-offsetX;
-                        int clickY = e.getY()-offsetY;
-                        moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
-                        break;
-                    case MouseEvent.BUTTON3:
-                    case 5:
-                        forward();
-                        break;
-                    case 4:
-                        backward();
-                        break;
-                    }
-                }
+    class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
+
+        private MouseEvent dragSource;
+        double sourceCx, sourceCy;
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            switch (e.getButton()) {
+            case MouseEvent.BUTTON2:
+                int clickX = e.getX()-offsetX;
+                int clickY = e.getY()-offsetY;
+                moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+                break;
+            case MouseEvent.BUTTON3:
+            case 5:
+                forward();
+                break;
+            case 4:
+                backward();
+                break;
             }
-        );
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            dragSource = e;
+            sourceCx = cx;
+            sourceCy = cy;
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            dragSource = null;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            //px values
+            int dx = e.getX() - dragSource.getX();
+            int dy = e.getY() - dragSource.getY();
+            //relative values
+            double rdx = dx/(double)squareSize;
+            double rdy = dy/(double)squareSize;
+
+            moveCenterTo(sourceCx-rdx, sourceCy-rdy);
+
+            //System.err.println(cx + " " + cy + " / " + offsetX + " "  + offsetY);
+            //offsetX = calculateCenterX() - (int)(cx * squareSize);
+            //offsetY = calculateCenterY() - (int)(cy * squareSize);
+//            int clickX = e.getX()-offsetX;
+//            int clickY = e.getY()-offsetY;
+//            moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+            //moveCenterTo(cx-dx*(double)squareSize,cy-dy(double)squareSize);
+            //System.err.println(x + "/" + y);
+        }
+    }
+
+    private void registerMouseListeners() {
+        DragInsensitiveMouseClickListener listener = new DragInsensitiveMouseClickListener(new GridPanelMouseListener());
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
