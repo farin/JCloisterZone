@@ -141,7 +141,7 @@ public class TilePackFactory {
 
         List<Tile> tiles = new ArrayList<Tile>(count);
         for (int j = 0; j < count; j++) {
-            Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
+            Tile tile = tileFactory.createTile(expansion, tileId, card, isTunnelActive(expansion));
             game.initTile(tile, card); //must be called before rotation!
             tiles.add(tile);
         }

@@ -134,8 +134,8 @@ public abstract class AiPlayer implements UserInterface {
     }
 
     protected boolean selectDummyMeepleAction(MeepleAction ma) {
-        Position p = ma.getSites().keySet().iterator().next();
-        for(Location loc : ma.getSites().get(p)) {
+        Position p = ma.getLocationsMap().keySet().iterator().next();
+        for(Location loc : ma.getLocationsMap().get(p)) {
             Feature f = getBoard().get(p).getFeature(loc);
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
                 getServer().deployMeeple(p, loc, ma.getMeepleType());
@@ -146,8 +146,8 @@ public abstract class AiPlayer implements UserInterface {
     }
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
-        Position p = action.getSites().keySet().iterator().next();
-        Location loc = action.getSites().get(p).iterator().next();
+        Position p = action.getLocationsMap().keySet().iterator().next();
+        Location loc = action.getLocationsMap().get(p).iterator().next();
         Meeple m = getBoard().get(p).getFeature(loc).getMeeples().get(0);
         getServer().takePrisoner(p, loc, m.getClass(), m.getPlayer().getIndex());
         return true;

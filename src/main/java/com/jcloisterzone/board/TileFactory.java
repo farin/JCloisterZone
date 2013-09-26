@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
@@ -43,17 +44,13 @@ public class TileFactory {
         this.game = game;
     }
 
-    public Tile createTile(String fullId, Element xml, boolean isTunnelActive) {
-        Tile tile = new Tile(fullId);
+    public Tile createTile(Expansion expansion, String fullId, Element xml, boolean isTunnelActive) {
+        Tile tile = new Tile(expansion, fullId);
         this.tile = tile;
         features = Lists.newArrayList();
         tile.setGame(game);
 
         logger.debug("Creating " + tile.getId());
-
-        if (attributeBoolValue(xml, "forbidden")) {
-            tile.setForbidden(true);
-        }
 
         NodeList nl;
         nl = xml.getElementsByTagName("cloister");

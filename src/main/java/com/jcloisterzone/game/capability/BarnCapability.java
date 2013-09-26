@@ -8,7 +8,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Barn;
@@ -27,7 +27,7 @@ public final class BarnCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         Position pos = getTile().getPosition();
 
         if (game.getActivePlayer().hasSpecialMeeple(Barn.class)) {

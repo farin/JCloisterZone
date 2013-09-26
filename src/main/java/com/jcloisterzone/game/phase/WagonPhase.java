@@ -6,7 +6,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
@@ -69,7 +69,7 @@ public class WagonPhase extends Phase {
             }
             Player player = game.getAllPlayers()[pi];
             Feature f = rw.remove(player);
-            Sites wagonMoves = prepareWagonMoves(f);
+            LocationsMap wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
                 wagonCap.setWagonPlayer(player);
                 game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
@@ -80,13 +80,13 @@ public class WagonPhase extends Phase {
         return false;
     }
 
-    private Sites prepareWagonMoves(Feature source) {
+    private LocationsMap prepareWagonMoves(Feature source) {
         return source.walk(new FindUnoccupiedNeighbours());
     }
 
-    private class FindUnoccupiedNeighbours implements FeatureVisitor<Sites> {
+    private class FindUnoccupiedNeighbours implements FeatureVisitor<LocationsMap> {
 
-        private Sites wagonMoves = new Sites();
+        private LocationsMap wagonMoves = new LocationsMap();
 
         @Override
         public boolean visit(Feature feature) {
@@ -99,7 +99,7 @@ public class WagonPhase extends Phase {
             return true;
         }
 
-        public Sites getResult() {
+        public LocationsMap getResult() {
             return wagonMoves;
         }
     }

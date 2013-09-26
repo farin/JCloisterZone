@@ -13,7 +13,7 @@ import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -100,7 +100,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private List<PlayerAction> prepareDeploymentAction(Class<? extends Feature> cornType) {
-        Sites sites = new Sites();
+        LocationsMap sites = new LocationsMap();
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;

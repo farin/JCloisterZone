@@ -31,10 +31,10 @@ public class AbstractTileTest {
     protected Tile createTile(Expansion exp, String id) {
         Element el = packFactory.getExpansionDefinition(exp);
         NodeList nl = el.getElementsByTagName("tile");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element card = (Element) nl.item(i);
             if (id.equals(card.getAttribute("id"))) {
-                return tileFactory.createTile(id, card, false);
+                return tileFactory.createTile(exp, id, card, false);
             }
         }
         throw new IllegalArgumentException("Invalid tile id");

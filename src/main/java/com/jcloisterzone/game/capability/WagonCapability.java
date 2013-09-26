@@ -20,7 +20,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
@@ -110,13 +110,13 @@ public class WagonCapability extends Capability {
      }
 
      @Override
-     public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+     public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
          Position pos = getTile().getPosition();
-         Set<Location> tileLocations = commonSites.get(pos);
+         Set<Location> tileLocations = followerLocMap.get(pos);
          if (game.getActivePlayer().hasFollower(Wagon.class)) {
              if (tileLocations != null) {
                  Set<Location> wagonLocations = copyWagonsLocations(tileLocations);
-                 if (! wagonLocations.isEmpty()) {
+                 if (!wagonLocations.isEmpty()) {
                      actions.add(new MeepleAction(Wagon.class, pos, wagonLocations));
                  }
              }
@@ -124,7 +124,7 @@ public class WagonCapability extends Capability {
      }
 
      @Override
-     public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
          prepareFollowerActions(actions, commonSites);
      }
 

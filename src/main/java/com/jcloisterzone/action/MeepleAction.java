@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Mayor;
@@ -24,7 +24,7 @@ public class MeepleAction extends SelectFeatureAction {
         this.meepleType = meepleType;
     }
 
-    public MeepleAction(Class<? extends Meeple> meepleType, Sites sites) {
+    public MeepleAction(Class<? extends Meeple> meepleType, LocationsMap sites) {
         super(meepleType.getSimpleName().toLowerCase(), sites);
         this.meepleType = meepleType;
     }

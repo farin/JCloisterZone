@@ -19,7 +19,7 @@ import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -72,12 +72,12 @@ public final class TunnelCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         if (isTunnelUsedThisTurn()) return;
         //TODO double iteration over tunnels
         if (getOpenTunnels().isEmpty()) return;
         TunnelAction tunnelAction = null;
-        Sites sites = new Sites();
+        LocationsMap sites = new LocationsMap();
         if (getTunnelTokens(game.getActivePlayer(), false) > 0) {
             tunnelAction = new TunnelAction(false, sites);
             actions.add(tunnelAction);

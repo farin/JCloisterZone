@@ -5,7 +5,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.game.Capability;
 
@@ -18,14 +18,14 @@ public class BigFollowerCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
-        if (game.getActivePlayer().hasFollower(BigFollower.class) && !commonSites.isEmpty()) {
-            actions.add(new MeepleAction(BigFollower.class, commonSites));
+    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+        if (game.getActivePlayer().hasFollower(BigFollower.class) && !followerLocMap.isEmpty()) {
+            actions.add(new MeepleAction(BigFollower.class, followerLocMap));
         }
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         prepareFollowerActions(actions, commonSites);
     }
 

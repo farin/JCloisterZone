@@ -8,11 +8,10 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Capability;
 
 public class PigCapability extends Capability {
@@ -23,17 +22,19 @@ public class PigCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        if (getTile().getTrigger() == TileTrigger.VOLCANO &&
-            getGame().hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return;
-
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         Player player = game.getActivePlayer();
-        Position pos = getTile().getPosition();
-        if (player.hasSpecialMeeple(Pig.class)) {
-            MeepleAction meepleAction = new MeepleAction(Pig.class);
-            Set<Location> dirs = getTile().getPlayerFeatures(player, Farm.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            if (! meepleAction.getSites().isEmpty()) actions.add(meepleAction);
+        if (!player.hasSpecialMeeple(Pig.class)) return;
+
+        Tile tile = getTile();
+        if (!game.isDeployAllowed(tile, Pig.class)) return;
+
+        Position pos = tile.getPosition();
+        Set<Location> locations = tile.getPlayerFeatures(player, Farm.class);
+        if (!locations.isEmpty()) {
+            MeepleAction pigAction = new MeepleAction(Pig.class);
+            pigAction.getOrCreate(pos).addAll(locations);
+            actions.add(pigAction);
         }
     }
 

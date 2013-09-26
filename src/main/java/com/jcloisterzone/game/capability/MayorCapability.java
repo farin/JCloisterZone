@@ -9,7 +9,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Mayor;
@@ -35,9 +35,9 @@ public class MayorCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
         Position pos = getTile().getPosition();
-        Set<Location> tileLocations = commonSites.get(pos);
+        Set<Location> tileLocations = followerLocMap.get(pos);
         if (game.getActivePlayer().hasFollower(Mayor.class)) {
             if (tileLocations != null) {
                 Set<Location> mayorLocations = copyMayorLocations(tileLocations);
@@ -49,8 +49,8 @@ public class MayorCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        prepareFollowerActions(actions, commonSites);
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+        prepareFollowerActions(actions, followerLocMap);
     }
 
 }

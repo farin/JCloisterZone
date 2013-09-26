@@ -7,7 +7,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
@@ -37,10 +37,10 @@ public class PhantomPhase extends Phase {
     public void enter() {
         List<PlayerAction> actions = Lists.newArrayList();
 
-        Sites commonSites = game.prepareCommonSites();
+        LocationsMap commonSites = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(Phantom.class)) {
             if (towerCap != null) {
-                towerCap.prepareCommonOnTower(commonSites);
+                towerCap.prepareTowerFollowerDeploy(commonSites);
             }
             if (!commonSites.isEmpty()) {
                 actions.add(new MeepleAction(Phantom.class, commonSites));

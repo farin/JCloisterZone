@@ -5,40 +5,40 @@ import java.util.Set;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 
 public abstract class SelectFeatureAction extends PlayerAction {
 
-    private final Sites sites;
+    private final LocationsMap locMap;
 
     public SelectFeatureAction(String name) {
-        this(name, new Sites());
+        this(name, new LocationsMap());
     }
 
     public SelectFeatureAction(String name, Position p, Set<Location> locations) {
         this(name);
-        sites.put(p, locations);
+        locMap.put(p, locations);
     }
 
-    public SelectFeatureAction(String name, Sites sites) {
+    public SelectFeatureAction(String name, LocationsMap sites) {
         super(name);
-        this.sites = sites;
+        this.locMap = sites;
     }
 
-    public Sites getSites() {
-        return sites;
+    public LocationsMap getLocationsMap() {
+        return locMap;
     }
 
     public Set<Location> get(Position p) {
-        Set<Location> locs = sites.get(p);
+        Set<Location> locs = locMap.get(p);
         return locs != null ? locs : Collections.<Location>emptySet();
     }
 
     public Set<Location> getOrCreate(Position p) {
-        return sites.getOrCreate(p);
+        return locMap.getOrCreate(p);
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class SelectFeatureAction extends PlayerAction {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + '=' + sites.toString();
+        return getClass().getSimpleName() + '=' + locMap.toString();
     }
 
 }

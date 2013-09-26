@@ -7,12 +7,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GameEventAdapter;
+import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Capability;
 
@@ -54,6 +58,13 @@ public class DragonCapability extends Capability {
         if (xml.getElementsByTagName("dragon").getLength() > 0) {
             tile.setTrigger(TileTrigger.DRAGON);
         }
+    }
+
+    @Override
+    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+        if (!tile.getPosition().equals(dragonPosition)) return true;
+        if (game.hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return false;
+        return Special.class.isAssignableFrom(meepleType);
     }
 
     public Position getDragonPosition() {
@@ -105,7 +116,7 @@ public class DragonCapability extends Capability {
         for (Position offset: Position.ADJACENT.values()) {
             Position position = dragonPosition.add(offset);
             Tile tile = getBoard().get(position);
-            if (tile == null || tile.isForbidden()) continue;
+            if (tile == null || tile.getOrigin() == Expansion.COUNT) continue;
             if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
             if (fairyCap != null && position.equals(fairyCap.getFairyPosition())) { continue; }
             result.add(position);

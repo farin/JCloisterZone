@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.event.EventMulticaster;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.City;
@@ -34,6 +34,7 @@ import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -248,28 +249,22 @@ public class Game extends GameSettings {
     }
 
 
-    public Sites prepareCommonSites() {
-        Sites sites = new Sites();
-        //on Volcano tile common figure cannot be placed when it comes into play
-        if (getCurrentTile().getTrigger() != TileTrigger.VOLCANO) {
-             //make shared sites
-            Set<Location> tileSites = prepareCommonForTile(getCurrentTile(), false);
-            if (! tileSites.isEmpty()) {
-                sites.put(getCurrentTile().getPosition(), tileSites);
-                return sites;
-            }
+    public LocationsMap prepareFollowerLocations() {
+        LocationsMap sites = new LocationsMap();
+        Set<Location> locations = prepareFollowerLocations(currentTile, false);
+        if (!locations.isEmpty()) {
+            sites.put(currentTile.getPosition(), locations);
         }
         return sites;
     }
 
-    public Set<Location> prepareCommonForTile(Tile tile, boolean excludeFinished) {
+    public Set<Location> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
+        if (!isDeployAllowed(tile, Follower.class)) return Collections.emptySet();
         Set<Location> locations = tile.getUnoccupiedScoreables(excludeFinished);
-        Tile nextTile = getCurrentTile(); //can be tile != nextTile
-        //v pripade custom pravidla zakazeme pokladat na princeznu obyc figurku
-        if (nextTile != null) { //nextTile muze byt null v pripade volani z AI, kde se muze predpripravovat figure rating pred polozenim
-            City princessLoc = nextTile.getPrincessCityPiece();
-            if (princessLoc != null && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-                locations.remove(princessLoc.getLocation());
+        if (hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+            City princessCity = tile.getCityWithPrincess();
+            if (princessCity != null) {
+                locations.remove(princessCity.getLocation());
             }
         }
         return locations;
@@ -339,16 +334,23 @@ public class Game extends GameSettings {
         }
     }
 
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         for (Capability cap: capabilities) {
             cap.prepareActions(actions, commonSites);
         }
     }
 
-    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap commonSites) {
         for (Capability cap: capabilities) {
             cap.prepareFollowerActions(actions, commonSites);
         }
+    }
+
+    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+        for (Capability cap: capabilities) {
+            if (!cap.isDeployAllowed(tile, meepleType)) return false;
+        }
+        return true;
     }
 
     public void scoreCompleted(CompletableScoreContext ctx) {

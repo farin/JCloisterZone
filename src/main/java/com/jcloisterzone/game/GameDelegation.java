@@ -9,7 +9,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
@@ -24,8 +24,8 @@ public interface GameDelegation {
     //TODO merge with UI events ??? - asi ne
     void begin();
     //void start();
-    void prepareActions(List<PlayerAction> actions, Sites commonSites);
-    void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites);
+    void prepareActions(List<PlayerAction> actions, LocationsMap commonSites);
+    void prepareFollowerActions(List<PlayerAction> actions, LocationsMap commonSites);
     void scoreCompleted(CompletableScoreContext ctx);
     void turnCleanUp();
     void finalScoring();

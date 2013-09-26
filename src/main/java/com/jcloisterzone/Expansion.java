@@ -13,6 +13,7 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.CathedralCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability;
+import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
@@ -60,7 +61,7 @@ public enum Expansion {
     RIVER("R1", _("The River"), new Class[] { RiverCapability.class }),
     RIVER_II("R2", _("The River II"), new Class[] { RiverCapability.class }),
     CATHARS("SI", _("The Cathars / Siege"), new Class[] { SiegeCapability.class }),
-    COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")"),
+    COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")", new Class[] { CountCapability.class }),
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
     CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
     TUNNEL("TU", _("The Tunnel"), new Class[] { TunnelCapability.class }),

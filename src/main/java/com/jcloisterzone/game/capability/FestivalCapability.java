@@ -9,7 +9,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 
@@ -23,7 +23,7 @@ public class FestivalCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         if (getTile().getTrigger() != TileTrigger.FESTIVAL) return;
 
         UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(getGame().getActivePlayer()));
@@ -39,7 +39,7 @@ public class FestivalCapability extends Capability {
                 action.getOrCreate(m.getPosition()).add(m.getLocation());
             }
         }
-        if (! action.getSites().isEmpty()) {
+        if (! action.getLocationsMap().isEmpty()) {
             actions.add(action);
         }
     }

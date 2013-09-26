@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
@@ -37,6 +38,7 @@ public class Tile /*implements Cloneable*/ {
     public static final String ABBEY_TILE_ID = "AM.A";
 
     protected Game game;
+    private final Expansion origin;
     private final String id;
 
     private ArrayList<Feature> features;
@@ -48,28 +50,19 @@ public class Tile /*implements Cloneable*/ {
     protected Position position = null;
     private Rotation rotation = Rotation.R0;
 
-    /** no dragon, no magic gate, not bridges for forbidden tiles (used for initial Count tiles) */
-    private boolean forbidden;
-
     private TileTrigger trigger;
     private Class<? extends Feature> cornCircle;
     private EdgePattern edgePattern;
 
-    public Tile(String id) {
+    public Tile(Expansion origin, String id) {
+        this.origin = origin;
         this.id = id;
     }
 
     @Override
     public int hashCode() {
+        //TODO tiles with same id has same hashcode, is it ok?
         return id.hashCode();
-    }
-
-    public boolean isForbidden() {
-        return forbidden;
-    }
-
-    public void setForbidden(boolean forbidden) {
-        this.forbidden = forbidden;
     }
 
     public EdgePattern getEdgePattern() {
@@ -86,6 +79,10 @@ public class Tile /*implements Cloneable*/ {
 
     public String getId() {
         return id;
+    }
+
+    public Expansion getOrigin() {
+        return origin;
     }
 
     protected boolean check(Tile tile, Location rel, Board board) {
@@ -293,8 +290,8 @@ public class Tile /*implements Cloneable*/ {
         this.cornCircle = cornCircle;
     }
 
-    public City getPrincessCityPiece() {
-        for(Feature p : features) {
+    public City getCityWithPrincess() {
+        for (Feature p : features) {
             if (p instanceof City ) {
                 City cp = (City) p;
                 if (cp.isPricenss()) {
@@ -324,7 +321,7 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public boolean isBridgeAllowed(Location bridgeLoc) {
-        if (isForbidden() || getBridge() != null) return false;
+        if (origin == Expansion.COUNT || getBridge() != null) return false;
         return edgePattern.isBridgeAllowed(bridgeLoc, rotation);
     }
 

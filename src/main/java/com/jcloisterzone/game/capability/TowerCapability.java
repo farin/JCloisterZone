@@ -23,7 +23,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
@@ -96,9 +96,9 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareCommonOnTower(commonSites);
+            prepareTowerFollowerDeploy(followerLocMap);
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
@@ -108,18 +108,13 @@ public final class TowerCapability extends Capability {
         }
     }
 
-    public void prepareCommonOnTower(Sites commonTileSites) {
-        Set<Position> towerActions = getOpenTowers(1);
-        if (!towerActions.isEmpty()) {
-            if (getGame().hasCapability(DragonCapability.class)) {
-                Position dragonPosition = getGame().getCapability(DragonCapability.class).getDragonPosition();
-                if (dragonPosition != null) {
-                    //cannot place meeple on tile with dragon
-                    towerActions.remove(dragonPosition);
+    public void prepareTowerFollowerDeploy(LocationsMap followerLocMap) {
+        Set<Position> availableTowers = getOpenTowers(1);
+        if (!availableTowers.isEmpty()) {
+            for (Position p : availableTowers) {
+                if (game.isDeployAllowed(getBoard().get(p), Follower.class)) {
+                    followerLocMap.getOrCreate(p).add(Location.TOWER);
                 }
-            }
-            for(Position p : towerActions) {
-                commonTileSites.getOrCreate(p).add(Location.TOWER);
             }
         }
     }

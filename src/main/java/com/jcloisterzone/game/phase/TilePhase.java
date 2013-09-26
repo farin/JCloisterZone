@@ -9,7 +9,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -53,7 +53,7 @@ public class TilePhase extends Phase {
         game.fireGameEvent().tilePlaced(tile);
 
         if (bridgeRequired) {
-            Sites sites = bridgeCap.prepareMandatoryBridgeAction().getSites();
+            LocationsMap sites = bridgeCap.prepareMandatoryBridgeAction().getLocationsMap();
 
             assert sites.size() == 1;
             Position pos = sites.keySet().iterator().next();

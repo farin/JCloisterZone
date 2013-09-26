@@ -9,7 +9,8 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 
 public class PortalCapability extends Capability {
@@ -22,7 +23,7 @@ public class PortalCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         if (TileTrigger.PORTAL.equals(getTile().getTrigger())) {
             if (game.getActivePlayer().hasFollower()) {
                 prepareMagicPortal(commonSites);
@@ -30,16 +31,12 @@ public class PortalCapability extends Capability {
         }
     }
 
-    private void prepareMagicPortal(Sites commonSites) {
+    private void prepareMagicPortal(LocationsMap commonSites) {
         for (Tile tile : getBoard().getAllTiles()) {
             if (tile == getTile()) continue; //prepared by basic common
-            if (tile.isForbidden()) continue;
-            if (game.hasCapability(DragonCapability.class)) {
-                if (tile.getPosition().equals(game.getCapability(DragonCapability.class).getDragonPosition())) continue;
-            }
-            Set<Location> tileSites = getGame().prepareCommonForTile(tile, true);
-            if (tileSites.isEmpty()) continue;
-            commonSites.put(tile.getPosition(), tileSites);
+            Set<Location> locations = game.prepareFollowerLocations(tile, true);
+            if (locations.isEmpty()) continue;
+            commonSites.put(tile.getPosition(), locations);
         }
     }
 

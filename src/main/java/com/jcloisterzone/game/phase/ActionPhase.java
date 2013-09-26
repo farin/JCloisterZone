@@ -10,7 +10,7 @@ import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
@@ -39,11 +39,11 @@ public class ActionPhase extends Phase {
     public void enter() {
         List<PlayerAction> actions = Lists.newArrayList();
 
-        Sites commonSites = game.prepareCommonSites();
-        if (getActivePlayer().hasFollower(SmallFollower.class)  && !commonSites.isEmpty()) {
-            actions.add(new MeepleAction(SmallFollower.class, commonSites));
+        LocationsMap locMap = game.prepareFollowerLocations();
+        if (getActivePlayer().hasFollower(SmallFollower.class)  && !locMap.isEmpty()) {
+            actions.add(new MeepleAction(SmallFollower.class, locMap));
         }
-        game.prepareActions(actions, commonSites);
+        game.prepareActions(actions, locMap);
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
@@ -108,7 +108,7 @@ public class ActionPhase extends Phase {
         int captureRange = doPlaceTowerPiece(p);
         game.fireGameEvent().towerIncreased(p, captureRange);
         TakePrisonerAction captureAction = prepareCapture(p, captureRange);
-        if (captureAction.getSites().isEmpty()) {
+        if (captureAction.getLocationsMap().isEmpty()) {
             next();
             return;
         }

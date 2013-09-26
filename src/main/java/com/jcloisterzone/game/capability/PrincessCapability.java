@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsOccupied;
@@ -27,8 +27,8 @@ public class PrincessCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        City c = getTile().getPrincessCityPiece();
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+        City c = getTile().getCityWithPrincess();
         if (c == null || ! c.walk(new IsOccupied().with(Follower.class))) return;
         Feature cityRepresentative = c.getMaster();
 
@@ -39,7 +39,7 @@ public class PrincessCapability extends Capability {
                 princessAction.getOrCreate(m.getPosition()).add(m.getLocation());
             }
         }
-        if (! princessAction.getSites().isEmpty()) {
+        if (!princessAction.getLocationsMap().isEmpty()) {
             actions.add(princessAction);
         }
     }

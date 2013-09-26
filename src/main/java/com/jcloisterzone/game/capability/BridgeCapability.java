@@ -15,7 +15,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.game.Capability;
 
 public class BridgeCapability extends Capability {
@@ -39,7 +39,7 @@ public class BridgeCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         if (! bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
             BridgeAction action = prepareBridgeAction();
             if (action != null) {
@@ -90,7 +90,7 @@ public class BridgeCapability extends Capability {
     private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action, Location bridgeLoc) {
         if (isBridgePlacementAllowed(tile, tile.getPosition(), bridgeLoc)) {
             if (action == null) action = new BridgeAction();
-            action.getSites().getOrCreate(tile.getPosition()).add(bridgeLoc);
+            action.getLocationsMap().getOrCreate(tile.getPosition()).add(bridgeLoc);
         }
         return action;
     }
@@ -168,7 +168,7 @@ public class BridgeCapability extends Capability {
 
     public void deployBridge(Position pos, Location loc) {
         Tile tile = getBoard().get(pos);
-        if (! tile.isBridgeAllowed(loc)) {
+        if (!tile.isBridgeAllowed(loc)) {
             throw new IllegalArgumentException("Cannot deploy " + loc + " bridge on " + pos);
         }
         bridgeUsed = true;

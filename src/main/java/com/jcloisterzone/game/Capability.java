@@ -13,9 +13,10 @@ import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+import com.jcloisterzone.figure.Meeple;
 
 
 public class Capability {
@@ -75,10 +76,14 @@ public class Capability {
     public void begin() {
     }
 
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
     }
 
-    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    }
+
+    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+        return true;
     }
 
     public void scoreCompleted(CompletableScoreContext ctx) {

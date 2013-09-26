@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 
 public class PlagueCapability extends Capability {
@@ -32,6 +33,15 @@ public class PlagueCapability extends Capability {
         getTilePack().activateGroup("plague");
     }
 
+    @Override
+    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+        for (PlagueSource ps : plagueSources) {
+            if (ps.active && ps.pos.equals(tile.getPosition())) return false;
+        }
+        //TODO check flea locations
+        return true;
+    }
+
     public List<PlagueSource> getPlagueSources() {
         return plagueSources;
     }
@@ -39,7 +49,7 @@ public class PlagueCapability extends Capability {
     public List<Position> getActiveSources() {
         List<Position> result = new ArrayList<>(6);
         for (PlagueSource source : plagueSources) {
-            if (source.isActive) {
+            if (source.active) {
                 result.add(source.pos);
             }
         }
@@ -48,7 +58,7 @@ public class PlagueCapability extends Capability {
 
     public static class PlagueSource {
         public Position pos;
-        public boolean isActive = true;
+        public boolean active = true;
 
         public PlagueSource(Position pos) {
             this.pos = pos;

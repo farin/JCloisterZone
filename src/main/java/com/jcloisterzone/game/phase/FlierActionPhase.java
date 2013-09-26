@@ -10,10 +10,11 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -23,12 +24,10 @@ import com.jcloisterzone.game.capability.FlierCapability;
 public class FlierActionPhase extends Phase {
 
     private final FlierCapability flierCap;
-    private final DragonCapability dragonCap;
 
     public FlierActionPhase(Game game) {
         super(game);
         flierCap = game.getCapability(FlierCapability.class);
-        dragonCap = game.getCapability(DragonCapability.class);
     }
 
     @Override
@@ -42,12 +41,12 @@ public class FlierActionPhase extends Phase {
         }
         Tile target = getBoard().get(pos);
 
-        if (target == null || target.isForbidden() || (dragonCap != null && pos.equals(dragonCap.getDragonPosition()))) {
+        if (target == null || !game.isDeployAllowed(target, Follower.class)) {
             next();
             return;
         }
 
-        Sites sites = new Sites();
+        LocationsMap sites = new LocationsMap();
         Set<Location> locations = Sets.newHashSet();
         for (Feature f : target.getFeatures()) {
             if (f instanceof Farm) continue;

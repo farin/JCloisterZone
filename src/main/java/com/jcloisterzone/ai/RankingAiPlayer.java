@@ -150,7 +150,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         for(PlayerAction action : actions) {
             if (action instanceof MeepleAction) {
                 MeepleAction ma = (MeepleAction) action;
-                rankMeeplePlacement(currTile, ma, ma.getMeepleType(), pos, ma.getSites().get(pos));
+                rankMeeplePlacement(currTile, ma, ma.getMeepleType(), pos, ma.getLocationsMap().get(pos));
 //				for(PositionLocation posloc : hopefulGatePlacements) {
 //					rankMeepleAction(currTile, ma, posloc.position, Collections.singleton(posloc.location));
 //				}

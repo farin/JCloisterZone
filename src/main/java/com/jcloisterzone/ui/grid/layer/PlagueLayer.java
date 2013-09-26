@@ -28,11 +28,11 @@ public class PlagueLayer extends AbstractGridLayer {
         for (PlagueSource source: plague.getPlagueSources()) {
             i++;
 
-            g2.setColor(source.isActive ? ACTIVE_PLAGUE : ERADICTED_PLAGUE);
+            g2.setColor(source.active ? ACTIVE_PLAGUE : ERADICTED_PLAGUE);
             int x = sqSize-boxSize-sqSize/10;
             int y = sqSize/10;
             g2.fillRect(getOffsetX(source.pos)+x, getOffsetY(source.pos)+y, boxSize, boxSize);
-            if (source.isActive) {
+            if (source.active) {
                 ImmutablePoint center = new ImmutablePoint(x+boxSize/2, y+boxSize/2);
                 drawAntialiasedTextCenteredNoScale(g2, i+"", 26, source.pos, center, Color.WHITE, null);
             }

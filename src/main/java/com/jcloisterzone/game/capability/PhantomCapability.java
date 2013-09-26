@@ -5,7 +5,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Capability;
 
@@ -17,15 +17,15 @@ public class PhantomCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
-        if (game.getActivePlayer().hasFollower(Phantom.class) && ! commonSites.isEmpty()) {
-            actions.add(new MeepleAction(Phantom.class, commonSites));
+    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+        if (game.getActivePlayer().hasFollower(Phantom.class) && !followerLocMap.isEmpty()) {
+            actions.add(new MeepleAction(Phantom.class, followerLocMap));
         }
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        prepareFollowerActions(actions, commonSites);
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+        prepareFollowerActions(actions, followerLocMap);
     }
 
 

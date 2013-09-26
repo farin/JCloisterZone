@@ -11,8 +11,9 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
@@ -45,20 +46,24 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
-        if (getTile().getTrigger() == TileTrigger.VOLCANO &&
-            getGame().hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return;
-
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         Player player = game.getActivePlayer();
-        Position pos = getTile().getPosition();
-        if (player.hasSpecialMeeple(Builder.class)) {
-            MeepleAction meepleAction = new MeepleAction(Builder.class);
-            Set<Location> dirs = getTile().getPlayerFeatures(player, Road.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            dirs = getTile().getPlayerFeatures(player, City.class);
-            if (! dirs.isEmpty()) meepleAction.getOrCreate(pos).addAll(dirs);
-            if (! meepleAction.getSites().isEmpty()) actions.add(meepleAction);
-        }
+        if (!player.hasSpecialMeeple(Builder.class)) return;
+
+        Tile tile = getTile();
+        if (!game.isDeployAllowed(tile, Builder.class)) return;
+
+        Set<Location> roads = tile.getPlayerFeatures(player, Road.class);
+        Set<Location> cities = tile.getPlayerFeatures(player, City.class);
+        if (roads.isEmpty() && cities.isEmpty()) return;
+
+        Position pos = tile.getPosition();
+        MeepleAction builderAction = new MeepleAction(Builder.class);
+
+        builderAction.getOrCreate(pos).addAll(roads);
+        builderAction.getOrCreate(pos).addAll(cities);
+        actions.add(builderAction);
+
     }
 
     @Override

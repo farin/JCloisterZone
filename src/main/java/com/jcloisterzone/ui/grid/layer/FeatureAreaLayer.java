@@ -43,7 +43,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     }
 
     protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
-        Set<Location> locations = action.getSites().get(p);
+        Set<Location> locations = action.getLocationsMap().get(p);
         if (locations == null) return null;
         if (action instanceof BridgeAction) {
             return getClient().getResourceManager().getBridgeAreas(tile, getSquareSize(), locations);

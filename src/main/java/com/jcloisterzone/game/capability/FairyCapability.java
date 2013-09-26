@@ -10,7 +10,7 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 
@@ -29,7 +29,7 @@ public class FairyCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         FairyAction fairyAction = null;
         for (Follower m : game.getActivePlayer().getFollowers()) {
             if (m.getPosition() != null && !m.at(fairyPosition)) {
