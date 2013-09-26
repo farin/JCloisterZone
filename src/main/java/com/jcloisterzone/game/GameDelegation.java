@@ -30,10 +30,7 @@ public interface GameDelegation {
     void turnCleanUp();
     void finalScoring();
 
-    /** allow placements which are normally not allowed */
-    boolean isSpecialPlacementAllowed(Tile tile, Position p);
-    /** forbid placements which are normally allowed */
-    boolean isPlacementAllowed(Tile tile, Position p);
+    boolean isTilePlacementAllowed(Tile tile, Position p);
 
     void saveTileToSnapshot(Tile tile, Document doc, Element tileNode);
     void loadTileFromSnapshot(Tile tile, Element tileNode);

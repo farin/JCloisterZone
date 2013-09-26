@@ -79,7 +79,7 @@ public class RiverCapability extends CapabilityController {
     }
 
     @Override
-    public boolean isPlacementAllowed(Tile tile, Position p) {
+    public boolean isTilePlacementAllowed(Tile tile, Position p) {
         if (tile.getRiver() == null) return true;
         for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
 

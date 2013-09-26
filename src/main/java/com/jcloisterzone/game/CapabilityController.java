@@ -105,12 +105,7 @@ public class CapabilityController implements GameDelegation {
     }
 
     @Override
-    public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
-        return false;
-    }
-
-    @Override
-    public boolean isPlacementAllowed(Tile tile, Position p) {
+    public boolean isTilePlacementAllowed(Tile tile, Position p) {
         return true;
     }
 

@@ -62,7 +62,7 @@ public class ActionPhase extends Phase {
             }
         }
         if (game.hasCapability(Capability.FLIER)) {
-            FlierCapability fg = game.getFlierGame();
+            FlierCapability fg = game.getFlierCapability();
             if (fg.isFlierRollAllowed()) {
                 return false;
             }
@@ -174,7 +174,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void setFlierDistance(int distance) {
-        game.getFlierGame().setFlierDistance(distance);
+        game.getFlierCapability().setFlierDistance(distance);
         next(FlierActionPhase.class);
     }
 

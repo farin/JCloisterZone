@@ -41,6 +41,7 @@ import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
@@ -372,7 +373,10 @@ public class Game extends GameSettings {
     public CornCircleCapability getCornCircleCapability() {
         return (CornCircleCapability) extensions.get(Capability.CORN_CIRCLE);
     }
-    public FlierCapability getFlierGame() {
+    public FlierCapability getFlierCapability() {
         return (FlierCapability) extensions.get(Capability.FLIER);
+    }
+    public PlagueCapability getPlagueCapability() {
+        return (PlagueCapability) extensions.get(Capability.PLAGUE);
     }
 }

@@ -121,4 +121,8 @@ public class GameEventAdapter implements GameEventListener {
     public void bazaarAuctionsEnded() {
     }
 
+    @Override
+    public void plagueSpread() {
+    }
+
 }

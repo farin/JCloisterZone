@@ -190,7 +190,7 @@ public class ClientController implements GameEventListener, UserInterface {
         GridPanel grid = client.getGridPanel();
         if (grid == null) return;
 
-        FlierCapability flierGame = client.getGame().getFlierGame();
+        FlierCapability flierGame = client.getGame().getFlierCapability();
         FlierPanel flierPanel;
         boolean rollAllowed = false, rollMade = false;
         if (flierGame != null) {
@@ -378,5 +378,10 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void bazaarAuctionsEnded() {
         client.getGridPanel().setSecondPanel(null);
+    }
+
+    @Override
+    public void plagueSpread() {
+        client.getGridPanel().repaint();
     }
 }

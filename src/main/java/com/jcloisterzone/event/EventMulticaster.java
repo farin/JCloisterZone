@@ -246,4 +246,10 @@ public class EventMulticaster implements GameEventListener, UserInterface {
         ((GameEventListener)b).bazaarAuctionsEnded();
     }
 
+    @Override
+    public void plagueSpread() {
+        ((GameEventListener)a).plagueSpread();
+        ((GameEventListener)b).plagueSpread();
+    }
+
 }

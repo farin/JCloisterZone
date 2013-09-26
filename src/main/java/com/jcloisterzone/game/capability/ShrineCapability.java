@@ -58,7 +58,7 @@ public final class ShrineCapability extends CapabilityController {
     }
 
     @Override
-    public boolean isPlacementAllowed(Tile tile, Position p) {
+    public boolean isTilePlacementAllowed(Tile tile, Position p) {
         if (tile.hasCloister()) {
             int opositeCount = 0;
             int sameCount = 0;

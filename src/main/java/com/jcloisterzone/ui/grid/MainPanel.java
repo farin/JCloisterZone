@@ -16,6 +16,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
@@ -28,6 +29,7 @@ import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FairyLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
+import com.jcloisterzone.ui.grid.layer.PlagueLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TowerLayer;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -47,6 +49,7 @@ public class MainPanel extends BackgroundPanel {
     private FairyLayer fairyLayer;
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
+    private PlagueLayer plagueLayer;
 
     public MainPanel(Client client) {
         this.client = client;
@@ -102,6 +105,10 @@ public class MainPanel extends BackgroundPanel {
         if (getGame().hasCapability(Capability.CASTLE)) {
             castleLayer = new CastleLayer(gridPanel);
             gridPanel.addLayer(castleLayer);
+        }
+        if (getGame().hasCapability(Capability.PLAGUE)) {
+            plagueLayer = new PlagueLayer(gridPanel);
+            gridPanel.addLayer(plagueLayer);
         }
         add(gridPanel);
 

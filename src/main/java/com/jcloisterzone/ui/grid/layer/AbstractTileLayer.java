@@ -6,7 +6,6 @@ import java.awt.geom.AffineTransform;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 

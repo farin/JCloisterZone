@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 
@@ -51,17 +52,17 @@ public class Board {
         currentAvailMoves.clear();
         for (Position p : availMoves.keySet()) {
             EnumSet<Rotation> allowed = EnumSet.noneOf(Rotation.class);
-            for(Rotation rotation: Rotation.values()) {
+            for (Rotation rotation: Rotation.values()) {
                 tile.setRotation(rotation);
-                if (! isPlacementAllowed(tile, p)) {
-                    if (! game.getDelegate().isSpecialPlacementAllowed(tile, p)) {
-                        continue;
-                    }
+                if (!isPlacementAllowed(tile, p)) {
+                    //not allowed according standard rules, must check if deployed bridge can allow it
+                    if (!game.hasCapability(Capability.BRIDGE)) continue;
+                    if (!game.getBridgeCapability().isTilePlacementWithBridgePossible(tile, p)) continue;
                 }
-                if (! game.getDelegate().isPlacementAllowed(tile, p)) continue;
+                if (!game.getDelegate().isTilePlacementAllowed(tile, p)) continue;
                 allowed.add(rotation);
             }
-            if (! allowed.isEmpty()) {
+            if (!allowed.isEmpty()) {
                 currentAvailMoves.put(p, allowed);
             }
         }

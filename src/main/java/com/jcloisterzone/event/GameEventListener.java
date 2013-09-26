@@ -20,6 +20,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.phase.Phase;
 
+//TODO change event system - allow adding events withou signature change
 public interface GameEventListener extends EventListener {
 
     void updateSlot(PlayerSlot slot);
@@ -66,4 +67,6 @@ public interface GameEventListener extends EventListener {
     void castleDeployed(Castle castle1, Castle castle2);
     void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem);
     void bazaarAuctionsEnded();
+
+    void plagueSpread();
 }

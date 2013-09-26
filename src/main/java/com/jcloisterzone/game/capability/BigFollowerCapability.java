@@ -19,7 +19,7 @@ public class BigFollowerCapability extends CapabilityController {
 
     @Override
     public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
-        if (game.getActivePlayer().hasFollower(BigFollower.class) && ! commonSites.isEmpty()) {
+        if (game.getActivePlayer().hasFollower(BigFollower.class) && !commonSites.isEmpty()) {
             actions.add(new MeepleAction(BigFollower.class, commonSites));
         }
     }

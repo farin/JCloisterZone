@@ -108,8 +108,7 @@ public class BridgeCapability extends CapabilityController {
         return true;
     }
 
-    @Override
-    public boolean isSpecialPlacementAllowed(Tile tile, Position p) {
+    public boolean isTilePlacementWithBridgePossible(Tile tile, Position p) {
         if (getPlayerBridges(game.getActivePlayer()) > 0) {
             if (isTilePlacementWithBridgeAllowed(tile, p, Location.NS)) return true;
             if (isTilePlacementWithBridgeAllowed(tile, p, Location.WE)) return true;

@@ -26,7 +26,7 @@ public class FlierActionPhase extends Phase {
 
     public FlierActionPhase(Game game) {
         super(game);
-        flierGame = game.getFlierGame();
+        flierGame = game.getFlierCapability();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class FlierActionPhase extends Phase {
         Tile target = getBoard().get(pos);
         DragonCapability dgCap = game.getDragonCapability();
 
-        if (target == null || (dgCap != null && pos.equals(dgCap.getDragonPosition()))) {
+        if (target == null || target.isForbidden() || (dgCap != null && pos.equals(dgCap.getDragonPosition()))) {
             next();
             return;
         }

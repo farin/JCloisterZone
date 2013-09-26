@@ -23,7 +23,7 @@ public class PlacementHistory extends AbstractGridLayer {
         super(gridPanel);
         int i = placedTiles.size();
         int limit = getClient().getGame().getAllPlayers().length;
-        for(Tile t : placedTiles) {
+        for (Tile t : placedTiles) {
             if (i <= limit) {
                 history.put(t.getPosition(), "" + i);
             }
@@ -34,7 +34,7 @@ public class PlacementHistory extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g) {
-        for(Entry<Position, String> entry : history.entrySet()) {
+        for (Entry<Position, String> entry : history.entrySet()) {
             drawAntialiasedTextCentered(g, entry.getValue(), 80, entry.getKey(), POINT, COLOR, null);
         }
 
