@@ -22,16 +22,18 @@ import com.jcloisterzone.game.capability.FlierCapability;
 
 public class FlierActionPhase extends Phase {
 
-    final FlierCapability flierGame;
+    private final FlierCapability flierCap;
+    private final DragonCapability dragonCap;
 
     public FlierActionPhase(Game game) {
         super(game);
-        flierGame = game.getFlierCapability();
+        flierCap = game.getCapability(FlierCapability.class);
+        dragonCap = game.getCapability(DragonCapability.class);
     }
 
     @Override
     public void enter() {
-        int distance = flierGame.getFlierDistance();
+        int distance = flierCap.getFlierDistance();
         Tile origin = game.getCurrentTile();
         Location direction = origin.getFlier().rotateCW(origin.getRotation());
         Position pos = game.getCurrentTile().getPosition();
@@ -39,9 +41,8 @@ public class FlierActionPhase extends Phase {
             pos = pos.add(direction);
         }
         Tile target = getBoard().get(pos);
-        DragonCapability dgCap = game.getDragonCapability();
 
-        if (target == null || target.isForbidden() || (dgCap != null && pos.equals(dgCap.getDragonPosition()))) {
+        if (target == null || target.isForbidden() || (dragonCap != null && pos.equals(dragonCap.getDragonPosition()))) {
             next();
             return;
         }
@@ -63,7 +64,7 @@ public class FlierActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
             actions.add(new MeepleAction(SmallFollower.class, sites));
         }
-        game.getDelegate().prepareFollowerActions(actions, sites);
+        game.prepareFollowerActions(actions, sites);
         notifyUI(actions, false);
     }
 
@@ -74,7 +75,7 @@ public class FlierActionPhase extends Phase {
 
     @Override
     public void next() {
-        flierGame.setFlierDistance(0);
+        flierCap.setFlierDistance(0);
         super.next();
     }
 

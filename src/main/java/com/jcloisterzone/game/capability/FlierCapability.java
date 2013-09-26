@@ -7,12 +7,12 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 
-public class FlierCapability extends CapabilityController {
+public class FlierCapability extends Capability {
 
     private int flierDistance;
 

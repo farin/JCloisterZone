@@ -12,8 +12,8 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.BridgeCapability;
 
 
 /**
@@ -56,10 +56,10 @@ public class Board {
                 tile.setRotation(rotation);
                 if (!isPlacementAllowed(tile, p)) {
                     //not allowed according standard rules, must check if deployed bridge can allow it
-                    if (!game.hasCapability(Capability.BRIDGE)) continue;
-                    if (!game.getBridgeCapability().isTilePlacementWithBridgePossible(tile, p)) continue;
+                    if (!game.hasCapability(BridgeCapability.class)) continue;
+                    if (!game.getCapability(BridgeCapability.class).isTilePlacementWithBridgePossible(tile, p)) continue;
                 }
-                if (!game.getDelegate().isTilePlacementAllowed(tile, p)) continue;
+                if (!game.isTilePlacementAllowed(tile, p)) continue;
                 allowed.add(rotation);
             }
             if (!allowed.isEmpty()) {

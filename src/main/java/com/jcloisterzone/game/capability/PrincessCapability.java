@@ -15,9 +15,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class PrincessCapability extends CapabilityController {
+public class PrincessCapability extends Capability {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

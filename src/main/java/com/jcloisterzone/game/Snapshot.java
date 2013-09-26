@@ -122,13 +122,9 @@ public class Snapshot implements Serializable {
     private void createCapabilityElements(Game game) {
         for (Capability cap : game.getCapabilities()) {
             Element el = doc.createElement("capability");
-            el.setAttribute("name", cap.name());
+            el.setAttribute("name", cap.getClass().getName());
             root.appendChild(el);
-            CapabilityController impl = game.getCapabilityController(cap);
-            if (impl != null) {
-                //TODO fix Expansion specific third attr
-                impl.saveToSnapshot(doc, el);
-            }
+            cap.saveToSnapshot(doc, el);
         }
     }
 
@@ -172,7 +168,7 @@ public class Snapshot implements Serializable {
             XmlUtils.injectPosition(el, tile.getPosition());
             parent.appendChild(el);
             tileElemens.put(tile.getPosition(), el);
-            game.getDelegate().saveTileToSnapshot(tile, doc, el);
+            game.saveTileToSnapshot(tile, doc, el);
         }
         for (Tile tile : game.getBoard().getDiscardedTiles()) {
             Element el = doc.createElement("discard");
@@ -238,19 +234,20 @@ public class Snapshot implements Serializable {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public void loadCapabilities(Game game) {
         NodeList nl = root.getElementsByTagName("capability");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            Capability cap = Capability.valueOf(el.getAttribute("name"));
-            CapabilityController capImpl = game.getCapabilityController(cap);
-            if (capImpl != null) {
-                try {
-                    capImpl.loadFromSnapshot(doc, el);
-                } catch (Exception e) {
-                    logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + cap.name(), e);
-                    game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
-                }
+            String capabilityName = el.getAttribute("name");
+            try {
+                //TODO instances should be created here, not in load phase
+                Class<? extends Capability> capabilityClass = (Class<? extends Capability>) Class.forName(capabilityName);
+                Capability capability = game.getCapability(capabilityClass);
+                capability.loadFromSnapshot(doc, el);
+            } catch (Exception e) {
+                logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + capabilityName, e);
+                game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
             }
         }
     }

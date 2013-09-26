@@ -23,6 +23,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.rmi.ClientIF;
 
 
@@ -156,8 +157,13 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
-        //pay ransom is valid anytime
-        game.getTowerCapability().payRansom(playerIndexToPay, meepleType);
+        //pay ransom is valid any time
+        TowerCapability towerCap = game.getCapability(TowerCapability.class);
+        if (towerCap == null) {
+            logger.error(Application.ILLEGAL_STATE_MSG, "payRansom");
+            return;
+        }
+        towerCap.payRansom(playerIndexToPay, meepleType);
     }
 
     @Override

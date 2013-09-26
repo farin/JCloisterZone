@@ -23,10 +23,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.capability.RiverCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 
 
 public class TilePackFactory {
@@ -104,7 +105,8 @@ public class TilePackFactory {
     }
 
     protected boolean isTunnelActive(Expansion expansion) {
-        return expansion == Expansion.TUNNEL || (game.hasCapability(Capability.TUNNEL) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
+        return expansion == Expansion.TUNNEL ||
+            (game.hasCapability(TunnelCapability.class) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
     }
 
     protected int getTileCount(Element card, String tileId) {
@@ -116,7 +118,7 @@ public class TilePackFactory {
     }
 
     protected String getTileGroup(Tile tile, Element card) {
-        String group = game.getDelegate().getTileGroup(tile);
+        String group = game.getTileGroup(tile);
         if (group != null) return group;
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
@@ -140,7 +142,7 @@ public class TilePackFactory {
         List<Tile> tiles = new ArrayList<Tile>(count);
         for (int j = 0; j < count; j++) {
             Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
-            game.getDelegate().initTile(tile, card); //must be called before rotation!
+            game.initTile(tile, card); //must be called before rotation!
             tiles.add(tile);
         }
         return tiles;
@@ -187,7 +189,7 @@ public class TilePackFactory {
                             }
                         } else if (game.hasExpansion(Expansion.WIND_ROSE)) {
                             if (tile.getId().equals("BA.RCr")) continue;
-                            if (game.hasCapability(Capability.RIVER)) {
+                            if (game.hasCapability(RiverCapability.class)) {
                                 if (tile.getId().equals("WR.CFR")) {
                                     pos = new Position(0, 1);
                                 }

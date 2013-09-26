@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;
@@ -10,7 +11,7 @@ public class GameSettings {
 
     private final Set<CustomRule> customRules = EnumSet.noneOf(CustomRule.class);
     private final Set<Expansion> expansions = EnumSet.noneOf(Expansion.class);
-    private final Set<Capability> capabilities = EnumSet.noneOf(Capability.class);
+    private final Set<Class<? extends Capability>> capabilityClasses = new HashSet<>();
 
     public boolean hasExpansion(Expansion expansion) {
         return expansions.contains(expansion);
@@ -20,8 +21,8 @@ public class GameSettings {
         return customRules.contains(rule);
     }
 
-    public boolean hasCapability(Capability c) {
-        return capabilities.contains(c);
+    public boolean hasCapability(Class<? extends Capability> c) {
+        return capabilityClasses.contains(c);
     }
 
     public Set<Expansion> getExpansions() {
@@ -32,8 +33,8 @@ public class GameSettings {
         return customRules;
     }
 
-    public Set<Capability> getCapabilities() {
-        return capabilities;
+    public Set<Class<? extends Capability>> getCapabilityClasses() {
+        return capabilityClasses;
     }
 
 }

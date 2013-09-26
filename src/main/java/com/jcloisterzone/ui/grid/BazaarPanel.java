@@ -54,7 +54,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
     public BazaarPanel(Client client) {
        super(client);
        noAuction = client.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
-       bcb = client.getGame().getBazaarCapability();
+       bcb = client.getGame().getCapability(BazaarCapability.class);
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
 

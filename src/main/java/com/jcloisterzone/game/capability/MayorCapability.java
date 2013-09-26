@@ -13,9 +13,9 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class MayorCapability extends CapabilityController {
+public class MayorCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {

@@ -27,9 +27,9 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
+import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.phase.ScorePhase;
 
@@ -289,8 +289,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double rankFairy() {
-        if (! game.hasCapability(Capability.FAIRY)) return 0;
-        FairyCapability fc = game.getFairyCapability();
+        if (!game.hasCapability(FairyCapability.class)) return 0;
+        FairyCapability fc = game.getCapability(FairyCapability.class);
         Position fairyPos = fc.getFairyPosition();
         if (fairyPos == null) return 0;
 
@@ -435,7 +435,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             rating += 0.5;
         }
 
-        BuilderCapability bc = game.getBuilderCapability();
+        BuilderCapability bc = game.getCapability(BuilderCapability.class);
         //builder used on object
         if (bc.getBuilderState() == BuilderState.ACTIVATED) {
             rating += 3.5;
@@ -466,7 +466,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         initVars();
-        Position dragonPosition = game.getDragonCapability().getDragonPosition();
+        Position dragonPosition = game.getCapability(DragonCapability.class).getDragonPosition();
         double tensionX = 0, tensionY = 0;
 
         for (Meeple m : game.getDeployedMeeples()) {

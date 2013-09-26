@@ -30,10 +30,9 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CapabilityController;
 
 
-public final class TowerCapability extends CapabilityController {
+public final class TowerCapability extends Capability {
 
     private static final int RANSOM_POINTS = 3;
 
@@ -112,8 +111,8 @@ public final class TowerCapability extends CapabilityController {
     public void prepareCommonOnTower(Sites commonTileSites) {
         Set<Position> towerActions = getOpenTowers(1);
         if (!towerActions.isEmpty()) {
-            if (getGame().hasCapability(Capability.DRAGON)) {
-                Position dragonPosition = getGame().getDragonCapability().getDragonPosition();
+            if (getGame().hasCapability(DragonCapability.class)) {
+                Position dragonPosition = getGame().getCapability(DragonCapability.class).getDragonPosition();
                 if (dragonPosition != null) {
                     //cannot place meeple on tile with dragon
                     towerActions.remove(dragonPosition);

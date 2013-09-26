@@ -10,9 +10,9 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class CornCircleCapability extends CapabilityController {
+public class CornCircleCapability extends Capability {
 
     public static enum CornCicleOption {
         DEPLOYMENT,

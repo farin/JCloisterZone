@@ -30,10 +30,10 @@ import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.phase.ScorePhase;
 
-public class WagonCapability extends CapabilityController {
+public class WagonCapability extends Capability {
 
      private Map<Player, Feature> returnedWagons = Maps.newHashMap();
      private Player wagonPlayer;

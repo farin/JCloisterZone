@@ -10,8 +10,8 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.FairyCapability;
 
 
 public class GameOverPhase extends Phase implements ScoreAllCallback {
@@ -22,15 +22,16 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
 
     @Override
     public void enter() {
-        if (game.hasCapability(Capability.FAIRY)) {
+        FairyCapability fairyCap = game.getCapability(FairyCapability.class);
+        if (fairyCap != null) {
             //erase position to not affect final scoring
-            game.getFairyCapability().setFairyPosition(null);
+            fairyCap.setFairyPosition(null);
         }
 
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
         scoreAll.scoreAll(game, this);
 
-        game.getDelegate().finalScoring();
+        game.finalScoring();
         game.fireGameEvent().gameOver();
     }
 

@@ -14,11 +14,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameEventAdapter;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
-public class WindRoseCapability extends CapabilityController {
+public class WindRoseCapability extends Capability {
 
     public static final int WIND_ROSE_POINTS = 3;
 

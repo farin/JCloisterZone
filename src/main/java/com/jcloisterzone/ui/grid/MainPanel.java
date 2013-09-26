@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -16,7 +15,12 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
@@ -86,32 +90,33 @@ public class MainPanel extends BackgroundPanel {
 
         animationService.setGridPanel(gridPanel);
 
-        if (getGame().hasCapability(Capability.TOWER)) {
-            towerLayer = new TowerLayer(gridPanel);
-            gridPanel.addLayer(towerLayer);
-        }
-        if (getGame().hasCapability(Capability.DRAGON)) {
-            dragonLayer = new DragonLayer(gridPanel, null);
-            gridPanel.addLayer(dragonLayer);
-        }
-        if (getGame().hasCapability(Capability.FAIRY)) {
-            fairyLayer = new FairyLayer(gridPanel, null);
-            gridPanel.addLayer(fairyLayer);
-        }
-        if (getGame().hasCapability(Capability.BRIDGE)) {
-            bridgeLayer = new BridgeLayer(gridPanel);
-            gridPanel.addLayer(bridgeLayer);
-        }
-        if (getGame().hasCapability(Capability.CASTLE)) {
-            castleLayer = new CastleLayer(gridPanel);
-            gridPanel.addLayer(castleLayer);
-        }
-        if (getGame().hasCapability(Capability.PLAGUE)) {
-            plagueLayer = new PlagueLayer(gridPanel);
-            gridPanel.addLayer(plagueLayer);
+        for (Class<? extends Capability> capClass : getGame().getCapabilityClasses()) {
+            if (capClass.equals(TowerCapability.class)) {
+                towerLayer = new TowerLayer(gridPanel);
+                gridPanel.addLayer(towerLayer);
+            }
+            if (capClass.equals(DragonCapability.class)) {
+                dragonLayer = new DragonLayer(gridPanel, null);
+                gridPanel.addLayer(dragonLayer);
+            }
+            if (capClass.equals(FairyCapability.class)) {
+                fairyLayer = new FairyLayer(gridPanel, null);
+                gridPanel.addLayer(fairyLayer);
+            }
+            if (capClass.equals(BridgeCapability.class)) {
+                bridgeLayer = new BridgeLayer(gridPanel);
+                gridPanel.addLayer(bridgeLayer);
+            }
+            if (capClass.equals(CastleCapability.class)) {
+                castleLayer = new CastleLayer(gridPanel);
+                gridPanel.addLayer(castleLayer);
+            }
+            if (capClass.equals(PlagueCapability.class)) {
+                plagueLayer = new PlagueLayer(gridPanel);
+                gridPanel.addLayer(plagueLayer);
+            }
         }
         add(gridPanel);
-
         setVisible(true);
     }
 

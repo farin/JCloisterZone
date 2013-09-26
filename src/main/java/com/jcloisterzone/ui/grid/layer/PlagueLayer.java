@@ -17,7 +17,7 @@ public class PlagueLayer extends AbstractGridLayer {
 
     public PlagueLayer(GridPanel gridPanel) {
         super(gridPanel);
-        plague = getGame().getPlagueCapability();
+        plague = getGame().getCapability(PlagueCapability.class);
     }
 
     @Override

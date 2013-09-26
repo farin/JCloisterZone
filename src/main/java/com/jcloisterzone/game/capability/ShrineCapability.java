@@ -10,10 +10,10 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
 
-public final class ShrineCapability extends CapabilityController {
+public final class ShrineCapability extends Capability {
 
 
     @Override

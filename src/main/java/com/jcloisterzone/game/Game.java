@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,13 +9,15 @@ import java.util.Set;
 import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -25,27 +28,12 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.event.EventMulticaster;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.BarnCapability;
-import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.game.capability.BridgeCapability;
-import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.game.capability.ClothWineGrainCapability;
-import com.jcloisterzone.game.capability.CornCircleCapability;
-import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
-import com.jcloisterzone.game.capability.FlierCapability;
-import com.jcloisterzone.game.capability.KingScoutCapability;
-import com.jcloisterzone.game.capability.PlagueCapability;
-import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.capability.TunnelCapability;
-import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -73,16 +61,18 @@ public class Game extends GameSettings {
     /** player in turn */
     private Player turnPlayer;
 
-    private final Map<Class<? extends Phase>, Phase> phases = Maps.newHashMap();
+    private final Map<Class<? extends Phase>, Phase> phases = new HashMap<>();
     private Phase phase;
 
     private GameEventListener eventListener;
     private UserInterface userInterface;
 
-    private Map<Capability, CapabilityController> extensions = Maps.newHashMap();
-    private final GameDelegation controllersDelegate = new ExtensionsDelegate(this);
+    private List<Capability> capabilities = new ArrayList<>();
+    private FairyCapability fairyCapability; //shortcut
 
     private int idSequenceCurrVal = 0;
+
+
 
 
     public Ini getConfig() {
@@ -227,47 +217,36 @@ public class Game extends GameSettings {
         this.turnPlayer = getPlayer(turnPlayer);
     }
 
-    private void createGameExtensions(Capability cap, Class<? extends CapabilityController> clazz) {
+    private void createGameExtensions(Class<? extends Capability> clazz) {
         if (clazz == null) return;
-        /* Expansions can share implementations - e.g Crop Circles 1 & 2
-         * in such case only one instance must be created
-         */
-        for (CapabilityController ge : extensions.values()) {
-            if (ge.getClass().equals(clazz)) return;
-        }
         try {
-            CapabilityController eg = clazz.newInstance();
-            eg.setGame(this);
-            extensions.put(cap, eg);
+            Capability capability = clazz.newInstance();
+            capability.setGame(this);
+            capabilities.add(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }
     }
 
+    public List<Capability> getCapabilities() {
+        return capabilities;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Capability> T getCapability(Class<T> clazz) {
+        for (Capability c : capabilities) {
+            if (c.getClass().equals(clazz)) return (T) c;
+        }
+        return null;
+    }
+
     public void start() {
-        for (Capability capability: getCapabilities()) {
-            createGameExtensions(capability, capability.getController());
+        for (Class<? extends Capability> capability: getCapabilityClasses()) {
+            createGameExtensions(capability);
         }
         board = new Board(this);
     }
 
-    //TODO refactor and clear ?
-
-    public Collection<CapabilityController> getCapabilityControllers() {
-        return extensions.values();
-    }
-
-    public Map<Capability, CapabilityController> getCapabilityMap() {
-        return extensions;
-    }
-
-    public CapabilityController getCapabilityController(Capability cap) {
-        return extensions.get(cap);
-    }
-
-    public GameDelegation getDelegate() {
-        return controllersDelegate;
-    }
 
     public Sites prepareCommonSites() {
         Sites sites = new Sites();
@@ -302,8 +281,7 @@ public class Game extends GameSettings {
         p.addPoints(points, ctx.getMasterFeature().getPointCategory());
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
-        FairyCapability fairyCap = getFairyCapability();
-        if (fairyCap != null && follower.getPosition().equals(fairyCap.getFairyPosition())) {
+        if (fairyCapability != null && follower.getPosition().equals(fairyCapability.getFairyPosition())) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
             fireGameEvent().scored(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
                     points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, follower,
@@ -326,57 +304,87 @@ public class Game extends GameSettings {
         return ++idSequenceCurrVal;
     }
 
-    //shortcut methods
+    // delegation to capabilities
 
-    public BuilderCapability getBuilderCapability() {
-        return (BuilderCapability) extensions.get(Capability.BUILDER);
+    public void initTile(Tile tile, Element xml) {
+        for (Capability cap: capabilities) {
+            cap.initTile(tile, xml);
+        }
     }
-    public ClothWineGrainCapability getClothWineGrainCapability() {
-        return (ClothWineGrainCapability) extensions.get(Capability.CLOTH_WINE_GRAIN);
+
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+        for (Capability cap: capabilities) {
+            cap.initFeature(tile, feature, xml);
+        }
     }
-    public FairyCapability getFairyCapability() {
-        return (FairyCapability) extensions.get(Capability.FAIRY);
+
+    public void initPlayer(Player player) {
+        for (Capability cap: capabilities) {
+            cap.initPlayer(player);
+        }
     }
-    public DragonCapability getDragonCapability() {
-        return (DragonCapability) extensions.get(Capability.DRAGON);
+
+    public String getTileGroup(Tile tile) {
+        for (Capability cap: capabilities) {
+            String group = cap.getTileGroup(tile);
+            if (group != null) return group;
+        }
+        return null;
     }
-    public AbbeyCapability getAbbeyCapability() {
-        return (AbbeyCapability) extensions.get(Capability.ABBEY);
+
+    public void begin() {
+        fairyCapability = getCapability(FairyCapability.class);
+        for (Capability cap: capabilities) {
+            cap.begin();
+        }
     }
-    public TowerCapability getTowerCapability() {
-        return (TowerCapability) extensions.get(Capability.TOWER);
+
+    public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
+        for (Capability cap: capabilities) {
+            cap.prepareActions(actions, commonSites);
+        }
     }
-    public WagonCapability getWagonCapability() {
-        return (WagonCapability) extensions.get(Capability.WAGON);
+
+    public void prepareFollowerActions(List<PlayerAction> actions, Sites commonSites) {
+        for (Capability cap: capabilities) {
+            cap.prepareFollowerActions(actions, commonSites);
+        }
     }
-    public BarnCapability getBarnCapability() {
-        return (BarnCapability) extensions.get(Capability.BARN);
+
+    public void scoreCompleted(CompletableScoreContext ctx) {
+        for (Capability cap: capabilities) {
+            cap.scoreCompleted(ctx);
+        }
     }
-    public BridgeCapability getBridgeCapability() {
-        return (BridgeCapability) extensions.get(Capability.BRIDGE);
+
+    public void turnCleanUp() {
+        for (Capability cap: capabilities) {
+            cap.turnCleanUp();
+        }
     }
-    public CastleCapability getCastleCapability() {
-        return (CastleCapability) extensions.get(Capability.CASTLE);
+
+    public void finalScoring() {
+        for (Capability cap: capabilities) {
+            cap.finalScoring();
+        }
     }
-    public BazaarCapability getBazaarCapability() {
-        return (BazaarCapability) extensions.get(Capability.BAZAAR);
+
+    public boolean isTilePlacementAllowed(Tile tile, Position p) {
+        for (Capability cap: capabilities) {
+            if (!cap.isTilePlacementAllowed(tile, p)) return false;
+        }
+        return true;
     }
-    public KingScoutCapability getKingScoutCapability() {
-        return (KingScoutCapability) extensions.get(Capability.KING_SCOUT);
+
+    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+        for (Capability cap: capabilities) {
+            cap.saveTileToSnapshot(tile, doc, tileNode);
+        }
     }
-    public RiverCapability getRiverCapability() {
-        return (RiverCapability) extensions.get(Capability.RIVER);
-    }
-    public TunnelCapability getTunnelCapability() {
-        return (TunnelCapability) extensions.get(Capability.TUNNEL);
-    }
-    public CornCircleCapability getCornCircleCapability() {
-        return (CornCircleCapability) extensions.get(Capability.CORN_CIRCLE);
-    }
-    public FlierCapability getFlierCapability() {
-        return (FlierCapability) extensions.get(Capability.FLIER);
-    }
-    public PlagueCapability getPlagueCapability() {
-        return (PlagueCapability) extensions.get(Capability.PLAGUE);
+
+    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
+        for (Capability cap: capabilities) {
+            cap.loadTileFromSnapshot(tile, tileNode);
+        }
     }
 }

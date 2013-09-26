@@ -1,6 +1,5 @@
 package com.jcloisterzone.figure;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -9,8 +8,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.RemoveLonelyBuilderAndPig;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.PigCapability;
 
 public abstract class Follower extends Meeple {
 
@@ -44,8 +44,8 @@ public abstract class Follower extends Meeple {
         Feature piece = getFeature();
         super.undeploy(checkForLonelyBuilderOrPig); //clear piece
         if (checkForLonelyBuilderOrPig) {
-            boolean builder = game.hasCapability(Capability.BUILDER) && (piece instanceof City || piece instanceof Road);
-            boolean pig = game.hasCapability(Capability.PIG) && piece instanceof Farm;
+            boolean builder = game.hasCapability(BuilderCapability.class) && (piece instanceof City || piece instanceof Road);
+            boolean pig = game.hasCapability(PigCapability.class) && piece instanceof Farm;
             if (builder || pig) {
                 Special toRemove = piece.walk(new RemoveLonelyBuilderAndPig(getPlayer()));
                 if (toRemove != null) {

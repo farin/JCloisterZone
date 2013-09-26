@@ -9,9 +9,9 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class AbbeyCapability extends CapabilityController {
+public class AbbeyCapability extends Capability {
 
     private Set<Player> unusedAbbey = Sets.newHashSet();
 

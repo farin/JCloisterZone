@@ -196,7 +196,7 @@ public class ControlPanel extends FakeComponent {
 
         g2.translate(0, 60);
 
-        BazaarCapability bcb = client.getGame().getBazaarCapability();
+        BazaarCapability bcb = client.getGame().getCapability(BazaarCapability.class);
         if (bcb != null && !(client.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
             List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {

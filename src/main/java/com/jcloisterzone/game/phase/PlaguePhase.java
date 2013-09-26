@@ -4,23 +4,22 @@ import java.util.List;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.PlagueCapability.PlagueSource;
 
 public class PlaguePhase extends Phase {
 
-    private PlagueCapability plagueCap;
+    private final PlagueCapability plagueCap;
 
     public PlaguePhase(Game game) {
         super(game);
-        plagueCap = game.getPlagueCapability();
+        plagueCap = game.getCapability(PlagueCapability.class);
     }
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.PLAGUE);
+        return game.hasCapability(PlagueCapability.class);
     }
 
     @Override

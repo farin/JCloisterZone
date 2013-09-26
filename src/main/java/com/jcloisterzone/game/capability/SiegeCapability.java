@@ -8,10 +8,10 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
 
-public final class SiegeCapability extends CapabilityController {
+public final class SiegeCapability extends Capability {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

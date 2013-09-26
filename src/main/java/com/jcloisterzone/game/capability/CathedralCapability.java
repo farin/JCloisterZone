@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class CathedralCapability extends CapabilityController {
+public class CathedralCapability extends Capability {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

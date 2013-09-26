@@ -9,8 +9,8 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.SiegeCapability;
 
 
 public class EscapePhase extends Phase {
@@ -21,7 +21,7 @@ public class EscapePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.SIEGE);
+        return game.hasCapability(SiegeCapability.class);
     }
 
     @Override

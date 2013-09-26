@@ -12,9 +12,9 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class FairyCapability extends CapabilityController {
+public class FairyCapability extends Capability {
 
     public static final int FAIRY_POINTS_FINISHED_OBJECT = 3;
 
@@ -31,8 +31,8 @@ public class FairyCapability extends CapabilityController {
     @Override
     public void prepareActions(List<PlayerAction> actions, Sites commonSites) {
         FairyAction fairyAction = null;
-        for(Follower m : game.getActivePlayer().getFollowers()) {
-            if (m.getPosition() != null && ! m.getPosition().equals(fairyPosition)) {
+        for (Follower m : game.getActivePlayer().getFollowers()) {
+            if (m.getPosition() != null && !m.getPosition().equals(fairyPosition)) {
                 if (fairyAction == null) {
                     fairyAction = new FairyAction();
                     actions.add(fairyAction);

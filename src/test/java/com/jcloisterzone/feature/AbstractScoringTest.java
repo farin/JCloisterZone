@@ -22,7 +22,7 @@ public class AbstractScoringTest extends AbstractTileTest {
         game.getExpansions().add(Expansion.CATHARS);
 
         for (Expansion exp : game.getExpansions()) {
-            game.getCapabilities().addAll(Arrays.asList(exp.getCapabilities()));
+            game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
     }
 

@@ -1,55 +1,84 @@
 package com.jcloisterzone;
 
-import static com.jcloisterzone.game.Capability.*;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BigFollowerCapability;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.CathedralCapability;
+import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.CornCircleCapability;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.FestivalCapability;
+import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.InnCapability;
+import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.MayorCapability;
+import com.jcloisterzone.game.capability.PhantomCapability;
+import com.jcloisterzone.game.capability.PigCapability;
+import com.jcloisterzone.game.capability.PlagueCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.capability.RiverCapability;
+import com.jcloisterzone.game.capability.ShrineCapability;
+import com.jcloisterzone.game.capability.SiegeCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.game.capability.WindRoseCapability;
 
+@SuppressWarnings("unchecked")
 public enum Expansion {
     //Basic sets
-    BASIC("BA", _("Basic game"), new Capability[] { FARM_PLACEMENT }),
+    BASIC("BA", _("Basic game")),
     WINTER("WI", _("Winter Edition")),
     WHEEL_OF_FORTUNE("WF", _("Wheel of Fortune"), false),
 
     //Big expansions
     INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
-            new Capability[] { BIG_FOLLOWER ,INN, CATHEDRAL }),
+            new Class[] { BigFollowerCapability.class ,InnCapability.class, CathedralCapability.class}),
     TRADERS_AND_BUILDERS("TB", _("Traders & Builders"),
-            new Capability[] { PIG, BUILDER, CLOTH_WINE_GRAIN }),
+            new Class[] { PigCapability.class, BuilderCapability.class, ClothWineGrainCapability.class }),
     PRINCESS_AND_DRAGON("DG", _("The Princess & the Dragon"),
-            new Capability[] { FAIRY, DRAGON, PORTAL, PRINCESS }),
+            new Class[] { FairyCapability.class, DragonCapability.class, PortalCapability.class, PrincessCapability.class }),
     TOWER("TO", _("The Tower"),
-            new Capability[] { Capability.TOWER }),
+            new Class[] { TowerCapability.class }),
     ABBEY_AND_MAYOR("AM", _("Abbey & Mayor"),
-            new Capability[] { ABBEY, WAGON, MAYOR, BARN }),
+            new Class[] { AbbeyCapability.class, WagonCapability.class, MayorCapability.class, BarnCapability.class }),
     CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
     BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"),
-            new Capability[] { BRIDGE, CASTLE, BAZAAR }),
+            new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }),
 
     //Small expansion
-    KING_AND_SCOUT("KS", _("King and Scout"), new Capability[] { KING_SCOUT}),
-    RIVER("R1", _("The River"), new Capability[] { Capability.RIVER }),
-    RIVER_II("R2", _("The River II"), new Capability[] { Capability.RIVER }),
-    CATHARS("SI", _("The Cathars / Siege"), new Capability[] { SIEGE }),
+    KING_AND_SCOUT("KS", _("King and Scout"), new Class[] { KingScoutCapability.class }),
+    RIVER("R1", _("The River"), new Class[] { RiverCapability.class }),
+    RIVER_II("R2", _("The River II"), new Class[] { RiverCapability.class }),
+    CATHARS("SI", _("The Cathars / Siege"), new Class[] { SiegeCapability.class }),
     COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")"),
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
-    CULT("CU", _("The Cult"),  new Capability[] { SHRINE }),
-    TUNNEL("TU", _("The Tunnel"), new Capability[] { Capability.TUNNEL }),
-    CORN_CIRCLES("CC", _("The Corn Circles"), new Capability[] { CORN_CIRCLE }),
-    PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Capability[] { Capability.PLAGUE }),
-    PHANTOM("PH", _("The Phantom"),  new Capability[] { Capability.PHANTOM }),
-    FESTIVAL("FE", _("The Festival (10th an.)"), new Capability[] { Capability.FESTIVAL }),
+    CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
+    TUNNEL("TU", _("The Tunnel"), new Class[] { TunnelCapability.class }),
+    CORN_CIRCLES("CC", _("The Corn Circles"), new Class[] { CornCircleCapability.class }),
+    PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { PlagueCapability.class }),
+    PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
+    FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
     HOUSES("LB", _("Little Buildings"), false),
-    WIND_ROSE("WR", _("The Wind Rose"), new Capability[] { Capability.WIND_ROSE }),
+    WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
 
     //minis expansion line
-    FLIER("FL", "#1 - " + _("The Flier"), new Capability[] { Capability.FLIER }),
+    FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),
     MESSAGES("ME", "#2 - " + _("The Messages"), false),
     FERRIES("FR", "#3 - " + _("The Ferries"), false),
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),
     MAGE_WITCH("MW", "#5 - " + _("Mage & Witch"), false),
     ROBBER("RO", "#6 - " + _("The Robber"), false),
-    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Capability[] { CORN_CIRCLE });
+    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class });
 
     //promo/one tile expansions
     //LA_PORXADA("PX", _("La porxada"), false),
@@ -58,7 +87,7 @@ public enum Expansion {
     String code;
     String label;
     boolean enabled = true;
-    Capability[] capabilities;
+    Class<? extends Capability>[] capabilities;
 
     Expansion(String code, String label) {
         this(code, label, null);
@@ -69,10 +98,10 @@ public enum Expansion {
         this.enabled = enabled;
     }
 
-    Expansion(String code, String label, Capability[] capabilities) {
+    Expansion(String code, String label, Class<? extends Capability>[] capabilities) {
         this.code = code;
         this.label = label;
-        this.capabilities = capabilities == null ? new Capability[0] : capabilities;
+        this.capabilities = capabilities == null ? new Class[0] : capabilities;
     }
 
     public String getCode() {
@@ -83,7 +112,7 @@ public enum Expansion {
         return enabled;
     }
 
-    public Capability[] getCapabilities() {
+    public Class<? extends Capability>[] getCapabilities() {
         return capabilities;
     }
 

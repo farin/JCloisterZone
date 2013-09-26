@@ -1,27 +1,26 @@
 package com.jcloisterzone.ai;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.ai.operation.Operation;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
 public class SavePoint {
     private final Operation operation;
     private final Phase phase;
-    private final Map<Capability, CapabilityController> frozenCapabilities = Maps.newHashMap();
+    private final List<Capability> frozenCapabilities = new ArrayList<>();
 
     public SavePoint(Operation operation, Game game) {
         this.operation = operation;
         this.phase = game.getPhase();
-        for (Entry<Capability, CapabilityController> entry : game.getCapabilityMap().entrySet()) {
-            CapabilityController copy = entry.getValue().copy();
+        for (Capability cap : game.getCapabilities()) {
+            Capability copy = cap.copy();
+            //TODO !!!! change all capabilities to return its copy
             if (copy != null) {
-                frozenCapabilities.put(entry.getKey(), copy);
+                frozenCapabilities.add(copy);
             }
         }
     }
@@ -34,7 +33,14 @@ public class SavePoint {
         return phase;
     }
 
-    public Map<Capability, CapabilityController> getFrozenCapabilities() {
+    public List<Capability> getFrozenCapabilities() {
         return frozenCapabilities;
+    }
+
+    public Capability getFrozenCapability(Class<? extends Capability> clazz) {
+        for (Capability c : frozenCapabilities) {
+            if (c.getClass().equals(clazz)) return c;
+        }
+        return null;
     }
 }

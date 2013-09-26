@@ -22,10 +22,10 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
 
-public final class TunnelCapability extends CapabilityController {
+public final class TunnelCapability extends Capability {
 
     private Road placedTunnelCurrentTurn;
 

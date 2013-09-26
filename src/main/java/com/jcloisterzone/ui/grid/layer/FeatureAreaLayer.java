@@ -27,6 +27,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog;
 import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog.AmbiguousUndeployDialogEvent;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -64,7 +65,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     private boolean confirmTowerPlacement(Position pos) {
         int result;
         Player activePlayer = getClient().getGame().getActivePlayer();
-        if (getClient().getGame().getTowerCapability().getTowerPieces(activePlayer) > 0) {
+        if (getClient().getGame().getCapability(TowerCapability.class).getTowerPieces(activePlayer) > 0) {
             String options[] = {
                 _("Confirm follower placement"),
                 _("Cancel"),

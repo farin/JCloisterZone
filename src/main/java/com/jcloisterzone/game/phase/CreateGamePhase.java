@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -99,7 +100,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     protected void preparePhases() {
         Phase next = null;
-        //no assignment - phase is out of standard flow
+        //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
         next = addPhase(next, new CleanUpPhase(game));
         next = addPhase(next, new BazaarPhase(game, getServer()));
@@ -120,7 +121,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new AbbeyPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
-        game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last first is default
+        game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last phase, the first is default
     }
 
     private void createPlayers() {
@@ -148,7 +149,7 @@ public class CreateGamePhase extends ServerAwarePhase {
             for(int i = 0; i < SmallFollower.QUANTITY; i++) {
                 player.addMeeple(new SmallFollower(game, player));
             }
-            game.getDelegate().initPlayer(player);
+            game.initPlayer(player);
         }
     }
 
@@ -166,7 +167,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         getTilePack().activateGroup("default");
         getTilePack().activateGroup("count");
         getTilePack().activateGroup("wind-rose-initial");
-        game.getDelegate().begin();
+        game.begin();
     }
 
     protected void preplaceTiles() {
@@ -201,17 +202,25 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     protected void prepareCapabilities() {
         for (Expansion exp : game.getExpansions()) {
-            game.getCapabilities().addAll(Arrays.asList(exp.getCapabilities()));
+            game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
         String offVal = game.getConfig().get("debug", "off_capabilities");
-        Set<Capability> off = EnumSet.noneOf(Capability.class);
+        Set<Class<? extends Capability>> off = new HashSet<>();
         if (offVal != null) {
             for (String tok : offVal.split(",")) {
-                off.add(Capability.valueOf(tok.trim()));
+                tok = tok.trim();
+                try {
+                    String className = "com.jcloisterzone.game.capability."+tok+"Capability";
+                    @SuppressWarnings("unchecked")
+                    Class<? extends Capability> clazz = (Class<? extends Capability>) Class.forName(className);
+                    off.add(clazz);
+                } catch (Exception e) {
+                    logger.warn("Invalid capability name: " + tok, e);
+                }
             }
         }
-        game.getCapabilities().removeAll(off);
+        game.getCapabilityClasses().removeAll(off);
     }
 
     @Override

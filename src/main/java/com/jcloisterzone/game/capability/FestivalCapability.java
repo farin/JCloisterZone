@@ -11,9 +11,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class FestivalCapability extends CapabilityController {
+public class FestivalCapability extends Capability {
 
     @Override
     public void initTile(Tile tile, Element xml) {

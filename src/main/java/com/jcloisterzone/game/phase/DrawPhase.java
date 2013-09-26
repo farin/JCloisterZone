@@ -6,16 +6,16 @@ import org.ini4j.Profile.Section;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.rmi.ServerIF;
 
 
 public class DrawPhase extends ServerAwarePhase {
 
-
     private List<String> debugTiles;
+    private final BazaarCapability bazaarCap;
 
     public DrawPhase(Game game, ServerIF server) {
         super(game, server);
@@ -23,6 +23,7 @@ public class DrawPhase extends ServerAwarePhase {
         if (debugSection != null) {
             debugTiles = debugSection.getAll("draw");
         }
+        bazaarCap = game.getCapability(BazaarCapability.class);
     }
 
     private boolean makeDebugDraw() {
@@ -37,8 +38,8 @@ public class DrawPhase extends ServerAwarePhase {
             if (tile == null) {
                 logger.warn("Invalid debug draw id: " + tileId);
             } else {
-                if (game.hasCapability(Capability.RIVER) && tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
-                    game.getRiverCapability().activateNonRiverTiles();
+                if (game.hasCapability(RiverCapability.class) && tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
+                    game.getCapability(RiverCapability.class).activateNonRiverTiles();
                     tilePack.deactivateGroup("river-start");
                     game.setCurrentTile(tile); //recovery from lake placement
                 }
@@ -55,9 +56,8 @@ public class DrawPhase extends ServerAwarePhase {
             next(GameOverPhase.class);
             return;
         }
-        BazaarCapability bcb = game.getBazaarCapability();
-        if (bcb != null) {
-            Tile tile = bcb.drawNextTile();
+        if (bazaarCap != null) {
+            Tile tile = bazaarCap.drawNextTile();
             if (tile != null) {
                 nextTile(tile);
                 return;

@@ -16,9 +16,9 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class BridgeCapability extends CapabilityController {
+public class BridgeCapability extends Capability {
 
     private boolean bridgeUsed;
     private Map<Player, Integer> bridges = Maps.newHashMap();

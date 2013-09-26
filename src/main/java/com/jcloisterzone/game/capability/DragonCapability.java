@@ -14,9 +14,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class DragonCapability extends CapabilityController {
+public class DragonCapability extends Capability {
 
     public static final int DRAGON_MOVES = 6;
 
@@ -24,7 +24,6 @@ public class DragonCapability extends CapabilityController {
     public int dragonMovesLeft;
     public Player dragonPlayer;
     public Set<Position> dragonVisitedTiles;
-
 
     @Override
     public void setGame(Game game) {
@@ -102,7 +101,7 @@ public class DragonCapability extends CapabilityController {
 
     public Set<Position> getAvailDragonMoves() {
         Set<Position> result = Sets.newHashSet();
-        FairyCapability fairyCap = game.getFairyCapability();
+        FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         for (Position offset: Position.ADJACENT.values()) {
             Position position = dragonPosition.add(offset);
             Tile tile = getBoard().get(position);

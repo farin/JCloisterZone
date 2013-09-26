@@ -92,7 +92,7 @@ public class TileFactory {
         cloister.setTile(tile);
         cloister.setLocation(Location.CLOISTER);
         features.add(cloister);
-        game.getDelegate().initFeature(tile, cloister, e);
+        game.initFeature(tile, cloister, e);
     }
 
     private void processTowerElement(Element e) {
@@ -101,7 +101,7 @@ public class TileFactory {
         tower.setTile(tile);
         tower.setLocation(Location.TOWER);
         features.add(tower);
-        game.getDelegate().initFeature(tile, tower, e);
+        game.initFeature(tile, tower, e);
     }
 
 
@@ -126,7 +126,7 @@ public class TileFactory {
             road.setTunnelEnd(Road.OPEN_TUNNEL);
         }
         initFromDirList(road, sides);
-        game.getDelegate().initFeature(tile, road, e);
+        game.initFeature(tile, road, e);
     }
 
     private void processCityElement(Element e) {
@@ -135,7 +135,7 @@ public class TileFactory {
         c.setId(game.idSequnceNextVal());
         c.setPennants(attributeIntValue(e, "pennant", 0));
         initFromDirList(c, sides);
-        game.getDelegate().initFeature(tile, c, e);
+        game.initFeature(tile, c, e);
     }
 
     //TODO move expansion specific stuff
@@ -166,7 +166,7 @@ public class TileFactory {
             }
         }
         initFromDirList(farm, sides);
-        game.getDelegate().initFeature(tile, farm, e);
+        game.initFeature(tile, farm, e);
     }
 
     private void initFromDirList(TileFeature piece, String[] sides) {

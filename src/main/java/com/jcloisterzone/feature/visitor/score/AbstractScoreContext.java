@@ -16,8 +16,8 @@ import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.FairyCapability;
 
 public abstract class AbstractScoreContext extends SelfReturningVisitor implements ScoreContext {
 
@@ -36,8 +36,8 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
 
     public AbstractScoreContext(Game game) {
         this.game = game;
-        if (game.hasCapability(Capability.FAIRY)) {
-            preferedPos = game.getFairyCapability().getFairyPosition();
+        if (game.hasCapability(FairyCapability.class)) {
+            preferedPos = game.getCapability(FairyCapability.class).getFairyPosition();
         }
     }
 

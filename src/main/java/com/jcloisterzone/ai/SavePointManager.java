@@ -1,8 +1,9 @@
 package com.jcloisterzone.ai;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Map.Entry;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,6 @@ import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CapabilityController;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -66,9 +66,15 @@ public class SavePointManager {
             //logger.info("      < undo {}", item);
             operations.pollLast().undo(game);
         }
-        for (Entry<Capability, CapabilityController> entry : sp.getFrozenCapabilities().entrySet()) {
-            game.getCapabilityMap().put(entry.getKey(), entry.getValue().copy());
+        List<Capability> restored = new ArrayList<>();
+        for (Capability cap : game.getCapabilities()) {
+            Capability copy = sp.getFrozenCapability(cap.getClass());
+            //TODO copy on save. copy on load ? strange. Should by one copy enough
+            restored.add(copy == null ? cap : copy.copy());
         }
+        game.getCapabilities().clear();
+        game.getCapabilities().addAll(restored);
+
         Phase phase = sp.getPhase();
         game.setPhase(phase);
         phase.setEntered(true);

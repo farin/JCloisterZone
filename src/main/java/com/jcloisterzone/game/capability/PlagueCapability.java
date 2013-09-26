@@ -8,9 +8,9 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class PlagueCapability extends CapabilityController {
+public class PlagueCapability extends Capability {
 
     final List<PlagueSource> plagueSources = new ArrayList<>(6);
 

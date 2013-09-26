@@ -36,6 +36,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.phase.Phase;
@@ -190,7 +191,7 @@ public class ClientController implements GameEventListener, UserInterface {
         GridPanel grid = client.getGridPanel();
         if (grid == null) return;
 
-        FlierCapability flierGame = client.getGame().getFlierCapability();
+        FlierCapability flierGame = client.getGame().getCapability(FlierCapability.class);
         FlierPanel flierPanel;
         boolean rollAllowed = false, rollMade = false;
         if (flierGame != null) {
@@ -329,7 +330,7 @@ public class ClientController implements GameEventListener, UserInterface {
         client.clearActions();
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (client.isClientActive()) {
-            ArrayList<BazaarItem> supply = client.getGame().getBazaarCapability().getBazaarSupply();
+            ArrayList<BazaarItem> supply = client.getGame().getCapability(BazaarCapability.class).getBazaarSupply();
             for(int i = 0; i < supply.size(); i++) {
                 //find first allowed item
                 if (supply.get(i).getOwner() == null) {

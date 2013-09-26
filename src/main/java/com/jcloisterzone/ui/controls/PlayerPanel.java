@@ -186,12 +186,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
 //		gp.profile(" > special");
 
-        AbbeyCapability ab = client.getGame().getAbbeyCapability();
-        TowerCapability tower = client.getGame().getTowerCapability();
-        BridgeCapability bc = client.getGame().getBridgeCapability();
-        CastleCapability cc = client.getGame().getCastleCapability();
-        KingScoutCapability ks = client.getGame().getKingScoutCapability();
-        ClothWineGrainCapability cwg = client.getGame().getClothWineGrainCapability();
+        AbbeyCapability ab = client.getGame().getCapability(AbbeyCapability.class);
+        TowerCapability tower = client.getGame().getCapability(TowerCapability.class);
+        BridgeCapability bc = client.getGame().getCapability(BridgeCapability.class);
+        CastleCapability cc = client.getGame().getCapability(CastleCapability.class);
+        KingScoutCapability ks = client.getGame().getCapability(KingScoutCapability.class);
+        ClothWineGrainCapability cwg = client.getGame().getCapability(ClothWineGrainCapability.class);
 
         if (ab != null) {
             drawMeepleBox(null, "abbey", ab.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -299,7 +299,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (!(origin.getData() instanceof Class)) return;
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
-        TowerCapability tg = client.getGame().getTowerCapability();
+        TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
         if (!tg.isRansomPaidThisTurn()) {
             if (client.getSettings().isConfirmRansomPayment()) {
                 String options[] = {_("Pay ransom"), _("Cancel") };
@@ -319,7 +319,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             mouseOverKey = (String) origin.getData();
             client.getGridPanel().repaint();
         } else {
-            TowerCapability tg = client.getGame().getTowerCapability();
+            TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
             if (!tg.isRansomPaidThisTurn()) {
                 client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }

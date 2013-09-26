@@ -13,9 +13,9 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class BazaarCapability extends CapabilityController {
+public class BazaarCapability extends Capability {
 
     private ArrayList<BazaarItem> bazaarSupply;
     private BazaarItem currentBazaarAuction;

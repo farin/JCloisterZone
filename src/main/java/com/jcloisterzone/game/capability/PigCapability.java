@@ -13,9 +13,9 @@ import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class PigCapability extends CapabilityController {
+public class PigCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {

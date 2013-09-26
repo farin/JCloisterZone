@@ -28,9 +28,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class CastleCapability extends CapabilityController {
+public class CastleCapability extends Capability {
 
     private Map<Player, Integer> castles = Maps.newHashMap();
 

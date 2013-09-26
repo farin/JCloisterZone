@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
@@ -26,16 +25,27 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 
 public class ScorePhase extends Phase {
 
     private Set<Completable> alredyScored = Sets.newHashSet();
 
+    private final BarnCapability barnCap;
+    private final BuilderCapability builderCap;
+    private final CastleCapability castleCap;
+    private final TunnelCapability tunnelCap;
+
     public ScorePhase(Game game) {
         super(game);
+        barnCap = game.getCapability(BarnCapability.class);
+        builderCap = game.getCapability(BuilderCapability.class);
+        tunnelCap = game.getCapability(TunnelCapability.class);
+        castleCap = game.getCapability(CastleCapability.class);
     }
 
     private void scoreCompletedOnTile(Tile tile) {
@@ -86,7 +96,7 @@ public class ScorePhase extends Phase {
         Position pos = getTile().getPosition();
 
         //TODO separate event here ??? and move this code to abbey and mayor game
-        if (game.hasCapability(Capability.BARN)) {
+        if (barnCap != null) {
             Map<City, CityScoreContext> cityCache = Maps.newHashMap();
             for (Feature feature : getTile().getFeatures()) {
                 if (feature instanceof Farm) {
@@ -100,8 +110,8 @@ public class ScorePhase extends Phase {
             scoreCompletedNearAbbey(pos);
         }
 
-        if (game.hasCapability(Capability.TUNNEL)) {
-            Road r = game.getTunnelCapability().getPlacedTunnel();
+        if (tunnelCap != null) {
+            Road r = tunnelCap.getPlacedTunnel();
             if (r != null) {
                 scoreCompleted(r);
             }
@@ -114,15 +124,13 @@ public class ScorePhase extends Phase {
             }
         }
 
-        if (game.hasCapability(Capability.CASTLE)) {
-            CastleCapability cCap = game.getCastleCapability();
-            for (Entry<Castle, Integer> entry : cCap.getCastleScore().entrySet()) {
+        if (castleCap != null) {
+            for (Entry<Castle, Integer> entry : castleCap.getCastleScore().entrySet()) {
                 scoreCastle(entry.getKey(), entry.getValue());
             }
         }
 
         alredyScored.clear();
-
         next();
     }
 
@@ -144,11 +152,11 @@ public class ScorePhase extends Phase {
     private void scoreCompleted(Completable completable) {
         CompletableScoreContext ctx = completable.getScoreContext();
         completable.walk(ctx);
-        if (game.hasCapability(Capability.BUILDER)) {
+        if (builderCap != null) {
             for (Meeple m : ctx.getSpecialMeeples()) {
                 if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
-                    if (! m.getPosition().equals(getTile().getPosition())) {
-                        game.getBuilderCapability().builderUsed();
+                    if (!m.getPosition().equals(getTile().getPosition())) {
+                        builderCap.builderUsed();
                     }
                     break;
                 }
@@ -158,7 +166,7 @@ public class ScorePhase extends Phase {
             Completable master = (Completable) ctx.getMasterFeature();
             if (!alredyScored.contains(master)) {
                 alredyScored.add(master);
-                game.getDelegate().scoreCompleted(ctx);
+                game.scoreCompleted(ctx);
                 game.scoreCompletableFeature(ctx);
                 undeployMeeples(ctx);
                 game.fireGameEvent().completed(master, ctx);

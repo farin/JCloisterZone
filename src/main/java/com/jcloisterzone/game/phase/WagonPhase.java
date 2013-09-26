@@ -12,7 +12,6 @@ import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.WagonCapability;
 
@@ -24,13 +23,13 @@ public class WagonPhase extends Phase {
 
     public WagonPhase(Game game) {
         super(game);
-        wagonCap = game.getWagonCapability();
+        wagonCap = game.getCapability(WagonCapability.class);
     }
 
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.WAGON);
+        return game.hasCapability(WagonCapability.class);
     }
 
     @Override

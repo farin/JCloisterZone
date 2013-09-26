@@ -3,7 +3,6 @@ package com.jcloisterzone.game.phase;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -11,19 +10,22 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 
 public class PhantomPhase extends Phase {
 
+    private final TowerCapability towerCap;
+
     public PhantomPhase(Game game) {
         super(game);
+        towerCap = game.getCapability(TowerCapability.class);
     }
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.PHANTOM);
+        return game.hasCapability(PhantomCapability.class);
     }
 
     @Override
@@ -37,9 +39,8 @@ public class PhantomPhase extends Phase {
 
         Sites commonSites = game.prepareCommonSites();
         if (getActivePlayer().hasFollower(Phantom.class)) {
-            if (game.hasCapability(Capability.TOWER)) {
-                TowerCapability tg = game.getTowerCapability();
-                tg.prepareCommonOnTower(commonSites);
+            if (towerCap != null) {
+                towerCap.prepareCommonOnTower(commonSites);
             }
             if (!commonSites.isEmpty()) {
                 actions.add(new MeepleAction(Phantom.class, commonSites));
@@ -54,12 +55,9 @@ public class PhantomPhase extends Phase {
 
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (! actions.isEmpty()) return false;
-        if (game.hasCapability(Capability.TOWER)) {
-            TowerCapability tg = game.getTowerCapability();
-            if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
-                //player can return phantom figure immediately
-                return false;
-            }
+        if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
+            //player can return phantom figure immediately
+            return false;
         }
         return true;
     }

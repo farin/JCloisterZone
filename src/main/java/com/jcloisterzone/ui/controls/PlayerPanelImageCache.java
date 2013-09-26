@@ -58,27 +58,27 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
         }
-        TowerCapability tower = client.getGame().getTowerCapability();
+        TowerCapability tower = client.getGame().getCapability(TowerCapability.class);
         if (tower != null) {
             scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
         }
-        KingScoutCapability ks = client.getGame().getKingScoutCapability();
+        KingScoutCapability ks = client.getGame().getCapability(KingScoutCapability.class);
         if (ks != null) {
             scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));
             scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));
         }
-        BazaarCapability bcb = client.getGame().getBazaarCapability();
+        BazaarCapability bcb = client.getGame().getCapability(BazaarCapability.class);
         if (bcb != null) {
             scaledImages.put("bridge", scaleImage(theme.getNeutralImage("bridge")));
             scaledImages.put("castle", scaleImage(theme.getNeutralImage("castle")));
         }
-        ClothWineGrainCapability cwg = client.getGame().getClothWineGrainCapability();
+        ClothWineGrainCapability cwg = client.getGame().getCapability(ClothWineGrainCapability.class);
         if (cwg != null) {
             scaledImages.put("cloth", theme.getNeutralImage("cloth"));
             scaledImages.put("grain", theme.getNeutralImage("grain"));
             scaledImages.put("wine", theme.getNeutralImage("wine"));
         }
-        BarnCapability ab = client.getGame().getBarnCapability();
+        BarnCapability ab = client.getGame().getCapability(BarnCapability.class);
         if (ab != null) {
             scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage()));
         }

@@ -18,9 +18,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class ClothWineGrainCapability extends CapabilityController {
+public class ClothWineGrainCapability extends Capability {
     protected Map<Player,int[]> tradeResources = Maps.newHashMap();
 
     @Override

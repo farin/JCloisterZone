@@ -17,9 +17,9 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class BuilderCapability extends CapabilityController {
+public class BuilderCapability extends Capability {
 
     public enum BuilderState { INACTIVE, ACTIVATED, BUILDER_TURN; }
 

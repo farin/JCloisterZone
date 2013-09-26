@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
-public class InnCapability extends CapabilityController {
+public class InnCapability extends Capability {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

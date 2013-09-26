@@ -14,10 +14,10 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 
 
-public class RiverCapability extends CapabilityController {
+public class RiverCapability extends Capability {
 
     private static final String R1_LAKE_ID = "R1.I.e";
     private static final String R2_LAKE_ID = "R2.I.v";

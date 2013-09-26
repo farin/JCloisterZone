@@ -13,7 +13,6 @@ import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Scoreable;
@@ -21,7 +20,6 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 
@@ -247,7 +245,7 @@ public class Tile /*implements Cloneable*/ {
     public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
         Set<Location> locations = Sets.newHashSet();
         for (Feature f : features) {
-            if (f instanceof Farm && !game.hasCapability(Capability.FARM_PLACEMENT)) continue;
+            //if (f instanceof Farm && !game.hasCapability(Capability.FARM_PLACEMENT)) continue;
             if (f instanceof Scoreable) {
                 IsOccupied visitor;
                 if (excludeCompleted && f instanceof Completable) {

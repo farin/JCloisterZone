@@ -11,9 +11,8 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.Sites;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CapabilityController;
 
-public class PortalCapability extends CapabilityController {
+public class PortalCapability extends Capability {
 
     @Override
     public void initTile(Tile tile, Element xml) {
@@ -35,8 +34,8 @@ public class PortalCapability extends CapabilityController {
         for (Tile tile : getBoard().getAllTiles()) {
             if (tile == getTile()) continue; //prepared by basic common
             if (tile.isForbidden()) continue;
-            if (game.hasCapability(Capability.DRAGON)) {
-                if (tile.getPosition().equals(game.getDragonCapability().getDragonPosition())) continue;
+            if (game.hasCapability(DragonCapability.class)) {
+                if (tile.getPosition().equals(game.getCapability(DragonCapability.class).getDragonPosition())) continue;
             }
             Set<Location> tileSites = getGame().prepareCommonForTile(tile, true);
             if (tileSites.isEmpty()) continue;

@@ -12,10 +12,10 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.CapabilityController;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
-public final class KingScoutCapability extends CapabilityController {
+public final class KingScoutCapability extends Capability {
 
     protected int completedCities, biggestCitySize;
     protected int completedRoads, longestRoadLength;

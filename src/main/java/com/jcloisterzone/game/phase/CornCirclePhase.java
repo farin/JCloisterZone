@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
@@ -25,7 +24,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
@@ -33,21 +31,21 @@ import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
 
 public class CornCirclePhase extends Phase {
 
-    final CornCircleCapability ccg;
+    private final CornCircleCapability cornCircleCap;
 
     public CornCirclePhase(Game game) {
         super(game);
-        ccg = game.getCornCircleCapability();
+        cornCircleCap = game.getCapability(CornCircleCapability.class);
     }
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.CORN_CIRCLE);
+        return game.hasCapability(CornCircleCapability.class);
     }
 
     @Override
     public Player getActivePlayer() {
-        Player player = ccg.getCornCirclePlayer();
+        Player player = cornCircleCap.getCornCirclePlayer();
         if (player == null) return super.getActivePlayer();
         return player;
     }
@@ -64,12 +62,12 @@ public class CornCirclePhase extends Phase {
     private void nextCornPlayer() {
         Player active = getActivePlayer();
         if (active == game.getTurnPlayer()) {
-            ccg.setCornCirclePlayer(null);
-            ccg.setCornCircleOption(null);
+            cornCircleCap.setCornCirclePlayer(null);
+            cornCircleCap.setCornCircleOption(null);
             next();
         } else {
             Player cornPlayer = game.getNextPlayer(active);
-            ccg.setCornCirclePlayer(cornPlayer);
+            cornCircleCap.setCornCirclePlayer(cornPlayer);
             prepareCornAction();
         }
     }
@@ -77,19 +75,19 @@ public class CornCirclePhase extends Phase {
     @Override
     public void cornCiclesRemoveOrDeploy(boolean remove) {
         if (remove) {
-            ccg.setCornCircleOption(CornCicleOption.REMOVAL);
+            cornCircleCap.setCornCircleOption(CornCicleOption.REMOVAL);
         } else {
-            ccg.setCornCircleOption(CornCicleOption.DEPLOYMENT);
+            cornCircleCap.setCornCircleOption(CornCicleOption.DEPLOYMENT);
         }
         Player cornPlayer = game.getNextPlayer(getActivePlayer());
-        ccg.setCornCirclePlayer(cornPlayer);
+        cornCircleCap.setCornCirclePlayer(cornPlayer);
         prepareCornAction();
     }
 
     private void prepareCornAction() {
         List<PlayerAction> actions;
         Class<? extends Feature> cornType = getTile().getCornCircle();
-        if (ccg.getCornCircleOption() == CornCicleOption.REMOVAL) {
+        if (cornCircleCap.getCornCircleOption() == CornCicleOption.REMOVAL) {
             actions = prepareRemovalAction(cornType);
         } else {
             actions = prepareDeploymentAction(cornType);
@@ -97,7 +95,7 @@ public class CornCirclePhase extends Phase {
         if (actions.isEmpty()) {
             nextCornPlayer();
         } else {
-            notifyUI(actions, ccg.getCornCircleOption() == CornCicleOption.DEPLOYMENT);
+            notifyUI(actions, cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT);
         }
     }
 
@@ -148,7 +146,7 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        if (ccg.getCornCircleOption() != CornCicleOption.REMOVAL) {
+        if (cornCircleCap.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
@@ -164,7 +162,7 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-        if (ccg.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
+        if (cornCircleCap.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
             logger.error("Deployment not selected as corn options.");
             return;
         }
@@ -187,7 +185,7 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void pass() {
-        if (ccg.getCornCircleOption() == CornCicleOption.REMOVAL) {
+        if (cornCircleCap.getCornCircleOption() == CornCicleOption.REMOVAL) {
             logger.error("Removal cannot be passed");
             return;
         }
@@ -197,7 +195,7 @@ public class CornCirclePhase extends Phase {
     @Override
     public void loadGame(Snapshot snapshot) {
         setEntered(true); //avoid call enter on load phase to this phase switch
-        if (ccg.getCornCircleOption() == null) {
+        if (cornCircleCap.getCornCircleOption() == null) {
             game.getUserInterface().selectCornCircleOption();
         } else {
             prepareCornAction();

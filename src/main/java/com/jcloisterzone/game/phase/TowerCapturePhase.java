@@ -8,7 +8,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.TowerCapability;
 
@@ -21,7 +20,7 @@ public class TowerCapturePhase extends Phase {
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.TOWER);
+        return game.hasCapability(TowerCapability.class);
     }
 
     @Override
@@ -36,20 +35,20 @@ public class TowerCapturePhase extends Phase {
         //unplace figure returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
-            TowerCapability tg = game.getTowerCapability();
+            TowerCapability towerCap = game.getCapability(TowerCapability.class);
             List<Follower> myCapturedFollowers = Lists.newArrayList();
-            for(Follower f : tg.getPrisoners().get(m.getPlayer())) {
+            for(Follower f : towerCap.getPrisoners().get(m.getPlayer())) {
                 if (f.getPlayer() == me) {
                     myCapturedFollowers.add(f);
                 }
             }
 
             if (myCapturedFollowers.isEmpty()) {
-                tg.inprison(m, me);
+                towerCap.inprison(m, me);
             } else {
                 //opponent has my prisoner - figure exchage
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type
-                tg.getPrisoners().get(m.getPlayer()).remove(exchanged);
+                towerCap.getPrisoners().get(m.getPlayer()).remove(exchanged);
                 exchanged.clearDeployment();
                 //? some events ?
             }

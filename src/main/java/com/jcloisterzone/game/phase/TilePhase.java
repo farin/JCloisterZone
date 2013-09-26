@@ -4,22 +4,24 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 public class TilePhase extends Phase {
 
+    private final BridgeCapability bridgeCap;
+
     public TilePhase(Game game) {
         super(game);
+        bridgeCap = game.getCapability(BridgeCapability.class);
     }
 
     @Override
@@ -42,27 +44,23 @@ public class TilePhase extends Phase {
         Tile tile = getTile();
         tile.setRotation(rotation);
 
-        boolean bridgeRequired = false;
-        if (game.hasCapability(Capability.BRIDGE)) {
-            bridgeRequired = !getBoard().isPlacementAllowed(tile, p);
-        }
+        boolean bridgeRequired = bridgeCap != null && !getBoard().isPlacementAllowed(tile, p);
 
         getBoard().add(tile, p);
         if (tile.getTower() != null) {
-            game.getTowerCapability().registerTower(p);
+            game.getCapability(TowerCapability.class).registerTower(p);
         }
         game.fireGameEvent().tilePlaced(tile);
 
         if (bridgeRequired) {
-            BridgeCapability bcb = game.getBridgeCapability();
-            Sites sites = bcb.prepareMandatoryBridgeAction().getSites();
+            Sites sites = bridgeCap.prepareMandatoryBridgeAction().getSites();
 
             assert sites.size() == 1;
             Position pos = sites.keySet().iterator().next();
             Location loc = sites.get(pos).iterator().next();
 
-            bcb.decreaseBridges(getActivePlayer());
-            bcb.deployBridge(pos, loc);
+            bridgeCap.decreaseBridges(getActivePlayer());
+            bridgeCap.deployBridge(pos, loc);
         }
         getBoard().mergeFeatures(tile);
 

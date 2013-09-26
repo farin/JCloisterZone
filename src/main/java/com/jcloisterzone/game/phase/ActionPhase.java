@@ -3,7 +3,6 @@ package com.jcloisterzone.game.phase;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -17,18 +16,23 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 
 
 public class ActionPhase extends Phase {
 
+    private final TowerCapability towerCap;
+    private final FlierCapability flierCap;
 
     public ActionPhase(Game game) {
         super(game);
+        towerCap = game.getCapability(TowerCapability.class);
+        flierCap = game.getCapability(FlierCapability.class);
     }
 
     @Override
@@ -39,7 +43,7 @@ public class ActionPhase extends Phase {
         if (getActivePlayer().hasFollower(SmallFollower.class)  && !commonSites.isEmpty()) {
             actions.add(new MeepleAction(SmallFollower.class, commonSites));
         }
-        game.getDelegate().prepareActions(actions, commonSites);
+        game.prepareActions(actions, commonSites);
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
@@ -54,18 +58,12 @@ public class ActionPhase extends Phase {
 
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
         if (!actions.isEmpty()) return false;
-        if (game.hasCapability(Capability.TOWER)) {
-            TowerCapability tg = game.getTowerCapability();
-            if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
-                //player can return figure immediately
-                return false;
-            }
+        if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer())) {
+            //player can return figure immediately
+            return false;
         }
-        if (game.hasCapability(Capability.FLIER)) {
-            FlierCapability fg = game.getFlierCapability();
-            if (fg.isFlierRollAllowed()) {
-                return false;
-            }
+        if (flierCap != null && flierCap.isFlierRollAllowed()) {
+            return false;
         }
         return true;
     }
@@ -88,7 +86,7 @@ public class ActionPhase extends Phase {
         if (tower.getMeeple() != null) {
             throw new IllegalArgumentException("The tower is sealed");
         }
-        game.getTowerCapability().decreaseTowerPieces(getActivePlayer());
+        towerCap.decreaseTowerPieces(getActivePlayer());
         return tower.increaseHeight();
     }
 
@@ -96,10 +94,11 @@ public class ActionPhase extends Phase {
         //TODO custom rule - opponent only
         TakePrisonerAction captureAction = new TakePrisonerAction(PlayerRestriction.any());
         for(Meeple pf : game.getDeployedMeeples()) {
-            if (! (pf instanceof Follower)) continue;
-            if (pf.getPosition().x != p.x && pf.getPosition().y != p.y) continue; //check if is in same row or column
-            if (pf.getPosition().squareDistance(p) > range) continue;
-            captureAction.getOrCreate(pf.getPosition()).add(pf.getLocation());
+            if (!(pf instanceof Follower)) continue;
+            Position pos = pf.getPosition();
+            if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column
+            if (pos.squareDistance(p) > range) continue;
+            captureAction.getOrCreate(pos).add(pf.getLocation());
         }
         return captureAction;
     }
@@ -121,7 +120,7 @@ public class ActionPhase extends Phase {
     public void moveFairy(Position p) {
         for (Follower f : getActivePlayer().getFollowers()) {
             if (p.equals(f.getPosition())) {
-                game.getFairyCapability().setFairyPosition(p);
+                game.getCapability(FairyCapability.class).setFairyPosition(p);
                 game.fireGameEvent().fairyMoved(p);
                 next();
                 return;
@@ -152,7 +151,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void placeTunnelPiece(Position p, Location loc, boolean isB) {
-        game.getTunnelCapability().placeTunnelPiece(p, loc, isB);
+        game.getCapability(TunnelCapability.class).placeTunnelPiece(p, loc, isB);
         next(ActionPhase.class);
     }
 
@@ -166,15 +165,15 @@ public class ActionPhase extends Phase {
 
     @Override
     public void deployBridge(Position pos, Location loc) {
-        BridgeCapability bcb = game.getBridgeCapability();
-        bcb.decreaseBridges(getActivePlayer());
-        bcb.deployBridge(pos, loc);
+        BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
+        bridgeCap.decreaseBridges(getActivePlayer());
+        bridgeCap.deployBridge(pos, loc);
         next(ActionPhase.class);
     }
 
     @Override
     public void setFlierDistance(int distance) {
-        game.getFlierCapability().setFlierDistance(distance);
+        flierCap.setFlierDistance(distance);
         next(FlierActionPhase.class);
     }
 

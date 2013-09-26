@@ -13,22 +13,21 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.CastleCapability;
 
 public class CastlePhase extends Phase {
 
-    final CastleCapability castleCap;
+    private final CastleCapability castleCap;
 
     public CastlePhase(Game game) {
         super(game);
-        castleCap = game.getCastleCapability();
+        castleCap = game.getCapability(CastleCapability.class);
     }
 
     @Override
     public boolean isActive() {
-        return game.hasCapability(Capability.CASTLE);
+        return game.hasCapability(CastleCapability.class);
     }
 
     @Override
