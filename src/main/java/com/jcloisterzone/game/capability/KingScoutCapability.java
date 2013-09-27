@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
@@ -24,17 +23,16 @@ public final class KingScoutCapability extends Capability {
 
     public KingScoutCapability(Game game) {
         super(game);
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void completed(Completable feature, CompletableScoreContext ctx) {
-                if (feature instanceof City) {
-                    cityCompleted((City) feature, (PositionCollectingScoreContext) ctx);
-                }
-                if (feature instanceof Road) {
-                    roadCompleted((Road) feature, (PositionCollectingScoreContext) ctx);
-                }
-            }
-        });
+    }
+
+    @Override
+    public void completed(Completable feature, CompletableScoreContext ctx) {
+        if (feature instanceof City) {
+            cityCompleted((City) feature, (PositionCollectingScoreContext) ctx);
+        }
+        if (feature instanceof Road) {
+            roadCompleted((Road) feature, (PositionCollectingScoreContext) ctx);
+        }
     }
 
     @Override

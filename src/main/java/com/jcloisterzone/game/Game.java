@@ -212,6 +212,7 @@ public class Game extends GameSettings {
         try {
             Capability capability = clazz.getConstructor(Game.class).newInstance(this);
             capabilities.add(capability);
+            addGameListener(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }

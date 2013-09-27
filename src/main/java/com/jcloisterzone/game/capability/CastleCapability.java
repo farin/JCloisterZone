@@ -20,7 +20,6 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -47,21 +46,20 @@ public class CastleCapability extends Capability {
 
     public CastleCapability(Game game) {
         super(game);
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void castleDeployed(Castle castle1, Castle castle2) {
-                newCastles.add(castle1.getMaster());
-            }
+    }
 
-            @Override
-            public void undeployed(Meeple meeple) {
-                if (meeple.getFeature() instanceof Castle) {
-                    Castle castle = (Castle) meeple.getFeature().getMaster();
-                    scoreableCastleVicinity.remove(castle);
-                    emptyCastles.add(castle);
-                }
-            }
-        });
+    @Override
+    public void castleDeployed(Castle castle1, Castle castle2) {
+        newCastles.add(castle1.getMaster());
+    }
+
+    @Override
+    public void undeployed(Meeple meeple) {
+        if (meeple.getFeature() instanceof Castle) {
+            Castle castle = (Castle) meeple.getFeature().getMaster();
+            scoreableCastleVicinity.remove(castle);
+            emptyCastles.add(castle);
+        }
     }
 
     @Override

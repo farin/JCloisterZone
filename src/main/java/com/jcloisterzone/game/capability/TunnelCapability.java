@@ -12,7 +12,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.PlayerAction;

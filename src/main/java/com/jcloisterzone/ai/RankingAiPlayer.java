@@ -13,7 +13,6 @@ import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.ai.copy.CopyGamePhase;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -23,7 +22,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
@@ -48,7 +49,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     @Deprecated
     private void phaseLoop() {
         Phase phase = getGame().getPhase();
-        while(! phase.isEntered()) {
+        while (!phase.isEntered()) {
             //logger.info("  * not entered {} -> {}", phase, phase.getDefaultNext());
             phase.setEntered(true);
             phase.enter();
@@ -57,25 +58,29 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
     }
 
-    //TEMPORARY method
-    //TODO fast game copying without snapshot ? or without re creating board and tile instances
-    //TODO do not recreate SavePointManager
+    //TODO is there faster game copying without snapshot? or without re-creating board and tile instances
+    private Game deepGameCopy(Game game) {
+        Snapshot snapshot = new Snapshot(game, 0);
+        Game copy = snapshot.asGame();
+        copy.setConfig(game.getConfig());
+        copy.addUserInterface(this);
+
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, null);
+        phase.setSlots(new PlayerSlot[0]);
+        copy.getPhases().put(phase.getClass(), phase);
+        copy.setPhase(phase);
+        phase.startGame();
+        return copy;
+    }
+
+
     private void backupGame() {
         assert original == null;
         original = getGame();
+        Game copy = deepGameCopy(original);
+        setGame(copy);
 
-        Snapshot snapshot = new Snapshot(getGame(), 0);
-        Game gameCopy = snapshot.asGame();
-        gameCopy.setConfig(getGame().getConfig());
-        gameCopy.addGameListener(new GameEventAdapter());
-        gameCopy.addUserInterface(this);
-        Phase phase = new CopyGamePhase(gameCopy, snapshot, getGame().getTilePack());
-        gameCopy.getPhases().put(phase.getClass(), phase);
-        gameCopy.setPhase(phase);
-        phase.startGame();
-        setGame(gameCopy);
-
-        spm = new SavePointManager(getGame());
+        spm = new SavePointManager(copy);
         bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
         spm.startRecording();
     }
@@ -141,7 +146,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
             }
         }
         restoreGame();
-        logger.info("Selected move is: {}", bestSoFar);
+        logger.info("Rank {} > {}", getGame().getCurrentTile() == null ? "Abbey" : getGame().getCurrentTile().getId(), bestSoFar);
     }
 
     public void rankAction(List<PlayerAction> actions) {

@@ -292,7 +292,7 @@ public class CreateGamePlayerPanel extends JPanel {
 
         @Override
         public void run() {
-            while (! stopped) {
+            while (!stopped) {
                 if (update != null) {
                     requestUpdate();
                 }

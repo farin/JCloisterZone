@@ -252,4 +252,9 @@ public class EventMulticaster implements GameEventListener, UserInterface {
         ((GameEventListener)b).plagueSpread();
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(a) + "," + String.valueOf(b);
+    }
+
 }

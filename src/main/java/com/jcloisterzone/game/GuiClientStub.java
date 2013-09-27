@@ -54,7 +54,7 @@ public class GuiClientStub extends ClientStub {
                         PlayerSlot slot;
                         try {
                             Class<?> clazz = Class.forName(name);
-                            slot = new PlayerSlot(i, SlotType.AI, clazz.getSimpleName(), getClientId());
+                            slot = new PlayerSlot(i, SlotType.AI, "AI-"+i+"-"+clazz.getSimpleName(), getClientId());
                             slot.setAiClassName(clazz.getName());
                         } catch (ClassNotFoundException e) {
                             slot = new PlayerSlot(i, SlotType.PLAYER, name, getClientId());

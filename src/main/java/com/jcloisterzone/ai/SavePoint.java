@@ -1,5 +1,6 @@
 package com.jcloisterzone.ai;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Function;
@@ -17,12 +18,12 @@ public class SavePoint {
     public SavePoint(Operation operation, final Game game) {
         this.operation = operation;
         this.phase = game.getPhase();
-        savedCapabilities = Lists.transform(game.getCapabilities(), new Function<Capability, Capability>() {
+        savedCapabilities = new ArrayList<>(Lists.transform(game.getCapabilities(), new Function<Capability, Capability>() {
             @Override
             public Capability apply(Capability cap) {
                 return cap.copy(game);
             }
-        });
+        }));
     }
 
     public Operation getOperation() {

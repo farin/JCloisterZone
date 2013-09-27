@@ -14,12 +14,13 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 
 
-public abstract class Capability {
+public abstract class Capability extends GameEventAdapter {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -90,6 +91,11 @@ public abstract class Capability {
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName().replace("Capability", "");
     }
 
 }

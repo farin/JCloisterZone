@@ -13,7 +13,6 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
@@ -31,16 +30,15 @@ public class DragonCapability extends Capability {
 
     public DragonCapability(final Game game) {
         super(game);
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void tilePlaced(Tile tile) {
-                if (tile.getTrigger() == TileTrigger.VOLCANO) {
-                    setDragonPosition(tile.getPosition());
-                    getTilePack().activateGroup("dragon");
-                    game.fireGameEvent().dragonMoved(tile.getPosition());
-                }
-            }
-        });
+    }
+
+    @Override
+    public void tilePlaced(Tile tile) {
+        if (tile.getTrigger() == TileTrigger.VOLCANO) {
+            setDragonPosition(tile.getPosition());
+            getTilePack().activateGroup("dragon");
+            game.fireGameEvent().dragonMoved(tile.getPosition());
+        }
     }
 
     @Override

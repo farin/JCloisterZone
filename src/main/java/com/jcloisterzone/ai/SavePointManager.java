@@ -1,15 +1,12 @@
 package com.jcloisterzone.ai;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
 import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;
@@ -52,31 +49,29 @@ public class SavePointManager {
     }
 
     public SavePoint save() {
-        Operation op = operations.isEmpty() ? null : operations.peekLast();
-        return new SavePoint(op, game);
+        return new SavePoint(operations.peekLast(), game);
+    }
+
+    private void replaceCapabilities(Game game, List<Capability> capabilities) {
+        //hack, modifying collection content, depending on listening contract
+        for (Capability cap : game.getCapabilities()) {
+            game.removeGameListener(cap);
+        }
+        game.getCapabilities().clear();
+        game.getCapabilities().addAll(capabilities);
+        for (Capability cap : capabilities) {
+            game.addGameListener(cap);
+        }
     }
 
     public void restore(SavePoint sp) {
         game.removeGameListener(operationRecorder);
-        Operation spOp = sp == null ? null : sp.getOperation();
-        assert spOp == null || operations.contains(spOp);
-        Operation item;
-        while ((item = operations.peekLast()) != null) {
-            if (item == spOp) {
-                break;
-            }
+        Operation target = sp.getOperation();
+        while (operations.peekLast() != target) {
             //logger.info("      < undo {}", item);
             operations.pollLast().undo(game);
         }
-        game.getCapabilities().clear();
-        //game.getCapabilities().addAll(sp.getSavedCapabilities());
-        //TODO is another copy back needed ?
-        game.getCapabilities().addAll(Lists.transform(sp.getSavedCapabilities(), new Function<Capability, Capability>() {
-            @Override
-            public Capability apply(Capability cap) {
-                return cap.copy(game);
-            }
-        }));
+        replaceCapabilities(game, sp.getSavedCapabilities());
 
         Phase phase = sp.getPhase();
         game.setPhase(phase);

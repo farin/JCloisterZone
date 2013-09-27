@@ -21,7 +21,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -40,14 +39,13 @@ public class WagonCapability extends Capability {
 
     public WagonCapability(final Game game) {
         super(game);
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void undeployed(Meeple m) {
-                if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
-                    returnedWagons.put(m.getPlayer(), m.getFeature());
-                }
-            }
-        });
+    }
+
+    @Override
+    public void undeployed(Meeple m) {
+        if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
+            returnedWagons.put(m.getPlayer(), m.getFeature());
+        }
     }
 
     @Override

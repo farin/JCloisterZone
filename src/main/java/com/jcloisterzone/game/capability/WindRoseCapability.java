@@ -10,7 +10,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
@@ -24,24 +23,23 @@ public class WindRoseCapability extends Capability {
 
     public WindRoseCapability(final Game game) {
         super(game);
-        game.addGameListener(new GameEventAdapter() {
-            @Override
-            public void tilePlaced(Tile tile) {
-                Location rose = tile.getWindRose();
-                if (rose == null) return;
-                if (rose == Location.NWSE) {
-                    roseRotation = tile.getRotation();
-                    rosePosition = tile.getPosition();
-                } else {
-                    rose = rose.rotateCW(roseRotation);
-                    if (isInProperQuadrant(rose, tile.getPosition())) {
-                        Player p = game.getActivePlayer();
-                        p.addPoints(WIND_ROSE_POINTS, PointCategory.WIND_ROSE);
-                        game.fireGameEvent().scored(tile.getPosition(), p, WIND_ROSE_POINTS, WIND_ROSE_POINTS+"", false);
-                    }
-                }
+    }
+
+    @Override
+    public void tilePlaced(Tile tile) {
+        Location rose = tile.getWindRose();
+        if (rose == null) return;
+        if (rose == Location.NWSE) {
+            roseRotation = tile.getRotation();
+            rosePosition = tile.getPosition();
+        } else {
+            rose = rose.rotateCW(roseRotation);
+            if (isInProperQuadrant(rose, tile.getPosition())) {
+                Player p = game.getActivePlayer();
+                p.addPoints(WIND_ROSE_POINTS, PointCategory.WIND_ROSE);
+                game.fireGameEvent().scored(tile.getPosition(), p, WIND_ROSE_POINTS, WIND_ROSE_POINTS+"", false);
             }
-        });
+        }
     }
 
     @Override
