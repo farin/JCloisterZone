@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -22,7 +23,6 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.game.CustomRule;
@@ -46,8 +46,8 @@ public class CreateGamePanel extends JPanel {
     private JPanel rulesPanel;
     private JPanel panel;
 
-    private Map<Expansion, JComponent[]> expansionComponents = Maps.newHashMap();
-    private Map<CustomRule, JCheckBox> ruleCheckboxes = Maps.newHashMap();
+    private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
+    private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
 
     /**
      * Create the panel.

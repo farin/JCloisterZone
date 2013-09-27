@@ -2,9 +2,9 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.feature.Castle;
@@ -22,7 +22,7 @@ public class CastleLayer extends AbstractGridLayer {
 		} 				
 	}
 	
-	private List<DeployedCastle> castles = Lists.newArrayList();
+	private List<DeployedCastle> castles = new ArrayList<>();
 	private Image castleImage;
 	
 	public CastleLayer(GridPanel gridPanel) {
@@ -49,7 +49,7 @@ public class CastleLayer extends AbstractGridLayer {
 	@Override
 	public void paint(Graphics2D g2) {	
 		int size = getSquareSize();
-		for(DeployedCastle dc : castles) {
+		for (DeployedCastle dc : castles) {
 			if (dc.rotation == Rotation.R0) {
 				g2.drawImage(castleImage, getOffsetX(dc.position), getOffsetY(dc.position) + size/2, size, size, null);
 			} else {

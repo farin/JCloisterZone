@@ -122,7 +122,7 @@ public abstract class AiPlayer implements UserInterface {
     protected boolean selectDummyTilePlacement(TilePlacementAction action) {
         Position nearest = null, p0 = new Position(0, 0);
         int min = Integer.MAX_VALUE;
-        for(Position pos : action.getAvailablePlacements().keySet()) {
+        for (Position pos : action.getAvailablePlacements().keySet()) {
             int dist = pos.squareDistance(p0);
             if (dist < min) {
                 min = dist;
@@ -135,7 +135,7 @@ public abstract class AiPlayer implements UserInterface {
 
     protected boolean selectDummyMeepleAction(MeepleAction ma) {
         Position p = ma.getLocationsMap().keySet().iterator().next();
-        for(Location loc : ma.getLocationsMap().get(p)) {
+        for (Location loc : ma.getLocationsMap().get(p)) {
             Feature f = getBoard().get(p).getFeature(loc);
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
                 getServer().deployMeeple(p, loc, ma.getMeepleType());

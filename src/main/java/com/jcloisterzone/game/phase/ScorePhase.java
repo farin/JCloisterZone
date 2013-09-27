@@ -1,12 +1,12 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
@@ -33,7 +33,7 @@ import com.jcloisterzone.game.capability.TunnelCapability;
 
 public class ScorePhase extends Phase {
 
-    private Set<Completable> alredyScored = Sets.newHashSet();
+    private Set<Completable> alredyScored = new HashSet<>();
 
     private final BarnCapability barnCap;
     private final BuilderCapability builderCap;
@@ -84,7 +84,7 @@ public class ScorePhase extends Phase {
                 game.scoreFeature(points, ctx, p);
             }
             for (Meeple m : ctx.getMeeples()) {
-                if (! (m instanceof Barn)) {
+                if (!(m instanceof Barn)) {
                     m.undeploy(false);
                 }
             }
@@ -97,7 +97,7 @@ public class ScorePhase extends Phase {
 
         //TODO separate event here ??? and move this code to abbey and mayor game
         if (barnCap != null) {
-            Map<City, CityScoreContext> cityCache = Maps.newHashMap();
+            Map<City, CityScoreContext> cityCache = new HashMap<>();
             for (Feature feature : getTile().getFeatures()) {
                 if (feature instanceof Farm) {
                     scoreFollowersOnBarnFarm((Farm) feature, cityCache);

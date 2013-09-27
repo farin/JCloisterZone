@@ -1,14 +1,11 @@
 package com.jcloisterzone.feature;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -50,7 +47,7 @@ public abstract class TileFeature implements Feature {
             for (Meeple m : meeples) {
                 if (m.getIndex() > index) index = m.getIndex();
             }
-            meeples = Lists.newLinkedList(meeples);
+            meeples = new LinkedList<>(meeples);
             meeples.add(meeple);
             meeple.setIndex(index+1);
         }
@@ -77,7 +74,7 @@ public abstract class TileFeature implements Feature {
 //        if (meeples.size() == 1) {
 //            return Collections.<Class<? extends Meeple>>singleton(meeples.get(0).getClass());
 //        }
-//        Set<Class<? extends Meeple>> types = Sets.newHashSet();
+//        Set<Class<? extends Meeple>> types = new HashSet<>();
 //        for (Meeple m : meeples) {
 //            types.add(m.getClass());
 //        }
@@ -137,7 +134,7 @@ public abstract class TileFeature implements Feature {
         return getClass().getSimpleName()+"@"+getId();
     }
 
-    public static String getLocalizedNameFor(Class<? extends Feature> feature) {
+    public static String getLocalizedNamefor (Class<? extends Feature> feature) {
         try {
             Method m = feature.getMethod("name");
             return (String) m.invoke(null);

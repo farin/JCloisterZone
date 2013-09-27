@@ -106,7 +106,7 @@ public class ControlPanel extends FakeComponent {
         super.dispatchMouseEvent(e);
         if (e.isConsumed()) return;
         actionPanel.dispatchMouseEvent(e);
-        for(PlayerPanel pp : playerPanels) {
+        for (PlayerPanel pp : playerPanels) {
             if (e.isConsumed()) return;
             pp.dispatchMouseEvent(e);
         }
@@ -201,7 +201,7 @@ public class ControlPanel extends FakeComponent {
             List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {
                 int x = 0;
-                for(Tile tile : queue) {
+                for (Tile tile : queue) {
                     Image img = client.getResourceManager().getTileImage(tile);
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;

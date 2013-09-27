@@ -7,6 +7,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,8 +21,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
@@ -44,7 +44,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
 
-    private Set<String> supportedExpansions = Sets.newHashSet(); //expansion codes
+    private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
     static {
         try {
@@ -155,7 +155,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         if (!containsTile(tile.getId())) return null;
 
-        Map<Location, Area> areas = Maps.newHashMap();
+        Map<Location, Area> areas = new HashMap<>();
         Area subsBridge = getBaseRoadAndCitySubstractions(tile);
         Area subsRoadCity = new Area(subsBridge);
         substractBridge(subsRoadCity, tile);
@@ -177,14 +177,14 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 if (piece instanceof Bridge) {
                     subs = subsBridge;
                 }
-                if (! subs.isEmpty()) {
+                if (!subs.isEmpty()) {
                     a = new Area(a); //copy to preserve original
                     a.subtract(subs);
                 }
             }
             areas.put(loc, a);
         }
-        Map<Location, Area> transformed = Maps.newHashMap();
+        Map<Location, Area> transformed = new HashMap<>();
 
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
@@ -196,7 +196,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
         AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
 
-        for(Entry<Location, Area> entry : areas.entrySet()) {
+        for (Entry<Location, Area> entry : areas.entrySet()) {
             Area a = entry.getValue();
             a = a.createTransformedArea(transform1);
             a = a.createTransformedArea(transform2);
@@ -212,7 +212,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     //TODO Move to default provider ???
     public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
-        Map<Location, Area> result = Maps.newHashMap();
+        Map<Location, Area> result = new HashMap<>();
         for (Location loc : locations) {
             result.put(loc, getBridgeArea(size, loc));
         }
@@ -251,8 +251,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private Area getFarmSubstractions(Tile tile) {
         Area sub = new Area();
-        for(Feature piece : tile.getFeatures()) {
-            if (! (piece instanceof Farm)) {
+        for (Feature piece : tile.getFeatures()) {
+            if (!(piece instanceof Farm)) {
                 Area area = getArea(tile, piece.getClass(), piece.getLocation());
                 sub.add(area);
             }

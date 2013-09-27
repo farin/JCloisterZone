@@ -91,7 +91,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
 
         Player activePlayer = client.getGame().getActivePlayer();
-        for(int i = 0; i < actions.length; i++) {
+        for (int i = 0; i < actions.length; i++) {
             selected[i] = new ImageIcon(
                 actions[i].getImage(activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
             ).getImage();
@@ -169,7 +169,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         if (refreshMouseRegions) {
             getMouseRegions().clear();
         }
-        for(int i = 0; i < actions.length; i++) {
+        for (int i = 0; i < actions.length; i++) {
             boolean active = (i == selectedActionIndex);
 
             Image img = active ? selected[i] : deselected[i];

@@ -3,11 +3,11 @@ package com.jcloisterzone.ui.controls;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -21,7 +21,7 @@ import com.jcloisterzone.ui.theme.FigureTheme;
 public class PlayerPanelImageCache {
 
     private final Client client;
-    private Map<String, Image> scaledImages = Maps.newHashMap();
+    private Map<String, Image> scaledImages = new HashMap<>();
 
     public PlayerPanelImageCache(Client client) {
         this.client = client;
@@ -43,7 +43,7 @@ public class PlayerPanelImageCache {
     private void scaleFigureImages(Player player, Color color, Collection<? extends Meeple> meeples) {
         FigureTheme theme = client.getFigureTheme();
         //Image img = theme.getFigureImage(type, color, null);
-        for(Meeple f : meeples) {
+        for (Meeple f : meeples) {
             String key = player.getIndex() + f.getClass().getSimpleName();
             if (!scaledImages.containsKey(key)) {
                 scaledImages.put(key, scaleImage(theme.getFigureImage(f.getClass(), color, null)));
@@ -53,7 +53,7 @@ public class PlayerPanelImageCache {
 
     private void scaleImages() {
         FigureTheme theme = client.getFigureTheme();
-        for(Player player : client.getGame().getAllPlayers()) {
+        for (Player player : client.getGame().getAllPlayers()) {
             Color color = client.getPlayerColor(player);
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());

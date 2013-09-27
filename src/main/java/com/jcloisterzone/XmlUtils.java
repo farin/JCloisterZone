@@ -96,7 +96,7 @@ public class XmlUtils {
 
     public static  Location union(String[] locations) {
         Location u = null;
-        for(String locStr : locations) {
+        for (String locStr : locations) {
             Location loc = Location.valueOf(locStr);
             u = loc.union(u);
         }
@@ -112,7 +112,7 @@ public class XmlUtils {
     }
 
     public static int attributeIntValue(Element e, String attr, Integer defaultValue) {
-        if (! e.hasAttribute(attr)) {
+        if (!e.hasAttribute(attr)) {
             return defaultValue;
         }
         if (e.getAttribute(attr).equals("yes") || e.getAttribute(attr).equals("true")) {
@@ -122,7 +122,7 @@ public class XmlUtils {
     }
 
     public static String attributeStringValue(Element e, String attr, String defaultValue) {
-        if (! e.hasAttribute(attr)) {
+        if (!e.hasAttribute(attr)) {
             return defaultValue;
         }
         return e.getAttribute(attr);

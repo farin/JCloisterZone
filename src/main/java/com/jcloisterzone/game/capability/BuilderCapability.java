@@ -12,12 +12,10 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Capability;
 
 public class BuilderCapability extends Capability {

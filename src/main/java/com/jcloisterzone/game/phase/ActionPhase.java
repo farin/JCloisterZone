@@ -1,8 +1,8 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -37,7 +37,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void enter() {
-        List<PlayerAction> actions = Lists.newArrayList();
+        List<PlayerAction> actions = new ArrayList<>();
 
         LocationsMap locMap = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(SmallFollower.class)  && !locMap.isEmpty()) {
@@ -93,7 +93,7 @@ public class ActionPhase extends Phase {
     public TakePrisonerAction prepareCapture(Position p, int range) {
         //TODO custom rule - opponent only
         TakePrisonerAction captureAction = new TakePrisonerAction(PlayerRestriction.any());
-        for(Meeple pf : game.getDeployedMeeples()) {
+        for (Meeple pf : game.getDeployedMeeples()) {
             if (!(pf instanceof Follower)) continue;
             Position pos = pf.getPosition();
             if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column

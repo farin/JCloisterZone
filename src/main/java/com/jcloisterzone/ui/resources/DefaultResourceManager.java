@@ -3,14 +3,13 @@ package com.jcloisterzone.ui.resources;
 import java.awt.Image;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -46,8 +45,8 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
-        Map<Location, Area> result = Maps.newHashMap();
-        for(Location corner : corners) {
+        Map<Location, Area> result = new HashMap<>();
+        for (Location corner : corners) {
             int r = size/2;
             Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
             if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));

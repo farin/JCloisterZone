@@ -1,12 +1,12 @@
 package com.jcloisterzone.ai;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.FairyAction;
@@ -36,7 +36,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     private Game original;
     private SavePointManager spm;
 
-    private Map<Feature, AiScoreContext> scoreCache = Maps.newHashMap();
+    private Map<Feature, AiScoreContext> scoreCache = new HashMap<>();
     private PositionRanking bestSoFar;
     //private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
@@ -94,8 +94,8 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 
     protected void selectAbbeyPlacement(AbbeyPlacementAction action) {
-        Map<Position, Set<Rotation>> placements = Maps.newHashMap();
-        for(Position pos : action.getSites()) {
+        Map<Position, Set<Rotation>> placements = new HashMap<>();
+        for (Position pos : action.getSites()) {
             placements.put(pos, Collections.singleton(Rotation.R0));
         }
         rankTilePlacement(placements);
@@ -118,9 +118,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
         backupGame();
         SavePoint sp = spm.save();
-        for(Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
+        for (Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
             Position pos = entry.getKey();
-            for(Rotation rot : entry.getValue()) {
+            for (Rotation rot : entry.getValue()) {
                 //logger.info("  * phase {} -> {}", getGame().getPhase(), getGame().getPhase().getDefaultNext());
                 //logger.info("  * placing {} {}", pos, rot);
                 getGame().getPhase().placeTile(rot, pos);
@@ -147,11 +147,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
     public void rankAction(List<PlayerAction> actions) {
         Tile currTile = getGame().getCurrentTile();
         Position pos = currTile.getPosition();
-        for(PlayerAction action : actions) {
+        for (PlayerAction action : actions) {
             if (action instanceof MeepleAction) {
                 MeepleAction ma = (MeepleAction) action;
                 rankMeeplePlacement(currTile, ma, ma.getMeepleType(), pos, ma.getLocationsMap().get(pos));
-//				for(PositionLocation posloc : hopefulGatePlacements) {
+//				for (PositionLocation posloc : hopefulGatePlacements) {
 //					rankMeepleAction(currTile, ma, posloc.position, Collections.singleton(posloc.location));
 //				}
             }
@@ -167,7 +167,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     protected void rankFairyPlacement(Tile currTile, FairyAction action) {
         SavePoint sp = spm.save();
-        for(Position pos: action.getSites()) {
+        for (Position pos: action.getSites()) {
             getGame().getPhase().moveFairy(pos);
             double currRank = rank();
             if (currRank > bestSoFar.getRank()) {
@@ -184,7 +184,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
             return;
         }
         SavePoint sp = spm.save();
-        for(Location loc : locations) {
+        for (Location loc : locations) {
             //logger.info("    . deploying {}", meepleType);
             getGame().getPhase().deployMeeple(pos, loc, meepleType);
             double currRank = rank();

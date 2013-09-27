@@ -77,7 +77,7 @@ public class BazaarPhase extends ServerAwarePhase {
     @Override
     public void drawTiles(int[] tileIndexes) {
         ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(tileIndexes.length);
-        for(int tileIndex : tileIndexes) {
+        for (int tileIndex : tileIndexes) {
             supply.add(new BazaarItem(getTilePack().drawTile(tileIndex)));
         }
         bazaarCap.setBazaarSupply(supply);
@@ -85,7 +85,7 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     private boolean canPlayerBid(Player p) {
-        for(BazaarItem bi : bazaarCap.getBazaarSupply()) {
+        for (BazaarItem bi : bazaarCap.getBazaarSupply()) {
             if (bi.getOwner() == p) return false;
         }
         return true;
@@ -145,7 +145,7 @@ public class BazaarPhase extends ServerAwarePhase {
         Player player = currentSelectingPlayer;
         do {
             player = game.getNextPlayer(player);
-            if (! bazaarCap.hasTileAuctioned(player)) {
+            if (!bazaarCap.hasTileAuctioned(player)) {
                 bazaarCap.setBazaarTileSelectingPlayer(player);
                 game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
                 game.getUserInterface().selectBazaarTile();

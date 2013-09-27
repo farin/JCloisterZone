@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Location;
@@ -40,14 +40,14 @@ public class CastlePhase extends Phase {
     public void enter() {
         Tile tile = getTile();
         Map<Player, Set<Location>> currentTileCastleBases = null;
-        for(Feature f : tile.getFeatures()) {
+        for (Feature f : tile.getFeatures()) {
             if (!(f instanceof City)) continue;
             Player owner = f.walk(new FindCastleBaseVisitor());
             if (owner == null || castleCap.getPlayerCastles(owner) == 0) continue;
-            if (currentTileCastleBases == null) currentTileCastleBases = Maps.newHashMap();
+            if (currentTileCastleBases == null) currentTileCastleBases = new HashMap<>();
             Set<Location> locs = currentTileCastleBases.get(owner);
             if (locs == null) {
-                locs = Sets.newHashSet();
+                locs = new HashSet<>();
                 currentTileCastleBases.put(owner, locs);
             }
             locs.add(f.getLocation());
@@ -101,7 +101,7 @@ public class CastlePhase extends Phase {
         @Override
         public boolean visit(Feature feature) {
             City c = (City) feature;
-            if (! c.isCastleBase()) {
+            if (!c.isCastleBase()) {
                 castleBase = false;
                 return false;
             }

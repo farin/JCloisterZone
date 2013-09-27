@@ -1,9 +1,9 @@
 package com.jcloisterzone.feature;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.FindMaster;
@@ -17,7 +17,7 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 		super.setLocation(location);
 
 		int edgeCount = 0;
-		for(Location side : getSides()) {
+		for (Location side : getSides()) {
 			if (side.intersect(location) != null) {
 				edgeCount++;
 			}
@@ -30,7 +30,7 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 	}
 
 	public boolean containsEdge(MultiTileFeature f) {
-		for(MultiTileFeature edge : edges) {
+		for (MultiTileFeature edge : edges) {
 			if (edge == f) return true;
 		}
 		return false;
@@ -42,7 +42,7 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 
 	private int getEdgeIndex(Location edge) {
 		int i = 0;
-		for(Location side : getSides()) {
+		for (Location side : getSides()) {
 			if (side.intersect(getLocation()) != null) {
 				if (side.isPartOf(edge)) return i;
 				i++;
@@ -69,16 +69,16 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
 	public <T> T walk(FeatureVisitor<T> visitor) {
 		Stack<MultiTileFeature> stack = new Stack<MultiTileFeature>();
 		//TODO implement by bit set or marking - this method can be optimized
-		Set<MultiTileFeature> visited = Sets.newHashSet();
+		Set<MultiTileFeature> visited = new HashSet<>();
 		MultiTileFeature previous = null; //little optimization - less touching set
 		stack.push(this);
 		visited.add(this);
 		while(! stack.isEmpty()) {
 			MultiTileFeature nextToVisit = stack.pop();
-			if (! visitor.visit(nextToVisit)) {
+			if (!visitor.visit(nextToVisit)) {
 				break;
 			}
-			for(MultiTileFeature feature : nextToVisit.edges) {
+			for (MultiTileFeature feature : nextToVisit.edges) {
 				if (feature != null && feature != nextToVisit && previous != feature && ! visited.contains(feature)) {
 					visited.add(feature);
 					stack.push(feature);

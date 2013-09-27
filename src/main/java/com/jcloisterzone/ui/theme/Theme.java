@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -17,7 +18,6 @@ import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.legacy.FigureImageFilter;
@@ -47,7 +47,7 @@ public abstract class Theme {
 
     protected List<URL> getResourceLayers(String name) {
         int i = 0;
-        List<URL> layers = Lists.newArrayList();
+        List<URL> layers = new ArrayList<>();
         for (;;) {
             URL url = getResource(name + "_" + i + ".png", i > 0);
             if (url == null)

@@ -1,17 +1,16 @@
 package com.jcloisterzone.board;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 
@@ -25,18 +24,18 @@ import com.jcloisterzone.game.capability.BridgeCapability;
  */
 public class Board {
     protected final Map<Position,Tile> tiles = new LinkedHashMap<Position,Tile>();
-    protected final Map<Position, EdgePattern> availMoves = Maps.newHashMap();
-    protected final Map<Position, Set<Rotation>> currentAvailMoves = Maps.newHashMap();
-    protected final Set<Position> holes = Sets.newHashSet();
+    protected final Map<Position, EdgePattern> availMoves = new HashMap<>();
+    protected final Map<Position, Set<Rotation>> currentAvailMoves = new HashMap<>();
+    protected final Set<Position> holes = new HashSet<>();
 
     private int maxX, minX, maxY, minY;
 
     private final Game game;
 
-//	protected Set<TunnelEnd> tunnels = Sets.newHashSet();
-//	protected Map<Integer, TunnelEnd> openTunnels = Maps.newHashMap(); //tunnel with open one side
+//	protected Set<TunnelEnd> tunnels = new HashSet<>();
+//	protected Map<Integer, TunnelEnd> openTunnels = new HashMap<>(); //tunnel with open one side
 
-    protected List<Tile> discardedTiles = Lists.newArrayList();
+    protected List<Tile> discardedTiles = new ArrayList<>();
 
 
     public Board(Game game) {
@@ -95,16 +94,16 @@ public class Board {
     }
 
     public void add(Tile tile, Position p, boolean unchecked) {
-        if (! unchecked) {
+        if (!unchecked) {
             if (tile.isAbbeyTile()) {
-                if (! holes.contains(p)) {
+                if (!holes.contains(p)) {
                     throw new IllegalArgumentException("Abbey must be placed inside hole");
                 }
             } else {
-                if (! currentAvailMoves.containsKey(p)) {
+                if (!currentAvailMoves.containsKey(p)) {
                     throw new IllegalArgumentException("Invalid position " + p);
                 }
-                if (! currentAvailMoves.get(p).contains(tile.getRotation())) {
+                if (!currentAvailMoves.get(p).contains(tile.getRotation())) {
                     throw new IllegalArgumentException("Incorrect rotation " + tile.getRotation() + " "+ p);
                 }
             }
@@ -113,7 +112,7 @@ public class Board {
         tiles.put(p, tile);
         availMovesRemove(p);
 
-        for(Position offset: Position.ADJACENT.values()) {
+        for (Position offset: Position.ADJACENT.values()) {
             Position next = p.add(offset);
             if (get(next) == null) {
                 availMovesAdd(next);
@@ -131,7 +130,7 @@ public class Board {
     }
 
     public void mergeFeatures(Tile tile) {
-        for(Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+        for (Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             tile.merge(e.getValue(), e.getKey());
         }
     }
@@ -143,7 +142,7 @@ public class Board {
         tile.setPosition(null);
         availMovesAdd(pos);
         if (isHole(pos)) holes.add(pos);
-        for(Position offset: Position.ADJACENT.values()) {
+        for (Position offset: Position.ADJACENT.values()) {
             Position next = pos.add(offset);
             holes.remove(next);
             if (getAdjacentCount(next) == 0) {
@@ -154,7 +153,7 @@ public class Board {
 
     public void unmergeFeatures(Tile tile) {
         assert tile.getPosition() != null;
-        for(Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+        for (Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             tile.unmerge(e.getValue(), e.getKey());
         }
     }
@@ -170,7 +169,7 @@ public class Board {
     }
 
     private boolean isHole(Position p) {
-        for(Position offset: Position.ADJACENT.values()) {
+        for (Position offset: Position.ADJACENT.values()) {
             Position next = p.add(offset);
             if (get(next) == null) {
                 return false;
@@ -181,7 +180,7 @@ public class Board {
 
     private int getAdjacentCount(Position p) {
         int count = 0;
-        for(Position offset: Position.ADJACENT.values()) {
+        for (Position offset: Position.ADJACENT.values()) {
             Position next = p.add(offset);
             if (get(next) != null) {
                 count++;
@@ -225,7 +224,7 @@ public class Board {
      * Check if placement is legal against orthonogal neigbours. */
     public boolean isPlacementAllowed(Tile tile, Position p) {
         for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
-            if (! tile.check(e.getValue(), e.getKey(), this)) {
+            if (!tile.check(e.getValue(), e.getKey(), this)) {
                 return false;
             }
         }
@@ -249,8 +248,8 @@ public class Board {
     }
 
     public List<Tile> getMulti(Position[] positions) {
-        List<Tile> tiles = Lists.newArrayList();
-        for(Position p : positions) {
+        List<Tile> tiles = new ArrayList<>();
+        for (Position p : positions) {
             Tile t = get(p);
             if (t != null) {
                 tiles.add(t);
@@ -261,7 +260,7 @@ public class Board {
 
     public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
         Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
-        for(Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
+        for (Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
             Tile tile = get(e.getValue().add(pos));
             if (tile != null) {
                 tiles.put(e.getKey(), tile);

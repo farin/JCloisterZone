@@ -8,7 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
@@ -151,11 +150,11 @@ public class BazaarCapability extends Capability {
 
     public List<Tile> getDrawQueue() {
         if (bazaarSupply == null) return Collections.emptyList();
-        List<Tile> result = Lists.newArrayList();
+        List<Tile> result = new ArrayList<>();
         Player turnPlayer = game.getTurnPlayer();
         Player p = game.getNextPlayer(turnPlayer);
         while (p != turnPlayer) {
-            for(BazaarItem bi : bazaarSupply) {
+            for (BazaarItem bi : bazaarSupply) {
                 if (bi.getOwner() == p) {
                     result.add(bi.getTile());
                     break;

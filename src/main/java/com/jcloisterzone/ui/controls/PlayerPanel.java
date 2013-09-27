@@ -13,21 +13,19 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
@@ -162,7 +160,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         int small = 0;
         String smallImgKey = SmallFollower.class.getSimpleName();
-        for(Follower f : player.getFollowers()) {
+        for (Follower f : player.getFollowers()) {
             if (!f.isDeployed()) {
                 //instanceof cannot be used because of Phantom
                 if (f.getClass().equals(SmallFollower.class)) {
@@ -178,7 +176,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
 //		gp.profile(" > followers");
 
-        for(Special meeple : player.getSpecialMeeples()) {
+        for (Special meeple : player.getSpecialMeeples()) {
             if (!meeple.isDeployed()) {
                 drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
             }
@@ -245,8 +243,8 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             List<Follower> capturedFigures = tower.getPrisoners().get(player);
             Map<Class<? extends Follower>, Integer> groupedByType;
             if (!capturedFigures.isEmpty()) {
-                groupedByType = Maps.newHashMap();
-                for(Player opponent : client.getGame().getAllPlayers()) {
+                groupedByType = new HashMap<>();
+                for (Player opponent : client.getGame().getAllPlayers()) {
                     if (opponent == player) continue;
                     boolean isOpponentActive = client.getGame().getActivePlayer() == opponent;
                     boolean clickable = isOpponentActive && !tower.isRansomPaidThisTurn();

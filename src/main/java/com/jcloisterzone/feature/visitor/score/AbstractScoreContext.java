@@ -1,13 +1,13 @@
 package com.jcloisterzone.feature.visitor.score;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
@@ -27,12 +27,12 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
 
     int bestPower = 1; //minimal power to score must be 1 (mayor power can be 0)
 
-    private Map<Player, Integer> power = Maps.newHashMap();
-    private Map<Player, Follower> sample = Maps.newHashMap();
+    private Map<Player, Integer> power = new HashMap<>();
+    private Map<Player, Follower> sample = new HashMap<>();
     private Position preferedPos = null;
 
-    private List<Follower> followers = Lists.newArrayList();
-    private List<Special> specialMeeples = Lists.newArrayList();
+    private List<Follower> followers = new ArrayList<>();
+    private List<Special> specialMeeples = new ArrayList<>();
 
     public AbstractScoreContext(Game game) {
         this.game = game;
@@ -85,8 +85,8 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
     }
 
     public Set<Player> getMajorOwners() {
-        Set<Player> majorOwners = Sets.newHashSet();
-        for(Player player: power.keySet()) {
+        Set<Player> majorOwners = new HashSet<>();
+        for (Player player: power.keySet()) {
             int pwr = power.get(player);
             if (pwr == bestPower) {
                 majorOwners.add(player);

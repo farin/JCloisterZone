@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,7 +22,7 @@ import com.jcloisterzone.game.Capability;
 public class BridgeCapability extends Capability {
 
     private boolean bridgeUsed;
-    private Map<Player, Integer> bridges = Maps.newHashMap();
+    private Map<Player, Integer> bridges = new HashMap<>();
 
     @Override
     public void initPlayer(Player player) {
@@ -40,7 +41,7 @@ public class BridgeCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        if (! bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
+        if (!bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
             BridgeAction action = prepareBridgeAction();
             if (action != null) {
                 actions.add(action);
@@ -50,7 +51,7 @@ public class BridgeCapability extends Capability {
 
     public BridgeAction prepareMandatoryBridgeAction() {
         Tile tile = game.getCurrentTile();
-        for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+        for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             Tile adjacent = entry.getValue();
             Location rel = entry.getKey();
 
@@ -79,7 +80,7 @@ public class BridgeCapability extends Capability {
         Tile tile = game.getCurrentTile();
         action = prepareTileBridgeAction(tile, action, Location.NS);
         action = prepareTileBridgeAction(tile, action, Location.WE);
-        for(Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
+        for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             Tile adjacent = entry.getValue();
             Location rel = entry.getKey();
             action = prepareTileBridgeAction(adjacent, action, getBridgeLocationForAdjacent(rel));
@@ -96,7 +97,7 @@ public class BridgeCapability extends Capability {
     }
 
     private boolean isBridgePlacementAllowed(Tile tile, Position p, Location bridgeLoc) {
-        if (! tile.isBridgeAllowed(bridgeLoc)) return false;
+        if (!tile.isBridgeAllowed(bridgeLoc)) return false;
         for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
             Location rel = e.getKey();
             if (rel.intersect(bridgeLoc) != null) {
@@ -118,7 +119,7 @@ public class BridgeCapability extends Capability {
     }
 
     private boolean isTilePlacementWithBridgeAllowed(Tile tile, Position p, Location bridgeLoc) {
-        if (! tile.isBridgeAllowed(bridgeLoc)) return false;
+        if (!tile.isBridgeAllowed(bridgeLoc)) return false;
 
         for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
             Tile adjacent = e.getValue();
@@ -149,7 +150,7 @@ public class BridgeCapability extends Capability {
                 if (tileSide != 'R') return false;
 
                 Location bridgeLoc = getBridgeLocationForAdjacent(rel);
-                if (! isBridgePlacementAllowed(adjacent, adjacent.getPosition(), bridgeLoc)) return false;
+                if (!isBridgePlacementAllowed(adjacent, adjacent.getPosition(), bridgeLoc)) return false;
                 bridgeUsed = true;
             }
         }

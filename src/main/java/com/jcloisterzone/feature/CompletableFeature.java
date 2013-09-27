@@ -6,7 +6,7 @@ public abstract class CompletableFeature extends MultiTileFeature implements Com
 
 	@Override
 	public boolean isOpen() {
-		for(MultiTileFeature edge : getEdges()) {
+		for (MultiTileFeature edge : getEdges()) {
 			if (edge == null) return true;
 		}
 		return false;

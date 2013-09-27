@@ -1,14 +1,14 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ClassToInstanceMap;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
@@ -90,7 +90,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     private Phase addPhase(Phase next, Phase phase) {
         if (!phase.isActive()) return next;
 
-        Map<Class<? extends Phase>, Phase> phases = game.getPhases();
+        ClassToInstanceMap<Phase> phases = game.getPhases();
         phases.put(phase.getClass(), phase);
         if (next != null) {
             phase.setDefaultNext(next);
@@ -125,9 +125,9 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     private void createPlayers() {
-        List<Player> players = Lists.newArrayList();
+        List<Player> players = new ArrayList<>();
         Arrays.sort(slots, new PlayerSlotComparator());
-        for(int i = 0; i < slots.length; i++) {
+        for (int i = 0; i < slots.length; i++) {
             PlayerSlot slot = slots[i];
             if (slot.isOccupied()) {
                 Player player = new Player(slot.getNick(), i, slot);
@@ -145,8 +145,8 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void initializePlayersMeeples() {
-        for(Player player : game.getAllPlayers()) {
-            for(int i = 0; i < SmallFollower.QUANTITY; i++) {
+        for (Player player : game.getAllPlayers()) {
+            for (int i = 0; i < SmallFollower.QUANTITY; i++) {
                 player.addMeeple(new SmallFollower(game, player));
             }
             game.initPlayer(player);
@@ -171,7 +171,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void preplaceTiles() {
-        for(Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
+        for (Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
             game.fireGameEvent().tilePlaced(preplaced);

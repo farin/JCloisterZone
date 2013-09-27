@@ -2,11 +2,10 @@ package com.jcloisterzone.board;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 
 /**
@@ -24,7 +23,7 @@ public class Location implements Serializable {
     transient private String name;
     private int mask;
 
-    private static Map<Integer, Location> instances = Maps.newHashMap();
+    private static Map<Integer, Location> instances = new HashMap<>();
 
     /**
      * Obtains instance with given mask. For named location
@@ -118,7 +117,7 @@ public class Location implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (! (obj instanceof Location)) return false;
+        if (!(obj instanceof Location)) return false;
         return mask == ((Location)obj).mask;
     }
 
@@ -245,8 +244,8 @@ public class Location implements Serializable {
     }
 
     public Location[] intersectMulti(Location[] locs) {
-        List<Location> result = Lists.newArrayList();
-        for(Location loc: locs) {
+        List<Location> result = new ArrayList<>();
+        for (Location loc: locs) {
             Location i = this.intersect(loc);
             if (i != null) {
                 result.add(i);
@@ -271,7 +270,7 @@ public class Location implements Serializable {
     }
 
     public Rotation getRotationOf(Location loc) {
-        for(Rotation r : Rotation.values()) {
+        for (Rotation r : Rotation.values()) {
             if (this.equals(loc.rotateCW(r))) return r;
         }
         return null;

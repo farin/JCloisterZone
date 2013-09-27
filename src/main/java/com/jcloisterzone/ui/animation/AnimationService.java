@@ -35,7 +35,7 @@ public class AnimationService extends Thread {
 	}
 
 	public void run() {
-		for(;;) {
+		for (;;) {
 			try {
 				Animation an = animations.take();
 				if (an.switchFrame()) {

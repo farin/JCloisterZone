@@ -28,7 +28,7 @@ public class Barn extends Special {
 
     @Override
     protected void checkDeployment(Feature feature) {
-        if (! (feature instanceof Farm)) {
+        if (!(feature instanceof Farm)) {
             throw new IllegalArgumentException("The barn must be placed only on a farm.");
         }
         Farm farm = (Farm) feature;
@@ -37,8 +37,8 @@ public class Barn extends Special {
         ctx.setCityCache(new HashMap<City, CityScoreContext>());
         farm.walk(ctx);
 
-        if (! farm.getTile().getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
-            for(Special m : ctx.getSpecialMeeples()) {
+        if (!farm.getTile().getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+            for (Special m : ctx.getSpecialMeeples()) {
                 if (m instanceof Barn) {
                     throw new IllegalArgumentException("Another barn is already placed on the farm.");
                 }
@@ -46,11 +46,11 @@ public class Barn extends Special {
         }
 
         //all ok - score non barn meeples
-        for(Player owner : ctx.getMajorOwners()) {
+        for (Player owner : ctx.getMajorOwners()) {
             int points = ctx.getPoints(owner);
             game.scoreFeature(points, ctx, owner);
         }
-        for(Meeple m : ctx.getMeeples()) {
+        for (Meeple m : ctx.getMeeples()) {
             m.undeploy(false);
         }
 

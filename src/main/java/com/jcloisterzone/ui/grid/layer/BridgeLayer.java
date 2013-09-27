@@ -6,10 +6,10 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -25,14 +25,14 @@ public class BridgeLayer extends AbstractGridLayer {
     }
 
     //TODO store direct images as in Meeple layer???
-    private Map<Tile, Location> bridges = Maps.newHashMap();
+    private Map<Tile, Location> bridges = new HashMap<>();
 
     @Override
     public void paint(Graphics2D g2) {
         Composite oldComposite = g2.getComposite();
 //		Stroke oldStroke = g2.getStroke();
 //		g2.setStroke(new BasicStroke(getSquareSize() * 0.015f));
-        for(Entry<Tile, Location> entry : bridges.entrySet()) {
+        for (Entry<Tile, Location> entry : bridges.entrySet()) {
             //devel code only - use image instead
             Tile tile = entry.getKey();
             Location loc = entry.getValue();

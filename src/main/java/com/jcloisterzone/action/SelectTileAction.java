@@ -1,11 +1,10 @@
 package com.jcloisterzone.action;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
-
 
 public abstract class SelectTileAction extends PlayerAction {
 
@@ -13,7 +12,7 @@ public abstract class SelectTileAction extends PlayerAction {
 
     public SelectTileAction(String name) {
         super(name);
-        this.sites = Sets.newHashSet();
+        this.sites = new HashSet<>();
     }
 
     public SelectTileAction(String name, Set<Position> sites) {
@@ -26,5 +25,4 @@ public abstract class SelectTileAction extends PlayerAction {
     }
 
     public abstract void perform(Client2ClientIF server, Position p);
-
 }

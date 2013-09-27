@@ -28,18 +28,18 @@ public class FestivalCapability extends Capability {
 
         UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(getGame().getActivePlayer()));
 
-        for(Meeple m : getGame().getActivePlayer().getFollowers()) {
+        for (Meeple m : getGame().getActivePlayer().getFollowers()) {
             if (m.isDeployed()) {
                 action.getOrCreate(m.getPosition()).add(m.getLocation());
             }
         }
-        for(Meeple m : getGame().getActivePlayer().getSpecialMeeples()) {
+        for (Meeple m : getGame().getActivePlayer().getSpecialMeeples()) {
             if (m.isDeployed()) {
                 //TODO verify barn
                 action.getOrCreate(m.getPosition()).add(m.getLocation());
             }
         }
-        if (! action.getLocationsMap().isEmpty()) {
+        if (!action.getLocationsMap().isEmpty()) {
             actions.add(action);
         }
     }

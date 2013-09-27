@@ -188,7 +188,7 @@ public class CreateGamePlayerPanel extends JPanel {
                 updateNickname(false);
                 break;
         }
-        if (! myBefore || ! nickname.isEnabled()) { //probably change by me
+        if (!myBefore || ! nickname.isEnabled()) { //probably change by me
             nickname.setText(slot.getNick());
         }
         /*if (slot.getSerial() == null) {

@@ -1,9 +1,9 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -23,8 +23,8 @@ public class MayorCapability extends Capability {
     }
 
     private Set<Location> copyMayorLocations(Set<Location> locations) {
-        Set<Location> result = Sets.newHashSet();
-        for(Feature piece : getTile().getFeatures()) {
+        Set<Location> result = new HashSet<>();
+        for (Feature piece : getTile().getFeatures()) {
             Location loc = piece.getLocation();
             if (piece instanceof City && locations.contains(loc)) {
                 result.add(loc);
@@ -41,7 +41,7 @@ public class MayorCapability extends Capability {
         if (game.getActivePlayer().hasFollower(Mayor.class)) {
             if (tileLocations != null) {
                 Set<Location> mayorLocations = copyMayorLocations(tileLocations);
-                if (! mayorLocations.isEmpty()) {
+                if (!mayorLocations.isEmpty()) {
                     actions.add(new MeepleAction(Mayor.class, pos, mayorLocations));
                 }
             }

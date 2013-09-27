@@ -73,10 +73,10 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
         }
         session.write(new ControllMessage(session.getId(), Application.PROTCOL_VERSION, server.getSnapshot(), server.getSlots()));
 
-        for(Expansion exp: server.getExpansions()) {
+        for (Expansion exp: server.getExpansions()) {
             session.write(new CallMessage("updateExpansion", new Object[] { exp, true }));
         }
-        for(CustomRule rule: server.getCustomRules()) {
+        for (CustomRule rule: server.getCustomRules()) {
             session.write(new CallMessage("updateCustomRule", new Object[] { rule, true }));
         }
     }

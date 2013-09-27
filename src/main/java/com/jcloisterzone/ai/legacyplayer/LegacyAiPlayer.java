@@ -109,10 +109,10 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double meepleRating() {
         double rating = 0;
 
-        for(Player p : game.getAllPlayers()) {
+        for (Player p : game.getAllPlayers()) {
             double meeplePoints = 0;
             int limit = 0;
-            for(Follower f : p.getFollowers()) {
+            for (Follower f : p.getFollowers()) {
                 if (f.isDeployed()) {
                     if (f instanceof SmallFollower) {
                         meeplePoints += 0.15;
@@ -184,7 +184,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double pointRating() {
         double rating = 0;
 
-        for(Player p : game.getAllPlayers()) {
+        for (Player p : game.getAllPlayers()) {
             rating += reducePoints(p.getPoints(), p);
         }
 
@@ -207,7 +207,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double openObjectRating() {
         double rating = 0;
 
-        for(int i = 0; i < OPEN_PENALTY.length; i++ ){
+        for (int i = 0; i < OPEN_PENALTY.length; i++ ){
             double penalty;
             //fast fix for strange bug causes ArrayIndexOutOfBoundsException: 9
             if (openCount[i] >= OPEN_PENALTY[i].length) {
@@ -242,7 +242,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         //FreePlaceInfo[] fpi = board.getFreeNei();
         double rank = 0;
 
-//		for(Entry<Position, OpenEdge> entry : ctx.getOpenEdgesChanceToClose().entrySet()) {
+//		for (Entry<Position, OpenEdge> entry : ctx.getOpenEdgesChanceToClose().entrySet()) {
 //			OpenEdge edge = entry.getValue();
 //			if (edge.chanceToClose < MIN_CHANCE) continue;
 //
@@ -268,7 +268,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //				continue;
 //			}
 //
-//			for(int type = 0; type < 2; type++) {
+//			for (int type = 0; type < 2; type++) {
 //				MultiTileFeature placedSO = i.so[type][d.rev().index()];
 //				if (placedSO == null) continue;
 //
@@ -297,7 +297,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         double rating = 0;
 
 //		TODO more sophisticated rating
-        for(Meeple meeple : game.getDeployedMeeples()) {
+        for (Meeple meeple : game.getDeployedMeeples()) {
             if (!meeple.at(fairyPos)) continue;
             if (!(meeple instanceof Follower)) continue;
             if (meeple.getFeature() instanceof Castle) continue;
@@ -309,8 +309,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 // 		//OLD legacy impl
 //		Set<PlacedFigure> onTile = gc.getPlacedFiguresForTile(board.get(fairyPos.x,fairyPos.y));
-//		Set<Player> onePointPlayers = Sets.newHashSet();
-//		for(PlacedFigure pfi : onTile) {
+//		Set<Player> onePointPlayers = new HashSet<>();
+//		for (PlacedFigure pfi : onTile) {
 //			if (pfi != null && gi.get().equals(pfi.player)) {
 //				onePointPlayers.add(pfi.player);
 //			}
@@ -330,7 +330,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //		}
 //		//kvuli brane a vice figurkam na jednom poli, aby kazdy hrac max +1 za kolo
 //
-//		for(Player player : onePointPlayers) {
+//		for (Player player : onePointPlayers) {
 //			rating += reducePoints(0.8, player);
 //		}
     }
@@ -343,7 +343,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {
         double rating = 0.0;
         double points = getUnfinishedCompletablePoints(completable, ctx);
-        for(Player p : ctx.getMajorOwners()) {
+        for (Player p : ctx.getMajorOwners()) {
             rating += reducePoints(points, p);
         }
         return rating;
@@ -414,7 +414,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
     protected double rankSpecialFigures(LegacyAiScoreContext ctx) {
         double rating = 0.0;
-        for(Meeple m : ctx.getSpecialMeeples()) {
+        for (Meeple m : ctx.getSpecialMeeples()) {
             if (m instanceof Builder && isMe(m.getPlayer())) {
                 rating += rankBuilder((Builder) m, ctx);
             }
@@ -423,7 +423,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
     protected double rankBuilder(Builder builder, LegacyAiScoreContext ctx) {
-        if (! ctx.getMajorOwners().contains(getPlayer())) {
+        if (!ctx.getMajorOwners().contains(getPlayer())) {
             return -3.0; //builder in enemy object penalty
         }
         if (ctx.getChanceToClose() < 0.55) return 0.0;
@@ -452,7 +452,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         if (ctx.getChanceToClose() > 0.4) return 0.0;
 
         double rating = 0.0;
-        for(Meeple m : ctx.getMeeples()) {
+        for (Meeple m : ctx.getMeeples()) {
             if (isMe(m.getPlayer())) {
                 rating += TRAPPED_MY_FIGURE_POINTS;
             } else {

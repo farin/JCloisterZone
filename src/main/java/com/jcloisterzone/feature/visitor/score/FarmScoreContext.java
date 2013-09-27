@@ -1,10 +1,10 @@
 package com.jcloisterzone.feature.visitor.score;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -17,9 +17,9 @@ import com.jcloisterzone.game.capability.SiegeCapability;
 
 public class FarmScoreContext extends AbstractScoreContext {
 
-    private Map<City, CityScoreContext> adjoiningCompletedCities = Maps.newHashMap();
-    private Set<Castle> adjoiningCastles = Sets.newHashSet();
-    private Set<Player> pigs = Sets.newHashSet();
+    private Map<City, CityScoreContext> adjoiningCompletedCities = new HashMap<>();
+    private Set<Castle> adjoiningCastles = new HashSet<>();
+    private Set<Player> pigs = new HashSet<>();
     private int pigHerds = 0;
 
     private Map<City, CityScoreContext> cityCache;
@@ -128,7 +128,7 @@ public class FarmScoreContext extends AbstractScoreContext {
     public int getBarnPoints() {
         if (getGame().hasCapability(SiegeCapability.class)) {
             int points = 0;
-            for(CityScoreContext ctx : adjoiningCompletedCities.values()) {
+            for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
                 points += 4;
                 if (ctx.isBesieged()) { //count city twice
                     points += 4;

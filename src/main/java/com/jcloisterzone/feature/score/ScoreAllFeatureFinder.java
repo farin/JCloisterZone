@@ -1,13 +1,14 @@
 package com.jcloisterzone.feature.score;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
@@ -30,19 +31,19 @@ import com.jcloisterzone.game.Game;
  */
 public class ScoreAllFeatureFinder {
 
-    private Set<Meeple> alreadyRated = Sets.newHashSet();
-    private List<FarmScoreContext> farmContexts = Lists.newArrayList();
-    private Map<City, CityScoreContext> cityCache = Maps.newHashMap();
+    private Set<Meeple> alreadyRated = new HashSet<>();
+    private List<FarmScoreContext> farmContexts = new ArrayList<>();
+    private Map<City, CityScoreContext> cityCache = new HashMap<>();
     private Map<Player, Set<City>> scoredCities;
 
     public void scoreAll(Game game, ScoreAllCallback callback) {
         if (game.hasRule(CustomRule.FARM_CITY_SCORED_ONCE)) {
-            scoredCities = Maps.newHashMap();
-            for(Player p : game.getAllPlayers()) {
+            scoredCities = new HashMap<>();
+            for (Player p : game.getAllPlayers()) {
                 scoredCities.put(p, Sets.<City>newHashSet());
             }
         }
-        for(Meeple m : game.getDeployedMeeples()) {
+        for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             Feature f = m.getFeature();
 
@@ -63,10 +64,10 @@ public class ScoreAllFeatureFinder {
             alreadyRated.addAll(ctx.getFollowers());
             callback.scoreCompletableFeature(ctx);
         }
-        for(Meeple m : game.getDeployedMeeples()) {
-            if (! (m instanceof Follower) && !(m instanceof Barn)) continue;
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (!(m instanceof Follower) && !(m instanceof Barn)) continue;
             Feature f = m.getFeature();
-            if (! (f instanceof Farm)) continue;
+            if (!(f instanceof Farm)) continue;
             if (alreadyRated.contains(m)) continue;
 
             Farm farm = (Farm) f;
@@ -81,17 +82,17 @@ public class ScoreAllFeatureFinder {
             farmContexts.add(ctx);
         }
 
-        for(Player p : game.getAllPlayers()) {
+        for (Player p : game.getAllPlayers()) {
             //2nd edition farm scoring (CustomRule.FARM_CITY_SCORED_ONCE) requires sort to assign correct (highest) points
             Collections.sort(farmContexts, new FarmPoitsPerCityComparator(p));
-            for(FarmScoreContext ctx : farmContexts) {
+            for (FarmScoreContext ctx : farmContexts) {
                 if (ctx.getMajorOwners().contains(p)) {
                     callback.scoreFarm(ctx, p);
                 }
             }
         }
-        for(FarmScoreContext ctx : farmContexts) {
-            for(Special m : ctx.getSpecialMeeples()) {
+        for (FarmScoreContext ctx : farmContexts) {
+            for (Special m : ctx.getSpecialMeeples()) {
                 if (m instanceof Barn) {
                     callback.scoreBarn(ctx, (Barn) m);
                 }

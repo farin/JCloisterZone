@@ -3,9 +3,9 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -13,7 +13,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 public class TileLayer extends AbstractGridLayer {
 
     //keep own copy of tiles in Swing thread to prevent concurent modification ex. of tile list on game
-    private List<Tile> placedTiles = Lists.newArrayList();
+    private List<Tile> placedTiles = new ArrayList<>();
 
 
     public TileLayer(GridPanel gridPanel) {

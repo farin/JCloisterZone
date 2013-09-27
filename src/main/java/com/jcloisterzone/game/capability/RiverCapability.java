@@ -94,7 +94,7 @@ public class RiverCapability extends Capability {
             //check U-turn
             Location continueRiver = tile.getRiver().rotateCW(tile.getRotation()).substract(tileRelativePosition);
             if (continueRiver == Location.INNER_FARM) return true; //lake
-            for(Location continueSide: Location.sides()) { //split beacuse of river fork
+            for (Location continueSide: Location.sides()) { //split beacuse of river fork
                 if (continueRiver.intersect(continueSide) == null) continue;
                 Position pCheck = p.add(continueSide).add(continueSide.rotateCW(Rotation.R90));
                 if (getBoard().get(pCheck) != null) return false;

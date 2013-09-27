@@ -16,10 +16,10 @@ public class Pig extends Special {
 
 	@Override
 	protected void checkDeployment(Feature farm) {
-		if (! (farm instanceof Farm)) {
+		if (!(farm instanceof Farm)) {
 			throw new IllegalArgumentException("Pig must be placed on a farm only.");
 		}
-		if (! farm.walk(new IsOccupied().with(Follower.class))) {
+		if (!farm.walk(new IsOccupied().with(Follower.class))) {
 			throw new IllegalArgumentException("Feature is not occupied by follower.");
 		}
 		super.checkDeployment(farm);

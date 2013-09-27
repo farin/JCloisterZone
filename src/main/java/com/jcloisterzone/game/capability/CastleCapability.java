@@ -2,7 +2,9 @@ package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -13,7 +15,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
@@ -27,23 +28,23 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class CastleCapability extends Capability {
 
-    private Map<Player, Integer> castles = Maps.newHashMap();
+    private Map<Player, Integer> castles = new HashMap<>();
 
     private Player castlePlayer;
     private Map<Player, Set<Location>> currentTileCastleBases = null;
 
     /** castles deployed this turn - cannot be scored - refs to master feature  */
-    private List<Castle> newCastles = Lists.newArrayList();
+    private List<Castle> newCastles = new ArrayList<>();
     /** empty castles, already scored, keeping ref for game save */
-    private List<Castle> emptyCastles = Lists.newArrayList();
+    private List<Castle> emptyCastles = new ArrayList<>();
     /** castles from previous turns, can be scored - castle -> vinicity area */
-    private Map<Castle, Position[]> scoreableCastleVicinity = Maps.newHashMap();
-    private Map<Castle, Integer> castleScore = Maps.newHashMap();
+    private Map<Castle, Position[]> scoreableCastleVicinity = new HashMap<>();
+    private Map<Castle, Integer> castleScore = new HashMap<>();
 
 
     @Override
@@ -84,10 +85,10 @@ public class CastleCapability extends Capability {
     }
 
     private void checkCastleVicinity(Iterable<Position> triggerPositions, int score) {
-        for(Position p : triggerPositions) {
-            for(Entry<Castle, Position[]> entry : scoreableCastleVicinity.entrySet()) {
+        for (Position p : triggerPositions) {
+            for (Entry<Castle, Position[]> entry : scoreableCastleVicinity.entrySet()) {
                 Position[] vicinity = entry.getValue();
-                for(int i = 0; i < vicinity.length; i++) {
+                for (int i = 0; i < vicinity.length; i++) {
                     if (vicinity[i].equals(p)) {
                         Castle master = entry.getKey();
                         Integer currentCastleScore = castleScore.get(master);
@@ -123,12 +124,12 @@ public class CastleCapability extends Capability {
         castle.setLocation(loc.rotateCCW(tile.getRotation()));
         iter.set(castle);
 
-        for(Feature f : tile.getFeatures()) { //replace also city references
+        for (Feature f : tile.getFeatures()) { //replace also city references
             if (f instanceof Farm) {
                 Farm farm = (Farm) f;
                 Feature[] adjoining = farm.getAdjoiningCities();
                 if (adjoining != null) {
-                    for(int i = 0; i < adjoining.length; i++) {
+                    for (int i = 0; i < adjoining.length; i++) {
                         if (adjoining[i] == city) {
                             adjoining[i] = castle;
                             break;

@@ -48,7 +48,7 @@ public abstract class Figure implements Serializable, Cloneable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (! (obj instanceof Figure)) return false;
+        if (!(obj instanceof Figure)) return false;
         return Objects.equal(position, ((Figure) obj).position);
     }
 

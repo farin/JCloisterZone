@@ -1,8 +1,8 @@
 package com.jcloisterzone.feature.visitor.score;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
@@ -10,7 +10,7 @@ import com.jcloisterzone.game.Game;
 
 public abstract class PositionCollectingScoreContext extends AbstractScoreContext implements CompletableScoreContext {
 
-	private Set<Position> positions = Sets.newHashSet();
+	private Set<Position> positions = new HashSet<>();
 	private boolean isCompleted = true;
 
 	public PositionCollectingScoreContext(Game game) {

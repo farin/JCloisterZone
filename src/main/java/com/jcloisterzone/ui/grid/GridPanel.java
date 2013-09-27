@@ -78,7 +78,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         if (snapshot != null) {
             NodeList nl = snapshot.getTileElements();
-            for(int i = 0; i < nl.getLength(); i++) {
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
                 Position pos = XmlUtils.extractPosition(el);
                 if (pos.x <= left) left = pos.x - 1;
@@ -312,7 +312,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         squareSize = size;
 
         synchronized (layers) {
-            for(GridLayer layer : layers) {
+            for (GridLayer layer : layers) {
                 layer.zoomChanged(squareSize);
             }
         }

@@ -31,8 +31,8 @@ public class LoadGamePhase extends CreateGamePhase {
     @Override
     protected void preparePlayers() {
         //update plain (created by snapshot) players's slot with real one from dialog
-        for(int i = 0; i < slots.length; i++) {
-            for(Player p: game.getAllPlayers()) {
+        for (int i = 0; i < slots.length; i++) {
+            for (Player p: game.getAllPlayers()) {
                 if (p.getSlot().getNumber() == i) {
                     p.setSlot(slots[i]);
                 }
@@ -52,7 +52,7 @@ public class LoadGamePhase extends CreateGamePhase {
     @Override
     protected void preplaceTiles() {
         //super.preplaceTiles();
-        for(Iterator<Tile> iter = ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles().iterator(); iter.hasNext();) {
+        for (Iterator<Tile> iter = ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles().iterator(); iter.hasNext();) {
             Tile preplaced = iter.next();
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
@@ -61,7 +61,7 @@ public class LoadGamePhase extends CreateGamePhase {
                 game.fireGameEvent().bridgeDeployed(preplaced.getPosition(), preplaced.getBridge().getLocation());
             }
         }
-        for(Meeple m : tilePackFactory.getPreplacedMeeples()) {
+        for (Meeple m : tilePackFactory.getPreplacedMeeples()) {
             Tile tile = game.getBoard().get(m.getPosition());
             Feature f;
             if (m instanceof Barn) {
@@ -87,7 +87,7 @@ public class LoadGamePhase extends CreateGamePhase {
         tilePackFactory.setSnapshot(snapshot);
         DefaultTilePack tilePack = tilePackFactory.createTilePack();
         game.setTilePack(tilePack);
-        for(String tileId : snapshot.getDiscardedTiles()) {
+        for (String tileId : snapshot.getDiscardedTiles()) {
             Tile tile = tilePack.drawTile(tileId);
             game.getBoard().discardTile(tile);
         }

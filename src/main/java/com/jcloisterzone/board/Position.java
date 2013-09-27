@@ -58,7 +58,7 @@ public class Position implements Serializable {
 
 	public Position[] addMulti(Position[] offsets) {
 		Position[] result = new Position[offsets.length];
-		for(int i = 0; i < result.length; i++) {
+		for (int i = 0; i < result.length; i++) {
 			result[i] = add(offsets[i]);
 		}
 		return result;

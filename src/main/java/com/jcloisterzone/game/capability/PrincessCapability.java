@@ -34,7 +34,7 @@ public class PrincessCapability extends Capability {
 
         PrincessAction princessAction = new PrincessAction();
         for (Meeple m : getGame().getDeployedMeeples()) {
-            if (! (m.getFeature() instanceof City)) continue;
+            if (!(m.getFeature() instanceof City)) continue;
             if (m.getFeature().getMaster().equals(cityRepresentative) && m instanceof Follower) {
                 princessAction.getOrCreate(m.getPosition()).add(m.getLocation());
             }

@@ -17,10 +17,10 @@ public class Builder extends Special {
 
 	@Override
 	protected void checkDeployment(Feature f) {
-		if (! (f instanceof City || f instanceof Road) ) {
+		if (!(f instanceof City || f instanceof Road) ) {
 			throw new IllegalArgumentException("Builder must be placed in city or on road only.");
 		}		
-		if (! f.walk(new IsOccupied().with(Follower.class))) {
+		if (!f.walk(new IsOccupied().with(Follower.class))) {
 			throw new IllegalArgumentException("Feature is not occupied by follower.");
 		}
 		super.checkDeployment(f);

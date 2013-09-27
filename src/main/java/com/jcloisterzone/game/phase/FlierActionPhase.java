@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -18,7 +18,6 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 
 public class FlierActionPhase extends Phase {
@@ -47,7 +46,7 @@ public class FlierActionPhase extends Phase {
         }
 
         LocationsMap sites = new LocationsMap();
-        Set<Location> locations = Sets.newHashSet();
+        Set<Location> locations = new HashSet<>();
         for (Feature f : target.getFeatures()) {
             if (f instanceof Farm) continue;
             if (f.walk(new IsCompleted())) continue;
@@ -59,7 +58,7 @@ public class FlierActionPhase extends Phase {
         }
         sites.put(pos, locations);
 
-        List<PlayerAction> actions = Lists.newArrayList();
+        List<PlayerAction> actions = new ArrayList<>();
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
             actions.add(new MeepleAction(SmallFollower.class, sites));
         }

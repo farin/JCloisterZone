@@ -1,5 +1,6 @@
 package com.jcloisterzone.board;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,6 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.figure.Meeple;
@@ -20,7 +20,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
 
     private Snapshot snapshot;
 
-    private List<Meeple> preplacedMeeples = Lists.newArrayList();
+    private List<Meeple> preplacedMeeples = new ArrayList<>();
 
     //TODO is required to store information from snapshot outside ?
     class PreplacedTile {
@@ -42,7 +42,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
         NodeList nl = snapshot.getTileElements();
         preplaced = new PreplacedTile[nl.getLength()];
 
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             preplaced[i] = new PreplacedTile();
             preplaced[i].tileId = el.getAttribute("name");
@@ -62,7 +62,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
     @Override
     public List<Tile> createTiles(Expansion expansion, String tileId, Element card, Map<String, Integer> discardList) {
         List<Tile> result =  super.createTiles(expansion, tileId, card, discardList);
-        for(PreplacedTile pt : preplaced) {
+        for (PreplacedTile pt : preplaced) {
             if (pt.tile == null && pt.tileId.equals(tileId)) {
                 pt.tile = result.remove(result.size()-1);
                 game.loadTileFromSnapshot(pt.tile, pt.element);
@@ -89,7 +89,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
     @Override
     public DefaultTilePack createTilePack() {
         DefaultTilePack pack = super.createTilePack();
-        for(PreplacedTile pt : preplaced) {
+        for (PreplacedTile pt : preplaced) {
             pt.tile.setRotation(pt.rot);
             pt.tile.setPosition(pt.pos);
             pack.addTile(pt.tile, PLACED_GROUP);
@@ -103,7 +103,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
 
     public void activateGroups(DefaultTilePack pack) {
         pack.deactivateAllGroups();
-        for(String group : snapshot.getActiveGroups()) {
+        for (String group : snapshot.getActiveGroups()) {
             if (pack.getGroups().contains(group)) {
                 pack.activateGroup(group);
             }

@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
 
 public class SvgTransformationCollector {

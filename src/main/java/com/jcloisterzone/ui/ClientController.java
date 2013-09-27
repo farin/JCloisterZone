@@ -331,7 +331,7 @@ public class ClientController implements GameEventListener, UserInterface {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (client.isClientActive()) {
             ArrayList<BazaarItem> supply = client.getGame().getCapability(BazaarCapability.class).getBazaarSupply();
-            for(int i = 0; i < supply.size(); i++) {
+            for (int i = 0; i < supply.size(); i++) {
                 //find first allowed item
                 if (supply.get(i).getOwner() == null) {
                     bazaarPanel.setSelectedItem(i);

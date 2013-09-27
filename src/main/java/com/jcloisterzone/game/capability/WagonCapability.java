@@ -2,6 +2,8 @@ package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XmlUtils.asLocation;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,7 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MeepleAction;
@@ -29,13 +30,13 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.ScorePhase;
 
 public class WagonCapability extends Capability {
 
-     private Map<Player, Feature> returnedWagons = Maps.newHashMap();
+     private Map<Player, Feature> returnedWagons = new HashMap<>();
      private Player wagonPlayer;
 
      @Override
@@ -66,7 +67,7 @@ public class WagonCapability extends Capability {
          assert nl.getLength() <= 1;
          if (nl.getLength() == 1) {
              nl = ((Element)nl.item(0)).getElementsByTagName("neighbouring");
-             for(int i = 0; i < nl.getLength(); i++) {
+             for (int i = 0; i < nl.getLength(); i++) {
                  processNeighbouringElement(tile, (Element) nl.item(i));
              }
          }
@@ -75,13 +76,13 @@ public class WagonCapability extends Capability {
      private void processNeighbouringElement(Tile tile, Element e) {
          String[] sides = asLocation(e);
          Feature[] te = new Feature[sides.length];
-         for(int i = 0; i < te.length; i++) {
+         for (int i = 0; i < te.length; i++) {
              te[i] = tile.getFeaturePartOf(Location.valueOf(sides[i]));
          }
-         for(int i = 0; i < te.length; i++) {
+         for (int i = 0; i < te.length; i++) {
              Feature[] neighbouring = new Feature[te.length-1];
              int ni = 0;
-             for(int j = 0; j < te.length; j++) {
+             for (int j = 0; j < te.length; j++) {
                  if (j == i) continue;
                  neighbouring[ni++] = te[j];
              }
@@ -96,8 +97,8 @@ public class WagonCapability extends Capability {
      }
 
      private Set<Location> copyWagonsLocations(Set<Location> locations) {
-         Set<Location> result = Sets.newHashSet();
-         for(Feature piece : getTile().getFeatures()) {
+         Set<Location> result = new HashSet<>();
+         for (Feature piece : getTile().getFeatures()) {
              Location loc = piece.getLocation();
              if (piece instanceof Road || piece instanceof City || piece instanceof Cloister) {
                  if (locations.contains(loc)) {

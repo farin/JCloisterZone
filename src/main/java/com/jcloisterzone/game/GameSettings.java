@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 
-
 public class GameSettings {
 
     private final Set<CustomRule> customRules = EnumSet.noneOf(CustomRule.class);
@@ -36,5 +35,4 @@ public class GameSettings {
     public Set<Class<? extends Capability>> getCapabilityClasses() {
         return capabilityClasses;
     }
-
 }

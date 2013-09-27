@@ -50,7 +50,7 @@ public class GuiClientStub extends ClientStub {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     int i = 0;
-                    for(String name: players) {
+                    for (String name: players) {
                         PlayerSlot slot;
                         try {
                             Class<?> clazz = Class.forName(name);

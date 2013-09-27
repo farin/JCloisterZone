@@ -7,11 +7,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.ui.Client;
 
 public abstract class FakeComponent extends ComponentAdapter {
@@ -19,7 +19,7 @@ public abstract class FakeComponent extends ComponentAdapter {
     private static final int DEFAULT_PANEL_WIDTH = 250;
 
     protected final Client client;
-    private List<MouseListeningRegion> mouseRegions = Lists.newArrayList();
+    private List<MouseListeningRegion> mouseRegions = new ArrayList<>();
     private MouseListeningRegion mouseOver = null;
     private AffineTransform transform;
 

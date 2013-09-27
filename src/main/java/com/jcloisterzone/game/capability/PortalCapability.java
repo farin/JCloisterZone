@@ -10,7 +10,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 
 public class PortalCapability extends Capability {

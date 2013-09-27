@@ -51,7 +51,7 @@ public final class BarnCapability extends Capability {
     private boolean isBarnCorner(Location corner, Location positionChange) {
         Farm farm = null;
         Position pos = getTile().getPosition();
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             Tile tile = getBoard().get(pos);
             if (tile == null) return false;
             farm = (Farm) tile.getFeaturePartOf(corner);
@@ -61,7 +61,7 @@ public final class BarnCapability extends Capability {
             positionChange = positionChange.next();
         }
 
-        if (! getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+        if (!getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
             return !farm.walk(new IsOccupied().with(Barn.class));
         }
 

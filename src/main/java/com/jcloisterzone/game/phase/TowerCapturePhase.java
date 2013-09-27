@@ -1,8 +1,8 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -36,8 +36,8 @@ public class TowerCapturePhase extends Phase {
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
-            List<Follower> myCapturedFollowers = Lists.newArrayList();
-            for(Follower f : towerCap.getPrisoners().get(m.getPlayer())) {
+            List<Follower> myCapturedFollowers = new ArrayList<>();
+            for (Follower f : towerCap.getPrisoners().get(m.getPlayer())) {
                 if (f.getPlayer() == me) {
                     myCapturedFollowers.add(f);
                 }

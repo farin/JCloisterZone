@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
@@ -47,30 +46,30 @@ public class TileFactory {
     public Tile createTile(Expansion expansion, String fullId, Element xml, boolean isTunnelActive) {
         Tile tile = new Tile(expansion, fullId);
         this.tile = tile;
-        features = Lists.newArrayList();
+        features = new ArrayList<>();
         tile.setGame(game);
 
         logger.debug("Creating " + tile.getId());
 
         NodeList nl;
         nl = xml.getElementsByTagName("cloister");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             processCloisterElement((Element) nl.item(i));
         }
         nl = xml.getElementsByTagName("road");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             processRoadElement((Element) nl.item(i), isTunnelActive);
         }
         nl = xml.getElementsByTagName("city");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             processCityElement((Element) nl.item(i));
         }
         nl = xml.getElementsByTagName("farm");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             processFarmElement((Element) nl.item(i));
         }
         nl = xml.getElementsByTagName("tower");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             processTowerElement((Element) nl.item(i));
         }
 
@@ -106,7 +105,7 @@ public class TileFactory {
         String[] sides = asLocation(e);
         //using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.lenght distinguish it
         if (sides.length > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
-            for(String side: sides) {
+            for (String side: sides) {
                 String[] side_as_array = { side };
                 processRoadElement(side_as_array, e, true);
             }
@@ -141,11 +140,11 @@ public class TileFactory {
         Farm farm = new Farm();
         farm.setId(game.idSequnceNextVal());
         if (e.hasAttribute("city")) {
-            List<City> cities = Lists.newArrayList();
+            List<City> cities = new ArrayList<>();
             String[] citiesLocs = asLocations(e, "city");
-            for(int j = 0; j < citiesLocs.length; j++) {
+            for (int j = 0; j < citiesLocs.length; j++) {
                 Location d = Location.valueOf(citiesLocs[j]);
-                for(Feature p : features) {
+                for (Feature p : features) {
                     if (p instanceof City) {
                         if (d.isPartOf(p.getLocation())) {
                             cities.add((City) p);
@@ -168,7 +167,7 @@ public class TileFactory {
 
     private void initFromDirList(TileFeature piece, String[] sides) {
         Location loc = null;
-        for(int i = 0; i < sides.length; i++) {
+        for (int i = 0; i < sides.length; i++) {
             Location l = Location.valueOf(sides[i]);
             assert !(piece instanceof Farm ^ l.isFarmLocation()) : String.format("Invalid location %s kind for tile %s", l, tile.getId());
             loc = loc == null ? l : loc.union(l);

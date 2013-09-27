@@ -1,9 +1,9 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
@@ -109,7 +109,7 @@ public class CornCirclePhase extends Phase {
         }
         if (sites.isEmpty()) return Collections.emptyList();
 
-        List<PlayerAction> actions = Lists.newArrayList();
+        List<PlayerAction> actions = new ArrayList<>();
         //TODO nice to do this in generic way independtly on particular followers enumeration
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
             actions.add(new MeepleAction(SmallFollower.class, sites));

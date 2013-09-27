@@ -1,19 +1,19 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Capability;
 
 public class AbbeyCapability extends Capability {
 
-    private Set<Player> unusedAbbey = Sets.newHashSet();
+    private Set<Player> unusedAbbey = new HashSet<>();
 
     @Override
     public void initPlayer(Player player) {
@@ -39,7 +39,7 @@ public class AbbeyCapability extends Capability {
     public AbbeyCapability copy() {
         AbbeyCapability copy = new AbbeyCapability();
         copy.game = game;
-        copy.unusedAbbey = Sets.newHashSet(unusedAbbey);
+        copy.unusedAbbey = new HashSet<>(unusedAbbey);
         return copy;
     }
 

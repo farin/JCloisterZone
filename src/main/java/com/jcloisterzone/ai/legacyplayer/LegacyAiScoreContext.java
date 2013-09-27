@@ -1,5 +1,6 @@
 package com.jcloisterzone.ai.legacyplayer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +8,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiScoreContext;
 import com.jcloisterzone.board.EdgePattern;
@@ -39,7 +39,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 	private final Map<Feature, AiScoreContext> scoreCache;
 	private boolean valid = true;
 
-	private Map<Position, OpenEdge> openEdgesChanceToClose = Maps.newHashMap();
+	private Map<Position, OpenEdge> openEdgesChanceToClose = new HashMap<>();
 	private double chanceToClose = 1.0;
 
 	public LegacyAiScoreContext(Game game, CompletableScoreContext ctx, Map<Feature, AiScoreContext> scoreCache) {
@@ -85,12 +85,12 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 		double result = 1.0;
 		//TODO: this method using internal contract of MultiTileFeature - encapsulation is violated here
 		int i = 0;
-		for(Location side : Location.sides()) {
+		for (Location side : Location.sides()) {
 			if (side.intersect(completable.getLocation()) != null) {
 				if (completable.getEdges()[i] == null) {
 					//side is open
 					Position p = completable.getTile().getPosition().add(side);
-					if (! openEdgesChanceToClose.containsKey(p)) {
+					if (!openEdgesChanceToClose.containsKey(p)) {
 						OpenEdge edge = new OpenEdge();
 						edge.chanceToClose = countChance(p);
 						edge.feature = completable;
@@ -112,7 +112,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 	private double updateCloisterChanceToClose(Cloister cloister) {
 		double result = 1.0;
 		Position p = cloister.getTile().getPosition();
-		for(Position adjacent: p.addMulti(Position.ADJACENT_AND_DIAGONAL.values())) {
+		for (Position adjacent: p.addMulti(Position.ADJACENT_AND_DIAGONAL.values())) {
 			result *= countChance(adjacent);
 		}
 		//for "1.6-compatibility" - make it already sense ?

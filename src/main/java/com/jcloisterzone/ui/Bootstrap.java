@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import com.google.common.collect.Lists;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.ui.plugin.Plugin;
@@ -44,7 +43,7 @@ public class Bootstrap  {
     }
 
     public List<Plugin> loadPlugins(Ini config) {
-        LinkedList<Plugin> plugins = Lists.newLinkedList();
+        LinkedList<Plugin> plugins = new LinkedList<>();
         List<String> pluginPaths = null;
 
         if (config.get("plugins") != null) {

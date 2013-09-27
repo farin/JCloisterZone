@@ -109,11 +109,11 @@ public abstract class Meeple extends Figure {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (! (obj instanceof Meeple)) return false;
-        if (! super.equals(obj)) return false;
+        if (!(obj instanceof Meeple)) return false;
+        if (!super.equals(obj)) return false;
         Meeple o = (Meeple) obj;
-        if (! Objects.equal(index, o.index)) return false;
-        if (! Objects.equal(location, o.location)) return false;
+        if (!Objects.equal(index, o.index)) return false;
+        if (!Objects.equal(location, o.location)) return false;
         //do not compare feature - location is enough - feature is changing during time
         return true;
     }

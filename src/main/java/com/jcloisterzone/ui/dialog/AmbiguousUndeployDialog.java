@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,7 +18,6 @@ import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.Client;
 

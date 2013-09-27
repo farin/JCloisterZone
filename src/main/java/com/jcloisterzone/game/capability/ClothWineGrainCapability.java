@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.w3c.dom.Document;
@@ -17,11 +18,11 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class ClothWineGrainCapability extends Capability {
-    protected Map<Player,int[]> tradeResources = Maps.newHashMap();
+    protected Map<Player,int[]> tradeResources = new HashMap<>();
 
     @Override
     public void initPlayer(Player player) {
@@ -38,7 +39,7 @@ public class ClothWineGrainCapability extends Capability {
                     int cityTradeResources[] = ((CityScoreContext)ctx).getCityTradeResources();
                     if (cityTradeResources != null) {
                         int playersTradeResources[] = tradeResources.get(getGame().getActivePlayer());
-                        for(int i = 0; i < cityTradeResources.length; i++) {
+                        for (int i = 0; i < cityTradeResources.length; i++) {
                             playersTradeResources[i] += cityTradeResources[i];
                         }
                     }
@@ -69,13 +70,13 @@ public class ClothWineGrainCapability extends Capability {
     public void finalScoring() {
         for (TradeResource tr : TradeResource.values()) {
             int hiVal = 1;
-            for(Player player: getGame().getAllPlayers()) {
+            for (Player player: getGame().getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue > hiVal) {
                     hiVal = playerValue;
                 }
             }
-            for(Player player: getGame().getAllPlayers()) {
+            for (Player player: getGame().getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
                     player.addPoints(10, PointCategory.TRADE_GOODS);
@@ -108,7 +109,7 @@ public class ClothWineGrainCapability extends Capability {
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
         NodeList nl = node.getElementsByTagName("player");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element playerEl = (Element) nl.item(i);
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             addTradeResources(player, TradeResource.GRAIN, Integer.parseInt(playerEl.getAttribute("grain")));

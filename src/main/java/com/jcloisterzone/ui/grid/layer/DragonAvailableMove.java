@@ -22,7 +22,7 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
 
     public void paint(Graphics2D g2) {
         Image dragon = getClient().getControlsTheme().getActionDecoration("dragon");
-        for(Position pos : positions) {
+        for (Position pos : positions) {
             g2.drawImage(dragon, getOffsetX(pos), getOffsetY(pos), getSquareSize(), getSquareSize(), null);
         }
     }

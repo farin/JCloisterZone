@@ -38,7 +38,7 @@ public class Mayor extends Follower {
 
 	@Override
 	protected void checkDeployment(Feature f) {
-		if (! (f instanceof City)) {
+		if (!(f instanceof City)) {
 			throw new IllegalArgumentException("Mayor must be placed in city only.");
 		}
 		super.checkDeployment(f);

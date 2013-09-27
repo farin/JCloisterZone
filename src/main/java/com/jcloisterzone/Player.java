@@ -3,10 +3,10 @@ package com.jcloisterzone;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -25,7 +25,7 @@ public class Player implements Serializable {
     private static final long serialVersionUID = -7276471952562769832L;
 
     private int points;
-    private final Map<PointCategory, Integer> pointStats = Maps.newHashMap();
+    private final Map<PointCategory, Integer> pointStats = new HashMap<>();
 
     private List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
     private List<Special> specialMeeples = new ArrayList<Special>(3);

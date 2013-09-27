@@ -25,7 +25,7 @@ public enum TileSymmetry {
 	}
 
 	private static TileSymmetry countBaseSymetry(Tile tile) {
-		for(Feature piece : tile.getFeatures()) {
+		for (Feature piece : tile.getFeatures()) {
 			if (piece instanceof Road|| piece instanceof City) {
 				Feature opposite = tile.getFeature(piece.getLocation().rev());
 				if (opposite == null || ! opposite.getClass().equals(piece.getClass())) {
@@ -33,7 +33,7 @@ public enum TileSymmetry {
 				}
 			}
 		}
-		for(Feature piece : tile.getFeatures()) {
+		for (Feature piece : tile.getFeatures()) {
 			if (piece instanceof Road|| piece instanceof City) {
 				Feature opposite = tile.getFeature(piece.getLocation().rotateCW(Rotation.R90));
 				if (opposite == null || ! opposite.getClass().equals(piece.getClass())) {

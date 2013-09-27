@@ -20,10 +20,10 @@ public class AnimationLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g2) {
         //HACK to correct animation order - TODO change animation design
-        for(Animation a : service.getAnimations()) {
+        for (Animation a : service.getAnimations()) {
             if (a instanceof RecentPlacement) a.paint(this, g2);
         }
-        for(Animation a : service.getAnimations()) {
+        for (Animation a : service.getAnimations()) {
             if (a instanceof ScoreAnimation) a.paint(this, g2);
         }
     }

@@ -3,14 +3,14 @@ package com.jcloisterzone.ui.grid.layer;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.geom.Area;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.BridgeAction;
@@ -87,7 +87,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         }
         if (result == JOptionPane.CANCEL_OPTION) {
             //place tower piece instead
-            for(PlayerAction action : getClient().getControlPanel().getActionPanel().getActions()) {
+            for (PlayerAction action : getClient().getControlPanel().getActionPanel().getActions()) {
                 if (action instanceof TowerPieceAction) {
                     ((TowerPieceAction) action).perform(getClient().getServer(), pos);
                     gridPanel.removeLayer(this);
@@ -104,8 +104,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         if (feature.getMeeples().size() == 1) {
             return feature.getMeeples();
         }
-        Set<String> used = Sets.newHashSet();
-        List<Meeple> result = Lists.newArrayList();
+        Set<String> used = new HashSet<>();
+        List<Meeple> result = new ArrayList<>();
         for (Meeple m : feature.getMeeples()) {
             if (!allowed.isAllowed(m.getPlayer())) continue;
             String key = m.getPlayer().getIndex() + m.getClass().getSimpleName();

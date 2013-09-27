@@ -3,12 +3,12 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Farm;
@@ -31,7 +31,7 @@ public class MeepleLayer extends AbstractGridLayer {
      */
     private LinkedHashMap<Meeple, PositionedImage> images = Maps.newLinkedHashMap();
     //TODO own layer ???
-    private List<PositionedImage> permanentImages = Lists.newArrayList();
+    private List<PositionedImage> permanentImages = new ArrayList<>();
 
     public MeepleLayer(GridPanel gridPanel) {
         super(gridPanel);
@@ -67,10 +67,10 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Override
     public void zoomChanged(int squareSize) {
-        for(PositionedImage mi : images.values()) {
+        for (PositionedImage mi : images.values()) {
             mi.scaledImage = null;
         }
-        for(PositionedImage mi : permanentImages) {
+        for (PositionedImage mi : permanentImages) {
             mi.scaledImage = null;
         }
         super.zoomChanged(squareSize);

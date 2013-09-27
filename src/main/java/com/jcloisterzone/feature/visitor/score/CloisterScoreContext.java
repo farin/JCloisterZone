@@ -2,10 +2,10 @@ package com.jcloisterzone.feature.visitor.score;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
@@ -73,7 +73,7 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
             }
         }
         int maxPower = Ints.max(power);
-        Set<Player> owners = Sets.newHashSet();
+        Set<Player> owners = new HashSet<>();
         for (int i = 0; i < power.length; i++) {
             if (power[i] == maxPower) {
                 owners.add(game.getAllPlayers()[i]);

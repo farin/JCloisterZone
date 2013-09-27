@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
@@ -36,8 +35,8 @@ public final class TowerCapability extends Capability {
 
     private static final int RANSOM_POINTS = 3;
 
-    protected Set<Position> towers = Sets.newHashSet();
-    private Map<Player, Integer> towerPieces = Maps.newHashMap();
+    protected Set<Position> towers = new HashSet<>();
+    private Map<Player, Integer> towerPieces = new HashMap<>();
     private boolean ransomPaidThisTurn;
 
     //key is Player who keeps follower imprisoned
@@ -120,7 +119,7 @@ public final class TowerCapability extends Capability {
     }
 
     protected Set<Position> getOpenTowers(int minHeight) {
-        Set<Position> availTower = Sets.newHashSet();
+        Set<Position> availTower = new HashSet<>();
         for (Position p : getTowers()) {
             Tower t = getBoard().get(p).getTower();
             if (t.getMeeple() == null && t.getHeight() >= minHeight) {
@@ -189,12 +188,12 @@ public final class TowerCapability extends Capability {
     public TowerCapability copy() {
         TowerCapability copy = new TowerCapability();
         copy.game = game;
-        copy.towers = Sets.newHashSet(towers);
+        copy.towers = new HashSet<>(towers);
         copy.towerPieces = Maps.newHashMap(towerPieces);
         copy.ransomPaidThisTurn = ransomPaidThisTurn;
-        copy.prisoners = Maps.newHashMap();
+        copy.prisoners = new HashMap<>();
         for (Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
-            copy.prisoners.put(entry.getKey(), Lists.newArrayList(entry.getValue()));
+            copy.prisoners.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
         return copy;
     }
@@ -244,7 +243,7 @@ public final class TowerCapability extends Capability {
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             towerPieces.put(player, Integer.parseInt(playerEl.getAttribute("pieces")));
             NodeList priosonerNl = playerEl.getElementsByTagName("prisoner");
-            for(int j = 0; j < priosonerNl.getLength(); j++) {
+            for (int j = 0; j < priosonerNl.getLength(); j++) {
                 Element prisonerEl = (Element) priosonerNl.item(j);
                 int ownerIndex = XmlUtils.attributeIntValue(prisonerEl, "player");
                 Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XmlUtils.classForName(prisonerEl.getAttribute("type"));

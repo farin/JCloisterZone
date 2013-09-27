@@ -93,7 +93,7 @@ public class MenuBar extends JMenuBar {
         });
         menu.add(load);
 
-        if (! isMac) {
+        if (!isMac) {
             menu.addSeparator();
 
             menuItem = new JMenuItem(_("Quit"));
@@ -136,7 +136,7 @@ public class MenuBar extends JMenuBar {
 //				throw new UnsupportedOperationException();
 //			}
 //		});
-//		/*if (! GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported()) {
+//		/*if (!GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported()) {
 //			menuItem.setEnabled(false);
 //		}*/
 //		menuItem.setEnabled(false);
@@ -229,7 +229,7 @@ public class MenuBar extends JMenuBar {
 
         menu = new JMenu(_("Help"));
 
-        if (! isMac) {
+        if (!isMac) {
 
             menuItem = new JMenuItem(_("About"));
             menuItem.addActionListener(new ActionListener() {
@@ -267,7 +267,7 @@ public class MenuBar extends JMenuBar {
         create.setEnabled(!isGameRunning);
         connect.setEnabled(!isGameRunning);
         close.setEnabled(isGameRunning);
-        if (! isGameRunning) {
+        if (!isGameRunning) {
             showDiscard.setEnabled(false);
         }
         save.setEnabled(isGameRunning);

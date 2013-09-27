@@ -18,7 +18,7 @@ public class LazyFileAppender extends FileAppender {
 
 	@Override
 	public void append(LoggingEvent event) {
-		if (! activated) {
+		if (!activated) {
 			activated = true;
 			super.activateOptions();
 		}

@@ -1,13 +1,13 @@
 package com.jcloisterzone.board;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Bridge;
@@ -99,14 +99,14 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public Feature getFeature(Location loc) {
-        for(Feature p : features) {
+        for (Feature p : features) {
             if (p.getLocation().equals(loc)) return p;
         }
         return null;
     }
 
     public Feature getFeaturePartOf(Location loc) {
-        for(Feature p : features) {
+        for (Feature p : features) {
             if (loc.isPartOf(p.getLocation())) {
                 return p;
             }
@@ -128,7 +128,7 @@ public class Tile /*implements Cloneable*/ {
                 thisPiece.setEdge(loc, oppositePiece);
             }
         }
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
             Location oppositeHalfSide = halfSide.rev();
             oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
@@ -149,18 +149,18 @@ public class Tile /*implements Cloneable*/ {
         MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
         if (oppositePiece != null) {
             oppositePiece.setEdge(oppositeLoc, null);
-            if (! isAbbeyTile()) {
+            if (!isAbbeyTile()) {
                 MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc);
                 thisPiece.setEdge(loc, null);
             }
         }
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
             Location oppositeHalfSide = halfSide.rev();
             oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
             if (oppositePiece != null) {
                 oppositePiece.setEdge(oppositeHalfSide, null);
-                if (! isAbbeyTile()) {
+                if (!isAbbeyTile()) {
                     MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide);
                     thisPiece.setEdge(halfSide, null);
                 }
@@ -240,7 +240,7 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
-        Set<Location> locations = Sets.newHashSet();
+        Set<Location> locations = new HashSet<>();
         for (Feature f : features) {
             //if (f instanceof Farm && !game.hasCapability(Capability.FARM_PLACEMENT)) continue;
             if (f instanceof Scoreable) {
@@ -259,9 +259,9 @@ public class Tile /*implements Cloneable*/ {
 
 
     public Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass) {
-        Set<Location> locations = Sets.newHashSet();
+        Set<Location> locations = new HashSet<>();
         for (Feature f : features) {
-            if (! featureClass.isInstance(f)) continue;
+            if (!featureClass.isInstance(f)) continue;
             if (f.walk(new IsOccupied().with(player).with(Follower.class))) {
                 locations.add(f.getLocation());
             }

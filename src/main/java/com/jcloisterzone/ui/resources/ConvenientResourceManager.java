@@ -3,13 +3,12 @@ package com.jcloisterzone.ui.resources;
 import java.awt.Image;
 import java.awt.geom.Area;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 
@@ -19,7 +18,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public class ConvenientResourceManager implements ResourceManager {
 
     private final ResourceManager manager;
-    private final Map<String, Image> imageCache = Maps.newHashMap();
+    private final Map<String, Image> imageCache = new HashMap<>();
 
     public ConvenientResourceManager(ResourceManager manager) {
         this.manager = manager;

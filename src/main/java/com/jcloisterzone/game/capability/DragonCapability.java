@@ -1,12 +1,12 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
@@ -16,9 +16,9 @@ import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Capability;
 
 public class DragonCapability extends Capability {
 
@@ -93,7 +93,7 @@ public class DragonCapability extends Capability {
     public void triggerDragonMove() {
         dragonMovesLeft = DRAGON_MOVES;
         dragonPlayer = game.getTurnPlayer();
-        dragonVisitedTiles = Sets.newHashSet();
+        dragonVisitedTiles = new HashSet<>();
         dragonVisitedTiles.add(dragonPosition);
     }
 
@@ -111,7 +111,7 @@ public class DragonCapability extends Capability {
     }
 
     public Set<Position> getAvailDragonMoves() {
-        Set<Position> result = Sets.newHashSet();
+        Set<Position> result = new HashSet<>();
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         for (Position offset: Position.ADJACENT.values()) {
             Position position = dragonPosition.add(offset);
@@ -131,7 +131,7 @@ public class DragonCapability extends Capability {
         copy.dragonPosition = dragonPosition;
         copy.dragonMovesLeft = dragonMovesLeft;
         copy.dragonPlayer = dragonPlayer;
-        if (dragonVisitedTiles != null) copy.dragonVisitedTiles = Sets.newHashSet(dragonVisitedTiles);
+        if (dragonVisitedTiles != null) copy.dragonVisitedTiles = new HashSet<>(dragonVisitedTiles);
         return copy;
     }
 
@@ -144,7 +144,7 @@ public class DragonCapability extends Capability {
                 dragon.setAttribute("moves", "" + dragonMovesLeft);
                 dragon.setAttribute("movingPlayer", "" + dragonPlayer.getIndex());
                 if (dragonVisitedTiles != null) {
-                    for(Position visited : dragonVisitedTiles) {
+                    for (Position visited : dragonVisitedTiles) {
                         Element ve = doc.createElement("visited");
                         XmlUtils.injectPosition(ve, visited);
                         dragon.appendChild(ve);
@@ -165,7 +165,7 @@ public class DragonCapability extends Capability {
             if (dragon.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));
-                dragonVisitedTiles = Sets.newHashSet();
+                dragonVisitedTiles = new HashSet<>();
                 NodeList vl = dragon.getElementsByTagName("visited");
                 for (int i = 0; i < vl.getLength(); i++) {
                     dragonVisitedTiles.add(XmlUtils.extractPosition((Element) vl.item(i)));

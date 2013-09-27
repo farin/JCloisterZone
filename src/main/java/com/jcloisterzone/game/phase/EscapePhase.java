@@ -49,7 +49,7 @@ public class EscapePhase extends Phase {
             if (city.isBesieged()) { //cloister must border Cathar tile
                 isBesieged = true;
                 Position p = city.getTile().getPosition();
-                for(Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
+                for (Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
                     if (tile.hasCloister()) {
                         cloisterNearby = true;
                         return false; //do not continue, besieged cloister exists
@@ -65,7 +65,7 @@ public class EscapePhase extends Phase {
         UndeployAction escapeAction = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.getPlayer() != getActivePlayer()) continue;
-            if (! (m.getFeature() instanceof City)) continue;
+            if (!(m.getFeature() instanceof City)) continue;
             if (m.getFeature().walk(new FindNearbyCloister())) {
                 if (escapeAction == null) {
                     escapeAction = new UndeployAction("escape", PlayerRestriction.only(getActivePlayer()));
@@ -81,7 +81,7 @@ public class EscapePhase extends Phase {
     public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         assert meepleOwner == getActivePlayer().getIndex();
         Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
-        if (! (m.getFeature() instanceof City)) {
+        if (!(m.getFeature() instanceof City)) {
             logger.error("Feature for escape action must be a city");
             return;
         }

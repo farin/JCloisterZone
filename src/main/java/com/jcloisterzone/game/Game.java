@@ -2,9 +2,7 @@ package com.jcloisterzone.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.ini4j.Ini;
@@ -14,7 +12,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.MutableClassToInstanceMap;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.UserInterface;
@@ -62,7 +62,7 @@ public class Game extends GameSettings {
     /** player in turn */
     private Player turnPlayer;
 
-    private final Map<Class<? extends Phase>, Phase> phases = new HashMap<>();
+    private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
     private GameEventListener eventListener;
@@ -72,8 +72,6 @@ public class Game extends GameSettings {
     private FairyCapability fairyCapability; //shortcut
 
     private int idSequenceCurrVal = 0;
-
-
 
 
     public Ini getConfig() {
@@ -101,7 +99,7 @@ public class Game extends GameSettings {
         this.phase = phase;
     }
 
-    public Map<Class<? extends Phase>, Phase> getPhases() {
+    public ClassToInstanceMap<Phase> getPhases() {
         return phases;
     }
 
@@ -123,7 +121,7 @@ public class Game extends GameSettings {
 
     public Iterable<Meeple> getDeployedMeeples() {
         Iterable<Meeple> iter = null;
-        for(Player player : plist) {
+        for (Player player : plist) {
             if (iter == null) {
                 iter = Iterables.concat(player.getFollowers(), player.getSpecialMeeples());
             } else {

@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -162,7 +161,7 @@ public class Client extends JFrame {
 
         List<String> colorNames = config.get("players").getAll("color");
         playerColors = new Color[colorNames.size()];
-        for(int i = 0; i < playerColors.length; i++ ) {
+        for (int i = 0; i < playerColors.length; i++ ) {
             playerColors[i] = stringToColor(colorNames.get(i));
         }
         figureTheme = new FigureTheme(this);
@@ -346,7 +345,7 @@ public class Client extends JFrame {
     }
 
     public void showConnectGamePanel() {
-        if (! closeGame()) return;
+        if (!closeGame()) return;
 
         Container pane = this.getContentPane();
         cleanContentPane();
@@ -386,7 +385,7 @@ public class Client extends JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file != null) {
-                if (! file.getName().endsWith(".jcz")) {
+                if (!file.getName().endsWith(".jcz")) {
                     file = new File(file.getAbsolutePath() + ".jcz");
                 }
                 try {
@@ -408,7 +407,7 @@ public class Client extends JFrame {
     }
 
     public void createGame() {
-        if (! closeGame()) return;
+        if (!closeGame()) return;
         try {
             localServer = new Server(config);
             localServer.start(getServerPort());
@@ -431,7 +430,7 @@ public class Client extends JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file != null) {
-                if (! closeGame()) return;
+                if (!closeGame()) return;
                 try {
                     localServer = new Server(new Snapshot(file));
                     localServer.start(getServerPort());

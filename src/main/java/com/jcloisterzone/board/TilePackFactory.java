@@ -7,6 +7,8 @@ import static com.jcloisterzone.XmlUtils.getTileId;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.game.CustomRule;
@@ -42,7 +43,7 @@ public class TilePackFactory {
     protected Ini config;
     protected Map<Expansion, Element> defs;
 
-    private Set<String> usedIds = Sets.newHashSet(); //for assertion only
+    private Set<String> usedIds = new HashSet<>(); //for assertion only
 
 
     public void setGame(Game game) {
@@ -88,7 +89,7 @@ public class TilePackFactory {
     }
 
     protected Map<String, Integer> getDiscardTiles() {
-        Map<String, Integer> discard = Maps.newHashMap();
+        Map<String, Integer> discard = new HashMap<>();
         for (Element expansionDef: defs.values()) {
             NodeList nl = expansionDef.getElementsByTagName("discard");
             for (int i = 0; i < nl.getLength(); i++) {

@@ -61,7 +61,7 @@ public class GameOverDialog extends JDialog {
         pane.add(new JLabel(_("Wind rose")), getLegendSpec(0, gridy++));
 
         Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
-        for(Player player : players) {
+        for (Player player : players) {
             gridy = 0;
             Color color = client.getPlayerColor(player);
             Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);

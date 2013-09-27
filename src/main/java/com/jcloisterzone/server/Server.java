@@ -106,7 +106,7 @@ public class Server extends GameSettings implements ServerIF {
 
     private EnumSet<Expansion> mergeSupportedExpansions() {
         EnumSet<Expansion> merged = null;
-        for(int i = 0; i < slotSupportedExpansions.length; i++) {
+        for (int i = 0; i < slotSupportedExpansions.length; i++) {
             EnumSet<Expansion> supported = slotSupportedExpansions[i];
             if (supported == null) continue;
             if (merged == null) {
@@ -179,7 +179,7 @@ public class Server extends GameSettings implements ServerIF {
         gameStarted = true;
         EnumSet<Expansion> supported = mergeSupportedExpansions();
         if (supported != null) {
-            for(Expansion exp : Expansion.values()) {
+            for (Expansion exp : Expansion.values()) {
                 if (exp.isEnabled() && ! supported.contains(exp)) {
                     stub.updateExpansion(exp, false);
                 }

@@ -1,6 +1,8 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +12,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
@@ -29,10 +30,10 @@ public final class TunnelCapability extends Capability {
 
     private Road placedTunnelCurrentTurn;
 
-    private Map<Player, Integer> tunnelTokensA = Maps.newHashMap();
-    private Map<Player, Integer> tunnelTokensB = Maps.newHashMap();
+    private Map<Player, Integer> tunnelTokensA = new HashMap<>();
+    private Map<Player, Integer> tunnelTokensB = new HashMap<>();
 
-    private List<Road> tunnels = Lists.newArrayList();
+    private List<Road> tunnels = new ArrayList<>();
 
     @Override
     public void initPlayer(Player player) {
@@ -42,7 +43,7 @@ public final class TunnelCapability extends Capability {
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
-        if (! (feature instanceof Road)) return;
+        if (!(feature instanceof Road)) return;
         Road road = (Road) feature;
         if (road.isTunnelEnd()) {
             tunnels.add(road);
@@ -113,13 +114,13 @@ public final class TunnelCapability extends Capability {
 
     public void placeTunnelPiece(Position p, Location d, boolean isB) {
         Road road = (Road) getBoard().get(p).getFeature(d);
-        if (! road.isTunnelOpen()) {
+        if (!road.isTunnelOpen()) {
             throw new IllegalStateException("No open tunnel here.");
         }
         Player player = game.getActivePlayer();
         int connectionId = getTunnelId(player, isB);
         decreaseTunnelTokens(player, isB);
-        for(Road r : tunnels) {
+        for (Road r : tunnels) {
             if (r.getTunnelEnd() == connectionId) {
                 r.setTunnelEdge(road);
                 road.setTunnelEdge(r);
@@ -143,7 +144,7 @@ public final class TunnelCapability extends Capability {
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
-        for(Road tunnel : tunnels) {
+        for (Road tunnel : tunnels) {
             if (tunnel.getTile().getPosition() != null && tunnel.getTunnelEnd() != Road.OPEN_TUNNEL) {
                 Element el = doc.createElement("tunnel");
                 node.appendChild(el);
@@ -158,12 +159,12 @@ public final class TunnelCapability extends Capability {
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
         NodeList nl = node.getElementsByTagName("tunnel");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Position pos = XmlUtils.extractPosition(el);
             Location loc = Location.valueOf(el.getAttribute("location"));
             Road road = (Road) getBoard().get(pos).getFeature(loc);
-            if (! road.isTunnelEnd()) {
+            if (!road.isTunnelEnd()) {
                 logger.error("Tunnel end does not exist.");
                 continue;
             }

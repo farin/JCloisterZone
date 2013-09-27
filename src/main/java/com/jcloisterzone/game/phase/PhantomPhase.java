@@ -1,8 +1,8 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -35,7 +35,7 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void enter() {
-        List<PlayerAction> actions = Lists.newArrayList();
+        List<PlayerAction> actions = new ArrayList<>();
 
         LocationsMap commonSites = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(Phantom.class)) {
@@ -54,7 +54,7 @@ public class PhantomPhase extends Phase {
     }
 
     private boolean isAutoTurnEnd(List<PlayerAction> actions) {
-        if (! actions.isEmpty()) return false;
+        if (!actions.isEmpty()) return false;
         if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
             //player can return phantom figure immediately
             return false;

@@ -1,12 +1,12 @@
 package com.jcloisterzone.ui.panel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.ini4j.Ini;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 
 public class NameProvider {
@@ -21,7 +21,7 @@ public class NameProvider {
 		}				
 	}
 	
-	private Map<SlotType, List<ReservedName>> namesMap = Maps.newHashMap();
+	private Map<SlotType, List<ReservedName>> namesMap = new HashMap<>();
 
 
 	public NameProvider(Ini config) {
@@ -30,10 +30,10 @@ public class NameProvider {
 	}
 	
 	private void initNames(SlotType type, List<String> names) {
-		List<ReservedName> rn = Lists.newArrayList();
+		List<ReservedName> rn = new ArrayList<>();
 		namesMap.put(type, rn);
 		if (names != null) {			
-			for(String name: names) {
+			for (String name: names) {
 				rn.add(new ReservedName(name, null));
 			}						
 		}
@@ -41,7 +41,7 @@ public class NameProvider {
 
 	synchronized
 	public String reserveName(SlotType type, int slot) {		
-		for(ReservedName rn : namesMap.get(type)) {
+		for (ReservedName rn : namesMap.get(type)) {
 			if (rn.slot == null) {
 				rn.slot = slot;
 				return rn.name;
@@ -52,7 +52,7 @@ public class NameProvider {
 	
 	synchronized
 	public void releaseName(SlotType type, int slot) {
-		for(ReservedName rn : namesMap.get(type)) {
+		for (ReservedName rn : namesMap.get(type)) {
 			if (rn.slot != null && rn.slot == slot) { //autoboxing, must check for null
 				rn.slot = null;
 				return;

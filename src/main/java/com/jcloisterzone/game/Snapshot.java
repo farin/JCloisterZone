@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +35,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -133,7 +133,7 @@ public class Snapshot implements Serializable {
         Element parent = doc.createElement("players");
         parent.setAttribute("turn", "" + game.getTurnPlayer().getIndex());
         root.appendChild(parent);
-        for(Player p : game.getAllPlayers()) {
+        for (Player p : game.getAllPlayers()) {
             Element el = doc.createElement("player");
             el.setAttribute("name", p.getNick());
             el.setAttribute("points", "" + p.getPoints());
@@ -178,7 +178,7 @@ public class Snapshot implements Serializable {
     }
 
     private void createMeepleElements(Game game) {
-        for(Meeple m : game.getDeployedMeeples()) {
+        for (Meeple m : game.getDeployedMeeples()) {
             Element tileEl = tileElemens.get(m.getPosition());
             Element el = doc.createElement("meeple");
             el.setAttribute("player", "" + m.getPlayer().getIndex());
@@ -224,9 +224,9 @@ public class Snapshot implements Serializable {
     }
 
     public Set<Expansion> getExpansions() {
-        Set<Expansion> result = Sets.newHashSet();
+        Set<Expansion> result = new HashSet<>();
         NodeList nl = root.getElementsByTagName("expansion");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Expansion exp = Expansion.valueOf(el.getAttribute("name"));
             result.add(exp);
@@ -253,9 +253,9 @@ public class Snapshot implements Serializable {
     }
 
     public Set<CustomRule> getCustomRules() {
-        Set<CustomRule> result = Sets.newHashSet();
+        Set<CustomRule> result = new HashSet<>();
         NodeList nl = root.getElementsByTagName("rule");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             CustomRule rule = CustomRule.valueOf(el.getAttribute("name"));
             result.add(rule);
@@ -264,9 +264,9 @@ public class Snapshot implements Serializable {
     }
 
     public List<Player> getPlayers() {
-        List<Player> players = Lists.newArrayList();
+        List<Player> players = new ArrayList<>();
         NodeList nl = getSecondLevelElelents("players", "player");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             PlayerSlot slot = new PlayerSlot(Integer.parseInt(el.getAttribute("slot")));
             Player p = new Player(el.getAttribute("name"), i, slot);
@@ -313,9 +313,9 @@ public class Snapshot implements Serializable {
     }
 
     public List<String> getActiveGroups() {
-        List<String> result = Lists.newArrayList();
+        List<String> result = new ArrayList<>();
         NodeList nl = getSecondLevelElelents("tiles", "group");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             if (Boolean.parseBoolean(el.getAttribute("active"))) {
                 result.add(el.getAttribute("name"));
@@ -325,9 +325,9 @@ public class Snapshot implements Serializable {
     }
 
     public List<String> getDiscardedTiles() {
-        List<String> result = Lists.newArrayList();
+        List<String> result = new ArrayList<>();
         NodeList nl = getSecondLevelElelents("tiles", "discard");
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             result.add(el.getAttribute("name"));
         }
@@ -341,8 +341,8 @@ public class Snapshot implements Serializable {
     @SuppressWarnings("unchecked")
     public List<Meeple> extractTileMeeples(Element tileEl, Game game, Position pos) throws SnapshotCorruptedException {
         NodeList nl = tileEl.getElementsByTagName("meeple");
-        List<Meeple> result = Lists.newArrayList();
-        for(int i = 0; i < nl.getLength(); i++) {
+        List<Meeple> result = new ArrayList<>();
+        for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Location loc = Location.valueOf(el.getAttribute("loc"));
             Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(el.getAttribute("type"));

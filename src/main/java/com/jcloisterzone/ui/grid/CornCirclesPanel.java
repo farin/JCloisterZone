@@ -59,7 +59,7 @@ public class CornCirclesPanel extends FakeComponent {
 
         parent.add(removalOption);
 
-        String feature = TileFeature.getLocalizedNameFor(client.getGame().getCurrentTile().getCornCircle());
+        String feature = TileFeature.getLocalizedNamefor (client.getGame().getCurrentTile().getCornCircle());
         footer = new JLabel(_("on/from a {0}.", feature.toLowerCase()));
         parent.add(footer);
     }

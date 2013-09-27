@@ -6,6 +6,8 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,8 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
@@ -35,11 +35,11 @@ public class ThemeGeometry {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Map<String, String> aliases = Maps.newHashMap();
-    private final Map<FeatureDescriptor, Area> areas = Maps.newHashMap();
-    private final Map<String, Area> substractionAll = Maps.newHashMap(); //key tile ID
-    private final Map<String, Area> substractionFarm = Maps.newHashMap(); //key tile ID
-    private final Set<FeatureDescriptor> complementFarms = Sets.newHashSet();
+    private final Map<String, String> aliases = new HashMap<>();
+    private final Map<FeatureDescriptor, Area> areas = new HashMap<>();
+    private final Map<String, Area> substractionAll = new HashMap<>(); //key tile ID
+    private final Map<String, Area> substractionFarm = new HashMap<>(); //key tile ID
+    private final Set<FeatureDescriptor> complementFarms = new HashSet<>();
     private final Map<FeatureDescriptor, ImmutablePoint> points;
 
     private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;

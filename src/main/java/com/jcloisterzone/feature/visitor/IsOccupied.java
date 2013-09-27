@@ -26,7 +26,7 @@ public class IsOccupied implements FeatureVisitor<Boolean> {
     @Override
     public boolean visit(Feature feature) {
         List<Meeple> meeples = feature.getMeeples();
-        for(Meeple m : meeples) {
+        for (Meeple m : meeples) {
             if (player != null && m.getPlayer() != player) continue;
             if (clazz != null && !clazz.isInstance(m)) continue;
             isOccupied = true;
