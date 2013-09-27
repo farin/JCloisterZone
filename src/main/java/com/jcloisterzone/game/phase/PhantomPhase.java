@@ -67,7 +67,7 @@ public class PhantomPhase extends Phase {
         if (!meepleType.equals(Phantom.class)) {
             throw new IllegalArgumentException("Only phantom can be placed as second follower.");
         }
-        Meeple m = getActivePlayer().getUndeployedMeeple(meepleType);
+        Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         m.deploy(getBoard().get(p), loc);
         next();
     }

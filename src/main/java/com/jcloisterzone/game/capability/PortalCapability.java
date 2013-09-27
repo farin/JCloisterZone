@@ -11,8 +11,18 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class PortalCapability extends Capability {
+
+    public PortalCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public PortalCapability copy(Game gameCopy) {
+        return new PortalCapability(gameCopy);
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {

@@ -7,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
@@ -22,23 +21,18 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public class ClothWineGrainCapability extends Capability {
+
     protected Map<Player,int[]> tradeResources = new HashMap<>();
 
-    @Override
-    public void initPlayer(Player player) {
-        tradeResources.put(player, new int[TradeResource.values().length]);
-    }
-
-    @Override
-    public void setGame(Game game) {
-        super.setGame(game);
+    public ClothWineGrainCapability(final Game game) {
+        super(game);
         game.addGameListener(new GameEventAdapter() {
             @Override
             public void completed(Completable feature, CompletableScoreContext ctx) {
                 if (feature instanceof City) {
                     int cityTradeResources[] = ((CityScoreContext)ctx).getCityTradeResources();
                     if (cityTradeResources != null) {
-                        int playersTradeResources[] = tradeResources.get(getGame().getActivePlayer());
+                        int playersTradeResources[] = tradeResources.get(game.getActivePlayer());
                         for (int i = 0; i < cityTradeResources.length; i++) {
                             playersTradeResources[i] += cityTradeResources[i];
                         }
@@ -46,6 +40,18 @@ public class ClothWineGrainCapability extends Capability {
                 }
             }
         });
+    }
+
+    @Override
+    public ClothWineGrainCapability copy(Game gameCopy) {
+        ClothWineGrainCapability copy = new ClothWineGrainCapability(gameCopy);
+        copy.tradeResources = new HashMap<>(tradeResources);
+        return copy;
+    }
+
+    @Override
+    public void initPlayer(Player player) {
+        tradeResources.put(player, new int[TradeResource.values().length]);
     }
 
     public void addTradeResources(Player p, TradeResource res, int n) {
@@ -70,13 +76,13 @@ public class ClothWineGrainCapability extends Capability {
     public void finalScoring() {
         for (TradeResource tr : TradeResource.values()) {
             int hiVal = 1;
-            for (Player player: getGame().getAllPlayers()) {
+            for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue > hiVal) {
                     hiVal = playerValue;
                 }
             }
-            for (Player player: getGame().getAllPlayers()) {
+            for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
                     player.addPoints(10, PointCategory.TRADE_GOODS);
@@ -86,13 +92,7 @@ public class ClothWineGrainCapability extends Capability {
         }
     }
 
-    @Override
-    public ClothWineGrainCapability copy() {
-        ClothWineGrainCapability copy = new ClothWineGrainCapability();
-        copy.game = game;
-        copy.tradeResources = Maps.newHashMap(tradeResources);
-        return copy;
-    }
+
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {

@@ -8,6 +8,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
 import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;
@@ -66,14 +68,15 @@ public class SavePointManager {
             //logger.info("      < undo {}", item);
             operations.pollLast().undo(game);
         }
-        List<Capability> restored = new ArrayList<>();
-        for (Capability cap : game.getCapabilities()) {
-            Capability copy = sp.getFrozenCapability(cap.getClass());
-            //TODO copy on save. copy on load ? strange. Should by one copy enough
-            restored.add(copy == null ? cap : copy.copy());
-        }
         game.getCapabilities().clear();
-        game.getCapabilities().addAll(restored);
+        //game.getCapabilities().addAll(sp.getSavedCapabilities());
+        //TODO is another copy back needed ?
+        game.getCapabilities().addAll(Lists.transform(sp.getSavedCapabilities(), new Function<Capability, Capability>() {
+            @Override
+            public Capability apply(Capability cap) {
+                return cap.copy(game);
+            }
+        }));
 
         Phase phase = sp.getPhase();
         game.setPhase(phase);

@@ -11,6 +11,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class CornCircleCapability extends Capability {
 
@@ -21,6 +22,18 @@ public class CornCircleCapability extends Capability {
 
     private Player cornCirclePlayer;
     private CornCicleOption cornCircleOption;
+
+    public CornCircleCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public CornCircleCapability copy(Game gameCopy) {
+        CornCircleCapability copy = new CornCircleCapability(gameCopy);
+        copy.cornCirclePlayer = cornCirclePlayer;
+        copy.cornCircleOption = cornCircleOption;
+        return copy;
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {

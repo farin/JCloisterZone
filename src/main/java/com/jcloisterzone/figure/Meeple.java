@@ -25,9 +25,13 @@ public abstract class Meeple extends Figure {
         return true;
     }
 
+    /** true if meeple is deploayed on board */
     public boolean isDeployed() {
-        //must check only location  because prisoner has everything except location also null
-        return location != null;
+        return location != null && location != Location.PRISON ;
+    }
+
+    public boolean isInSupply() {
+        return location == null;
     }
 
     public void clearDeployment() {
@@ -103,7 +107,7 @@ public abstract class Meeple extends Figure {
 
     @Override
     public int hashCode() {
-        return 47 * getPlayer().getIndex() + 13 * (index == null ? 0 : (int) index) + (location == null ? 1 : location.hashCode());
+        return java.util.Objects.hash(index, location);
     }
 
     @Override

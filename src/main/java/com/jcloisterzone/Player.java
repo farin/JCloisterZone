@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
 
 
@@ -56,49 +59,30 @@ public class Player implements Serializable {
         return specialMeeples;
     }
 
+    public Iterable<Meeple> getMeeples() {
+        return Iterables.<Meeple>concat(followers, specialMeeples);
+    }
+
     public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
         assert !Modifier.isAbstract(clazz.getModifiers());
-        for (Special m : specialMeeples) {
-            if (!m.isDeployed() && clazz.equals(m.getClass())) {
-                return true;
-            }
-        }
-        return false;
+        return Iterables.any(specialMeeples, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
     }
 
     public boolean hasFollower() {
-        for (Follower m : followers) {
-            if (!m.isDeployed()) {
-                return true;
-            }
-        }
-        return false;
+        return Iterables.any(followers, MeeplePredicates.inSupply());
     }
 
     public boolean hasFollower(Class<? extends Follower> clazz) {
         assert !Modifier.isAbstract(clazz.getModifiers());
-        for (Follower m : followers) {
-            //no instance of! bacause phantom is subclass of small follower
-            if (!m.isDeployed() && clazz.equals(m.getClass())) {
-                return true;
-            }
-        }
-        return false;
+        //chcek equality not instanceOf - phantom is subclass of small follower
+        return Iterables.any(followers, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
     }
 
 
-    public Meeple getUndeployedMeeple(Class<? extends Meeple> clazz) {
+    public Meeple getMeepleFromSupply(Class<? extends Meeple> clazz) {
         assert !Modifier.isAbstract(clazz.getModifiers());
-        if (Follower.class.isAssignableFrom(clazz)) {
-            for (Follower m : followers) {
-                if (!m.isDeployed() && clazz.equals(m.getClass())) return m;
-            }
-        } else {
-            for (Special m : specialMeeples) {
-                if (!m.isDeployed() && clazz.equals(m.getClass())) return m;
-            }
-        }
-        return null;
+        Iterable<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? followers : specialMeeples);
+        return Iterables.find(collection, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
     }
 
     public void addPoints(int points, PointCategory category) {

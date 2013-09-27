@@ -1,8 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -22,25 +19,15 @@ public class WindRoseCapability extends Capability {
 
     public static final int WIND_ROSE_POINTS = 3;
 
-    private Map<String, Location> roseDirections = new HashMap<>();
     private Rotation roseRotation;
     private Position rosePosition;
 
-    @Override
-    public void initTile(Tile tile, Element xml) {
-        if (xml.hasAttribute("wind-rose")) {
-            Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
-            roseDirections.put(tile.getId(), loc);
-        }
-    }
-
-    @Override
-    public void setGame(final Game game) {
-        super.setGame(game);
+    public WindRoseCapability(final Game game) {
+        super(game);
         game.addGameListener(new GameEventAdapter() {
             @Override
             public void tilePlaced(Tile tile) {
-                Location rose = roseDirections.get(tile.getId());
+                Location rose = tile.getWindRose();
                 if (rose == null) return;
                 if (rose == Location.NWSE) {
                     roseRotation = tile.getRotation();
@@ -55,6 +42,22 @@ public class WindRoseCapability extends Capability {
                 }
             }
         });
+    }
+
+    @Override
+    public WindRoseCapability copy(Game gameCopy) {
+        WindRoseCapability copy = new WindRoseCapability(gameCopy);
+        copy.roseRotation = roseRotation;
+        copy.rosePosition = rosePosition;
+        return copy;
+    }
+
+    @Override
+    public void initTile(Tile tile, Element xml) {
+        if (xml.hasAttribute("wind-rose")) {
+            Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
+            tile.setWindRose(loc);
+        }
     }
 
     private boolean isInProperQuadrant(Location rose, Position pos) {

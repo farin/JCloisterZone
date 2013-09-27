@@ -24,16 +24,31 @@ import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 
 public final class TunnelCapability extends Capability {
 
     private Road placedTunnelCurrentTurn;
 
-    private Map<Player, Integer> tunnelTokensA = new HashMap<>();
-    private Map<Player, Integer> tunnelTokensB = new HashMap<>();
+    private final Map<Player, Integer> tunnelTokensA = new HashMap<>();
+    private final Map<Player, Integer> tunnelTokensB = new HashMap<>();
 
-    private List<Road> tunnels = new ArrayList<>();
+    private final List<Road> tunnels = new ArrayList<>();
+
+    public TunnelCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public TunnelCapability copy(Game gameCopy) {
+        TunnelCapability copy = new TunnelCapability(gameCopy);
+        copy.placedTunnelCurrentTurn = placedTunnelCurrentTurn;
+        copy.tunnelTokensA.putAll(tunnelTokensA);
+        copy.tunnelTokensB.putAll(tunnelTokensB);
+        copy.tunnels.addAll(tunnels);
+        return copy;
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -130,16 +145,6 @@ public final class TunnelCapability extends Capability {
         road.setTunnelEnd(connectionId);
         placedTunnelCurrentTurn = road;
         game.fireGameEvent().tunnelPiecePlaced(player, p, d, isB);
-    }
-
-    @Override
-    public TunnelCapability copy() {
-        TunnelCapability copy = new TunnelCapability();
-        copy.game = game;
-        copy.placedTunnelCurrentTurn = placedTunnelCurrentTurn;
-        copy.tunnelTokensA = Maps.newHashMap(tunnelTokensA);
-        copy.tunnelTokensB = Maps.newHashMap(tunnelTokensB);
-        return copy;
     }
 
     @Override

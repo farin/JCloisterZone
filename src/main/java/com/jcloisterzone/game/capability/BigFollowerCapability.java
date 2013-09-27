@@ -8,9 +8,18 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class BigFollowerCapability extends Capability {
 
+    public BigFollowerCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public BigFollowerCapability copy(Game gameCopy) {
+        return new BigFollowerCapability(gameCopy);
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -28,5 +37,6 @@ public class BigFollowerCapability extends Capability {
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         prepareFollowerActions(actions, commonSites);
     }
+
 
 }

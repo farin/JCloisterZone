@@ -11,10 +11,19 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 
 public final class ShrineCapability extends Capability {
 
+    public ShrineCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public ShrineCapability copy(Game gameCopy) {
+        return new ShrineCapability(gameCopy);
+    }
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
@@ -27,7 +36,7 @@ public final class ShrineCapability extends Capability {
         boolean first = true;
         for (Meeple m : cloister.getMeeples()) {
             if (first) {
-                getGame().fireGameEvent().scored(cloister, 0, "0", m, false);
+                game.fireGameEvent().scored(cloister, 0, "0", m, false);
                 first = false;
             }
             m.undeploy();

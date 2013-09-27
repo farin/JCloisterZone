@@ -347,7 +347,7 @@ public class Snapshot implements Serializable {
             Location loc = Location.valueOf(el.getAttribute("loc"));
             Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(el.getAttribute("type"));
             int playerIndex = Integer.parseInt(el.getAttribute("player"));
-            Meeple meeple = game.getPlayer(playerIndex).getUndeployedMeeple(mt);
+            Meeple meeple = game.getPlayer(playerIndex).getMeepleFromSupply(mt);
             meeple.setLocation(loc);
             meeple.setPosition(pos);
             //don't set feature here. Feature must be set after meeple deployment to correct replace ref during merge

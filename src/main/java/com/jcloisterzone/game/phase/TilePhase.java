@@ -1,9 +1,9 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -26,7 +26,7 @@ public class TilePhase extends Phase {
 
     @Override
     public void enter() {
-        Map<Position, Set<Rotation>> freezed = Maps.newHashMap(getBoard().getAvailablePlacements());
+        Map<Position, Set<Rotation>> freezed = new HashMap<>(getBoard().getAvailablePlacements());
         notifyUI(new TilePlacementAction(game.getCurrentTile(), freezed), false);
     }
 

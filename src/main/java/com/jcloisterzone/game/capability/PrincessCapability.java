@@ -16,8 +16,18 @@ import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class PrincessCapability extends Capability {
+
+    public PrincessCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public PrincessCapability copy(Game gameCopy) {
+        return new PrincessCapability(gameCopy);
+    }
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
@@ -33,7 +43,7 @@ public class PrincessCapability extends Capability {
         Feature cityRepresentative = c.getMaster();
 
         PrincessAction princessAction = new PrincessAction();
-        for (Meeple m : getGame().getDeployedMeeples()) {
+        for (Meeple m : game.getDeployedMeeples()) {
             if (!(m.getFeature() instanceof City)) continue;
             if (m.getFeature().getMaster().equals(cityRepresentative) && m instanceof Follower) {
                 princessAction.getOrCreate(m.getPosition()).add(m.getLocation());

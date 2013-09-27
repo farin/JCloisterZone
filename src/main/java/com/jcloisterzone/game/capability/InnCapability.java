@@ -8,8 +8,18 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class InnCapability extends Capability {
+
+    public InnCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public InnCapability copy(Game gameCopy) {
+        return new InnCapability(gameCopy);
+    }
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

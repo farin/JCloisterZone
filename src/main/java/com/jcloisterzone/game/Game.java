@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
@@ -33,6 +32,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.phase.GameOverPhase;
@@ -120,20 +120,11 @@ public class Game extends GameSettings {
     }
 
     public Iterable<Meeple> getDeployedMeeples() {
-        Iterable<Meeple> iter = null;
+        Iterable<Meeple> iter = Collections.emptyList();
         for (Player player : plist) {
-            if (iter == null) {
-                iter = Iterables.concat(player.getFollowers(), player.getSpecialMeeples());
-            } else {
-                iter = Iterables.concat(iter, player.getFollowers(), player.getSpecialMeeples());
-            }
+            iter = Iterables.concat(iter, player.getFollowers(), player.getSpecialMeeples());
         }
-        return Iterables.filter(iter, new Predicate<Meeple>() {
-            @Override
-            public boolean apply(Meeple m) {
-                return m.getPosition() != null;
-            }
-        });
+        return Iterables.filter(iter, MeeplePredicates.deployed());
     }
 
     public Player getTurnPlayer() {
@@ -216,11 +207,10 @@ public class Game extends GameSettings {
         this.turnPlayer = getPlayer(turnPlayer);
     }
 
-    private void createGameExtensions(Class<? extends Capability> clazz) {
+    private void createCapabilityInstance(Class<? extends Capability> clazz) {
         if (clazz == null) return;
         try {
-            Capability capability = clazz.newInstance();
-            capability.setGame(this);
+            Capability capability = clazz.getConstructor(Game.class).newInstance(this);
             capabilities.add(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
@@ -241,7 +231,7 @@ public class Game extends GameSettings {
 
     public void start() {
         for (Class<? extends Capability> capability: getCapabilityClasses()) {
-            createGameExtensions(capability);
+            createCapabilityInstance(capability);
         }
         board = new Board(this);
     }

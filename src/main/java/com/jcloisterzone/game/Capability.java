@@ -19,18 +19,18 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 
 
-public class Capability {
+public abstract class Capability {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected Game game;
+    protected final Game game;
 
-    public Game getGame() {
-        return game;
-    }
-    public void setGame(Game game) {
+    public Capability(Game game) {
         this.game = game;
     }
+
+    public abstract Capability copy(Game gameCopy);
+
     protected TilePack getTilePack() {
         return game.getTilePack();
     }
@@ -39,13 +39,6 @@ public class Capability {
     }
     protected Tile getTile() {
         return game.getCurrentTile();
-    }
-
-    /**
-     * @return object copy or null if expansion is stateless
-     */
-    public Capability copy() {
-        return null;
     }
 
     public void saveToSnapshot(Document doc, Element node) {

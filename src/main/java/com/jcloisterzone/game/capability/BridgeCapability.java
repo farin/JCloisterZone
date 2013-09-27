@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -18,11 +17,24 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class BridgeCapability extends Capability {
 
     private boolean bridgeUsed;
-    private Map<Player, Integer> bridges = new HashMap<>();
+    private final Map<Player, Integer> bridges = new HashMap<>();
+
+    public BridgeCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public BridgeCapability copy(Game gameCopy) {
+        BridgeCapability copy = new BridgeCapability(gameCopy);
+        copy.bridgeUsed = bridgeUsed;
+        copy.bridges.putAll(bridges);
+        return copy;
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -177,13 +189,7 @@ public class BridgeCapability extends Capability {
         game.fireGameEvent().bridgeDeployed(pos, loc);
     }
 
-    @Override
-    public BridgeCapability copy() {
-        BridgeCapability copy = new BridgeCapability();
-        copy.game = game;
-        copy.bridges = Maps.newHashMap(bridges);
-        return copy;
-    }
+
 
     @Override
     public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {

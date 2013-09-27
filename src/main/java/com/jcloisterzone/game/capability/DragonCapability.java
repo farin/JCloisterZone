@@ -29,21 +29,30 @@ public class DragonCapability extends Capability {
     public Player dragonPlayer;
     public Set<Position> dragonVisitedTiles;
 
-    @Override
-    public void setGame(Game game) {
-        super.setGame(game);
-
+    public DragonCapability(final Game game) {
+        super(game);
         game.addGameListener(new GameEventAdapter() {
             @Override
             public void tilePlaced(Tile tile) {
                 if (tile.getTrigger() == TileTrigger.VOLCANO) {
                     setDragonPosition(tile.getPosition());
                     getTilePack().activateGroup("dragon");
-                    getGame().fireGameEvent().dragonMoved(tile.getPosition());
+                    game.fireGameEvent().dragonMoved(tile.getPosition());
                 }
             }
         });
     }
+
+    @Override
+    public DragonCapability copy(Game gameCopy) {
+        DragonCapability copy = new DragonCapability(gameCopy);
+        copy.dragonPosition = dragonPosition;
+        copy.dragonMovesLeft = dragonMovesLeft;
+        copy.dragonPlayer = dragonPlayer;
+        if (dragonVisitedTiles != null) copy.dragonVisitedTiles = new HashSet<>(dragonVisitedTiles);
+        return copy;
+    }
+
 
     @Override
     public String getTileGroup(Tile tile) {
@@ -124,16 +133,7 @@ public class DragonCapability extends Capability {
         return result;
     }
 
-    @Override
-    public DragonCapability copy() {
-        DragonCapability copy = new DragonCapability();
-        copy.game = game;
-        copy.dragonPosition = dragonPosition;
-        copy.dragonMovesLeft = dragonMovesLeft;
-        copy.dragonPlayer = dragonPlayer;
-        if (dragonVisitedTiles != null) copy.dragonVisitedTiles = new HashSet<>(dragonVisitedTiles);
-        return copy;
-    }
+
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {

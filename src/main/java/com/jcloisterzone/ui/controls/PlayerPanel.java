@@ -20,11 +20,14 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -130,10 +133,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void paintComponent(Graphics2D parentGraphics) {
         super.paintComponent(parentGraphics);
 
+        Game game = client.getGame();
+
 //		GridPanel gp = client.getGridPanel();
 
-//        boolean isActive = client.getGame().getActivePlayer() == player;
-//        boolean playerTurn = client.getGame().getTurnPlayer() == player;
+//        boolean isActive = game.getActivePlayer() == player;
+//        boolean playerTurn = game.getTurnPlayer() == player;
 
 //		gp.profile(" > get flags");
 
@@ -160,94 +165,90 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         int small = 0;
         String smallImgKey = SmallFollower.class.getSimpleName();
-        for (Follower f : player.getFollowers()) {
-            if (!f.isDeployed()) {
-                //instanceof cannot be used because of Phantom
-                if (f.getClass().equals(SmallFollower.class)) {
-                    small++;
-                } else { //all small followers are at beginning of collection
-                    drawMeepleBox(player, smallImgKey, small, true);
-                    small = 0;
-                    drawMeepleBox(player, f.getClass().getSimpleName(), 1, false);
-                }
+        for (Follower f : Iterables.filter(player.getFollowers(), MeeplePredicates.inSupply())) {
+            //instanceof cannot be used because of Phantom
+            if (f.getClass().equals(SmallFollower.class)) {
+                small++;
+            } else { //all small followers are at beginning of collection
+                drawMeepleBox(player, smallImgKey, small, true);
+                small = 0;
+                drawMeepleBox(player, f.getClass().getSimpleName(), 1, false);
             }
         }
         drawMeepleBox(player, smallImgKey, small, true); //case when only small followers are in collection (not drawn yet)
 
 //		gp.profile(" > followers");
 
-        for (Special meeple : player.getSpecialMeeples()) {
-            if (!meeple.isDeployed()) {
-                drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
-            }
+        for (Special meeple : Iterables.filter(player.getSpecialMeeples(), MeeplePredicates.inSupply())) {
+            drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
         }
 
 //		gp.profile(" > special");
 
-        AbbeyCapability ab = client.getGame().getCapability(AbbeyCapability.class);
-        TowerCapability tower = client.getGame().getCapability(TowerCapability.class);
-        BridgeCapability bc = client.getGame().getCapability(BridgeCapability.class);
-        CastleCapability cc = client.getGame().getCapability(CastleCapability.class);
-        KingScoutCapability ks = client.getGame().getCapability(KingScoutCapability.class);
-        ClothWineGrainCapability cwg = client.getGame().getCapability(ClothWineGrainCapability.class);
+        AbbeyCapability abbeyCap = game.getCapability(AbbeyCapability.class);
+        TowerCapability towerCap = game.getCapability(TowerCapability.class);
+        BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
+        CastleCapability castleCap = game.getCapability(CastleCapability.class);
+        KingScoutCapability kingScoutCap = game.getCapability(KingScoutCapability.class);
+        ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
 
-        if (ab != null) {
-            drawMeepleBox(null, "abbey", ab.hasUnusedAbbey(player) ? 1 : 0, false);
+        if (abbeyCap != null) {
+            drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
         }
 
-        if (tower != null) {
-            drawMeepleBox(null, "towerpiece", tower.getTowerPieces(player), true);
+        if (towerCap != null) {
+            drawMeepleBox(null, "towerpiece", towerCap.getTowerPieces(player), true);
             getMouseRegions().clear();
         }
 
-        if (bc != null) {
-            drawMeepleBox(null, "bridge", bc.getPlayerBridges(player), true);
+        if (bridgeCap != null) {
+            drawMeepleBox(null, "bridge", bridgeCap.getPlayerBridges(player), true);
         }
-        if (cc != null) {
-            drawMeepleBox(null, "castle", cc.getPlayerCastles(player), true);
+        if (castleCap != null) {
+            drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
 
 
-        if (ks != null) {
-            if (ks.getKing() == player) {
+        if (kingScoutCap != null) {
+            if (kingScoutCap.getKing() == player) {
                 Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
                 if ("king".equals(mouseOverKey)) {
                     g2.setFont(FONT_KING_SCOUT_OVERLAY);
                     g2.setColor(KING_SCOUT_OVERLAY);
                     g2.fillRect(r.x, r.y, r.width, r.height);
                     g2.setColor(Color.WHITE);
-                    int size = ks.getBiggestCitySize();
+                    int size = kingScoutCap.getBiggestCitySize();
                     g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
                     g2.setFont(FONT_MEEPLE);
                 }
             }
-            if (ks.getRobberBaron() == player) {
+            if (kingScoutCap.getRobberBaron() == player) {
                 Rectangle r = drawMeepleBox(null, "robber", 1, false, "robber");
                 if ("robber".equals(mouseOverKey)) {
                     g2.setFont(FONT_KING_SCOUT_OVERLAY);
                     g2.setColor(KING_SCOUT_OVERLAY);
                     g2.fillRect(r.x, r.y, r.width, r.height);
                     g2.setColor(Color.WHITE);
-                    int size = ks.getLongestRoadLength();
+                    int size = kingScoutCap.getLongestRoadLength();
                     g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
                     g2.setFont(FONT_MEEPLE);
                 }
             }
         }
-        if (cwg != null) {
-            drawMeepleBox(null, "cloth", cwg.getTradeResources(player, TradeResource.CLOTH), true);
-            drawMeepleBox(null, "grain", cwg.getTradeResources(player, TradeResource.GRAIN), true);
-            drawMeepleBox(null, "wine", cwg.getTradeResources(player, TradeResource.WINE), true);
+        if (cwgCap != null) {
+            drawMeepleBox(null, "cloth", cwgCap.getTradeResources(player, TradeResource.CLOTH), true);
+            drawMeepleBox(null, "grain", cwgCap.getTradeResources(player, TradeResource.GRAIN), true);
+            drawMeepleBox(null, "wine", cwgCap.getTradeResources(player, TradeResource.WINE), true);
         }
-        if (tower != null) {
-            List<Follower> capturedFigures = tower.getPrisoners().get(player);
+        if (towerCap != null) {
+            List<Follower> capturedFigures = towerCap.getPrisoners().get(player);
             Map<Class<? extends Follower>, Integer> groupedByType;
             if (!capturedFigures.isEmpty()) {
                 groupedByType = new HashMap<>();
-                for (Player opponent : client.getGame().getAllPlayers()) {
+                for (Player opponent : game.getAllPlayers()) {
                     if (opponent == player) continue;
-                    boolean isOpponentActive = client.getGame().getActivePlayer() == opponent;
-                    boolean clickable = isOpponentActive && !tower.isRansomPaidThisTurn();
+                    boolean isOpponentActive = game.getActivePlayer() == opponent;
+                    boolean clickable = isOpponentActive && !towerCap.isRansomPaidThisTurn();
                     for (Follower f : capturedFigures) {
                         if (f.getPlayer() == opponent) {
                             Integer prevVal = groupedByType.get(f.getClass());

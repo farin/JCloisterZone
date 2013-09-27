@@ -156,7 +156,7 @@ public class ScorePhase extends Phase {
             for (Meeple m : ctx.getSpecialMeeples()) {
                 if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
                     if (!m.at(getTile().getPosition())) {
-                        builderCap.builderUsed();
+                        builderCap.useBuilder();
                     }
                     break;
                 }

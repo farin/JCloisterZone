@@ -8,8 +8,18 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class CathedralCapability extends Capability {
+
+    public CathedralCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public CathedralCapability copy(Game gameCopy) {
+        return new CathedralCapability(gameCopy);
+    }
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
@@ -17,5 +27,7 @@ public class CathedralCapability extends Capability {
             ((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));
         }
     }
+
+
 
 }

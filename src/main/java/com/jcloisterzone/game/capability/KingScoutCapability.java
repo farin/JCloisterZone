@@ -22,9 +22,8 @@ public final class KingScoutCapability extends Capability {
 
     private Player king, robberBaron;
 
-    @Override
-    public void setGame(Game game) {
-        super.setGame(game);
+    public KingScoutCapability(Game game) {
+        super(game);
         game.addGameListener(new GameEventAdapter() {
             @Override
             public void completed(Completable feature, CompletableScoreContext ctx) {
@@ -36,6 +35,18 @@ public final class KingScoutCapability extends Capability {
                 }
             }
         });
+    }
+
+    @Override
+    public KingScoutCapability copy(Game gameCopy) {
+        KingScoutCapability copy = new KingScoutCapability(gameCopy);
+        copy.completedCities = completedCities;
+        copy.biggestCitySize = biggestCitySize;
+        copy.completedRoads = completedRoads;
+        copy.longestRoadLength = longestRoadLength;
+        copy.king = king;
+        copy.robberBaron = robberBaron;
+        return copy;
     }
 
     private void cityCompleted(City c, PositionCollectingScoreContext ctx) {
@@ -90,18 +101,7 @@ public final class KingScoutCapability extends Capability {
         return robberBaron;
     }
 
-    @Override
-    public KingScoutCapability copy() {
-        KingScoutCapability copy = new KingScoutCapability();
-        copy.game = game;
-        copy.completedCities = completedCities;
-        copy.biggestCitySize = biggestCitySize;
-        copy.completedRoads = completedRoads;
-        copy.longestRoadLength = longestRoadLength;
-        copy.king = king;
-        copy.robberBaron = robberBaron;
-        return copy;
-    }
+
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {

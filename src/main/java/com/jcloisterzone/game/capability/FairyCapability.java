@@ -6,19 +6,34 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.Iterables;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class FairyCapability extends Capability {
 
     public static final int FAIRY_POINTS_FINISHED_OBJECT = 3;
 
     public Position fairyPosition;
+
+    public FairyCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public FairyCapability copy(Game gameCopy) {
+        FairyCapability copy = new FairyCapability(gameCopy);
+        copy.fairyPosition = fairyPosition;
+        return copy;
+    }
 
     public Position getFairyPosition() {
         return fairyPosition;
@@ -30,24 +45,16 @@ public class FairyCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        FairyAction fairyAction = null;
-        for (Follower m : game.getActivePlayer().getFollowers()) {
-            if (m.getPosition() != null && !m.at(fairyPosition)) {
-                if (fairyAction == null) {
-                    fairyAction = new FairyAction();
-                    actions.add(fairyAction);
-                }
+        FairyAction fairyAction = new FairyAction();
+        Player activePlayer = game.getActivePlayer();
+        for (Follower m : Iterables.filter(activePlayer.getFollowers(), MeeplePredicates.deployed())) {
+            if (!m.at(fairyPosition)) {
                 fairyAction.getSites().add(m.getPosition());
             }
         }
-    }
-
-    @Override
-    public FairyCapability copy() {
-        FairyCapability copy = new FairyCapability();
-        copy.game = game;
-        copy.fairyPosition = fairyPosition;
-        return copy;
+        if (!fairyAction.getSites().isEmpty()) {
+            actions.add(fairyAction);
+        }
     }
 
     @Override

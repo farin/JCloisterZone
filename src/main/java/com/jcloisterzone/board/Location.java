@@ -86,6 +86,8 @@ public class Location implements Serializable {
     public static final Location CLOISTER = new Location("CLOISTER", 1 << 16 );
     /** Tower on tile */
     public static final Location TOWER = new Location("TOWER", 1 << 17);
+    /** Inprisoned follwer */
+    public static final Location PRISON = new Location("PRISON", 1 << 18);
 
     // --- farm locations ---
 

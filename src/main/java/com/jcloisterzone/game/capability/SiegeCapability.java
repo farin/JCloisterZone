@@ -9,9 +9,19 @@ import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 
 public final class SiegeCapability extends Capability {
+
+    public SiegeCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public SiegeCapability copy(Game gameCopy) {
+        return new SiegeCapability(gameCopy);
+    }
 
     @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {

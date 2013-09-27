@@ -13,6 +13,7 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class BazaarCapability extends Capability {
 
@@ -21,6 +22,14 @@ public class BazaarCapability extends Capability {
     private Player bazaarTileSelectingPlayer;
     private Player bazaarBiddingPlayer;
 
+    public BazaarCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public BazaarCapability copy(Game gameCopy) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {

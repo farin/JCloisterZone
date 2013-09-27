@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -16,6 +17,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -118,15 +120,13 @@ public class ActionPhase extends Phase {
 
     @Override
     public void moveFairy(Position p) {
-        for (Follower f : getActivePlayer().getFollowers()) {
-            if (f.at(p)) {
-                game.getCapability(FairyCapability.class).setFairyPosition(p);
-                game.fireGameEvent().fairyMoved(p);
-                next();
-                return;
-            }
+        if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(p))) {
+            throw new IllegalArgumentException("The tile has deployed not own follower.");
         }
-        throw new IllegalArgumentException("No own follower on the tile");
+
+        game.getCapability(FairyCapability.class).setFairyPosition(p);
+        game.fireGameEvent().fairyMoved(p);
+        next();
     }
 
     private boolean isFestivalUndeploy(Meeple m) {
@@ -158,7 +158,7 @@ public class ActionPhase extends Phase {
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-        Meeple m = getActivePlayer().getUndeployedMeeple(meepleType);
+        Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         m.deploy(getBoard().get(p), loc);
         next();
     }

@@ -10,10 +10,20 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class PlagueCapability extends Capability {
 
-    final List<PlagueSource> plagueSources = new ArrayList<>(6);
+    private final List<PlagueSource> plagueSources = new ArrayList<>(6);
+
+    public PlagueCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public PlagueCapability copy(Game gameCopy) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {

@@ -13,8 +13,18 @@ import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class PigCapability extends Capability {
+
+    public PigCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public PigCapability copy(Game gameCopy) {
+        return new PigCapability(gameCopy);
+    }
 
     @Override
     public void initPlayer(Player player) {

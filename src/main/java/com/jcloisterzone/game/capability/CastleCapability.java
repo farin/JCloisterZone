@@ -15,7 +15,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Maps;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
@@ -33,23 +32,21 @@ import com.jcloisterzone.game.Game;
 
 public class CastleCapability extends Capability {
 
-    private Map<Player, Integer> castles = new HashMap<>();
+    private final Map<Player, Integer> castles = new HashMap<>();
 
     private Player castlePlayer;
     private Map<Player, Set<Location>> currentTileCastleBases = null;
 
     /** castles deployed this turn - cannot be scored - refs to master feature  */
-    private List<Castle> newCastles = new ArrayList<>();
+    private final List<Castle> newCastles = new ArrayList<>();
     /** empty castles, already scored, keeping ref for game save */
-    private List<Castle> emptyCastles = new ArrayList<>();
+    private final List<Castle> emptyCastles = new ArrayList<>();
     /** castles from previous turns, can be scored - castle -> vinicity area */
-    private Map<Castle, Position[]> scoreableCastleVicinity = new HashMap<>();
-    private Map<Castle, Integer> castleScore = new HashMap<>();
+    private final Map<Castle, Position[]> scoreableCastleVicinity = new HashMap<>();
+    private final Map<Castle, Integer> castleScore = new HashMap<>();
 
-
-    @Override
-    public void setGame(Game game) {
-        super.setGame(game);
+    public CastleCapability(Game game) {
+        super(game);
         game.addGameListener(new GameEventAdapter() {
             @Override
             public void castleDeployed(Castle castle1, Castle castle2) {
@@ -65,6 +62,11 @@ public class CastleCapability extends Capability {
                 }
             }
         });
+    }
+
+    @Override
+    public CastleCapability copy(Game gameCopy) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -200,13 +202,7 @@ public class CastleCapability extends Capability {
         castles.put(player, n-1);
     }
 
-    @Override
-    public CastleCapability copy() {
-        CastleCapability copy = new CastleCapability();
-        copy.game = game;
-        copy.castles = Maps.newHashMap(castles);
-        return copy;
-    }
+
 
     private Element createCastleXmlElement(Document doc, Castle castle) {
         Element el = doc.createElement("castle");

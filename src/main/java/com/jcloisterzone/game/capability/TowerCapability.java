@@ -14,7 +14,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Maps;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
@@ -28,21 +29,39 @@ import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 
 public final class TowerCapability extends Capability {
 
     private static final int RANSOM_POINTS = 3;
 
-    protected Set<Position> towers = new HashSet<>();
-    private Map<Player, Integer> towerPieces = new HashMap<>();
+    private final Set<Position> towers = new HashSet<>();
+    private final Map<Player, Integer> towerPieces = new HashMap<>();
     private boolean ransomPaidThisTurn;
 
     //key is Player who keeps follower imprisoned
     //synchronized because of GUI is looking inside
-    private Map<Player, List<Follower>> prisoners = Collections.synchronizedMap(new HashMap<Player, List<Follower>>());
+    //TODO fix gui hack
+    private final Map<Player, List<Follower>> prisoners = Collections.synchronizedMap(new HashMap<Player, List<Follower>>());
 
+    public TowerCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public TowerCapability copy(Game gameCopy) {
+        TowerCapability copy = new TowerCapability(gameCopy);
+        copy.towers.addAll(towers);
+        copy.towerPieces.putAll(towerPieces);
+        copy.ransomPaidThisTurn = ransomPaidThisTurn;
+        for (Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
+            copy.prisoners.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return copy;
+    }
 
     public void registerTower(Position p) {
         towers.add(p);
@@ -86,12 +105,8 @@ public final class TowerCapability extends Capability {
     }
 
     private boolean hasSmallOrBigFollower(Player p) {
-        for (Follower m : p.getFollowers()) {
-            if (!m.isDeployed() && (m instanceof SmallFollower || m instanceof BigFollower)) {
-                return true;
-            }
-        }
-        return false;
+        return Iterables.any(p.getFollowers(), Predicates.and(
+                MeeplePredicates.inSupply(), MeeplePredicates.instanceOf(SmallFollower.class, BigFollower.class)));
     }
 
     @Override
@@ -134,26 +149,22 @@ public final class TowerCapability extends Capability {
     }
 
     public boolean hasImprisonedFollower(Player followerOwner) {
-        for (List<Follower> list : prisoners.values()) {
-            for (Follower m : list) {
-                if (m.getPlayer() == followerOwner) return true;
-            }
+        for (Follower m : followerOwner.getFollowers()) {
+            if (m.getLocation() == Location.PRISON) return true;
         }
         return false;
     }
 
     public boolean hasImprisonedFollower(Player followerOwner, Class<? extends Follower> followerClass) {
-        for (List<Follower> list : prisoners.values()) {
-            for (Follower m : list) {
-                if (m.getPlayer() == followerOwner && m.getClass().equals(followerClass)) return true;
-            }
+        for (Follower m : followerOwner.getFollowers()) {
+            if (m.getLocation() == Location.PRISON && m.getClass().equals(followerClass)) return true;
         }
         return false;
     }
 
     public void inprison(Meeple m, Player player) {
         prisoners.get(player).add((Follower) m);
-        m.setLocation(Location.TOWER);
+        m.setLocation(Location.PRISON);
     }
 
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
@@ -182,20 +193,6 @@ public final class TowerCapability extends Capability {
     @Override
     public void turnCleanUp() {
         ransomPaidThisTurn = false;
-    }
-
-    @Override
-    public TowerCapability copy() {
-        TowerCapability copy = new TowerCapability();
-        copy.game = game;
-        copy.towers = new HashSet<>(towers);
-        copy.towerPieces = Maps.newHashMap(towerPieces);
-        copy.ransomPaidThisTurn = ransomPaidThisTurn;
-        copy.prisoners = new HashMap<>();
-        for (Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
-            copy.prisoners.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-        }
-        return copy;
     }
 
     @Override
@@ -247,7 +244,7 @@ public final class TowerCapability extends Capability {
                 Element prisonerEl = (Element) priosonerNl.item(j);
                 int ownerIndex = XmlUtils.attributeIntValue(prisonerEl, "player");
                 Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XmlUtils.classForName(prisonerEl.getAttribute("type"));
-                Meeple m = game.getPlayer(ownerIndex).getUndeployedMeeple(meepleClass);
+                Meeple m = game.getPlayer(ownerIndex).getMeepleFromSupply(meepleClass);
                 inprison(m, player);
             }
         }

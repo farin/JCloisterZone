@@ -43,16 +43,19 @@ public class Tile /*implements Cloneable*/ {
 
     private ArrayList<Feature> features;
     private Bridge bridge; //direct reference to bridge feature
-    private Location river;
-    private Location flier;
 
     protected TileSymmetry symmetry;
     protected Position position = null;
     private Rotation rotation = Rotation.R0;
 
-    private TileTrigger trigger;
-    private Class<? extends Feature> cornCircle;
     private EdgePattern edgePattern;
+
+    //expansions data - maybe some map instead ? but still it is only few tiles
+    private TileTrigger trigger;
+    private Location river;
+    private Location flier;
+    private Location windRose;
+    private Class<? extends Feature> cornCircle;
 
     public Tile(Expansion origin, String id) {
         this.origin = origin;
@@ -278,7 +281,7 @@ public class Tile /*implements Cloneable*/ {
         return trigger;
     }
 
-    public void  setTrigger(TileTrigger trigger) {
+    public void setTrigger(TileTrigger trigger) {
         this.trigger = trigger;
     }
 
@@ -318,6 +321,14 @@ public class Tile /*implements Cloneable*/ {
 
     public void setFlier(Location flier) {
         this.flier = flier;
+    }
+
+    public Location getWindRose() {
+        return windRose;
+    }
+
+    public void setWindRose(Location windRose) {
+        this.windRose = windRose;
     }
 
     public boolean isBridgeAllowed(Location bridgeLoc) {

@@ -17,12 +17,24 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class BuilderCapability extends Capability {
 
     public enum BuilderState { INACTIVE, ACTIVATED, BUILDER_TURN; }
 
     protected BuilderState builderState = BuilderState.INACTIVE;
+
+    public BuilderCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public BuilderCapability copy(Game gameCopy) {
+        BuilderCapability copy = new BuilderCapability(gameCopy);
+        copy.builderState = builderState;
+        return copy;
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -33,10 +45,8 @@ public class BuilderCapability extends Capability {
         return builderState;
     }
 
-    public void builderUsed() {
-        if (builderState == BuilderState.INACTIVE) {
-            builderState = BuilderState.ACTIVATED;
-        }
+    public void useBuilder() {
+        builderState = BuilderState.ACTIVATED;
     }
 
     public boolean hasPlayerAnotherTurn() {
@@ -66,21 +76,14 @@ public class BuilderCapability extends Capability {
 
     @Override
     public void turnCleanUp() {
-        if (builderState == BuilderState.ACTIVATED) {
+        switch (builderState) {
+        case ACTIVATED:
             builderState = BuilderState.BUILDER_TURN;
-            return;
-        }
-        if (builderState == BuilderState.BUILDER_TURN) {
+            break;
+        case BUILDER_TURN:
             builderState = BuilderState.INACTIVE;
+            break;
         }
-    }
-
-    @Override
-    public BuilderCapability copy() {
-        BuilderCapability copy = new BuilderCapability();
-        copy.game = game;
-        copy.builderState = builderState;
-        return copy;
     }
 
     @Override

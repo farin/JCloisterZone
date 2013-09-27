@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Iterables;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
@@ -11,9 +13,20 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class FestivalCapability extends Capability {
+
+    public FestivalCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public Capability copy(Game gameCopy) {
+        return new FestivalCapability(gameCopy);
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {
@@ -26,22 +39,17 @@ public class FestivalCapability extends Capability {
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
         if (getTile().getTrigger() != TileTrigger.FESTIVAL) return;
 
-        UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(getGame().getActivePlayer()));
+        Player activePlayer = game.getActivePlayer();
+        UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(activePlayer));
 
-        for (Meeple m : getGame().getActivePlayer().getFollowers()) {
-            if (m.isDeployed()) {
-                action.getOrCreate(m.getPosition()).add(m.getLocation());
-            }
-        }
-        for (Meeple m : getGame().getActivePlayer().getSpecialMeeples()) {
-            if (m.isDeployed()) {
-                //TODO verify barn
-                action.getOrCreate(m.getPosition()).add(m.getLocation());
-            }
+        for (Meeple m : Iterables.filter(activePlayer.getMeeples(), MeeplePredicates.deployed())) {
+            action.getOrCreate(m.getPosition()).add(m.getLocation());
         }
         if (!action.getLocationsMap().isEmpty()) {
             actions.add(action);
         }
     }
+
+
 
 }

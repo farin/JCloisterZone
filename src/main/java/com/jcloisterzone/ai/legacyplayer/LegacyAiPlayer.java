@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.RankingAiPlayer;
@@ -27,6 +28,7 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 import com.jcloisterzone.game.capability.DragonCapability;
@@ -112,15 +114,13 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         for (Player p : game.getAllPlayers()) {
             double meeplePoints = 0;
             int limit = 0;
-            for (Follower f : p.getFollowers()) {
-                if (f.isDeployed()) {
-                    if (f instanceof SmallFollower) {
-                        meeplePoints += 0.15;
-                    } else if (f instanceof BigFollower) {
-                        meeplePoints += 0.25;
-                    }
-                    if (++limit == myTurnsLeft) break;
+            for (Follower f : Iterables.filter(p.getFollowers(), MeeplePredicates.deployed())) {
+                if (f instanceof SmallFollower) {
+                    meeplePoints += 0.15;
+                } else if (f instanceof BigFollower) {
+                    meeplePoints += 0.25;
                 }
+                if (++limit == myTurnsLeft) break;
             }
             rating += reducePoints(meeplePoints, p);
         }

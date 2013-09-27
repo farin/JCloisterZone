@@ -176,7 +176,7 @@ public class CornCirclePhase extends Phase {
             return;
         }
 
-        Meeple m = getActivePlayer().getUndeployedMeeple(meepleType);
+        Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         Tile tile = getBoard().get(p);
         m.deployUnchecked(tile, loc, tile.getFeature(loc));
         game.fireGameEvent().deployed(m);

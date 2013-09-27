@@ -15,12 +15,22 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 
 public class RiverCapability extends Capability {
 
     private static final String R1_LAKE_ID = "R1.I.e";
     private static final String R2_LAKE_ID = "R2.I.v";
+
+    public RiverCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public RiverCapability copy(Game gameCopy) {
+        return new RiverCapability(gameCopy);
+    }
 
     @Override
     public void initTile(Tile tile, Element xml) {
@@ -48,7 +58,7 @@ public class RiverCapability extends Capability {
     public void begin() {
         getTilePack().deactivateGroup("default");
         getTilePack().activateGroup("river-start");
-        if (!getGame().hasExpansion(Expansion.RIVER_II)) {
+        if (!game.hasExpansion(Expansion.RIVER_II)) {
             getTilePack().activateGroup("river");
         }
     }

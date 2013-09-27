@@ -8,6 +8,7 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
@@ -15,6 +16,17 @@ import com.jcloisterzone.game.phase.Phase;
 public class FlierCapability extends Capability {
 
     private int flierDistance;
+
+    public FlierCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public FlierCapability copy(Game gameCopy) {
+        FlierCapability copy = new FlierCapability(gameCopy);
+        copy.flierDistance = flierDistance;
+        return copy;
+    }
 
     public int getFlierDistance() {
         return flierDistance;

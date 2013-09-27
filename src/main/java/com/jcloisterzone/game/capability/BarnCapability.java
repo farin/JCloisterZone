@@ -14,9 +14,19 @@ import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Game;
 
 
 public final class BarnCapability extends Capability {
+
+    public BarnCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public BarnCapability copy(Game gameCopy) {
+        return new BarnCapability(gameCopy);
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -61,7 +71,7 @@ public final class BarnCapability extends Capability {
             positionChange = positionChange.next();
         }
 
-        if (!getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+        if (!game.hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
             return !farm.walk(new IsOccupied().with(Barn.class));
         }
 

@@ -10,10 +10,22 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class AbbeyCapability extends Capability {
 
-    private Set<Player> unusedAbbey = new HashSet<>();
+    private final Set<Player> unusedAbbey = new HashSet<>();
+
+    public AbbeyCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public AbbeyCapability copy(Game gameCopy) {
+        AbbeyCapability copy = new AbbeyCapability(gameCopy);
+        copy.unusedAbbey.addAll(unusedAbbey);
+        return copy;
+    }
 
     @Override
     public void initPlayer(Player player) {
@@ -35,13 +47,7 @@ public class AbbeyCapability extends Capability {
         }
     }
 
-    @Override
-    public AbbeyCapability copy() {
-        AbbeyCapability copy = new AbbeyCapability();
-        copy.game = game;
-        copy.unusedAbbey = new HashSet<>(unusedAbbey);
-        return copy;
-    }
+
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {

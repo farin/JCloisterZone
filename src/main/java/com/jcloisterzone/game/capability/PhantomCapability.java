@@ -8,8 +8,18 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Game;
 
 public class PhantomCapability extends Capability {
+
+    public PhantomCapability(Game game) {
+        super(game);
+    }
+
+    @Override
+    public PhantomCapability copy(Game gameCopy) {
+        return new PhantomCapability(gameCopy);
+    }
 
     @Override
     public void initPlayer(Player player) {
