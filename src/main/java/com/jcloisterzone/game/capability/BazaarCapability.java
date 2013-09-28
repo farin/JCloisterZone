@@ -27,8 +27,23 @@ public class BazaarCapability extends Capability {
     }
 
     @Override
-    public BazaarCapability copy(Game gameCopy) {
-        throw new UnsupportedOperationException();
+    public Object[] backup() {
+        return new Object[] {
+            (bazaarSupply == null ? null : new ArrayList<>(bazaarSupply)),
+            (currentBazaarAuction == null ? null : new BazaarItem(currentBazaarAuction)),
+            bazaarTileSelectingPlayer,
+            bazaarBiddingPlayer
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        bazaarSupply = a[0] == null ? null : new ArrayList<>((ArrayList<BazaarItem>)a[0]);
+        currentBazaarAuction = a[1] == null ? null : new BazaarItem((BazaarItem)a[1]);
+        bazaarTileSelectingPlayer = (Player) a[2];
+        bazaarBiddingPlayer = (Player) a[3];
     }
 
     @Override

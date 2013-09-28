@@ -49,6 +49,16 @@ public class CastleCapability extends Capability {
     }
 
     @Override
+    public Object backup() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void restore(Object data) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void castleDeployed(Castle castle1, Castle castle2) {
         newCastles.add(castle1.getMaster());
     }
@@ -62,10 +72,7 @@ public class CastleCapability extends Capability {
         }
     }
 
-    @Override
-    public CastleCapability copy(Game gameCopy) {
-        throw new UnsupportedOperationException();
-    }
+
 
     @Override
     public void initPlayer(Player player) {

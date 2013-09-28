@@ -24,11 +24,6 @@ public class FestivalCapability extends Capability {
     }
 
     @Override
-    public Capability copy(Game gameCopy) {
-        return new FestivalCapability(gameCopy);
-    }
-
-    @Override
     public void initTile(Tile tile, Element xml) {
         if (xml.getElementsByTagName("festival").getLength() > 0) {
             tile.setTrigger(TileTrigger.FESTIVAL);

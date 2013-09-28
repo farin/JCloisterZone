@@ -17,11 +17,6 @@ public class CathedralCapability extends Capability {
     }
 
     @Override
-    public CathedralCapability copy(Game gameCopy) {
-        return new CathedralCapability(gameCopy);
-    }
-
-    @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof City) {
             ((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));

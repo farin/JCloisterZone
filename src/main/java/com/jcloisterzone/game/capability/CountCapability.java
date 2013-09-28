@@ -13,11 +13,6 @@ public class CountCapability extends Capability {
     }
 
     @Override
-    public CountCapability copy(Game gameCopy) {
-        return new CountCapability(gameCopy);
-    }
-
-    @Override
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return tile.getOrigin() != Expansion.COUNT;
     }

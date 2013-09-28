@@ -30,7 +30,12 @@ public abstract class Capability extends GameEventAdapter {
         this.game = game;
     }
 
-    public abstract Capability copy(Game gameCopy);
+    public Object backup() {
+        return null;
+    }
+    public void restore(Object data) {
+        //unpack data created by backup and fill itself
+    }
 
     protected TilePack getTilePack() {
         return game.getTilePack();

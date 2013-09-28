@@ -40,13 +40,23 @@ public final class TunnelCapability extends Capability {
     }
 
     @Override
-    public TunnelCapability copy(Game gameCopy) {
-        TunnelCapability copy = new TunnelCapability(gameCopy);
-        copy.placedTunnelCurrentTurn = placedTunnelCurrentTurn;
-        copy.tunnelTokensA.putAll(tunnelTokensA);
-        copy.tunnelTokensB.putAll(tunnelTokensB);
-        copy.tunnels.addAll(tunnels);
-        return copy;
+    public Object backup() {
+        return new Object[] {
+            placedTunnelCurrentTurn,
+            new HashMap<>(tunnelTokensA),
+            new HashMap<>(tunnelTokensB)
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        placedTunnelCurrentTurn = (Road) a[0];
+        tunnelTokensA.clear();
+        tunnelTokensA.putAll((Map<Player, Integer>)a[1]);
+        tunnelTokensA.clear();
+        tunnelTokensA.putAll((Map<Player, Integer>)a[2]);
     }
 
     @Override

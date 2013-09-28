@@ -16,6 +16,13 @@ public class BazaarItem {
         this.tile = tile;
     }
 
+    public BazaarItem(BazaarItem bi) {
+        tile = bi.tile;
+        owner = bi.owner;
+        currentPrice = bi.currentPrice;
+        currentBidder = bi.currentBidder;
+    }
+
     public Player getOwner() {
         return owner;
     }

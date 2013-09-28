@@ -22,10 +22,13 @@ public class FlierCapability extends Capability {
     }
 
     @Override
-    public FlierCapability copy(Game gameCopy) {
-        FlierCapability copy = new FlierCapability(gameCopy);
-        copy.flierDistance = flierDistance;
-        return copy;
+    public Object backup() {
+        return flierDistance;
+    }
+
+    @Override
+    public void restore(Object data) {
+        flierDistance = (Integer) data;
     }
 
     public int getFlierDistance() {

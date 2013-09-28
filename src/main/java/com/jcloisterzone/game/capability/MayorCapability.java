@@ -23,11 +23,6 @@ public class MayorCapability extends Capability {
     }
 
     @Override
-    public MayorCapability copy(Game gameCopy) {
-        return new MayorCapability(gameCopy);
-    }
-
-    @Override
     public void initPlayer(Player player) {
         player.addMeeple(new Mayor(game, player));
     }

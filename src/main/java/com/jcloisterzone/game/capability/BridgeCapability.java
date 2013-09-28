@@ -29,12 +29,22 @@ public class BridgeCapability extends Capability {
     }
 
     @Override
-    public BridgeCapability copy(Game gameCopy) {
-        BridgeCapability copy = new BridgeCapability(gameCopy);
-        copy.bridgeUsed = bridgeUsed;
-        copy.bridges.putAll(bridges);
-        return copy;
+    public Object backup() {
+        return new Object[] {
+            bridgeUsed,
+            new HashMap<>(bridges)
+        };
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        bridgeUsed = (Boolean) a[0];
+        bridges.clear();
+        bridges.putAll((Map<Player, Integer>) a[1]);
+    }
+
 
     @Override
     public void initPlayer(Player player) {

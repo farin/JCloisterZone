@@ -20,11 +20,6 @@ public class PortalCapability extends Capability {
     }
 
     @Override
-    public PortalCapability copy(Game gameCopy) {
-        return new PortalCapability(gameCopy);
-    }
-
-    @Override
     public void initTile(Tile tile, Element xml) {
         if (xml.getElementsByTagName("portal").getLength() > 0) {
             tile.setTrigger(TileTrigger.PORTAL);

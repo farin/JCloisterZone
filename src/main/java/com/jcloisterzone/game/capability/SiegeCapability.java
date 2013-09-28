@@ -19,11 +19,6 @@ public final class SiegeCapability extends Capability {
     }
 
     @Override
-    public SiegeCapability copy(Game gameCopy) {
-        return new SiegeCapability(gameCopy);
-    }
-
-    @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "besieged")) {
             City city = (City) feature;

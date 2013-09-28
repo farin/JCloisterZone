@@ -21,11 +21,6 @@ public final class ShrineCapability extends Capability {
     }
 
     @Override
-    public ShrineCapability copy(Game gameCopy) {
-        return new ShrineCapability(gameCopy);
-    }
-
-    @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof Cloister) {
             ((Cloister)feature).setShrine(attributeBoolValue(xml, "shrine"));

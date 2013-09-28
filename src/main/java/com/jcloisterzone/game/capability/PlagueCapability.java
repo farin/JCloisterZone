@@ -21,7 +21,12 @@ public class PlagueCapability extends Capability {
     }
 
     @Override
-    public PlagueCapability copy(Game gameCopy) {
+    public Object backup() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void restore(Object data) {
         throw new UnsupportedOperationException();
     }
 

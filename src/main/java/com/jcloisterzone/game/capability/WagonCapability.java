@@ -49,11 +49,20 @@ public class WagonCapability extends Capability {
     }
 
     @Override
-    public WagonCapability copy(Game gameCopy) {
-        WagonCapability copy = new WagonCapability(gameCopy);
-        copy.returnedWagons.putAll(returnedWagons);
-        copy.wagonPlayer = wagonPlayer;
-        return copy;
+    public Object backup() {
+        return new Object[] {
+            wagonPlayer,
+            new HashMap<>(returnedWagons)
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        wagonPlayer = (Player) a[0];
+        returnedWagons.clear();
+        returnedWagons.putAll((Map<Player, Feature>) a[1]);
     }
 
     @Override

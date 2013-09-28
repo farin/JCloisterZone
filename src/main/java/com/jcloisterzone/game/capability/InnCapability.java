@@ -17,11 +17,6 @@ public class InnCapability extends Capability {
     }
 
     @Override
-    public InnCapability copy(Game gameCopy) {
-        return new InnCapability(gameCopy);
-    }
-
-    @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof Road) {
             ((Road) feature).setInn(attributeBoolValue(xml, "inn"));

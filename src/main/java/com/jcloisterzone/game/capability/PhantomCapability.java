@@ -17,11 +17,6 @@ public class PhantomCapability extends Capability {
     }
 
     @Override
-    public PhantomCapability copy(Game gameCopy) {
-        return new PhantomCapability(gameCopy);
-    }
-
-    @Override
     public void initPlayer(Player player) {
         player.addMeeple(new Phantom(game, player));
     }

@@ -157,5 +157,9 @@ public abstract class AiPlayer implements UserInterface {
         getServer().moveDragon(positions.iterator().next());
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(player);
+    }
 
 }

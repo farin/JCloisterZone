@@ -17,11 +17,6 @@ public class BigFollowerCapability extends Capability {
     }
 
     @Override
-    public BigFollowerCapability copy(Game gameCopy) {
-        return new BigFollowerCapability(gameCopy);
-    }
-
-    @Override
     public void initPlayer(Player player) {
         player.addMeeple(new BigFollower(game, player));
     }

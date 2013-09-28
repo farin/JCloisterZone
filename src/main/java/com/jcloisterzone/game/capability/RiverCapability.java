@@ -28,11 +28,6 @@ public class RiverCapability extends Capability {
     }
 
     @Override
-    public RiverCapability copy(Game gameCopy) {
-        return new RiverCapability(gameCopy);
-    }
-
-    @Override
     public void initTile(Tile tile, Element xml) {
         NodeList nl;
         nl = xml.getElementsByTagName("river");

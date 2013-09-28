@@ -21,7 +21,7 @@ import com.jcloisterzone.game.Game;
 
 public class ClothWineGrainCapability extends Capability {
 
-    protected Map<Player,int[]> tradeResources = new HashMap<>();
+    private final Map<Player, int[]> tradeResources = new HashMap<>();
 
     public ClothWineGrainCapability(final Game game) {
         super(game);
@@ -41,10 +41,15 @@ public class ClothWineGrainCapability extends Capability {
     }
 
     @Override
-    public ClothWineGrainCapability copy(Game gameCopy) {
-        ClothWineGrainCapability copy = new ClothWineGrainCapability(gameCopy);
-        copy.tradeResources = new HashMap<>(tradeResources);
-        return copy;
+    public Object backup() {
+        return new HashMap<>(tradeResources);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        tradeResources.clear();
+        tradeResources.putAll((Map<Player, int[]>) data);
     }
 
     @Override

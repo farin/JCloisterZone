@@ -1,29 +1,17 @@
 package com.jcloisterzone.ai;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.jcloisterzone.ai.operation.Operation;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.Phase;
 
 public class SavePoint {
     private final Operation operation;
     private final Phase phase;
-    private final List<Capability> savedCapabilities;
+    private final Object[] capabilitiesBackups;
 
-    public SavePoint(Operation operation, final Game game) {
+    public SavePoint(Operation operation, Phase phase, Object[] capabilitiesBackups) {
         this.operation = operation;
-        this.phase = game.getPhase();
-        savedCapabilities = new ArrayList<>(Lists.transform(game.getCapabilities(), new Function<Capability, Capability>() {
-            @Override
-            public Capability apply(Capability cap) {
-                return cap.copy(game);
-            }
-        }));
+        this.phase = phase;
+        this.capabilitiesBackups = capabilitiesBackups;
     }
 
     public Operation getOperation() {
@@ -34,7 +22,7 @@ public class SavePoint {
         return phase;
     }
 
-    public List<Capability> getSavedCapabilities() {
-        return savedCapabilities;
+    public Object[] getCapabilitiesBackups() {
+        return capabilitiesBackups;
     }
 }

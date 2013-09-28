@@ -42,13 +42,23 @@ public class DragonCapability extends Capability {
     }
 
     @Override
-    public DragonCapability copy(Game gameCopy) {
-        DragonCapability copy = new DragonCapability(gameCopy);
-        copy.dragonPosition = dragonPosition;
-        copy.dragonMovesLeft = dragonMovesLeft;
-        copy.dragonPlayer = dragonPlayer;
-        if (dragonVisitedTiles != null) copy.dragonVisitedTiles = new HashSet<>(dragonVisitedTiles);
-        return copy;
+    public Object backup() {
+        return new Object[] {
+            dragonPosition,
+            dragonMovesLeft,
+            dragonPlayer,
+            dragonVisitedTiles == null ? null : new HashSet<>(dragonVisitedTiles)
+         };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        dragonPosition = (Position) a[0];
+        dragonMovesLeft = (Integer) a[1];
+        dragonPlayer = (Player) a[2];
+        dragonVisitedTiles = a[3] == null ? null : new HashSet<>((Set<Position>) a[3]);
     }
 
 

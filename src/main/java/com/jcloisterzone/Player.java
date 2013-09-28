@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -30,8 +31,10 @@ public class Player implements Serializable {
     private int points;
     private final Map<PointCategory, Integer> pointStats = new HashMap<>();
 
-    private List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
-    private List<Special> specialMeeples = new ArrayList<Special>(3);
+    private final List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
+    private final List<Special> specialMeeples = new ArrayList<Special>(3);
+    private final Iterable<Meeple> meeples = Iterables.<Meeple>concat(followers, specialMeeples);
+
 
     final private String nick;
     final private int index;
@@ -60,7 +63,7 @@ public class Player implements Serializable {
     }
 
     public Iterable<Meeple> getMeeples() {
-        return Iterables.<Meeple>concat(followers, specialMeeples);
+        return meeples;
     }
 
     public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
@@ -135,11 +138,7 @@ public class Player implements Serializable {
 
     @Override
     public int hashCode() {
-        if (index == -1) {
-            return nick.hashCode();
-        } else {
-            return index;
-        }
+        return Objects.hash(index, nick);
     }
 
     public void setPoints(int points) {

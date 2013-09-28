@@ -24,11 +24,6 @@ public final class BarnCapability extends Capability {
     }
 
     @Override
-    public BarnCapability copy(Game gameCopy) {
-        return new BarnCapability(gameCopy);
-    }
-
-    @Override
     public void initPlayer(Player player) {
         /*if (game.hasCapability(Capability.FARM_PLACEMENT)) {
             player.addMeeple(new Barn(game, player));

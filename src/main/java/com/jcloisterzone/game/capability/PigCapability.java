@@ -22,11 +22,6 @@ public class PigCapability extends Capability {
     }
 
     @Override
-    public PigCapability copy(Game gameCopy) {
-        return new PigCapability(gameCopy);
-    }
-
-    @Override
     public void initPlayer(Player player) {
         player.addMeeple(new Pig(game, player));
     }

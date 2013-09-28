@@ -30,10 +30,13 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public BuilderCapability copy(Game gameCopy) {
-        BuilderCapability copy = new BuilderCapability(gameCopy);
-        copy.builderState = builderState;
-        return copy;
+    public Object backup() {
+        return builderState;
+    }
+
+    @Override
+    public void restore(Object data) {
+        builderState = (BuilderState) data;
     }
 
     @Override

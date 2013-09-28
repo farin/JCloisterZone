@@ -52,15 +52,34 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public TowerCapability copy(Game gameCopy) {
-        TowerCapability copy = new TowerCapability(gameCopy);
-        copy.towers.addAll(towers);
-        copy.towerPieces.putAll(towerPieces);
-        copy.ransomPaidThisTurn = ransomPaidThisTurn;
+    public Object backup() {
+        Map<Player, List<Follower>> prisonersCopy = new HashMap<>();
         for (Entry<Player, List<Follower>> entry : prisoners.entrySet()) {
-            copy.prisoners.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            prisonersCopy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
-        return copy;
+
+        return new Object[] {
+            ransomPaidThisTurn,
+            new HashSet<>(towers),
+            new HashMap<>(towerPieces),
+            prisonersCopy
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        ransomPaidThisTurn = (Boolean) a[0];
+        towers.clear();
+        towers.addAll((Set<Position>) a[1]);
+        towerPieces.clear();
+        towerPieces.putAll((Map<Player, Integer>) a[2]);
+        for (Entry<Player, List<Follower>> entry : ((Map<Player, List<Follower>>)a[3]).entrySet()) {
+            List<Follower> value = prisoners.get(entry.getKey());
+            value.clear();
+            value.addAll(entry.getValue());
+        }
     }
 
     public void registerTower(Position p) {

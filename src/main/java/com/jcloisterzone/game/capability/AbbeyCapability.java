@@ -21,10 +21,15 @@ public class AbbeyCapability extends Capability {
     }
 
     @Override
-    public AbbeyCapability copy(Game gameCopy) {
-        AbbeyCapability copy = new AbbeyCapability(gameCopy);
-        copy.unusedAbbey.addAll(unusedAbbey);
-        return copy;
+    public Object backup() {
+        return new HashSet<>(unusedAbbey);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restore(Object data) {
+        unusedAbbey.clear();
+        unusedAbbey.addAll((Set<Player>) data);
     }
 
     @Override

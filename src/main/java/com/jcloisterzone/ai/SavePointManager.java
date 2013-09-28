@@ -49,19 +49,13 @@ public class SavePointManager {
     }
 
     public SavePoint save() {
-        return new SavePoint(operations.peekLast(), game);
-    }
-
-    private void replaceCapabilities(Game game, List<Capability> capabilities) {
-        //hack, modifying collection content, depending on listening contract
+        Object[] backups = new Object[game.getCapabilities().size()];
+        int i = 0;
         for (Capability cap : game.getCapabilities()) {
-            game.removeGameListener(cap);
+            backups[i++] = cap.backup();
         }
-        game.getCapabilities().clear();
-        game.getCapabilities().addAll(capabilities);
-        for (Capability cap : capabilities) {
-            game.addGameListener(cap);
-        }
+        return new SavePoint(operations.peekLast(), game.getPhase(), backups);
+
     }
 
     public void restore(SavePoint sp) {
@@ -71,7 +65,10 @@ public class SavePointManager {
             //logger.info("      < undo {}", item);
             operations.pollLast().undo(game);
         }
-        replaceCapabilities(game, sp.getSavedCapabilities());
+        int i = 0;
+        for (Capability cap : game.getCapabilities()) {
+            cap.restore(sp.getCapabilitiesBackups()[i++]);
+        }
 
         Phase phase = sp.getPhase();
         game.setPhase(phase);

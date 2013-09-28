@@ -29,10 +29,13 @@ public class FairyCapability extends Capability {
     }
 
     @Override
-    public FairyCapability copy(Game gameCopy) {
-        FairyCapability copy = new FairyCapability(gameCopy);
-        copy.fairyPosition = fairyPosition;
-        return copy;
+    public Object backup() {
+        return fairyPosition;
+    }
+
+    @Override
+    public void restore(Object data) {
+        fairyPosition = (Position) data;
     }
 
     public Position getFairyPosition() {

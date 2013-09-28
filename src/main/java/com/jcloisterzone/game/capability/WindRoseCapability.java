@@ -43,11 +43,15 @@ public class WindRoseCapability extends Capability {
     }
 
     @Override
-    public WindRoseCapability copy(Game gameCopy) {
-        WindRoseCapability copy = new WindRoseCapability(gameCopy);
-        copy.roseRotation = roseRotation;
-        copy.rosePosition = rosePosition;
-        return copy;
+    public Object backup() {
+        return new Object[] { rosePosition, roseRotation };
+    }
+
+    @Override
+    public void restore(Object data) {
+        Object[] a = (Object[]) data;
+        rosePosition = (Position) a[0];
+        roseRotation = (Rotation) a[1];
     }
 
     @Override

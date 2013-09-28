@@ -25,11 +25,6 @@ public class PrincessCapability extends Capability {
     }
 
     @Override
-    public PrincessCapability copy(Game gameCopy) {
-        return new PrincessCapability(gameCopy);
-    }
-
-    @Override
     public void initFeature(Tile tile, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "princess")) {
             ((City)feature).setPricenss(true);
