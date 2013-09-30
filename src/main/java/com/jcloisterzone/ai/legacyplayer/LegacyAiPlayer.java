@@ -2,19 +2,28 @@ package com.jcloisterzone.ai.legacyplayer;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.RankingAiPlayer;
+import com.jcloisterzone.board.EdgePattern;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
@@ -22,6 +31,7 @@ import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.feature.visitor.score.RoadScoreContext;
+import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Builder;
@@ -39,6 +49,8 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
     private static final double TRAPPED_MY_FIGURE_POINTS = -12.0;
     private static final double TRAPPED_ENEMY_FIGURE_POINTS = 3.0;
+    private static final double SELF_MERGE_PENALTY = 6.0;
+
     private static final double MIN_CHANCE = 0.4;
 
     protected int packSize, myTurnsLeft;
@@ -48,6 +60,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     private static final int OPEN_COUNT_CITY = 1;
     private static final int OPEN_COUNT_FARM = 2;
     private static final int OPEN_COUNT_CLOITSTER = 3;
+
 
     private int[] openCount = new int[4]; //number of my open objects
 
@@ -64,6 +77,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.RIVER_II,
             Expansion.GQ11,
             Expansion.CATAPULT,
+            Expansion.WIND_ROSE,
             //only cards
             Expansion.COUNT,
             Expansion.PLAGUE
@@ -97,6 +111,23 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         ranking += rankConvexity();
         ranking += rankFairy();
 
+        // --- dbg print --
+//        Tile tile = getGame().getCurrentTile();
+//        Feature meeplePlacement = Iterables.find(tile.getFeatures(), new Predicate<Feature>() {
+//            @Override
+//            public boolean apply(Feature f) {
+//                return !f.getMeeples().isEmpty();
+//            }
+//        }, null);
+//        Arrays.fill(openCount, 0);
+//        System.err.println(
+//                String.format("%8s (%4s) %10s %4s/%5s %8.3f = Mepl %.3f Poit %.3f Open %.3f Conn %.3f Covx %.3f Fair %.3f",
+//                tile.getId(), tile.getRotation(), tile.getPosition(),
+//                meeplePlacement == null ? "" : meeplePlacement.getClass().getSimpleName(),
+//                meeplePlacement == null ? "" : meeplePlacement.getLocation(),
+//                ranking, meepleRating(), pointRating(), openObjectRating(),
+//                rankPossibleFeatureConnections(), rankConvexity(), rankFairy()));
+        // --- end of debug print
 
         //objectRatings.clear();
 
@@ -106,6 +137,19 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     protected double reducePoints(double points, Player p) {
         if (isMe(p)) return points;
         return -points/enemyPlayers;
+    }
+
+    protected double chanceToPlaceTile(Position pos) {
+        EdgePattern pattern = game.getBoard().getAvailMoveEdgePattern(pos);
+        if (pattern != null && pattern.wildcardSize() < 2) {
+            int remains = game.getTilePack().getSizeForEdgePattern(pattern);
+            if (remains == 0) return 0.0;
+            if (remains < game.getAllPlayers().length) {
+                if (remains == 0) return 0.0;
+                return 1.0 - Math.pow(1.0 - 1.0 / (game.getAllPlayers().length), remains);
+            }
+        }
+        return 1.0;
     }
 
     protected double meepleRating() {
@@ -137,17 +181,17 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         }
 
         @Override
-        public CompletableScoreContext getCompletableScoreContext(Completable completable) {
+        public LegacyAiScoreContext getCompletableScoreContext(Completable completable) {
             //TODO uncomment after invalidate implemeted
 //			AiScoreContext ctx = getScoreCache().get(completable);
 //			if (ctx != null && ctx.isValid()) {
 //				return (CompletableScoreContext) ctx;
 //			}
-            return new LegacyAiScoreContext(game, completable.getScoreContext(), getScoreCache());
+            return new LegacyAiScoreContext(LegacyAiPlayer.this, completable.getScoreContext(), getScoreCache());
         }
 
         @Override
-        public FarmScoreContext getFarmScoreContext(Farm farm) {
+        public LegacyAiFarmScoreContext getFarmScoreContext(Farm farm) {
             //TODO uncomment after invalidate implemeted
 //			AiScoreContext ctx = getScoreCache().get(farm);
 //			if (ctx != null && ctx.isValid()) {
@@ -198,10 +242,10 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 
     public static final double[][]  OPEN_PENALTY = {
-        { 0.0, 0.2, 0.5, 2.5, 5.5, 9.5, 15.0, 22.0, 30.0 },
-        { 0.0, 0.15, 0.3, 1.3, 2.3, 5.3, 10.0, 15.0, 22.0 },
-        { 0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0 },
-        { 0.0, 0.0, 0.4, 0.8, 1.2, 2.0, 4.0, 7.0, 11.0 }
+        { 0.0, 1.0, 2.5, 4.5, 7.5, 10.5, 14.5, 19.0, 29.0 }, //road
+        { 0.0, 0.5, 1.5, 3.0, 5.0, 8.0, 12.0, 17.0, 27.0 }, //city
+        { 0.0, 5.0, 10.0, 19.0, 28.0, 37.0, 47.0, 57.0, 67.0 }, //farm
+        { 0.0, 0.0, 0.4, 0.8, 1.2, 2.0, 4.0, 7.0, 11.0 } //cloister
     };
 
     protected double openObjectRating() {
@@ -227,64 +271,174 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         return rating;
     }
 
-    /*
-    private double rankFeatureConnectionsOn(Position pos, OpenEdge edge, Location loc, boolean isCornerConnection) {
-        Tile tile = getBoard().get(pos.add(loc));
-        if (tile == null) return 0.0;
-        Feature opposite = tile.getFeaturePartOf(loc.rev());
-        if (opposite == null || edge.getClass().isInstance(opposite)) return 0.0;
-
-        return 0.0;
+    private ScoreContext futureConnectionCreateScoreContext(Feature feature) {
+        LegacyAiScoreAllCallback ctxHelper = new LegacyAiScoreAllCallback();
+        ScoreContext ctx;
+        if (feature instanceof Completable) {
+            ctx = ctxHelper.getCompletableScoreContext((Completable) feature);
+        } else {
+            ctx = ctxHelper.getFarmScoreContext((Farm) feature);
+            ((LegacyAiFarmScoreContext) ctx).setCityCache(new HashMap<City, CityScoreContext>());
+        }
+        feature.walk(ctx);
+        return ctx;
     }
-    */
+
+    private double futureConnectionGetFeaturePoints(Feature feature, ScoreContext featureCtx) {
+        if (featureCtx instanceof CompletableScoreContext) {
+            return getUnfinishedCompletablePoints((Completable) feature, (LegacyAiScoreContext) featureCtx);
+        } else {
+            return ((FarmScoreContext) featureCtx).getPoints(getPlayer());
+        }
+    }
+
+    private double futureConnectionRateConnection(Location toEmpty, Location toFeature, Position f2Pos, double chance) {
+        Tile tile1 = getGame().getCurrentTile();
+        Tile tile2 = getBoard().get(f2Pos);
+
+        double rating = 0;
+
+        Completable f1 = (Completable) tile1.getFeaturePartOf(toEmpty);
+        Completable f2 = (Completable) tile2.getFeaturePartOf(toFeature.rev());
+
+        if (f1 != null && f2 != null) {
+            if (f1.getClass().equals(f2.getClass())) {
+                //            System.err.println("    " + tile1.getPosition() + " <-->" + f2Pos + " / " + f1 + " " + f2);
+                rating +=  futureConnectionRateFeatures(toEmpty, toFeature, chance, f1, f2);
+            } else {
+                rating +=  futureConnectionRateCrossing(toEmpty, toFeature, chance, f1, f2);
+            }
+        }
+
+        if (toEmpty != toFeature) {
+            boolean left = toEmpty.rotateCCW(Rotation.R90) == toFeature;
+            Farm farm1 = (Farm) tile2.getFeaturePartOf(left ? toEmpty.getLeftFarm() : toEmpty.getRightFarm());
+            Farm farm2 = (Farm) tile2.getFeaturePartOf(left ? toFeature.rev().getRightFarm() : toFeature.rev().getLeftFarm());
+
+            if (farm1 != null && farm2 != null) {
+//                System.err.println("    " + tile1.getPosition() + " <-->" + f2Pos + " / " + farm1 + " " + farm2);
+                rating +=  futureConnectionRateFeatures(toEmpty, toFeature, chance, farm1, farm2);
+            }
+        }
+        return rating;
+    }
+
+    private double futureConnectionRateCrossing(Location toEmpty, Location toFeature, double chance, Feature f1, Feature f2) {
+        ScoreContext f1Ctx = futureConnectionCreateScoreContext(f1);
+        ScoreContext f2Ctx = futureConnectionCreateScoreContext(f2);
+        Map<Player, Integer> f1Powers = f1Ctx.getPowers();
+        Map<Player, Integer> f2Powers = f2Ctx.getPowers();
+
+        int[] powers = funtureConnectionSumPower(f2Powers, null);
+        int myPower = powers[0];
+        int bestEnemy = powers[1];
+
+        if (f1Powers.size() == 0) {
+            if (bestEnemy > myPower) {
+                return 0.2;
+            } else if (myPower > 0) {
+                return -2.5;
+            }
+        } else {
+            if (bestEnemy > myPower) {
+                return -0.1;
+            } else if (myPower > 0) {
+                return -0.5;
+            } else {
+                return -0.5;
+            }
+        }
+        return 0;
+    }
+
+
+    private double futureConnectionRateFeatures(Location toEmpty, Location toFeature, double chance, Feature f1, Feature f2) {
+        ScoreContext f1Ctx = futureConnectionCreateScoreContext(f1);
+        ScoreContext f2Ctx = futureConnectionCreateScoreContext(f2);
+        Map<Player, Integer> f1Powers = f1Ctx.getPowers();
+        Map<Player, Integer> f2Powers = f2Ctx.getPowers();
+
+        if (f1Powers.size() == 0) {
+            return 0;
+        }
+
+        if (f1Powers.size() == 1 && f2Powers.size() == 1 && f1Powers.containsKey(getPlayer()) && f2Powers.containsKey(getPlayer())) {
+//            System.err.println("   !self merge");
+//            System.err.println(f1Powers + " // " + f2Powers);
+            return -SELF_MERGE_PENALTY;
+        }
+
+        double myPoints = futureConnectionGetFeaturePoints(f1, f1Ctx);
+        double enemyPoints = futureConnectionGetFeaturePoints(f2, f2Ctx);
+
+        if (enemyPoints < (toEmpty == toFeature ? 7.0 : 5.0)) {
+//            System.err.println("too small penalty: " + enemyPoints);
+            return  -0.05; //small penalty
+        }
+
+        int[] powers = funtureConnectionSumPower(f1Powers, f2Powers);
+        int myPower = powers[0];
+        int bestEnemy = powers[1];
+
+        double coef = toEmpty != toFeature ? 0.7 : 0.4; //corner / straight connection
+
+//        System.err.println("@@@ @@@ " + myPower + "/" + myPoints + " vs " + bestEnemy + "/" + enemyPoints);
+
+        if (myPower == bestEnemy) {
+            return coef * (enemyPoints - myPoints) * chance;
+        }
+        if (myPower > bestEnemy) {
+            return coef * enemyPoints * chance;
+
+        }
+        return -myPoints * chance; //no coef here
+
+    }
+
+    private int[] funtureConnectionSumPower(Map<Player, Integer> f1Powers, Map<Player, Integer> f2Powers) {
+        Map<Player, Integer> sum = new HashMap<Player, Integer>(f1Powers);
+        if (f2Powers != null) {
+            for (Entry<Player, Integer> epower : f2Powers.entrySet()) {
+                Integer val = sum.get(epower.getKey());
+                sum.put(epower.getKey(), val == null ? epower.getValue() : val + epower.getValue());
+            }
+        }
+        int myPower = 0;
+        int bestEnemy = 0;
+        for (Entry<Player, Integer> esum : sum.entrySet()) {
+            int value = esum.getValue();
+            if (esum.getKey().equals(getPlayer())) {
+                myPower = value;
+            } else {
+                if (value > bestEnemy) bestEnemy = value;
+            }
+        }
+        return new int[] { myPower, bestEnemy };
+    }
 
     private double rankPossibleFeatureConnections() {
-        //FreePlaceInfo[] fpi = board.getFreeNei();
         double rank = 0;
 
-//		for (Entry<Position, OpenEdge> entry : ctx.getOpenEdgesChanceToClose().entrySet()) {
-//			OpenEdge edge = entry.getValue();
-//			if (edge.chanceToClose < MIN_CHANCE) continue;
-//
-//			Position pos = entry.getKey();
-//			rank += rankFeatureConnectionsOn(pos, edge, edge.location.rotateCW(Rotation.R90), true);
-//			rank += rankFeatureConnectionsOn(pos, edge, edge.location.rotateCCW(Rotation.R90), true);
-//			rank += rankFeatureConnectionsOn(pos, edge, edge.location, false);
-//		}
+        Tile tile = getGame().getCurrentTile();
+        Position placement = tile.getPosition();
+        assert placement != null;
 
-        /// vvvvvvvvvvvv OLD vvvvvvvvvvvvvvvvvv
+        for (Entry<Location, Position> eplace : Position.ADJACENT.entrySet()) {
+            Position pos = placement.add(eplace.getValue());
+            if (getBoard().get(pos) != null) continue;
 
-//		for (Location loc : Location side) {
-//
-//		}
+            double chance = chanceToPlaceTile(pos);
+            if (chance < MIN_CHANCE) continue;
 
-        //----- TODO difference 1.6
-//		for (Direction d : Direction.sides()) {
-//			FreePlaceInfo i = fpi[d.index()];
-//			if (i == null) continue;
-//
-//			double chance = countChance(i.suitableCards);
-//			if (chance < MIN_CHANCE) {
-//				continue;
-//			}
-//
-//			for (int type = 0; type < 2; type++) {
-//				MultiTileFeature placedSO = i.so[type][d.rev().index()];
-//				if (placedSO == null) continue;
-//
-//				int balance = placedSO.getFigureBalance(me);
-//				MultiTileFeature comparedSO;
-//				//SO next to placed
-//				comparedSO = i.so[type][d.prev().index()];
-//				rating += connectionRating(placedSO, balance, comparedSO, PLACED_NEXT,i);
-//				//second SO next to placed
-//				comparedSO = i.so[type][d.next().index()];
-//				rating += connectionRating(placedSO, balance, comparedSO, PLACED_NEXT,i);
-//				//oppostite SO
-//				comparedSO = i.so[type][d.index()];
-//				rating += connectionRating(placedSO, balance, comparedSO, PLACED_OPPOSITE,i);
-//			}
-//		}
+            for (Entry<Location, Position> econn : Position.ADJACENT.entrySet()) {
+                Position conn = pos.add(econn.getValue());
+                if (conn.equals(placement)) continue;
+                Tile connTile = getBoard().get(conn);
+                if (connTile == null) continue;
+
+                rank += futureConnectionRateConnection(eplace.getKey(), econn.getKey(), conn, chance);
+            }
+        }
         return rank;
     }
 

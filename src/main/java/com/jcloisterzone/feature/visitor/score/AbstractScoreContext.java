@@ -108,5 +108,9 @@ public abstract class AbstractScoreContext extends SelfReturningVisitor implemen
         return Iterables.<Meeple>concat(followers, specialMeeples);
     }
 
+    public Map<Player, Integer> getPowers() {
+        return power;
+    }
+
 }
 

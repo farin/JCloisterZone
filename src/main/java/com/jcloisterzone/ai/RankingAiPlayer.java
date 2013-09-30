@@ -1,11 +1,15 @@
 package com.jcloisterzone.ai;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.xml.transform.TransformerException;
 
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
@@ -17,7 +21,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
@@ -112,6 +115,19 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     protected void selectTilePlacement(TilePlacementAction action) {
+        String autosave = game.getConfig().get("debug", "save_before_ranking");
+        if (autosave != null && autosave.length() > 0) {
+            Snapshot snapshot = new Snapshot(game, 0);
+            if ("plain".equals(game.getConfig().get("debug", "save_format"))) {
+                snapshot.setGzipOutput(false);
+            }
+            try {
+                snapshot.save(new File(autosave));
+            } catch (Exception e) {
+                logger.error("Auto save before ranking failed.", e);
+            }
+        }
+
         Map<Position, Set<Rotation>> placements = action.getAvailablePlacements();
         rankTilePlacement(placements);
         getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());

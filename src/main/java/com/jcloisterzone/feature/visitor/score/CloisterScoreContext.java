@@ -2,8 +2,10 @@ package com.jcloisterzone.feature.visitor.score;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.primitives.Ints;
@@ -80,6 +82,24 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
             }
         }
         return owners;
+    }
+
+    public Map<Player, Integer> getPowers() {
+        int size = cloister.getMeeples().size();
+        if (size == 0) return Collections.emptyMap();
+        if (size == 1) {
+            Follower m = (Follower) cloister.getMeeples().iterator().next();
+            return Collections.singletonMap(m.getPlayer(), m.getPower());
+        }
+        //rare cases
+        Map<Player, Integer> result = new HashMap<Player, Integer>();
+        for (Meeple m : cloister.getMeeples()) {
+            Follower follower = (Follower) m;
+            Integer val = result.get(follower.getPlayer());
+            result.put(follower.getPlayer(), val == null ? follower.getPower() : val + follower.getPower());
+        }
+        return result;
+
     }
 
     @SuppressWarnings("unchecked")

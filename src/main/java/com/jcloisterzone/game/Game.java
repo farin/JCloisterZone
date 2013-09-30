@@ -25,6 +25,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.event.EventMulticaster;
+import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
@@ -65,7 +66,7 @@ public class Game extends GameSettings {
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
-    private GameEventListener eventListener;
+    private GameEventListener eventListener = new GameEventAdapter();
     private UserInterface userInterface;
 
     private List<Capability> capabilities = new ArrayList<>();
