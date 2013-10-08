@@ -34,24 +34,28 @@ public class EscapePhase extends Phase {
         }
     }
 
+    @Override
+    public void pass() {
+        next();
+    }
+
     private class FindNearbyCloister implements FeatureVisitor<Boolean> {
 
-        private boolean isBesieged, cloisterNearby;
+        private boolean result;
 
 
         public Boolean getResult() {
-            return isBesieged && cloisterNearby;
+            return result;
         }
 
         @Override
         public boolean visit(Feature feature) {
             City city = (City) feature;
             if (city.isBesieged()) { //cloister must border Cathar tile
-                isBesieged = true;
                 Position p = city.getTile().getPosition();
                 for (Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
                     if (tile.hasCloister()) {
-                        cloisterNearby = true;
+                        result = true;
                         return false; //do not continue, besieged cloister exists
                     }
                 }

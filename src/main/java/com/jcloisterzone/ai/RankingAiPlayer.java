@@ -22,6 +22,7 @@ import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.action.TowerPieceAction;
+import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.ai.PositionRanking.SelectedAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -33,6 +34,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.ActionPhase;
+import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
@@ -70,7 +72,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     /* TODP COPIED FROM CLIENT STUB */
     private void phaseLoop() {
         Phase phase = getGame().getPhase();
-        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, TowerCapturePhase.class);
+        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
         while (!phase.isEntered()) {
             if (!Iterables.contains(allowed, phase.getClass())) {
                 break;
@@ -361,6 +363,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 if (firstAction instanceof AbbeyPlacementAction) {
                     selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
                     return;
+                }
+                if (firstAction instanceof UndeployAction ) {
+                    //hack, ai never use escape, TODO
+                    if (firstAction.getName().equals("escape")) {
+                        getServer().pass();
+                    }
                 }
             }
 
