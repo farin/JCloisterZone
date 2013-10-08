@@ -197,6 +197,7 @@ public final class TowerCapability extends Capability {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
+                game.fireGameEvent().undeployed(meeple);
                 meeple.clearDeployment();
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;

@@ -379,4 +379,9 @@ public class Game extends GameSettings {
             cap.loadTileFromSnapshot(tile, tileNode);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Game in " + phase.getClass().getSimpleName() + " phase.";
+    }
 }

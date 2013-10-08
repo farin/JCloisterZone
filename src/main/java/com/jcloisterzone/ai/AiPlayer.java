@@ -76,13 +76,12 @@ public abstract class AiPlayer implements UserInterface {
     }
 
     protected boolean isMe(Player p) {
-        //nestaci porovnavat ref ?
-        return p.getIndex() == player.getIndex();
+        return player.equals(p);
     }
 
     public boolean isAiPlayerActive() {
         if (server == null) return false;
-        return game.getActivePlayer() == player;
+        return player.equals(game.getActivePlayer());
     }
 
     @Override

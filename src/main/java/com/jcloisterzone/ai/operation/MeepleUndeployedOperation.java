@@ -14,17 +14,19 @@ public class MeepleUndeployedOperation implements Operation {
 
     public MeepleUndeployedOperation(Meeple meeple) {
         this.meeple = meeple;
-        this.tile = meeple.getFeature().getTile();
+        this.tile = meeple.getFeature() == null ? null : meeple.getFeature().getTile(); //prison undeploy
         this.loc = meeple.getLocation();
     }
 
     @Override
     public void undo(Game game) {
-        Feature feature = meeple.getPieceForDeploy(tile, loc);
-        feature.addMeeple(meeple);
-        meeple.setPosition(tile.getPosition());
         meeple.setLocation(loc);
-        meeple.setFeature(feature);
+        if (tile != null) {
+            Feature feature = meeple.getPieceForDeploy(tile, loc);
+            feature.addMeeple(meeple);
+            meeple.setPosition(tile.getPosition());
+            meeple.setFeature(feature);
+        }
     }
 
 }

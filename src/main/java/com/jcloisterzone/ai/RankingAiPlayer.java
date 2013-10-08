@@ -1,34 +1,41 @@
 package com.jcloisterzone.ai;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.xml.transform.TransformerException;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.SelectFollowerAction;
+import com.jcloisterzone.action.SelectTileAction;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.action.TowerPieceAction;
+import com.jcloisterzone.ai.PositionRanking.SelectedAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.game.phase.TowerCapturePhase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
 
@@ -40,24 +47,38 @@ public abstract class RankingAiPlayer extends AiPlayer {
     private Game original;
     private SavePointManager spm;
 
-    private Map<Feature, AiScoreContext> scoreCache = new HashMap<>();
+    private UserInterface defaultInteractionHandler;
+    private UserInterface interactionHandler;
+
+    //private Map<Feature, AiScoreContext> scoreCache = new HashMap<>();
     private PositionRanking bestSoFar;
     //private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
-    public Map<Feature, AiScoreContext> getScoreCache() {
-        return scoreCache;
+//    public Map<Feature, AiScoreContext> getScoreCache() {
+//        return scoreCache;
+//    }
+
+    public RankingAiPlayer() {
+        defaultInteractionHandler = createDefaultInteractionHandler();
+        interactionHandler = defaultInteractionHandler;
     }
 
-    /* TEMPORARY COPIED FROM CLIENT STUB */
-    @Deprecated
+    protected UserInterface createDefaultInteractionHandler() {
+        return new DefaultInteraction();
+    }
+
+    /* TODP COPIED FROM CLIENT STUB */
     private void phaseLoop() {
         Phase phase = getGame().getPhase();
+        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, TowerCapturePhase.class);
         while (!phase.isEntered()) {
+            if (!Iterables.contains(allowed, phase.getClass())) {
+                break;
+            }
             //logger.info("  * not entered {} -> {}", phase, phase.getDefaultNext());
             phase.setEntered(true);
             phase.enter();
-            //phase = getGame().getPhase();
-            break; //now only transition Tile -> Action phase
+            phase = getGame().getPhase();
         }
     }
 
@@ -77,28 +98,34 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
 
-    private void backupGame() {
+    protected void backupGame() {
         assert original == null;
         original = getGame();
         Game copy = deepGameCopy(original);
         setGame(copy);
+        interactionHandler = new RankingInteractionHanlder();
 
         spm = new SavePointManager(copy);
         bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
         spm.startRecording();
     }
 
-    private void restoreGame() {
+    protected void restoreGame() {
         assert original != null;
         spm.stopRecording();
         spm = null;
         setGame(original);
         original = null;
+        interactionHandler = defaultInteractionHandler;
     }
 
-    private boolean isRankingInProcess() {
-        return original != null;
-    }
+//    private boolean isRankingInProcess() {
+//        return original != null;
+//    }
+
+//    public PositionRanking getBestSoFar() {
+//        return bestSoFar;
+//    }
 
 
     protected void selectAbbeyPlacement(AbbeyPlacementAction action) {
@@ -165,7 +192,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         logger.info("Rank {} > {}", getGame().getCurrentTile() == null ? "Abbey" : getGame().getCurrentTile().getId(), bestSoFar);
     }
 
-    public void rankAction(List<PlayerAction> actions) {
+    protected void rankAction(List<PlayerAction> actions) {
         Tile currTile = getGame().getCurrentTile();
         Position pos = currTile.getPosition();
         for (PlayerAction action : actions) {
@@ -183,6 +210,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
             if (action instanceof FairyAction) {
                 rankFairyPlacement(currTile, (FairyAction) action);
             }
+            if (action instanceof TowerPieceAction) {
+                rankTowerPiecePlacement(currTile, (TowerPieceAction) action);
+            }
         }
     }
 
@@ -193,11 +223,48 @@ public abstract class RankingAiPlayer extends AiPlayer {
             double currRank = rank();
             if (currRank > bestSoFar.getRank()) {
                 bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
-                bestSoFar.setAction(action);
-                bestSoFar.setActionPosition(pos);
+                bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, null));
             }
             spm.restore(sp);
         }
+    }
+
+    protected void rankTowerPiecePlacementOnTile(final Tile currTile, final TowerPieceAction towerPieceAction, final Position towerPiecePos) {
+        this.interactionHandler = new NotSupportedInteraction() {
+            public void selectAction(List<PlayerAction> actions, boolean canPass) {
+                phaseLoop();
+                SavePoint sp = spm.save();
+                TakePrisonerAction prisonerAction = (TakePrisonerAction) actions.get(0);
+                for (Entry<Position, Set<Location>> entry : prisonerAction.getLocationsMap().entrySet()) {
+                    Position pos = entry.getKey();
+                    for (Location loc : entry.getValue()) {
+                        for (Meeple m : getBoard().get(pos).getFeature(loc).getMeeples()) {
+                            getGame().getPhase().takePrisoner(pos, loc, m.getClass(), m.getPlayer().getIndex());
+                            double currRank = rank();
+                            if (currRank > bestSoFar.getRank()) {
+                                bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
+                                Deque<SelectedAction> sa = bestSoFar.getSelectedActions();
+                                sa.add(new SelectedAction(towerPieceAction, towerPiecePos, null));
+                                sa.add(new SelectedAction(prisonerAction, pos, loc, m.getClass(), m.getPlayer()));
+                            }
+                            spm.restore(sp);
+                        }
+                    }
+                }
+            };
+        };
+        getGame().getPhase().placeTowerPiece(towerPiecePos);
+    }
+
+    protected void rankTowerPiecePlacement(Tile currTile,TowerPieceAction action) {
+        UserInterface interactionHandlerBackup = this.interactionHandler;
+        SavePoint sp = spm.save();
+        for (Position pos: action.getSites()) {
+            rankTowerPiecePlacementOnTile(currTile, action, pos);
+            spm.restore(sp);
+        }
+
+        this.interactionHandler = interactionHandlerBackup;
     }
 
     protected void rankMeeplePlacement(Tile currTile, PlayerAction action, Class<? extends Meeple> meepleType, Position pos, Set<Location> locations) {
@@ -211,15 +278,13 @@ public abstract class RankingAiPlayer extends AiPlayer {
             double currRank = rank();
             if (currRank > bestSoFar.getRank()) {
                 bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
-                bestSoFar.setAction(action);
-                bestSoFar.setActionPosition(pos);
-                bestSoFar.setActionLocation(loc);
+                bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, loc));
             }
             spm.restore(sp);
         }
     }
 
-    private void rankPass() {
+    public void rankPass() {
         SavePoint sp = spm.save();
         getGame().getPhase().pass();
         double currRank = rank();
@@ -229,87 +294,39 @@ public abstract class RankingAiPlayer extends AiPlayer {
         spm.restore(sp);
     }
 
-    private void cleanRanking() {
+    public void cleanRanking() {
         bestSoFar = null;
-        scoreCache.clear();
+        //scoreCache.clear();
     }
-
-
 
     @Override
     public void selectAction(List<PlayerAction> actions, boolean canPass) {
-        PlayerAction firstAction = actions.get(0);
-
-        if (firstAction instanceof TilePlacementAction) {
-            selectTilePlacement((TilePlacementAction) firstAction);
-            return;
-        }
-        if (firstAction instanceof AbbeyPlacementAction) {
-            selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
-            return;
-        }
-
-        if (isRankingInProcess()) {
-            rankAction(actions);
-            return;
-        }
-
-        if (bestSoFar == null) { //loaded game or wagon phase
-            backupGame();
-            if (canPass) rankPass();
-            rankAction(actions);
-            restoreGame();
-        }
-
-        if (bestSoFar != null) {
-            if (bestSoFar.getAction() instanceof MeepleAction) {
-                MeepleAction action = (MeepleAction) bestSoFar.getAction();
-                action.perform(getServer(), bestSoFar.getActionPosition(), bestSoFar.getActionLocation());
-                cleanRanking();
-                return;
-            }
-            if (bestSoFar.getAction() instanceof BarnAction) {
-                BarnAction action = (BarnAction) bestSoFar.getAction();
-                action.perform(getServer(), bestSoFar.getActionPosition(), bestSoFar.getActionLocation());
-                cleanRanking();
-                return;
-            }
-            if (bestSoFar.getAction() instanceof FairyAction) {
-                FairyAction action = (FairyAction) bestSoFar.getAction();
-                action.perform(getServer(), bestSoFar.getActionPosition());
-                cleanRanking();
-                return;
-            }
-        }
-        getServer().pass();
-        cleanRanking();
+        interactionHandler.selectAction(actions, canPass);
     }
-
-
 
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
-        throw new UnsupportedOperationException();
+        interactionHandler.selectDragonMove(positions, movesLeft);
     }
 
     @Override
     public void selectBazaarTile() {
-        throw new UnsupportedOperationException();
+        interactionHandler.selectBazaarTile();
     }
 
     @Override
     public void makeBazaarBid(int supplyIndex) {
-        throw new UnsupportedOperationException();
+        interactionHandler.makeBazaarBid(supplyIndex);
     }
 
     @Override
     public void selectBuyOrSellBazaarOffer(int supplyIndex) {
-        throw new UnsupportedOperationException();
+        interactionHandler.selectBuyOrSellBazaarOffer(supplyIndex);
     }
 
     @Override
     public void selectCornCircleOption() {
-        throw new UnsupportedOperationException();
+        interactionHandler.selectCornCircleOption();
     }
 
     abstract protected double rank();
@@ -320,6 +337,65 @@ public abstract class RankingAiPlayer extends AiPlayer {
         cleanRanking();
         if (original != null) {
             restoreGame();
+        }
+    }
+
+    class RankingInteractionHanlder extends NotSupportedInteraction {
+        @Override
+        public void selectAction(List<PlayerAction> actions, boolean canPass) {
+            rankAction(actions);
+        }
+    }
+
+    class DefaultInteraction extends NotSupportedInteraction {
+
+        @Override
+        public void selectAction(List<PlayerAction> actions, boolean canPass) {
+            if (actions.size() > 0) {
+                PlayerAction firstAction = actions.get(0);
+
+                if (firstAction instanceof TilePlacementAction) {
+                    selectTilePlacement((TilePlacementAction) firstAction);
+                    return;
+                }
+                if (firstAction instanceof AbbeyPlacementAction) {
+                    selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
+                    return;
+                }
+            }
+
+            if (bestSoFar == null) { //loaded game or wagon phase
+                backupGame();
+                if (canPass) rankPass();
+                rankAction(actions);
+                restoreGame();
+            }
+
+            Deque<SelectedAction> selected = bestSoFar.getSelectedActions();
+            SelectedAction sa = selected.pollFirst();
+            if (sa != null) {
+                if (sa.action instanceof MeepleAction) {
+                    MeepleAction action = (MeepleAction) sa.action;
+                    action.perform(getServer(), sa.position, sa.location);
+                } else if (sa.action instanceof BarnAction) {
+                    BarnAction action = (BarnAction) sa.action;
+                    action.perform(getServer(), sa.position, sa.location);
+                } else if (sa.action instanceof SelectTileAction) {
+                    SelectTileAction action = (SelectTileAction) sa.action;
+                    action.perform(getServer(), sa.position);
+                } else if (sa.action instanceof SelectFollowerAction) {
+                    SelectFollowerAction action = (SelectFollowerAction) sa.action;
+                    action.perform(getServer(), sa.position, sa.location, sa.meepleType, sa.meepleOwner);
+                } else {
+                    throw new UnsupportedOperationException("Unhandled action type " + sa.action.getName()); //should never happen
+                }
+            } else {
+                getServer().pass();
+            }
+
+            if (selected.isEmpty()) {
+                cleanRanking();
+            }
         }
     }
 

@@ -120,8 +120,10 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     public void meepleUndeployed(Meeple m) {
-        images.remove(m);
-        rearrangeMeeples(m.getFeature());
+        if (m.getFeature() != null) {
+            images.remove(m);
+            rearrangeMeeples(m.getFeature());
+        }
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {

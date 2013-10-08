@@ -122,4 +122,13 @@ public abstract class Meeple extends Figure {
         return true;
     }
 
+    @Override
+    public String toString() {
+        if (location == Location.PRISON) {
+            return getClass().getSimpleName() + location.toString();
+        } else {
+            return super.toString();
+        }
+    }
+
 }

@@ -66,7 +66,7 @@ public enum Expansion {
     CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
     TUNNEL("TU", _("The Tunnel"), new Class[] { TunnelCapability.class }),
     CORN_CIRCLES("CC", _("The Corn Circles"), new Class[] { CornCircleCapability.class }),
-    PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { PlagueCapability.class }),
+    PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { /*PlagueCapability.class*/ }),
     PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
     HOUSES("LB", _("Little Buildings"), false),

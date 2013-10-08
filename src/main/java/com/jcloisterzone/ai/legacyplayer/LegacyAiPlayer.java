@@ -3,6 +3,7 @@ package com.jcloisterzone.ai.legacyplayer;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,6 +28,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
+import com.jcloisterzone.feature.visitor.score.AbstractScoreContext;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
@@ -43,6 +45,7 @@ import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.phase.ScorePhase;
 
 public class LegacyAiPlayer extends RankingAiPlayer {
@@ -72,6 +75,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.INNS_AND_CATHEDRALS,
             Expansion.TRADERS_AND_BUILDERS,
             Expansion.PRINCESS_AND_DRAGON,
+            Expansion.TOWER,
             Expansion.KING_AND_SCOUT,
             Expansion.RIVER,
             Expansion.RIVER_II,
@@ -111,7 +115,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         ranking += rankConvexity();
         ranking += rankFairy();
 
-        // --- dbg print --
+//        // --- dbg print --
 //        Tile tile = getGame().getCurrentTile();
 //        Feature meeplePlacement = Iterables.find(tile.getFeatures(), new Predicate<Feature>() {
 //            @Override
@@ -127,7 +131,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //                meeplePlacement == null ? "" : meeplePlacement.getLocation(),
 //                ranking, meepleRating(), pointRating(), openObjectRating(),
 //                rankPossibleFeatureConnections(), rankConvexity(), rankFairy()));
-        // --- end of debug print
+//        // --- end of debug print
 
         //objectRatings.clear();
 
@@ -175,6 +179,36 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
         private double rank = 0;
 
+        private Set<Position> towerDanger = new HashSet<>();
+
+        public LegacyAiScoreAllCallback() {
+            TowerCapability towerCap = game.getCapability(TowerCapability.class);
+            if (towerCap != null) {
+                for (Position towerPos : towerCap.getTowers()) {
+                    int dangerDistance = 1 + game.getBoard().get(towerPos).getTower().getHeight();
+                    towerDanger.add(towerPos);
+                    for (int i = 1; i < dangerDistance; i++) {
+                        towerDanger.add(towerPos.add(new Position(i, 0)));
+                        towerDanger.add(towerPos.add(new Position(-i, 0)));
+                        towerDanger.add(towerPos.add(new Position(0, i)));
+                        towerDanger.add(towerPos.add(new Position(0, -i)));
+                    }
+                }
+            }
+        }
+
+        private boolean isInTowerDanger(ScoreContext ctx) {
+            //not exact but it is easy heuristic at now
+            if (!towerDanger.isEmpty()) {
+                for (Follower f : ctx.getFollowers()) {
+                    if (towerDanger.contains(f.getPosition())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         @Override
         public void scoreCastle(Meeple meeple, Castle castle) {
             throw new UnsupportedOperationException();
@@ -187,7 +221,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //			if (ctx != null && ctx.isValid()) {
 //				return (CompletableScoreContext) ctx;
 //			}
-            return new LegacyAiScoreContext(LegacyAiPlayer.this, completable.getScoreContext(), getScoreCache());
+            return new LegacyAiScoreContext(LegacyAiPlayer.this, completable.getScoreContext()/*, getScoreCache()*/);
         }
 
         @Override
@@ -197,11 +231,12 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //			if (ctx != null && ctx.isValid()) {
 //				return (FarmScoreContext) ctx;
 //			}
-            return new LegacyAiFarmScoreContext(game, getScoreCache());
+            return new LegacyAiFarmScoreContext(game/*, getScoreCache()*/);
         }
 
         @Override
         public void scoreFarm(FarmScoreContext ctx, Player player) {
+            if (isInTowerDanger(ctx)) return;
             double points = getFarmPoints((Farm) ctx.getMasterFeature(), player, ctx);
             rank += reducePoints(points, player);
         }
@@ -214,6 +249,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
         @Override
         public void scoreCompletableFeature(CompletableScoreContext ctx) {
+            if (isInTowerDanger(ctx)) return;
             rank += rankUnfishedCompletable(ctx.getMasterFeature(), (LegacyAiScoreContext) ctx);
             rank += rankTrappedMeeples((LegacyAiScoreContext) ctx);
             rank += rankSpecialFigures((LegacyAiScoreContext) ctx);

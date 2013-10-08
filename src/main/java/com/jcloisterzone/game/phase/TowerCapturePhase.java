@@ -49,6 +49,7 @@ public class TowerCapturePhase extends Phase {
                 //opponent has my prisoner - figure exchage
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type
                 towerCap.getPrisoners().get(m.getPlayer()).remove(exchanged);
+                game.fireGameEvent().undeployed(exchanged);
                 exchanged.clearDeployment();
                 //? some events ?
             }

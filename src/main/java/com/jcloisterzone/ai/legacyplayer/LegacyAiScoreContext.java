@@ -34,16 +34,16 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 
     private final LegacyAiPlayer aiPlayer;
     private final CompletableScoreContext ctx;
-    private final Map<Feature, AiScoreContext> scoreCache;
+    //private final Map<Feature, AiScoreContext> scoreCache;
     private boolean valid = true;
 
     private Map<Position, OpenEdge> openEdgesChanceToClose = new HashMap<>();
     private double chanceToClose = 1.0;
 
-    public LegacyAiScoreContext(LegacyAiPlayer aiPlayer, CompletableScoreContext ctx, Map<Feature, AiScoreContext> scoreCache) {
+    public LegacyAiScoreContext(LegacyAiPlayer aiPlayer, CompletableScoreContext ctx/*, Map<Feature, AiScoreContext> scoreCache*/) {
         this.aiPlayer = aiPlayer;
         this.ctx = ctx;
-        this.scoreCache = scoreCache;
+        //this.scoreCache = scoreCache;
     }
 
     @Override
@@ -103,7 +103,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 
     @Override
     public boolean visit(Feature feature) {
-        scoreCache.put(feature, this);
+        //scoreCache.put(feature, this);
 
         if (feature instanceof CompletableFeature) {
             chanceToClose *= updateCompletableChanceToClose((CompletableFeature) feature);

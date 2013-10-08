@@ -1,93 +1,108 @@
 package com.jcloisterzone.ai;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.figure.Meeple;
 
 public class PositionRanking {
 
-	private double rank;
+    public static class SelectedAction {
 
-	private Position position;
-	private Rotation rotation;
+        public SelectedAction(PlayerAction action) {
+            this(action, null, null, null, null);
+        }
 
-	private PlayerAction action;
-	private Position actionPosition;
-	private Location actionLocation;
+        public SelectedAction(PlayerAction action, Position position, Location location) {
+            this(action, position, location, null, null);
+        }
 
-	public PositionRanking(double rank) {
-		this.rank = rank;
-	}
+        public SelectedAction(PlayerAction action, Position actionPosition, Location actionLocation, Class<? extends Meeple> meepleType, Player meepleOwner) {
+            this.action = action;
+            this.position = actionPosition;
+            this.location = actionLocation;
+            this.meepleType = meepleType;
+            this.meepleOwner = meepleOwner;
+        }
 
-	public PositionRanking(double rank, Position position, Rotation rotation) {
-		this.rank = rank;
-		this.position = position;
-		this.rotation = rotation;
-	}
+        public PlayerAction action;
+        public Position position;
+        public Location location;
+        public Class<? extends Meeple> meepleType;
+        public Player meepleOwner;
+    }
 
-	public double getRank() {
-		return rank;
-	}
+    private double rank;
 
-	public void setRank(double rank) {
-		this.rank = rank;
-	}
+    private Position position;
+    private Rotation rotation;
 
-	public Position getPosition() {
-		return position;
-	}
+    private Deque<SelectedAction> selectedActions = new LinkedList<>();
 
-	public void setPosition(Position position) {
-		this.position = position;
-	}
 
-	public Rotation getRotation() {
-		return rotation;
-	}
+    public PositionRanking(double rank) {
+        this.rank = rank;
+    }
 
-	public void setRotation(Rotation rotation) {
-		this.rotation = rotation;
-	}
+    public PositionRanking(double rank, Position position, Rotation rotation) {
+        this.rank = rank;
+        this.position = position;
+        this.rotation = rotation;
+    }
 
-	public PlayerAction getAction() {
-		return action;
-	}
+    public double getRank() {
+        return rank;
+    }
 
-	public void setAction(PlayerAction action) {
-		this.action = action;
-	}
+    public void setRank(double rank) {
+        this.rank = rank;
+    }
 
-	public Position getActionPosition() {
-		return actionPosition;
-	}
+    public Position getPosition() {
+        return position;
+    }
 
-	public void setActionPosition(Position actionPosition) {
-		this.actionPosition = actionPosition;
-	}
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 
-	public Location getActionLocation() {
-		return actionLocation;
-	}
+    public Rotation getRotation() {
+        return rotation;
+    }
 
-	public void setActionLocation(Location actionLocation) {
-		this.actionLocation = actionLocation;
-	}
+    public void setRotation(Rotation rotation) {
+        this.rotation = rotation;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(rank);
-		sb.append(" Pos: ").append(position);
-		sb.append(" Rot: ").append(rotation);
-		if (action instanceof MeepleAction) {
-			sb.append(" Meeple: ").append(((MeepleAction)action).getMeepleType().getSimpleName());
-			sb.append(" APos:").append(actionPosition);
-			sb.append(" ALoc:").append(actionLocation);
-		}
-		return sb.toString();
-	}
+    public Deque<SelectedAction> getSelectedActions() {
+        return selectedActions;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(rank);
+        sb.append(" Pos: ").append(position);
+        sb.append(" Rot: ").append(rotation);
+        for (SelectedAction sa : selectedActions) {
+            if (sa.action instanceof MeepleAction) {
+                sb.append(" Meeple: ").append(((MeepleAction)sa.action).getMeepleType().getSimpleName());
+                sb.append(" APos: ").append(sa.position);
+                sb.append(" ALoc: ").append(sa.location);
+            } else {
+                sb.append(" Action: ").append(sa.action.getName());
+            }
+        }
+        return sb.toString();
+    }
 
 
 
