@@ -130,7 +130,7 @@
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
-                            <minimizeJar>false</minimizeJar>
+                            <minimizeJar>true</minimizeJar>
                             <filters>
                                 <filter>
                                     <artifact>jcloisterzone:jcloisterzone</artifact>
