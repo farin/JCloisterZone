@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -382,8 +383,16 @@ public abstract class RankingAiPlayer extends AiPlayer {
             Deque<SelectedAction> selected = bestSoFar.getSelectedActions();
             SelectedAction sa = selected.pollFirst();
             if (sa != null) {
+                //logger.info("Polling " + sa.action);
                 if (sa.action instanceof MeepleAction) {
                     MeepleAction action = (MeepleAction) sa.action;
+                    //debug, should never happen, but it happens sometimes when Tower game is enabled
+                    try {
+                        getPlayer().getMeepleFromSupply(action.getMeepleType());
+                    } catch (NoSuchElementException e) {
+                        logger.error(e.getMessage(), e);
+                        throw e;
+                    }
                     action.perform(getServer(), sa.position, sa.location);
                 } else if (sa.action instanceof BarnAction) {
                     BarnAction action = (BarnAction) sa.action;

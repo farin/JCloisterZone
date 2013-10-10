@@ -75,7 +75,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.INNS_AND_CATHEDRALS,
             Expansion.TRADERS_AND_BUILDERS,
             Expansion.PRINCESS_AND_DRAGON,
-            Expansion.TOWER,
+            //Expansion.TOWER, //causing error sometimes
             Expansion.KING_AND_SCOUT,
             Expansion.RIVER,
             Expansion.RIVER_II,

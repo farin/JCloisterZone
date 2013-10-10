@@ -1,11 +1,15 @@
 package com.jcloisterzone.figure;
 
+import java.util.List;
+import java.util.Map.Entry;
+
 import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 public abstract class Meeple extends Figure {
 
@@ -60,6 +64,7 @@ public abstract class Meeple extends Figure {
     }
 
     public void deployUnchecked(Tile tile, Location loc, Feature feature) {
+        assert location == null;
         feature.addMeeple(this);
         setPosition(tile.getPosition());
         setLocation(loc);
@@ -71,6 +76,7 @@ public abstract class Meeple extends Figure {
     }
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
+        assert location != null && location != Location.PRISON;
         game.fireGameEvent().undeployed(this);
         feature.removeMeeple(this);
         clearDeployment();
@@ -94,6 +100,18 @@ public abstract class Meeple extends Figure {
     }
 
     public void setLocation(Location location) {
+        // DBG TO DEL
+//        if (location != Location.PRISON) {
+//            TowerCapability tc = game.getCapability(TowerCapability.class);
+//            for (List<Follower> l : tc.getPrisoners().values()) {
+//                for (Follower f : l) {
+//                    if (f == this) {
+//                        System.err.print("IN PRISON");
+//                    }
+//                }
+//            }
+//        }
+
         this.location = location;
     }
 
@@ -125,7 +143,7 @@ public abstract class Meeple extends Figure {
     @Override
     public String toString() {
         if (location == Location.PRISON) {
-            return getClass().getSimpleName() + location.toString();
+            return getClass().getSimpleName() + " " + location.toString();
         } else {
             return super.toString();
         }

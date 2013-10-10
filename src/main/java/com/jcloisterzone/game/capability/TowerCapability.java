@@ -182,6 +182,7 @@ public final class TowerCapability extends Capability {
     }
 
     public void inprison(Meeple m, Player player) {
+        assert m.getLocation() == null;
         prisoners.get(player).add((Follower) m);
         m.setLocation(Location.PRISON);
     }

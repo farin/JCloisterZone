@@ -36,8 +36,9 @@ public class TowerCapturePhase extends Phase {
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
+            List<Follower> prisoners = towerCap.getPrisoners().get(m.getPlayer());
             List<Follower> myCapturedFollowers = new ArrayList<>();
-            for (Follower f : towerCap.getPrisoners().get(m.getPlayer())) {
+            for (Follower f : prisoners) {
                 if (f.getPlayer() == me) {
                     myCapturedFollowers.add(f);
                 }
@@ -47,8 +48,9 @@ public class TowerCapturePhase extends Phase {
                 towerCap.inprison(m, me);
             } else {
                 //opponent has my prisoner - figure exchage
-                Follower exchanged = myCapturedFollowers.get(0); //TODO same type
-                towerCap.getPrisoners().get(m.getPlayer()).remove(exchanged);
+                Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
+                boolean removeOk = prisoners.remove(exchanged);
+                assert removeOk;
                 game.fireGameEvent().undeployed(exchanged);
                 exchanged.clearDeployment();
                 //? some events ?
