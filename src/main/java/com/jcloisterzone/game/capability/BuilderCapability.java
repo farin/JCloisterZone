@@ -49,7 +49,9 @@ public class BuilderCapability extends Capability {
     }
 
     public void useBuilder() {
-        builderState = BuilderState.ACTIVATED;
+        if (builderState == BuilderState.INACTIVE) {
+            builderState = BuilderState.ACTIVATED;
+        }
     }
 
     public boolean hasPlayerAnotherTurn() {
