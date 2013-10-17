@@ -244,7 +244,7 @@ public class ControlPanel extends FakeComponent {
         }
         Arrays.sort(arr);
         actionPanel.setActions(arr);
-        this.canPass = canPass;
+        this.canPass = client.isClientActive() ? canPass : false;
         refreshComponents();
     }
 

@@ -46,17 +46,15 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     }
 
     public void setActions(PlayerAction[] actions) {
-        if (client.isClientActive()) {
-            selected = new Image[actions.length];
-            deselected = new Image[actions.length];
-            refreshImages = true;
-            refreshMouseRegions = true;
-            this.actions = actions;
-            if (actions.length > 0) {
-                setSelectedActionIndex(0);
-            }
-            repaint();
+        selected = new Image[actions.length];
+        deselected = new Image[actions.length];
+        refreshImages = true;
+        refreshMouseRegions = true;
+        this.actions = actions;
+        if (actions.length > 0 && client.isClientActive()) {
+            setSelectedActionIndex(0);
         }
+        repaint();
     }
 
 
@@ -176,7 +174,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
             int size = img.getWidth(null);
             int iy = (LINE_HEIGHT-size) / 2;
 
-            if (refreshMouseRegions) {
+            if (refreshMouseRegions && selectedActionIndex != -1) {
                 getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
             }
             g2.drawImage(img, x, iy+imgOffset, size, size, null);
