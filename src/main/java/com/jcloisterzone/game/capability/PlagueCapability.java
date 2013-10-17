@@ -39,7 +39,7 @@ public class PlagueCapability extends Capability {
 
     @Override
     public String getTileGroup(Tile tile) {
-        return tile.getTrigger() == TileTrigger.PLAGUE ? "plague" : null;
+        return tile.hasTrigger(TileTrigger.PLAGUE) ? "plague" : null;
     }
 
     @Override

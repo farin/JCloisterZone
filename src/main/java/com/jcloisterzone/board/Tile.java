@@ -285,6 +285,10 @@ public class Tile /*implements Cloneable*/ {
         this.trigger = trigger;
     }
 
+    public boolean hasTrigger(TileTrigger trigger) {
+        return trigger == this.trigger;
+    }
+
     public Class<? extends Feature> getCornCircle() {
         return cornCircle;
     }

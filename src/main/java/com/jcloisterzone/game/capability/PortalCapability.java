@@ -28,7 +28,7 @@ public class PortalCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        if (TileTrigger.PORTAL.equals(getTile().getTrigger())) {
+        if (getTile().hasTrigger(TileTrigger.PORTAL)) {
             if (game.getActivePlayer().hasFollower()) {
                 prepareMagicPortal(commonSites);
             }
