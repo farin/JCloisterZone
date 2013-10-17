@@ -7,8 +7,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -77,16 +75,16 @@ public class GuiClientStub extends ClientStub {
         );
     }
 
-    @Override
-    public void exceptionCaught(IoSession session, Throwable cause) {
-        logger.error(cause.getLocalizedMessage(), cause);
-        JOptionPane.showMessageDialog(client,
-            cause.getLocalizedMessage(),
-            _("Connection error"),
-            JOptionPane.ERROR_MESSAGE
-        );
-        //TODO better handling
-    }
+//    @Override
+//    public void exceptionCaught(IoSession session, Throwable cause) {
+//        logger.error(cause.getLocalizedMessage(), cause);
+//        JOptionPane.showMessageDialog(client,
+//            cause.getLocalizedMessage(),
+//            _("Connection error"),
+//            JOptionPane.ERROR_MESSAGE
+//        );
+//        //TODO better handling
+//    }
 
 
 }
