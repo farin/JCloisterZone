@@ -77,7 +77,7 @@ public class TilePackFactory {
     }
 
     private URL getCardsConfig(Expansion expansion) {
-        String fileName = config.get("debug", "cards_"+expansion.name());
+        String fileName = config.get("debug", "tiles_"+expansion.name());
         if (fileName == null) {
             fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
         }
