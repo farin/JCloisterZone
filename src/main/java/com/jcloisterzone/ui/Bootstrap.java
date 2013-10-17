@@ -16,10 +16,18 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
+
+    {
+        //run before first logger is initialized
+        if (!"false".equals(System.getProperty("errorLog"))) {
+            System.setOut(new FileTeeStream(System.out, "error.log"));
+        }
+    }
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
