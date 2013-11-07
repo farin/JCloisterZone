@@ -214,6 +214,7 @@ public class ControlPanel extends FakeComponent {
 
         for (PlayerPanel pp : playerPanels) {
             pp.paintComponent(g2);
+            g2.translate(0, 12);
         }
 
 //		gp.profile("players");

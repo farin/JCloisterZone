@@ -129,6 +129,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         return rect;
     }
 
+    /*
+     * translates parentGraphics, which is not much clean!
+     */
     @Override
     public void paintComponent(Graphics2D parentGraphics) {
         super.paintComponent(parentGraphics);
@@ -208,7 +211,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
 
-
         if (kingScoutCap != null) {
             if (kingScoutCap.getKing() == player) {
                 Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
@@ -282,7 +284,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-        parentGraphics.translate(0, realHeight + 12); //add also padding
+        parentGraphics.translate(0, realHeight); //add also padding
 
         g2 = null;
 
