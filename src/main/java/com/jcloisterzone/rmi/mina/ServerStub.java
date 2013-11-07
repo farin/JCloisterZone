@@ -60,6 +60,9 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         CallMessage msg = new CallMessage(method, args);
         acceptor.broadcast(msg);
+        for (List<CallMessage> queue : undelivered.values()) {
+            queue.add(msg);
+        }
         return null;
     }
 
@@ -123,5 +126,4 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
         logger.info("Session error " + session.getRemoteAddress());
         undelivered.put((Long)session.getAttribute("clientId"), new ArrayList<CallMessage>());
     }
-
 }

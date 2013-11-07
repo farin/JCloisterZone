@@ -180,9 +180,10 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         SocketAddress endpoint = brokenSession.getServiceAddress();
         session = null;
         int delay = 500;
+        logger.warn("Connection lost. Reconnecting to " + endpoint + " ...");
+        onDisconnect();
         while (session == null) {
-            //TODO notify in UI
-            System.err.println("Reconnecting to " + endpoint + " ...");
+
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
@@ -190,7 +191,14 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
             connect(endpoint);
             if (delay < 4000) delay *= 2;
         }
+        onReconnect();
         session.write(new ClientControllMessage(clientId));
+    }
+
+    protected void onDisconnect() {
+    }
+
+    protected void onReconnect() {
     }
 
 }

@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -46,6 +48,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     public static int INITIAL_SQUARE_SIZE = 120;
     private static final int STARTING_GRID_SIZE = 3;
 
+    private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
+    private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
+
+
     final Client client;
     final ControlPanel controlPanel;
 
@@ -61,6 +67,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private MoveCenterAnimation moveAnimation;
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
+    private String errorMessage, hintMessage;
 
     public GridPanel(Client client, Snapshot snapshot) {
         setDoubleBuffered(true);
@@ -274,6 +281,27 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return offsetY;
     }
 
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+
+    public String getHintMessage() {
+        return hintMessage;
+    }
+
+
+    public void setHintMessage(String hintMessage) {
+        this.hintMessage = hintMessage;
+    }
+
+
     public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
         double dx = xSteps * 30.0f / getSquareSize();
@@ -484,14 +512,37 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         controlPanel.paintComponent(g2);
 
+        int innerWidth;
         if (secondPanel != null) {
             g2.translate(-secondPanel.getWidth()-60, 0);
             secondPanel.paintComponent(g2);
+            innerWidth = (int) g2.getTransform().getTranslateX();
+        } else {
+            innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
         }
-
-        //jb.paint(g2);
         g2.setTransform(origTransform);
+        paintMessages(g2, innerWidth);
         super.paintChildren(g);
+    }
+
+    private void paintMessages(Graphics2D g2, int innerWidth) {
+        int y = 0;
+        if (hintMessage != null) {
+            g2.setColor(MESSAGE_HINT);
+            g2.fillRect(0, y, innerWidth, 36);
+            g2.setFont(new Font(null, Font.PLAIN, 16));
+            g2.setColor(Color.WHITE);
+            g2.drawString(hintMessage, 30, y+23);
+            y += 42;
+        }
+        if (errorMessage != null) {
+            g2.setColor(MESSAGE_ERROR);
+            g2.fillRect(0, y, innerWidth, 36);
+            g2.setFont(new Font(null, Font.PLAIN, 16));
+            g2.setColor(Color.WHITE);
+            g2.drawString(errorMessage, 30, y+23);
+            y += 42;
+        }
 
     }
 

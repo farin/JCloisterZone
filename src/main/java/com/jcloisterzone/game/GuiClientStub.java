@@ -75,16 +75,13 @@ public class GuiClientStub extends ClientStub {
         );
     }
 
-//    @Override
-//    public void exceptionCaught(IoSession session, Throwable cause) {
-//        logger.error(cause.getLocalizedMessage(), cause);
-//        JOptionPane.showMessageDialog(client,
-//            cause.getLocalizedMessage(),
-//            _("Connection error"),
-//            JOptionPane.ERROR_MESSAGE
-//        );
-//        //TODO better handling
-//    }
+    @Override
+    protected void onDisconnect() {
+        client.getGridPanel().setErrorMessage("Connection lost. Reconnecting...");
+    }
 
-
+    @Override
+    protected void onReconnect() {
+        client.getGridPanel().setErrorMessage(null);
+    }
 }
