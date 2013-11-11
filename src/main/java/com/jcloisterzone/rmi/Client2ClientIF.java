@@ -45,4 +45,8 @@ public interface Client2ClientIF {
     public void bazaarBuyOrSell(boolean buy);
 
     public void cornCiclesRemoveOrDeploy(boolean remove);
+
+    /* -------------------- CHAT --------------------- */
+
+    public void chatMessage(Integer author, String message);
 }

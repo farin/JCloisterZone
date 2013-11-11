@@ -156,7 +156,7 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
+    public final void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
         //pay ransom is valid any time
         TowerCapability towerCap = game.getCapability(TowerCapability.class);
         if (towerCap == null) {
@@ -225,6 +225,11 @@ public abstract class Phase implements ClientIF {
     @Override
     public void setFlierDistance(int distance) {
         logger.error(Application.ILLEGAL_STATE_MSG, "setFlierDistance");
+    }
+
+    @Override
+    public final void chatMessage(Integer author, String message) {
+        game.getUserInterface().chatMessage(game.getPlayer(author), message);
     }
 
     @Override

@@ -278,6 +278,7 @@ public class Client extends JFrame {
     }
 
     public void cleanContentPane() {
+        //this.requestFocus();
         Container pane = this.getContentPane();
         pane.setVisible(false);
         pane.removeAll();

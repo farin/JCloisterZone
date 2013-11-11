@@ -282,4 +282,9 @@ public class Server extends GameSettings implements ServerIF {
 
     }
 
+    @Override
+    public void chatMessage(Integer author, String message) {
+        stub.chatMessage(author, message);
+    }
+
 }

@@ -69,4 +69,5 @@ public interface GameEventListener extends EventListener {
     void bazaarAuctionsEnded();
 
     void plagueSpread();
+    void chatMessage(Player player, String message);
 }

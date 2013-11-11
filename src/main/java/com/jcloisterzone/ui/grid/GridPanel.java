@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -32,6 +33,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
+import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
@@ -54,6 +56,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     final Client client;
     final ControlPanel controlPanel;
+    final ChatPanel chatPanel;
 
     private FakeComponent secondPanel;
 
@@ -76,6 +79,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         this.client = client;
         this.controlPanel = client.getControlPanel();
+        this.chatPanel = new ChatPanel(client);
 
         squareSize = INITIAL_SQUARE_SIZE;
         left = 0 - STARTING_GRID_SIZE / 2;
@@ -96,6 +100,15 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         registerMouseListeners();
         controlPanel.registerSwingComponents(this);
+        chatPanel.registerSwingComponents(this);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                controlPanel.layoutSwingComponents(GridPanel.this);
+                chatPanel.layoutSwingComponents(GridPanel.this);
+            }
+        });
     }
 
 
@@ -237,6 +250,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return client;
     }
 
+    public ChatPanel getChatPanel() {
+        return chatPanel;
+    }
+
     public FakeComponent getSecondPanel() {
         return secondPanel;
     }
@@ -257,21 +274,21 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return squareSize;
     }
 
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
-    public int getTop() {
-        return top;
-    }
-
-    public int getBottom() {
-        return bottom;
-    }
+//    public int getLeft() {
+//        return left;
+//    }
+//
+//    public int getRight() {
+//        return right;
+//    }
+//
+//    public int getTop() {
+//        return top;
+//    }
+//
+//    public int getBottom() {
+//        return bottom;
+//    }
 
     public int getOffsetX() {
         return offsetX;

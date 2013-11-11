@@ -3,6 +3,7 @@ package com.jcloisterzone.ai;
 import java.util.List;
 import java.util.Set;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
@@ -42,6 +43,11 @@ public class NotSupportedInteraction implements UserInterface {
     @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void chatMessage(Player player, String message) {
+        //empty
     }
 
 }

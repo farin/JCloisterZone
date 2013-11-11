@@ -125,4 +125,8 @@ public class GameEventAdapter implements GameEventListener {
     public void plagueSpread() {
     }
 
+    @Override
+    public void chatMessage(Player player, String message) {
+    }
+
 }

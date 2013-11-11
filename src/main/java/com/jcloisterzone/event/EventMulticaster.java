@@ -253,6 +253,13 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void chatMessage(Player player, String message) {
+        ((GameEventListener)a).chatMessage(player, message);
+        ((GameEventListener)b).chatMessage(player, message);
+
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(a) + "," + String.valueOf(b);
     }
