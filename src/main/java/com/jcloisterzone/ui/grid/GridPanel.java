@@ -538,6 +538,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
         }
         g2.setTransform(origTransform);
+
+        chatPanel.paintComponent(g2);
+
         paintMessages(g2, innerWidth);
         super.paintChildren(g);
     }
