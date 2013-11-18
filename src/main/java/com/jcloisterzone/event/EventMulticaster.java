@@ -174,6 +174,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void chatMessageReceived(Player player, String message) {
+        ((UserInterface)a).chatMessageReceived(player, message);
+        ((UserInterface)b).chatMessageReceived(player, message);
+    }
+
+    @Override
     public void gameOver() {
         ((GameEventListener)a).gameOver();
         ((GameEventListener)b).gameOver();
@@ -252,12 +258,11 @@ public class EventMulticaster implements GameEventListener, UserInterface {
         ((GameEventListener)b).plagueSpread();
     }
 
-    @Override
-    public void chatMessage(Player player, String message) {
-        ((GameEventListener)a).chatMessage(player, message);
-        ((GameEventListener)b).chatMessage(player, message);
-
-    }
+//    @Override
+//    public void chatMessage(Player player, String message) {
+//        ((GameEventListener)a).chatMessage(player, message);
+//        ((GameEventListener)b).chatMessage(player, message);
+//    }
 
     @Override
     public String toString() {

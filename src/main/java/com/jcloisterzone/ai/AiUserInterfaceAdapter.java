@@ -59,7 +59,7 @@ public class AiUserInterfaceAdapter implements UserInterface {
         throw new UnsupportedOperationException();
     }
 
-    public void chatMessage(Player player, String message) {
+    public void chatMessageReceived(Player player, String message) {
     }
 
     @Override

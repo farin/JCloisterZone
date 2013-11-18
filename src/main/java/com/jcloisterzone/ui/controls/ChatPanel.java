@@ -2,19 +2,24 @@ package com.jcloisterzone.ui.controls;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.lang.reflect.Proxy;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.Timer;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.BoxView;
@@ -36,19 +41,30 @@ import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class ChatPanel extends FakeComponent {
+public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     public static final int CHAT_WIDTH = 250;
+    public static final int DISPLAY_MESSAGES_INTERVAL = 5000;
 
     private JComponent parent; //move to FakeComponent? hack to realoyot from inside class
 
-    //private boolean hasFocus = true;
+    private boolean forceFocus;
+    private boolean messageReceivedWhileIconified;
     private JTextField input;
     private JTextPane messagesPane;
     private final Deque<ChatMessage> formattedMessages = new ArrayDeque<>();
+    private final Timer repaintTimer;
 
     public ChatPanel(Client client) {
         super(client);
+        repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                forceFocus = false;
+                parent.repaint();
+                repaintTimer.stop();
+            }
+        });
     }
 
     private void clean() {
@@ -56,12 +72,23 @@ public class ChatPanel extends FakeComponent {
         client.requestFocus();
     }
 
+    /**
+     * More then one client can play from one seat. Find local player, prefer active, than human player, latest is AI.
+     * @return
+     */
     private Player getSendingPlayer() {
         Player result = null, active = client.getGame().getActivePlayer();
         for (Player player : client.getGame().getAllPlayers()) {
             boolean isLocal  = ((ClientStub)Proxy.getInvocationHandler(client.getServer())).isLocalPlayer(player);
             if (isLocal) {
-                if (result == null) result = player;
+                if (result == null) {
+                    result = player;
+                } else {
+                    if (result.getSlot().getAiClassName() != null && player.getSlot().getAiClassName() == null) {
+                        //prefer real user for remote inactive client with more players
+                        result = player;
+                    }
+                }
                 if (player.equals(active)) return player;
             }
         }
@@ -85,6 +112,7 @@ public class ChatPanel extends FakeComponent {
             public void actionPerformed(ActionEvent e) {
                 String msg = input.getText();
                 if (!"".equals(msg)) {
+                    forceFocus = true; //prevent panel flashing
                     client.getServer().chatMessage(getSendingPlayer().getIndex(), msg);
                 }
                 clean();
@@ -98,6 +126,7 @@ public class ChatPanel extends FakeComponent {
 
             @Override
             public void focusGained(FocusEvent e) {
+                messagesPane.setVisible(true);
                 client.getGridPanel().repaint();
             }
         });
@@ -112,23 +141,35 @@ public class ChatPanel extends FakeComponent {
 
         parent.add(input);
         parent.add(messagesPane);
+
+        client.addWindowStateListener(this);
     }
 
     @Override
     public void destroySwingComponents(JComponent parent) {
         parent.remove(input);
+        client.removeWindowStateListener(this);
+    }
+
+    @Override
+    public void windowStateChanged(WindowEvent e) {
+        if (e.getOldState() == JFrame.ICONIFIED && messageReceivedWhileIconified) {
+            setForceFocus();
+            messageReceivedWhileIconified = false;
+        }
     }
 
     @Override
     public void layoutSwingComponents(JComponent parent) {
-        //    input.setBounds(10, 10, 180, 25);
-        //    messagesPane.setBounds(10, 45, 240, parent.getHeight() - 55);
         input.setBounds(10, parent.getHeight() - 35, CHAT_WIDTH-20, 25);
 
         messagesPane.setSize(CHAT_WIDTH-20, Short.MAX_VALUE);
-        //int height = Math.min(messagesPane.getPreferredSize().height, parent.getHeight() - 55);
         int height = messagesPane.getPreferredSize().height;
         messagesPane.setBounds(10, parent.getHeight() - 30 - height, CHAT_WIDTH-20, height);
+    }
+
+    private boolean isFolded() {
+        return !forceFocus && !input.hasFocus();
     }
 
     @Override
@@ -137,11 +178,12 @@ public class ChatPanel extends FakeComponent {
         int h = gp.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
-
-        if (input.hasFocus()) {
-            g2.fillRect(0, 0, CHAT_WIDTH, h);
-        } else {
+        if (isFolded()) {
+            if (messagesPane.isVisible()) messagesPane.setVisible(false);
             g2.fillRect(0, gp.getHeight() - 45, CHAT_WIDTH, 45);
+        } else {
+            if (!messagesPane.isVisible()) messagesPane.setVisible(true);
+            g2.fillRect(0, 0, CHAT_WIDTH, h);
         }
     }
 
@@ -149,9 +191,25 @@ public class ChatPanel extends FakeComponent {
         return input;
     }
 
+    private void setForceFocus() {
+        if (repaintTimer.isRunning()) {
+            repaintTimer.restart();
+        } else {
+            forceFocus = true;
+            parent.repaint();
+            repaintTimer.start();
+        }
+    }
+
     public void displayChatMessage(Player player, String message) {
         ChatMessage fm = new ChatMessage(player, message);
         formattedMessages.addLast(fm);
+
+        if (client.getState() == JFrame.ICONIFIED) {
+            messageReceivedWhileIconified = true;
+        } else {
+            setForceFocus();
+        }
 
         DefaultStyledDocument doc = new DefaultStyledDocument();
         int offset = 0;
@@ -172,13 +230,16 @@ public class ChatPanel extends FakeComponent {
         layoutSwingComponents(parent);
     }
 
+
     static class ChatMessage {
         Player player;
         String message;
+        long time;
 
         public ChatMessage(Player player, String message) {
             this.player = player;
             this.message = message;
+            this.time = System.currentTimeMillis();
         }
     }
 

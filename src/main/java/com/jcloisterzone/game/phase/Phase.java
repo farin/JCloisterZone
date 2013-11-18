@@ -229,7 +229,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public final void chatMessage(Integer author, String message) {
-        game.getUserInterface().chatMessage(game.getPlayer(author), message);
+        game.getUserInterface().chatMessageReceived(game.getPlayer(author), message);
     }
 
     @Override

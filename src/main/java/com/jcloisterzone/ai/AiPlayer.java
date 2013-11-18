@@ -157,7 +157,7 @@ public abstract class AiPlayer implements UserInterface {
     }
 
     @Override
-    public void chatMessage(Player player, String message) {
+    public void chatMessageReceived(Player player, String message) {
     }
 
     @Override
