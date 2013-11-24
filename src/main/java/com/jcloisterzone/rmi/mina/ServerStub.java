@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.rmi.CallMessage;
 import com.jcloisterzone.rmi.ClientControllMessage;
 import com.jcloisterzone.rmi.ControllMessage;
@@ -118,7 +121,11 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
             engageSlots = false;
             server.engageSlots(session.getId());
         }
+    }
 
+    @Override
+    public void sessionClosed(IoSession session) throws Exception {
+        server.sessionClosed(session.getId());
     }
 
     @Override

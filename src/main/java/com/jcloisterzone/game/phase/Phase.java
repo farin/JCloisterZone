@@ -177,7 +177,7 @@ public abstract class Phase implements ClientIF {
     }
     @Override
     public void updateSlot(PlayerSlot slot) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateSlot");
+        game.fireGameEvent().updateSlot(slot);
     }
 
     @Override

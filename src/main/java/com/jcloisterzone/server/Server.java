@@ -20,6 +20,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ClientIF;
@@ -131,6 +132,9 @@ public class Server extends GameSettings implements ServerIF {
             if (slot.getType() == SlotType.OPEN) { //new type
                 slot.setNick(null);
                 slot.setSerial(null);
+                slot.setState(null);
+            } else {
+                slot.setState(SlotState.ACTIVE);
             }
             if (slot.getType() != SlotType.AI) { //new type
                 slot.setAiClassName(null);
@@ -141,6 +145,15 @@ public class Server extends GameSettings implements ServerIF {
         stub.updateSlot(slot);
         //TODO
         stub.updateSupportedExpansions(mergeSupportedExpansions());
+    }
+
+    public void sessionClosed(long clientId) {
+        for (PlayerSlot slot : slots) {
+            if (slot != null && slot.getOwner() == clientId) {
+                slot.setState(SlotState.CLOSED);
+                stub.updateSlot(slot);
+            }
+        }
     }
 
     @Override

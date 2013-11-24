@@ -121,7 +121,9 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         input.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
-                client.getGridPanel().repaint();
+                if (client.getGridPanel() != null) {
+                    client.getGridPanel().repaint();
+                }
             }
 
             @Override

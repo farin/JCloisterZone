@@ -35,6 +35,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -77,7 +78,18 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void updateSlot(PlayerSlot slot) {
-        client.getCreateGamePanel().updateSlot(slot);
+        if (client.getCreateGamePanel() != null) {
+            client.getCreateGamePanel().updateSlot(slot);
+        } else {
+            if (slot.getState() == SlotState.CLOSED) {
+                for (Player p : client.getGame().getAllPlayers()) {
+                    if (p.getSlot().getNumber() == slot.getNumber()) {
+                        p.getSlot().setState(SlotState.CLOSED);
+                        client.getGridPanel().repaint();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -179,8 +191,6 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void gameOver() {
-        client.setTitle(Client.BASE_TITLE);
-        client.resetWindowIcon();
         client.closeGame(true);
         new GameOverDialog(client);
     }

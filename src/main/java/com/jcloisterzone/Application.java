@@ -12,7 +12,7 @@ public interface Application {
     public String VERSION = "dev-snapshot";
     public String BUILD_DATE = "";
 
-    public int PROTCOL_VERSION = 15;
+    public int PROTCOL_VERSION = 16; //2.5
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }

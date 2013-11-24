@@ -78,7 +78,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     @Override
     public void updateSlot(PlayerSlot slot) {
         slots[slot.getNumber()] = slot;
-        game.fireGameEvent().updateSlot(slot);
+        super.updateSlot(slot);
     }
 
     @Override
