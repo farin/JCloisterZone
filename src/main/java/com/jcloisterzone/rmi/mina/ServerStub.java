@@ -91,6 +91,7 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
                 for (CallMessage callMsg : undelivered.remove(msg.getClientId())) {
                     session.write(callMsg);
                 }
+                server.sessionStateChanged(msg.getClientId(), SlotState.ACTIVE);
             }
         } else {
             //TODO check rights (has token)
@@ -125,7 +126,7 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        server.sessionClosed(session.getId());
+        server.sessionStateChanged((Long) session.getAttribute("clientId"), SlotState.CLOSED);
     }
 
     @Override

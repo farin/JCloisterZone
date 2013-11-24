@@ -147,13 +147,14 @@ public class Server extends GameSettings implements ServerIF {
         stub.updateSupportedExpansions(mergeSupportedExpansions());
     }
 
-    public void sessionClosed(long clientId) {
-        for (PlayerSlot slot : slots) {
-            if (slot != null && slot.getOwner() == clientId) {
-                slot.setState(SlotState.CLOSED);
-                stub.updateSlot(slot);
-            }
-        }
+    public void sessionStateChanged(Long clientId, SlotState state) {
+        //temporaty disable
+//        for (PlayerSlot slot : slots) {
+//            if (slot != null && slot.getOwner() == clientId) {
+//                slot.setState(state);
+//                stub.updateSlot(slot);
+//            }
+//        }
     }
 
     @Override
