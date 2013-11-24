@@ -269,15 +269,12 @@ public class Client extends JFrame {
         return createGamePanel;
     }
 
-    public void setCreateGamePanel(CreateGamePanel createGamePanel) {
-        this.createGamePanel = createGamePanel;
-    }
-
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }
 
     public void cleanContentPane() {
+        //this.requestFocus();
         Container pane = this.getContentPane();
         pane.setVisible(false);
         pane.removeAll();
@@ -286,6 +283,7 @@ public class Client extends JFrame {
         this.controlPanel = null;
         if (createGamePanel != null) {
             createGamePanel.disposePanel();
+            createGamePanel = null;
         }
     }
 
@@ -325,9 +323,14 @@ public class Client extends JFrame {
                 if (JOptionPane.OK_OPTION != result) return false;
             }
         }
+
+        setTitle(BASE_TITLE);
+        resetWindowIcon();
         if (localServer != null) {
             localServer.stop();
             localServer = null;
+        } else if (server != null) {
+             getClientStub().stop();
         }
         server = null;
         activePlayer = null;

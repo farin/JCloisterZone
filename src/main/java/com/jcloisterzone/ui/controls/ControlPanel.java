@@ -36,10 +36,8 @@ public class ControlPanel extends FakeComponent {
     public static final Color PANEL_BG_COLOR = new Color(255, 255, 255, 225);
     public static final Color PANEL_BG_COLOR_SHADOW = new Color(255, 255, 255, 158);
 
-
     @Deprecated
     public static final Color FONT_SHADOW_COLOR = new Color(0, 0, 0, 60);
-
     public static final int CORNER_DIAMETER = 16;
     public static final int PANEL_WIDTH = 220;
     public static final int PANEL_SHADOW_WIDTH = 3;
@@ -214,6 +212,7 @@ public class ControlPanel extends FakeComponent {
 
         for (PlayerPanel pp : playerPanels) {
             pp.paintComponent(g2);
+            g2.translate(0, 12);
         }
 
 //		gp.profile("players");
@@ -244,7 +243,7 @@ public class ControlPanel extends FakeComponent {
         }
         Arrays.sort(arr);
         actionPanel.setActions(arr);
-        this.canPass = canPass;
+        this.canPass = client.isClientActive() ? canPass : false;
         refreshComponents();
     }
 

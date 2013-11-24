@@ -68,7 +68,7 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     private boolean isBazaarTriggered() {
-        if (getTile().getTrigger() != TileTrigger.BAZAAR) return false;
+        if (!getTile().hasTrigger(TileTrigger.BAZAAR)) return false;
         if (getTilePack().size() < game.getAllPlayers().length) return false; //there isn't one tile for each player available
         if (bazaarCap.getBazaarSupply() != null) return false;
         return true;

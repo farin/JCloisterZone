@@ -119,7 +119,7 @@ public class Tile /*implements Cloneable*/ {
 
     /** merge this to another tile - method argument is tile placed before */
     protected void merge(Tile tile, Location loc) {
-        if (logger.isDebugEnabled()) logger.debug("Merging " + id + " with " + tile.getId());
+        //if (logger.isDebugEnabled()) logger.debug("Merging " + id + " with " + tile.getId());
         Location oppositeLoc = loc.rev();
         MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
         if (oppositePiece != null) {
@@ -283,6 +283,10 @@ public class Tile /*implements Cloneable*/ {
 
     public void setTrigger(TileTrigger trigger) {
         this.trigger = trigger;
+    }
+
+    public boolean hasTrigger(TileTrigger trigger) {
+        return trigger == this.trigger;
     }
 
     public Class<? extends Feature> getCornCircle() {

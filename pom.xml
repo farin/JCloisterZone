@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
         <dependency>
@@ -110,7 +110,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.5</version>
+                <version>2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -137,9 +137,8 @@
                                     <excludes>
                                         <exclude>config.ini</exclude>
                                         <exclude>debug.ini</exclude>
-                                        <exclude>log4j.debug.properties</exclude>
                                         <exclude>**/.gitignore</exclude>
-                                        <exclude>plugins</exclude>
+                                        <exclude>plugins/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

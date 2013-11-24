@@ -5,22 +5,27 @@ import java.util.Comparator;
 
 public interface GridLayer {
 
-	void paint(Graphics2D g2);
-	int getZIndex();
+    void paint(Graphics2D g2);
 
-	void zoomChanged(int squareSize);
-	//void gridChanged(int left, int right, int top, int bottom);
+    int getZIndex();
 
-	void layerAdded();
-	void layerRemoved();
+    void zoomChanged(int squareSize);
 
-	public static final Comparator<GridLayer> Z_INDEX_COMPARATOR = new Comparator<GridLayer>() {
-		@Override
-		public int compare(GridLayer o1, GridLayer o2) {
-			if (o1.getZIndex() < o2.getZIndex()) return -1;
-			if (o1.getZIndex() > o2.getZIndex()) return 1;
-			return 0;
-		}
-	};
+    // void gridChanged(int left, int right, int top, int bottom);
+
+    void layerAdded();
+
+    void layerRemoved();
+
+    public static final Comparator<GridLayer> Z_INDEX_COMPARATOR = new Comparator<GridLayer>() {
+        @Override
+        public int compare(GridLayer o1, GridLayer o2) {
+            if (o1.getZIndex() < o2.getZIndex())
+                return -1;
+            if (o1.getZIndex() > o2.getZIndex())
+                return 1;
+            return 0;
+        }
+    };
 
 }

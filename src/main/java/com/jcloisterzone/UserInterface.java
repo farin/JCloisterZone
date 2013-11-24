@@ -21,6 +21,8 @@ public interface UserInterface extends EventListener {
     //TODO deprecated - use unified interface
     void selectDragonMove(Set<Position> positions, int movesLeft);
 
+    void chatMessageReceived(Player player, String message);
+
 
 
 }

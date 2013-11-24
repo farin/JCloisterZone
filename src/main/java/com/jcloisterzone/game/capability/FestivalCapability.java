@@ -32,7 +32,7 @@ public class FestivalCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        if (getTile().getTrigger() != TileTrigger.FESTIVAL) return;
+        if (!getTile().hasTrigger(TileTrigger.FESTIVAL)) return;
 
         Player activePlayer = game.getActivePlayer();
         UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(activePlayer));

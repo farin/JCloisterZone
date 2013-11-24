@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -26,6 +27,7 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.rmi.CallMessage;
+import com.jcloisterzone.rmi.ClientControllMessage;
 import com.jcloisterzone.rmi.ClientIF;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.ServerIF;
@@ -35,7 +37,6 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private NioSocketConnector connector;
     private IoSession session;
     private long clientId = -1;  //remote session id
 
@@ -45,7 +46,13 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
 
     public void connect(InetAddress ia, int port) {
-        connector = new NioSocketConnector();
+        InetSocketAddress endpoint = new InetSocketAddress(ia, port);
+        connect(endpoint);
+        session.write(new ClientControllMessage(null));
+    }
+
+    private void connect(SocketAddress endpoint) {
+        NioSocketConnector connector = new NioSocketConnector();
         connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
         if (logger.isDebugEnabled()) {
             LoggingFilter logFilter = new LoggingFilter();
@@ -55,12 +62,11 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         }
         connector.setHandler(this);
 
-        ConnectFuture future = connector.connect(new InetSocketAddress(ia, port));
+        ConnectFuture future = connector.connect(endpoint);
         future.awaitUninterruptibly();
-        if (!future.isConnected()) {
-            logger.error("Connection failed");
+        if (future.isConnected()) {
+            session = future.getSession();
         }
-        session = future.getSession();
     }
 
 
@@ -83,7 +89,11 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        session.write(new CallMessage(method, args));
+        if (session == null) {
+            logger.info("Not connected. Message ignored");
+        } else {
+            session.write(new CallMessage(method, args));
+        }
         return null;
     }
 
@@ -165,5 +175,30 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         return Objects.equal(clientId, slot.getOwner());
     }
 
+    @Override
+    public void exceptionCaught(IoSession brokenSession, Throwable cause) {
+        SocketAddress endpoint = brokenSession.getServiceAddress();
+        session = null;
+        int delay = 500;
+        logger.warn("Connection lost. Reconnecting to " + endpoint + " ...");
+        onDisconnect();
+        while (session == null) {
+
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+            }
+            connect(endpoint);
+            if (delay < 4000) delay *= 2;
+        }
+        onReconnect();
+        session.write(new ClientControllMessage(clientId));
+    }
+
+    protected void onDisconnect() {
+    }
+
+    protected void onReconnect() {
+    }
 
 }

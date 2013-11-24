@@ -24,7 +24,7 @@ public class PlaguePhase extends Phase {
 
     @Override
     public void enter() {
-        if (getTile().getTrigger() == TileTrigger.PLAGUE) {
+        if (getTile().hasTrigger(TileTrigger.PLAGUE)) {
             PlagueSource source = new PlagueSource(getTile().getPosition());
             plagueCap.getPlagueSources().add(source);
         } else {

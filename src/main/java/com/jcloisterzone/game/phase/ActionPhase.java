@@ -130,7 +130,7 @@ public class ActionPhase extends Phase {
     }
 
     private boolean isFestivalUndeploy(Meeple m) {
-        return getTile().getTrigger() == TileTrigger.FESTIVAL &&  m.getPlayer() == getActivePlayer();
+        return getTile().hasTrigger(TileTrigger.FESTIVAL) && m.getPlayer() == getActivePlayer();
     }
 
     private boolean isPrincessUndeploy(Meeple m) {

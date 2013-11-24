@@ -34,7 +34,7 @@ public class DragonCapability extends Capability {
 
     @Override
     public void tilePlaced(Tile tile) {
-        if (tile.getTrigger() == TileTrigger.VOLCANO) {
+        if (tile.hasTrigger(TileTrigger.VOLCANO)) {
             setDragonPosition(tile.getPosition());
             getTilePack().activateGroup("dragon");
             game.fireGameEvent().dragonMoved(tile.getPosition());
@@ -64,7 +64,7 @@ public class DragonCapability extends Capability {
 
     @Override
     public String getTileGroup(Tile tile) {
-        return (tile.getTrigger() == TileTrigger.DRAGON) ? "dragon" : null;
+        return tile.hasTrigger(TileTrigger.DRAGON) ? "dragon" : null;
     }
 
     @Override

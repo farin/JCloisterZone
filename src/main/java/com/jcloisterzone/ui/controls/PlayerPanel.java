@@ -28,6 +28,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -55,7 +56,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int DELIMITER_Y = 34;
 
     private final Player player;
-    private final Color color;
+    private Color color;
 
     private final PlayerPanelImageCache cache;
 
@@ -129,11 +130,19 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         return rect;
     }
 
+    /*
+     * translates parentGraphics, which is not much clean!
+     */
     @Override
     public void paintComponent(Graphics2D parentGraphics) {
         super.paintComponent(parentGraphics);
 
         Game game = client.getGame();
+
+        //TODO better display
+        if (player.getSlot().getState() == SlotState.CLOSED) {
+            this.color = Color.GRAY;
+        }
 
 //		GridPanel gp = client.getGridPanel();
 
@@ -208,7 +217,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
 
-
         if (kingScoutCap != null) {
             if (kingScoutCap.getKing() == player) {
                 Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
@@ -282,7 +290,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-        parentGraphics.translate(0, realHeight + 12); //add also padding
+        parentGraphics.translate(0, realHeight); //add also padding
 
         g2 = null;
 

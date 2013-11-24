@@ -35,6 +35,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -77,7 +78,18 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void updateSlot(PlayerSlot slot) {
-        client.getCreateGamePanel().updateSlot(slot);
+        if (client.getCreateGamePanel() != null) {
+            client.getCreateGamePanel().updateSlot(slot);
+        } else {
+            if (slot.getState() == SlotState.CLOSED) {
+                for (Player p : client.getGame().getAllPlayers()) {
+                    if (p.getSlot().getNumber() == slot.getNumber()) {
+                        p.getSlot().setState(SlotState.CLOSED);
+                        client.getGridPanel().repaint();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -102,7 +114,7 @@ public class ClientController implements GameEventListener, UserInterface {
         mainPanel.started(snapshot);
 
         if (keyController == null) {
-            //first started game
+            // first started game
             keyController = new KeyController(client);
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
         }
@@ -124,7 +136,7 @@ public class ClientController implements GameEventListener, UserInterface {
             client.beep();
         }
 
-        //TODO better image quality ?
+        // TODO better image quality ?
         Color c = client.getPlayerColor(activePlayer);
         Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
         client.setIconImage(image);
@@ -177,11 +189,8 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getMainPanel().tunnelPiecePlaced(player, p, d, isSecondPiece);
     }
 
-
     @Override
     public void gameOver() {
-        client.setTitle(Client.BASE_TITLE);
-        client.resetWindowIcon();
         client.closeGame(true);
         new GameOverDialog(client);
     }
@@ -189,7 +198,8 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void phaseEntered(Phase phase) {
         GridPanel grid = client.getGridPanel();
-        if (grid == null) return;
+        if (grid == null)
+            return;
 
         FlierCapability flierGame = client.getGame().getCapability(FlierCapability.class);
         FlierPanel flierPanel;
@@ -201,7 +211,7 @@ public class ClientController implements GameEventListener, UserInterface {
         if (rollAllowed || rollMade) {
             flierPanel = createSecondPanel(FlierPanel.class);
             if (rollMade) {
-               flierPanel.setFlierDistance(flierGame.getFlierDistance());
+                flierPanel.setFlierDistance(flierGame.getFlierDistance());
             }
         } else {
             if (grid.getSecondPanel() instanceof FlierPanel) {
@@ -226,8 +236,7 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
     }
 
-    //------------------ Meeple events -----------
-
+    // ------------------ Meeple events -----------
 
     @Override
     public void deployed(Meeple m) {
@@ -252,18 +261,19 @@ public class ClientController implements GameEventListener, UserInterface {
     // ------------------ Feature evnts ----------
 
     @Override
-    public void completed(Completable feature, CompletableScoreContext ctx) { }
+    public void completed(Completable feature, CompletableScoreContext ctx) {
+    }
 
     @Override
     public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
         client.getMainPanel().scored(feature, label, meeple, finalScoring);
-        client.getMainPanel().repaint(); //players only
+        client.getMainPanel().repaint(); // players only
     }
 
     @Override
     public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
         client.getMainPanel().scored(position, player, label, finalScoring);
-        client.getMainPanel().repaint(); //players only
+        client.getMainPanel().repaint(); // players only
     }
 
     // User interface
@@ -281,7 +291,6 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
         if (client.isClientActive()) {
-            logger.debug("client is active");
             client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
             client.beep();
         }
@@ -290,9 +299,7 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void selectAction(List<PlayerAction> actions, boolean canPass) {
         client.clearActions();
-        if (client.isClientActive()) {
-            client.getControlPanel().selectAction(actions, canPass);
-        }
+        client.getControlPanel().selectAction(actions, canPass);
         client.getGridPanel().repaint();
     }
 
@@ -314,7 +321,7 @@ public class ClientController implements GameEventListener, UserInterface {
         try {
             newPanel = type.getConstructor(Client.class).newInstance(client);
         } catch (Exception e) {
-            //should never happen;
+            // should never happen;
             e.printStackTrace();
             return null;
         }
@@ -324,7 +331,6 @@ public class ClientController implements GameEventListener, UserInterface {
         return newPanel;
     }
 
-
     @Override
     public void selectBazaarTile() {
         client.clearActions();
@@ -332,7 +338,7 @@ public class ClientController implements GameEventListener, UserInterface {
         if (client.isClientActive()) {
             ArrayList<BazaarItem> supply = client.getGame().getCapability(BazaarCapability.class).getBazaarSupply();
             for (int i = 0; i < supply.size(); i++) {
-                //find first allowed item
+                // find first allowed item
                 if (supply.get(i).getOwner() == null) {
                     bazaarPanel.setSelectedItem(i);
                     break;
@@ -384,5 +390,10 @@ public class ClientController implements GameEventListener, UserInterface {
     @Override
     public void plagueSpread() {
         client.getGridPanel().repaint();
+    }
+
+    @Override
+    public void chatMessageReceived(Player player, String message) {
+        client.getGridPanel().getChatPanel().displayChatMessage(player, message);
     }
 }

@@ -22,8 +22,13 @@ public class KeyController implements KeyEventDispatcher {
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         //System.out.println(e);
-        if (!client.isActive()) return false;
+        if (!client.isActive()) return false; //AWT method on window (it not check if player is active)
+        if (!isDispatchActive()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
+            if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
+                client.getGridPanel().getChatPanel().getInput().requestFocus();
+                return true;
+            }
             switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
             case KeyEvent.VK_ENTER:
@@ -43,11 +48,19 @@ public class KeyController implements KeyEventDispatcher {
                 return dispatchReptable(e, true);
             }
         } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-            return dispatchReptable(e, false);
+            boolean result = dispatchReptable(e, false);
+            if (result) e.consume();
+            return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
             return dispatchKeyTyped(e);
         }
         return false;
+    }
+
+    private boolean isDispatchActive() {
+        GridPanel gp = client.getGridPanel();
+        if (gp != null) return !gp.getChatPanel().getInput().hasFocus();
+        return true;
     }
 
     private boolean dispatchReptable(KeyEvent e, boolean pressed) {
@@ -71,12 +84,10 @@ public class KeyController implements KeyEventDispatcher {
         }
         if (e.getKeyChar() == '+') {
             repeatZoomIn = pressed;
-            e.consume();
             return true;
         }
         if (e.getKeyChar() == '-') {
             repeatZoomOut = pressed;
-            e.consume();
             return true;
         }
         return false;
