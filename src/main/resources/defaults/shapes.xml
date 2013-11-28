@@ -32,6 +32,11 @@
         <apply allRotations="1">* EL.WR</apply>
     </shape>
 
+    <shape feature="@">
+        <svg:circle cx="500" cy="500" r="200"/>
+        <apply>* FLIER</apply>
+    </shape>
+
      <complement-farm>
         <apply>* NL.NR.WL.WR.SL.SR.EL.ER</apply>
         <apply>* INNER_FARM</apply>

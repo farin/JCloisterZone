@@ -14,10 +14,10 @@ public class ScoreAnimation extends AbstractAnimation {
     private static final Color POINTS_BLACK_BACKGROUND_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.7f);
     private static final Color POINTS_BACKGROUND_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.7f);
 
-    private Position tilePosition;
-    private String points;
-    private ImmutablePoint offset;
-    private Color color;
+    private final Position tilePosition;
+    private final String points;
+    private final ImmutablePoint offset;
+    private final Color color;
 
     //fuuuuj tolik parametru
     public ScoreAnimation(Position tilePosition, String points, ImmutablePoint point, Color color, Integer duration) {

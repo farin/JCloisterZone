@@ -223,7 +223,7 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void setFlierDistance(int distance) {
+    public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
         logger.error(Application.ILLEGAL_STATE_MSG, "setFlierDistance");
     }
 

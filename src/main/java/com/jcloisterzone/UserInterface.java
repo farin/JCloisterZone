@@ -22,7 +22,4 @@ public interface UserInterface extends EventListener {
     void selectDragonMove(Set<Position> positions, int movesLeft);
 
     void chatMessageReceived(Player player, String message);
-
-
-
 }

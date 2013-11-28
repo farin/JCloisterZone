@@ -88,6 +88,8 @@ public class Location implements Serializable {
     public static final Location TOWER = new Location("TOWER", 1 << 17);
     /** Inprisoned follwer */
     public static final Location PRISON = new Location("PRISON", 1 << 18);
+    /** Flier location - follower can be placed here just for moment, before dice roll  */
+    public static final Location FLIER = new Location("FLIER", 1 << 19);
 
     // --- farm locations ---
 

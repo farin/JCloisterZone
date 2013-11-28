@@ -64,9 +64,6 @@ public class ActionPhase extends Phase {
             //player can return figure immediately
             return false;
         }
-        if (flierCap != null && flierCap.isFlierRollAllowed()) {
-            return false;
-        }
         return true;
     }
 
@@ -172,8 +169,9 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void setFlierDistance(int distance) {
-        flierCap.setFlierDistance(distance);
+    public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
+        flierCap.setFlierDistance(meepleType, distance);
+        game.fireGameEvent().flierRoll(getTile().getPosition(), distance);
         next(FlierActionPhase.class);
     }
 

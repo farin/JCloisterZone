@@ -53,7 +53,7 @@ public class Snapshot implements Serializable {
 
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String COMPATIBLE_FROM = "2.3";
+    public static final String COMPATIBLE_FROM = "2.5";
 
     private Document doc;
     private Element root;

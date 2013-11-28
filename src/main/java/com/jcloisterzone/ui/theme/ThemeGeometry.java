@@ -140,7 +140,7 @@ public class ThemeGeometry {
 
     public Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
         Rotation tileRotation = tile.getRotation();
-        if (featureClass.equals(Bridge.class)) {
+        if (featureClass != null && featureClass.equals(Bridge.class)) {
             Area a =  getBridgeArea(loc.rotateCCW(tileRotation));
             //bridge is independent on tile rotation
             if ((loc == Location.WE && (tileRotation == Rotation.R90 || tileRotation == Rotation.R180)) ||

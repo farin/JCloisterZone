@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,6 @@ import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -40,7 +40,9 @@ public class FlierActionPhase extends Phase {
         }
         Tile target = getBoard().get(pos);
 
-        if (target == null || !game.isDeployAllowed(target, Follower.class)) {
+        Class<? extends Meeple> meepleType = flierCap.getMeepleType();
+
+        if (target == null || !game.isDeployAllowed(target, meepleType)) {
             next();
             return;
         }
@@ -58,12 +60,31 @@ public class FlierActionPhase extends Phase {
         }
         sites.put(pos, locations);
 
-        List<PlayerAction> actions = new ArrayList<>();
-        if (getActivePlayer().hasFollower(SmallFollower.class)) {
-            actions.add(new MeepleAction(SmallFollower.class, sites));
+        MeepleAction action = null;
+        if (meepleType.equals(SmallFollower.class)) {
+            if (!getActivePlayer().hasFollower(SmallFollower.class)) {
+                next();
+                return;
+            }
+            action = new MeepleAction(SmallFollower.class, sites);
+        } else {
+            //tricky impl - first prepare unfiltered actions - TODO implement in better way
+            List<PlayerAction> actions = new ArrayList<>();
+            game.prepareFollowerActions(actions, sites);
+            for (PlayerAction a : actions) {
+                MeepleAction ma = (MeepleAction) a;
+                if (ma.getMeepleType().equals(meepleType)) {
+                    action = ma;
+                    break;
+                }
+            }
         }
-        game.prepareFollowerActions(actions, sites);
-        notifyUI(actions, false);
+        if (action == null || action.getLocationsMap().isEmpty()) {
+            next();
+            return;
+        }
+
+        notifyUI(Collections.<PlayerAction>singletonList(action), false);
     }
 
     @Override
@@ -73,12 +94,15 @@ public class FlierActionPhase extends Phase {
 
     @Override
     public void next() {
-        flierCap.setFlierDistance(0);
+        flierCap.setFlierDistance(null, 0);
         super.next();
     }
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+        if (!meepleType.equals(flierCap.getMeepleType())) {
+            throw new IllegalArgumentException("Invalid meeple type.");
+        }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         Tile tile = getBoard().get(p);
         m.deployUnchecked(tile, loc, tile.getFeature(loc));

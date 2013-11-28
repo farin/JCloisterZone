@@ -124,6 +124,12 @@ public class EventMulticaster implements GameEventListener, UserInterface {
     }
 
     @Override
+    public void flierRoll(Position pos, int distance) {
+        ((GameEventListener)a).flierRoll(pos, distance);
+        ((GameEventListener)b).flierRoll(pos, distance);
+    }
+
+    @Override
     public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
         ((GameEventListener)a).bazaarTileSelected(supplyIndex, bazaarItem);
         ((GameEventListener)b).bazaarTileSelected(supplyIndex, bazaarItem);

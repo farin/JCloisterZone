@@ -3,6 +3,7 @@ package com.jcloisterzone.rmi;
 import java.util.EnumSet;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.PlayerSlot;
 
 /**
@@ -18,6 +19,6 @@ public interface ClientIF extends Client2ClientIF {
     /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/
 
     void drawTiles(int[] tileIndexes);
-    void setFlierDistance(int distance);
+    void setFlierDistance(Class<? extends Meeple> meepleType, int distance);
 
 }

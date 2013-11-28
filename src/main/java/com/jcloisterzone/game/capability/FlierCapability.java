@@ -1,21 +1,27 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
-import com.jcloisterzone.game.phase.ActionPhase;
-import com.jcloisterzone.game.phase.Phase;
 
 public class FlierCapability extends Capability {
 
     private int flierDistance;
+    private Class<? extends Meeple> meepleType;
 
     public FlierCapability(Game game) {
         super(game);
@@ -23,19 +29,28 @@ public class FlierCapability extends Capability {
 
     @Override
     public Object backup() {
-        return flierDistance;
+        return new Object[] { flierDistance, meepleType };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void restore(Object data) {
-        flierDistance = (Integer) data;
+        Object[] a = (Object[]) data;
+        flierDistance = (Integer) a[0];
+        meepleType = (Class<? extends Meeple>) a[1];
     }
 
     public int getFlierDistance() {
         return flierDistance;
     }
 
-    public void setFlierDistance(int flierDistance) {
+    public Class<? extends Meeple> getMeepleType() {
+        return meepleType;
+    }
+
+    public void setFlierDistance(Class<? extends Meeple> meepleType, int flierDistance) {
+        assert flierDistance > 0 ^ meepleType == null;
+        this.meepleType = meepleType;
         this.flierDistance = flierDistance;
     }
 
@@ -49,25 +64,34 @@ public class FlierCapability extends Capability {
         }
     }
 
-    public boolean isFlierRollAllowed() {
-        Phase phase = game.getPhase();
-        if (phase instanceof ActionPhase && game.getActivePlayer().hasFollower()) {
-            return game.getCurrentTile().getFlier() != null;
+    @Override
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+        Tile tile = game.getCurrentTile();
+        if (tile.getFlier() == null) return;
+        for (PlayerAction action : actions) {
+            if (action instanceof MeepleAction) {
+                MeepleAction ma = (MeepleAction) action;
+                if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
+                    ma.getOrCreate(tile.getPosition()).add(Location.FLIER);
+                }
+            }
         }
-        return false;
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         if (flierDistance > 0) {
             node.setAttribute("flierDistance", ""+flierDistance);
+            node.setAttribute("meepleType", meepleType.getName());
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
         if (node.hasAttribute("flierDistance")) {
              flierDistance = Integer.parseInt(node.getAttribute("flierDistance"));
+             meepleType = (Class<? extends Meeple>) XmlUtils.classForName(node.getAttribute("meepleType"));
         }
     }
 
