@@ -15,7 +15,7 @@ public class Wagon extends Follower {
 	}
 
 	@Override
-	protected void checkDeployment(Feature f) {
+	public void checkDeployment(Feature f) {
 		if (f instanceof Tower) {
 			throw new IllegalArgumentException("Cannot place wagon on the tower.");
 		}

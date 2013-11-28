@@ -15,7 +15,7 @@ public class Pig extends Special {
 	}
 
 	@Override
-	protected void checkDeployment(Feature farm) {
+	public void checkDeployment(Feature farm) {
 		if (!(farm instanceof Farm)) {
 			throw new IllegalArgumentException("Pig must be placed on a farm only.");
 		}

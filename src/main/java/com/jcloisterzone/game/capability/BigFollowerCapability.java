@@ -22,16 +22,9 @@ public class BigFollowerCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
         if (game.getActivePlayer().hasFollower(BigFollower.class) && !followerLocMap.isEmpty()) {
             actions.add(new MeepleAction(BigFollower.class, followerLocMap));
         }
     }
-
-    @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        prepareFollowerActions(actions, commonSites);
-    }
-
-
 }

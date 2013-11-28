@@ -30,7 +30,7 @@ public abstract class Follower extends Meeple {
     }
 
     @Override
-    protected void checkDeployment(Feature f) {
+	public void checkDeployment(Feature f) {
         if (f.walk(new IsOccupied())) {
             throw new IllegalArgumentException("Feature is occupied.");
         }

@@ -12,9 +12,11 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -41,6 +43,7 @@ public class FlierActionPhase extends Phase {
         Tile target = getBoard().get(pos);
 
         Class<? extends Meeple> meepleType = flierCap.getMeepleType();
+        Follower follower = (Follower) getActivePlayer().getMeepleFromSupply(meepleType);
 
         if (target == null || !game.isDeployAllowed(target, meepleType)) {
             next();
@@ -50,40 +53,21 @@ public class FlierActionPhase extends Phase {
         LocationsMap sites = new LocationsMap();
         Set<Location> locations = new HashSet<>();
         for (Feature f : target.getFeatures()) {
-            if (f instanceof Farm) continue;
+            if (!(f instanceof Completable)) continue;
             if (f.walk(new IsCompleted())) continue;
-            locations.add(f.getLocation());
+            try {
+                follower.checkDeployment(f);
+                locations.add(f.getLocation());
+            } catch (IllegalArgumentException e) {
+                //quick hack, same as in FlierCapability source
+            }
         }
         if (locations.isEmpty()) {
             next();
             return;
         }
         sites.put(pos, locations);
-
-        MeepleAction action = null;
-        if (meepleType.equals(SmallFollower.class)) {
-            if (!getActivePlayer().hasFollower(SmallFollower.class)) {
-                next();
-                return;
-            }
-            action = new MeepleAction(SmallFollower.class, sites);
-        } else {
-            //tricky impl - first prepare unfiltered actions - TODO implement in better way
-            List<PlayerAction> actions = new ArrayList<>();
-            game.prepareFollowerActions(actions, sites);
-            for (PlayerAction a : actions) {
-                MeepleAction ma = (MeepleAction) a;
-                if (ma.getMeepleType().equals(meepleType)) {
-                    action = ma;
-                    break;
-                }
-            }
-        }
-        if (action == null || action.getLocationsMap().isEmpty()) {
-            next();
-            return;
-        }
-
+        MeepleAction action = new MeepleAction(meepleType, sites);
         notifyUI(Collections.<PlayerAction>singletonList(action), false);
     }
 
