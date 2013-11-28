@@ -51,7 +51,7 @@ public class ScorePhase extends Phase {
     private void scoreCompletedOnTile(Tile tile) {
         for (Feature feature : tile.getFeatures()) {
             if (feature instanceof Completable) {
-                scoreCompleted((Completable) feature);
+                scoreCompleted((Completable) feature, true);
             }
         }
     }
@@ -61,7 +61,7 @@ public class ScorePhase extends Phase {
             Tile tile = e.getValue();
             Feature feature = tile.getFeaturePartOf(e.getKey().rev());
             if (feature instanceof Completable) {
-                scoreCompleted((Completable) feature);
+                scoreCompleted((Completable) feature, false);
             }
         }
     }
@@ -113,14 +113,14 @@ public class ScorePhase extends Phase {
         if (tunnelCap != null) {
             Road r = tunnelCap.getPlacedTunnel();
             if (r != null) {
-                scoreCompleted(r);
+                scoreCompleted(r, true);
             }
         }
 
         for (Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
             Cloister cloister = neighbour.getCloister();
             if (cloister != null) {
-                scoreCompleted(cloister);
+                scoreCompleted(cloister, false);
             }
         }
 
@@ -149,10 +149,10 @@ public class ScorePhase extends Phase {
         m.undeploy(false);
     }
 
-    private void scoreCompleted(Completable completable) {
+    private void scoreCompleted(Completable completable, boolean triggerBuilder) {
         CompletableScoreContext ctx = completable.getScoreContext();
         completable.walk(ctx);
-        if (builderCap != null) {
+        if (triggerBuilder && builderCap != null) {
             for (Meeple m : ctx.getSpecialMeeples()) {
                 if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
                     if (!m.at(getTile().getPosition())) {
