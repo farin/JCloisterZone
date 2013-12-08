@@ -72,7 +72,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
     public void activateChat() {
         input.setFocusable(true);
         input.requestFocusInWindow();
-        //prevent key event propagato to input
+        //prevent key event propagate to input - but still not 100%
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

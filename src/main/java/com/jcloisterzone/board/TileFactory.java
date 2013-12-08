@@ -74,8 +74,6 @@ public class TileFactory {
         }
 
         tile.setFeatures(features);
-        tile.setSymmetry(TileSymmetry.forTile(tile));
-        tile.setEdgePattern(EdgePattern.forTile(tile));
 
         features = null;
         this.tile = null; //clear context
