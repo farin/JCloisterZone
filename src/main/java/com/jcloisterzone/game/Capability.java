@@ -77,8 +77,7 @@ public abstract class Capability extends GameEventAdapter {
 
     public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
     }
-
-    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void postPrepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
     }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {

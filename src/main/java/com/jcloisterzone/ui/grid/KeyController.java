@@ -26,7 +26,8 @@ public class KeyController implements KeyEventDispatcher {
         if (!isDispatchActive()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
-                client.getGridPanel().getChatPanel().getInput().requestFocus();
+                e.consume();
+                client.getGridPanel().getChatPanel().activateChat();
                 return true;
             }
             switch (e.getKeyCode()) {

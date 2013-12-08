@@ -44,6 +44,7 @@ public interface GameEventListener extends EventListener {
     void dragonMoved(Position p);
     void fairyMoved(Position p);
     void towerIncreased(Position p, Integer height);
+    void flierRoll(Position pos, int distance);
 
     void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece);
 

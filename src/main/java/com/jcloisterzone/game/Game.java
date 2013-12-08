@@ -328,11 +328,8 @@ public class Game extends GameSettings {
         for (Capability cap: capabilities) {
             cap.prepareActions(actions, commonSites);
         }
-    }
-
-    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap commonSites) {
-        for (Capability cap: capabilities) {
-            cap.prepareFollowerActions(actions, commonSites);
+        for (Capability cap: capabilities) { //TODO hack for flier
+            cap.postPrepareActions(actions, commonSites);
         }
     }
 

@@ -33,7 +33,7 @@ public class FeatureDescriptor {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(tileId).append(' ');
-        sb.append(featureType.getSimpleName().toUpperCase()).append(' ');
+        sb.append(featureType == null ? '@' : featureType.getSimpleName().toUpperCase()).append(' ');
         sb.append(location.toString());
         return sb.toString();
     }
@@ -53,10 +53,11 @@ public class FeatureDescriptor {
         case "TOWER": featureType = Tower.class; break;
         case "CASTLE": featureType = Castle.class; break;
         case "BRIDGE": featureType = Bridge.class; break;
+        case "@": featureType = null; break;
         default: throw new IllegalArgumentException("Unsupported feature "+featureName);
         }
         Location location = Location.valueOf(locationName);
-        assert location.isFarmLocation() ^ !featureType.equals(Farm.class) : "improper location "+locationName;
+        assert featureType == null || (location.isFarmLocation() ^ !featureType.equals(Farm.class)) : "improper location "+locationName;
         return new FeatureDescriptor(tileId, featureType, location);
     }
 
@@ -75,7 +76,7 @@ public class FeatureDescriptor {
     @Override
     public int hashCode() {
         int result = 1;
-        result = 31 * result + featureType.toString().hashCode();
+        result = 31 * result + (featureType == null ? 1 : featureType.toString().hashCode());
         result = 31 * result + location.hashCode();
         result = 31 * result + tileId.hashCode();
         return result;

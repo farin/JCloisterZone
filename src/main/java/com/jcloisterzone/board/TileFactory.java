@@ -74,8 +74,6 @@ public class TileFactory {
         }
 
         tile.setFeatures(features);
-        tile.setSymmetry(TileSymmetry.forTile(tile));
-        tile.setEdgePattern(EdgePattern.forTile(tile));
 
         features = null;
         this.tile = null; //clear context
@@ -170,6 +168,7 @@ public class TileFactory {
         for (int i = 0; i < sides.length; i++) {
             Location l = Location.valueOf(sides[i]);
             assert !(piece instanceof Farm ^ l.isFarmLocation()) : String.format("Invalid location %s kind for tile %s", l, tile.getId());
+            assert l.intersect(loc) == null;
             loc = loc == null ? l : loc.union(l);
         }
         //logger.debug(tile.getId() + "/" + piece.getClass().getSimpleName() + "/"  + loc);

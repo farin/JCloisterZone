@@ -24,6 +24,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
+import com.jcloisterzone.ui.animation.FlierDiceRollAnimation;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
@@ -158,28 +159,28 @@ public class MainPanel extends BackgroundPanel {
         Position pos = m.getPosition();
         Tile tile = getGame().getBoard().get(pos);
         ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getLocation());
-        animationService.registerAnimation(pos,
-            new ScoreAnimation(
-                    pos,
-                    points,
-                    offset,
-                    client.getPlayerColor(m.getPlayer()),
-                    finalScoring ? null : getScoreAnimationDuration()
-            )
-        );
+        animationService.registerAnimation(new ScoreAnimation(
+            pos,
+            points,
+            offset,
+            client.getPlayerColor(m.getPlayer()),
+            finalScoring ? null : getScoreAnimationDuration()
+        ));
     }
 
     public void scored(Position pos, Player player, String points, boolean finalScoring) {
-        animationService.registerAnimation(pos,
-            new ScoreAnimation(
-                    pos,
-                    points,
-                    new ImmutablePoint(50, 50),
-                    client.getPlayerColor(player),
-                    finalScoring ? null : getScoreAnimationDuration()
-            )
-        );
+        animationService.registerAnimation(new ScoreAnimation(
+            pos,
+            points,
+            new ImmutablePoint(50, 50),
+            client.getPlayerColor(player),
+            finalScoring ? null : getScoreAnimationDuration()
+        ));
 
+    }
+
+    public void flierRoll(Position pos, int distance) {
+        animationService.registerAnimation(new FlierDiceRollAnimation(pos, distance));
     }
 
     public void towerIncreased(Position p, Integer height) {

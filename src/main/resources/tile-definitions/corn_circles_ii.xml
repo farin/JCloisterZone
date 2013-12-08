@@ -21,7 +21,7 @@
         <corn-circle type="Farm"/>
         <city castle-base="true">N</city>
         <road>S</road>
-        <farm>ER ER SL SR EL ER</farm>
+        <farm>WR WL SL SR EL ER</farm>
     </tile>
     <tile id="RCR">
         <corn-circle type="Farm"/>

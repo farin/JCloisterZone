@@ -22,16 +22,9 @@ public class PhantomCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
         if (game.getActivePlayer().hasFollower(Phantom.class) && !followerLocMap.isEmpty()) {
             actions.add(new MeepleAction(Phantom.class, followerLocMap));
         }
     }
-
-    @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
-        prepareFollowerActions(actions, followerLocMap);
-    }
-
-
 }

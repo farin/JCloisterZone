@@ -16,7 +16,7 @@ public class Builder extends Special {
 	}
 
 	@Override
-	protected void checkDeployment(Feature f) {
+	public void checkDeployment(Feature f) {
 		if (!(f instanceof City || f instanceof Road) ) {
 			throw new IllegalArgumentException("Builder must be placed in city or on road only.");
 		}		

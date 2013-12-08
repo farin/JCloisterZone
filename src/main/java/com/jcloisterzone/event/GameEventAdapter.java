@@ -74,6 +74,10 @@ public class GameEventAdapter implements GameEventListener {
     }
 
     @Override
+    public void flierRoll(Position pos, int distance) {
+    }
+
+    @Override
     public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
     }
 

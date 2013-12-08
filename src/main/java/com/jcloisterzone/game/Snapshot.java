@@ -207,7 +207,6 @@ public class Snapshot implements Serializable {
         streamResult.getOutputStream().close();
     }
 
-
     public void load(InputStream is) throws SnapshotCorruptedException {
         doc = XmlUtils.parseDocument(is);
         root = doc.getDocumentElement();

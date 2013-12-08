@@ -131,6 +131,10 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                     if (!confirmTowerPlacement(pos)) return;
                 }
             }
+            if (loc == Location.FLIER) {
+                getClient().getServer().rollFlierDice(ma.getMeepleType());
+                return;
+            }
         }
         if (action instanceof SelectFollowerAction) {
             final SelectFollowerAction selectFollowerAction = (SelectFollowerAction) action;

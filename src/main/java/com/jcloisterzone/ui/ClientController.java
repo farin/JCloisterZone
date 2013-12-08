@@ -39,7 +39,7 @@ import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.phase.FlierActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -48,7 +48,6 @@ import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
-import com.jcloisterzone.ui.grid.FlierPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
@@ -201,23 +200,14 @@ public class ClientController implements GameEventListener, UserInterface {
         if (grid == null)
             return;
 
-        FlierCapability flierGame = client.getGame().getCapability(FlierCapability.class);
-        FlierPanel flierPanel;
-        boolean rollAllowed = false, rollMade = false;
-        if (flierGame != null) {
-            rollAllowed = flierGame.isFlierRollAllowed() && client.isClientActive();
-            rollMade = flierGame.getFlierDistance() > 0;
+        if (phase instanceof FlierActionPhase) {
+
         }
-        if (rollAllowed || rollMade) {
-            flierPanel = createSecondPanel(FlierPanel.class);
-            if (rollMade) {
-                flierPanel.setFlierDistance(flierGame.getFlierDistance());
-            }
-        } else {
-            if (grid.getSecondPanel() instanceof FlierPanel) {
-                grid.setSecondPanel(null);
-            }
-        }
+    }
+
+    @Override
+    public void flierRoll(Position pos, int distance) {
+        client.getMainPanel().flierRoll(pos, distance);
     }
 
     @Override

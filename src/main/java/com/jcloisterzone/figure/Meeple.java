@@ -44,7 +44,7 @@ public abstract class Meeple extends Figure {
         setFeature(null);
     }
 
-    protected void checkDeployment(Feature piece) {
+    public void checkDeployment(Feature piece) {
         //empty
     }
 

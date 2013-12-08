@@ -35,8 +35,8 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
-    public void rollFlierDice() {
-        server.rollFlierDice();
+    public void rollFlierDice(Class<? extends Meeple> meepleType) {
+        server.rollFlierDice(null);
     }
 
     @Override

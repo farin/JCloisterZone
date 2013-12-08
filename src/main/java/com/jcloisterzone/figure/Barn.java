@@ -27,7 +27,7 @@ public class Barn extends Special {
     }
 
     @Override
-    protected void checkDeployment(Feature feature) {
+	public void checkDeployment(Feature feature) {
         if (!(feature instanceof Farm)) {
             throw new IllegalArgumentException("The barn must be placed only on a farm.");
         }

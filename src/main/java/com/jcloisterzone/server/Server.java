@@ -240,8 +240,8 @@ public class Server extends GameSettings implements ServerIF {
     }
 
     @Override
-    public void rollFlierDice() {
-        stub.setFlierDistance(1+random.nextInt(3));
+    public void rollFlierDice(Class<? extends Meeple> meepleType) {
+        stub.setFlierDistance(meepleType, 1+random.nextInt(3));
     }
 
     @Override

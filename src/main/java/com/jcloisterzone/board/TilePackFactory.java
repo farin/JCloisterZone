@@ -144,6 +144,10 @@ public class TilePackFactory {
         for (int j = 0; j < count; j++) {
             Tile tile = tileFactory.createTile(expansion, tileId, card, isTunnelActive(expansion));
             game.initTile(tile, card); //must be called before rotation!
+
+            //set after full inicialization
+            tile.setSymmetry(TileSymmetry.forTile(tile));
+            tile.setEdgePattern(EdgePattern.forTile(tile));
             tiles.add(tile);
         }
         return tiles;

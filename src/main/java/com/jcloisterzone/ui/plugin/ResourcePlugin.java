@@ -184,6 +184,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             }
             areas.put(loc, a);
         }
+        if (locations.contains(Location.FLIER)) {
+            areas.put(Location.FLIER, getArea(tile, null, Location.FLIER));
+        }
+
         Map<Location, Area> transformed = new HashMap<>();
 
         AffineTransform transform1;
@@ -245,6 +249,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (tile.getTower() != null) {
             sub.add(getArea(tile, Tower.class, Location.TOWER));
         }
+        if (tile.getFlier() != null) {
+            sub.add(getArea(tile, null, Location.FLIER));
+        }
         sub.add(getSubstractionArea(tile, false));
         return sub;
     }
@@ -256,6 +263,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 Area area = getArea(tile, piece.getClass(), piece.getLocation());
                 sub.add(area);
             }
+        }
+        if (tile.getFlier() != null) {
+            sub.add(getArea(tile, null, Location.FLIER));
         }
         sub.add(getSubstractionArea(tile, true));
         return sub;

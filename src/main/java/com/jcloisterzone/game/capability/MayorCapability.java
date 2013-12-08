@@ -40,7 +40,7 @@ public class MayorCapability extends Capability {
     }
 
     @Override
-    public void prepareFollowerActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
         Position pos = getTile().getPosition();
         Set<Location> tileLocations = followerLocMap.get(pos);
         if (game.getActivePlayer().hasFollower(Mayor.class)) {
@@ -51,11 +51,6 @@ public class MayorCapability extends Capability {
                 }
             }
         }
-    }
-
-    @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
-        prepareFollowerActions(actions, followerLocMap);
     }
 
 }

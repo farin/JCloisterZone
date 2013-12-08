@@ -781,6 +781,36 @@
         <apply>TO.CFR TOWER</apply>
     </shape>
 
+    <shape feature="@">
+        <svg:circle cx="315" cy="300" r="200"/>
+        <apply>FL.F.d FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="282" cy="392" r="200"/>
+        <apply>FL.F.o FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="220" cy="200" r="200"/>
+        <apply>FL.RFr.d FLIER</apply>
+        <apply>FL.Rr.d FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="222" cy="222" r="200"/>
+        <apply>FL.RFr.WE.o FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="222" cy="555" r="200"/>
+        <apply>FL.RFr.NS.o FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="471" cy="695" r="200"/>
+        <apply>FL.Rr.NW.o FLIER</apply>
+    </shape>
+    <shape feature="@">
+        <svg:circle cx="412" cy="272" r="200"/>
+        <apply>FL.Rr.SW.o FLIER</apply>
+    </shape>
+
     <complement-farm>
         <apply>BA.CcRr EL.SR</apply>
         <apply>BA.CcRr+ EL.SR</apply>

@@ -177,22 +177,23 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     @Override
     public void exceptionCaught(IoSession brokenSession, Throwable cause) {
-        SocketAddress endpoint = brokenSession.getServiceAddress();
-        session = null;
-        int delay = 500;
-        logger.warn("Connection lost. Reconnecting to " + endpoint + " ...");
-        onDisconnect();
-        while (session == null) {
-
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-            }
-            connect(endpoint);
-            if (delay < 4000) delay *= 2;
-        }
-        onReconnect();
-        session.write(new ClientControllMessage(clientId));
+        //temporary disabled, not worked as intended
+//        SocketAddress endpoint = brokenSession.getServiceAddress();
+//        session = null;
+//        int delay = 500;
+//        logger.warn("Connection lost. Reconnecting to " + endpoint + " ...");
+//        onDisconnect();
+//        while (session == null) {
+//
+//            try {
+//                Thread.sleep(delay);
+//            } catch (InterruptedException e) {
+//            }
+//            connect(endpoint);
+//            if (delay < 4000) delay *= 2;
+//        }
+//        onReconnect();
+//        session.write(new ClientControllMessage(clientId));
     }
 
     protected void onDisconnect() {
