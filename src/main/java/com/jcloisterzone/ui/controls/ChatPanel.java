@@ -2,13 +2,14 @@ package com.jcloisterzone.ui.controls;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.lang.reflect.Proxy;
@@ -19,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
@@ -67,9 +69,22 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         });
     }
 
+    public void activateChat() {
+        input.setFocusable(true);
+        input.requestFocusInWindow();
+        //prevent key event propagato to input
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                input.requestFocusInWindow();
+            }
+        });
+    }
+
     private void clean() {
         input.setText("");
-        client.requestFocus();
+        input.setFocusable(false);
+        client.requestFocusInWindow();
     }
 
     /**
@@ -99,6 +114,14 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
     public void registerSwingComponents(JComponent parent) {
         this.parent = parent;
         input = new JTextField();
+        //prevent unintended focus (by window activate etc. - allow focus just on direct click)
+        input.setFocusable(false);
+        input.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                activateChat();
+            }
+        });
         input.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
