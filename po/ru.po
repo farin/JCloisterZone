@@ -112,36 +112,36 @@ msgstr "Фестиваль (Юбилейное изд.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:53
 msgid "Little Buildings"
-msgstr ""
+msgstr "Малые здания"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "The Wind Rose"
-msgstr ""
+msgstr "Роза ветров"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:57
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:89
 msgid "The Flier"
-msgstr ""
+msgstr "Воздухоплаватель"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:58
 msgid "The Messages"
-msgstr ""
+msgstr "Послания"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:59
 msgid "The Ferries"
-msgstr ""
+msgstr "Паромы"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "The Goldmines"
-msgstr ""
+msgstr "Золотые шахты"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:61
 msgid "Mage & Witch"
-msgstr ""
+msgstr "Маг и Ведьма"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "The Robber"
-msgstr ""
+msgstr "Грабители"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "The Corn circles II"
@@ -149,31 +149,31 @@ msgstr "Круги на полях II"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
-msgstr ""
+msgstr "моста"
 
 #: src/main/java/com/jcloisterzone/feature/Castle.java:58
 msgid "Castle"
-msgstr ""
+msgstr "замка"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
-msgstr ""
+msgstr "города"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:41
 msgid "Cloister"
-msgstr ""
+msgstr "монастыря"
 
 #: src/main/java/com/jcloisterzone/feature/Farm.java:47
 msgid "Farm"
-msgstr ""
+msgstr "поля"
 
 #: src/main/java/com/jcloisterzone/feature/Road.java:67
 msgid "Road"
-msgstr ""
+msgstr "дороги"
 
 #: src/main/java/com/jcloisterzone/feature/Tower.java:33
 msgid "Tower"
-msgstr ""
+msgstr "башни"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
 msgid "Tiny city is scored only for 2 points."
@@ -368,7 +368,7 @@ msgstr "О программе"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:39
 msgid "Controls"
-msgstr "Упревление"
+msgstr "Управление"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -402,11 +402,11 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:36
 msgid "Undeploy meeple"
-msgstr ""
+msgstr "Снять мипл"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:43
 msgid "Select meeple to undeploy"
-msgstr ""
+msgstr "Выберите мипл, который хотите снять"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
@@ -526,20 +526,20 @@ msgstr "Предложение базара"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:43
 msgid "Each player…"
-msgstr ""
+msgstr "Каждый игрок..."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:49
 msgid "may deploy additional follower"
-msgstr ""
+msgstr "может разместить дополнительного последователя"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:61
 msgid "must remove follower"
-msgstr ""
+msgstr "должен удалить последователя"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:74
 #, java-format
 msgid "on/from a {0}."
-msgstr ""
+msgstr "на/с {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:99
 msgid "Corn circle"
@@ -547,15 +547,15 @@ msgstr "Круг на полях"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:42
 msgid "Place follower as a flier"
-msgstr ""
+msgstr "Разместить последователя как воздухоплавателя"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:47
 msgid "Roll a dice"
-msgstr ""
+msgstr "Бросить кубик"
 
 #: src/main/java/com/jcloisterzone/ui/grid/FlierPanel.java:66
 msgid "distance"
-msgstr ""
+msgstr "расстояние"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:56
 msgid "Place a follower"
