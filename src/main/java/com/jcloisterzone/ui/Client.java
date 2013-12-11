@@ -34,11 +34,12 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.Config;
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.event.GameEventListener;
@@ -77,7 +78,7 @@ public class Client extends JFrame {
 
     private ClientController controller = new ClientController(this);
 
-    private final Ini config;
+    private final Config config;
     private final ClientSettings settings;
     private final ConvenientResourceManager resourceManager;
 
@@ -113,7 +114,7 @@ public class Client extends JFrame {
     }
 
     private Locale getLocaleFromConfig() {
-        String language = config.get("ui", "locale");
+        String language = config.getLocale();
         if (language == null) {
             return Locale.getDefault();
         }
@@ -150,7 +151,7 @@ public class Client extends JFrame {
         super.setLocale(l);
     }
 
-    public Client(Ini config, List<Plugin> plugins) {
+    public Client(Config config, List<Plugin> plugins) {
         this.config = config;
         settings = new ClientSettings(config);
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
@@ -159,7 +160,7 @@ public class Client extends JFrame {
     public void init() {
         setLocale(getLocaleFromConfig());
 
-        List<String> colorNames = config.get("players").getAll("color");
+        List<String> colorNames = config.getPlayers().getColors();
         playerColors = new Color[colorNames.size()];
         for (int i = 0; i < playerColors.length; i++ ) {
             playerColors[i] = stringToColor(colorNames.get(i));
@@ -214,7 +215,7 @@ public class Client extends JFrame {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
     }
 
-    public Ini getConfig() {
+    public Config getConfig() {
         return config;
     }
 
@@ -393,7 +394,8 @@ public class Client extends JFrame {
                 }
                 try {
                     Snapshot snapshot = new Snapshot(game, getClientId());
-                    if ("plain".equals(getConfig().get("debug", "save_format"))) {
+                    DebugConfig debugConfig = getConfig().getDebug();
+                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
                     }
                     snapshot.save(file);
@@ -405,16 +407,12 @@ public class Client extends JFrame {
         }
     }
 
-    private int getServerPort() {
-        return config.get("server", "port", int.class);
-    }
-
     public void createGame() {
         if (!closeGame()) return;
         try {
             localServer = new Server(config);
-            localServer.start(getServerPort());
-            connect(InetAddress.getLocalHost(), getServerPort());
+            localServer.start(config.getPort());
+            connect(InetAddress.getLocalHost(), config.getPort());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -436,8 +434,8 @@ public class Client extends JFrame {
                 if (!closeGame()) return;
                 try {
                     localServer = new Server(new Snapshot(file));
-                    localServer.start(getServerPort());
-                    connect(InetAddress.getLocalHost(), getServerPort());
+                    localServer.start(config.getPort());
+                    connect(InetAddress.getLocalHost(), config.getPort());
                 } catch (SnapshotVersionException ex1) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

@@ -15,13 +15,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
+import com.jcloisterzone.Config;
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.game.CustomRule;
@@ -40,7 +41,7 @@ public class TilePackFactory {
     private final TileFactory tileFactory = new TileFactory();
 
     protected Game game;
-    protected Ini config;
+    protected Config config;
     protected Map<Expansion, Element> defs;
 
     private Set<String> usedIds = new HashSet<>(); //for assertion only
@@ -51,7 +52,7 @@ public class TilePackFactory {
         tileFactory.setGame(game);
     }
 
-    public void setConfig(Ini config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 
@@ -77,7 +78,11 @@ public class TilePackFactory {
     }
 
     private URL getCardsConfig(Expansion expansion) {
-        String fileName = config.get("debug", "tiles_"+expansion.name());
+        DebugConfig debugConfig = config.getDebug();
+        String fileName = null;
+        if (debugConfig != null && debugConfig.getTile_definitions() != null) {
+            fileName = debugConfig.getTile_definitions().get(expansion.name());
+        }
         if (fileName == null) {
             fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
         }

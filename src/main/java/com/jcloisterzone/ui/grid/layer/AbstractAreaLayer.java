@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -37,7 +38,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     public AbstractAreaLayer(GridPanel gridPanel) {
         super(gridPanel);
-        if ("figure".equals(getClient().getConfig().get("debug", "area_highlight"))) {
+        DebugConfig debugConfig = getClient().getConfig().getDebug();
+        if (debugConfig != null && "figure".equals(debugConfig.getArea_highlight())) {
             figureHighlight = true;
         }
     }

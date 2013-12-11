@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -14,6 +13,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.jcloisterzone.Config;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.UserInterface;
@@ -47,7 +47,7 @@ import com.jcloisterzone.game.phase.Phase;
 public class Game extends GameSettings {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private Ini config;
+    private Config config;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -75,11 +75,11 @@ public class Game extends GameSettings {
     private int idSequenceCurrVal = 0;
 
 
-    public Ini getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(Ini config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 

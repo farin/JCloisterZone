@@ -6,11 +6,11 @@ import java.lang.reflect.Proxy;
 import java.util.EnumSet;
 import java.util.Random;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
+import com.jcloisterzone.Config;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -52,23 +52,24 @@ public class Server extends GameSettings implements ServerIF {
 
 
     @SuppressWarnings("unchecked")
-    public Server(Ini config)  {
+    public Server(Config config)  {
         slots = new PlayerSlot[PlayerSlot.COUNT];
         slotSupportedExpansions = new EnumSet[slots.length];
         for (int i = 0; i < slots.length; i++) {
             slots[i] = new PlayerSlot(i);
         }
         getExpansions().add(Expansion.BASIC);
-        for (Expansion exp: Expansion.values()) {
-            if (exp.isEnabled() && config.get("game-default-expansions", exp.name(), boolean.class)) {
-                getExpansions().add(exp);
-            }
-        }
-        for (CustomRule rule : CustomRule.values()) {
-            if (config.get("game-default-rules", rule.name(), boolean.class)) {
-                getCustomRules().add(rule);
-            }
-        }
+        //TODO profile ?
+//        for (Expansion exp: Expansion.values()) {
+//            if (exp.isEnabled() && config.get("game-default-expansions", exp.name(), boolean.class)) {
+//                getExpansions().add(exp);
+//            }
+//        }
+//        for (CustomRule rule : CustomRule.values()) {
+//            if (config.get("game-default-rules", rule.name(), boolean.class)) {
+//                getCustomRules().add(rule);
+//            }
+//        }
     }
 
     @SuppressWarnings("unchecked")

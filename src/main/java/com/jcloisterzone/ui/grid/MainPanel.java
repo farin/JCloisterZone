@@ -152,7 +152,8 @@ public class MainPanel extends BackgroundPanel {
     }
 
     private Integer getScoreAnimationDuration() {
-        return client.getConfig().get("ui", "score_display_duration", Integer.class);
+        Integer duration = client.getConfig().getScore_display_duration();
+        return duration == null ? 10 : Math.max(duration, 1);
     }
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {

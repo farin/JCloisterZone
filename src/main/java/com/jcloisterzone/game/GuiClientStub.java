@@ -2,11 +2,14 @@ package com.jcloisterzone.game;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.jcloisterzone.Config.AutostartConfig;
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -39,11 +42,13 @@ public class GuiClientStub extends ClientStub {
             }
         });
 
-        if (client.getConfig().get("debug", "autostart", boolean.class)) {
-            client.getConfig().remove("debug", "autostart"); //apply autostart only once
-            final List<String> players = client.getConfig().get("debug").getAll("autostart_player");
+        DebugConfig debugConfig = client.getConfig().getDebug();
+        if (debugConfig.isAutostartEnabled()) {
+            AutostartConfig autostrtConfig = debugConfig.getAutostart();
+            debugConfig.setAutostart(null); //apply autostart only once - !!! beware rewriting config when persistence will be implemented
+            final List<String> players = autostrtConfig.getPlayers() == null ? new ArrayList<String>() : autostrtConfig.getPlayers();
             if (players.isEmpty()) {
-                players.add("UNDEFINED");
+                players.add("Player");
             }
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {

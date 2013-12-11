@@ -2,8 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.List;
 
-import org.ini4j.Profile.Section;
-
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
@@ -14,14 +13,16 @@ import com.jcloisterzone.rmi.ServerIF;
 
 public class DrawPhase extends ServerAwarePhase {
 
+    private static final String DEBUG_END_OF_PACK = ".";
+
     private List<String> debugTiles;
     private final BazaarCapability bazaarCap;
 
     public DrawPhase(Game game, ServerIF server) {
         super(game, server);
-        Section debugSection = game.getConfig().get("debug");
-        if (debugSection != null) {
-            debugTiles = debugSection.getAll("draw");
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null) {
+            debugTiles = debugConfig.getDraw();
         }
         bazaarCap = game.getCapability(BazaarCapability.class);
     }
@@ -29,7 +30,7 @@ public class DrawPhase extends ServerAwarePhase {
     private boolean makeDebugDraw() {
         if (debugTiles != null && debugTiles.size() > 0) { //for debug purposes only
             String tileId = debugTiles.remove(0);
-            if (tileId.equals("!")) {
+            if (tileId.equals(DEBUG_END_OF_PACK)) {
                 next(GameOverPhase.class);
                 return true;
             }

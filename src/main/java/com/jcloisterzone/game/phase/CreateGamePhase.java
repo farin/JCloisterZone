@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ClassToInstanceMap;
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
@@ -205,10 +206,11 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
-        String offVal = game.getConfig().get("debug", "off_capabilities");
-        Set<Class<? extends Capability>> off = new HashSet<>();
-        if (offVal != null) {
-            for (String tok : offVal.split(",")) {
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
+            List<String> offNames =  debugConfig.getOff_capabilities();
+            Set<Class<? extends Capability>> off = new HashSet<>();
+            for (String tok : offNames) {
                 tok = tok.trim();
                 try {
                     String className = "com.jcloisterzone.game.capability."+tok+"Capability";
@@ -219,8 +221,8 @@ public class CreateGamePhase extends ServerAwarePhase {
                     logger.warn("Invalid capability name: " + tok, e);
                 }
             }
+            game.getCapabilityClasses().removeAll(off);
         }
-        game.getCapabilityClasses().removeAll(off);
     }
 
     @Override

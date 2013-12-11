@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.BarnAction;
@@ -145,14 +146,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     protected void selectTilePlacement(TilePlacementAction action) {
-        String autosave = game.getConfig().get("debug", "save_before_ranking");
-        if (autosave != null && autosave.length() > 0) {
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
             Snapshot snapshot = new Snapshot(game, 0);
-            if ("plain".equals(game.getConfig().get("debug", "save_format"))) {
+            if ("plain".equals(debugConfig.getSave_format())) {
                 snapshot.setGzipOutput(false);
             }
             try {
-                snapshot.save(new File(autosave));
+                snapshot.save(new File(debugConfig.getAutosave()));
             } catch (Exception e) {
                 logger.error("Auto save before ranking failed.", e);
             }

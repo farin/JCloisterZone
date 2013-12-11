@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui;
 
-import org.ini4j.Ini;
-import org.ini4j.Profile.Section;
+import com.jcloisterzone.Config;
 
 
 //TODO possible with merge config
@@ -16,13 +15,12 @@ public class ClientSettings {
 
     private boolean showHistory;
 
-    public ClientSettings(Ini config) {
-        Section uiConfig = config.get("settings");
-        playBeep = uiConfig.get("beep_alert", boolean.class);
-        confirmFarmPlacement = uiConfig.get("confirm_farm_place", boolean.class);
-        confirmTowerPlacement = uiConfig.get("confirm_tower_place", boolean.class);
-        confirmGameClose = uiConfig.get("confirm_game_close", boolean.class);
-        confirmRansomPayment = uiConfig.get("confirm_ransom_payment", boolean.class);
+    public ClientSettings(Config config) {
+        playBeep = config.getBeep_alert();
+        confirmFarmPlacement = config.getConfirm().getFarm_place();
+        confirmTowerPlacement = config.getConfirm().getTower_place();
+        confirmGameClose = config.getConfirm().getGame_close();
+        confirmRansomPayment = config.getConfirm().getRansom_payment();
     }
 
     public boolean isPlayBeep() {
