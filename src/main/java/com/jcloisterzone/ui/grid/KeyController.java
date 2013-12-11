@@ -21,7 +21,6 @@ public class KeyController implements KeyEventDispatcher {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        //System.out.println(e);
         if (!client.isActive()) return false; //AWT method on window (it not check if player is active)
         if (!isDispatchActive()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
@@ -65,6 +64,7 @@ public class KeyController implements KeyEventDispatcher {
     }
 
     private boolean dispatchReptable(KeyEvent e, boolean pressed) {
+        if (e.getModifiers() != 0) return false;
         switch (e.getKeyCode()) {
         case KeyEvent.VK_LEFT:
         case KeyEvent.VK_A:
@@ -95,6 +95,7 @@ public class KeyController implements KeyEventDispatcher {
     }
 
     private boolean dispatchKeyTyped(KeyEvent e) {
+        if (e.getModifiers() != 0) return false;
         if (e.getKeyChar() == '+' || e.getKeyChar() == '-') {
             e.consume();
             return true;
