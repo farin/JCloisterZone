@@ -48,7 +48,6 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
     public void connect(InetAddress ia, int port) {
         InetSocketAddress endpoint = new InetSocketAddress(ia, port);
         connect(endpoint);
-        session.write(new ClientControllMessage(null));
     }
 
     private void connect(SocketAddress endpoint) {
@@ -66,6 +65,7 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         future.awaitUninterruptibly();
         if (future.isConnected()) {
             session = future.getSession();
+            session.write(new ClientControllMessage(null));
         }
     }
 
