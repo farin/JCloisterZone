@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Config;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {

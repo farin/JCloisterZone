@@ -43,6 +43,11 @@
             <version>2.0.7</version>
         </dependency>
         <dependency>
+        <groupId>com.floreysoft</groupId>
+            <artifactId>jmte</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.13</version>

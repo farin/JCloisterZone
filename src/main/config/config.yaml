@@ -1,4 +1,7 @@
---- #JCloisterZone configuration
+# JCloisterZone configuration
+#
+# Feel free to edit. Mind all your own comments or whitespaces may be stripped by configuration save peformed by application.
+
 update: http://jcloisterzone.com/version.xml
 port: 37447
 

@@ -2,9 +2,9 @@ package com.jcloisterzone.game.phase;
 
 import java.util.List;
 
-import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;

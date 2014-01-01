@@ -21,10 +21,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.jcloisterzone.Config;
-import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;

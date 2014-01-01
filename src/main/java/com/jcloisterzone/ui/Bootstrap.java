@@ -10,18 +10,16 @@ import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Config;
-import com.jcloisterzone.Config.AutostartConfig;
-import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
@@ -37,17 +35,6 @@ public class Bootstrap  {
 
     public static boolean isMac() {
         return System.getProperty("os.name").startsWith("Mac");
-    }
-
-    public Config loadConfig() {
-        Yaml yaml = new Yaml(new Constructor(Config.class));
-        String configFile = System.getProperty("config");
-        if (configFile == null) {
-            configFile = "config.yaml";
-        }
-
-        Config config = (Config) yaml.load(Client.class.getClassLoader().getResourceAsStream(configFile));
-        return config;
     }
 
     public List<Plugin> loadPlugins(Config config) {
@@ -97,7 +84,9 @@ public class Bootstrap  {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        Config config = loadConfig();
+        ConfigLoader configLoader = new ConfigLoader();
+        Config config = configLoader.load();
+
         List<Plugin> plugins = loadPlugins(config);
 
         final Client client = new Client(config, plugins);

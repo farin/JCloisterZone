@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ClassToInstanceMap;
-import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
@@ -17,6 +16,7 @@ import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui;
 
-import com.jcloisterzone.Config;
+import com.jcloisterzone.config.Config;
 
 
 //TODO possible with merge config

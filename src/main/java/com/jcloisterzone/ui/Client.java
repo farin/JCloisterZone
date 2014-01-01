@@ -36,12 +36,13 @@ import javax.swing.WindowConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Config;
-import com.jcloisterzone.Config.DebugConfig;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;

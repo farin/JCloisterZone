@@ -1,5 +1,6 @@
-package com.jcloisterzone;
+package com.jcloisterzone.config;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +16,28 @@ public class Config {
     private Boolean beep_alert;
 
     private List<String> plugins;
-    private ConfirmConfig confirm; //TODO class
+    private ConfirmConfig confirm;
     private PlayersConfig players;
     private DebugConfig debug;
-    private Map<String, Object> profiles;
+    private Map<String, ProfileConfig> profiles;
+
+    public static class ProfileConfig {
+        private List<String> expansions;
+        private List<String> rules;
+
+        public List<String> getExpansions() {
+            return expansions;
+        }
+        public void setExpansions(List<String> expansions) {
+            this.expansions = expansions;
+        }
+        public List<String> getRules() {
+            return rules;
+        }
+        public void setRules(List<String> rules) {
+            this.rules = rules;
+        }
+    }
 
     public static class AutostartConfig {
 
@@ -103,25 +122,25 @@ public class Config {
         private Boolean ransom_payment;
 
         public Boolean getFarm_place() {
-            return farm_place;
+            return farm_place == null ? Boolean.FALSE : farm_place;
         }
         public void setFarm_place(Boolean farm_place) {
             this.farm_place = farm_place;
         }
         public Boolean getTower_place() {
-            return tower_place;
+            return tower_place == null ? Boolean.FALSE : tower_place;
         }
         public void setTower_place(Boolean tower_place) {
             this.tower_place = tower_place;
         }
         public Boolean getGame_close() {
-            return game_close;
+            return game_close == null ? Boolean.FALSE : game_close;
         }
         public void setGame_close(Boolean game_close) {
             this.game_close = game_close;
         }
         public Boolean getRansom_payment() {
-            return ransom_payment;
+            return ransom_payment == null ? Boolean.FALSE : ransom_payment;
         }
         public void setRansom_payment(Boolean ransom_payment) {
             this.ransom_payment = ransom_payment;
@@ -134,7 +153,7 @@ public class Config {
         private List<String> ai_names;
 
         public List<String> getColors() {
-            return colors;
+            return colors == null ? Collections.<String>emptyList() : colors;
         }
         public void setColors(List<String> colors) {
             this.colors = colors;
@@ -152,7 +171,6 @@ public class Config {
             this.ai_names = ai_names;
         }
     }
-
 
     public String getUpdate() {
         return update;
@@ -195,7 +213,7 @@ public class Config {
     }
 
     public Boolean getBeep_alert() {
-        return beep_alert;
+        return beep_alert == null ? Boolean.FALSE : beep_alert;
     }
 
     public void setBeep_alert(Boolean beep_alert) {
@@ -211,6 +229,9 @@ public class Config {
     }
 
     public PlayersConfig getPlayers() {
+        if (players == null) {
+            players = new PlayersConfig();
+        }
         return players;
     }
 
@@ -227,6 +248,9 @@ public class Config {
     }
 
     public ConfirmConfig getConfirm() {
+        if (confirm == null) {
+            confirm = new ConfirmConfig();
+        }
         return confirm;
     }
 
@@ -234,85 +258,12 @@ public class Config {
         this.confirm = confirm;
     }
 
-    public Map<String, Object> getProfiles() {
+    public Map<String, ProfileConfig> getProfiles() {
         return profiles;
     }
 
-    public void setProfiles(Map<String, Object> profiles) {
+    public void setProfiles(Map<String, ProfileConfig> profiles) {
         this.profiles = profiles;
     }
-
-
-
-
-
-
-
-
-//
-//
-//    class Confirmations
-//
-//    confirm:
-//      farm_place: false
-//      tower_place: true
-//      game_close: true
-//      ransom_payment: true
-//
-//    players:
-//      colors: # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)
-//        - RED
-//        - "#008ffe"
-//        - YELLOW
-//        - "#009900"
-//        - BLACK
-//        - "#808000"
-//
-//      names: [] # You can declare default player names
-//      ai_names: [ Adda, Ellen, Caitlyn, Riannon, Tankred, Rigatona ]
-//
-//    plugins:
-//      - plugins/classic.jar # Graphics from original board game
-//      #- plugins/rgg_siege.jar # RGG's Siege tiles instead of original The Cathars tiles
-//
-//    profiles:
-//      default:
-//        expansions:
-//          #- WINTER
-//          #- INNS_AND_CATHEDRALS
-//          #- TRADERS_AND_BUILDERS
-//          #- PRINCESS_AND_DRAGON
-//          #- TOWER
-//          #- ABBEY_AND_MAYOR
-//          #- BRIDGES_CASTLES_AND_BAZAARS
-//
-//          #- CATAPULT
-//          #- KING_AND_SCOUT
-//          #- RIVER
-//          #- RIVER_II
-//          #- CATHARS= false
-//          #- COUNT= false
-//          #- GQ11= false
-//          #- CULT
-//          #- TUNNEL
-//          #- CORN_CIRCLES
-//          #- PLAGUE
-//          #- FESTIVAL
-//          #- PHANTOM
-//          #- WIND_ROSE
-//
-//          #- FLIER
-//          #- CORN_CIRCLES_II
-//        rules:
-//          #- TINY_CITY_2_POINTS
-//          #- FARM_CITY_SCORED_ONCE
-//          #- CANNOT_PLACE_BUILDER_ON_VOLCANO
-//          #- PRINCESS_MUST_REMOVE_KNIGHT
-//          - PIG_HERD_ON_GQ_FARM
-//          #- MULTI_BARN_ALLOWEDD
-//          - TUNNELIZE_ALL_EXPANSIONS
-//          #- BAZAAR_NO_AUCTION
-
-
 
 }

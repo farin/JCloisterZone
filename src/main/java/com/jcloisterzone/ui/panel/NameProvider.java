@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jcloisterzone.Config;
-import com.jcloisterzone.Config.PlayersConfig;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.PlayersConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 
 public class NameProvider {

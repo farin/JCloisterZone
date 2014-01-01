@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.jcloisterzone.Config.AutostartConfig;
-import com.jcloisterzone.Config.DebugConfig;
+import com.jcloisterzone.config.Config.AutostartConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
