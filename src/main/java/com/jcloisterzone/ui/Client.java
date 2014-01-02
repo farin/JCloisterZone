@@ -36,7 +36,6 @@ import javax.swing.WindowConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
@@ -82,8 +81,10 @@ public class Client extends JFrame {
 
     private final Config config;
     private final ConfigLoader configLoader;
-    private final ClientSettings settings;
     private final ConvenientResourceManager resourceManager;
+
+    //non-persistetn settings
+    private boolean showHistory;
 
     @Deprecated
     private FigureTheme figureTheme;
@@ -157,7 +158,6 @@ public class Client extends JFrame {
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
         this.config = config;
-        settings = new ClientSettings(config);
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
@@ -223,12 +223,8 @@ public class Client extends JFrame {
         return config;
     }
 
-    public ConfigLoader getConfigLoader() {
-        return configLoader;
-    }
-
-    public ClientSettings getSettings() {
-        return settings;
+    public void saveConfig() {
+        configLoader.save(config);
     }
 
     public ConvenientResourceManager getResourceManager() {
@@ -315,7 +311,7 @@ public class Client extends JFrame {
 
     public boolean closeGame(boolean force) {
         boolean isGameRunning = getJMenuBar().isGameRunning();
-        if (settings.isConfirmGameClose() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
+        if (config.getConfirm().getGame_close() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
@@ -480,7 +476,7 @@ public class Client extends JFrame {
     }
 
     void beep() {
-        if (settings.isPlayBeep()) {
+        if (config.getBeep_alert()) {
             try {
                 BufferedInputStream fileInStream = new BufferedInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
                 AudioInputStream beepStream = AudioSystem.getAudioInputStream(fileInStream);
@@ -545,6 +541,13 @@ public class Client extends JFrame {
         }
     }
 
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(boolean showHistory) {
+        this.showHistory = showHistory;
+    }
 
     //------------------- LEGACY: TODO refactor ---------------
     //TODO move getColor on player

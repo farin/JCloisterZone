@@ -148,7 +148,7 @@ public class MenuBar extends JMenuBar {
         history.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getSettings().setShowHistory(ch.isSelected());
+                client.setShowHistory(ch.isSelected());
                 if (ch.isSelected()) {
                     client.getGridPanel().showRecentHistory();
                 } else {
@@ -177,10 +177,11 @@ public class MenuBar extends JMenuBar {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getSettings().setPlayBeep(state);
+                client.getConfig().setBeep_alert(state);
+                client.saveConfig();
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isPlayBeep());
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getBeep_alert());
         menu.add(menuItem);
 
         menu.addSeparator();
@@ -189,28 +190,33 @@ public class MenuBar extends JMenuBar {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getSettings().setConfirmFarmPlacement(state);
+                client.getConfig().getConfirm().setFarm_place(state);
+                client.saveConfig();
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmFarmPlacement());
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getFarm_place());
         menu.add(menuItem);
+
         menuItem = new JCheckBoxMenuItem(_("Confirm placement on a tower"));
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getSettings().setConfirmTowerPlacement(state);
+                client.getConfig().getConfirm().setTower_place(state);
+                client.saveConfig();
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmTowerPlacement());
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getTower_place());
         menu.add(menuItem);
+
         menuItem = new JCheckBoxMenuItem(_("Confirm ransom payment"));
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getSettings().setConfirmRansomPayment(state);
+                client.getConfig().getConfirm().setRansom_payment(state);
+                client.saveConfig();
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmTowerPlacement());
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getRansom_payment());
         menu.add(menuItem);
 
         menu.addSeparator();
@@ -219,10 +225,11 @@ public class MenuBar extends JMenuBar {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getSettings().setConfirmGameClose(state);
+                client.getConfig().getConfirm().setGame_close(state);
+                client.saveConfig();
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getSettings().isConfirmGameClose());
+        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getGame_close());
         menu.add(menuItem);
 
         this.add(menu);

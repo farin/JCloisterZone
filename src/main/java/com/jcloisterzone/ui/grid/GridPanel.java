@@ -447,7 +447,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         tileLayer.tilePlaced(tile);
 
-        if (client.getSettings().isShowHistory()) {
+        if (client.isShowHistory()) {
             showRecentHistory();
         }
         boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles

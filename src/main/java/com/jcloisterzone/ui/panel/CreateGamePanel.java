@@ -158,7 +158,7 @@ public class CreateGamePanel extends JPanel {
                 }
                 Config config = client.getConfig();
                 config.getProfiles().put(profile.getName(), profile.getConfig());
-                client.getConfigLoader().save(config);
+                client.saveConfig();
             }
         });
         profilePanel.add(profileSave, "width 80, gapright 10, west");
@@ -176,7 +176,7 @@ public class CreateGamePanel extends JPanel {
                     profiles.removeItem(profile);
                     Config config = client.getConfig();
                     config.getProfiles().remove(profile.getName());
-                    client.getConfigLoader().save(config);
+                    client.saveConfig();
                 }
             }
         });

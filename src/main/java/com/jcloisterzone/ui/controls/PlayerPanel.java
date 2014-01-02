@@ -308,7 +308,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
         TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
         if (!tg.isRansomPaidThisTurn()) {
-            if (client.getSettings().isConfirmRansomPayment()) {
+            if (client.getConfig().getConfirm().getRansom_payment()) {
                 String options[] = {_("Pay ransom"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(client,
                         _("Do you really want to pay 3 points to release prisoner?"),

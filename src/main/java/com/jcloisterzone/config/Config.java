@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Snakeyaml not supporting mapping to camel-case properties.
+ * So propeties must be underscored.
+ *
+ */
 public class Config {
 
     private transient File origin;
