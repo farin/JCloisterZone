@@ -14,6 +14,8 @@ public enum CustomRule {
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, _("Princess MUST remove a knight from city.")),
     //DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, _("Dragon movement after scoring.")),
 
+    ESCAPE_RGG(Expansion.CATHARS, _("Escape cloister can be placed adjacent to any tile of a besieged city (RGG's)")),
+
     PIG_HERD_ON_GQ_FARM(Expansion.GQ11, _("The Pig herd is present on the farm tile.")),
 
     MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, _("Allow direct barn placement on a farm where another barn is already placed.")),
