@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.rmi.CallMessage;
 import com.jcloisterzone.rmi.ClientControllMessage;
@@ -106,13 +104,10 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
         }
 
         session.write(new ControllMessage(session.getId(), Application.PROTCOL_VERSION, server.getSnapshot(), server.getSlots()));
-
-        for (Expansion exp: server.getExpansions()) {
-            session.write(new CallMessage("updateExpansion", new Object[] { exp, true }));
-        }
-        for (CustomRule rule: server.getCustomRules()) {
-            session.write(new CallMessage("updateCustomRule", new Object[] { rule, true }));
-        }
+        session.write(new CallMessage("updateGameSetup", new Object[] {
+                server.getExpansions().toArray(new Expansion[server.getExpansions().size()]),
+                server.getCustomRules().toArray(new CustomRule[server.getCustomRules().size()])
+        }));
     }
 
     @Override

@@ -170,11 +170,18 @@ public abstract class Phase implements ClientIF {
     public void updateCustomRule(CustomRule rule, Boolean enabled) {
         logger.error(Application.ILLEGAL_STATE_MSG, "updateCustomRule");
     }
+
     @Override
     public void updateExpansion(Expansion expansion, Boolean enabled) {
         logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
 
     }
+
+    @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+         logger.error(Application.ILLEGAL_STATE_MSG, "updateGameSetup");
+    }
+
     @Override
     public void updateSlot(PlayerSlot slot) {
         game.fireGameEvent().updateSlot(slot);

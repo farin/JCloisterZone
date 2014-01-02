@@ -34,42 +34,11 @@ plugins:
   - plugins/classic.jar # Graphics from original board game
   #- plugins/rgg_siege.jar # RGG's Siege tiles instead of original The Cathars tiles
 
+# possible expansions in profile definition:
+#   WINTER, INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON, TOWER, ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS,
+#   CATAPULT, KING_AND_SCOUT, RIVER, RIVER_II, CATHARS, COUNT, GQ11, CULT, TUNNEL, CORN_CIRCLES, PLAGUE, FESTIVAL, PHANTOM, WIND_ROSE,
+#   FLIER, CORN_CIRCLES_II
+# possible rules:
+#   TINY_CITY_2_POINTS, FARM_CITY_SCORED_ONCE, CANNOT_PLACE_BUILDER_ON_VOLCANO, PRINCESS_MUST_REMOVE_KNIGHT, PIG_HERD_ON_GQ_FARM, MULTI_BARN_ALLOWEDD
+#   TUNNELIZE_ALL_EXPANSIONS,  BAZAAR_NO_AUCTION
 profiles:
-  default:
-    expansions:
-      #- WINTER
-      #- INNS_AND_CATHEDRALS
-      #- TRADERS_AND_BUILDERS
-      #- PRINCESS_AND_DRAGON
-      #- TOWER
-      #- ABBEY_AND_MAYOR
-      #- BRIDGES_CASTLES_AND_BAZAARS
-
-      #- CATAPULT
-      #- KING_AND_SCOUT
-      #- RIVER
-      #- RIVER_II
-      #- CATHARS= false
-      #- COUNT= false
-      #- GQ11= false
-      #- CULT
-      #- TUNNEL
-      #- CORN_CIRCLES
-      #- PLAGUE
-      #- FESTIVAL
-      #- PHANTOM
-      #- WIND_ROSE
-
-      #- FLIER
-      #- CORN_CIRCLES_II
-    rules:
-      #- TINY_CITY_2_POINTS
-      #- FARM_CITY_SCORED_ONCE
-      #- CANNOT_PLACE_BUILDER_ON_VOLCANO
-      #- PRINCESS_MUST_REMOVE_KNIGHT
-      - PIG_HERD_ON_GQ_FARM
-      #- MULTI_BARN_ALLOWEDD
-      - TUNNELIZE_ALL_EXPANSIONS
-      #- BAZAAR_NO_AUCTION
-
-

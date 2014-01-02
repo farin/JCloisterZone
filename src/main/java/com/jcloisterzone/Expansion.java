@@ -109,6 +109,7 @@ public enum Expansion {
         return code;
     }
 
+    @Deprecated //??? keep only supported expansions in code
     public boolean isEnabled() {
         return enabled;
     }

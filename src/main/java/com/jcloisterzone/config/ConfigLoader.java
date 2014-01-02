@@ -1,8 +1,10 @@
 package com.jcloisterzone.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -46,29 +48,42 @@ public class ConfigLoader {
     public Config load() {
         Yaml yaml = new Yaml(new Constructor(Config.class));
         String configFile = getConfigFile();
-        InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(configFile);
-        if (inputStream == null && !configFile.equals(DEFAULT_CONFIG)) {
+        URL configResource = Client.class.getClassLoader().getResource(configFile);
+        if (configResource == null && !configFile.equals(DEFAULT_CONFIG)) {
             logger.warn("Configuration file not found {}", configFile);
             configFile = DEFAULT_CONFIG;
-            inputStream = Client.class.getClassLoader().getResourceAsStream(configFile);
+            configResource = Client.class.getClassLoader().getResource(configFile);
         }
 
         Config config = null;
-        if (inputStream == null) {
-            logger.info("Default configuration file doesn't exist. Creating new one.");
+        if (configResource == null) {
+            logger.info("Default configuration file {} doesn't exist. Creating new one.", DEFAULT_CONFIG);
             config = createDefault();
-            try {
-                PrintWriter writer = new PrintWriter(DEFAULT_CONFIG);
-                writer.print(fillTemplate(config));
-                writer.close();
-            } catch (IOException e) {
-                logger.warn("Unable to create configuration file {}", DEFAULT_CONFIG);
-            }
+            config.setOrigin(new File(DEFAULT_CONFIG));
+            save(config);
         } else {
             logger.info("Loading configuration {}", configFile);
-            config = (Config) yaml.load(inputStream);
+            try {
+                config = (Config) yaml.load(configResource.openStream());
+            } catch (IOException ex) {
+                logger.warn("Error reading configuration.", ex);
+                config = createDefault();
+            }
+            config.setOrigin(new File(configResource.getFile()));
         }
         return config;
+    }
+
+    public void save(Config config) {
+        File file = config.getOrigin();
+        try {
+            PrintWriter writer = new PrintWriter(file);
+            writer.print(fillTemplate(config));
+            writer.close();
+            logger.warn("Configuration saved {}", file);
+        } catch (IOException e) {
+            logger.warn("Unable to create configuration file {}", file);
+        }
     }
 
     private Config createDefault() {
@@ -83,7 +98,6 @@ public class ConfigLoader {
         config.getPlayers().setColors(Lists.newArrayList("RED", "#008ffe", "YELLOW", "#009900", "BLACK", "#808000"));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
-
         return config;
     }
 

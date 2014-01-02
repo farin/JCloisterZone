@@ -43,4 +43,8 @@ public enum CustomRule {
         return label;
     }
 
+    public static CustomRule[] defaultEnabled() {
+        return new CustomRule[] { PIG_HERD_ON_GQ_FARM, TUNNELIZE_ALL_EXPANSIONS };
+    }
+
 }

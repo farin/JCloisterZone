@@ -89,7 +89,7 @@ public class Bootstrap  {
 
         List<Plugin> plugins = loadPlugins(config);
 
-        final Client client = new Client(config, plugins);
+        final Client client = new Client(configLoader, config, plugins);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

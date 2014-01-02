@@ -1,10 +1,14 @@
 package com.jcloisterzone.config;
 
+import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Config {
+
+    private transient File origin;
 
     private String update;
     private Integer port;
@@ -26,7 +30,7 @@ public class Config {
         private List<String> rules;
 
         public List<String> getExpansions() {
-            return expansions;
+            return expansions == null ? Collections.<String>emptyList() : expansions;
         }
         public void setExpansions(List<String> expansions) {
             this.expansions = expansions;
@@ -259,11 +263,22 @@ public class Config {
     }
 
     public Map<String, ProfileConfig> getProfiles() {
+        if (profiles == null) {
+            profiles = new HashMap<>();
+        }
         return profiles;
     }
 
     public void setProfiles(Map<String, ProfileConfig> profiles) {
         this.profiles = profiles;
+    }
+
+    public File getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(File origin) {
+        this.origin = origin;
     }
 
 }

@@ -50,6 +50,11 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+        server.updateGameSetup(expansions, rules);
+    }
+
+    @Override
     public void startGame() {
         server.startGame();
     }

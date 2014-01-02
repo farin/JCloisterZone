@@ -43,6 +43,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
@@ -80,6 +81,7 @@ public class Client extends JFrame {
     private ClientController controller = new ClientController(this);
 
     private final Config config;
+    private final ConfigLoader configLoader;
     private final ClientSettings settings;
     private final ConvenientResourceManager resourceManager;
 
@@ -152,7 +154,8 @@ public class Client extends JFrame {
         super.setLocale(l);
     }
 
-    public Client(Config config, List<Plugin> plugins) {
+    public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
+        this.configLoader = configLoader;
         this.config = config;
         settings = new ClientSettings(config);
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
@@ -218,6 +221,10 @@ public class Client extends JFrame {
 
     public Config getConfig() {
         return config;
+    }
+
+    public ConfigLoader getConfigLoader() {
+        return configLoader;
     }
 
     public ClientSettings getSettings() {

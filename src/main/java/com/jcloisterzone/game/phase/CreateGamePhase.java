@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.ObjectArrays;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
@@ -74,6 +75,22 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getExpansions().remove(expansion);
         }
         game.fireGameEvent().updateExpansion(expansion, enabled);
+    }
+
+    @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+        game.getExpansions().clear();
+        game.getExpansions().addAll(Arrays.asList(expansions));
+        game.getCustomRules().clear();
+        game.getCustomRules().addAll(Arrays.asList(rules));
+
+        for (Expansion exp : Expansion.values()) {
+            if (!exp.isEnabled()) continue;
+            game.fireGameEvent().updateExpansion(exp, game.getExpansions().contains(exp));
+        }
+        for (CustomRule rule : CustomRule.values()) {
+            game.fireGameEvent().updateCustomRule(rule, game.getCustomRules().contains(rule));
+        }
     }
 
     @Override

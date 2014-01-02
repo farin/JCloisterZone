@@ -20,6 +20,7 @@ public interface Client2ClientIF {
 
     public void updateExpansion(Expansion expansion, Boolean enabled);
     public void updateCustomRule(CustomRule rule, Boolean enabled);
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules);
     public void startGame();
 
     /* ---------------------- STARTED GAME MESSAGES ------------------*/

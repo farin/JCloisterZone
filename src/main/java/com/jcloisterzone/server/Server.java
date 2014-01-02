@@ -3,6 +3,8 @@ package com.jcloisterzone.server;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Random;
 
@@ -59,17 +61,9 @@ public class Server extends GameSettings implements ServerIF {
             slots[i] = new PlayerSlot(i);
         }
         getExpansions().add(Expansion.BASIC);
-        //TODO profile ?
-//        for (Expansion exp: Expansion.values()) {
-//            if (exp.isEnabled() && config.get("game-default-expansions", exp.name(), boolean.class)) {
-//                getExpansions().add(exp);
-//            }
-//        }
-//        for (CustomRule rule : CustomRule.values()) {
-//            if (config.get("game-default-rules", rule.name(), boolean.class)) {
-//                getCustomRules().add(rule);
-//            }
-//        }
+        for (CustomRule cr : CustomRule.defaultEnabled()) {
+            getCustomRules().add(cr);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -160,8 +154,12 @@ public class Server extends GameSettings implements ServerIF {
 
     @Override
     public void updateExpansion(Expansion expansion, Boolean enabled) {
-        if (gameStarted || ! expansion.isEnabled()) {
+        if (gameStarted) {
             logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
+            return;
+        }
+        if (!expansion.isEnabled() || expansion == Expansion.BASIC) {
+            logger.error("Invalid expansion {}", expansion);
             return;
         }
         if (enabled) {
@@ -186,6 +184,20 @@ public class Server extends GameSettings implements ServerIF {
         }
         //stub.updateGameSettings(slots, getExpansions(), getCustomRules());
         stub.updateCustomRule(rule, enabled);
+    }
+
+    @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+        if (gameStarted) {
+            logger.error(Application.ILLEGAL_STATE_MSG, "updateGameSetup");
+            return;
+        }
+        getExpansions().clear();
+        getExpansions().add(Expansion.BASIC);
+        getExpansions().addAll(Arrays.asList(expansions));
+        getCustomRules().clear();
+        getCustomRules().addAll(Arrays.asList(rules));
+        stub.updateGameSetup(expansions, rules);
     }
 
     @Override

@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +28,8 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.ProfileConfig;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
@@ -41,6 +46,9 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel playersPanel;
     // private JLabel helpText;
+    private JComboBox<Object> profiles;
+    private JButton profileSave, profileDelete;
+
     private JButton startGameButton;
     private JPanel expansionPanel;
     private JPanel rulesPanel;
@@ -48,6 +56,38 @@ public class CreateGamePanel extends JPanel {
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
+
+    static class Profile implements Comparable<Profile>{
+        private final String name;
+        private ProfileConfig config;
+
+        public Profile(String name, ProfileConfig config) {
+            this.name = name;
+            this.config = config;
+        }
+
+        @Override
+        public int compareTo(Profile o) {
+            return name.compareTo(o.name);
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ProfileConfig getConfig() {
+            return config;
+        }
+
+        public void setConfig(ProfileConfig config) {
+            this.config = config;
+        }
+    }
 
     /**
      * Create the panel.
@@ -78,6 +118,70 @@ public class CreateGamePanel extends JPanel {
             }
         });
 
+        JPanel profilePanel = new JPanel();
+        profilePanel.setBorder(new TitledBorder(null, _("Profiles"),
+                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        profilePanel.setLayout(new MigLayout());
+        panel.add(profilePanel, "west");
+
+        profiles = new JComboBox<Object>(getProfiles());
+        profiles.setEditable(true);
+        profiles.setSelectedItem("");
+        profiles.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (profiles.getSelectedItem() instanceof Profile) {
+                    loadProfile((Profile) profiles.getSelectedItem());
+                }
+            }
+        });
+        profilePanel.add(profiles, "width 160, gapright 10, west");
+
+        profileSave = new JButton(_("Save"));
+        profileSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object item = profiles.getSelectedItem();
+                if (item instanceof String) {
+                    Profile profile = getProfileFor((String) item);
+                    if (profile != null) {
+                        item = profile;
+                    }
+                }
+                Profile profile = null;
+                if (item instanceof String) { //not found matching profile, create new
+                    profile = new Profile(((String)item).trim(), createCurrentConfig());
+                    profiles.addItem(profile); //TODO insert at
+                } else { //profile already exists
+                    profile = (Profile) item;
+                    profile.setConfig(createCurrentConfig());
+                }
+                Config config = client.getConfig();
+                config.getProfiles().put(profile.getName(), profile.getConfig());
+                client.getConfigLoader().save(config);
+            }
+        });
+        profilePanel.add(profileSave, "width 80, gapright 10, west");
+
+        profileDelete = new JButton(_("Delete"));
+        profileDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object item = profiles.getSelectedItem();
+                if (item instanceof String) {
+                    item = getProfileFor((String) item);
+                }
+                if (item instanceof Profile) {
+                    Profile profile = (Profile) item;
+                    profiles.removeItem(profile);
+                    Config config = client.getConfig();
+                    config.getProfiles().remove(profile.getName());
+                    client.getConfigLoader().save(config);
+                }
+            }
+        });
+        profilePanel.add(profileDelete, "width 80, west");
+
         playersPanel = new JPanel();
         playersPanel.setBorder(new TitledBorder(null, _("Players"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -101,7 +205,6 @@ public class CreateGamePanel extends JPanel {
         for (Expansion exp : Expansion.values()) {
             if (!exp.isEnabled())
                 continue;
-            // if (exp == Expansion.WHEEL_OF_FORTUNE) continue;
             JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
             if (exp == Expansion.KING_AND_SCOUT || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
                 expansionPanel.add(chbox, "gaptop 10");
@@ -136,6 +239,64 @@ public class CreateGamePanel extends JPanel {
 
         onSlotStateChange();
         startGameButton.requestFocus();
+    }
+
+    private Profile getProfileFor(String name) {
+        name = name.trim();
+        if ("".equals(name)) return null;
+
+        int count = profiles.getItemCount();
+        for (int i = 0; i < count; i++) {
+            Profile profile = (Profile) profiles.getItemAt(i);
+            if (profile.getName().equals(name)) {
+                return profile;
+            }
+        }
+        return null;
+    }
+
+    private ProfileConfig createCurrentConfig() {
+        List<String> expansions = new ArrayList<>();
+        List<String> rules = new ArrayList<>();
+        for (Expansion exp : client.getGame().getExpansions()) {
+            if (exp == Expansion.BASIC) continue;
+            expansions.add(exp.name());
+        }
+        for (CustomRule rule : client.getGame().getCustomRules()) {
+            rules.add(rule.name());
+        }
+        ProfileConfig config = new ProfileConfig();
+        config.setExpansions(expansions);
+        config.setRules(rules);
+        return config;
+    }
+
+    private Profile[] getProfiles() {
+        Map<String, ProfileConfig> profileCfg = client.getConfig().getProfiles();
+        if (profileCfg == null) {
+            return new Profile[0];
+        }
+        ArrayList<Profile> profiles = new ArrayList<>();
+        for (Entry<String, ProfileConfig> e : profileCfg.entrySet()) {
+            profiles.add(new Profile(e.getKey(), e.getValue()));
+        }
+        Collections.sort(profiles);
+        return profiles.toArray(new Profile[profiles.size()]);
+    }
+
+    private void loadProfile(Profile profile) {
+        EnumSet<Expansion> expansions = EnumSet.noneOf(Expansion.class);
+        expansions.add(Expansion.BASIC);
+        for (String expName : profile.getConfig().getExpansions()) {
+            expansions.add(Expansion.valueOf(expName));
+        }
+
+        EnumSet<CustomRule> rules = EnumSet.noneOf(CustomRule.class);
+        for (String ruleName : profile.getConfig().getRules()) {
+            rules.add(CustomRule.valueOf(ruleName));
+        }
+
+        client.getServer().updateGameSetup(expansions.toArray(new Expansion[expansions.size()]), rules.toArray(new CustomRule[rules.size()]));
     }
 
     public void disposePanel() {
