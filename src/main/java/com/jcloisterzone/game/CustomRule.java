@@ -10,7 +10,7 @@ public enum CustomRule {
     RANDOM_SEATING_ORDER(Expansion.BASIC, _("Randomize seating order")),
 
     TINY_CITY_2_POINTS(Expansion.BASIC, _("Tiny city is scored only for 2 points.")),
-    FARM_CITY_SCORED_ONCE(Expansion.BASIC, _("Each city is scored with one farm only.")),   //each city can be scored only once
+    FARM_CITY_SCORED_ONCE(Expansion.BASIC, _("Each city is scored with one farm only.")),   //2nd edition scoring
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, _("Princess MUST remove a knight from city.") + "(RGG, ZMG)"),
     DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, _("Dragon movement occurs after scoring.") + " (RGG)"),

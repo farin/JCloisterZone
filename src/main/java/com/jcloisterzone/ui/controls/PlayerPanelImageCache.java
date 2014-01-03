@@ -13,7 +13,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
-import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.theme.FigureTheme;
@@ -62,7 +62,7 @@ public class PlayerPanelImageCache {
         if (tower != null) {
             scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
         }
-        KingScoutCapability ks = client.getGame().getCapability(KingScoutCapability.class);
+        KingAndRobberBaronCapability ks = client.getGame().getCapability(KingAndRobberBaronCapability.class);
         if (ks != null) {
             scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));
             scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));

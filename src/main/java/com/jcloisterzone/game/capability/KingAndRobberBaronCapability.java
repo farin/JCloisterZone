@@ -14,14 +14,14 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
-public final class KingScoutCapability extends Capability {
+public final class KingAndRobberBaronCapability extends Capability {
 
     protected int completedCities, biggestCitySize;
     protected int completedRoads, longestRoadLength;
 
     private Player king, robberBaron;
 
-    public KingScoutCapability(Game game) {
+    public KingAndRobberBaronCapability(Game game) {
         super(game);
     }
 

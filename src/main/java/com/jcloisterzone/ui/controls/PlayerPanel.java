@@ -33,7 +33,7 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
-import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -42,12 +42,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
-    private static final Color KING_SCOUT_OVERLAY = new Color(0f,0f,0f,0.4f);
+    private static final Color KING_ROBBER_OVERLAY = new Color(0f,0f,0f,0.4f);
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
-    private static Font FONT_KING_SCOUT_OVERLAY = new Font("Georgia", Font.BOLD, 22);
+    private static Font FONT_KING_ROBBER_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
 
     private static final int PADDING_L = 9;
@@ -198,7 +198,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         TowerCapability towerCap = game.getCapability(TowerCapability.class);
         BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
         CastleCapability castleCap = game.getCapability(CastleCapability.class);
-        KingScoutCapability kingScoutCap = game.getCapability(KingScoutCapability.class);
+        KingAndRobberBaronCapability kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
         ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
 
         if (abbeyCap != null) {
@@ -217,27 +217,27 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
 
-        if (kingScoutCap != null) {
-            if (kingScoutCap.getKing() == player) {
+        if (kingRobberCap != null) {
+            if (kingRobberCap.getKing() == player) {
                 Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
                 if ("king".equals(mouseOverKey)) {
-                    g2.setFont(FONT_KING_SCOUT_OVERLAY);
-                    g2.setColor(KING_SCOUT_OVERLAY);
+                    g2.setFont(FONT_KING_ROBBER_OVERLAY);
+                    g2.setColor(KING_ROBBER_OVERLAY);
                     g2.fillRect(r.x, r.y, r.width, r.height);
                     g2.setColor(Color.WHITE);
-                    int size = kingScoutCap.getBiggestCitySize();
+                    int size = kingRobberCap.getBiggestCitySize();
                     g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
                     g2.setFont(FONT_MEEPLE);
                 }
             }
-            if (kingScoutCap.getRobberBaron() == player) {
+            if (kingRobberCap.getRobberBaron() == player) {
                 Rectangle r = drawMeepleBox(null, "robber", 1, false, "robber");
                 if ("robber".equals(mouseOverKey)) {
-                    g2.setFont(FONT_KING_SCOUT_OVERLAY);
-                    g2.setColor(KING_SCOUT_OVERLAY);
+                    g2.setFont(FONT_KING_ROBBER_OVERLAY);
+                    g2.setColor(KING_ROBBER_OVERLAY);
                     g2.fillRect(r.x, r.y, r.width, r.height);
                     g2.setColor(Color.WHITE);
-                    int size = kingScoutCap.getLongestRoadLength();
+                    int size = kingRobberCap.getLongestRoadLength();
                     g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
                     g2.setFont(FONT_MEEPLE);
                 }

@@ -19,7 +19,7 @@ import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.InnCapability;
-import com.jcloisterzone.game.capability.KingScoutCapability;
+import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PigCapability;
@@ -60,7 +60,7 @@ public enum Expansion {
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }),
 
     //Small expansion
-    KING_AND_SCOUT("KS", _("King and Scout"), new Class[] { KingScoutCapability.class }),
+    KING_AND_ROBBER_BARON("KR", _("King and Robber Baron"), new Class[] { KingAndRobberBaronCapability.class }),
     RIVER("R1", _("The River"), new Class[] { RiverCapability.class }),
     RIVER_II("R2", _("The River II"), new Class[] { RiverCapability.class }),
     CATHARS("SI", _("The Cathars / Siege"), new Class[] { SiegeCapability.class }),

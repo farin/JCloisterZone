@@ -21,7 +21,7 @@
     </shape>
     <shape feature="CLOISTER">
         <svg:polygon points="220,770 220,560 350,500 460,500 460,440 570,290 740,480 740,780 530,900"/>
-        <apply>KS.LC CLOISTER</apply>
+        <apply>KR.LC CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
         <svg:polygon points="50,120 160,20 250,130 250,220 360,200 480,270 480,420 280,490 280,540 150,550 50,490"/>
@@ -86,7 +86,7 @@
         <apply>CA.RrR.1 SE</apply>
         <apply>GQ.CRRr SW</apply>
         <apply>IC.RrRr SE</apply>
-        <apply>KS.CRrR SE</apply>
+        <apply>KR.CRrR SE</apply>
         <apply>DG.RrRr.g SE</apply>
         <apply>DG.CcRr.p SE</apply>
         <apply>R1.RrII NE</apply>
@@ -151,8 +151,8 @@
         <apply>GQ.CRcR.1 N</apply>
         <apply>IC.LRFR E</apply>
         <apply>IC.RRR.i S</apply>
-        <apply>KS.CcRR! S</apply>
-        <apply>KS.CcRR! E</apply>
+        <apply>KR.CcRR! S</apply>
+        <apply>KR.CcRR! E</apply>
         <apply>DG.LRRR.d E</apply>
         <apply>DG.RRR.g S</apply>
         <apply>DG.CRRR.p S</apply>
@@ -237,7 +237,7 @@
         <svg:polygon points="400,0 600,0 600,370 630,400 740,400 740,600 600,600 400,400"/>
         <apply>AM.RC W</apply>
         <apply>GQ.CcCR S</apply>
-        <apply>KS.CRrR W</apply>
+        <apply>KR.CRrR W</apply>
     </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- turn R -->
         <svg:polygon points="600,0 400,0 400,370 370,400 260,400 260,600 400,600 600,400"/>
@@ -401,8 +401,8 @@
         <svg:polygon points="10,0 200,240 410,290 480,290 530,250 820,170 850,150 999,0"/>
         <apply>BA.RrC N</apply>
         <apply>GQ.CRRr N</apply>
-        <apply>KS.LC N</apply>
-        <apply>KS.CRrR N</apply>
+        <apply>KR.LC N</apply>
+        <apply>KR.CRrR N</apply>
         <apply>DG.C.d N</apply>
         <apply>DG.RrC.d N</apply>
         <apply>DG.CRr.d N</apply>
@@ -504,7 +504,7 @@
     </shape>
     <shape feature="CITY" baseLocation="NW">
         <svg:polygon points="0,0 999,0 840,210 830,640 999,950 999,999 640,800 230,800 0,999"/>
-        <apply>KS.CcRR! NW</apply>
+        <apply>KR.CcRR! NW</apply>
         <apply>DG.Cc!.p NW</apply>
         <apply>TO.CcR! NW</apply>
         <apply>TB.CcRR!.c NW</apply>
@@ -609,7 +609,7 @@
         <svg:polygon points="500,0 999,0 500,500"/>
         <apply>TB.CcRR!.c ER</apply>
         <apply>TB.CcR!.w ER</apply>
-        <apply>KS.CcRR! ER</apply>
+        <apply>KR.CcRR! ER</apply>
         <apply>TO.CcR! ER</apply>
         <apply>AM.CRcr+ NR</apply>
     </shape>
@@ -620,7 +620,7 @@
         <apply>TB.CcRR!.c SL</apply>
         <apply>TB.RCc!.g SL</apply>
         <apply>AM.CRcr+ NL</apply>
-        <apply>KS.CcRR! SL</apply>
+        <apply>KR.CcRR! SL</apply>
     </shape>
     <shape feature="FARM" baseLocation="NL.WR">
         <title>oblique-NL,WR</title>
@@ -633,7 +633,7 @@
         <apply>SI.CcRr ER.SL</apply>
         <apply>IC.RrRr ER.SL</apply>
         <apply>IC.CcRr+.i ER.SL</apply>
-        <apply>KS.CRrR ER.SL</apply>
+        <apply>KR.CRrR ER.SL</apply>
         <apply>DG.LCcc.d ER.SL</apply>
         <apply>DG.CcRr.p ER.SL</apply>
         <apply>DG.RrRr.g ER.SL</apply>
@@ -852,7 +852,7 @@
         <apply>AM.CCRR SL.ER</apply>
         <apply>AM.RC EL.ER.SL.SR.WL</apply>
         <apply>AM.RrC SR.WL</apply>
-        <apply>KS.CRrR EL.SR.WL</apply>
+        <apply>KR.CRrR EL.SR.WL</apply>
         <apply>R1.CcII SR.EL</apply>
         <apply>R1.RrII WR.NL.ER.SL</apply>
         <apply>SI.RCr WR.EL</apply>

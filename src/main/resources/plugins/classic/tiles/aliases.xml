@@ -12,8 +12,8 @@
     <alias treat="GQ.Cc!" as="DG.Cc!.p" />
     <alias treat="GQ.CcRR" as="TB.CcRR.w" />
 
-    <alias treat="KS.CCcc" as="AM.CCcc+" />
-    <alias treat="KS.RC" as="AM.RC" />
+    <alias treat="KR.CCcc" as="AM.CCcc+" />
+    <alias treat="KR.RC" as="AM.RC" />
 
     <alias treat="PL.Cc+" as="BA.Cc+" />
     <alias treat="PL.CC" as="BA.CC.2" />

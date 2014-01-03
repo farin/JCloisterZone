@@ -118,11 +118,72 @@ public class CreateGamePanel extends JPanel {
             }
         });
 
+        if (mutableSlots) {
+            panel.add(createProfilePanel(), "west");
+        }
+
+        playersPanel = new JPanel();
+        playersPanel.setBorder(new TitledBorder(null, _("Players"),
+                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        playersPanel.setLayout(new MigLayout("", "[grow]", ""));
+
+        for (PlayerSlot slot : slots) {
+            if (slot != null) {
+                playersPanel.add(new CreateGamePlayerPanel(client, mutableSlots, slot, nameProvider), "wrap");
+            }
+        }
+        if (mutableSlots) {
+            JCheckBox randomSeating = createRuleCheckbox(CustomRule.RANDOM_SEATING_ORDER, true);
+            playersPanel.add(randomSeating, "wrap, gaptop 10");
+            ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
+        }
+
+        add(playersPanel, "cell 0 1,grow");
+
+        expansionPanel = new JPanel();
+        expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
+                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+
+        TilePackFactory tilePackFactory = new TilePackFactory();
+        tilePackFactory.setConfig(client.getConfig());
+
+        expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
+        for (Expansion exp : Expansion.values()) {
+            if (!exp.isImplemented()) continue;
+            createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
+        }
+        add(expansionPanel, "cell 1 1,grow");
+
+        rulesPanel = new JPanel();
+        rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
+                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
+        add(rulesPanel, "cell 2 1,grow");
+
+        Expansion prev = Expansion.BASIC;
+        for (CustomRule rule : CustomRule.values()) {
+            if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
+            if (prev != rule.getExpansion()) {
+                prev = rule.getExpansion();
+                JLabel label = new JLabel(prev.toString());
+                label.setFont(FONT_RULE_SECTION);
+                rulesPanel.add(label, "wrap, growx, gaptop 10, gapbottom 7");
+            }
+            JCheckBox chbox = createRuleCheckbox(rule, mutableSlots);
+            rulesPanel.add(chbox, "wrap");
+            ruleCheckboxes.put(rule, chbox);
+        }
+
+        onSlotStateChange();
+        startGameButton.requestFocus();
+    }
+
+    private JPanel createProfilePanel() {
         JPanel profilePanel = new JPanel();
         profilePanel.setBorder(new TitledBorder(null, _("Profiles"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         profilePanel.setLayout(new MigLayout());
-        panel.add(profilePanel, "west");
+
 
         profiles = new JComboBox<Object>(getProfiles());
         profiles.setEditable(true);
@@ -182,66 +243,12 @@ public class CreateGamePanel extends JPanel {
             }
         });
         profilePanel.add(profileDelete, "width 80, west");
-
-        playersPanel = new JPanel();
-        playersPanel.setBorder(new TitledBorder(null, _("Players"),
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        playersPanel.setLayout(new MigLayout("", "[grow]", ""));
-
-        for (PlayerSlot slot : slots) {
-            if (slot != null) {
-                playersPanel.add(new CreateGamePlayerPanel(client, mutableSlots, slot, nameProvider), "wrap");
-            }
-        }
-        if (mutableSlots) {
-            JCheckBox randomSeating = createRuleCheckbox(CustomRule.RANDOM_SEATING_ORDER, true);
-            playersPanel.add(randomSeating, "wrap, gaptop 10");
-            ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
-        }
-
-        add(playersPanel, "cell 0 1,grow");
-
-        expansionPanel = new JPanel();
-        expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-        TilePackFactory tilePackFactory = new TilePackFactory();
-        tilePackFactory.setConfig(client.getConfig());
-
-        expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
-        for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
-            createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
-        }
-        add(expansionPanel, "cell 1 1,grow");
-
-        rulesPanel = new JPanel();
-        rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
-        add(rulesPanel, "cell 2 1,grow");
-
-        Expansion prev = Expansion.BASIC;
-        for (CustomRule rule : CustomRule.values()) {
-            if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
-            if (prev != rule.getExpansion()) {
-                prev = rule.getExpansion();
-                JLabel label = new JLabel(prev.toString());
-                label.setFont(FONT_RULE_SECTION);
-                rulesPanel.add(label, "wrap, growx, gaptop 10, gapbottom 7");
-            }
-            JCheckBox chbox = createRuleCheckbox(rule, mutableSlots);
-            rulesPanel.add(chbox, "wrap");
-            ruleCheckboxes.put(rule, chbox);
-        }
-
-        onSlotStateChange();
-        startGameButton.requestFocus();
+        return profilePanel;
     }
 
     private void createExpansionLine(Expansion exp, int expSize) {
         JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
-        if (exp == Expansion.KING_AND_SCOUT || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
+        if (exp == Expansion.KING_AND_ROBBER_BARON || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
             expansionPanel.add(chbox, "gaptop 10");
         } else {
             expansionPanel.add(chbox, "");
