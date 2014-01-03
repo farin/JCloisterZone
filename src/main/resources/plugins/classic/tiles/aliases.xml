@@ -50,5 +50,8 @@
     <alias treat="WR.Cc.1" as="BA.Cc.1" />
     <alias treat="WR.CC.2" as="BA.CC.2" />
 
-
+    <alias treat="BE.RrC" as="BA.RrC" />
+    <alias treat="BE.CRr" as="BA.CRr" />
+    <alias treat="BE.RCc" as="TB.RCc.g" />
+    <alias treat="BE.CcR" as="IC.CcR" />
 </aliases>

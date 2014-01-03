@@ -158,7 +158,7 @@ public class Server extends GameSettings implements ServerIF {
             logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
             return;
         }
-        if (!expansion.isEnabled() || expansion == Expansion.BASIC) {
+        if (!expansion.isImplemented() || expansion == Expansion.BASIC) {
             logger.error("Invalid expansion {}", expansion);
             return;
         }
@@ -207,7 +207,7 @@ public class Server extends GameSettings implements ServerIF {
         EnumSet<Expansion> supported = mergeSupportedExpansions();
         if (supported != null) {
             for (Expansion exp : Expansion.values()) {
-                if (exp.isEnabled() && ! supported.contains(exp)) {
+                if (exp.isImplemented() && ! supported.contains(exp)) {
                     stub.updateExpansion(exp, false);
                 }
             }

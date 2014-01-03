@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="Ccc">
+        <city besieged="yes">N E W</city>
+        <farm city="N">SL SR</farm>
+    </tile>
+    <tile id="CcR">
+        <city besieged="yes">N W</city>
+        <road>E</road>
+        <farm city="W">EL</farm>
+        <farm city="W">ER SL SR </farm>
+        <wagon-move>
+            <neighbouring>N E</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CFR">
+        <city besieged="yes" castle-base="true">N</city>
+        <road>S</road>
+        <farm city="N">WL WR SR</farm>
+        <farm city="N">EL ER SL</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CRr">
+        <road>E S</road>
+        <city besieged="yes" castle-base="true">N</city>
+        <farm city="N">EL WL WR SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="RCc">
+        <city besieged="yes">N W</city>
+        <road>S</road>
+        <farm city="W">SR</farm>
+        <farm city="W">SL EL ER</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RrC">
+        <road>S W</road>
+        <city besieged="yes" castle-base="true">N</city>
+        <farm city="N">WR EL ER SL</farm>
+        <farm>WL SR</farm>
+    </tile>
+</pack>

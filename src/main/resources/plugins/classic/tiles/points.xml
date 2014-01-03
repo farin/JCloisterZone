@@ -256,6 +256,7 @@
     </point>
     <point feature="CITY" cx="250" cy="250">
         <apply>TO.CccR _S</apply>
+        <apply>BE.Ccc _S</apply>
     </point>
     <point feature="CITY" cx="750" cy="250">
         <apply>TO.CccC+ _S</apply>
@@ -343,6 +344,9 @@
         <apply>R1.IFI NL.NR.EL.WR</apply>
         <apply>R1.IFI SL.SR.ER.WL</apply>
         <apply>R2.III SL.SR.ER.WL</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="750">
+        <apply>BE.Ccc SL.SR</apply>
     </point>
     <point feature="FARM" cx="600" cy="100" baseLocation="NL.NR"> <!-- small farm north from WE city -->
         <apply>BA.CFc.1 NL.NR</apply>

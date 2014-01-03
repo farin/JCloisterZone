@@ -2,9 +2,14 @@ package com.jcloisterzone.config;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.rmi.ServerIF;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -45,6 +50,20 @@ public class Config {
         }
         public void setRules(List<String> rules) {
             this.rules = rules;
+        }
+
+        public void updateGameSetup(ServerIF server) {
+            EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
+            expansionSet.add(Expansion.BASIC);
+            for (String expName : expansions) {
+                expansionSet.add(Expansion.valueOf(expName));
+            }
+
+            EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
+            for (String ruleName : rules) {
+                ruleSet.add(CustomRule.valueOf(ruleName));
+            }
+            server.updateGameSetup(expansionSet.toArray(new Expansion[expansionSet.size()]), ruleSet.toArray(new CustomRule[ruleSet.size()]));
         }
     }
 

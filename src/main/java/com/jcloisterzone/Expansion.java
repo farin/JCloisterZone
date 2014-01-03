@@ -38,8 +38,11 @@ import com.jcloisterzone.game.capability.WindRoseCapability;
 public enum Expansion {
     //Basic sets
     BASIC("BA", _("Basic game")),
-    WINTER("WI", _("Winter Edition")),
     WHEEL_OF_FORTUNE("WF", _("Wheel of Fortune"), false),
+
+    //Winter branch
+    WINTER("WI", _("Winter Edition")),
+    GINGERBREAD_MAN("GM", _("The Gingerbread man"), false),
 
     //Big expansions
     INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
@@ -61,6 +64,7 @@ public enum Expansion {
     RIVER("R1", _("The River"), new Class[] { RiverCapability.class }),
     RIVER_II("R2", _("The River II"), new Class[] { RiverCapability.class }),
     CATHARS("SI", _("The Cathars / Siege"), new Class[] { SiegeCapability.class }),
+    BESIEGERS("BE", _("The Besiegers"), new Class[] { SiegeCapability.class }),
     COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")", new Class[] { CountCapability.class }),
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
     CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
@@ -79,24 +83,24 @@ public enum Expansion {
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),
     MAGE_WITCH("MW", "#5 - " + _("Mage & Witch"), false),
     ROBBER("RO", "#6 - " + _("The Robber"), false),
-    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class });
+    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class }),
 
     //promo/one tile expansions
-    //LA_PORXADA("PX", _("La porxada"), false),
-    //SCHOOL("SC", _("The school"), false);
+    SCHOOL("SC", _("The school"), false),
+    LA_PORXADA("PX", _("La porxada"), false);
 
     String code;
     String label;
-    boolean enabled = true;
+    boolean implemented = true;
     Class<? extends Capability>[] capabilities;
 
     Expansion(String code, String label) {
         this(code, label, null);
     }
 
-    Expansion(String code, String label, boolean enabled) {
+    Expansion(String code, String label, boolean implemented) {
         this(code, label, null);
-        this.enabled = enabled;
+        this.implemented = implemented;
     }
 
     Expansion(String code, String label, Class<? extends Capability>[] capabilities) {
@@ -109,9 +113,8 @@ public enum Expansion {
         return code;
     }
 
-    @Deprecated //??? keep only supported expansions in code
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isImplemented() {
+        return implemented;
     }
 
     public Class<? extends Capability>[] getCapabilities() {

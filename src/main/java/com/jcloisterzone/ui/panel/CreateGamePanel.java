@@ -131,7 +131,8 @@ public class CreateGamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (profiles.getSelectedItem() instanceof Profile) {
-                    loadProfile((Profile) profiles.getSelectedItem());
+                    Profile profile = (Profile) profiles.getSelectedItem();
+                    profile.getConfig().updateGameSetup(client.getServer());
                 }
             }
         });
@@ -203,7 +204,7 @@ public class CreateGamePanel extends JPanel {
 
         expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isEnabled())
+            if (!exp.isImplemented())
                 continue;
             JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
             if (exp == Expansion.KING_AND_SCOUT || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
@@ -284,21 +285,6 @@ public class CreateGamePanel extends JPanel {
         return profiles.toArray(new Profile[profiles.size()]);
     }
 
-    private void loadProfile(Profile profile) {
-        EnumSet<Expansion> expansions = EnumSet.noneOf(Expansion.class);
-        expansions.add(Expansion.BASIC);
-        for (String expName : profile.getConfig().getExpansions()) {
-            expansions.add(Expansion.valueOf(expName));
-        }
-
-        EnumSet<CustomRule> rules = EnumSet.noneOf(CustomRule.class);
-        for (String ruleName : profile.getConfig().getRules()) {
-            rules.add(CustomRule.valueOf(ruleName));
-        }
-
-        client.getServer().updateGameSetup(expansions.toArray(new Expansion[expansions.size()]), rules.toArray(new CustomRule[rules.size()]));
-    }
-
     public void disposePanel() {
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof CreateGamePlayerPanel) {
@@ -328,7 +314,7 @@ public class CreateGamePanel extends JPanel {
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
         JCheckBox chbox = new JCheckBox(exp.toString());
-        if (!exp.isEnabled() || !mutableSlots)
+        if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
             // chbox.setSelected(true);
@@ -359,7 +345,7 @@ public class CreateGamePanel extends JPanel {
             expansions = EnumSet.allOf(Expansion.class);
         }
         for (Expansion exp : Expansion.values()) {
-            if (exp.isEnabled()) {
+            if (exp.isImplemented()) {
                 boolean isSupported = expansions.contains(exp);
                 JComponent[] components = expansionComponents.get(exp);
                 for (JComponent comp : components) {

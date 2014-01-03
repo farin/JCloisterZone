@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.Config.ProfileConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -19,6 +20,7 @@ import com.jcloisterzone.ui.Client;
 public class GuiClientStub extends ClientStub {
 
     private final Client client;
+    private boolean autostartPerfomed;
 
     public GuiClientStub(Client client) {
         this.client = client;
@@ -43,10 +45,16 @@ public class GuiClientStub extends ClientStub {
         });
 
         DebugConfig debugConfig = client.getConfig().getDebug();
-        if (debugConfig.isAutostartEnabled()) {
-            AutostartConfig autostrtConfig = debugConfig.getAutostart();
-            debugConfig.setAutostart(null); //apply autostart only once - !!! beware rewriting config when persistence will be implemented
-            final List<String> players = autostrtConfig.getPlayers() == null ? new ArrayList<String>() : autostrtConfig.getPlayers();
+        if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
+            autostartPerfomed = true; //apply autostart only once
+            AutostartConfig autostartConfig = debugConfig.getAutostart();
+            final ProfileConfig profileCfg = client.getConfig().getProfiles().get(autostartConfig.getProfile());
+            if (profileCfg == null) {
+                logger.warn("Autostart profile {} not found.", autostartConfig.getProfile());
+                return;
+            }
+
+            final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>() : autostartConfig.getPlayers();
             if (players.isEmpty()) {
                 players.add("Player");
             }
@@ -65,6 +73,8 @@ public class GuiClientStub extends ClientStub {
                         client.getServer().updateSlot(slot, null);
                         i++;
                     }
+
+                    profileCfg.updateGameSetup(client.getServer());
                     client.getServer().startGame();
                 }
             });

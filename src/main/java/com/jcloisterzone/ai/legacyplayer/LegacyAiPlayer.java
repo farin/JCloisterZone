@@ -83,6 +83,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.CATAPULT,
             Expansion.WIND_ROSE,
             Expansion.CATHARS,
+            Expansion.BESIEGERS,
             //Expansion.PHANTOM,
             //only cards
             Expansion.COUNT,

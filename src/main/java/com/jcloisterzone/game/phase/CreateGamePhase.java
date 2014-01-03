@@ -85,7 +85,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         game.getCustomRules().addAll(Arrays.asList(rules));
 
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isEnabled()) continue;
+            if (!exp.isImplemented()) continue;
             game.fireGameEvent().updateExpansion(exp, game.getExpansions().contains(exp));
         }
         for (CustomRule rule : CustomRule.values()) {

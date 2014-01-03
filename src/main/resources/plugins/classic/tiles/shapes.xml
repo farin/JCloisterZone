@@ -131,6 +131,10 @@
         <apply>BB.RFR.b N</apply>
         <apply>BB.RFR.bi S</apply>
     </shape>
+    <shape feature="ROAD" baseLocation="N"> <!-- long -->
+        <svg:rect x="400" y="0" width="200" height="770"/>
+        <apply>BE.CFR S</apply>
+    </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- short  -->
         <svg:rect x="400" y="0" width="200" height="300"/>
         <apply>AM.LRRRR N</apply>
@@ -326,11 +330,10 @@
         <apply>R1.LIRI S</apply>
     </shape>
 
-
-
     <shape feature="CITY">
         <svg:polygon points="0,0 290,290 390,350 610,350 690,290 999,0"/>
         <apply allRotations="1">* N</apply>
+        <apply>BE.RrC N</apply> <!-- override alias  -->
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 950,80 550,280 340,560 250,850 80,980 0,999"/>
@@ -453,6 +456,8 @@
         <apply>BB.CFR.b N</apply>
         <apply>C2.CFR N</apply>
         <apply>C2.CFC S</apply>
+        <apply>BE.CRr N</apply>
+        <apply>BE.CFR N</apply>
     </shape>
     <shape feature="CITY" baseLocation="E">
         <svg:polygon points="999,20 915,150 870,340 857,362 867,377 820,572 805,617 820,650 830,657 840,732 912,922 987,997 995,999"/>
@@ -575,6 +580,10 @@
     <shape feature="CITY">
         <svg:polygon points="2,17 212,267 262,267 340,210 382,207 410,180 507,210 685,205 715,185 770,185 957,2 995,2 995,992 637,835 640,770 702,745 702,482 690,475 690,402 597,307 520,415 515,487 502,495 387,475 280,542 292,555 287,685 532,772 640,770 635,837 165,835 145,852 122,852 0,960"/>
         <apply>BB.LCFc WE</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,982 925,962 882,932 837,802 805,542 740,430 700,430 652,407 512,400 472,427 437,427 342,507 325,525 280,525 227,542 205,572 177,617 172,752 170,795 145,892 125,922 70,972 35,999 0,999"/>
+        <apply>BE.Ccc _S</apply>
     </shape>
 
     <!--  Farm areas -->
@@ -861,6 +870,7 @@
         <apply>TU.RCR EL.WR</apply>
         <apply>WR.CFR WR.NL.NR</apply>
         <apply>WR.RrC EL.ER.SL.WR</apply>
+        <apply>BE.Ccc SL.SR</apply>
     </complement-farm>
 
     <shape> <!-- center -->
