@@ -55,11 +55,8 @@ public class FlierActionPhase extends Phase {
         for (Feature f : target.getFeatures()) {
             if (!(f instanceof Completable)) continue;
             if (f.walk(new IsCompleted())) continue;
-            try {
-                follower.checkDeployment(f);
+            if (follower.isDeploymentAllowed(f).result) {
                 locations.add(f.getLocation());
-            } catch (IllegalArgumentException e) {
-                //quick hack, same as in FlierCapability source
             }
         }
         if (locations.isEmpty()) {
@@ -89,8 +86,7 @@ public class FlierActionPhase extends Phase {
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         Tile tile = getBoard().get(p);
-        m.deployUnchecked(tile, loc, tile.getFeature(loc));
-        game.fireGameEvent().deployed(m);
+        m.deploy(tile, loc);
         next();
     }
 

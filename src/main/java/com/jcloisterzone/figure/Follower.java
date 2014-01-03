@@ -6,7 +6,6 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.RemoveLonelyBuilderAndPig;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BuilderCapability;
@@ -27,14 +26,6 @@ public abstract class Follower extends Meeple {
     @Override
     public boolean canBeEatenByDragon() {
         return !(getFeature() instanceof Castle);
-    }
-
-    @Override
-	public void checkDeployment(Feature f) {
-        if (f.walk(new IsOccupied())) {
-            throw new IllegalArgumentException("Feature is occupied.");
-        }
-        super.checkDeployment(f);
     }
 
 

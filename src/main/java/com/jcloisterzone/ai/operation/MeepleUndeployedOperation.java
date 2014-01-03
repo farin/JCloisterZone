@@ -22,7 +22,7 @@ public class MeepleUndeployedOperation implements Operation {
     public void undo(Game game) {
         meeple.setLocation(loc);
         if (tile != null) {
-            Feature feature = meeple.getPieceForDeploy(tile, loc);
+            Feature feature = meeple.getDeploymentFeature(tile, loc);
             feature.addMeeple(meeple);
             meeple.setPosition(tile.getPosition());
             meeple.setFeature(feature);

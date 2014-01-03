@@ -8,40 +8,40 @@ import com.jcloisterzone.game.Game;
 
 public class Mayor extends Follower {
 
-	private static final long serialVersionUID = -7602411772187519451L;
+    private static final long serialVersionUID = -7602411772187519451L;
 
-	public Mayor(Game game, Player player) {
-		super(game, player);
-	}
+    public Mayor(Game game, Player player) {
+        super(game, player);
+    }
 
-	static class PennatsCountingVisitor implements FeatureVisitor<Integer> {
-		int pennats = 0;
+    static class PennatsCountingVisitor implements FeatureVisitor<Integer> {
+        int pennats = 0;
 
-		@Override
-		public boolean visit(Feature feature) {
-			City c = (City) feature;
-			pennats += c.getPennants();
-			return true;
-		}
+        @Override
+        public boolean visit(Feature feature) {
+            City c = (City) feature;
+            pennats += c.getPennants();
+            return true;
+        }
 
-		@Override
-		public Integer getResult() {			
-			return pennats;
-		}
-	}
+        @Override
+        public Integer getResult() {
+            return pennats;
+        }
+    }
 
-	@Override
-	public int getPower() {
-		//TODO not effective - city is walked twice during scoring
-		return getFeature().walk(new PennatsCountingVisitor());
-	}
+    @Override
+    public int getPower() {
+        //TODO not effective - city is walked twice during scoring
+        return getFeature().walk(new PennatsCountingVisitor());
+    }
 
-	@Override
-	public void checkDeployment(Feature f) {
-		if (!(f instanceof City)) {
-			throw new IllegalArgumentException("Mayor must be placed in city only.");
-		}
-		super.checkDeployment(f);
-	}
+    @Override
+    public DeploymentCheckResult isDeploymentAllowed(Feature f) {
+        if (!(f instanceof City)) {
+            return new DeploymentCheckResult("Mayor must be placed in city only.");
+        }
+        return super.isDeploymentAllowed(f);
+    }
 
 }

@@ -159,7 +159,7 @@ public class ActionPhase extends Phase {
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deploy(getBoard().get(p), loc);
+        m.deployUnoccupied(getBoard().get(p), loc);
         if (!p.equals(getTile().getPosition()) && portalCap != null) {
             //magic gate usage
             portalCap.setPortalUsed(true);

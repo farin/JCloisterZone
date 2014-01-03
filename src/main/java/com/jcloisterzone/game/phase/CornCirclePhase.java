@@ -163,12 +163,12 @@ public class CornCirclePhase extends Phase {
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
-            logger.error("Deployment not selected as corn options.");
+            logger.error("Deployment wasn't selected as corn options.");
             return;
         }
         List<Meeple> meeples = getBoard().get(p).getFeature(loc).getMeeples();
         if (meeples.isEmpty()) {
-            logger.error("Feature must be occupies");
+            logger.error("Feature must be occupied");
             return;
         }
         if (meeples.get(0).getPlayer() != getActivePlayer()) {
@@ -178,8 +178,7 @@ public class CornCirclePhase extends Phase {
 
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         Tile tile = getBoard().get(p);
-        m.deployUnchecked(tile, loc, tile.getFeature(loc));
-        game.fireGameEvent().deployed(m);
+        m.deploy(tile, loc);
         nextCornPlayer();
     }
 

@@ -27,9 +27,9 @@ public class Barn extends Special {
     }
 
     @Override
-	public void checkDeployment(Feature feature) {
+    public DeploymentCheckResult isDeploymentAllowed(Feature feature) {
         if (!(feature instanceof Farm)) {
-            throw new IllegalArgumentException("The barn must be placed only on a farm.");
+            return new DeploymentCheckResult("The barn must be placed only on a farm.");
         }
         Farm farm = (Farm) feature;
 
@@ -40,7 +40,7 @@ public class Barn extends Special {
         if (!farm.getTile().getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
             for (Special m : ctx.getSpecialMeeples()) {
                 if (m instanceof Barn) {
-                    throw new IllegalArgumentException("Another barn is already placed on the farm.");
+                    return new DeploymentCheckResult("Another barn is already placed on the farm.");
                 }
             }
         }
@@ -54,16 +54,12 @@ public class Barn extends Special {
             m.undeploy(false);
         }
 
-        super.checkDeployment(feature);
+        return super.isDeploymentAllowed(feature);
     }
 
     @Override
-    public Feature getPieceForDeploy(Tile tile, Location loc) {
-        Farm farmPiece = (Farm) tile.getFeaturePartOf(loc);
-        if (farmPiece == null) {
-            throw new IllegalArgumentException("No such farm");
-        }
-        return farmPiece;
+    public Farm getDeploymentFeature(Tile tile, Location loc) {
+        return (Farm) tile.getFeaturePartOf(loc);
     }
 
 

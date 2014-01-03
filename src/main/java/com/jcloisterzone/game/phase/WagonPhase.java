@@ -49,7 +49,7 @@ public class WagonPhase extends Phase {
             return;
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(Wagon.class);
-        m.deploy(getBoard().get(p), loc);
+        m.deployUnoccupied(getBoard().get(p), loc);
         enter();
     }
 
