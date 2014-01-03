@@ -12,11 +12,10 @@ public enum CustomRule {
     TINY_CITY_2_POINTS(Expansion.BASIC, _("Tiny city is scored only for 2 points.")),
     FARM_CITY_SCORED_ONCE(Expansion.BASIC, _("Each city is scored with one farm only.")),   //each city can be scored only once
 
-    CANNOT_PLACE_BUILDER_ON_VOLCANO(Expansion.PRINCESS_AND_DRAGON, _("The Builder and the pig cannot be placed on a volcano.")),
-    PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, _("Princess MUST remove a knight from city.")),
-    //DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, _("Dragon movement after scoring.")),
+    PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, _("Princess MUST remove a knight from city.") + "(RGG, ZMG)"),
+    DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, _("Dragon movement occurs after scoring.") + " (RGG)"),
 
-    ESCAPE_RGG(Expansion.CATHARS, _("Escape cloister can be placed adjacent to any tile of a besieged city (RGG's)")),
+    ESCAPE_RGG(Expansion.CATHARS, _("Escape cloister can be placed adjacent to any tile of a besieged city.") + " (RGG)"),
 
     PIG_HERD_ON_GQ_FARM(Expansion.GQ11, _("The Pig herd is present on the farm tile.")),
 

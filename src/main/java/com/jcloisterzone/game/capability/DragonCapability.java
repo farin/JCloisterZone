@@ -79,9 +79,8 @@ public class DragonCapability extends Capability {
 
     @Override
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
-        if (!tile.getPosition().equals(dragonPosition)) return true;
-        if (game.hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return false;
-        return Special.class.isAssignableFrom(meepleType);
+        if (tile.getPosition().equals(dragonPosition)) return false;
+        return true;
     }
 
     public Position getDragonPosition() {
