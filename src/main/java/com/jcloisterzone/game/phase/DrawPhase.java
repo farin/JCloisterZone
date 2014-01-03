@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.rmi.ServerIF;
@@ -17,6 +18,7 @@ public class DrawPhase extends ServerAwarePhase {
 
     private List<String> debugTiles;
     private final BazaarCapability bazaarCap;
+    private final AbbeyCapability abbeyCap;
 
     public DrawPhase(Game game, ServerIF server) {
         super(game, server);
@@ -25,6 +27,7 @@ public class DrawPhase extends ServerAwarePhase {
             debugTiles = debugConfig.getDraw();
         }
         bazaarCap = game.getCapability(BazaarCapability.class);
+        abbeyCap = game.getCapability(AbbeyCapability.class);
     }
 
     private boolean makeDebugDraw() {
@@ -54,6 +57,13 @@ public class DrawPhase extends ServerAwarePhase {
     @Override
     public void enter() {
         if (getTilePack().isEmpty()) {
+            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
+                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
+                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
+                }
+                next(CleanUpPhase.class);
+                return;
+            }
             next(GameOverPhase.class);
             return;
         }
