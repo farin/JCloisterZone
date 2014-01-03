@@ -207,8 +207,17 @@ public class Server extends GameSettings implements ServerIF {
         EnumSet<Expansion> supported = mergeSupportedExpansions();
         if (supported != null) {
             for (Expansion exp : Expansion.values()) {
-                if (exp.isImplemented() && ! supported.contains(exp)) {
+                if (exp.isImplemented() && !supported.contains(exp)) {
                     stub.updateExpansion(exp, false);
+                }
+            }
+        }
+        if (getCustomRules().contains(CustomRule.RANDOM_SEATING_ORDER)) {
+            Random rnd = new Random();
+            for (PlayerSlot slot : slots) {
+                if (slot.getType() != SlotType.OPEN) {
+                    slot.setSerial(rnd.nextInt());
+                    stub.updateSlot(slot);
                 }
             }
         }

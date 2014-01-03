@@ -7,6 +7,8 @@ import com.jcloisterzone.Expansion;
 
 
 public enum CustomRule {
+    RANDOM_SEATING_ORDER(Expansion.BASIC, _("Randomize seating order")),
+
     TINY_CITY_2_POINTS(Expansion.BASIC, _("Tiny city is scored only for 2 points.")),
     FARM_CITY_SCORED_ONCE(Expansion.BASIC, _("Each city is scored with one farm only.")),   //each city can be scored only once
 

@@ -193,6 +193,12 @@ public class CreateGamePanel extends JPanel {
                 playersPanel.add(new CreateGamePlayerPanel(client, mutableSlots, slot, nameProvider), "wrap");
             }
         }
+        if (mutableSlots) {
+            JCheckBox randomSeating = createRuleCheckbox(CustomRule.RANDOM_SEATING_ORDER, true);
+            playersPanel.add(randomSeating, "wrap, gaptop 10");
+            ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
+        }
+
         add(playersPanel, "cell 0 1,grow");
 
         expansionPanel = new JPanel();
@@ -204,18 +210,8 @@ public class CreateGamePanel extends JPanel {
 
         expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented())
-                continue;
-            JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
-            if (exp == Expansion.KING_AND_SCOUT || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
-                expansionPanel.add(chbox, "gaptop 10");
-            } else {
-                expansionPanel.add(chbox, "");
-            }
-            JLabel expansionSize = new JLabel(tilePackFactory.getExpansionSize(exp)+"");
-            expansionSize.setForeground(Color.GRAY);
-            expansionPanel.add(expansionSize, "wrap");
-            expansionComponents.put(exp, new JComponent[] {chbox, expansionSize});
+            if (!exp.isImplemented()) continue;
+            createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
         }
         add(expansionPanel, "cell 1 1,grow");
 
@@ -227,6 +223,7 @@ public class CreateGamePanel extends JPanel {
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
+            if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
             if (prev != rule.getExpansion()) {
                 prev = rule.getExpansion();
                 JLabel label = new JLabel(prev.toString());
@@ -240,6 +237,19 @@ public class CreateGamePanel extends JPanel {
 
         onSlotStateChange();
         startGameButton.requestFocus();
+    }
+
+    private void createExpansionLine(Expansion exp, int expSize) {
+        JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
+        if (exp == Expansion.KING_AND_SCOUT || exp == Expansion.INNS_AND_CATHEDRALS || exp == Expansion.FLIER) {
+            expansionPanel.add(chbox, "gaptop 10");
+        } else {
+            expansionPanel.add(chbox, "");
+        }
+        JLabel expansionSize = new JLabel(expSize+"");
+        expansionSize.setForeground(Color.GRAY);
+        expansionPanel.add(expansionSize, "wrap");
+        expansionComponents.put(exp, new JComponent[] {chbox, expansionSize});
     }
 
     private Profile getProfileFor(String name) {
@@ -293,16 +303,14 @@ public class CreateGamePanel extends JPanel {
         }
     }
 
-    private JCheckBox createRuleCheckbox(final CustomRule rule,
-            boolean mutableSlots) {
+    private JCheckBox createRuleCheckbox(final CustomRule rule, boolean mutableSlots) {
         JCheckBox chbox = new JCheckBox(rule.getLabel());
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getServer().updateCustomRule(rule,
-                            chbox.isSelected());
+                    client.getServer().updateCustomRule(rule, chbox.isSelected());
                 }
             });
         } else {
@@ -317,7 +325,6 @@ public class CreateGamePanel extends JPanel {
         if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
-            // chbox.setSelected(true);
             chbox.setEnabled(false);
         }
         if (chbox.isEnabled()) {
@@ -333,7 +340,13 @@ public class CreateGamePanel extends JPanel {
     }
 
     public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        ruleCheckboxes.get(rule).setSelected(enabled);
+        JCheckBox chbox = ruleCheckboxes.get(rule);
+        if (chbox != null) {
+            chbox.setSelected(enabled);
+        }
+        if (rule == CustomRule.RANDOM_SEATING_ORDER) {
+            updateSerialLabels();
+        }
     }
 
     public void updateExpansion(Expansion expansion, Boolean enabled) {
@@ -357,10 +370,11 @@ public class CreateGamePanel extends JPanel {
 
     private CreateGamePlayerPanel getPlayerPanel(int number) {
         for (Component comp : playersPanel.getComponents()) {
-            CreateGamePlayerPanel panel = (CreateGamePlayerPanel) comp;
-            PlayerSlot slot = panel.getSlot();
-            if (slot != null && slot.getNumber() == number)
-                return panel;
+            if (comp instanceof CreateGamePlayerPanel) {
+                CreateGamePlayerPanel panel = (CreateGamePlayerPanel) comp;
+                PlayerSlot slot = panel.getSlot();
+                if (slot != null && slot.getNumber() == number) return panel;
+            }
         }
         throw new IllegalArgumentException("Slot " + number + " does not exit.");
     }
@@ -370,19 +384,13 @@ public class CreateGamePanel extends JPanel {
         onSlotStateChange();
     }
 
-    private void onSlotStateChange() {
-        boolean anyPlayerAssigned = false;
-        boolean allPlayersAssigned = true;
+    private void updateSerialLabels() {
         ArrayList<Integer> serials = new ArrayList<Integer>();
 
         for (Component c : playersPanel.getComponents()) {
+            if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
-            if (ps == null || ps.getType() == SlotType.OPEN) {
-                allPlayersAssigned = false;
-            } else {
-                anyPlayerAssigned = true;
-            }
             if (ps != null && ps.getSerial() != null) {
                 serials.add(ps.getSerial());
             } else {
@@ -391,21 +399,41 @@ public class CreateGamePanel extends JPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
+            boolean randomSeating = client.getGame().hasRule(CustomRule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
+                if (!(c instanceof CreateGamePlayerPanel)) continue;
                 CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
                 PlayerSlot ps = playerPanel.getSlot();
                 if (ps != null && ps.getSerial() != null) {
-                    playerPanel.setSerialText(""
-                            + (1 + serials.indexOf(ps.getSerial())));
+                    String serial = randomSeating ? "?" : ("" + (1 + serials.indexOf(ps.getSerial())));
+                    playerPanel.setSerialText(serial);
                 }
             }
         }
+    }
 
+    private void onSlotStateChange() {
+        boolean anyPlayerAssigned = false;
+        boolean allPlayersAssigned = true;
+
+
+        for (Component c : playersPanel.getComponents()) {
+            if (!(c instanceof CreateGamePlayerPanel)) continue;
+            CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
+            PlayerSlot ps = playerPanel.getSlot();
+            if (ps == null || ps.getType() == SlotType.OPEN) {
+                allPlayersAssigned = false;
+            } else {
+                anyPlayerAssigned = true;
+            }
+        }
         if (mutableSlots) {
             startGameButton.setEnabled(anyPlayerAssigned);
         } else {
             startGameButton.setEnabled(allPlayersAssigned);
         }
+
+        updateSerialLabels();
     }
 
 }
