@@ -12,15 +12,18 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.PhantomCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 
 public class PhantomPhase extends Phase {
 
     private final TowerCapability towerCap;
+    private final PortalCapability portalCap;
 
     public PhantomPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
+        portalCap = game.getCapability(PortalCapability.class);
     }
 
     @Override
@@ -41,6 +44,9 @@ public class PhantomPhase extends Phase {
         if (getActivePlayer().hasFollower(Phantom.class)) {
             if (towerCap != null) {
                 towerCap.prepareTowerFollowerDeploy(commonSites);
+            }
+            if (portalCap != null) {
+                portalCap.prepareMagicPortal(commonSites);
             }
             if (!commonSites.isEmpty()) {
                 actions.add(new MeepleAction(Phantom.class, commonSites));

@@ -15,8 +15,20 @@ import com.jcloisterzone.game.Game;
 
 public class PortalCapability extends Capability {
 
+    boolean portalUsed = false;
+
     public PortalCapability(Game game) {
         super(game);
+    }
+
+    @Override
+    public Object backup() {
+        return portalUsed;
+    }
+
+    @Override
+    public void restore(Object data) {
+        portalUsed = (Boolean) data;
     }
 
     @Override
@@ -35,7 +47,8 @@ public class PortalCapability extends Capability {
         }
     }
 
-    private void prepareMagicPortal(LocationsMap commonSites) {
+    public void prepareMagicPortal(LocationsMap commonSites) {
+        if (portalUsed) return;
         for (Tile tile : getBoard().getAllTiles()) {
             if (tile == getTile()) continue; //prepared by basic common
             Set<Location> locations = game.prepareFollowerLocations(tile, true);
@@ -43,5 +56,19 @@ public class PortalCapability extends Capability {
             commonSites.put(tile.getPosition(), locations);
         }
     }
+
+    @Override
+    public void turnCleanUp() {
+        portalUsed = false;
+    }
+
+    public boolean isPortalUsed() {
+        return portalUsed;
+    }
+
+    public void setPortalUsed(boolean portalUsed) {
+        this.portalUsed = portalUsed;
+    }
+
 
 }
