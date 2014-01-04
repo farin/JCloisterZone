@@ -21,7 +21,7 @@ public class FarmScoreContext extends AbstractScoreContext {
     private Set<Castle> adjoiningCastles = new HashSet<>();
     private boolean adjoiningCityOfCarcassonne;
     private Set<Player> pigs = new HashSet<>();
-    private int pigHerds = 0;
+    private boolean pigHerd;
 
     private Map<City, CityScoreContext> cityCache;
 
@@ -71,13 +71,13 @@ public class FarmScoreContext extends AbstractScoreContext {
             }
         }
         if (farm.isPigHerd()) {
-            pigHerds += 1;
+            pigHerd = true;
         }
         return super.visit(feature);
     }
 
     private int getPointsPerCity(Player player, int basePoints) {
-        int pointsPerCity = basePoints + pigHerds;
+        int pointsPerCity = basePoints + (pigHerd ? 1 : 0);
         if (pigs.contains(player)) pointsPerCity += 1;
         return pointsPerCity;
     }
@@ -115,6 +115,7 @@ public class FarmScoreContext extends AbstractScoreContext {
     }
 
     public int getBarnPoints() {
+        //note: pigHerd has no influence on barn points
         int points = adjoiningCityOfCarcassonne ? 4 : 0;
         points += 5 * adjoiningCastles.size();
         if (getGame().hasCapability(SiegeCapability.class)) {
