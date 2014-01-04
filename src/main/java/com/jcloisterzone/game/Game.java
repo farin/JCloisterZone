@@ -28,6 +28,7 @@ import com.jcloisterzone.event.EventMulticaster;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
@@ -298,6 +299,10 @@ public class Game extends GameSettings {
     }
 
     public void initFeature(Tile tile, Feature feature, Element xml) {
+        if (feature instanceof Farm && tile.getId().startsWith("CO.")) {
+            //this is not part of Count capability because it is integral behaviour valid also when capability is off
+            ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
+        }
         for (Capability cap: capabilities) {
             cap.initFeature(tile, feature, xml);
         }

@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.feature.City;
@@ -12,6 +13,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
 public final class KingAndRobberBaronCapability extends Capability {
@@ -44,6 +46,14 @@ public final class KingAndRobberBaronCapability extends Capability {
         longestRoadLength = i[3];
         king = (Player) a[1];
         robberBaron = (Player) a[2];
+    }
+
+    @Override
+    public void begin() {
+        if (game.hasExpansion(Expansion.COUNT)) {
+            //City of Carcassonne is counted as city
+            completedCities = 1;
+        }
     }
 
     @Override

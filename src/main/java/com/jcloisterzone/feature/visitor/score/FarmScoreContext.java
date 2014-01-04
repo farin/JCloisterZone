@@ -19,6 +19,7 @@ public class FarmScoreContext extends AbstractScoreContext {
 
     private Map<City, CityScoreContext> adjoiningCompletedCities = new HashMap<>();
     private Set<Castle> adjoiningCastles = new HashSet<>();
+    private boolean adjoiningCityOfCarcassonne;
     private Set<Player> pigs = new HashSet<>();
     private int pigHerds = 0;
 
@@ -69,6 +70,9 @@ public class FarmScoreContext extends AbstractScoreContext {
     @Override
     public boolean visit(Feature feature) {
         Farm farm = (Farm) feature;
+        if (farm.isAdjoiningCityOfCarcassonne()) {
+            adjoiningCityOfCarcassonne = true;
+        }
         if (farm.getAdjoiningCities() != null) {
             addAdjoiningCompletedCities(farm.getAdjoiningCities());
         }
@@ -102,13 +106,16 @@ public class FarmScoreContext extends AbstractScoreContext {
     }
 
     private int getPlayerPoints(Player player, int pointsPerCity) {
+
+        int points = adjoiningCityOfCarcassonne ? pointsPerCity : 0;
+        points += (pointsPerCity + 1) * adjoiningCastles.size();
+
         //optimalization
         if (scoredCities == null && !getGame().hasCapability(SiegeCapability.class)) {
-            return pointsPerCity * adjoiningCompletedCities.size() +
-                   (pointsPerCity + 1) * adjoiningCastles.size();
+            points += pointsPerCity * adjoiningCompletedCities.size();
+            return points;
         }
 
-        int points = 0;
         for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
             if (scoredCities != null) {
                 if (scoredCities.get(player).contains(ctx.getMasterFeature())) {
@@ -121,25 +128,23 @@ public class FarmScoreContext extends AbstractScoreContext {
                 points += pointsPerCity;
             }
         }
-        points += (pointsPerCity + 1) * adjoiningCastles.size();
         return points;
     }
 
     public int getBarnPoints() {
+        int points = adjoiningCityOfCarcassonne ? 4 : 0;
+        points += 5 * adjoiningCastles.size();
         if (getGame().hasCapability(SiegeCapability.class)) {
-            int points = 0;
             for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
                 points += 4;
                 if (ctx.isBesieged()) { //count city twice
                     points += 4;
                 }
             }
-            points += 5 * adjoiningCastles.size();
-            return points;
         } else {
-            return adjoiningCompletedCities.size() * 4 +
-                   adjoiningCastles.size() * 5;
+            points += adjoiningCompletedCities.size() * 4;
         }
+        return points;
     }
 
 }

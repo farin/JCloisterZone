@@ -9,6 +9,7 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 public class Farm extends MultiTileFeature {
 
     protected Feature[] adjoiningCities; //or castles
+    protected boolean adjoiningCityOfCarcassonne;
     protected boolean pigHerd;
 
 
@@ -26,6 +27,14 @@ public class Farm extends MultiTileFeature {
 
     public void setPigHerd(boolean pigHerd) {
         this.pigHerd = pigHerd;
+    }
+
+    public boolean isAdjoiningCityOfCarcassonne() {
+        return adjoiningCityOfCarcassonne;
+    }
+
+    public void setAdjoiningCityOfCarcassonne(boolean adjoiningCityOfCarcassonne) {
+        this.adjoiningCityOfCarcassonne = adjoiningCityOfCarcassonne;
     }
 
     @Override
