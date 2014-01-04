@@ -132,7 +132,7 @@ public class DragonCapability extends Capability {
         for (Position offset: Position.ADJACENT.values()) {
             Position position = dragonPosition.add(offset);
             Tile tile = getBoard().get(position);
-            if (tile == null || tile.getOrigin() == Expansion.COUNT) continue;
+            if (tile == null || CountCapability.isTileForbidden(tile)) continue;
             if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
             if (fairyCap != null && position.equals(fairyCap.getFairyPosition())) { continue; }
             result.add(position);

@@ -159,6 +159,12 @@
     <point feature="ROAD" cx="215" cy="625">
         <apply>WR.CFR W</apply>
     </point>
+    <point feature="ROAD" cx="147" cy="395">
+        <apply>CO.1 W</apply>
+    </point>
+    <point feature="ROAD" cx="650" cy="262">
+        <apply>CO.4 N</apply>
+    </point>
     <point feature="ROAD" cx="720" cy="720" baseLocation="SE"> <!-- oblique -->
         <apply>BA.CcRr SE</apply>
         <apply>BA.CcRr+ SE</apply>
@@ -334,6 +340,9 @@
     <point feature="FARM" cx="280" cy="100" baseLocation="NL">
         <apply>TB.CcRR.w EL</apply>
     </point>
+    <point feature="FARM" cx="300" cy="150">
+        <apply>CO.4 WR.NL</apply>
+    </point>
     <point feature="FARM" cx="350" cy="750">
         <apply>TO.CC.2 SL.SR.EL.ER</apply>
     </point>
@@ -344,6 +353,7 @@
         <apply>R1.IFI NL.NR.EL.WR</apply>
         <apply>R1.IFI SL.SR.ER.WL</apply>
         <apply>R2.III SL.SR.ER.WL</apply>
+        <apply>CO.1 NL.NR.EL.WR</apply>
     </point>
     <point feature="FARM" cx="500" cy="750">
         <apply>BE.Ccc SL.SR</apply>
