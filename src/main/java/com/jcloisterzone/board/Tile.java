@@ -18,8 +18,10 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
+import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
+import com.jcloisterzone.feature.visitor.IsOccupoedAndUncompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Game;
 
@@ -260,12 +262,21 @@ public class Tile /*implements Cloneable*/ {
         return locations;
     }
 
-
     public Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass) {
+        return getPlayerFeatures(player, featureClass, false);
+    }
+
+    public Set<Location> getPlayerUncompletedFeatures(Player player, Class<? extends Feature> featureClass) {
+        return getPlayerFeatures(player, featureClass, true);
+    }
+
+
+    private Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass, boolean uncompletedOnly)  {
         Set<Location> locations = new HashSet<>();
         for (Feature f : features) {
             if (!featureClass.isInstance(f)) continue;
-            if (f.walk(new IsOccupied().with(player).with(Follower.class))) {
+            IsOccupied visitor = uncompletedOnly ? new IsOccupoedAndUncompleted() : new IsOccupied();
+            if (f.walk(visitor.with(player).with(Follower.class))) {
                 locations.add(f.getLocation());
             }
         }

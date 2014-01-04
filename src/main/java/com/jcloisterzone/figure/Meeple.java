@@ -5,7 +5,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.game.Game;
 
 public abstract class Meeple extends Figure {
@@ -66,11 +65,9 @@ public abstract class Meeple extends Figure {
         return tile.getFeature(loc);
     }
 
-    public final void deployUnoccupied(Tile tile, Location loc) {
+    public void deployUnoccupied(Tile tile, Location loc) {
+        //perorm unoccupied check for followers only!!!
         Feature feature = getDeploymentFeature(tile, loc);
-        if (feature.walk(new IsOccupied())) {
-            throw new IllegalArgumentException("Feature is occupied.");
-        }
         deploy(tile, loc, feature);
     }
 
@@ -79,7 +76,7 @@ public abstract class Meeple extends Figure {
         deploy(tile, loc, feature);
     }
 
-    private void deploy(Tile tile, Location loc, Feature feature) {
+    protected void deploy(Tile tile, Location loc, Feature feature) {
         assert this.location == null;
         DeploymentCheckResult check = isDeploymentAllowed(feature);
         if (!check.result) {

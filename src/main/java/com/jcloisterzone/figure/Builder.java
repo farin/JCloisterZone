@@ -4,7 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.feature.visitor.IsOccupoedAndUncompleted;
 import com.jcloisterzone.game.Game;
 
 public class Builder extends Special {
@@ -20,8 +20,8 @@ public class Builder extends Special {
         if (!(f instanceof City || f instanceof Road) ) {
             return new DeploymentCheckResult("Builder must be placed in city or on road only.");
         }
-        if (!f.walk(new IsOccupied().with(Follower.class))) {
-            return new DeploymentCheckResult("Feature is not occupied by follower.");
+        if (!f.walk(new IsOccupoedAndUncompleted().with(Follower.class))) {
+            return new DeploymentCheckResult("Feature is not occupied by follower or completed.");
         }
         return super.isDeploymentAllowed(f);
     }

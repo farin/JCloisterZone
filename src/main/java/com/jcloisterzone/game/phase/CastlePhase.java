@@ -69,7 +69,7 @@ public class CastlePhase extends Phase {
             return;
         }
         int pi = game.getTurnPlayer().getIndex();
-        while(! currentTileCastleBases.containsKey(game.getAllPlayers()[pi])) {
+        while (!currentTileCastleBases.containsKey(game.getAllPlayers()[pi])) {
             pi++;
             if (pi == game.getAllPlayers().length) pi = 0;
         }

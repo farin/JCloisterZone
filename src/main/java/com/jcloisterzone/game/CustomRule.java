@@ -20,9 +20,9 @@ public enum CustomRule {
 
     MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, _("Allow direct barn placement on a farm where another barn is already placed.")),
 
-    TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, _("Apply tunnel rule on tunnel from other expansions.")),
+    TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, _("Apply tunnel rule on tunnels from other expansions.")),
 
-    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, _("No bidding on bazaar tile. Each players just choose one tile."));
+    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, _("No bazaar bidding. Each players just choose one tile."));
 
     String label;
     Expansion expansion;
