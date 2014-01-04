@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.config.Config.ProfileConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -48,9 +48,9 @@ public class GuiClientStub extends ClientStub {
         if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
             autostartPerfomed = true; //apply autostart only once
             AutostartConfig autostartConfig = debugConfig.getAutostart();
-            final ProfileConfig profileCfg = client.getConfig().getProfiles().get(autostartConfig.getProfile());
-            if (profileCfg == null) {
-                logger.warn("Autostart profile {} not found.", autostartConfig.getProfile());
+            final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
+            if (presetCfg == null) {
+                logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
                 return;
             }
 
@@ -74,7 +74,7 @@ public class GuiClientStub extends ClientStub {
                         i++;
                     }
 
-                    profileCfg.updateGameSetup(client.getServer());
+                    presetCfg.updateGameSetup(client.getServer());
                     client.getServer().startGame();
                 }
             });

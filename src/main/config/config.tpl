@@ -33,7 +33,7 @@ plugins: ${plugins}
 #   TINY_CITY_2_POINTS, PRINCESS_MUST_REMOVE_KNIGHT, DRAGON_MOVE_AFTER_SCORING, ESCAPE_RGG,
 #   PIG_HERD_ON_GQ_FARM, MULTI_BARN_ALLOWEDD, TUNNELIZE_ALL_EXPANSIONS,  BAZAAR_NO_AUCTION,
 
-profiles: ${profiles}
+presets: ${presets}
 
 ${if hasDebug}
 debug:
@@ -42,7 +42,7 @@ debug:
 
   autosave: ${autosave}
 
-  # comment profile to disable autostart
+  # comment preset to disable autostart
   # use player name for human player or class for ai
   # - com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer
   # - com.jcloisterzone.ai.DummyAiPlayer

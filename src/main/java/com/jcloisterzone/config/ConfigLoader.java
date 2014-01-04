@@ -138,8 +138,8 @@ public class ConfigLoader {
         if (config.getPlugins() != null) {
             model.put("plugins", indent(1, yaml.dumpAs(config.getPlugins(), Tag.SEQ, FlowStyle.BLOCK)));
         }
-        if (config.getProfiles() != null) {
-            model.put("profiles", indent(1, yaml.dumpAs(config.getProfiles(), Tag.MAP, FlowStyle.BLOCK)));
+        if (config.getPresets() != null) {
+            model.put("presets", indent(1, yaml.dumpAs(config.getPresets(), Tag.MAP, FlowStyle.BLOCK)));
         }
 
         DebugConfig dc = config.getDebug();

@@ -29,7 +29,7 @@ import net.miginfocom.swing.MigLayout;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.config.Config.ProfileConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
@@ -46,8 +46,8 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel playersPanel;
     // private JLabel helpText;
-    private JComboBox<Object> profiles;
-    private JButton profileSave, profileDelete;
+    private JComboBox<Object> presets;
+    private JButton presetSave, presetDelete;
 
     private JButton startGameButton;
     private JPanel expansionPanel;
@@ -57,17 +57,17 @@ public class CreateGamePanel extends JPanel {
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
 
-    static class Profile implements Comparable<Profile>{
+    static class Preset implements Comparable<Preset>{
         private final String name;
-        private ProfileConfig config;
+        private PresetConfig config;
 
-        public Profile(String name, ProfileConfig config) {
+        public Preset(String name, PresetConfig config) {
             this.name = name;
             this.config = config;
         }
 
         @Override
-        public int compareTo(Profile o) {
+        public int compareTo(Preset o) {
             return name.compareTo(o.name);
         }
 
@@ -80,11 +80,11 @@ public class CreateGamePanel extends JPanel {
             return name;
         }
 
-        public ProfileConfig getConfig() {
+        public PresetConfig getConfig() {
             return config;
         }
 
-        public void setConfig(ProfileConfig config) {
+        public void setConfig(PresetConfig config) {
             this.config = config;
         }
     }
@@ -180,69 +180,69 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel createProfilePanel() {
         JPanel profilePanel = new JPanel();
-        profilePanel.setBorder(new TitledBorder(null, _("Profiles"),
+        profilePanel.setBorder(new TitledBorder(null, _("Presets"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         profilePanel.setLayout(new MigLayout());
 
 
-        profiles = new JComboBox<Object>(getProfiles());
-        profiles.setEditable(true);
-        profiles.setSelectedItem("");
-        profiles.addActionListener(new ActionListener() {
+        presets = new JComboBox<Object>(getPresets());
+        presets.setEditable(true);
+        presets.setSelectedItem("");
+        presets.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (profiles.getSelectedItem() instanceof Profile) {
-                    Profile profile = (Profile) profiles.getSelectedItem();
+                if (presets.getSelectedItem() instanceof Preset) {
+                    Preset profile = (Preset) presets.getSelectedItem();
                     profile.getConfig().updateGameSetup(client.getServer());
                 }
             }
         });
-        profilePanel.add(profiles, "width 160, gapright 10, west");
+        profilePanel.add(presets, "width 160, gapright 10, west");
 
-        profileSave = new JButton(_("Save"));
-        profileSave.addActionListener(new ActionListener() {
+        presetSave = new JButton(_("Save"));
+        presetSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object item = profiles.getSelectedItem();
+                Object item = presets.getSelectedItem();
                 if (item instanceof String) {
-                    Profile profile = getProfileFor((String) item);
+                    Preset profile = getProfileFor((String) item);
                     if (profile != null) {
                         item = profile;
                     }
                 }
-                Profile profile = null;
+                Preset profile = null;
                 if (item instanceof String) { //not found matching profile, create new
-                    profile = new Profile(((String)item).trim(), createCurrentConfig());
-                    profiles.addItem(profile); //TODO insert at
+                    profile = new Preset(((String)item).trim(), createCurrentConfig());
+                    presets.addItem(profile); //TODO insert at
                 } else { //profile already exists
-                    profile = (Profile) item;
+                    profile = (Preset) item;
                     profile.setConfig(createCurrentConfig());
                 }
                 Config config = client.getConfig();
-                config.getProfiles().put(profile.getName(), profile.getConfig());
+                config.getPresets().put(profile.getName(), profile.getConfig());
                 client.saveConfig();
             }
         });
-        profilePanel.add(profileSave, "width 80, gapright 10, west");
+        profilePanel.add(presetSave, "width 80, gapright 10, west");
 
-        profileDelete = new JButton(_("Delete"));
-        profileDelete.addActionListener(new ActionListener() {
+        presetDelete = new JButton(_("Delete"));
+        presetDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object item = profiles.getSelectedItem();
+                Object item = presets.getSelectedItem();
                 if (item instanceof String) {
                     item = getProfileFor((String) item);
                 }
-                if (item instanceof Profile) {
-                    Profile profile = (Profile) item;
-                    profiles.removeItem(profile);
+                if (item instanceof Preset) {
+                    Preset profile = (Preset) item;
+                    presets.removeItem(profile);
                     Config config = client.getConfig();
-                    config.getProfiles().remove(profile.getName());
+                    config.getPresets().remove(profile.getName());
                     client.saveConfig();
                 }
             }
         });
-        profilePanel.add(profileDelete, "width 80, west");
+        profilePanel.add(presetDelete, "width 80, west");
         return profilePanel;
     }
 
@@ -259,13 +259,13 @@ public class CreateGamePanel extends JPanel {
         expansionComponents.put(exp, new JComponent[] {chbox, expansionSize});
     }
 
-    private Profile getProfileFor(String name) {
+    private Preset getProfileFor(String name) {
         name = name.trim();
         if ("".equals(name)) return null;
 
-        int count = profiles.getItemCount();
+        int count = presets.getItemCount();
         for (int i = 0; i < count; i++) {
-            Profile profile = (Profile) profiles.getItemAt(i);
+            Preset profile = (Preset) presets.getItemAt(i);
             if (profile.getName().equals(name)) {
                 return profile;
             }
@@ -273,7 +273,7 @@ public class CreateGamePanel extends JPanel {
         return null;
     }
 
-    private ProfileConfig createCurrentConfig() {
+    private PresetConfig createCurrentConfig() {
         List<String> expansions = new ArrayList<>();
         List<String> rules = new ArrayList<>();
         for (Expansion exp : client.getGame().getExpansions()) {
@@ -283,23 +283,23 @@ public class CreateGamePanel extends JPanel {
         for (CustomRule rule : client.getGame().getCustomRules()) {
             rules.add(rule.name());
         }
-        ProfileConfig config = new ProfileConfig();
+        PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
         config.setRules(rules);
         return config;
     }
 
-    private Profile[] getProfiles() {
-        Map<String, ProfileConfig> profileCfg = client.getConfig().getProfiles();
-        if (profileCfg == null) {
-            return new Profile[0];
+    private Preset[] getPresets() {
+        Map<String, PresetConfig> presetCfg = client.getConfig().getPresets();
+        if (presetCfg == null) {
+            return new Preset[0];
         }
-        ArrayList<Profile> profiles = new ArrayList<>();
-        for (Entry<String, ProfileConfig> e : profileCfg.entrySet()) {
-            profiles.add(new Profile(e.getKey(), e.getValue()));
+        ArrayList<Preset> profiles = new ArrayList<>();
+        for (Entry<String, PresetConfig> e : presetCfg.entrySet()) {
+            profiles.add(new Preset(e.getKey(), e.getValue()));
         }
         Collections.sort(profiles);
-        return profiles.toArray(new Profile[profiles.size()]);
+        return profiles.toArray(new Preset[profiles.size()]);
     }
 
     public void disposePanel() {

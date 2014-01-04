@@ -33,9 +33,9 @@ public class Config {
     private ConfirmConfig confirm;
     private PlayersConfig players;
     private DebugConfig debug;
-    private Map<String, ProfileConfig> profiles;
+    private Map<String, PresetConfig> presets;
 
-    public static class ProfileConfig {
+    public static class PresetConfig {
         private List<String> expansions;
         private List<String> rules;
 
@@ -69,14 +69,14 @@ public class Config {
 
     public static class AutostartConfig {
 
-        private String profile;
+        private String preset;
         private List<String> players;
 
-        public String getProfile() {
-            return profile;
+        public String getPreset() {
+            return preset;
         }
-        public void setProfile(String profile) {
-            this.profile = profile;
+        public void setPreset(String profile) {
+            this.preset = profile;
         }
         public List<String> getPlayers() {
             return players;
@@ -96,7 +96,7 @@ public class Config {
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
-            return autostart != null && autostart.getProfile() != null;
+            return autostart != null && autostart.getPreset() != null;
         }
 
         public String getSave_format() {
@@ -286,15 +286,15 @@ public class Config {
         this.confirm = confirm;
     }
 
-    public Map<String, ProfileConfig> getProfiles() {
-        if (profiles == null) {
-            profiles = new HashMap<>();
+    public Map<String, PresetConfig> getPresets() {
+        if (presets == null) {
+            presets = new HashMap<>();
         }
-        return profiles;
+        return presets;
     }
 
-    public void setProfiles(Map<String, ProfileConfig> profiles) {
-        this.profiles = profiles;
+    public void setPresets(Map<String, PresetConfig> presets) {
+        this.presets = presets;
     }
 
     public File getOrigin() {
