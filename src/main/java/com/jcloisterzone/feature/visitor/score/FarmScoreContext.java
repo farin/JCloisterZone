@@ -82,12 +82,8 @@ public class FarmScoreContext extends AbstractScoreContext {
         return pointsPerCity;
     }
 
-    public int getPointsPerCity(Player player) {
-        return getPointsPerCity(player, 3);
-    }
-
     public int getPoints(Player player) {
-        return getPlayerPoints(player, getPointsPerCity(player));
+        return getPlayerPoints(player, getPointsPerCity(player, 3));
     }
 
     public int getPointsWhenBarnIsConnected(Player player) {

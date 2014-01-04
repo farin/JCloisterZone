@@ -6,10 +6,10 @@
         <apply>* CLOISTER</apply>
     </point>
 
-    <!-- point feature="BRIDGE" cx="500" cy="200">
+    <point feature="BRIDGE" cx="500" cy="200">
         <apply>* NS</apply>
         <apply svg:transform="rotate(270 500 500)">* WE</apply>
-    </point -->
+    </point>
 
     <point feature="ROAD" cx="500" cy="200">
         <apply allRotations="1">* N</apply>
