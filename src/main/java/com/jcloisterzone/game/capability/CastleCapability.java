@@ -114,16 +114,16 @@ public class CastleCapability extends Capability {
     private Castle replaceCityWithCastle(Tile tile, Location loc) {
         ListIterator<Feature> iter = tile.getFeatures().listIterator();
         City city = null;
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Feature feature =  iter.next();
             if (feature.getLocation() == loc) {
                 city = (City) feature;
                 break;
             }
         }
-        List<Meeple> meeples = city.getMeeples();
+        List<Meeple> meeples = new ArrayList<>(city.getMeeples()); //collection copy required!!! undeploy modify it
         for (Meeple m : meeples) {
-            m.undeploy(false);
+            m.undeploy();
         }
         Castle castle = new Castle();
         castle.setTile(tile);
@@ -147,7 +147,9 @@ public class CastleCapability extends Capability {
         }
 
         for (Meeple m : meeples) {
-            m.deploy(tile, loc);
+            if (m.getPlayer() == game.getActivePlayer() && m.isDeploymentAllowed(castle).result) {
+                m.deploy(tile, loc);
+            }
         }
         return castle;
     }

@@ -61,6 +61,8 @@ public class LoadGamePhase extends CreateGamePhase {
                 game.fireGameEvent().bridgeDeployed(preplaced.getPosition(), preplaced.getBridge().getLocation());
             }
         }
+        snapshot.loadCapabilities(game);
+        //meeples must be places after capabilites are loaded - when cities replaces castles
         for (Meeple m : tilePackFactory.getPreplacedMeeples()) {
             Tile tile = game.getBoard().get(m.getPosition());
             Feature f;
@@ -75,7 +77,6 @@ public class LoadGamePhase extends CreateGamePhase {
             game.fireGameEvent().deployed(m);
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
-        snapshot.loadCapabilities(game);
     }
 
     @Override

@@ -77,7 +77,6 @@ public abstract class Meeple extends Figure {
     }
 
     protected void deploy(Tile tile, Location loc, Feature feature) {
-        assert this.location == null;
         DeploymentCheckResult check = isDeploymentAllowed(feature);
         if (!check.result) {
             throw new IllegalArgumentException(check.error);
