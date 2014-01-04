@@ -24,7 +24,6 @@ public class FarmScoreContext extends AbstractScoreContext {
     private int pigHerds = 0;
 
     private Map<City, CityScoreContext> cityCache;
-    private Map<Player, Set<City>> scoredCities;
 
     public FarmScoreContext(Game game) {
         super(game);
@@ -36,14 +35,6 @@ public class FarmScoreContext extends AbstractScoreContext {
 
     public void setCityCache(Map<City, CityScoreContext> cityCache) {
         this.cityCache = cityCache;
-    }
-
-    public Map<Player, Set<City>> getScoredCities() {
-        return scoredCities;
-    }
-
-    public void setScoredCities(Map<Player, Set<City>> scoredCities) {
-        this.scoredCities = scoredCities;
     }
 
     private void addAdjoiningCompletedCities(Feature[] adjoiningCities) {
@@ -62,10 +53,8 @@ public class FarmScoreContext extends AbstractScoreContext {
             } else if (feature instanceof Castle) {
                 adjoiningCastles.add((Castle) feature.getMaster());
             }
-
         }
     }
-
 
     @Override
     public boolean visit(Feature feature) {
@@ -111,18 +100,12 @@ public class FarmScoreContext extends AbstractScoreContext {
         points += (pointsPerCity + 1) * adjoiningCastles.size();
 
         //optimalization
-        if (scoredCities == null && !getGame().hasCapability(SiegeCapability.class)) {
+        if (!getGame().hasCapability(SiegeCapability.class)) {
             points += pointsPerCity * adjoiningCompletedCities.size();
             return points;
         }
 
         for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
-            if (scoredCities != null) {
-                if (scoredCities.get(player).contains(ctx.getMasterFeature())) {
-                    continue;
-                }
-                scoredCities.get(player).add((City) ctx.getMasterFeature());
-            }
             points += pointsPerCity;
             if (ctx.isBesieged()) { //count city twice
                 points += pointsPerCity;
