@@ -173,7 +173,7 @@ public class CastleCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
         for (Castle castle: newCastles) {
             scoreableCastleVicinity.put(castle, castle.getVicinity());
         }

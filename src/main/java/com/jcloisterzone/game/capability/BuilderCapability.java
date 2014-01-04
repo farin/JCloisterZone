@@ -80,7 +80,7 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
         switch (builderState) {
         case ACTIVATED:
             builderState = BuilderState.BUILDER_TURN;

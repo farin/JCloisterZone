@@ -58,7 +58,7 @@ public class PortalCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
         portalUsed = false;
     }
 

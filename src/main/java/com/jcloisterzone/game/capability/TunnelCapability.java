@@ -128,8 +128,10 @@ public final class TunnelCapability extends Capability {
 
 
     @Override
-    public void turnCleanUp() {
-        placedTunnelCurrentTurn = null;
+    public void turnCleanUp(boolean doubleTurn) {
+        if (!doubleTurn) {
+            placedTunnelCurrentTurn = null;
+        }
     }
 
     private int getTunnelId(Player p, boolean isB) {

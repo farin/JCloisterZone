@@ -16,7 +16,7 @@ public class CleanUpPhase extends Phase {
     @Override
     public void enter() {
         boolean builderTakeAnotherTurn = builderCap != null && builderCap.hasPlayerAnotherTurn();
-        game.turnCleanUp();
+        game.turnCleanUp(builderTakeAnotherTurn);
         game.setCurrentTile(null);
         if (builderTakeAnotherTurn) {
             next(game.hasCapability(AbbeyCapability.class) ? AbbeyPhase.class : DrawPhase.class);

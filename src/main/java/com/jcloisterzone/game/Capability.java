@@ -87,7 +87,7 @@ public abstract class Capability extends GameEventAdapter {
     public void scoreCompleted(CompletableScoreContext ctx) {
     }
 
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
     }
 
     public void finalScoring() {

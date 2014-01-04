@@ -71,7 +71,7 @@ public class RiverCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
         if (getTile().getRiver() == null) return;
         if (getTilePack().isEmpty()) {
             if (getTilePack().isGroupActive("river")) {

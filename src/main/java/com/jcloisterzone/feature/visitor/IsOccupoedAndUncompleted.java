@@ -13,7 +13,8 @@ public class IsOccupoedAndUncompleted extends IsOccupied {
         if (completable.isOpen()) {
             isCompleted = false;
         }
-        return super.visit(feature);
+        super.visit(feature);
+        return true;
     }
 
     @Override
