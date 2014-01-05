@@ -9,6 +9,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -33,6 +34,7 @@ import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FairyLayer;
+import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
@@ -55,6 +57,7 @@ public class MainPanel extends BackgroundPanel {
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
+    private FarmHintsLayer farmHintLayer;
 
     public MainPanel(Client client) {
         this.client = client;
@@ -74,6 +77,16 @@ public class MainPanel extends BackgroundPanel {
 
     private Game getGame() {
         return client.getGame();
+    }
+
+    public void setShowFarmHints(boolean showFarmHints) {
+        if (showFarmHints) {
+            farmHintLayer = new FarmHintsLayer(gridPanel);
+            gridPanel.addLayer(farmHintLayer);
+        } else {
+            farmHintLayer = null;
+            gridPanel.removeLayer(FarmHintsLayer.class);
+        }
     }
 
     public void started(Snapshot snapshot) {
@@ -129,16 +142,25 @@ public class MainPanel extends BackgroundPanel {
 
     public void tilePlaced(Tile tile) {
         gridPanel.tilePlaced(tile, tileLayer);
+        if (farmHintLayer != null) {
+            farmHintLayer.refreshHints();
+        }
     }
 
     public void deployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleDeployed(m);
+        if (m.getFeature() instanceof Farm && farmHintLayer != null) {
+            farmHintLayer.refreshHints();
+        }
     }
 
     public void undeployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleUndeployed(m);
+        if (m.getFeature() instanceof Farm && farmHintLayer != null) {
+            farmHintLayer.refreshHints();
+        }
     }
 
     public void bridgeDeployed(Position pos, Location loc) {

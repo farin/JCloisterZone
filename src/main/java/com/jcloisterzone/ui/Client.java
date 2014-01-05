@@ -59,6 +59,8 @@ import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
+import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
+import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
@@ -83,7 +85,7 @@ public class Client extends JFrame {
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
 
-    //non-persistetn settings
+    //non-persistetn settings (TODO move to mainPanel)
     private boolean showHistory;
 
     @Deprecated
@@ -546,12 +548,16 @@ public class Client extends JFrame {
     }
 
     public void setShowHistory(boolean showHistory) {
+        if (showHistory) {
+            getGridPanel().showRecentHistory();
+        } else {
+            getGridPanel().removeLayer(PlacementHistory.class);
+        }
         this.showHistory = showHistory;
     }
 
     //------------------- LEGACY: TODO refactor ---------------
     //TODO move getColor on player
-
 
     public Color getPlayerSecondTunelColor(Player player) {
         int slotNumber = player.getSlot().getNumber();

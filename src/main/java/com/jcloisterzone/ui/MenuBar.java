@@ -27,7 +27,7 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, close, showDiscard, save, load;
+    private JMenuItem create, connect, close, showDiscard, save, load, farmHints;
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history;
 
@@ -149,14 +149,20 @@ public class MenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
                 client.setShowHistory(ch.isSelected());
-                if (ch.isSelected()) {
-                    client.getGridPanel().showRecentHistory();
-                } else {
-                    client.getGridPanel().removeLayer(PlacementHistory.class);
-                }
+
             }
         });
         menu.add(history);
+
+        farmHints = new JCheckBoxMenuItem(_("Show farm hints"));
+        farmHints.setAccelerator(KeyStroke.getKeyStroke('f'));
+        farmHints.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getMainPanel().setShowFarmHints(ch.isSelected());
+            }
+        });
+        menu.add(farmHints);
 
 
         showDiscard = new JMenuItem(_("Show discarded tiles"));
