@@ -1,6 +1,9 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,6 +44,8 @@ import javax.swing.text.ViewFactory;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.TextPrompt;
+import com.jcloisterzone.ui.TextPrompt.Show;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class ChatPanel extends FakeComponent implements WindowStateListener {
@@ -158,6 +163,10 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
 
         input.setOpaque(false);
         input.setBackground(new Color(255, 255, 255, 8));
+        TextPrompt tp = new TextPrompt(_("Type to chat"), input);
+        tp.setShow(Show.FOCUS_LOST);
+        tp.changeStyle(Font.ITALIC);
+        tp.changeAlpha(0.4f);
 
         messagesPane = new JTextPane();
         messagesPane.setEditorKit(new WrapEditorKit());

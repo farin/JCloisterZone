@@ -23,6 +23,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -34,6 +42,8 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.TextPrompt;
+import com.jcloisterzone.ui.TextPrompt.Show;
 
 public class CreateGamePanel extends JPanel {
 
@@ -56,6 +66,8 @@ public class CreateGamePanel extends JPanel {
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     static class Preset implements Comparable<Preset>{
         private final String name;
@@ -119,7 +131,7 @@ public class CreateGamePanel extends JPanel {
         });
 
         if (mutableSlots) {
-            panel.add(createProfilePanel(), "west");
+            panel.add(createPresetPanel(), "west");
         }
 
         playersPanel = new JPanel();
@@ -178,11 +190,11 @@ public class CreateGamePanel extends JPanel {
         startGameButton.requestFocus();
     }
 
-    private JPanel createProfilePanel() {
-        JPanel profilePanel = new JPanel();
-        profilePanel.setBorder(new TitledBorder(null, _("Presets"),
+    private JPanel createPresetPanel() {
+        JPanel presetPanel = new JPanel();
+        presetPanel.setBorder(new TitledBorder(null, _("Presets"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        profilePanel.setLayout(new MigLayout());
+        presetPanel.setLayout(new MigLayout());
 
 
         presets = new JComboBox<Object>(getPresets());
@@ -197,7 +209,40 @@ public class CreateGamePanel extends JPanel {
                 }
             }
         });
-        profilePanel.add(presets, "width 160, gapright 10, west");
+        presetPanel.add(presets, "width 160, gapright 10, west");
+
+        JTextComponent editorComponent = (JTextComponent) presets.getEditor().getEditorComponent();
+        TextPrompt tp = new TextPrompt(_("Preset name"), editorComponent);
+        tp.setShow(Show.FOCUS_LOST);
+        tp.changeStyle(Font.ITALIC);
+        tp.changeAlpha(0.4f);
+
+        editorComponent.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void handle(DocumentEvent e) {
+                try {
+                    Document doc = e.getDocument();
+                    updatePresetButtons(doc.getText(0, doc.getLength()));
+                } catch (BadLocationException ex) {
+                    logger.error(ex.getMessage(), ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                handle(e);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handle(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handle(e);
+            }
+        });
 
         presetSave = new JButton(_("Save"));
         presetSave.addActionListener(new ActionListener() {
@@ -205,7 +250,7 @@ public class CreateGamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 Object item = presets.getSelectedItem();
                 if (item instanceof String) {
-                    Preset profile = getProfileFor((String) item);
+                    Preset profile = getPresetFor((String) item);
                     if (profile != null) {
                         item = profile;
                     }
@@ -221,9 +266,10 @@ public class CreateGamePanel extends JPanel {
                 Config config = client.getConfig();
                 config.getPresets().put(profile.getName(), profile.getConfig());
                 client.saveConfig();
+                updatePresetButtons(presets.getSelectedItem());
             }
         });
-        profilePanel.add(presetSave, "width 80, gapright 10, west");
+        presetPanel.add(presetSave, "width 80, gapright 10, west");
 
         presetDelete = new JButton(_("Delete"));
         presetDelete.addActionListener(new ActionListener() {
@@ -231,19 +277,42 @@ public class CreateGamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 Object item = presets.getSelectedItem();
                 if (item instanceof String) {
-                    item = getProfileFor((String) item);
+                    item = getPresetFor((String) item);
                 }
                 if (item instanceof Preset) {
-                    Preset profile = (Preset) item;
-                    presets.removeItem(profile);
+                    Preset preset = (Preset) item;
+                    presets.removeItem(preset);
                     Config config = client.getConfig();
-                    config.getPresets().remove(profile.getName());
+                    config.getPresets().remove(preset.getName());
                     client.saveConfig();
+                    presets.setSelectedItem("");
+                    updatePresetButtons("");
                 }
             }
         });
-        profilePanel.add(presetDelete, "width 80, west");
-        return profilePanel;
+        presetPanel.add(presetDelete, "width 80, west");
+
+        updatePresetButtons(presets.getSelectedItem());
+        return presetPanel;
+    }
+
+    private void updatePresetButtons(Object item) {
+        if (item instanceof String) {
+            item = ((String) item).trim();
+            Preset preset = getPresetFor((String) item);
+            if (preset != null) item = preset;
+        }
+        if (item instanceof Preset) {
+            presetSave.setEnabled(true);
+            presetDelete.setEnabled(true);
+        } else {
+            presetDelete.setEnabled(false);
+            if ("".equals(item)) {
+                presetSave.setEnabled(false);
+            } else {
+                presetSave.setEnabled(true);
+            }
+        }
     }
 
     private void createExpansionLine(Expansion exp, int expSize) {
@@ -259,7 +328,7 @@ public class CreateGamePanel extends JPanel {
         expansionComponents.put(exp, new JComponent[] {chbox, expansionSize});
     }
 
-    private Preset getProfileFor(String name) {
+    private Preset getPresetFor(String name) {
         name = name.trim();
         if ("".equals(name)) return null;
 
