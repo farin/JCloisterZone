@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -44,6 +45,7 @@ import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.TextPrompt;
 import com.jcloisterzone.ui.TextPrompt.Show;
+import com.jcloisterzone.ui.UiUtils;
 
 public class CreateGamePanel extends JPanel {
 
@@ -407,7 +409,7 @@ public class CreateGamePanel extends JPanel {
             chbox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JCheckBox chbox = (JCheckBox) e.getSource();
+                    final JCheckBox chbox = (JCheckBox) e.getSource();
                     client.getServer().updateExpansion(exp, chbox.isSelected());
                 }
             });
@@ -417,8 +419,9 @@ public class CreateGamePanel extends JPanel {
 
     public void updateCustomRule(CustomRule rule, Boolean enabled) {
         JCheckBox chbox = ruleCheckboxes.get(rule);
-        if (chbox != null) {
+        if (chbox != null && chbox.isSelected() != enabled) {
             chbox.setSelected(enabled);
+            UiUtils.highlightComponent(chbox);
         }
         if (rule == CustomRule.RANDOM_SEATING_ORDER) {
             updateSerialLabels();
@@ -426,7 +429,13 @@ public class CreateGamePanel extends JPanel {
     }
 
     public void updateExpansion(Expansion expansion, Boolean enabled) {
-        ((JCheckBox)expansionComponents.get(expansion)[0]).setSelected(enabled);
+        JCheckBox chbox = (JCheckBox) expansionComponents.get(expansion)[0];
+        if (chbox.isSelected() != enabled) {
+            chbox.setSelected(enabled);
+            if (expansion != Expansion.BASIC) { //hardcoded exception
+                UiUtils.highlightComponent(chbox);
+            }
+        }
     }
 
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
