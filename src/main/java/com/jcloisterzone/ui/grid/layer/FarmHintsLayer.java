@@ -4,12 +4,8 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,79 +32,6 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
     private final List<FarmHint> hints = new ArrayList<>();
 
-    static public class TextureFactory {
-
-        private final int squareSize;
-        private int seq;
-
-        public TextureFactory(int squareSize) {
-            this.squareSize = squareSize;
-        }
-
-        public TexturePaint create(Color c) {
-            switch (++seq) {
-            case 6: seq = 0;
-            case 0: return createDiagonalUp(c);
-            case 1: return createVertical(c);
-            case 2: return createDiagonalCheck(c);
-            case 3: return createDiagonalDown(c);
-            case 4: return createHorizontal(c);
-            default: return createCheck(c);
-            }
-        }
-
-        private TexturePaint createDiagonalUp(Color c) {
-            BufferedImage bi = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fill(new Polygon(new int[] {16, 32, 32}, new int[] {32, 16, 32}, 3));
-            g2.fill(new Polygon(new int[] {0, 16, 32, 0}, new int[] {16, 0, 0, 32}, 4));
-            return new TexturePaint(bi, new Rectangle(0, 0, 32, 32));
-        }
-
-        private TexturePaint createDiagonalDown(Color c) {
-            BufferedImage bi = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fill(new Polygon(new int[] {0, 0, 16}, new int[] {32, 16, 32}, 3));
-            g2.fill(new Polygon(new int[] {0, 16, 32, 32}, new int[] {0, 0, 16, 32}, 4));
-            return new TexturePaint(bi, new Rectangle(0, 0, 32, 32));
-        }
-
-        private TexturePaint createVertical(Color c) {
-            BufferedImage bi = new BufferedImage(22, 22, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fillRect(0, 0, 11, 22);
-            return new TexturePaint(bi, new Rectangle(0, 0, 22, 22));
-        }
-
-        private TexturePaint createHorizontal(Color c) {
-            BufferedImage bi = new BufferedImage(22, 22, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fillRect(0, 0, 22, 11);
-            return new TexturePaint(bi, new Rectangle(0, 0, 22, 22));
-        }
-
-        private TexturePaint createDiagonalCheck(Color c) {
-            BufferedImage bi = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fill(new Polygon(new int[] {10, 20, 10, 0}, new int[] {0, 10, 20, 10}, 4));
-            return new TexturePaint(bi, new Rectangle(0, 0, 20, 20));
-        }
-
-        private TexturePaint createCheck(Color c) {
-            BufferedImage bi = new BufferedImage(22, 22, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.setColor(c);
-            g2.fillRect(0, 0, 11, 11);
-            g2.fillRect(11, 11, 11, 11);
-            return new TexturePaint(bi, new Rectangle(0, 0, 22, 22));
-        }
-    }
-
     public FarmHintsLayer(GridPanel gridPanel) {
         super(gridPanel);
         refreshHints();
@@ -130,8 +53,14 @@ public class FarmHintsLayer extends AbstractGridLayer {
                     fh.scaledArea = fh.area.createTransformedArea(AffineTransform.getScaleInstance(scale, scale));
                 }
             }
-            g2.setPaint(textures.create(fh.color));
-            g2.fill(transformArea(fh.scaledArea, fh.position));
+            Area area = transformArea(fh.scaledArea, fh.position);
+            if (fh.colors.length > 1) {
+                g2.setPaint(textures.createMultiColor(fh.colors));
+                g2.fill(area);
+            } else {
+                g2.setPaint(textures.create(fh.colors[0]));
+                g2.fill(area);
+            }
         }
         g2.setPaint(null);
         g2.setComposite(old);
@@ -206,32 +135,31 @@ public class FarmHintsLayer extends AbstractGridLayer {
                         result.position = new Position(x, y);
 
                         int bestPower = 0;
-                        int bestPlayerIndex = -1;
+                        List<Integer> bestPlayerIndexes = new ArrayList<>();
                         for (int i = 0; i < power.length; i++) {
                             if (power[i] == bestPower) {
-                                bestPlayerIndex = -1;
+                                bestPlayerIndexes.add(i);
                             }
                             if (power[i] > bestPower) {
                                 bestPower = power[i];
-                                bestPlayerIndex = i;
+                                bestPlayerIndexes.clear();
+                                bestPlayerIndexes.add(i);
                             }
                         }
                         if (bestPower == 0) {
                             if (size < 2 || !hasCity) return null; //don't display unimportant farms
-                            result.color = Color.DARK_GRAY;
+                            result.colors = new Color[] { Color.DARK_GRAY };
                         } else {
-                            if (bestPlayerIndex == -1) { //tie
-                                result.color = Color.BLACK;
-                            } else {
-                                result.color = getClient().getPlayerColor(getGame().getPlayer(bestPlayerIndex));
+                            result.colors = new Color[bestPlayerIndexes.size()];
+                            int i = 0;
+                            for (Integer index : bestPlayerIndexes) {
+                                result.colors[i++] = getClient().getPlayerColor(getGame().getPlayer(index));
                             }
                         }
-
                         return result;
                     }
                 });
                 if (fh == null) continue; //to small farm
-                //fh.area = newArea(stroke.createStrokedShape(fh.area));
                 hints.add(fh);
             }
         }
@@ -248,7 +176,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
         public Area area;
         public Area scaledArea;
         public Position position;
-        public Color color;
+        public Color colors[];
 
         public FarmHint(Area area, Position position) {
             this.area = area;
