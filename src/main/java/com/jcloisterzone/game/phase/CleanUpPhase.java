@@ -16,8 +16,10 @@ public class CleanUpPhase extends Phase {
     @Override
     public void enter() {
         boolean builderTakeAnotherTurn = builderCap != null && builderCap.hasPlayerAnotherTurn();
-        game.turnCleanUp(builderTakeAnotherTurn);
-        game.setCurrentTile(null);
+        if (getTile() != null) { //after last turn, abbeys can be placed, then cycling through players and tile can be null. Do not delegate on capabilities in such case
+            game.turnCleanUp(builderTakeAnotherTurn);
+            game.setCurrentTile(null);
+        }
         if (builderTakeAnotherTurn) {
             next(game.hasCapability(AbbeyCapability.class) ? AbbeyPhase.class : DrawPhase.class);
         } else {

@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.animation;
 
 import java.util.concurrent.DelayQueue;
 
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 

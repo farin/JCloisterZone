@@ -18,7 +18,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.feature.visitor.IsOccupoedAndUncompleted;
@@ -66,7 +65,6 @@ public class Tile /*implements Cloneable*/ {
 
     @Override
     public int hashCode() {
-        //TODO tiles with same id has same hashcode, is it ok?
         return id.hashCode();
     }
 

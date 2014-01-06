@@ -370,6 +370,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void addLayer(GridLayer layer) {
+        assert layer != null;
         synchronized (layers) {
             ListIterator<GridLayer> iter = layers.listIterator();
             while(iter.hasNext()) {

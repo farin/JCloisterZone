@@ -80,13 +80,7 @@ public class MainPanel extends BackgroundPanel {
     }
 
     public void setShowFarmHints(boolean showFarmHints) {
-        if (showFarmHints) {
-            farmHintLayer = new FarmHintsLayer(gridPanel);
-            gridPanel.addLayer(farmHintLayer);
-        } else {
-            farmHintLayer = null;
-            gridPanel.removeLayer(FarmHintsLayer.class);
-        }
+         farmHintLayer.setVisible(showFarmHints);
     }
 
     public void started(Snapshot snapshot) {
@@ -98,8 +92,11 @@ public class MainPanel extends BackgroundPanel {
         gridPanel = new GridPanel(client, snapshot);
         meepleLayer = new MeepleLayer(gridPanel);
         tileLayer = new TileLayer(gridPanel);
+        farmHintLayer = new FarmHintsLayer(gridPanel);
         gridPanel.addLayer(tileLayer);
         gridPanel.addLayer(meepleLayer);
+        gridPanel.addLayer(farmHintLayer);
+
         gridPanel.addLayer(new AnimationLayer(gridPanel, animationService));
 
         animationService.setGridPanel(gridPanel);
@@ -143,24 +140,20 @@ public class MainPanel extends BackgroundPanel {
     public void tilePlaced(Tile tile) {
         gridPanel.tilePlaced(tile, tileLayer);
         if (farmHintLayer != null) {
-            farmHintLayer.refreshHints();
+            farmHintLayer.tilePlaced(tile);
         }
     }
 
     public void deployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleDeployed(m);
-        if (m.getFeature() instanceof Farm && farmHintLayer != null) {
-            farmHintLayer.refreshHints();
-        }
+        farmHintLayer.meepleDeployed(m);
     }
 
     public void undeployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleUndeployed(m);
-        if (m.getFeature() instanceof Farm && farmHintLayer != null) {
-            farmHintLayer.refreshHints();
-        }
+        farmHintLayer.meepleUndeployed(m);
     }
 
     public void bridgeDeployed(Position pos, Location loc) {

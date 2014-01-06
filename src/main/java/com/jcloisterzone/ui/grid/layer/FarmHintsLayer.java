@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.jcloisterzone.board.Location;
@@ -28,8 +29,11 @@ import com.jcloisterzone.ui.resources.ResourceManager;
 public class FarmHintsLayer extends AbstractGridLayer {
 
     private static final int FULL_SIZE = 300;
-    private static final AlphaComposite HINT_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .3f);
+    private static final AlphaComposite HINT_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
+    private boolean visible;
+    private boolean doRefreshHints;
+    final Map<Tile, Map<Location, Area>> areas = new HashMap<>();
     private final List<FarmHint> hints = new ArrayList<>();
 
     public FarmHintsLayer(GridPanel gridPanel) {
@@ -37,13 +41,25 @@ public class FarmHintsLayer extends AbstractGridLayer {
         refreshHints();
     }
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        gridPanel.repaint();
+    }
+
     @Override
     public void paint(Graphics2D g2) {
+        if (!visible) return;
+
         Composite old = g2.getComposite();
         g2.setComposite(HINT_ALPHA_COMPOSITE);
         int sqSize = getSquareSize();
         Double scale = sqSize == FULL_SIZE ? null : (double) sqSize / FULL_SIZE;
         TextureFactory textures = new TextureFactory(sqSize);
+
+        if (doRefreshHints) {
+            doRefreshHints = false;
+            fillHints();
+        }
 
         for (FarmHint fh : hints) {
             if (fh.scaledArea == null) {
@@ -71,28 +87,44 @@ public class FarmHintsLayer extends AbstractGridLayer {
         return 10;
     }
 
-    public void refreshHints() {
-        final Map<Position, Map<Location, Area>> areas = new HashMap<>();
-
+    public void tilePlaced(Tile tile) {
         ResourceManager resourceManager = getClient().getResourceManager();
-        for (Tile tile : getGame().getBoard().getAllTiles()) {
-            Set<Location> farmLocations = new HashSet<>();
-            for (Feature f : tile.getFeatures()) {
-                if (f instanceof Farm) {
-                    farmLocations.add(f.getLocation());
-                }
+        Set<Location> farmLocations = new HashSet<>();
+        for (Feature f : tile.getFeatures()) {
+            if (f instanceof Farm) {
+                farmLocations.add(f.getLocation());
             }
-            Map<Location, Area> tileAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
-            areas.put(tile.getPosition(), tileAreas);
         }
+        if (farmLocations.isEmpty()) return;
+        Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+        areas.put(tile, tAreas);
+        refreshHints();
+    }
 
+    public void meepleUndeployed(Meeple m) {
+        if (m.getFeature() instanceof Farm) {
+            refreshHints();
+        }
+    }
+
+    public void meepleDeployed(Meeple m) {
+        if (m.getFeature() instanceof Farm) {
+            refreshHints();
+        }
+    }
+
+    public void refreshHints() {
+        doRefreshHints = true;
+    }
+
+    private void fillHints() {
         hints.clear();
         final Set<Feature> processed = new HashSet<>();
-        //TODO concurent modification issue !!!
-        for (Tile tile : getGame().getBoard().getAllTiles()) {
-            for (Feature f : tile.getFeatures()) {
+        for (Entry<Tile, Map<Location, Area>> entry : areas.entrySet()) {
+            for (Feature f : entry.getKey().getFeatures()) {
                 if (!(f instanceof Farm)) continue;
                 if (processed.contains(f)) continue;
+
                 FarmHint fh = f.walk(new FeatureVisitor<FarmHint>() {
                     FarmHint result = new FarmHint(new Area(), null);
                     int x = Integer.MAX_VALUE;
@@ -124,9 +156,12 @@ public class FarmHintsLayer extends AbstractGridLayer {
                             if (y != Integer.MAX_VALUE) result.area.transform(AffineTransform.getTranslateInstance(0, FULL_SIZE * (y-pos.y)));
                             y = pos.y;
                         }
-                        Area featureArea = areas.get(pos).get(f.getLocation());
-                        featureArea.transform(AffineTransform.getTranslateInstance(FULL_SIZE * (pos.x-x), FULL_SIZE*(pos.y-y)));
-                        result.area.add(featureArea);
+                        Map<Location, Area> tileAreas = areas.get(f.getTile());
+                        if (tileAreas != null) { //sync issue, feature can be extended in other thread, so it is not registered in areas yet
+                            Area featureArea = new Area(tileAreas.get(f.getLocation()));
+                            featureArea.transform(AffineTransform.getTranslateInstance(FULL_SIZE * (pos.x-x), FULL_SIZE*(pos.y-y)));
+                            result.area.add(featureArea);
+                        }
                         return true;
                     }
 
