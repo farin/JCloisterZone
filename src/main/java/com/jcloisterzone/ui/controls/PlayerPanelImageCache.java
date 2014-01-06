@@ -54,7 +54,7 @@ public class PlayerPanelImageCache {
     private void scaleImages() {
         FigureTheme theme = client.getFigureTheme();
         for (Player player : client.getGame().getAllPlayers()) {
-            Color color = client.getPlayerColor(player);
+            Color color = player.getColors().getMeepleColor();
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
         }

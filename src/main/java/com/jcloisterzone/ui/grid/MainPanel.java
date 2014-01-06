@@ -179,7 +179,7 @@ public class MainPanel extends BackgroundPanel {
             pos,
             points,
             offset,
-            client.getPlayerColor(m.getPlayer()),
+            m.getPlayer().getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
     }
@@ -189,7 +189,7 @@ public class MainPanel extends BackgroundPanel {
             pos,
             points,
             new ImmutablePoint(50, 50),
-            client.getPlayerColor(player),
+            player.getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
 
@@ -209,7 +209,7 @@ public class MainPanel extends BackgroundPanel {
         if (isSecondPiece) {
             c = client.getPlayerSecondTunelColor(player);
         } else {
-            c = client.getPlayerColor(player);
+            c = player.getColors().getMeepleColor();
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
         Tile tile = gridPanel.getTile(p);

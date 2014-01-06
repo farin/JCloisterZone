@@ -16,6 +16,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.ui.PlayerColor;
 
 
 /**
@@ -112,6 +113,10 @@ public class Player implements Serializable {
 
     public int getIndex() {
         return index;
+    }
+
+    public PlayerColor getColors() {
+        return slot.getColors();
     }
 
     public Long getOwnerId() {

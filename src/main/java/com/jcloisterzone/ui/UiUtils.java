@@ -40,4 +40,25 @@ public final class UiUtils {
         t.start();
     }
 
+    public static Color stringToColor(String colorName) {
+        colorName = colorName.trim();
+        if (colorName.startsWith("#")) {
+            if (colorName.length() != 7) throw new  IllegalArgumentException("Invalid #RRGGBB sytnax: "+ colorName);
+            //RGB format
+            int r = Integer.parseInt(colorName.substring(1,3),16);
+            int g = Integer.parseInt(colorName.substring(3,5),16);
+            int b = Integer.parseInt(colorName.substring(5,7),16);
+            return new Color(r,g,b);
+        } else {
+            //constant format
+            java.lang.reflect.Field f;
+            try {
+                f = Color.class.getField(colorName);
+                return (Color) f.get(null);
+            } catch (Exception e1) {
+                throw new IllegalArgumentException("Unknow Color constant: " + colorName);
+            }
+        }
+    }
+
 }

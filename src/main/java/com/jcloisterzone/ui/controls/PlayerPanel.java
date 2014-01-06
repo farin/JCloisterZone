@@ -56,7 +56,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int DELIMITER_Y = 34;
 
     private final Player player;
-    private Color color;
+    private Color color, fontColor;
 
     private final PlayerPanelImageCache cache;
 
@@ -72,7 +72,8 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         super(client);
         this.player = player;
         this.cache = cache;
-        this.color = client.getPlayerColor(player);
+        this.color = player.getColors().getMeepleColor();
+        this.fontColor = player.getColors().getFontColor();
     }
 
     private void drawDelimiter(int y) {
@@ -88,7 +89,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.drawString(text, x+0.8f, y+0.7f);*/
         g2.setColor(ControlPanel.FONT_SHADOW_COLOR);
         g2.drawString(text, x+0.6f, y+0.5f);
-        g2.setColor(color);
+        g2.setColor(fontColor);
         g2.drawString(text, x, y);
     }
 

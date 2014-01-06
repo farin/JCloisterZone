@@ -250,7 +250,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         try {
             for (ChatMessage msg : formattedMessages) {
                 SimpleAttributeSet attrs = new SimpleAttributeSet();
-                ColorConstants.setForeground(attrs, client.getPlayerColor(msg.player));
+                ColorConstants.setForeground(attrs, msg.player.getColors().getFontColor());
 
                 doc.insertString(offset, msg.player.getNick() + ": ", attrs);
                 offset += msg.player.getNick().length() + 2;

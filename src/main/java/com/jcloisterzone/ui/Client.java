@@ -41,6 +41,7 @@ import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.GameEventListener;
@@ -92,7 +93,7 @@ public class Client extends JFrame {
     private FigureTheme figureTheme;
     @Deprecated
     private ControlsTheme controlsTheme;
-    private Color[] playerColors;
+    //private PlayerColor[] playerColors;
 
     //private MenuBar menuBar;
     private StartPanel startPanel;
@@ -131,25 +132,7 @@ public class Client extends JFrame {
         return new Locale(language);
     }
 
-    private Color stringToColor(String colorName) {
-        if (colorName.startsWith("#")) {
-            //RGB format
-            int r = Integer.parseInt(colorName.substring(1,3),16);
-            int g = Integer.parseInt(colorName.substring(3,5),16);
-            int b = Integer.parseInt(colorName.substring(5,7),16);
-            return new Color(r,g,b);
-        } else {
-            //constant format
-            java.lang.reflect.Field f;
-            try {
-                f = Color.class.getField(colorName);
-                return (Color) f.get(null);
-            } catch (Exception e1) {
-                logger.error("Invalid color name in config file: " + colorName);
-                return Color.BLACK;
-            }
-        }
-    }
+
 
     @Override
     public void setLocale(Locale l) {
@@ -165,12 +148,6 @@ public class Client extends JFrame {
 
     public void init() {
         setLocale(getLocaleFromConfig());
-
-        List<String> colorNames = config.getPlayers().getColors();
-        playerColors = new Color[colorNames.size()];
-        for (int i = 0; i < playerColors.length; i++ ) {
-            playerColors[i] = stringToColor(colorNames.get(i));
-        }
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
 
@@ -557,28 +534,14 @@ public class Client extends JFrame {
     }
 
     //------------------- LEGACY: TODO refactor ---------------
-    //TODO move getColor on player
 
+    @Deprecated
     public Color getPlayerSecondTunelColor(Player player) {
+        //TODO more effective implementation, move it to tunnel capability
         int slotNumber = player.getSlot().getNumber();
-        return playerColors[(slotNumber + 2) % playerColors.length];
+        PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
+        return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
 
-    public Color getPlayerColor(Player player) {
-        return playerColors[player.getSlot().getNumber()];
-    }
-
-    public Color getPlayerColor(PlayerSlot playerSlot) {
-        return playerColors[playerSlot.getNumber()];
-    }
-
-    public Color getPlayerColor() {
-        Player player = game.getActivePlayer();
-        if (player == null) { //awt thread is not synced
-            return Color.BLACK;
-        } else {
-            return playerColors[player.getSlot().getNumber()];
-        }
-    }
 
 }

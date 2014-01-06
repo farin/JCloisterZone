@@ -2,7 +2,6 @@ package com.jcloisterzone.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashMap;
@@ -20,9 +19,11 @@ import com.floreysoft.jmte.Engine;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
+import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PlayersConfig;
 import com.jcloisterzone.ui.Client;
+
 
 public class ConfigLoader {
 
@@ -95,7 +96,14 @@ public class ConfigLoader {
         config.getConfirm().setTower_place(true);
         config.getConfirm().setRansom_payment(true);
         config.getConfirm().setGame_close(true);
-        config.getPlayers().setColors(Lists.newArrayList("RED", "#008ffe", "YELLOW", "#009900", "BLACK", "#808000"));
+        config.getPlayers().setColors(Lists.newArrayList(
+            new ColorConfig("RED", "RED"),
+            new ColorConfig("#008ffe", "#008ffe"),
+            new ColorConfig("#FFED00", "#FFED00"),
+            new ColorConfig("#009900", "#009900"),
+            new ColorConfig("BLACK", "BLACK"),
+            new ColorConfig("#812EFF", "#812EFF")
+        ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
         return config;

@@ -188,7 +188,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                             result.colors = new Color[bestPlayerIndexes.size()];
                             int i = 0;
                             for (Integer index : bestPlayerIndexes) {
-                                result.colors[i++] = getClient().getPlayerColor(getGame().getPlayer(index));
+                                result.colors[i++] = getGame().getPlayer(index).getColors().getMeepleColor();
                             }
                         }
                         return result;

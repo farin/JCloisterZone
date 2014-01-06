@@ -7,9 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.PlayerColor;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -17,6 +22,8 @@ import com.jcloisterzone.rmi.ServerIF;
  *
  */
 public class Config {
+
+    protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private transient File origin;
 
@@ -175,15 +182,40 @@ public class Config {
         }
     }
 
+    public static class ColorConfig {
+        private String meeple;
+        private String font;
+
+        public ColorConfig() {
+        }
+
+        public ColorConfig(String meeple, String font) {
+            this.meeple = meeple;
+            this.font = font;
+        }
+        public String getMeeple() {
+            return meeple;
+        }
+        public void setMeeple(String meeple) {
+            this.meeple = meeple;
+        }
+        public String getFont() {
+            return font;
+        }
+        public void setFont(String font) {
+            this.font = font;
+        }
+    }
+
     public static class PlayersConfig {
-        private List<String> colors;
+        private List<ColorConfig> colors;
         private List<String> names;
         private List<String> ai_names;
 
-        public List<String> getColors() {
-            return colors == null ? Collections.<String>emptyList() : colors;
+        public List<ColorConfig> getColors() {
+            return colors == null ? Collections.<ColorConfig>emptyList() : colors;
         }
-        public void setColors(List<String> colors) {
+        public void setColors(List<ColorConfig> colors) {
             this.colors = colors;
         }
         public List<String> getNames() {
@@ -197,6 +229,16 @@ public class Config {
         }
         public void setAi_names(List<String> ai_names) {
             this.ai_names = ai_names;
+        }
+    }
+
+    public PlayerColor getPlayerColor(PlayerSlot slot) {
+        try {
+            ColorConfig cfg = players.getColors().get(slot.getNumber());
+            return new PlayerColor(cfg);
+        } catch (IndexOutOfBoundsException ex) {
+            logger.warn("Too few player colors defined in config");
+            return new PlayerColor();
         }
     }
 

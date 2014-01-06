@@ -63,7 +63,7 @@ public class GameOverDialog extends JDialog {
         Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
         for (Player player : players) {
             gridy = 0;
-            Color color = client.getPlayerColor(player);
+            Color color = player.getColors().getMeepleColor();
             Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);
             Icon icon = new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
             pane.add(new JLabel(icon, SwingConstants.CENTER), getSpec(gridx, gridy++));

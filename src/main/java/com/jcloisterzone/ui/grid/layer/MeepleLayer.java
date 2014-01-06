@@ -80,7 +80,7 @@ public class MeepleLayer extends AbstractGridLayer {
     private MeeplePositionedImage createMeepleImage(Meeple m) {
         Feature feature = m.getFeature();
         ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), m.getLocation());
-        Color c = getClient().getPlayerColor(m.getPlayer());
+        Color c = m.getPlayer().getColors().getMeepleColor();
         Image image = getClient().getFigureTheme().getFigureImage(m.getClass(), c,  getExtraDecoration(m));
         return new MeeplePositionedImage(m, offset, image);
     }

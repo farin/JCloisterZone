@@ -16,6 +16,7 @@ import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
@@ -25,6 +26,7 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.PlayerColor;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -94,6 +96,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     @Override
     public void updateSlot(PlayerSlot slot) {
+        slot.setColors(slots[slot.getNumber()].getColors()); //colors are transient, copy them to new object
         slots[slot.getNumber()] = slot;
         super.updateSlot(slot);
     }

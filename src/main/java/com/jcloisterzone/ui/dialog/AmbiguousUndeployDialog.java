@@ -42,7 +42,7 @@ public class AmbiguousUndeployDialog extends JDialog {
 
         int gridx = 0;
         for (final Meeple meeple : meeples) {
-            Color color = client.getPlayerColor(meeple.getPlayer());
+            Color color = meeple.getPlayer().getColors().getMeepleColor();
             Image img = client.getFigureTheme().getFigureImage(meeple.getClass(), color, null);
             img = img.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
             JButton button = new JButton(new ImageIcon(img));

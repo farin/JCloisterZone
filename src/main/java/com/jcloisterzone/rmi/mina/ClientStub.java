@@ -134,6 +134,9 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
         } else {
             phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
         }
+        for (PlayerSlot slot : msg.getSlots()) {
+            slot.setColors(game.getConfig().getPlayerColor(slot));
+        }
         phase.setSlots(msg.getSlots());
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
