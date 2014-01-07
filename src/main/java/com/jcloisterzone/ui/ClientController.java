@@ -384,6 +384,8 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void chatMessageReceived(Player player, String message) {
-        client.getGridPanel().getChatPanel().displayChatMessage(player, message);
+        if (client.getGridPanel().getChatPanel() != null) {
+            client.getGridPanel().getChatPanel().displayChatMessage(player, message);
+        }
     }
 }
