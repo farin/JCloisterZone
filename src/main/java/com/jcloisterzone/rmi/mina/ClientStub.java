@@ -84,7 +84,9 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
 
     //TODO revise; close from client side ???
     public void stop() {
-        session.close(false);
+        if (session != null) {
+            session.close(false);
+        }
     }
 
     @Override

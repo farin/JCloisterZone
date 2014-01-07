@@ -35,6 +35,15 @@ public class ConnectGamePanel extends JPanel {
      * Create the panel.
      */
     public ConnectGamePanel(Client client) {
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                btnConnect.setEnabled(false); //TODO change to Interrupt button
+                message.setForeground(Color.BLACK);
+                message.setText(_("Connecting") + "...");
+                (new AsyncConnect()).start();
+            }
+        };
+
         setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         this.client = client;
         setLayout(new MigLayout("", "[80.00][grow]", "[][][][][]"));
@@ -46,6 +55,7 @@ public class ConnectGamePanel extends JPanel {
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
 
         hostField = new JTextField();
+        hostField.addActionListener(actionListener);
         add(hostField, "cell 1 1,growx, width 250::");
         hostField.setColumns(10);
 
@@ -53,19 +63,13 @@ public class ConnectGamePanel extends JPanel {
         add(portLabel, "cell 0 2,alignx left, gaptop 5");
 
         portField = new JTextField();
+        portField.addActionListener(actionListener);
         add(portField, "cell 1 2,growx, width 250::");
         portField.setColumns(10);
         portField.setText(client.getConfig().getPort() + "");
 
         btnConnect = new JButton(_("Connect"));
-        btnConnect.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                btnConnect.setEnabled(false); //TODO change to Interrupt button
-                message.setForeground(Color.BLACK);
-                message.setText(_("Connecting") + "...");
-                (new AsyncConnect()).start();
-            }
-        });
+        btnConnect.addActionListener(actionListener);
         add(btnConnect, "cell 1 3");
 
         message = new JLabel("");
