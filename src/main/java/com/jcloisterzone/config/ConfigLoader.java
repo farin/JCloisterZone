@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.parser.ParserException;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.base.Charsets;
@@ -22,6 +24,7 @@ import com.google.common.io.Resources;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PlayersConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.ui.Client;
 
 
@@ -57,20 +60,42 @@ public class ConfigLoader {
         }
 
         Config config = null;
+        boolean save = false;
         if (configResource == null) {
             logger.info("Default configuration file {} doesn't exist. Creating new one.", DEFAULT_CONFIG);
             config = createDefault();
             config.setOrigin(new File(DEFAULT_CONFIG));
-            save(config);
+
         } else {
             logger.info("Loading configuration {}", configFile);
+            File origin = new File(configResource.getFile());
             try {
                 config = (Config) yaml.load(configResource.openStream());
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 logger.warn("Error reading configuration.", ex);
+                if (ex instanceof ParserException && origin.isFile()) {
+                    String name;
+                    if (origin.getParent() == null) {
+                        name = "~" + origin.getName();
+                    } else {
+                        name = origin.getParent() + File.separator + "~" + origin.getName();
+                    }
+                    File backup = new File(name);
+                    if (!backup.isFile()) {
+                        try {
+                            Files.copy(origin.toPath(), backup.toPath());
+                        } catch (IOException copyEx) {
+                            logger.warn("Unable to backup invalid config.", copyEx);
+                        }
+                    }
+                    save = true;
+                }
                 config = createDefault();
             }
-            config.setOrigin(new File(configResource.getFile()));
+            config.setOrigin(origin);
+        }
+        if (save) {
+            save(config);
         }
         return config;
     }
@@ -97,12 +122,12 @@ public class ConfigLoader {
         config.getConfirm().setRansom_payment(true);
         config.getConfirm().setGame_close(true);
         config.getPlayers().setColors(Lists.newArrayList(
-            new ColorConfig("RED", "RED"),
-            new ColorConfig("#008ffe", "#008ffe"),
-            new ColorConfig("#FFED00", "#FFED00"),
-            new ColorConfig("#009900", "#009900"),
-            new ColorConfig("BLACK", "BLACK"),
-            new ColorConfig("#812EFF", "#812EFF")
+            new ColorConfig("RED"),
+            new ColorConfig("#008ffe"),
+            new ColorConfig("#FFED00"),
+            new ColorConfig("#009900"),
+            new ColorConfig("BLACK"),
+            new ColorConfig("#812EFF")
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
@@ -133,7 +158,12 @@ public class ConfigLoader {
         PlayersConfig pc = config.getPlayers();
         if (pc != null) {
             if (pc.getColors() != null && !pc.getColors().isEmpty()) {
-                model.put("colors", yaml.dumpAs(pc.getColors(), Tag.SEQ, FlowStyle.FLOW).trim());
+                StringBuilder colors = new StringBuilder();
+                for (ColorConfig cfg : pc.getColors()) {
+                    colors.append("\n  - ");
+                    colors.append(yaml.dumpAs(cfg, Tag.MAP, FlowStyle.FLOW).trim());
+                }
+                model.put("colors", colors.toString());
             }
             if (pc.getNames() != null && !pc.getNames().isEmpty()) {
                 model.put("player_names", yaml.dumpAs(pc.getNames(), Tag.SEQ, FlowStyle.FLOW).trim());
@@ -171,7 +201,8 @@ public class ConfigLoader {
         }
 
         String result = engine.transform(template, model);
-        result = result.replace(" !!com.jcloisterzone.config.Config$ProfileConfig", "");
+        result = result.replace(" !!"+PresetConfig.class.getName(), "");
+        result = result.replace("\n", System.lineSeparator());
         return result;
     }
 

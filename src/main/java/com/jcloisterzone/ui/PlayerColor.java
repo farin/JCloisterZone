@@ -18,24 +18,9 @@ public class PlayerColor {
         font = Color.BLACK;
     }
 
-    public PlayerColor(Color meeple, Color font) {
-        super();
-        this.meeple = meeple;
-        this.font = font;
-    }
-
     public PlayerColor(ColorConfig cfg) {
-        Color meeple, font;
-        try {
-            meeple = UiUtils.stringToColor(cfg.getMeeple());
-            font = UiUtils.stringToColor(cfg.getFont());
-        } catch (IllegalArgumentException e) {
-            logger.warn(e.getMessage());
-            meeple = Color.BLACK;
-            font = Color.BLACK;
-        }
-        this.meeple = meeple;
-        this.font = font;
+        this.meeple = stringToColor(cfg.getMeeple(), Color.BLACK);
+        this.font = stringToColor(cfg.getFont(), meeple);
     }
 
     public Color getMeepleColor() {
@@ -44,6 +29,16 @@ public class PlayerColor {
 
     public Color getFontColor() {
         return font;
+    }
+
+    private Color stringToColor(String s, Color defaultColor) {
+        if (s == null || s.equals("")) return defaultColor;
+        try {
+            return UiUtils.stringToColor(s);
+        } catch (IllegalArgumentException e) {
+            logger.warn(e.getMessage());
+            return defaultColor;
+        }
     }
 
 

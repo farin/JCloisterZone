@@ -189,6 +189,10 @@ public class Config {
         public ColorConfig() {
         }
 
+        public ColorConfig(String meeple) {
+            this.meeple = meeple;
+        }
+
         public ColorConfig(String meeple, String font) {
             this.meeple = meeple;
             this.font = font;
