@@ -35,6 +35,8 @@ plugins: ${plugins}
 
 presets: ${presets}
 
+connection_history: ${connection_history}
+
 ${if hasDebug}
 debug:
   # plain or zip

@@ -41,6 +41,7 @@ public class Config {
     private PlayersConfig players;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
+    private List<String> connection_history;
 
     public static class PresetConfig {
         private List<String> expansions;
@@ -343,6 +344,14 @@ public class Config {
         this.presets = presets;
     }
 
+    public List<String> getConnection_history() {
+        return connection_history;
+    }
+
+    public void setConnection_history(List<String> connection_history) {
+        this.connection_history = connection_history;
+    }
+
     public File getOrigin() {
         return origin;
     }
@@ -350,5 +359,7 @@ public class Config {
     public void setOrigin(File origin) {
         this.origin = origin;
     }
+
+
 
 }

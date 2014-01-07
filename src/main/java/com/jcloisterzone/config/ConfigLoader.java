@@ -179,6 +179,9 @@ public class ConfigLoader {
         if (config.getPresets() != null) {
             model.put("presets", indent(1, yaml.dumpAs(config.getPresets(), Tag.MAP, FlowStyle.BLOCK)));
         }
+        if (config.getConnection_history() != null) {
+            model.put("connection_history", yaml.dumpAs(config.getConnection_history(), Tag.SEQ, FlowStyle.FLOW).trim());
+        }
 
         DebugConfig dc = config.getDebug();
         model.put("hasDebug", dc != null);
