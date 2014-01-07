@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -94,7 +95,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
             pt.tile.setPosition(pt.pos);
             pack.addTile(pt.tile, PLACED_GROUP);
         }
-        pack.activateGroup(PLACED_GROUP);
+        pack.setGroupState(PLACED_GROUP, TileGroupState.ACTIVE);
         if (preplaced.length > 0) {
             game.setCurrentTile(preplaced[preplaced.length-1].tile);
         }
@@ -102,11 +103,8 @@ public class LoadGameTilePackFactory extends TilePackFactory {
     }
 
     public void activateGroups(DefaultTilePack pack) {
-        pack.deactivateAllGroups();
-        for (String group : snapshot.getActiveGroups()) {
-            if (pack.getGroups().contains(group)) {
-                pack.activateGroup(group);
-            }
+        for (Entry<String, TileGroupState> entry : snapshot.getActiveGroups().entrySet()) {
+            pack.setGroupState(entry.getKey(), entry.getValue());
         }
     }
 

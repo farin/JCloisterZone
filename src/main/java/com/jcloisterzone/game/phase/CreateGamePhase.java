@@ -15,6 +15,7 @@ import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
@@ -194,9 +195,9 @@ public class CreateGamePhase extends ServerAwarePhase {
         tilePackFactory.setConfig(game.getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
-        getTilePack().activateGroup("default");
-        getTilePack().activateGroup("count");
-        getTilePack().activateGroup("wind-rose-initial");
+        getTilePack().setGroupState("default", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("count", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("wind-rose-initial", TileGroupState.ACTIVE);
         game.begin();
     }
 

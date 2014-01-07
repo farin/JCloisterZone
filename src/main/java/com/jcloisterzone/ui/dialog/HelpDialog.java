@@ -25,7 +25,6 @@ public class HelpDialog extends JDialog {
     public static void main(String[] args) {
         try {
             HelpDialog dialog = new HelpDialog();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +42,7 @@ public class HelpDialog extends JDialog {
         contentPanel.setLayout(new BorderLayout());
         getContentPane().add(new HelpPanel());
 
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
         setVisible(true);
     }

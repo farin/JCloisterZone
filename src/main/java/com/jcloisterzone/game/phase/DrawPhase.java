@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.List;
 
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Game;
@@ -42,9 +43,10 @@ public class DrawPhase extends ServerAwarePhase {
             if (tile == null) {
                 logger.warn("Invalid debug draw id: " + tileId);
             } else {
-                if (game.hasCapability(RiverCapability.class) && tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
+                boolean riverActive = tilePack.getGroupState("river-start") == TileGroupState.ACTIVE || tilePack.getGroupState("river") == TileGroupState.ACTIVE;
+                if (game.hasCapability(RiverCapability.class) && tile.getRiver() == null && riverActive) {
                     game.getCapability(RiverCapability.class).activateNonRiverTiles();
-                    tilePack.deactivateGroup("river-start");
+                    tilePack.setGroupState("river-start", TileGroupState.RETIRED);
                     game.setCurrentTile(tile); //recovery from lake placement
                 }
                 nextTile(tile);

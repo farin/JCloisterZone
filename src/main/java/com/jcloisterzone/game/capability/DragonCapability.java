@@ -12,6 +12,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
@@ -36,7 +37,7 @@ public class DragonCapability extends Capability {
     public void tilePlaced(Tile tile) {
         if (tile.hasTrigger(TileTrigger.VOLCANO)) {
             setDragonPosition(tile.getPosition());
-            getTilePack().activateGroup("dragon");
+            getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
             game.fireGameEvent().dragonMoved(tile.getPosition());
         }
     }

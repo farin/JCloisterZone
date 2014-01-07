@@ -40,10 +40,13 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
+import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.phase.Phase;
@@ -156,9 +159,11 @@ public class Snapshot implements Serializable {
         }
         root.appendChild(parent);
         for (String group : game.getTilePack().getGroups()) {
+            if (group.equals(LoadGameTilePackFactory.PLACED_GROUP)) continue; //empty technical group created only when loading game
+            if (group.equals(TilePack.INACTIVE_GROUP)) continue; //system always existing group
             Element el = doc.createElement("group");
             el.setAttribute("name", group);
-            el.setAttribute("active", "" + game.getTilePack().isGroupActive(group));
+            el.setAttribute("state", game.getTilePack().getGroupState(group).name());
             parent.appendChild(el);
         }
         for (Tile tile : game.getBoard().getAllTiles()) {
@@ -311,14 +316,13 @@ public class Snapshot implements Serializable {
         return Integer.parseInt(el.getAttribute("turn"));
     }
 
-    public List<String> getActiveGroups() {
-        List<String> result = new ArrayList<>();
+    public Map<String, TileGroupState> getActiveGroups() {
+        Map<String, TileGroupState> result = new HashMap<>();
         NodeList nl = getSecondLevelElelents("tiles", "group");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            if (Boolean.parseBoolean(el.getAttribute("active"))) {
-                result.add(el.getAttribute("name"));
-            }
+            TileGroupState state = TileGroupState.valueOf(el.getAttribute("state"));
+            result.put(el.getAttribute("name"), state);
         }
         return result;
     }

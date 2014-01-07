@@ -24,7 +24,7 @@ public abstract class PlayerAction implements Comparable<PlayerAction>, ForwardB
     }
 
     public Image getImage(Player player, boolean active) {
-        return getImage(active ? player.getColors().getMeepleColor() : Color.GRAY);
+        return getImage(player != null && active ? player.getColors().getMeepleColor() : Color.GRAY);
     }
 
     protected GridLayer createGridLayer() {

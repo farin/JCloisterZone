@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.game.Capability;
@@ -51,16 +52,16 @@ public class RiverCapability extends Capability {
 
     @Override
     public void begin() {
-        getTilePack().deactivateGroup("default");
-        getTilePack().activateGroup("river-start");
+        getTilePack().setGroupState("default", TileGroupState.WAITING);
+        getTilePack().setGroupState("river-start", TileGroupState.ACTIVE);
         if (!game.hasExpansion(Expansion.RIVER_II)) {
-            getTilePack().activateGroup("river");
+            getTilePack().setGroupState("river", TileGroupState.ACTIVE);
         }
     }
 
     public void activateNonRiverTiles() {
-        getTilePack().activateGroup("default");
-        getTilePack().deactivateGroup("river");
+        getTilePack().setGroupState("default", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("river", TileGroupState.RETIRED);
         Tile lake = getTilePack().drawTile(TilePack.INACTIVE_GROUP, getLakeId());
         getBoard().refreshAvailablePlacements(lake);
         Entry<Position, Set<Rotation>> entry = getBoard().getAvailablePlacements().entrySet().iterator().next();
@@ -74,11 +75,11 @@ public class RiverCapability extends Capability {
     public void turnCleanUp(boolean doubleTurn) {
         if (getTile().getRiver() == null) return;
         if (getTilePack().isEmpty()) {
-            if (getTilePack().isGroupActive("river")) {
+            if (getTilePack().getGroupState("river") == TileGroupState.ACTIVE) {
                 activateNonRiverTiles();
             } else {
-                getTilePack().deactivateGroup("river-start");
-                getTilePack().activateGroup("river");
+                getTilePack().setGroupState("river-start", TileGroupState.RETIRED);
+                getTilePack().setGroupState("river", TileGroupState.ACTIVE);
             }
         }
     }
@@ -112,7 +113,6 @@ public class RiverCapability extends Capability {
                 if (next != null && next.getRiver().rotateCW(next.getRotation()).intersect(continueSide) == continueSide) return false;
                 next = getBoard().get(p.add(continueSide.rotateCCW(Rotation.R90)));
                 if (next != null && next.getRiver().rotateCW(next.getRotation()).intersect(continueSide) == continueSide) return false;
-
             }
         }
         return true;

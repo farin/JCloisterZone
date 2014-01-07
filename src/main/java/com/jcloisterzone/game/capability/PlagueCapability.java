@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
@@ -45,7 +46,7 @@ public class PlagueCapability extends Capability {
     @Override
     public void begin() {
         //TODO replace with activation ofter 17th tile
-        getTilePack().activateGroup("plague");
+        getTilePack().setGroupState("plague", TileGroupState.ACTIVE);
     }
 
     @Override

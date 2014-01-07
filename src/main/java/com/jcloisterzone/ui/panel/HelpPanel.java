@@ -27,6 +27,9 @@ public class HelpPanel extends JPanel {
 
         paragraph = new JLabel(_("<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play no action.</html>"));
         add(paragraph, "cell 0 3,grow");
+
+        paragraph = new JLabel(_("<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed tiles.</html>"));
+        add(paragraph, "cell 0 4,grow");
     }
 
 }
