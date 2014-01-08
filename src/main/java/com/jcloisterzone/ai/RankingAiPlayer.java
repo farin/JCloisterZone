@@ -39,6 +39,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
@@ -389,7 +390,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 }
                 if (firstAction instanceof UndeployAction ) {
                     //hack, ai never use escape, TODO
-                    if (firstAction.getName().equals("escape")) {
+                    if (firstAction.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
                         getServer().pass();
                     }
                 }

@@ -100,7 +100,7 @@ public class EscapePhase extends Phase {
             FeatureVisitor<Boolean> visitor = game.hasRule(CustomRule.ESCAPE_RGG) ? new FindNearbyCloisterRgg() : new FindNearbyCloister();
             if (m.getFeature().walk(visitor)) {
                 if (escapeAction == null) {
-                    escapeAction = new UndeployAction("escape", PlayerRestriction.only(getActivePlayer()));
+                    escapeAction = new UndeployAction(SiegeCapability.UNDEPLOY_ESCAPE, PlayerRestriction.only(getActivePlayer()));
                 }
                 escapeAction.getOrCreate(m.getPosition()).add(m.getLocation());
             }

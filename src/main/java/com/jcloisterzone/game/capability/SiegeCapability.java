@@ -14,6 +14,8 @@ import com.jcloisterzone.game.Game;
 
 public final class SiegeCapability extends Capability {
 
+    public static final String UNDEPLOY_ESCAPE = "escape";
+
     public SiegeCapability(Game game) {
         super(game);
     }
