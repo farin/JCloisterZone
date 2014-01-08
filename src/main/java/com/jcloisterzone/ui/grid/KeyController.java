@@ -61,7 +61,7 @@ public class KeyController implements KeyEventDispatcher {
 
     private boolean isDispatchActive() {
         GridPanel gp = client.getGridPanel();
-        if (gp != null) return !gp.getChatPanel().getInput().hasFocus();
+        if (gp != null && gp.getChatPanel() != null) return !gp.getChatPanel().getInput().hasFocus();
         return true;
     }
 

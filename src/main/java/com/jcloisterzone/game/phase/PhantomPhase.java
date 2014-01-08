@@ -39,9 +39,8 @@ public class PhantomPhase extends Phase {
     @Override
     public void enter() {
         List<PlayerAction> actions = new ArrayList<>();
-
-        LocationsMap commonSites = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(Phantom.class)) {
+            LocationsMap commonSites = game.prepareFollowerLocations();
             if (towerCap != null) {
                 towerCap.prepareTowerFollowerDeploy(commonSites);
             }
