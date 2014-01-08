@@ -123,11 +123,11 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
             MeepleAction ma = (MeepleAction) action;
             Feature piece = gridPanel.getTile(pos).getFeature(loc);
             if (piece instanceof Farm) {
-                if (Follower.class.isAssignableFrom(ma.getMeepleType()) && getClient().getSettings().isConfirmFarmPlacement()) {
+                if (Follower.class.isAssignableFrom(ma.getMeepleType()) && getClient().getConfig().getConfirm().getFarm_place()) {
                     if (!confirmFarmPlacement()) return;
                 }
             } else if (piece instanceof Tower) {
-                if (getClient().getSettings().isConfirmTowerPlacement()) {
+                if (getClient().getConfig().getConfirm().getTower_place()) {
                     if (!confirmTowerPlacement(pos)) return;
                 }
             }

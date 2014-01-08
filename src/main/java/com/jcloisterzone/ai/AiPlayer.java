@@ -50,7 +50,7 @@ public abstract class AiPlayer implements UserInterface {
     }
 
     public void setServer(ServerIF server) {
-        Integer placeTileDelay = game.getConfig().get("players", "ai_place_tile_delay", Integer.class);
+        Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
         this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
         this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
     }

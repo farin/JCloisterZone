@@ -2,6 +2,8 @@ package com.jcloisterzone.game;
 
 import java.io.Serializable;
 
+import com.jcloisterzone.ui.PlayerColor;
+
 public class PlayerSlot implements Serializable {
 
     private static final long serialVersionUID = 6093356973595538191L;
@@ -18,6 +20,7 @@ public class PlayerSlot implements Serializable {
     private Long owner; //clientId
     private Integer serial; //server assign sequence number when type is occupied
     private String aiClassName;
+    private transient PlayerColor colors;
 
     public PlayerSlot(int number) {
         this.number = number;
@@ -75,6 +78,14 @@ public class PlayerSlot implements Serializable {
 
     public void setAiClassName(String aiClassName) {
         this.aiClassName = aiClassName;
+    }
+
+    public PlayerColor getColors() {
+        return colors;
+    }
+
+    public void setColors(PlayerColor colors) {
+        this.colors = colors;
     }
 
     @Override

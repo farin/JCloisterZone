@@ -137,7 +137,7 @@ public class CreateGamePlayerPanel extends JPanel {
 
     public void updateSlotImmutable(PlayerSlot slot) {
         this.slot = slot;
-        Color color = client.getPlayerColor(slot);
+        Color color = slot.getColors().getMeepleColor();
         switch (slot.getType()) {
             case OPEN:
                 status.setText(_("Unassigned player"));
@@ -163,7 +163,7 @@ public class CreateGamePlayerPanel extends JPanel {
     public void updateSlotMutable(PlayerSlot slot) {
         boolean myBefore = isMySlotBefore(slot);
         this.slot = slot;
-        Color color = client.getPlayerColor(slot);
+        Color color = slot.getColors().getMeepleColor();
         switch (slot.getType()) {
             case OPEN:
                 status.setText(_("Open player slot"));

@@ -42,7 +42,7 @@ public abstract class TileFeature implements Feature {
             meeples = Collections.singletonList(meeple);
             meeple.setIndex(0);
         } else {
-            //rare case (eg. Crop circles allows this) when more then one followe stay on same feature
+            //rare case (eg. Crop circles allows this) when more then one follower stay on same feature
             int index = -1;
             for (Meeple m : meeples) {
                 if (m.getIndex() > index) index = m.getIndex();
@@ -68,18 +68,6 @@ public abstract class TileFeature implements Feature {
     public final List<Meeple> getMeeples() {
         return meeples;
     }
-
-//    @Override
-//    public final Set<Class<? extends Meeple>> getMeepleTypes() {
-//        if (meeples.size() == 1) {
-//            return Collections.<Class<? extends Meeple>>singleton(meeples.get(0).getClass());
-//        }
-//        Set<Class<? extends Meeple>> types = new HashSet<>();
-//        for (Meeple m : meeples) {
-//            types.add(m.getClass());
-//        }
-//        return types;
-//    }
 
     public Feature[] getNeighbouring() {
         return neighbouring;

@@ -9,6 +9,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.SiegeCapability;
 
@@ -43,7 +44,6 @@ public class EscapePhase extends Phase {
 
         private boolean result;
 
-
         public Boolean getResult() {
             return result;
         }
@@ -64,15 +64,43 @@ public class EscapePhase extends Phase {
         }
     }
 
+    private class FindNearbyCloisterRgg implements FeatureVisitor<Boolean> {
+        private boolean isBesieged;
+        private boolean cloisterExists;
+
+        public Boolean getResult() {
+            return isBesieged && cloisterExists;
+        }
+
+        @Override
+        public boolean visit(Feature feature) {
+            City city = (City) feature;
+            if (city.isBesieged()) {
+                isBesieged = true;
+            }
+
+            Position p = city.getTile().getPosition();
+            for (Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
+                if (tile.hasCloister()) {
+                    cloisterExists = true;
+                    break;
+                }
+            }
+            return true;
+        }
+    }
+
 
     public UndeployAction prepareEscapeAction() {
         UndeployAction escapeAction = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!(m.getFeature() instanceof City)) continue;
-            if (m.getFeature().walk(new FindNearbyCloister())) {
+
+            FeatureVisitor<Boolean> visitor = game.hasRule(CustomRule.ESCAPE_RGG) ? new FindNearbyCloisterRgg() : new FindNearbyCloister();
+            if (m.getFeature().walk(visitor)) {
                 if (escapeAction == null) {
-                    escapeAction = new UndeployAction("escape", PlayerRestriction.only(getActivePlayer()));
+                    escapeAction = new UndeployAction(SiegeCapability.UNDEPLOY_ESCAPE, PlayerRestriction.only(getActivePlayer()));
                 }
                 escapeAction.getOrCreate(m.getPosition()).add(m.getLocation());
             }

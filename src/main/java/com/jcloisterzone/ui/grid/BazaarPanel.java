@@ -336,7 +336,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
             g2.drawImage(img, 20, y, 90, 90, null);
 
             if (bi.getCurrentBidder() == null && bi.getOwner() != null) {
-                Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, client.getPlayerColor(bi.getOwner()), null);
+                Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, bi.getOwner().getColors().getMeepleColor(), null);
                 //TODO smooth image
                 g2.drawImage(playerImage, 140, y+12, 64, 64, null);
             }

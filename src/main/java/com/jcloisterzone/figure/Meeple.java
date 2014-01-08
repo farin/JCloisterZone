@@ -1,15 +1,11 @@
 package com.jcloisterzone.figure;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.TowerCapability;
 
 public abstract class Meeple extends Figure {
 
@@ -19,6 +15,23 @@ public abstract class Meeple extends Figure {
     private transient Feature feature;
     private transient Integer index; //index distinguish meeples on same feature
     private Location location;
+
+    public static class DeploymentCheckResult {
+        public final boolean result;
+        public final String error;
+
+        private DeploymentCheckResult() {
+            this.result = true;
+            this.error = null;
+        }
+
+        public DeploymentCheckResult(String error) {
+            this.result = false;
+            this.error = error;
+        }
+
+        public static final DeploymentCheckResult OK = new DeploymentCheckResult();
+    }
 
     public Meeple(Game game, Player player) {
         super(game);
@@ -44,31 +57,35 @@ public abstract class Meeple extends Figure {
         setFeature(null);
     }
 
-    public void checkDeployment(Feature piece) {
-        //empty
+    public DeploymentCheckResult isDeploymentAllowed(Feature feature) {
+        return DeploymentCheckResult.OK;
     }
 
-    public Feature getPieceForDeploy(Tile tile, Location loc) {
-        Feature piece = tile.getFeature(loc);
-        if (piece == null) {
-            throw new IllegalArgumentException("No such feature");
+    public Feature getDeploymentFeature(Tile tile, Location loc) {
+        return tile.getFeature(loc);
+    }
+
+    public void deployUnoccupied(Tile tile, Location loc) {
+        //perorm unoccupied check for followers only!!!
+        Feature feature = getDeploymentFeature(tile, loc);
+        deploy(tile, loc, feature);
+    }
+
+    public final void deploy(Tile tile, Location loc) {
+        Feature feature = getDeploymentFeature(tile, loc);
+        deploy(tile, loc, feature);
+    }
+
+    protected void deploy(Tile tile, Location loc, Feature feature) {
+        DeploymentCheckResult check = isDeploymentAllowed(feature);
+        if (!check.result) {
+            throw new IllegalArgumentException(check.error);
         }
-        return piece;
-    }
-
-    public void deploy(Tile tile, Location loc) {
-        Feature feature = getPieceForDeploy(tile, loc);
-        checkDeployment(feature);
-        deployUnchecked(tile, loc, feature);
-        game.fireGameEvent().deployed(this);
-    }
-
-    public void deployUnchecked(Tile tile, Location loc, Feature feature) {
-        assert location == null;
         feature.addMeeple(this);
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
+        game.fireGameEvent().deployed(this);
     }
 
     public final void undeploy() {

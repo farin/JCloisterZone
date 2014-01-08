@@ -6,63 +6,70 @@ Game can be also played against computer AI.
 
 ## Development guide
 
-Helpers for more pleasant developement and application debugging.
+Helpers for more pleasant development and application debugging.
 
 ### VM arguments
 
-use different config.ini, don't create error.log (console out is enough), change log level and enable assertions
+use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
 
-    -Dconfig=debug.ini -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -ea
+    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -ea
 
 
-### debug.ini
+### debug.yaml
 
-tweaked config.ini
+tweaked config.yaml
 
-use unpacked pluging from source
+use unpacked plugins from source
 
-    [plugins]
-    plugin = plugins/classic
-    plugin = plugins/rgg_siege
+    plugins:
+      - plugins/classic
+      - plugins/rgg_siege
 
 for immediately AI play comment delay option
 
-    [players]
-    ;ai_place_tile_delay = 200
+    # ai_place_tile_delay: 250
 
-#### [debug] section
+#### debug options
 
-use debug section for fast and repeatable game setup with following possible options
+use debug options for quick and repeatable game setup with following possible options
 
-    [debug]
+    debug:
+      # use some keys described below ...
 
 don't compress saves, autosave before each AI play
 
-    save_format = plain
-    save_before_ranking = saves/_prerank.jcz
+    save_format: plain
+    autosave: saves/_prerank.jcz
 
 skip game config dialog, player is name or AI class
+you can comment just profile key to disable whole autostart
 
-    autostart = true
-    autostart_player = Alice
-    autostart_player = Bob
-    autostart_player = com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer
+    autostart:
+      profile: default
+      players:
+        - Alice
+        - Bob
+        - com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer
+        - com.jcloisterzone.ai.DummyAiPlayer
 
 developing expansion, don't bother with basic tiles. Override any expansion with own set definition.
 
-    tiles_BASIC = tile-definitions/basic-only-starting.xml
+    tile_definitions:
+      BASIC: tile-definitions/basic-1card.xml
 
 force drawn tiles
 
-    draw=BA.C
-    draw=BA.Rr
-    draw=IC.CCCC
+    draw:
+      - BA.C
+      - BA.Cccc+
 
-and then force final scoring
+and then force final scoring with dot item
 
-    draw=!
+    draw:
+       # ... some tiles ...
+       - .
 
 experimental options
 
-    off_capabilities = Dragon, Fairy
-    area_highlight = figure
+    off_capabilities: [ Dragon, Fairy ]
+    area_highlight: figure

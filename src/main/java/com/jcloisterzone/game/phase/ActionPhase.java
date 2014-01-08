@@ -22,6 +22,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 
@@ -30,11 +31,13 @@ public class ActionPhase extends Phase {
 
     private final TowerCapability towerCap;
     private final FlierCapability flierCap;
+    private final PortalCapability portalCap;
 
     public ActionPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
         flierCap = game.getCapability(FlierCapability.class);
+        portalCap = game.getCapability(PortalCapability.class);
     }
 
     @Override
@@ -156,7 +159,11 @@ public class ActionPhase extends Phase {
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deploy(getBoard().get(p), loc);
+        m.deployUnoccupied(getBoard().get(p), loc);
+        if (!p.equals(getTile().getPosition()) && portalCap != null) {
+            //magic gate usage
+            portalCap.setPortalUsed(true);
+        }
         next();
     }
 

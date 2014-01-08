@@ -12,15 +12,18 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.PhantomCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 
 public class PhantomPhase extends Phase {
 
     private final TowerCapability towerCap;
+    private final PortalCapability portalCap;
 
     public PhantomPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
+        portalCap = game.getCapability(PortalCapability.class);
     }
 
     @Override
@@ -36,11 +39,13 @@ public class PhantomPhase extends Phase {
     @Override
     public void enter() {
         List<PlayerAction> actions = new ArrayList<>();
-
-        LocationsMap commonSites = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(Phantom.class)) {
+            LocationsMap commonSites = game.prepareFollowerLocations();
             if (towerCap != null) {
                 towerCap.prepareTowerFollowerDeploy(commonSites);
+            }
+            if (portalCap != null) {
+                portalCap.prepareMagicPortal(commonSites);
             }
             if (!commonSites.isEmpty()) {
                 actions.add(new MeepleAction(Phantom.class, commonSites));
@@ -68,7 +73,7 @@ public class PhantomPhase extends Phase {
             throw new IllegalArgumentException("Only phantom can be placed as second follower.");
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deploy(getBoard().get(p), loc);
+        m.deployUnoccupied(getBoard().get(p), loc);
         next();
     }
 

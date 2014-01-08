@@ -34,13 +34,16 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.ColorConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
@@ -57,6 +60,8 @@ import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
+import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
+import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
@@ -77,15 +82,18 @@ public class Client extends JFrame {
 
     private ClientController controller = new ClientController(this);
 
-    private final Ini config;
-    private final ClientSettings settings;
+    private final Config config;
+    private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
+
+    //non-persistetn settings (TODO move to mainPanel)
+    private boolean showHistory;
 
     @Deprecated
     private FigureTheme figureTheme;
     @Deprecated
     private ControlsTheme controlsTheme;
-    private Color[] playerColors;
+    //private PlayerColor[] playerColors;
 
     //private MenuBar menuBar;
     private StartPanel startPanel;
@@ -113,7 +121,7 @@ public class Client extends JFrame {
     }
 
     private Locale getLocaleFromConfig() {
-        String language = config.get("ui", "locale");
+        String language = config.getLocale();
         if (language == null) {
             return Locale.getDefault();
         }
@@ -124,25 +132,7 @@ public class Client extends JFrame {
         return new Locale(language);
     }
 
-    private Color stringToColor(String colorName) {
-        if (colorName.startsWith("#")) {
-            //RGB format
-            int r = Integer.parseInt(colorName.substring(1,3),16);
-            int g = Integer.parseInt(colorName.substring(3,5),16);
-            int b = Integer.parseInt(colorName.substring(5,7),16);
-            return new Color(r,g,b);
-        } else {
-            //constant format
-            java.lang.reflect.Field f;
-            try {
-                f = Color.class.getField(colorName);
-                return (Color) f.get(null);
-            } catch (Exception e1) {
-                logger.error("Invalid color name in config file: " + colorName);
-                return Color.BLACK;
-            }
-        }
-    }
+
 
     @Override
     public void setLocale(Locale l) {
@@ -150,20 +140,14 @@ public class Client extends JFrame {
         super.setLocale(l);
     }
 
-    public Client(Ini config, List<Plugin> plugins) {
+    public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
+        this.configLoader = configLoader;
         this.config = config;
-        settings = new ClientSettings(config);
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
     public void init() {
         setLocale(getLocaleFromConfig());
-
-        List<String> colorNames = config.get("players").getAll("color");
-        playerColors = new Color[colorNames.size()];
-        for (int i = 0; i < playerColors.length; i++ ) {
-            playerColors[i] = stringToColor(colorNames.get(i));
-        }
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
 
@@ -214,12 +198,12 @@ public class Client extends JFrame {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
     }
 
-    public Ini getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public ClientSettings getSettings() {
-        return settings;
+    public void saveConfig() {
+        configLoader.save(config);
     }
 
     public ConvenientResourceManager getResourceManager() {
@@ -306,7 +290,7 @@ public class Client extends JFrame {
 
     public boolean closeGame(boolean force) {
         boolean isGameRunning = getJMenuBar().isGameRunning();
-        if (settings.isConfirmGameClose() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
+        if (config.getConfirm().getGame_close() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
@@ -393,7 +377,8 @@ public class Client extends JFrame {
                 }
                 try {
                     Snapshot snapshot = new Snapshot(game, getClientId());
-                    if ("plain".equals(getConfig().get("debug", "save_format"))) {
+                    DebugConfig debugConfig = getConfig().getDebug();
+                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
                     }
                     snapshot.save(file);
@@ -405,16 +390,12 @@ public class Client extends JFrame {
         }
     }
 
-    private int getServerPort() {
-        return config.get("server", "port", int.class);
-    }
-
     public void createGame() {
         if (!closeGame()) return;
         try {
             localServer = new Server(config);
-            localServer.start(getServerPort());
-            connect(InetAddress.getLocalHost(), getServerPort());
+            localServer.start(config.getPort());
+            connect(InetAddress.getLocalHost(), config.getPort());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -436,8 +417,8 @@ public class Client extends JFrame {
                 if (!closeGame()) return;
                 try {
                     localServer = new Server(new Snapshot(file));
-                    localServer.start(getServerPort());
-                    connect(InetAddress.getLocalHost(), getServerPort());
+                    localServer.start(config.getPort());
+                    connect(InetAddress.getLocalHost(), config.getPort());
                 } catch (SnapshotVersionException ex1) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -474,7 +455,7 @@ public class Client extends JFrame {
     }
 
     void beep() {
-        if (settings.isPlayBeep()) {
+        if (config.getBeep_alert()) {
             try {
                 BufferedInputStream fileInStream = new BufferedInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
                 AudioInputStream beepStream = AudioSystem.getAudioInputStream(fileInStream);
@@ -539,31 +520,28 @@ public class Client extends JFrame {
         }
     }
 
+    public boolean isShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(boolean showHistory) {
+        if (showHistory) {
+            getGridPanel().showRecentHistory();
+        } else {
+            getGridPanel().removeLayer(PlacementHistory.class);
+        }
+        this.showHistory = showHistory;
+    }
 
     //------------------- LEGACY: TODO refactor ---------------
-    //TODO move getColor on player
 
-
+    @Deprecated
     public Color getPlayerSecondTunelColor(Player player) {
+        //TODO more effective implementation, move it to tunnel capability
         int slotNumber = player.getSlot().getNumber();
-        return playerColors[(slotNumber + 2) % playerColors.length];
+        PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
+        return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
 
-    public Color getPlayerColor(Player player) {
-        return playerColors[player.getSlot().getNumber()];
-    }
-
-    public Color getPlayerColor(PlayerSlot playerSlot) {
-        return playerColors[playerSlot.getNumber()];
-    }
-
-    public Color getPlayerColor() {
-        Player player = game.getActivePlayer();
-        if (player == null) { //awt thread is not synced
-            return Color.BLACK;
-        } else {
-            return playerColors[player.getSlot().getNumber()];
-        }
-    }
 
 }

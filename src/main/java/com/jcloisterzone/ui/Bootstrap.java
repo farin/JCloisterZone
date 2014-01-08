@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +17,9 @@ import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
@@ -35,28 +37,9 @@ public class Bootstrap  {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    public Ini loadConfig() {
-        Ini config = new Ini();
-        String configFile = System.getProperty("config");
-        if (configFile == null) {
-            configFile = "config.ini";
-        }
-        try {
-            config.load(Client.class.getClassLoader().getResource(configFile));
-        } catch (Exception ex) {
-            logger.error("Unable to read config.ini", ex);
-            System.exit(1);
-        }
-        return config;
-    }
-
-    public List<Plugin> loadPlugins(Ini config) {
+    public List<Plugin> loadPlugins(Config config) {
         LinkedList<Plugin> plugins = new LinkedList<>();
-        List<String> pluginPaths = null;
-
-        if (config.get("plugins") != null) {
-            pluginPaths = config.get("plugins").getAll("plugin");
-        }
+        List<String> pluginPaths = config.getPlugins();
 
         if (pluginPaths != null) {
             for (String pluginPath : pluginPaths) {
@@ -73,8 +56,8 @@ public class Bootstrap  {
         return plugins;
     }
 
-    private void checkForUpdate(Ini config, final Client client) {
-        final String updateUrlStr = config.get("update", "url");
+    private void checkForUpdate(Config config, final Client client) {
+        final String updateUrlStr = config.getUpdate();
         if (updateUrlStr != null && !com.jcloisterzone.Application.VERSION.contains("dev")) {
             (new Thread() {
                 public void run() {
@@ -101,10 +84,12 @@ public class Bootstrap  {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        Ini config = loadConfig();
+        ConfigLoader configLoader = new ConfigLoader();
+        Config config = configLoader.load();
+
         List<Plugin> plugins = loadPlugins(config);
 
-        final Client client = new Client(config, plugins);
+        final Client client = new Client(configLoader, config, plugins);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -116,7 +101,8 @@ public class Bootstrap  {
                     macApplication.addApplicationListener(new MacApplicationAdapter(client));
                 }
 
-                if (client.getConfig().get("debug", "autostart", boolean.class)) {
+                DebugConfig debugConfig = client.getConfig().getDebug();
+                if (debugConfig != null && debugConfig.isAutostartEnabled()) {
                     client.createGame();
                 }
             }

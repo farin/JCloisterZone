@@ -2,7 +2,6 @@ package com.jcloisterzone.board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -14,21 +13,29 @@ import org.slf4j.LoggerFactory;
 
 public class DefaultTilePack implements TilePack {
 
+    static class TileGroup {
+        final ArrayList<Tile> tiles = new ArrayList<>();
+        TileGroupState state = TileGroupState.WAITING;
+    }
+
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String INACTIVE_GROUP = "inactive";
-
-    private Map<String, ArrayList<Tile>> groups = new HashMap<>();
-    private Set<String> activeGroups = new HashSet<>();
-
+    private Map<String, TileGroup> groups = new HashMap<>();
     private Map<EdgePattern, Integer> edgePatterns = new HashMap<>();
+
+
+    public DefaultTilePack() {
+        TileGroup inactive = new TileGroup();
+        inactive.state = TileGroupState.RETIRED;
+        groups.put(INACTIVE_GROUP, inactive);
+    }
 
     @Override
     public int totalSize() {
         int n = 0;
-        for (Entry<String, ArrayList<Tile>> entry: groups.entrySet()) {
-            if (!entry.getKey().equals(INACTIVE_GROUP)) {
-                n += entry.getValue().size();
+        for (TileGroup group: groups.values()) {
+            if (group.state != TileGroupState.RETIRED) {
+                n += group.tiles.size();
             }
         }
         return n;
@@ -42,22 +49,26 @@ public class DefaultTilePack implements TilePack {
     @Override
     public int size() {
         int n = 0;
-        for (String key: activeGroups) {
-            n += groups.get(key).size();
+        for (TileGroup group: groups.values()) {
+            if (group.state == TileGroupState.ACTIVE) {
+                n += group.tiles.size();
+            }
         }
         return n;
     }
 
     @Override
     public Tile drawTile(int index) {
-        for (String key: activeGroups) {
-            ArrayList<Tile> group = groups.get(key);
-            if (index < group.size()) {
-                Tile currentTile = group.remove(index);
-                decreaseSideMaskCounter(currentTile, key);
+        for (Entry<String,TileGroup> entry: groups.entrySet()) {
+            TileGroup group = entry.getValue();
+            if (group.state != TileGroupState.ACTIVE) continue;
+            ArrayList<Tile> tiles = group.tiles;
+            if (index < tiles.size()) {
+                Tile currentTile = tiles.remove(index);
+                decreaseSideMaskCounter(currentTile, entry.getKey());
                 return currentTile;
             } else {
-                index -= group.size();
+                index -= tiles.size();
             }
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -90,8 +101,8 @@ public class DefaultTilePack implements TilePack {
 
     @Override
     public Tile drawTile(String groupId, String tileId) {
-        ArrayList<Tile> group = groups.get(groupId);
-        Iterator<Tile> i = group.iterator();
+        ArrayList<Tile> tiles = groups.get(groupId).tiles;
+        Iterator<Tile> i = tiles.iterator();
         while(i.hasNext()) {
             Tile tile = i.next();
             if (tile.getId().equals(tileId)) {
@@ -115,13 +126,13 @@ public class DefaultTilePack implements TilePack {
 
     public List<Tile> drawPrePlacedActiveTiles() {
         List<Tile> result = new ArrayList<>();
-        for (Entry<String, ArrayList<Tile>> entry: groups.entrySet()) {
-            ArrayList<Tile> group = entry.getValue();
-            Iterator<Tile> i = group.iterator();
+        for (Entry<String, TileGroup> entry: groups.entrySet()) {
+            TileGroup group = entry.getValue();
+            Iterator<Tile> i = group.tiles.iterator();
             while(i.hasNext()) {
                 Tile tile = i.next();
                 if (tile.getPosition() != null) {
-                    if (activeGroups.contains(entry.getKey())) {
+                    if (group.state == TileGroupState.ACTIVE) {
                         result.add(tile);
                         i.remove();
                     } else {
@@ -135,34 +146,27 @@ public class DefaultTilePack implements TilePack {
     }
 
     public void addTile(Tile tile, String groupId) {
-        if (!groups.containsKey(groupId)) {
-            groups.put(groupId, new ArrayList<Tile>());
+        TileGroup group = groups.get(groupId);
+        if (group == null) {
+            group = new TileGroup();
+            groups.put(groupId, group);
         }
-        ArrayList<Tile> group = groups.get(groupId);
-        group.add(tile);
+        group.tiles.add(tile);
         increaseSideMaskCounter(tile, groupId);
     }
 
     @Override
-    public void activateGroup(String group) {
-        //check if group exists - game load can cause activation on empty (and non existing after load) group
-        if (groups.containsKey(group)) {
-            activeGroups.add(group);
+    public void setGroupState(String groupId, TileGroupState state) {
+        //can be called with non-existing group (from expansion etc.)
+        TileGroup group = groups.get(groupId);
+        if (group != null) {
+            group.state = state;
         }
     }
 
     @Override
-    public void deactivateGroup(String group) {
-        activeGroups.remove(group);
-    }
-
-    public void deactivateAllGroups() {
-        activeGroups.clear();
-    }
-
-    @Override
-    public boolean isGroupActive(String group) {
-        return activeGroups.contains(group);
+    public TileGroupState getGroupState(String groupId) {
+        return groups.get(groupId).state;
     }
 
     @Override
@@ -170,10 +174,10 @@ public class DefaultTilePack implements TilePack {
         return groups.keySet();
     }
 
-    /* special Abbey related methods - refactor je to jen kvuli klientovi */
+    /* special Abbey related methods - TODO refactor it is here only for client */
     @Override
     public Tile getAbbeyTile() {
-        for (Tile tile : groups.get(INACTIVE_GROUP)) {
+        for (Tile tile : groups.get(INACTIVE_GROUP).tiles) {
             if (tile.getId().equals(Tile.ABBEY_TILE_ID)) {
                 return tile;
             }

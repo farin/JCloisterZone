@@ -26,9 +26,11 @@ import javax.swing.event.MouseInputListener;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
@@ -79,7 +81,16 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         this.client = client;
         this.controlPanel = client.getControlPanel();
-        this.chatPanel = new ChatPanel(client);
+
+        boolean networkGame = false;
+        for (Player p : client.getGame().getAllPlayers()) {
+            if (p.getSlot().getOwner() != client.getClientId()) {
+                networkGame = true;
+                break;
+            }
+        }
+
+        this.chatPanel = networkGame ? new ChatPanel(client) : null;
 
         squareSize = INITIAL_SQUARE_SIZE;
         left = 0 - STARTING_GRID_SIZE / 2;
@@ -100,13 +111,17 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         registerMouseListeners();
         controlPanel.registerSwingComponents(this);
-        chatPanel.registerSwingComponents(this);
+        if (chatPanel != null) {
+            chatPanel.registerSwingComponents(this);
+        }
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 controlPanel.layoutSwingComponents(GridPanel.this);
-                chatPanel.layoutSwingComponents(GridPanel.this);
+                if (chatPanel != null) {
+                    chatPanel.layoutSwingComponents(GridPanel.this);
+                }
             }
         });
     }
@@ -370,6 +385,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void addLayer(GridLayer layer) {
+        assert layer != null;
         synchronized (layers) {
             ListIterator<GridLayer> iter = layers.listIterator();
             while(iter.hasNext()) {
@@ -447,7 +463,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         tileLayer.tilePlaced(tile);
 
-        if (client.getSettings().isShowHistory()) {
+        if (client.isShowHistory()) {
             showRecentHistory();
         }
         boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
@@ -539,7 +555,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         g2.setTransform(origTransform);
 
-        chatPanel.paintComponent(g2);
+        if (chatPanel != null) {
+            chatPanel.paintComponent(g2);
+        }
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);

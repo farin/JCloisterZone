@@ -27,10 +27,8 @@
     </tile>
     <tile id="CIcI" group="river">
         <city>W E</city>
-        <farm city="W">NR</farm>
-        <farm city="W">NL</farm>
-        <farm city="W">SL</farm>
-        <farm city="W">SR</farm>
+        <farm city="W">NR SL</farm>
+        <farm city="W">NL SR</farm>
         <river>N S</river>
     </tile>
     <tile id="LIFI" group="river">

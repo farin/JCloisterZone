@@ -9,7 +9,7 @@ public interface Application {
     public String VERSION = "2.5";
     public String BUILD_DATE = "2013-12-08";
 
-    public int PROTCOL_VERSION = 16; //2.5
+    public int PROTCOL_VERSION = 17; //2.6
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }

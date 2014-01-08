@@ -11,9 +11,11 @@ import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
@@ -37,7 +39,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     public AbstractAreaLayer(GridPanel gridPanel) {
         super(gridPanel);
-        if ("figure".equals(getClient().getConfig().get("debug", "area_highlight"))) {
+        DebugConfig debugConfig = getClient().getConfig().getDebug();
+        if (debugConfig != null && "figure".equals(debugConfig.getArea_highlight())) {
             figureHighlight = true;
         }
     }
@@ -151,7 +154,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(selectedPosition);
         ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
-        Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, getClient().getPlayerColor(), null);
+        Player p = getClient().getGame().getActivePlayer();
+        Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
         Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
         scaled = new ImageIcon(scaled).getImage();
@@ -161,7 +165,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     /** standard highlight **/
     private void paintAreaHighlight(Graphics2D g2) {
-        g2.setColor(getClient().getPlayerColor());
+        Player p = getClient().getGame().getActivePlayer();
+        g2.setColor(p.getColors().getMeepleColor());
         g2.setComposite(AREA_ALPHA_COMPOSITE);
         g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
     }

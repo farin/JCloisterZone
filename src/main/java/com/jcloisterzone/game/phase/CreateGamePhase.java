@@ -15,7 +15,10 @@ import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.config.Config.ColorConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
@@ -24,6 +27,7 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.PlayerColor;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -76,7 +80,24 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+        game.getExpansions().clear();
+        game.getExpansions().addAll(Arrays.asList(expansions));
+        game.getCustomRules().clear();
+        game.getCustomRules().addAll(Arrays.asList(rules));
+
+        for (Expansion exp : Expansion.values()) {
+            if (!exp.isImplemented()) continue;
+            game.fireGameEvent().updateExpansion(exp, game.getExpansions().contains(exp));
+        }
+        for (CustomRule rule : CustomRule.values()) {
+            game.fireGameEvent().updateCustomRule(rule, game.getCustomRules().contains(rule));
+        }
+    }
+
+    @Override
     public void updateSlot(PlayerSlot slot) {
+        slot.setColors(slots[slot.getNumber()].getColors()); //colors are transient, copy them to new object
         slots[slot.getNumber()] = slot;
         super.updateSlot(slot);
     }
@@ -106,11 +127,21 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new BazaarPhase(game, getServer()));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
+
+        if (game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+            addPhase(next, new DragonMovePhase(game));
+            next = addPhase(next, new DragonPhase(game));
+        }
+
         next = addPhase(next, new WagonPhase(game));
         next = addPhase(next, new ScorePhase(game));
         next = addPhase(next, new CastlePhase(game));
+
+        if (!game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
                addPhase(next, new DragonMovePhase(game));
-        next = addPhase(next, new DragonPhase(game));
+               next = addPhase(next, new DragonPhase(game));
+        }
+
         next = addPhase(next, new PhantomPhase(game));
                addPhase(next, new TowerCapturePhase(game));
                addPhase(next, new FlierActionPhase(game));
@@ -164,9 +195,9 @@ public class CreateGamePhase extends ServerAwarePhase {
         tilePackFactory.setConfig(game.getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
-        getTilePack().activateGroup("default");
-        getTilePack().activateGroup("count");
-        getTilePack().activateGroup("wind-rose-initial");
+        getTilePack().setGroupState("default", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("count", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("wind-rose-initial", TileGroupState.ACTIVE);
         game.begin();
     }
 
@@ -205,10 +236,11 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
-        String offVal = game.getConfig().get("debug", "off_capabilities");
-        Set<Class<? extends Capability>> off = new HashSet<>();
-        if (offVal != null) {
-            for (String tok : offVal.split(",")) {
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
+            List<String> offNames =  debugConfig.getOff_capabilities();
+            Set<Class<? extends Capability>> off = new HashSet<>();
+            for (String tok : offNames) {
                 tok = tok.trim();
                 try {
                     String className = "com.jcloisterzone.game.capability."+tok+"Capability";
@@ -219,8 +251,8 @@ public class CreateGamePhase extends ServerAwarePhase {
                     logger.warn("Invalid capability name: " + tok, e);
                 }
             }
+            game.getCapabilityClasses().removeAll(off);
         }
-        game.getCapabilityClasses().removeAll(off);
     }
 
     @Override

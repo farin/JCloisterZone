@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import com.google.common.collect.Maps;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -29,7 +30,7 @@ public class MeepleLayer extends AbstractGridLayer {
      * Corn circles allows multiple meeples on single feature.
      * In such case double meeple should be displayed after common ones.
      */
-    private LinkedHashMap<Meeple, PositionedImage> images = Maps.newLinkedHashMap();
+    private LinkedList<MeeplePositionedImage> images = new LinkedList<>();
     //TODO own layer ???
     private List<PositionedImage> permanentImages = new ArrayList<>();
 
@@ -43,7 +44,7 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {
-        ImmutablePoint scaledOffset = mi.offset.scale(getSquareSize(), boxSize);
+        ImmutablePoint scaledOffset = mi.getScaledOffset(boxSize);
         //TODO optimize also for scrolling
         if (mi.scaledImage == null) {
             int size = (int) (getSquareSize() * FIGURE_SIZE_RATIO);
@@ -56,7 +57,7 @@ public class MeepleLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g) {
         int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
-        for (PositionedImage mi : images.values()) {
+        for (PositionedImage mi : images) {
             paintPositionedImage(g, mi, boxSize );
         }
         for (PositionedImage mi : permanentImages) {
@@ -67,7 +68,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Override
     public void zoomChanged(int squareSize) {
-        for (PositionedImage mi : images.values()) {
+        for (MeeplePositionedImage mi : images) {
             mi.scaledImage = null;
         }
         for (PositionedImage mi : permanentImages) {
@@ -76,53 +77,50 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-    private PositionedImage createMeepleImage(Meeple m, int order) {
+    private MeeplePositionedImage createMeepleImage(Meeple m) {
         Feature feature = m.getFeature();
         ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), m.getLocation());
-        if (order > 0) {
-            offset = new ImmutablePoint(offset.getX() + 10*order, offset.getY());
-        }
-        Color c = getClient().getPlayerColor(m.getPlayer());
+        Color c = m.getPlayer().getColors().getMeepleColor();
         Image image = getClient().getFigureTheme().getFigureImage(m.getClass(), c,  getExtraDecoration(m));
-        return new PositionedImage(m.getPosition(), offset, image);
+        return new MeeplePositionedImage(m, offset, image);
     }
 
-    /**
-     * recompute offset, keep big follower on top
-     */
-    private void rearrangeMeeples(final Feature feature) {
-        for (Meeple m : feature.getMeeples()) {
-            images.remove(m);
-        }
-
-        int i = 0;
-        //clone meeples to freeze its state
-        for (Meeple m : feature.getMeeples()) {
-            if (m instanceof SmallFollower) {
-                Meeple c = (Meeple) m.clone();
-                if (c.getPosition() == null) continue; //synchronization issue, because reading directly from Feature, not from args passed to ui layer
-                images.put(c, createMeepleImage(c, i++));
+    private void rearrangeMeeples(Position p, Location loc) {
+        int order = 0;
+        //small followers first
+        for (MeeplePositionedImage mi : images) {
+            if (mi.location == loc && mi.position.equals(p)) {
+                if (mi.meepleType.equals(SmallFollower.class)) {
+                    mi.order = order++;
+                }
             }
-
         }
-        for (Meeple m : feature.getMeeples()) {
-            if (!(m instanceof SmallFollower)) {
-                Meeple c = (Meeple) m.clone();
-                if (c.getPosition() == null) continue; //synchronization issue, because reading directly from Feature, not from args passed to ui layer
-                images.put(c, createMeepleImage(c, i++));
+        //others on top
+        for (MeeplePositionedImage mi : images) {
+            if (mi.location == loc && mi.position.equals(p)) {
+                if (!mi.meepleType.equals(SmallFollower.class)) {
+                    mi.order = order++;
+                }
             }
         }
     }
 
     public void meepleDeployed(Meeple m) {
-        assert !images.containsKey(m);
-        rearrangeMeeples(m.getFeature());
+        images.add(createMeepleImage(m));
+        rearrangeMeeples(m.getPosition(), m.getLocation());
     }
 
     public void meepleUndeployed(Meeple m) {
         if (m.getFeature() != null) {
-            images.remove(m);
-            rearrangeMeeples(m.getFeature());
+            Iterator<MeeplePositionedImage> iter = images.iterator();
+            while (iter.hasNext()) {
+                MeeplePositionedImage mi = iter.next();
+                if (mi.match(m)) {
+                    iter.remove();
+                    break;
+                }
+            }
+            rearrangeMeeples(m.getPosition(), m.getLocation());
         }
     }
 
@@ -146,17 +144,48 @@ public class MeepleLayer extends AbstractGridLayer {
         return null;
     }
 
-    private static class PositionedImage {
+    private class PositionedImage {
         public final Position position;
         public final ImmutablePoint offset;
         public final Image sourceImage;
         public Image scaledImage;
-
 
         public PositionedImage(Position position, ImmutablePoint offset, Image sourceImage) {
             this.position = position;
             this.offset = offset;
             this.sourceImage = sourceImage;
         }
+
+        public ImmutablePoint getScaledOffset(int boxSize) {
+            return offset.scale(getSquareSize(), boxSize);
+        }
     }
+
+    private class MeeplePositionedImage extends PositionedImage{
+         public final Class<? extends Meeple> meepleType;
+         public final Location location;
+         public int order;
+
+         public MeeplePositionedImage(Meeple m, ImmutablePoint offset, Image sourceImage) {
+             super(m.getPosition(), offset, sourceImage);
+             meepleType = m.getClass();
+             location = m.getLocation();
+         }
+
+         public ImmutablePoint getScaledOffset(int boxSize) {
+             ImmutablePoint point = offset;
+             if (order > 0) {
+                 point = point.translate(10*order, 0);
+             }
+             return point.scale(getSquareSize(), boxSize);
+         }
+
+         public boolean match(Meeple m) {
+             if (!m.getClass().equals(meepleType)) return false;
+             if (location != m.getLocation()) return false;
+             if (!position.equals(m.getPosition())) return false;
+             return true;
+         }
+    }
+
 }

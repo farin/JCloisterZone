@@ -3,10 +3,11 @@ package com.jcloisterzone.server;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Random;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
@@ -52,22 +54,15 @@ public class Server extends GameSettings implements ServerIF {
 
 
     @SuppressWarnings("unchecked")
-    public Server(Ini config)  {
+    public Server(Config config)  {
         slots = new PlayerSlot[PlayerSlot.COUNT];
         slotSupportedExpansions = new EnumSet[slots.length];
         for (int i = 0; i < slots.length; i++) {
             slots[i] = new PlayerSlot(i);
         }
         getExpansions().add(Expansion.BASIC);
-        for (Expansion exp: Expansion.values()) {
-            if (exp.isEnabled() && config.get("game-default-expansions", exp.name(), boolean.class)) {
-                getExpansions().add(exp);
-            }
-        }
-        for (CustomRule rule : CustomRule.values()) {
-            if (config.get("game-default-rules", rule.name(), boolean.class)) {
-                getCustomRules().add(rule);
-            }
+        for (CustomRule cr : CustomRule.defaultEnabled()) {
+            getCustomRules().add(cr);
         }
     }
 
@@ -159,8 +154,12 @@ public class Server extends GameSettings implements ServerIF {
 
     @Override
     public void updateExpansion(Expansion expansion, Boolean enabled) {
-        if (gameStarted || ! expansion.isEnabled()) {
+        if (gameStarted) {
             logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
+            return;
+        }
+        if (!expansion.isImplemented() || expansion == Expansion.BASIC) {
+            logger.error("Invalid expansion {}", expansion);
             return;
         }
         if (enabled) {
@@ -188,14 +187,37 @@ public class Server extends GameSettings implements ServerIF {
     }
 
     @Override
+    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
+        if (gameStarted) {
+            logger.error(Application.ILLEGAL_STATE_MSG, "updateGameSetup");
+            return;
+        }
+        getExpansions().clear();
+        getExpansions().add(Expansion.BASIC);
+        getExpansions().addAll(Arrays.asList(expansions));
+        getCustomRules().clear();
+        getCustomRules().addAll(Arrays.asList(rules));
+        stub.updateGameSetup(expansions, rules);
+    }
+
+    @Override
     public void startGame() {
         ((ServerStub)Proxy.getInvocationHandler(stub)).closeAccepting();
         gameStarted = true;
         EnumSet<Expansion> supported = mergeSupportedExpansions();
         if (supported != null) {
             for (Expansion exp : Expansion.values()) {
-                if (exp.isEnabled() && ! supported.contains(exp)) {
+                if (exp.isImplemented() && !supported.contains(exp)) {
                     stub.updateExpansion(exp, false);
+                }
+            }
+        }
+        if (getCustomRules().contains(CustomRule.RANDOM_SEATING_ORDER)) {
+            Random rnd = new Random();
+            for (PlayerSlot slot : slots) {
+                if (slot.getType() != SlotType.OPEN) {
+                    slot.setSerial(rnd.nextInt());
+                    stub.updateSlot(slot);
                 }
             }
         }

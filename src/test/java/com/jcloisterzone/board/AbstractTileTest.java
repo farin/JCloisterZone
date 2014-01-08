@@ -1,11 +1,11 @@
 package com.jcloisterzone.board;
 
-import org.ini4j.Ini;
 import org.junit.Before;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {
@@ -20,7 +20,7 @@ public class AbstractTileTest {
 
     @Before
     public void initFactories() {
-        Ini config = new Ini();
+        Config config = new Config();
         game.setConfig(config);
         setUpGame(game);
         packFactory.setGame(game);

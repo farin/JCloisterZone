@@ -90,14 +90,7 @@ public class FlierCapability extends Capability {
 
     private boolean isLandingExists(Follower follower, List<Feature> reachable) {
         for (Feature feature : reachable) {
-            try {
-                //quick HACK
-                //TODO change checkDeployment to return boolean (but how to returnt reason for deploy() check ?)
-                follower.checkDeployment(feature);
-                return true;
-            } catch (IllegalArgumentException e) {
-                //do nothing
-            }
+            if (follower.isDeploymentAllowed(feature).result) return true;
         }
         return false;
     }

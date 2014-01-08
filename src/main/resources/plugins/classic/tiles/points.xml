@@ -8,7 +8,7 @@
         <apply>BB.LCFc CLOISTER</apply>
     </point>
     <point feature="CLOISTER" cx="500" cy="650">
-        <apply>KS.LC CLOISTER</apply>
+        <apply>KR.LC CLOISTER</apply>
     </point>
     <point feature="CLOISTER" cx="180" cy="330">
         <apply>DG.LCcc.d CLOISTER</apply>
@@ -32,7 +32,7 @@
         <apply>TB.LRRR E</apply>
         <apply>DG.LRRR.d S</apply>
         <apply>DG.LRRR.d E</apply>
-        <apply>KS.CcRR! E</apply>
+        <apply>KR.CcRR! E</apply>
         <apply>TB.CcRR.w E</apply>
         <apply>IC.LRFR W</apply>
     </point>
@@ -51,7 +51,7 @@
         <apply>TB.CRc.g S</apply>
         <apply>TB.CcRR!.c S</apply>
         <apply>AM.LRRRR S</apply>
-        <apply>KS.CcRR! S</apply>
+        <apply>KR.CcRR! S</apply>
         <apply>GQ.CRcR.1 N</apply>
         <apply>GQ.CRcR.1 S</apply>
         <apply>C2.RCR W</apply>
@@ -159,12 +159,18 @@
     <point feature="ROAD" cx="215" cy="625">
         <apply>WR.CFR W</apply>
     </point>
+    <point feature="ROAD" cx="147" cy="395">
+        <apply>CO.1 W</apply>
+    </point>
+    <point feature="ROAD" cx="650" cy="262">
+        <apply>CO.4 N</apply>
+    </point>
     <point feature="ROAD" cx="720" cy="720" baseLocation="SE"> <!-- oblique -->
         <apply>BA.CcRr SE</apply>
         <apply>BA.CcRr+ SE</apply>
         <apply>CA.RrR.1 SE</apply>
         <apply>IC.CcRr+.i SE</apply>
-        <apply>KS.CRrR SE</apply>
+        <apply>KR.CRrR SE</apply>
         <apply>DG.RrRr.g SE</apply>
         <apply>DG.CcRr.p SE</apply>
         <apply>TO.RrRr.2 SE</apply>
@@ -212,7 +218,7 @@
         <apply>IC.CCCC N</apply>
         <apply>IC.CCCC S</apply>
         <apply>IC.CCC N</apply>
-        <apply>KS.CRrR N</apply>
+        <apply>KR.CRrR N</apply>
         <apply>TB.CcCC.c E</apply>
         <apply>TO.CccC+ S</apply>
         <apply>TO.CC.2 W</apply>
@@ -256,6 +262,7 @@
     </point>
     <point feature="CITY" cx="250" cy="250">
         <apply>TO.CccR _S</apply>
+        <apply>BE.Ccc _S</apply>
     </point>
     <point feature="CITY" cx="750" cy="250">
         <apply>TO.CccC+ _S</apply>
@@ -265,12 +272,12 @@
     </point>
 
     <point feature="FARM" cx="200" cy="110" baseLocation="NL"> <!-- shifted NL -->
-        <apply>KS.CcRR! EL</apply>
+        <apply>KR.CcRR! EL</apply>
         <apply>TB.CcR!.w EL</apply>
         <apply>TB.CcRR!.c EL</apply>
     </point>
     <point feature="FARM" cx="800" cy="110" baseLocation="NR"> <!-- shifted NR -->
-        <apply>KS.CcRR! SR</apply>
+        <apply>KR.CcRR! SR</apply>
         <apply>TB.RCc!.g SR</apply>
         <apply>TB.CcRR!.c SR</apply>
         <apply>TB.CccR.w SR</apply>
@@ -333,6 +340,9 @@
     <point feature="FARM" cx="280" cy="100" baseLocation="NL">
         <apply>TB.CcRR.w EL</apply>
     </point>
+    <point feature="FARM" cx="300" cy="150">
+        <apply>CO.4 WR.NL</apply>
+    </point>
     <point feature="FARM" cx="350" cy="750">
         <apply>TO.CC.2 SL.SR.EL.ER</apply>
     </point>
@@ -343,6 +353,10 @@
         <apply>R1.IFI NL.NR.EL.WR</apply>
         <apply>R1.IFI SL.SR.ER.WL</apply>
         <apply>R2.III SL.SR.ER.WL</apply>
+        <apply>CO.1 NL.NR.EL.WR</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="750">
+        <apply>BE.Ccc SL.SR</apply>
     </point>
     <point feature="FARM" cx="600" cy="100" baseLocation="NL.NR"> <!-- small farm north from WE city -->
         <apply>BA.CFc.1 NL.NR</apply>
@@ -412,7 +426,7 @@
     </point>
     <point feature="FARM" cx="820" cy="820">
         <apply>R2.LIFI SL.SR.ER.WL</apply>
-        <apply>KS.LC EL.ER.SL.SR.WL.WR</apply>
+        <apply>KR.LC EL.ER.SL.SR.WL.WR</apply>
         <apply>CU.SRCR ER.SL.SR.WL</apply>
         <apply>CU.SRFR NR.EL.ER.SL</apply>
         <apply>BB.LRFr ER.SL.SR.WL</apply>
@@ -423,7 +437,7 @@
         <apply>BA.CcRr+ SL.ER</apply>
         <apply>CA.RrR.1 SL.ER</apply>
         <apply>IC.CcRr+.i SL.ER</apply>
-        <apply>KS.CRrR SL.ER</apply>
+        <apply>KR.CRrR SL.ER</apply>
         <apply>DG.RrRr.g SL.ER</apply>
         <apply>DG.CcRr.p SL.ER</apply>
         <apply>TO.RrRr.2 SL.ER</apply>

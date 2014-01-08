@@ -12,6 +12,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
@@ -36,7 +37,7 @@ public class DragonCapability extends Capability {
     public void tilePlaced(Tile tile) {
         if (tile.hasTrigger(TileTrigger.VOLCANO)) {
             setDragonPosition(tile.getPosition());
-            getTilePack().activateGroup("dragon");
+            getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
             game.fireGameEvent().dragonMoved(tile.getPosition());
         }
     }
@@ -79,9 +80,8 @@ public class DragonCapability extends Capability {
 
     @Override
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
-        if (!tile.getPosition().equals(dragonPosition)) return true;
-        if (game.hasRule(CustomRule.CANNOT_PLACE_BUILDER_ON_VOLCANO)) return false;
-        return Special.class.isAssignableFrom(meepleType);
+        if (tile.getPosition().equals(dragonPosition)) return false;
+        return true;
     }
 
     public Position getDragonPosition() {
@@ -133,7 +133,7 @@ public class DragonCapability extends Capability {
         for (Position offset: Position.ADJACENT.values()) {
             Position position = dragonPosition.add(offset);
             Tile tile = getBoard().get(position);
-            if (tile == null || tile.getOrigin() == Expansion.COUNT) continue;
+            if (tile == null || CountCapability.isTileForbidden(tile)) continue;
             if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
             if (fairyCap != null && position.equals(fairyCap.getFairyPosition())) { continue; }
             result.add(position);

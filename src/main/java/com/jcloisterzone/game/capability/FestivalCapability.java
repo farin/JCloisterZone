@@ -19,6 +19,8 @@ import com.jcloisterzone.game.Game;
 
 public class FestivalCapability extends Capability {
 
+    public final String UNDEPLOY_FESTIVAL = "festival";
+
     public FestivalCapability(Game game) {
         super(game);
     }
@@ -35,7 +37,7 @@ public class FestivalCapability extends Capability {
         if (!getTile().hasTrigger(TileTrigger.FESTIVAL)) return;
 
         Player activePlayer = game.getActivePlayer();
-        UndeployAction action = new UndeployAction("festival", PlayerRestriction.only(activePlayer));
+        UndeployAction action = new UndeployAction(UNDEPLOY_FESTIVAL, PlayerRestriction.only(activePlayer));
 
         for (Meeple m : Iterables.filter(activePlayer.getMeeples(), MeeplePredicates.deployed())) {
             action.getOrCreate(m.getPosition()).add(m.getLocation());

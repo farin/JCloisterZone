@@ -76,14 +76,16 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.TRADERS_AND_BUILDERS,
             Expansion.PRINCESS_AND_DRAGON,
             //Expansion.TOWER, //causing error sometimes
-            Expansion.KING_AND_SCOUT,
+            Expansion.KING_AND_ROBBER_BARON,
             Expansion.RIVER,
             Expansion.RIVER_II,
             Expansion.GQ11,
             Expansion.CATAPULT,
             Expansion.WIND_ROSE,
             Expansion.CATHARS,
-            //Expansion.PHANTOM,
+            Expansion.BESIEGERS,
+            Expansion.PHANTOM,
+            Expansion.FESTIVAL,
             //only cards
             Expansion.COUNT,
             Expansion.PLAGUE

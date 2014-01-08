@@ -9,6 +9,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -33,6 +34,7 @@ import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FairyLayer;
+import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
@@ -55,6 +57,7 @@ public class MainPanel extends BackgroundPanel {
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
+    private FarmHintsLayer farmHintLayer;
 
     public MainPanel(Client client) {
         this.client = client;
@@ -76,6 +79,10 @@ public class MainPanel extends BackgroundPanel {
         return client.getGame();
     }
 
+    public void setShowFarmHints(boolean showFarmHints) {
+         farmHintLayer.setVisible(showFarmHints);
+    }
+
     public void started(Snapshot snapshot) {
         animationService.clearAll();
         animationService.setGridPanel(null);
@@ -85,8 +92,11 @@ public class MainPanel extends BackgroundPanel {
         gridPanel = new GridPanel(client, snapshot);
         meepleLayer = new MeepleLayer(gridPanel);
         tileLayer = new TileLayer(gridPanel);
+        farmHintLayer = new FarmHintsLayer(gridPanel);
         gridPanel.addLayer(tileLayer);
         gridPanel.addLayer(meepleLayer);
+        gridPanel.addLayer(farmHintLayer);
+
         gridPanel.addLayer(new AnimationLayer(gridPanel, animationService));
 
         animationService.setGridPanel(gridPanel);
@@ -129,16 +139,21 @@ public class MainPanel extends BackgroundPanel {
 
     public void tilePlaced(Tile tile) {
         gridPanel.tilePlaced(tile, tileLayer);
+        if (farmHintLayer != null) {
+            farmHintLayer.tilePlaced(tile);
+        }
     }
 
     public void deployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleDeployed(m);
+        farmHintLayer.meepleDeployed(m);
     }
 
     public void undeployed(Meeple m) {
         gridPanel.clearActionDecorations();
         meepleLayer.meepleUndeployed(m);
+        farmHintLayer.meepleUndeployed(m);
     }
 
     public void bridgeDeployed(Position pos, Location loc) {
@@ -152,7 +167,8 @@ public class MainPanel extends BackgroundPanel {
     }
 
     private Integer getScoreAnimationDuration() {
-        return client.getConfig().get("ui", "score_display_duration", Integer.class);
+        Integer duration = client.getConfig().getScore_display_duration();
+        return duration == null ? 10 : Math.max(duration, 1);
     }
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
@@ -163,7 +179,7 @@ public class MainPanel extends BackgroundPanel {
             pos,
             points,
             offset,
-            client.getPlayerColor(m.getPlayer()),
+            m.getPlayer().getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
     }
@@ -173,7 +189,7 @@ public class MainPanel extends BackgroundPanel {
             pos,
             points,
             new ImmutablePoint(50, 50),
-            client.getPlayerColor(player),
+            player.getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
 
@@ -193,7 +209,7 @@ public class MainPanel extends BackgroundPanel {
         if (isSecondPiece) {
             c = client.getPlayerSecondTunelColor(player);
         } else {
-            c = client.getPlayerColor(player);
+            c = player.getColors().getMeepleColor();
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
         Tile tile = gridPanel.getTile(p);

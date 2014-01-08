@@ -1,15 +1,17 @@
 package com.jcloisterzone.ai;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.UserInterface;
@@ -29,14 +31,19 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Phantom;
+import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
+import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
 
@@ -145,14 +152,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     protected void selectTilePlacement(TilePlacementAction action) {
-        String autosave = game.getConfig().get("debug", "save_before_ranking");
-        if (autosave != null && autosave.length() > 0) {
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
             Snapshot snapshot = new Snapshot(game, 0);
-            if ("plain".equals(game.getConfig().get("debug", "save_format"))) {
+            if ("plain".equals(debugConfig.getSave_format())) {
                 snapshot.setGzipOutput(false);
             }
             try {
-                snapshot.save(new File(autosave));
+                snapshot.save(new File(debugConfig.getAutosave()));
             } catch (Exception e) {
                 logger.error("Auto save before ranking failed.", e);
             }
@@ -195,7 +202,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         logger.info("Rank {} > {}", getGame().getCurrentTile() == null ? "Abbey" : getGame().getCurrentTile().getId(), bestSoFar);
     }
 
-    protected void rankAction(List<PlayerAction> actions) {
+    protected void rankAction(Collection<PlayerAction> actions) {
         Tile currTile = getGame().getCurrentTile();
         Position pos = currTile.getPosition();
         for (PlayerAction action : actions) {
@@ -346,7 +353,23 @@ public abstract class RankingAiPlayer extends AiPlayer {
     class RankingInteractionHanlder extends NotSupportedInteraction {
         @Override
         public void selectAction(List<PlayerAction> actions, boolean canPass) {
-            rankAction(actions);
+            if (game.getPhase() instanceof PhantomPhase) return;
+            boolean hasSmallFollower = false;
+            boolean hasPhantom = false;
+            for (PlayerAction a : actions) {
+                if (a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(SmallFollower.class)) hasSmallFollower = true;
+                if (a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Phantom.class)) hasPhantom = true;
+            }
+            if (hasSmallFollower && hasPhantom) {
+                rankAction(Collections2.filter(actions, new Predicate<PlayerAction>() {
+                    @Override
+                    public boolean apply(PlayerAction a) {
+                        return !(a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Phantom.class));
+                    }
+                }));
+            } else {
+                rankAction(actions);
+            }
         }
     }
 
@@ -367,13 +390,13 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 }
                 if (firstAction instanceof UndeployAction ) {
                     //hack, ai never use escape, TODO
-                    if (firstAction.getName().equals("escape")) {
+                    if (firstAction.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
                         getServer().pass();
                     }
                 }
             }
 
-            if (bestSoFar == null) { //loaded game or wagon phase
+            if (bestSoFar == null) { //loaded game or wagon phase or phantom phase
                 backupGame();
                 if (canPass) rankPass();
                 rankAction(actions);
@@ -387,12 +410,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 if (sa.action instanceof MeepleAction) {
                     MeepleAction action = (MeepleAction) sa.action;
                     //debug, should never happen, but it happens sometimes when Tower game is enabled
-                    try {
-                        getPlayer().getMeepleFromSupply(action.getMeepleType());
-                    } catch (NoSuchElementException e) {
-                        logger.error(e.getMessage(), e);
-                        throw e;
-                    }
+//                    try {
+//                        getPlayer().getMeepleFromSupply(action.getMeepleType());
+//                    } catch (NoSuchElementException e) {
+//                        logger.error(e.getMessage(), e);
+//                        throw e;
+//                    }
                     action.perform(getServer(), sa.position, sa.location);
                 } else if (sa.action instanceof BarnAction) {
                     BarnAction action = (BarnAction) sa.action;

@@ -80,7 +80,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public AffineTransform getAffineTransform(Position pos) {
-        return getAffineTransform(pos, Rotation.R0);
+        return AffineTransform.getTranslateInstance(pos.x * getSquareSize(), pos.y * getSquareSize());
     }
 
     public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
@@ -123,9 +123,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     protected Area transformArea(Area area, Position pos) {
-        Area copy = new Area(area);
-        copy.transform(getAffineTransform(pos));
-        return copy;
+        return area.createTransformedArea(getAffineTransform(pos));
     }
 
     // LEGACY CODE - TODO REFACTOR

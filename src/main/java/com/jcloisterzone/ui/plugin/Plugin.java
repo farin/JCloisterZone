@@ -74,10 +74,18 @@ public class Plugin {
     }
 
     public static Plugin loadPlugin(String path) throws Exception {
-         URL pluginURL = Plugin.class.getClassLoader().getResource(path);
-         ResourcePlugin plugin = new ResourcePlugin(pluginURL);
-         plugin.loadMetadata();
-         return plugin;
+        URL pluginURL = Plugin.class.getClassLoader().getResource(path);
+        if (pluginURL == null) {
+            // development helper - try to load unpacked plugin
+            String unpacked = path.replace(".jar", "");
+            pluginURL = Plugin.class.getClassLoader().getResource(unpacked);
+            if (pluginURL == null) {
+                throw new IllegalArgumentException("Plugin " + path + " not found.");
+            }
+        }
+        ResourcePlugin plugin = new ResourcePlugin(pluginURL);
+        plugin.loadMetadata();
+        return plugin;
     }
 }
 

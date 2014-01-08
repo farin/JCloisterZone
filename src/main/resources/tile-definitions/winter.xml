@@ -74,11 +74,11 @@
         </wagon-move>
     </tile>
     <tile id="RrRr">
-        <road>W S</road>
-        <road>N E</road>
-        <farm>SR WL</farm>
-        <farm>NR EL</farm>
-        <farm>NL WR SL ER</farm>
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
     </tile>
     <tile id="CcR">
         <city>N W</city>

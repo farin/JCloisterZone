@@ -1,7 +1,9 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +15,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Mayor;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.CastleCapability;
 
@@ -69,7 +74,7 @@ public class CastlePhase extends Phase {
             return;
         }
         int pi = game.getTurnPlayer().getIndex();
-        while(! currentTileCastleBases.containsKey(game.getAllPlayers()[pi])) {
+        while (!currentTileCastleBases.containsKey(game.getAllPlayers()[pi])) {
             pi++;
             if (pi == game.getAllPlayers().length) pi = 0;
         }
@@ -96,7 +101,8 @@ public class CastlePhase extends Phase {
 
         int size = 0;
         boolean castleBase = true;
-        Player owner;
+        List<Follower> followers = new ArrayList<>();
+        //Player owner;
 
         @Override
         public boolean visit(Feature feature) {
@@ -105,10 +111,10 @@ public class CastlePhase extends Phase {
                 castleBase = false;
                 return false;
             }
-            //if more then one follower is on caste, all has same owner
-            //possible scenario - deploy on city - add by crop circle another follower - deploy castle
-            if (!c.getMeeples().isEmpty()) {
-                owner = c.getMeeples().get(0).getPlayer();
+            for (Meeple m : c.getMeeples()) {
+                if (m instanceof Follower) {
+                    followers.add((Follower) m);
+                }
             }
             size++;
             if (size > 2) return false;
@@ -116,8 +122,14 @@ public class CastlePhase extends Phase {
         }
 
         public Player getResult() {
-            if (castleBase && size == 2) return owner;
-            return null;
+            if (!castleBase || size != 2) return null;
+            //check single owner only - flier can cause that more followers of different players can be placed on city
+            Player owner = null;
+            for (Follower f : followers) {
+                if (owner != null && owner != f.getPlayer()) return null;
+                if (owner == null && !(f instanceof Mayor)) owner = f.getPlayer();
+            }
+            return owner;
         }
 
     }

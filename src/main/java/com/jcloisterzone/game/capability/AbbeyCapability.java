@@ -15,6 +15,7 @@ import com.jcloisterzone.game.Game;
 public class AbbeyCapability extends Capability {
 
     private final Set<Player> unusedAbbey = new HashSet<>();
+    private Player abbeyRoundLastPlayer; //when last tile is drawn all players can still place abbey
 
     public AbbeyCapability(Game game) {
         super(game);
@@ -22,14 +23,19 @@ public class AbbeyCapability extends Capability {
 
     @Override
     public Object backup() {
-        return new HashSet<>(unusedAbbey);
+        return new Object[] {
+            new HashSet<>(unusedAbbey),
+            abbeyRoundLastPlayer
+        };
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void restore(Object data) {
+        Object[] a = (Object[]) data;
         unusedAbbey.clear();
-        unusedAbbey.addAll((Set<Player>) data);
+        unusedAbbey.addAll((Set<Player>) a[0]);
+        abbeyRoundLastPlayer = (Player) a[1];
     }
 
     @Override
@@ -52,7 +58,13 @@ public class AbbeyCapability extends Capability {
         }
     }
 
+    public Player getAbbeyRoundLastPlayer() {
+        return abbeyRoundLastPlayer;
+    }
 
+    public void setAbbeyRoundLastPlayer(Player abbeyRoundLastPlayer) {
+        this.abbeyRoundLastPlayer = abbeyRoundLastPlayer;
+    }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
@@ -61,6 +73,9 @@ public class AbbeyCapability extends Capability {
             node.appendChild(el);
             el.setAttribute("index", "" + player.getIndex());
             el.setAttribute("abbey", "" + unusedAbbey.contains(player));
+            if (player.equals(abbeyRoundLastPlayer)) {
+                el.setAttribute("abbeyRoundLastPlayer", "1");
+            }
         }
     }
 
@@ -72,6 +87,9 @@ public class AbbeyCapability extends Capability {
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
             if (!Boolean.parseBoolean(playerEl.getAttribute("abbey"))) {
                 useAbbey(player);
+            }
+            if (playerEl.hasAttribute("abbeyRoundLastPlayer")) {
+                abbeyRoundLastPlayer = player;
             }
         }
     }

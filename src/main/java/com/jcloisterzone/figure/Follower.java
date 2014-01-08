@@ -1,6 +1,8 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -30,11 +32,12 @@ public abstract class Follower extends Meeple {
     }
 
     @Override
-	public void checkDeployment(Feature f) {
-        if (f.walk(new IsOccupied())) {
+    public void deployUnoccupied(Tile tile, Location loc) {
+        Feature feature = getDeploymentFeature(tile, loc);
+        if (feature.walk(new IsOccupied())) {
             throw new IllegalArgumentException("Feature is occupied.");
         }
-        super.checkDeployment(f);
+        deploy(tile, loc, feature);
     }
 
 

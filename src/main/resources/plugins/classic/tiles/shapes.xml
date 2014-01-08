@@ -21,7 +21,7 @@
     </shape>
     <shape feature="CLOISTER">
         <svg:polygon points="220,770 220,560 350,500 460,500 460,440 570,290 740,480 740,780 530,900"/>
-        <apply>KS.LC CLOISTER</apply>
+        <apply>KR.LC CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
         <svg:polygon points="50,120 160,20 250,130 250,220 360,200 480,270 480,420 280,490 280,540 150,550 50,490"/>
@@ -86,7 +86,7 @@
         <apply>CA.RrR.1 SE</apply>
         <apply>GQ.CRRr SW</apply>
         <apply>IC.RrRr SE</apply>
-        <apply>KS.CRrR SE</apply>
+        <apply>KR.CRrR SE</apply>
         <apply>DG.RrRr.g SE</apply>
         <apply>DG.CcRr.p SE</apply>
         <apply>R1.RrII NE</apply>
@@ -131,6 +131,10 @@
         <apply>BB.RFR.b N</apply>
         <apply>BB.RFR.bi S</apply>
     </shape>
+    <shape feature="ROAD" baseLocation="N"> <!-- long -->
+        <svg:rect x="400" y="0" width="200" height="770"/>
+        <apply>BE.CFR S</apply>
+    </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- short  -->
         <svg:rect x="400" y="0" width="200" height="300"/>
         <apply>AM.LRRRR N</apply>
@@ -147,8 +151,8 @@
         <apply>GQ.CRcR.1 N</apply>
         <apply>IC.LRFR E</apply>
         <apply>IC.RRR.i S</apply>
-        <apply>KS.CcRR! S</apply>
-        <apply>KS.CcRR! E</apply>
+        <apply>KR.CcRR! S</apply>
+        <apply>KR.CcRR! E</apply>
         <apply>DG.LRRR.d E</apply>
         <apply>DG.RRR.g S</apply>
         <apply>DG.CRRR.p S</apply>
@@ -233,7 +237,7 @@
         <svg:polygon points="400,0 600,0 600,370 630,400 740,400 740,600 600,600 400,400"/>
         <apply>AM.RC W</apply>
         <apply>GQ.CcCR S</apply>
-        <apply>KS.CRrR W</apply>
+        <apply>KR.CRrR W</apply>
     </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- turn R -->
         <svg:polygon points="600,0 400,0 400,370 370,400 260,400 260,600 400,600 600,400"/>
@@ -325,12 +329,23 @@
         <svg:polygon points="472,505 627,505 620,530 487,650 387,690 277,752 272,785 455,845 542,905 557,932 560,992 415,995 405,960 195,890 140,832 132,760 157,697 347,575 387,567"/>
         <apply>R1.LIRI S</apply>
     </shape>
-
-
+    <shape feature="ROAD">
+        <svg:polygon points="0,412 42,402 90,370 135,297 197,240 265,217 350,222 570,300 372,395 327,385 295,385 262,400 167,522 125,562 65,592 0,597"/>
+        <apply>CO.1 W</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="417,2 432,125 455,152 490,167 555,185 565,210 567,245 540,292 487,322 352,330 455,475 452,502 615,470 655,450 680,412 717,347 735,225 727,140 685,87 602,42 585,20 575,0"/>
+        <apply>CO.4 N</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="442,785 357,830 340,860 340,922 385,999 535,999 510,910 512,895 525,882 597,827 570,802"/>
+        <apply>CO.11 S</apply>
+    </shape>
 
     <shape feature="CITY">
         <svg:polygon points="0,0 290,290 390,350 610,350 690,290 999,0"/>
         <apply allRotations="1">* N</apply>
+        <apply>BE.RrC N</apply> <!-- override alias  -->
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 950,80 550,280 340,560 250,850 80,980 0,999"/>
@@ -393,13 +408,14 @@
         <apply>IC.CFR N</apply>
         <apply>DG.CRRR.p N</apply>
         <apply>C2.RCR N</apply>
+        <apply>CO.9 S</apply>
     </shape>
     <shape feature="CITY" baseLocation="N">
         <svg:polygon points="10,0 200,240 410,290 480,290 530,250 820,170 850,150 999,0"/>
         <apply>BA.RrC N</apply>
         <apply>GQ.CRRr N</apply>
-        <apply>KS.LC N</apply>
-        <apply>KS.CRrR N</apply>
+        <apply>KR.LC N</apply>
+        <apply>KR.CRrR N</apply>
         <apply>DG.C.d N</apply>
         <apply>DG.RrC.d N</apply>
         <apply>DG.CRr.d N</apply>
@@ -453,6 +469,8 @@
         <apply>BB.CFR.b N</apply>
         <apply>C2.CFR N</apply>
         <apply>C2.CFC S</apply>
+        <apply>BE.CRr N</apply>
+        <apply>BE.CFR N</apply>
     </shape>
     <shape feature="CITY" baseLocation="E">
         <svg:polygon points="999,20 915,150 870,340 857,362 867,377 820,572 805,617 820,650 830,657 840,732 912,922 987,997 995,999"/>
@@ -499,7 +517,7 @@
     </shape>
     <shape feature="CITY" baseLocation="NW">
         <svg:polygon points="0,0 999,0 840,210 830,640 999,950 999,999 640,800 230,800 0,999"/>
-        <apply>KS.CcRR! NW</apply>
+        <apply>KR.CcRR! NW</apply>
         <apply>DG.Cc!.p NW</apply>
         <apply>TO.CcR! NW</apply>
         <apply>TB.CcRR!.c NW</apply>
@@ -576,6 +594,10 @@
         <svg:polygon points="2,17 212,267 262,267 340,210 382,207 410,180 507,210 685,205 715,185 770,185 957,2 995,2 995,992 637,835 640,770 702,745 702,482 690,475 690,402 597,307 520,415 515,487 502,495 387,475 280,542 292,555 287,685 532,772 640,770 635,837 165,835 145,852 122,852 0,960"/>
         <apply>BB.LCFc WE</apply>
     </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,982 925,962 882,932 837,802 805,542 740,430 700,430 652,407 512,400 472,427 437,427 342,507 325,525 280,525 227,542 205,572 177,617 172,752 170,795 145,892 125,922 70,972 35,999 0,999"/>
+        <apply>BE.Ccc _S</apply>
+    </shape>
 
     <!--  Farm areas -->
 
@@ -600,7 +622,7 @@
         <svg:polygon points="500,0 999,0 500,500"/>
         <apply>TB.CcRR!.c ER</apply>
         <apply>TB.CcR!.w ER</apply>
-        <apply>KS.CcRR! ER</apply>
+        <apply>KR.CcRR! ER</apply>
         <apply>TO.CcR! ER</apply>
         <apply>AM.CRcr+ NR</apply>
     </shape>
@@ -611,7 +633,7 @@
         <apply>TB.CcRR!.c SL</apply>
         <apply>TB.RCc!.g SL</apply>
         <apply>AM.CRcr+ NL</apply>
-        <apply>KS.CcRR! SL</apply>
+        <apply>KR.CcRR! SL</apply>
     </shape>
     <shape feature="FARM" baseLocation="NL.WR">
         <title>oblique-NL,WR</title>
@@ -624,7 +646,7 @@
         <apply>SI.CcRr ER.SL</apply>
         <apply>IC.RrRr ER.SL</apply>
         <apply>IC.CcRr+.i ER.SL</apply>
-        <apply>KS.CRrR ER.SL</apply>
+        <apply>KR.CRrR ER.SL</apply>
         <apply>DG.LCcc.d ER.SL</apply>
         <apply>DG.CcRr.p ER.SL</apply>
         <apply>DG.RrRr.g ER.SL</apply>
@@ -725,6 +747,18 @@
     <shape feature="FARM">
         <svg:polygon points="0,512 527,775 999,580 999,999 0,999"/>
         <apply>WR.CFR SL.SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,505 0,0 999,0 999,365 477,360 262,295"/>
+        <apply>CO.1 WR.NL.NR.EL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,422 0,0 482,0 647,200 605,390"/>
+        <apply>CO.4 WR.NL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="452,999 0,999 0,600 600,600 517,807 422,885"/>
+        <apply>CO.11 SR.WL</apply>
     </shape>
 
     <!-- Tower areas ? TODO what about define as translate -->
@@ -843,7 +877,7 @@
         <apply>AM.CCRR SL.ER</apply>
         <apply>AM.RC EL.ER.SL.SR.WL</apply>
         <apply>AM.RrC SR.WL</apply>
-        <apply>KS.CRrR EL.SR.WL</apply>
+        <apply>KR.CRrR EL.SR.WL</apply>
         <apply>R1.CcII SR.EL</apply>
         <apply>R1.RrII WR.NL.ER.SL</apply>
         <apply>SI.RCr WR.EL</apply>
@@ -861,6 +895,11 @@
         <apply>TU.RCR EL.WR</apply>
         <apply>WR.CFR WR.NL.NR</apply>
         <apply>WR.RrC EL.ER.SL.WR</apply>
+        <apply>BE.Ccc SL.SR</apply>
+        <apply>CO.4 NR.EL.ER.SL</apply>
+        <apply>CO.9 NL.ER.WL.WR</apply>
+        <apply>CO.11 ER.SL</apply>
+        <apply>CO.12 NR.SL.SR.WL</apply>
     </complement-farm>
 
     <shape> <!-- center -->
@@ -936,5 +975,47 @@
     <shape feature="FARM">
         <svg:polygon points="75,505 80,482 95,477 107,427 172,377 180,317 225,327 285,317 300,302 332,300 362,280 377,280 402,297 437,295 500,312 522,330 562,332 647,410 667,410 777,450 797,450 805,465 847,512 890,565 897,597 870,627 792,642 577,697 530,720 512,707 480,702 465,680 442,680 435,670 390,670 342,675 337,652 297,642 272,610 147,510 115,522"/>
         <substract>TU.RCR</substract>
+    </shape>
+
+    <!-- City od Carcassonne -->
+    <shape>
+        <svg:polygon points="999,302 999,999 290,999 305,937 232,647 177,625 175,472 222,392 282,460 485,355 510,307 527,335 642,275 642,245 682,172 725,225 727,257 797,257 835,215 880,277"/>
+        <substract>CO.1</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="999,467 999,999 0,999 0,300 87,312 92,260 102,227 115,227 137,180 160,227 172,230 175,257 175,325 307,345 350,342 355,327 340,297 407,205 462,300 455,325 475,325 517,255 555,307 555,325 715,402 787,435 897,457 950,352 999,447"/>
+        <substract>CO.2</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="999,230 999,999 0,999 2,435 155,415 152,380 165,340 212,340 255,365 320,255 355,290 387,367 425,360 450,342 477,350 615,317 622,342"/>
+        <substract>CO.3</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="622,999 0,999 0,227 37,207 55,182 80,165 135,165 155,197 155,222 172,220 255,267 370,355 397,345 450,367 457,392 455,497 490,525 575,682 575,705 607,700 645,720 667,737 672,767 665,787 665,867 650,890 622,905"/>
+        <substract>CO.4</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="290,0 267,70 242,75 232,102 240,132 232,227 262,250 280,250 277,310 292,440 305,527 322,570 297,602 287,627 295,665 280,782 302,815 337,827 377,830 395,915 442,999 999,999 999,0"/>
+        <substract>CO.5</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="667,999 0,999 0,0 627,0 645,97 667,95 715,110 732,130 735,165 722,187 720,282 705,295 685,307 697,332 705,400 722,687 755,702 772,717 785,740 787,770 775,812 777,912 762,942 722,962 687,965"/>
+        <substract>CO.8</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="437,0 999,0 999,657 637,400 597,407 555,380 550,315"/>
+        <substract>CO.9</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="0,685 0,0 999,5 999,710 560,725 535,767 505,780 455,777 415,752 412,730 342,692 270,770 120,717 102,727 60,727 40,717 35,695"/>
+        <substract>CO.10</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="0,717 0,0 999,0 999,705 842,715 812,765 745,792 692,792 615,760 565,800 492,795 495,732 515,732 517,662 452,682 367,695 72,707 55,720 15,720"/>
+        <substract>CO.11</substract>
+    </shape>
+    <shape>
+        <svg:polygon points="0,700 0,0 675,0 607,202 602,332 565,362 507,372 265,672 255,672 255,690 220,715 155,717 130,697"/>
+        <substract>CO.12</substract>
     </shape>
 </shapes>

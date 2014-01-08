@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -24,10 +23,12 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.EventMulticaster;
 import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
@@ -47,7 +48,7 @@ import com.jcloisterzone.game.phase.Phase;
 public class Game extends GameSettings {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private Ini config;
+    private Config config;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -75,11 +76,11 @@ public class Game extends GameSettings {
     private int idSequenceCurrVal = 0;
 
 
-    public Ini getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(Ini config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 
@@ -298,6 +299,10 @@ public class Game extends GameSettings {
     }
 
     public void initFeature(Tile tile, Feature feature, Element xml) {
+        if (feature instanceof Farm && tile.getId().startsWith("CO.")) {
+            //this is not part of Count capability because it is integral behaviour valid also when capability is off
+            ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
+        }
         for (Capability cap: capabilities) {
             cap.initFeature(tile, feature, xml);
         }
@@ -346,9 +351,12 @@ public class Game extends GameSettings {
         }
     }
 
-    public void turnCleanUp() {
+    /**
+     * @param doubleTurn true when only first phase is ending and another "turn" of same player follows
+     */
+    public void turnCleanUp(boolean doubleTurn) {
         for (Capability cap: capabilities) {
-            cap.turnCleanUp();
+            cap.turnCleanUp(doubleTurn);
         }
     }
 

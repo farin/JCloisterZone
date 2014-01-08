@@ -25,7 +25,7 @@ public class TowerCapturePhase extends Phase {
 
     @Override
     public void enter() {
-        //TODO move handle tower placement here from action phase or not ?
+        //TODO move handle tower placement here from action phase or not ? nice to have but activated tower arg is needed for it
     }
 
     @Override

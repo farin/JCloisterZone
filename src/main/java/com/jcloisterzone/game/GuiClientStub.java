@@ -2,11 +2,15 @@ package com.jcloisterzone.game;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.jcloisterzone.config.Config.AutostartConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.rmi.ControllMessage;
 import com.jcloisterzone.rmi.mina.ClientStub;
@@ -16,6 +20,7 @@ import com.jcloisterzone.ui.Client;
 public class GuiClientStub extends ClientStub {
 
     private final Client client;
+    private boolean autostartPerfomed;
 
     public GuiClientStub(Client client) {
         this.client = client;
@@ -39,11 +44,19 @@ public class GuiClientStub extends ClientStub {
             }
         });
 
-        if (client.getConfig().get("debug", "autostart", boolean.class)) {
-            client.getConfig().remove("debug", "autostart"); //apply autostart only once
-            final List<String> players = client.getConfig().get("debug").getAll("autostart_player");
+        DebugConfig debugConfig = client.getConfig().getDebug();
+        if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
+            autostartPerfomed = true; //apply autostart only once
+            AutostartConfig autostartConfig = debugConfig.getAutostart();
+            final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
+            if (presetCfg == null) {
+                logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
+                return;
+            }
+
+            final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>() : autostartConfig.getPlayers();
             if (players.isEmpty()) {
-                players.add("UNDEFINED");
+                players.add("Player");
             }
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -60,6 +73,8 @@ public class GuiClientStub extends ClientStub {
                         client.getServer().updateSlot(slot, null);
                         i++;
                     }
+
+                    presetCfg.updateGameSetup(client.getServer());
                     client.getServer().startGame();
                 }
             });

@@ -136,7 +136,7 @@ public class ClientController implements GameEventListener, UserInterface {
         }
 
         // TODO better image quality ?
-        Color c = client.getPlayerColor(activePlayer);
+        Color c = activePlayer.getColors().getMeepleColor();
         Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
         client.setIconImage(image);
     }
@@ -384,6 +384,8 @@ public class ClientController implements GameEventListener, UserInterface {
 
     @Override
     public void chatMessageReceived(Player player, String message) {
-        client.getGridPanel().getChatPanel().displayChatMessage(player, message);
+        if (client.getGridPanel().getChatPanel() != null) {
+            client.getGridPanel().getChatPanel().displayChatMessage(player, message);
+        }
     }
 }

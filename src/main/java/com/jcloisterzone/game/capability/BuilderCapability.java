@@ -66,8 +66,8 @@ public class BuilderCapability extends Capability {
         Tile tile = getTile();
         if (!game.isDeployAllowed(tile, Builder.class)) return;
 
-        Set<Location> roads = tile.getPlayerFeatures(player, Road.class);
-        Set<Location> cities = tile.getPlayerFeatures(player, City.class);
+        Set<Location> roads = tile.getPlayerUncompletedFeatures(player, Road.class);
+        Set<Location> cities = tile.getPlayerUncompletedFeatures(player, City.class);
         if (roads.isEmpty() && cities.isEmpty()) return;
 
         Position pos = tile.getPosition();
@@ -80,7 +80,7 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp() {
+    public void turnCleanUp(boolean doubleTurn) {
         switch (builderState) {
         case ACTIVATED:
             builderState = BuilderState.BUILDER_TURN;
