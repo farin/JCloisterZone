@@ -65,7 +65,7 @@ public class ConfigLoader {
             logger.info("Default configuration file {} doesn't exist. Creating new one.", DEFAULT_CONFIG);
             config = createDefault();
             config.setOrigin(new File(DEFAULT_CONFIG));
-
+            save = true;
         } else {
             logger.info("Loading configuration {}", configFile);
             File origin = new File(configResource.getFile());
