@@ -105,7 +105,7 @@ public class WagonCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         returnedWagons.clear();
         wagonPlayer = null;
     }

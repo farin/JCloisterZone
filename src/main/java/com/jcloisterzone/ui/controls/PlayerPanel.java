@@ -345,4 +345,3 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     }
 
 }
-

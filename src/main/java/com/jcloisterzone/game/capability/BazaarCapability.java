@@ -21,6 +21,7 @@ public class BazaarCapability extends Capability {
     private BazaarItem currentBazaarAuction;
     private Player bazaarTileSelectingPlayer;
     private Player bazaarBiddingPlayer;
+    private boolean bazaarTriggered;
 
     public BazaarCapability(Game game) {
         super(game);
@@ -32,7 +33,8 @@ public class BazaarCapability extends Capability {
             (bazaarSupply == null ? null : new ArrayList<>(bazaarSupply)),
             (currentBazaarAuction == null ? null : new BazaarItem(currentBazaarAuction)),
             bazaarTileSelectingPlayer,
-            bazaarBiddingPlayer
+            bazaarBiddingPlayer,
+            bazaarTriggered
         };
     }
 
@@ -44,6 +46,7 @@ public class BazaarCapability extends Capability {
         currentBazaarAuction = a[1] == null ? null : new BazaarItem((BazaarItem)a[1]);
         bazaarTileSelectingPlayer = (Player) a[2];
         bazaarBiddingPlayer = (Player) a[3];
+        bazaarTriggered = (Boolean) a[4];
     }
 
     @Override
@@ -55,6 +58,9 @@ public class BazaarCapability extends Capability {
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
+        if (bazaarTriggered) {
+            node.setAttribute("bazaar-triggered", "true");
+        }
         if (bazaarSupply != null) {
             for (BazaarItem bi : bazaarSupply) {
                 Element el = doc.createElement("bazaar-supply");
@@ -85,6 +91,7 @@ public class BazaarCapability extends Capability {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
+        bazaarTriggered = XmlUtils.attributeBoolValue(node,"bazaar-triggered");
         NodeList nl = node.getElementsByTagName("bazaar-supply");
         if (nl.getLength() > 0) {
             bazaarSupply = new ArrayList<BazaarItem>(nl.getLength());
@@ -144,6 +151,22 @@ public class BazaarCapability extends Capability {
 
     public void setCurrentBazaarAuction(BazaarItem currentBazaarAuction) {
         this.currentBazaarAuction = currentBazaarAuction;
+    }
+
+    public boolean isBazaarTriggered() {
+        return bazaarTriggered;
+    }
+
+    @Override
+    public void turnCleanUp() {
+        bazaarTriggered = false;
+    }
+
+    @Override
+    public void tileDrawn(Tile tile) {
+        if (tile.hasTrigger(TileTrigger.BAZAAR)) {
+            bazaarTriggered = true;
+        }
     }
 
     public boolean hasTileAuctioned(Player p) {

@@ -57,7 +57,7 @@ public class BridgeCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         bridgeUsed = false;
     }
 

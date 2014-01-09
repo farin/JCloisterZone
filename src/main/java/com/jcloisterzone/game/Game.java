@@ -351,12 +351,15 @@ public class Game extends GameSettings {
         }
     }
 
-    /**
-     * @param doubleTurn true when only first phase is ending and another "turn" of same player follows
-     */
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         for (Capability cap: capabilities) {
-            cap.turnCleanUp(doubleTurn);
+            cap.turnPartCleanUp();
+        }
+    }
+
+    public void turnCleanUp() {
+        for (Capability cap: capabilities) {
+            cap.turnCleanUp();
         }
     }
 

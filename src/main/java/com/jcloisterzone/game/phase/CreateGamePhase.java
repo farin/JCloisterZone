@@ -17,7 +17,6 @@ import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
-import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
@@ -27,7 +26,6 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.ui.PlayerColor;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -120,11 +118,12 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void preparePhases() {
-        Phase next = null;
+        Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
-        next = addPhase(next, new CleanUpPhase(game));
+        next = last = addPhase(next, new CleanUpTurnPhase(game));
         next = addPhase(next, new BazaarPhase(game, getServer()));
+        next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
 
@@ -152,7 +151,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new AbbeyPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
-        game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last phase, the first is default
+        last.setDefaultNext(next); //after last phase, the first is default
     }
 
     private void createPlayers() {

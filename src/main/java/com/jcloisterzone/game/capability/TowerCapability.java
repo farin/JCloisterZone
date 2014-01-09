@@ -212,10 +212,8 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
-        if (!doubleTurn) {
-            ransomPaidThisTurn = false;
-        }
+    public void turnCleanUp() {
+        ransomPaidThisTurn = false;
     }
 
     @Override

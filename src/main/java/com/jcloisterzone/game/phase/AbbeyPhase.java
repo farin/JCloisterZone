@@ -7,16 +7,20 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 
 public class AbbeyPhase extends Phase {
 
     private AbbeyCapability abbeyCap;
     private BazaarCapability bazaarCap;
+    private BuilderCapability builderCap;
 
     public AbbeyPhase(Game game) {
         super(game);
         abbeyCap = game.getCapability(AbbeyCapability.class);
         bazaarCap = game.getCapability(BazaarCapability.class);
+        builderCap = game.getCapability(BuilderCapability.class);
     }
 
     @Override
@@ -26,7 +30,9 @@ public class AbbeyPhase extends Phase {
 
     @Override
     public void enter() {
-        if (bazaarCap == null || bazaarCap.getBazaarSupply() == null) {
+        boolean baazaarInProgress = bazaarCap != null && bazaarCap.getBazaarSupply() != null;
+        boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
+        if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
                 notifyUI(new AbbeyPlacementAction(getBoard().getHoles()), true);
                 return;

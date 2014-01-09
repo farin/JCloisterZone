@@ -104,7 +104,9 @@ public class XmlUtils {
     }
 
     public static boolean attributeBoolValue(Element e, String attr) {
-        return e.getAttribute(attr).equals("yes") || e.getAttribute(attr).equals("true") || e.getAttribute(attr).equals("1");
+        if (!e.hasAttribute(attr)) return false;
+        String val = e.getAttribute(attr);
+        return val.equals("yes") || val.equals("true") || val.equals("1");
     }
 
     public static int attributeIntValue(Element e, String attr) {
