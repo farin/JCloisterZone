@@ -106,7 +106,7 @@ public class ConfigLoader {
             PrintWriter writer = new PrintWriter(file);
             writer.print(fillTemplate(config));
             writer.close();
-            logger.warn("Configuration saved {}", file);
+            logger.info("Configuration saved {}", file);
         } catch (IOException e) {
             logger.warn("Unable to create configuration file {}", file);
         }
@@ -173,13 +173,13 @@ public class ConfigLoader {
             }
         }
 
-        if (config.getPlugins() != null) {
+        if (config.getPlugins() != null && !config.getPlugins().isEmpty()) {
             model.put("plugins", indent(1, yaml.dumpAs(config.getPlugins(), Tag.SEQ, FlowStyle.BLOCK)));
         }
-        if (config.getPresets() != null) {
+        if (config.getPresets() != null && !config.getPresets().isEmpty()) {
             model.put("presets", indent(1, yaml.dumpAs(config.getPresets(), Tag.MAP, FlowStyle.BLOCK)));
         }
-        if (config.getConnection_history() != null) {
+        if (config.getConnection_history() != null && !config.getConnection_history().isEmpty()) {
             model.put("connection_history", yaml.dumpAs(config.getConnection_history(), Tag.SEQ, FlowStyle.FLOW).trim());
         }
 

@@ -142,6 +142,8 @@
                                     <excludes>
                                         <exclude>config.yaml</exclude>
                                         <exclude>debug.yaml</exclude>
+                                        <exclude>Messages.properties</exclude>
+                                        <exclude>Messages_en.properties</exclude>
                                         <exclude>**/.gitignore</exclude>
                                         <exclude>plugins/**</exclude>
                                     </excludes>
