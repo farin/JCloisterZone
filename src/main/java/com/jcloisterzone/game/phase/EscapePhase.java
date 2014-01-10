@@ -5,6 +5,7 @@ import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -29,7 +30,7 @@ public class EscapePhase extends Phase {
     public void enter() {
         UndeployAction action = prepareEscapeAction();
         if (prepareEscapeAction() != null) {
-            notifyUI(action, true);
+            game.post(new SelectActionEvent(getActivePlayer(), action, true));
         } else {
             next();
         }

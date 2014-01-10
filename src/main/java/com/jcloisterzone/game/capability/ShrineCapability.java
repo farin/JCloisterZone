@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
@@ -31,7 +32,7 @@ public final class ShrineCapability extends Capability {
         boolean first = true;
         for (Meeple m : cloister.getMeeples()) {
             if (first) {
-                game.fireGameEvent().scored(cloister, 0, "0", m, false);
+                game.post(new ScoreEvent(cloister, 0, "0", m, false));
                 first = false;
             }
             m.undeploy();

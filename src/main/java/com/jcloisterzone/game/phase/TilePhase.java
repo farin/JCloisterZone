@@ -10,6 +10,9 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TileDrawnEvent;
+import com.jcloisterzone.event.TilePlacedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -27,7 +30,7 @@ public class TilePhase extends Phase {
     @Override
     public void enter() {
         Map<Position, Set<Rotation>> freezed = new HashMap<>(getBoard().getAvailablePlacements());
-        notifyUI(new TilePlacementAction(game.getCurrentTile(), freezed), false);
+        game.post(new SelectActionEvent(getActivePlayer(), new TilePlacementAction(game.getCurrentTile(), freezed), false));
     }
 
     @Override
@@ -36,7 +39,7 @@ public class TilePhase extends Phase {
          Tile tile = game.getTilePack().drawTile(tileId);
          game.setCurrentTile(tile);
          game.getBoard().refreshAvailablePlacements(tile);
-         game.fireGameEvent().tileDrawn(tile);
+         game.post(new TileDrawnEvent(getActivePlayer(), tile));
     }
 
     @Override
@@ -50,7 +53,7 @@ public class TilePhase extends Phase {
         if (tile.getTower() != null) {
             game.getCapability(TowerCapability.class).registerTower(p);
         }
-        game.fireGameEvent().tilePlaced(tile);
+        game.post(new TilePlacedEvent(getActivePlayer(), tile));
 
         if (bridgeRequired) {
             LocationsMap sites = bridgeCap.prepareMandatoryBridgeAction().getLocationsMap();

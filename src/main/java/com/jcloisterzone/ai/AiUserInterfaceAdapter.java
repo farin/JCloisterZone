@@ -40,6 +40,11 @@ public class AiUserInterfaceAdapter implements UserInterface {
     }
 
     @Override
+    public void selectAnyTimeAction(List<PlayerAction> actions) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void selectBazaarTile() {
         throw new UnsupportedOperationException();
     }

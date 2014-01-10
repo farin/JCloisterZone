@@ -18,6 +18,12 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.ExpansionChangedEvent;
+import com.jcloisterzone.event.GameStartEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.RuleChangeEvent;
+import com.jcloisterzone.event.SupportedExpansionsChangeEvent;
+import com.jcloisterzone.event.TilePlacedEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
@@ -64,7 +70,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         } else {
             game.getCustomRules().remove(rule);
         }
-        game.fireGameEvent().updateCustomRule(rule, enabled);
+        game.post(new RuleChangeEvent(rule, enabled));
     }
 
     @Override
@@ -74,7 +80,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         } else {
             game.getExpansions().remove(expansion);
         }
-        game.fireGameEvent().updateExpansion(expansion, enabled);
+        game.post(new ExpansionChangedEvent(expansion, enabled));
     }
 
     @Override
@@ -86,10 +92,10 @@ public class CreateGamePhase extends ServerAwarePhase {
 
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
-            game.fireGameEvent().updateExpansion(exp, game.getExpansions().contains(exp));
+            game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
         }
         for (CustomRule rule : CustomRule.values()) {
-            game.fireGameEvent().updateCustomRule(rule, game.getCustomRules().contains(rule));
+            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
         }
     }
 
@@ -102,7 +108,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     @Override
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        game.fireGameEvent().updateSupportedExpansions(expansions);
+        game.post(new SupportedExpansionsChangeEvent(expansions));
     }
 
 
@@ -149,6 +155,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new TilePhase(game));
         next = addPhase(next, new DrawPhase(game, getServer()));
         next = addPhase(next, new AbbeyPhase(game));
+        next = addPhase(next, new AnyTimeActionPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
         last.setDefaultNext(next); //after last phase, the first is default
@@ -204,7 +211,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         for (Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.fireGameEvent().tilePlaced(preplaced);
+            game.post(new TilePlacedEvent(null, preplaced));
         }
     }
 
@@ -221,7 +228,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                             break;
                         }
                     }
-                    game.addUserInterface(new AiUserInterfaceAdapter(ai));
+                    //game.addUserInterface(new AiUserInterfaceAdapter(ai));
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
                     logger.error("Unable to create AI player", e);
@@ -265,9 +272,10 @@ public class CreateGamePhase extends ServerAwarePhase {
         prepareTilePack();
         prepareAiPlayers();
 
-        game.fireGameEvent().started(getSnapshot());
+        game.post(new GameStartEvent(getSnapshot()));
         preplaceTiles();
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        game.post(new PlayerTurnEvent(game.getTurnPlayer()));
+        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
 
         next();
     }

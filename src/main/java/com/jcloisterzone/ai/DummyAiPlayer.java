@@ -14,6 +14,11 @@ public class DummyAiPlayer extends AiPlayer {
     }
 
     @Override
+    public void selectAnyTimeAction(List<PlayerAction> actions) {
+        //do nothing
+    }
+
+    @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         selectDummyDragonMove(positions, movesLeft);
     }

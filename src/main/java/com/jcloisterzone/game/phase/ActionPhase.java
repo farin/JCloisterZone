@@ -12,6 +12,10 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.FairyMovedEvent;
+import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
@@ -52,7 +56,7 @@ public class ActionPhase extends Phase {
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
-            notifyUI(actions, true);
+            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
         }
     }
 
@@ -108,14 +112,14 @@ public class ActionPhase extends Phase {
     @Override
     public void placeTowerPiece(Position p) {
         int captureRange = doPlaceTowerPiece(p);
-        game.fireGameEvent().towerIncreased(p, captureRange);
+        game.post(new TowerIncreasedEvent(getActivePlayer(), p, captureRange));
         TakePrisonerAction captureAction = prepareCapture(p, captureRange);
         if (captureAction.getLocationsMap().isEmpty()) {
             next();
             return;
         }
         next(TowerCapturePhase.class);
-        notifyUI(captureAction, false);
+        game.post(new SelectActionEvent(getActivePlayer(), captureAction, false));
     }
 
     @Override
@@ -125,7 +129,7 @@ public class ActionPhase extends Phase {
         }
 
         game.getCapability(FairyCapability.class).setFairyPosition(p);
-        game.fireGameEvent().fairyMoved(p);
+        game.post(new FairyMovedEvent(getActivePlayer(), p));
         next();
     }
 
@@ -178,7 +182,7 @@ public class ActionPhase extends Phase {
     @Override
     public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
         flierCap.setFlierDistance(meepleType, distance);
-        game.fireGameEvent().flierRoll(getTile().getPosition(), distance);
+        game.post(new FlierRollEvent(getTile().getPosition(), distance));
         next(FlierActionPhase.class);
     }
 

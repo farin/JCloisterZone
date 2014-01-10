@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MeepleAction;
@@ -21,6 +22,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.MeepleUndeployedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -41,8 +43,9 @@ public class WagonCapability extends Capability {
         super(game);
     }
 
-    @Override
-    public void undeployed(Meeple m) {
+    @Subscribe
+    public void undeployed(MeepleUndeployedEvent ev) {
+        Meeple m = ev.getMeeple();
         if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
             returnedWagons.put(m.getPlayer(), m.getFeature());
         }

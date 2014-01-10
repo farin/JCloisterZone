@@ -24,6 +24,9 @@ import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.MeepleUndeployedEvent;
+import com.jcloisterzone.event.RansomPaidEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
@@ -198,12 +201,12 @@ public final class TowerCapability extends Capability {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
-                game.fireGameEvent().undeployed(meeple);
+                game.post(new MeepleUndeployedEvent(meeple));
                 meeple.clearDeployment();
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
-                game.fireGameEvent().ransomPaid(game.getActivePlayer(), opponent, meeple);
+                game.post(new RansomPaidEvent(game.getActivePlayer(), opponent, meeple));
                 game.getPhase().notifyRansomPaid();
                 return;
             }
@@ -252,7 +255,7 @@ public final class TowerCapability extends Capability {
             tower.setHeight(Integer.parseInt(te.getAttribute("height")));
             towers.add(towerPos);
             if (tower.getHeight() > 0) {
-                game.fireGameEvent().towerIncreased(towerPos, tower.getHeight());
+                game.post(new TowerIncreasedEvent(null, towerPos, tower.getHeight()));
             }
         }
         nl = node.getElementsByTagName("player");

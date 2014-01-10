@@ -7,17 +7,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Expansion;
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.DragonMovedEvent;
+import com.jcloisterzone.event.TilePlacedEvent;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 
 public class DragonCapability extends Capability {
@@ -33,12 +33,13 @@ public class DragonCapability extends Capability {
         super(game);
     }
 
-    @Override
-    public void tilePlaced(Tile tile) {
+    @Subscribe
+    public void tilePlaced(TilePlacedEvent ev) {
+        Tile tile = ev.getTile();
         if (tile.hasTrigger(TileTrigger.VOLCANO)) {
             setDragonPosition(tile.getPosition());
             getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
-            game.fireGameEvent().dragonMoved(tile.getPosition());
+            game.post(new DragonMovedEvent(null, tile.getPosition()));
         }
     }
 
@@ -169,7 +170,7 @@ public class DragonCapability extends Capability {
         if (nl.getLength() > 0) {
             Element dragon = (Element) nl.item(0);
             dragonPosition = XmlUtils.extractPosition(dragon);
-            game.fireGameEvent().dragonMoved(dragonPosition);
+            game.post(new DragonMovedEvent(null, dragonPosition));
             if (dragon.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));

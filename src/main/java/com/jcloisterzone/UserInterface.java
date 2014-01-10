@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Position;
 public interface UserInterface extends EventListener {
 
     void selectAction(List<PlayerAction> actions, boolean canPass);
+    void selectAnyTimeAction(List<PlayerAction> actions);
     void selectBazaarTile();
     void makeBazaarBid(int supplyIndex);
     void selectBuyOrSellBazaarOffer(int supplyIndex);

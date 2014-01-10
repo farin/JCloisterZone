@@ -315,6 +315,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     @Override
+    public void selectAnyTimeAction(List<PlayerAction> actions) {
+        interactionHandler.selectAnyTimeAction(actions);
+    }
+
+    @Override
     public void selectDragonMove(Set<Position> positions, int movesLeft) {
         interactionHandler.selectDragonMove(positions, movesLeft);
     }

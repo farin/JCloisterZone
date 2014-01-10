@@ -251,7 +251,8 @@ public class Snapshot implements Serializable {
                 capability.loadFromSnapshot(doc, el);
             } catch (Exception e) {
                 logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + capabilityName, e);
-                game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
+                //TODO show client error
+                //game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
             }
         }
     }

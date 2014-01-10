@@ -12,6 +12,7 @@ import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -81,7 +82,7 @@ public class CastlePhase extends Phase {
         Player player = game.getAllPlayers()[pi];
         castleCap.setCastlePlayer(player);
         Set<Location> locs = currentTileCastleBases.remove(player);
-        notifyUI(new CastleAction(getTile().getPosition(), locs), true);
+        game.post(new SelectActionEvent(player, new CastleAction(getTile().getPosition(), locs), true));
     }
 
     @Override

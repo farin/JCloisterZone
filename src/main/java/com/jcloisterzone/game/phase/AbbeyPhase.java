@@ -4,6 +4,8 @@ import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TilePlacedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -34,7 +36,7 @@ public class AbbeyPhase extends Phase {
         boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
         if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
-                notifyUI(new AbbeyPlacementAction(getBoard().getHoles()), true);
+                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction(getBoard().getHoles()), true));
                 return;
             }
         }
@@ -56,7 +58,7 @@ public class AbbeyPhase extends Phase {
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
 
-        game.fireGameEvent().tilePlaced(nextTile);
+        game.post(new TilePlacedEvent(getActivePlayer(), nextTile));
         next(ActionPhase.class);
     }
 }

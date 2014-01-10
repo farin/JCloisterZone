@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.TileDrawnEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -103,7 +104,7 @@ public class DrawPhase extends ServerAwarePhase {
             next(DrawPhase.class);
             return;
         }
-        game.fireGameEvent().tileDrawn(tile);
+        game.post(new TileDrawnEvent(getActivePlayer(), tile));
         next();
     }
 

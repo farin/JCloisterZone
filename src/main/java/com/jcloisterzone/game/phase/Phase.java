@@ -17,6 +17,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.event.ChatEvent;
+import com.jcloisterzone.event.PlayerSlotChangeEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
@@ -92,15 +94,6 @@ public abstract class Phase implements ClientIF {
 
     public Player getActivePlayer() {
         return game.getTurnPlayer();
-    }
-
-
-    protected void notifyUI(List<PlayerAction> actions, boolean canPass) {
-        game.getUserInterface().selectAction(actions, canPass);
-    }
-
-    protected void notifyUI(PlayerAction action, boolean canPass) {
-        game.getUserInterface().selectAction(Collections.singletonList(action), canPass);
     }
 
     /** handler called after game is load if this phase is active */
@@ -184,7 +177,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public void updateSlot(PlayerSlot slot) {
-        game.fireGameEvent().updateSlot(slot);
+        game.post(new PlayerSlotChangeEvent(slot));
     }
 
     @Override
@@ -236,7 +229,7 @@ public abstract class Phase implements ClientIF {
 
     @Override
     public final void chatMessage(Integer author, String message) {
-        game.getUserInterface().chatMessageReceived(game.getPlayer(author), message);
+        game.post(new ChatEvent(game.getPlayer(author), message));
     }
 
     @Override

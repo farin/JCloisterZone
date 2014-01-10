@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -28,7 +29,7 @@ public class FairyPhase extends Phase {
             for (Meeple m : game.getDeployedMeeples()) {
                 if (m.at(fairyPos) && m.getPlayer() == getActivePlayer()) {
                     m.getPlayer().addPoints(1, PointCategory.FAIRY);
-                    game.fireGameEvent().scored(m.getPosition(), m.getPlayer(), 1, "1", false);
+                    game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), 1, "1", false));
                     break;
                 }
             }

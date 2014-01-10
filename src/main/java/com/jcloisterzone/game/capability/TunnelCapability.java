@@ -20,6 +20,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -135,8 +136,8 @@ public final class TunnelCapability extends Capability {
         return p.getIndex() + (isB ? 100 : 0);
     }
 
-    public void placeTunnelPiece(Position p, Location d, boolean isB) {
-        Road road = (Road) getBoard().get(p).getFeature(d);
+    public void placeTunnelPiece(Position p, Location loc, boolean isB) {
+        Road road = (Road) getBoard().get(p).getFeature(loc);
         if (!road.isTunnelOpen()) {
             throw new IllegalStateException("No open tunnel here.");
         }
@@ -152,7 +153,7 @@ public final class TunnelCapability extends Capability {
         }
         road.setTunnelEnd(connectionId);
         placedTunnelCurrentTurn = road;
-        game.fireGameEvent().tunnelPiecePlaced(player, p, d, isB);
+        game.post(new TunnelPiecePlacedEvent(player, p, loc, isB));
     }
 
     @Override
@@ -184,7 +185,7 @@ public final class TunnelCapability extends Capability {
             Player player = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
             boolean isB = "yes".equals(el.getAttribute("b"));
             road.setTunnelEnd(getTunnelId(player, isB));
-            game.fireGameEvent().tunnelPiecePlaced(player, pos, loc, isB);
+            game.post(new TunnelPiecePlacedEvent(player, pos, loc, isB));
         }
     }
 

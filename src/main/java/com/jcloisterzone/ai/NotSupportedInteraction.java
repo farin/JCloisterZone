@@ -16,6 +16,11 @@ public class NotSupportedInteraction implements UserInterface {
     }
 
     @Override
+    public void selectAnyTimeAction(List<PlayerAction> actions) {
+        //empty
+    }
+
+    @Override
     public void selectBazaarTile() {
         throw new UnsupportedOperationException();
     }

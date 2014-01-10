@@ -14,13 +14,12 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.GameEventAdapter;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 
 
-public abstract class Capability extends GameEventAdapter {
+public abstract class Capability {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -79,6 +78,8 @@ public abstract class Capability extends GameEventAdapter {
     }
     public void postPrepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
     }
+//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
+//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return true;
