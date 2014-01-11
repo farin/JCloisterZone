@@ -3,7 +3,7 @@ package com.jcloisterzone.event;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
 
-public class CastleDeployedEvent extends Event {
+public class CastleDeployedEvent extends PlayEvent {
 
     private final Castle part1, part2;
 

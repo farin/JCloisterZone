@@ -22,7 +22,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.CastleDeployedEvent;
-import com.jcloisterzone.event.MeepleUndeployedEvent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -62,16 +62,14 @@ public class CastleCapability extends Capability {
     }
 
     @Subscribe
-    public void undeployed(MeepleUndeployedEvent ev) {
+    public void undeployed(MeepleEvent ev) {
         Meeple meeple = ev.getMeeple();
-        if (meeple.getFeature() instanceof Castle) {
+        if (ev.getType() == MeepleEvent.UNDEPLOY && meeple.getFeature() instanceof Castle) {
             Castle castle = (Castle) meeple.getFeature().getMaster();
             scoreableCastleVicinity.remove(castle);
             emptyCastles.add(castle);
         }
     }
-
-
 
     @Override
     public void initPlayer(Player player) {

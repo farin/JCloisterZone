@@ -5,7 +5,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.capability.BazaarItem;
 
-public class BazaarSelectTileEvent extends Event {
+public class BazaarSelectTileEvent extends PlayEvent {
 
     private List<BazaarItem> bazaarSupply;
 

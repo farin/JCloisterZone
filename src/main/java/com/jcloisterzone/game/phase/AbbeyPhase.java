@@ -5,7 +5,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -58,7 +58,7 @@ public class AbbeyPhase extends Phase {
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
 
-        game.post(new TilePlacedEvent(getActivePlayer(), nextTile));
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile));
         next(ActionPhase.class);
     }
 }

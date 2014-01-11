@@ -1,5 +1,6 @@
-package com.jcloisterzone.event;
+package com.jcloisterzone.event.setup;
 
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.game.CustomRule;
 
 public class RuleChangeEvent extends Event {

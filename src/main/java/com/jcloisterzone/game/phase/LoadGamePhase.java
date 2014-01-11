@@ -7,8 +7,8 @@ import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.BridgeDeployedEvent;
-import com.jcloisterzone.event.MeepleDeployedEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
@@ -59,7 +59,7 @@ public class LoadGamePhase extends CreateGamePhase {
             Tile preplaced = iter.next();
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.post(new TilePlacedEvent(null, preplaced));
+            game.post(new TileEvent(TileEvent.PLACEMENT, preplaced));
             if (preplaced.getBridge() != null) {
                 game.post(new BridgeDeployedEvent(null, preplaced.getPosition(), preplaced.getBridge().getLocation()));
             }
@@ -77,7 +77,7 @@ public class LoadGamePhase extends CreateGamePhase {
             }
             m.setFeature(f);
             f.addMeeple(m);
-            game.post(new MeepleDeployedEvent(m));
+            game.post(new MeepleEvent(MeepleEvent.DEPLOY, m));
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
     }

@@ -18,7 +18,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.ChatEvent;
-import com.jcloisterzone.event.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
@@ -71,6 +71,7 @@ public abstract class Phase implements ClientIF {
     /**
      * Method is invoked on active phase when user buy back inprisoned follower
      */
+    @Deprecated //generic approach to refresh actions
     public void notifyRansomPaid() {
         //do nothing by default
     }

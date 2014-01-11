@@ -12,7 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.ScoreEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
@@ -29,7 +29,8 @@ public class WindRoseCapability extends Capability {
     }
 
     @Subscribe
-    public void tilePlaced(TilePlacedEvent ev) {
+    public void tilePlaced(TileEvent ev) {
+        if (ev.getType() != TileEvent.PLACEMENT) return;
         Tile tile = ev.getTile();
         Location rose = tile.getWindRose();
         if (rose == null) return;

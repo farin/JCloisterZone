@@ -38,14 +38,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.event.Event;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
@@ -112,12 +109,7 @@ public class Client extends JFrame {
     //active player must be cached locally because of game's active player record is changed in other thread immediately
     private Player activePlayer;
 
-    private EventBus eventBus = new EventBus("UI event bus");
-
-    {
-        //TODO particular components register
-        eventBus.register(controller);
-    }
+    private EventBus eventBus;
 
     protected ClientStub getClientStub() {
         return (ClientStub) Proxy.getInvocationHandler(server);
@@ -335,6 +327,7 @@ public class Client extends JFrame {
             discardedTilesDialog = null;
             getJMenuBar().setShowDiscardedEnabled(false);
         }
+        eventBus = null;
         return true;
     }
 
@@ -354,6 +347,8 @@ public class Client extends JFrame {
 
     public void setGame(Game game) {
         this.game = game;
+        this.eventBus = new EventBus("UI event bus");
+        eventBus.register(controller);
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 

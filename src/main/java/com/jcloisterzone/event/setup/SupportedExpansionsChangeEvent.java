@@ -1,8 +1,9 @@
-package com.jcloisterzone.event;
+package com.jcloisterzone.event.setup;
 
 import java.util.EnumSet;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.event.Event;
 
 public class SupportedExpansionsChangeEvent extends Event {
 

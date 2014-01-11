@@ -12,8 +12,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.FairyMovedEvent;
 import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.City;
@@ -129,7 +129,7 @@ public class ActionPhase extends Phase {
         }
 
         game.getCapability(FairyCapability.class).setFairyPosition(p);
-        game.post(new FairyMovedEvent(getActivePlayer(), p));
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), p));
         next();
     }
 
@@ -182,7 +182,7 @@ public class ActionPhase extends Phase {
     @Override
     public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
         flierCap.setFlierDistance(meepleType, distance);
-        game.post(new FlierRollEvent(getTile().getPosition(), distance));
+        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
         next(FlierActionPhase.class);
     }
 

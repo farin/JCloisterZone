@@ -6,7 +6,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 
-public class SelectActionEvent extends Event {
+public class SelectActionEvent extends PlayEvent {
 
     private final boolean passAllowed;
     private final List<PlayerAction> actions;

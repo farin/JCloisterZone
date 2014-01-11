@@ -4,7 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 
-public class TunnelPiecePlacedEvent extends Event {
+public class TunnelPiecePlacedEvent extends PlayEvent {
 
     private boolean secondPiece;
 

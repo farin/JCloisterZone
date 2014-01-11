@@ -27,27 +27,21 @@ import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
-import com.jcloisterzone.event.DragonMovedEvent;
-import com.jcloisterzone.event.ExpansionChangedEvent;
-import com.jcloisterzone.event.FairyMovedEvent;
 import com.jcloisterzone.event.FlierRollEvent;
-import com.jcloisterzone.event.GameOverEvent;
-import com.jcloisterzone.event.GameStartEvent;
-import com.jcloisterzone.event.MeepleDeployedEvent;
-import com.jcloisterzone.event.MeepleUndeployedEvent;
-import com.jcloisterzone.event.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
-import com.jcloisterzone.event.RansomPaidEvent;
-import com.jcloisterzone.event.RuleChangeEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
-import com.jcloisterzone.event.SupportedExpansionsChangeEvent;
-import com.jcloisterzone.event.TileDiscardedEvent;
-import com.jcloisterzone.event.TileDrawnEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.event.TunnelPiecePlacedEvent;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -110,7 +104,19 @@ public class ClientController  {
     }
 
     @Subscribe
-    public void started(GameStartEvent ev) {
+    public void gameStateChange(GameStateChangeEvent ev) {
+        switch (ev.getType()) {
+        case GameStateChangeEvent.GAME_START:
+            started(ev);
+            break;
+        case GameStateChangeEvent.GAME_OVER:
+            client.closeGame(true);
+            new GameOverDialog(client);
+            break;
+        }
+    }
+
+    private void started(GameStateChangeEvent ev) {
         client.cleanContentPane();
 
         Container pane = client.getContentPane();
@@ -174,31 +180,40 @@ public class ClientController  {
     }
 
     @Subscribe
-    public void tileDrawn(TileDrawnEvent ev) {
-        client.clearActions();
-        refreshWindowTitle();
-    }
-
-    @Subscribe
-    public void tileDiscarded(TileDiscardedEvent ev) {
-        DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
-        if (discardedTilesDialog == null) {
-            discardedTilesDialog = new DiscardedTilesDialog(client);
-            client.setDiscardedTilesDialog(discardedTilesDialog);
-            client.getJMenuBar().setShowDiscardedEnabled(true);
+    public void tileEvent(TileEvent ev) {
+        switch (ev.getType()) {
+        case TileEvent.DRAW:
+            client.clearActions();
+            refreshWindowTitle();
+            break;
+        case TileEvent.DISCARD:
+            DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
+            if (discardedTilesDialog == null) {
+                discardedTilesDialog = new DiscardedTilesDialog(client);
+                client.setDiscardedTilesDialog(discardedTilesDialog);
+                client.getJMenuBar().setShowDiscardedEnabled(true);
+            }
+            discardedTilesDialog.addTile(ev.getTile());
+            discardedTilesDialog.setVisible(true);
+            break;
+        case TileEvent.PLACEMENT:
+            client.getMainPanel().tilePlaced(ev.getTile());
+            break;
         }
-        discardedTilesDialog.addTile(ev.getTile());
-        discardedTilesDialog.setVisible(true);
+
+
     }
 
     @Subscribe
-    public void tilePlaced(TilePlacedEvent ev) {
-        client.getMainPanel().tilePlaced(ev.getTile());
-    }
-
-    @Subscribe
-    public void dragonMoved(DragonMovedEvent ev) {
-        client.getMainPanel().dragonMoved(ev.getPosition());
+    public void dragonMoved(NeutralFigureMoveEvent ev) {
+        switch (ev.getType()) {
+        case NeutralFigureMoveEvent.DRAGON:
+            client.getMainPanel().dragonMoved(ev.getPosition());
+            break;
+        case NeutralFigureMoveEvent.FAIRY:
+            client.getMainPanel().fairyMoved(ev.getPosition());
+            break;
+        }
     }
 
     @Subscribe
@@ -206,20 +221,10 @@ public class ClientController  {
         client.getMainPanel().tunnelPiecePlaced(ev.getPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
     }
 
-    @Subscribe
-    public void gameOver(GameOverEvent ev) {
-        client.closeGame(true);
-        new GameOverDialog(client);
-    }
 
     @Subscribe
     public void flierRoll(FlierRollEvent ev) {
         client.getMainPanel().flierRoll(ev.getPosition(), ev.getDistance());
-    }
-
-    @Subscribe
-    public void fairyMoved(FairyMovedEvent ev) {
-        client.getMainPanel().fairyMoved(ev.getPosition());
     }
 
     @Subscribe
@@ -228,22 +233,25 @@ public class ClientController  {
         client.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
     }
 
-    @Subscribe
-    public void ransomPaid(RansomPaidEvent ev) {
-        client.getGridPanel().repaint();
-    }
-
     // ------------------ Meeple events -----------
 
     @Subscribe
-    public void deployed(MeepleDeployedEvent ev) {
-        client.getMainPanel().deployed(ev.getMeeple());
+    public void meepleEvent(MeepleEvent ev) {
+        switch (ev.getType()) {
+        case MeepleEvent.DEPLOY:
+            client.getMainPanel().deployed(ev.getMeeple());
+            break;
+        case MeepleEvent.UNDEPLOY:
+            client.getMainPanel().undeployed(ev.getMeeple());
+            break;
+        case MeepleEvent.PRISON:
+        case MeepleEvent.RELEASE:
+            client.getGridPanel().repaint();
+            break;
+        }
+
     }
 
-    @Subscribe
-    public void undeployed(MeepleUndeployedEvent ev) {
-        client.getMainPanel().undeployed(ev.getMeeple());
-    }
 
     @Subscribe
     public void bridgeDeployed(BridgeDeployedEvent ev) {

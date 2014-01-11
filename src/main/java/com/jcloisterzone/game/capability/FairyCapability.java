@@ -13,7 +13,7 @@ import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.FairyMovedEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
@@ -76,7 +76,7 @@ public class FairyCapability extends Capability {
         if (nl.getLength() > 0) {
             Element fairy = (Element) nl.item(0);
             fairyPosition = XmlUtils.extractPosition(fairy);
-            game.post(new FairyMovedEvent(null, fairyPosition));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, null, fairyPosition));
         }
     }
 }

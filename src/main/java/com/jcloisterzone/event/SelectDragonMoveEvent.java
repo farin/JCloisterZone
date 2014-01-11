@@ -5,7 +5,7 @@ import java.util.Set;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 
-public class SelectDragonMoveEvent extends Event {
+public class SelectDragonMoveEvent extends PlayEvent {
 
     private final Set<Position> positions;
     private final int movesLeft;

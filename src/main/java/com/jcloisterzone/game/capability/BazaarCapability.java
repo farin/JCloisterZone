@@ -13,7 +13,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.event.TileDrawnEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -165,8 +165,8 @@ public class BazaarCapability extends Capability {
     }
 
     @Subscribe
-    public void tileDrawn(TileDrawnEvent ev) {
-        if (ev.getTile().hasTrigger(TileTrigger.BAZAAR)) {
+    public void tileDrawn(TileEvent ev) {
+        if (ev.getType() == TileEvent.DRAW && ev.getTile().hasTrigger(TileTrigger.BAZAAR)) {
             bazaarTriggered = true;
         }
     }

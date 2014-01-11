@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.DragonMovedEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -60,7 +60,7 @@ public class DragonMovePhase extends Phase {
                 m.undeploy();
             }
         }
-        game.post(new DragonMovedEvent(player, p));
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, p));
         selectDragonMove();
     }
 

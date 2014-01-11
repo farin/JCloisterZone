@@ -4,7 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 
-public class FeatureCompletedEvent extends Event {
+public class FeatureCompletedEvent extends PlayEvent {
 
     private final Completable feature;
     private final CompletableScoreContext scoreContent;

@@ -1,6 +1,7 @@
-package com.jcloisterzone.event;
+package com.jcloisterzone.event.setup;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.event.Event;
 
 public class ExpansionChangedEvent extends Event {
 

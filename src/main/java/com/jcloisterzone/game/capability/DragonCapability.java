@@ -14,8 +14,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.event.DragonMovedEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -34,12 +34,12 @@ public class DragonCapability extends Capability {
     }
 
     @Subscribe
-    public void tilePlaced(TilePlacedEvent ev) {
+    public void tilePlaced(TileEvent ev) {
         Tile tile = ev.getTile();
-        if (tile.hasTrigger(TileTrigger.VOLCANO)) {
+        if (ev.getType() == TileEvent.PLACEMENT && tile.hasTrigger(TileTrigger.VOLCANO)) {
             setDragonPosition(tile.getPosition());
             getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
-            game.post(new DragonMovedEvent(null, tile.getPosition()));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, tile.getPosition()));
         }
     }
 
@@ -170,7 +170,7 @@ public class DragonCapability extends Capability {
         if (nl.getLength() > 0) {
             Element dragon = (Element) nl.item(0);
             dragonPosition = XmlUtils.extractPosition(dragon);
-            game.post(new DragonMovedEvent(null, dragonPosition));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, dragonPosition));
             if (dragon.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));

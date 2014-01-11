@@ -2,7 +2,6 @@ package com.jcloisterzone.board;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Collections2;
-import com.jcloisterzone.event.TileDiscardedEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 
@@ -163,7 +161,7 @@ public class Board {
 
     public void discardTile(Tile tile) {
         discardedTiles.add(tile);
-        game.post(new TileDiscardedEvent(tile));
+        game.post(new TileEvent(TileEvent.DISCARD, tile));
     }
 
 

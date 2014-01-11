@@ -25,6 +25,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.City;

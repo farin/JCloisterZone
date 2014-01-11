@@ -22,7 +22,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.MeepleUndeployedEvent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -44,9 +44,9 @@ public class WagonCapability extends Capability {
     }
 
     @Subscribe
-    public void undeployed(MeepleUndeployedEvent ev) {
+    public void undeployed(MeepleEvent ev) {
         Meeple m = ev.getMeeple();
-        if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
+        if (ev.getType() == MeepleEvent.UNDEPLOY && m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
             returnedWagons.put(m.getPlayer(), m.getFeature());
         }
     }

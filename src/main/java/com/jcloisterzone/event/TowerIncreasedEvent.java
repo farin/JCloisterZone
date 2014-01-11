@@ -3,7 +3,7 @@ package com.jcloisterzone.event;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 
-public class TowerIncreasedEvent extends Event {
+public class TowerIncreasedEvent extends PlayEvent {
 
     private final int captureRange;
 

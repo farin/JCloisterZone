@@ -1,7 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.event.GameOverEvent;
+import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
@@ -34,7 +34,7 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
         scoreAll.scoreAll(game, this);
 
         game.finalScoring();
-        game.post(new GameOverEvent());
+        game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_OVER));
     }
 
     @Override

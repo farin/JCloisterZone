@@ -5,7 +5,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 
-public class ScoreEvent extends Event {
+public class ScoreEvent extends PlayEvent {
 
     //TODO fields revision
 

@@ -4,8 +4,7 @@ import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.MeepleDeployedEvent;
-import com.jcloisterzone.event.MeepleUndeployedEvent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
 
@@ -87,7 +86,7 @@ public abstract class Meeple extends Figure {
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
-        game.post(new MeepleDeployedEvent(this));
+        game.post(new MeepleEvent(MeepleEvent.DEPLOY, this));
     }
 
     public final void undeploy() {
@@ -96,7 +95,7 @@ public abstract class Meeple extends Figure {
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
         assert location != null && location != Location.PRISON;
-        game.post(new MeepleUndeployedEvent(this));
+        game.post(new MeepleEvent(MeepleEvent.UNDEPLOY, this));
         feature.removeMeeple(this);
         clearDeployment();
     }
