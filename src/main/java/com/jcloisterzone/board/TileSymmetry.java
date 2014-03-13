@@ -18,19 +18,19 @@ public enum TileSymmetry {
         if (tile.getWindRose() != null) {
             return TileSymmetry.NONE;
         }
-        TileSymmetry symetry = countBaseSymetry(tile);
+        TileSymmetry symmetry = countBaseSymmetry(tile);
         Location river = tile.getRiver();
         if (river != null) {
             if (river == Location.WE || river == Location.NS) {
-                if (symetry == TileSymmetry.S4) symetry = TileSymmetry.S2;
+                if (symmetry == TileSymmetry.S4) symmetry = TileSymmetry.S2;
             } else {
-                symetry = TileSymmetry.NONE;
+                symmetry = TileSymmetry.NONE;
             }
         }
-        return symetry;
+        return symmetry;
     }
 
-    private static TileSymmetry countBaseSymetry(Tile tile) {
+    private static TileSymmetry countBaseSymmetry(Tile tile) {
         for (Feature piece : tile.getFeatures()) {
             if (piece instanceof Road|| piece instanceof City) {
                 Feature opposite = tile.getFeature(piece.getLocation().rev());
