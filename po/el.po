@@ -1,0 +1,740 @@
+# Greek Translation
+# Autor initial: Peter J. Athaks <athaks@gmail.com>
+# Copyright (C) 2014
+# This file is distributed under the same license as the JCloisterZone package.
+# PETER ATHAKS <ATHAKS@GMAIL.COM>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-07 23:56+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Peter J. Athaks <athaks@gmail.com>\n"
+"Language-Team: Athaks Family <athaks@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:40
+msgid "Basic game"
+msgstr "Βασικό παιχνίδι"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:41
+msgid "Wheel of Fortune"
+msgstr "Τροχός της Τύχης"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:44
+msgid "Winter Edition"
+msgstr "Χειμερινή Έκδοση"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:45
+msgid "The Gingerbread man"
+msgstr "Ο Μελοπιτάνρθωπος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:48
+msgid "Inns & Cathedrals"
+msgstr "Πανδοχεία & Καθεδρικοί ναοί"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:50
+msgid "Traders & Builders"
+msgstr "Πραματευτές & Χτίστες"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:52
+msgid "The Princess & the Dragon"
+msgstr "Η Πριγκίπισσα & ο Δράκος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:54
+msgid "The Tower"
+msgstr "Ο Πύργος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:56
+msgid "Abbey & Mayor"
+msgstr "Αβαείο & Δήμαρχος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:58
+msgid "The Catapult"
+msgstr "Ο Καταπέλτης"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:58
+#: src/main/java/com/jcloisterzone/Expansion.java:68
+#: src/main/java/com/jcloisterzone/Expansion.java:73
+msgid "tiles only"
+msgstr "μόνο κομμάτια"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:59
+msgid "Bridges, Castles and Bazaars"
+msgstr "Γέφυρες, Κάστρα και Παζάρια"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:63
+msgid "King and Robber Baron"
+msgstr "Ο Βασιλιάς και o Ληστής Βαρώνος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:64
+msgid "The River"
+msgstr "Το Ποτάμι"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:65
+msgid "The River II"
+msgstr "Το Ποτάμι 2"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:66
+msgid "The Cathars / Siege"
+msgstr "Οι Καθαροί / Πολιορκία"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:67
+msgid "The Besiegers"
+msgstr "Οι Πολιορκητές"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:68
+msgid "The Count of Carcassonne"
+msgstr "Ο Κόμης του Καρκασσόν"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:69
+msgid "The Mini Expansion (GQ11)"
+msgstr "Μίνι Επέκταση (GQ11)"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:70
+msgid "The Cult"
+msgstr "Η Λατρεία"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:71
+msgid "The Tunnel"
+msgstr "Η Σήραγγα"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:72
+msgid "The Corn Circles"
+msgstr "Τα Αγρογλυφικά"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:73
+msgid "The Plague"
+msgstr "Η Πανούκλα"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:74
+msgid "The Phantom"
+msgstr "Το Φάντασμα"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:75
+msgid "The Festival (10th an.)"
+msgstr "Το Πανηγύρι (10χρ. επετειακό)"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:76
+msgid "Little Buildings"
+msgstr "Μικρά Κτίρια"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:77
+msgid "The Wind Rose"
+msgstr "Το Άγριο Τριαντάφυλλο"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:80
+msgid "The Flier"
+msgstr "Ο Αεροπόρος"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:81
+msgid "The Messages"
+msgstr "Τα Μηνύματα"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:82
+msgid "The Ferries"
+msgstr "Οι Νεράιδες"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:83
+msgid "The Goldmines"
+msgstr "Οι Χρυσωρύχοι"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:84
+msgid "Mage & Witch"
+msgstr "Μάγος & Μάγισσα"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:85
+msgid "The Robber"
+msgstr "Ο Ληστής"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:86
+msgid "The Corn circles II"
+msgstr "Τα Αγρογλυφικά 2"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:89
+msgid "The school"
+msgstr "Το σχολείο"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:90
+msgid "La porxada"
+msgstr "Η βεράντα"
+
+#: src/main/java/com/jcloisterzone/feature/Bridge.java:8
+msgid "Bridge"
+msgstr "Γέφυρα"
+
+#: src/main/java/com/jcloisterzone/feature/Castle.java:58
+msgid "Castle"
+msgstr "Κάστρο"
+
+#: src/main/java/com/jcloisterzone/feature/City.java:65
+msgid "City"
+msgstr "Πόλη"
+
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:41
+msgid "Cloister"
+msgstr "Μοναστήρι"
+
+#: src/main/java/com/jcloisterzone/feature/Farm.java:56
+msgid "Farm"
+msgstr "Χωράφι"
+
+#: src/main/java/com/jcloisterzone/feature/Road.java:67
+msgid "Road"
+msgstr "Δρόμος"
+
+#: src/main/java/com/jcloisterzone/feature/Tower.java:33
+msgid "Tower"
+msgstr "Πύργος"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:10
+msgid "Randomize seating order"
+msgstr "Τυχαία σειρά παιξίματος"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:12
+msgid "Tiny city is scored only for 2 points."
+msgstr "Η μικρότερη πόλη παίρνει μόνο 2 βαθμούς"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:14
+msgid "Princess MUST remove a knight from city."
+msgstr "Η Πριγκίπισσα υποχρεωτικά αφαιρεί ένα Ιππότη από την πόλη"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:15
+msgid "Dragon movement occurs after scoring."
+msgstr "Ο Δράκος κινείται μετά την βαθμολόγηση."
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:17
+msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
+msgstr "Μοναστήρι διαφυγής μπορεί να τοποθετηθεί κολλητά σε κομμάτι πολιορκημένης πόλης."
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:19
+msgid "The Pig herd is present on the farm tile."
+msgstr "Το κοπάδι των Γουρουνιών βρίσκεται στο κομμάτι με το χωράφι"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:21
+msgid ""
+"Allow direct barn placement on a farm where another barn is already placed."
+msgstr "Να επιτρέπεται η απευθείας τοποθέτηση μιας σιταποθήκης σε ένα χωράφι, όταν μια άλλη είναι ήδη τοποθετημένη"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:23
+msgid "Apply tunnel rule on tunnels from other expansions."
+msgstr "Εφαρμογή του κανόνα της σήραγγας σε σήραγγες άλλων επεκτάσεων"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:25
+msgid "No bazaar bidding. Each players just choose one tile."
+msgstr "Καθόλου προσφορές για το παζάρι. Κάθε παίκτης απλά διαλέγει ένα κομμάτι"
+
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:87
+msgid ""
+"Remote JCloisterZone is not compatible with local application. Please "
+"upgrade both applications to same version."
+msgstr ""
+"Η απομακρυσμένη JCloisterZone δέν είναι συμβατή με την τοπική έκδοση"
+"Χρησιμοποιήστε την ίδια έκδοση και στις δύο μεριές"
+
+#: src/main/java/com/jcloisterzone/game/GuiClientStub.java:88
+msgid "Incompatible versions"
+msgstr "Μη συμβατές εκδόσεις της εφαρμογής"
+
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid "Load error"
+msgstr "Σφάλμα ανάκτησης"
+
+#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
+msgid ""
+"Saved game is incompatible or file is corrupted. Game couldn't work properly."
+msgstr ""
+"Το αποθηκευμένο παιχνίδι δεν είναι συμβατό ή το αρχείο είναι κατεστραμμένο"
+"Το παιχνίδι δεν μπορεί να λειτουργήσει κανονικά"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:65
+msgid "Close game"
+msgstr "Κλείσιμο παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:313
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:81
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
+msgid ""
+"Game is running. Do you really want to quit game and also disconnect all "
+"other players?"
+msgstr ""
+"Το παιχνίδι βρίσκεται σε εξέλιξη."
+"Είστε βέβαιος/η ότι επιθυμείτε να τερματιστεί και να αποσυνδεθούν όλοι οι παίκτες;"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:304
+msgid "Game is running. Do you really want to leave it?"
+msgstr "Το παιχνίδι βρίσκεται σε εξέλιξη, Είστε βέβαιος/η ότι επιθυμείτε να το εγκαταλείψετε"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:367
+msgid "Save game"
+msgstr "Αποθήκευση παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:387
+#: src/main/java/com/jcloisterzone/ui/Client.java:401
+#: src/main/java/com/jcloisterzone/ui/Client.java:424
+#: src/main/java/com/jcloisterzone/ui/Client.java:427
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:409
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
+msgid "Load game"
+msgstr "Ανάκτηση παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:490
+msgid "JCloisterZone "
+msgstr "JCloisterZone"
+
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:153
+msgid "%d tiles left"
+msgstr "απομένουν %d κομμάτια"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
+msgid "Game"
+msgstr "Παιχνίδι"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:48
+msgid "New game"
+msgstr "Νέο παιχνίδι"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:66
+msgid "Connect"
+msgstr "Σύνδεση"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:77
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:249
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:87
+msgid "Load"
+msgstr "Ανάκτηση"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:99
+msgid "Quit"
+msgstr "Έξοδος"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:112
+msgid "Window"
+msgstr "Παράθυρο"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:113
+msgid "Zoom in"
+msgstr "Μεγέθυνση"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:122
+msgid "Zoom out"
+msgstr "Σμίκρυνση"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:146
+msgid "Show last placements"
+msgstr "Προβολή τελευταίων τοποθετήσεων"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:157
+msgid "Show farm hints"
+msgstr "Εμφάνιση κατάστασης χωραφιών"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:168
+msgid "Show discarded tiles"
+msgstr "Προβολή κομματιών που απορρίφθηκαν"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:181
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:182
+msgid "Beep alert at player turn"
+msgstr "Ήχος ειδοποίησης στη σειρά του παίκτη"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:195
+msgid "Confirm placement on a farm"
+msgstr "Επιβεβαίωση όταν γίνεται τοποθέτηση σε χωράφι"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:206
+msgid "Confirm placement on a tower"
+msgstr "Επιβεβαίωση όταν γίνεται τοποθέτηση σε πύργο"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:316
+msgid "Confirm ransom payment"
+msgstr "Επιβεβαίωση όταν γίνεται πληρωμή λύτρων"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:230
+msgid "Confirm game close"
+msgstr "Επιβεβαίωση όταν κλείνει το παιχνίδι"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:247
+msgid "About"
+msgstr "Σχετικά"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:257
+#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:38
+msgid "Controls"
+msgstr "Χειρισμός"
+
+#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
+msgid "JCloisterZone saved games"
+msgstr "Αποθηκευμένα παιχνίδια JCloisterZone"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ChatPanel.java:166
+msgid "Type to chat"
+msgstr "Πληκτρολόγησε για να συνομιλήσεις"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
+msgid "Skip"
+msgstr "Παράλειψη"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:313
+msgid "Pay ransom"
+msgstr "Πληρωμή λύτρων"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:315
+msgid "Do you really want to pay 3 points to release prisoner?"
+msgstr "Θέλεις σίγουρα να πληρώσεις 3 βαθμούς για την απελευθέρωση κρατουμένου;"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
+msgid "About application"
+msgstr "Σχετικά με την εφαρμογή"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:64
+msgid "Version"
+msgstr "Έκδοση"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:68
+msgid ""
+"Distributed under the terms of GNU Affero General Public License version 3"
+msgstr ""
+"Διανέμεται υπό των όρων της αδείας GNU Affero General Public License version 3"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:34
+msgid "Undeploy meeple"
+msgstr "Αποδέσμευση ακολούθου"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:41
+msgid "Select meeple to undeploy"
+msgstr "Επιλέξτε τον ακόλουθο που θα αποδεσμευτεί"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
+msgid "Discarded tiles"
+msgstr "Απορριμμένα κομμάτια"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
+msgid "These tiles have been discarded during the game"
+msgstr "Αυτά τα κομμάτια απορρίφθηκαν κατά την διάρκεια του παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:35
+msgid "Game overview"
+msgstr "Επισκόπηση παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:44
+msgid "Player"
+msgstr "Παίκτης"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:45
+msgid "Rank"
+msgstr "Κατάταξη"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:46
+msgid "Total points"
+msgstr "Σύνολο βαθμών"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:48
+msgid "Roads"
+msgstr "Δρόμοι"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:49
+msgid "Cities"
+msgstr "Πόλεις"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:50
+msgid "Cloisters"
+msgstr "Μοναστήρια"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:51
+msgid "Farms"
+msgstr "Χωράφια"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:52
+msgid "Castles"
+msgstr "Κάστρα"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:54
+msgid "The biggest city"
+msgstr "Η μεγαλύτερη πόλη"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:55
+msgid "The longest road"
+msgstr "Ο μακρύτερος δρόμος"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:57
+msgid "Trade goods"
+msgstr "Εμπορικά αγαθά"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:58
+msgid "Fairy"
+msgstr "Νεράιδα"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:59
+msgid "Tower ransom"
+msgstr "Λύτρα πύργου"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:60
+msgid "Bazaars"
+msgstr "Παζάρια"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:61
+msgid "Wind rose"
+msgstr "Ρόδο του ανέμου"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
+msgid "Choose your tile."
+msgstr "Επέλεξε το κομμάτι σου"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:152
+msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
+msgstr "<html>Επέλεξε κομμάτι για την επόμενη δημοπρασία<br>και κάνε μια αρχική προσφορά.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:157
+msgid "Raise bid or pass."
+msgstr "Αύξησε την προσφορά ή πήγαινε πάσο"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:161
+msgid "Buy or sell tile from latest bidder."
+msgstr "Αγόρασε η πούλησε κομμάτι στόν/από τον τελευταίο πλειοδότης"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:166
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:168
+msgid "points"
+msgstr "βαθμοί"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:203
+msgid "Buy"
+msgstr "Αγορά"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:204
+msgid "Sell"
+msgstr "Πώληση"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+msgid "Select"
+msgstr "Επιλογή"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+msgid "Bid"
+msgstr "Προσφορά"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:223
+msgid "Pass"
+msgstr "Πάσο"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:314
+msgid "Bazaar supply"
+msgstr "προμήθεια Παζαριού"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
+msgid "Each player…"
+msgstr "Κάθε παίκτης…"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
+msgid "may deploy additional follower"
+msgstr "μπορεί να τοποθετήσει επιπρόσθετο ακόλουθο"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:50
+msgid "must remove follower"
+msgstr "υποχρεωτική απομάκρυνση ακολούθου"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:63
+#, java-format
+msgid "on/from a {0}."
+msgstr "επί ενός / από ένα {0}."
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:98
+msgid "Corn circle"
+msgstr "Αγρογλυφικό"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
+msgid "Place a follower"
+msgstr "Τοποθέτησε ένα ακόλουθο"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:59
+msgid "Do you really want to place a follower on farm?"
+msgstr "Σίγουρα επιθυμείς να τοποθετήσεις ένα ακόλουθο στο χωράφι;"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:60
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:76
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:80
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:85
+msgid "Confirm follower placement"
+msgstr "Επιβεβαίωσε την τοποθέτηση του ακόλουθου"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
+msgid "Place a tower piece"
+msgstr "Τοποθέτησε ένα κομμάτι του πύργου"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:75
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:84
+msgid ""
+"Do you really want to place a follower on the tower?\n"
+"(To prevent tower from adding more pieces on the top)"
+msgstr ""
+"Είσαι σίγουρος ότι θέλεις να τοποθετήσεις έναν ακόλουθο στον πύργο;"
+"(για να εμποδίσεις της τοποθέτηση επιπλέον κομματιών στην κορυφή του)"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:46
+msgid "Connecting"
+msgstr "Σύνδεση..."
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:63
+msgid "Host"
+msgstr "Υπολογιστής"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:74
+msgid "Port"
+msgstr "Θύρα"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:131
+msgid "Invalid port number."
+msgstr "Άκυρος αριθμός θύρας"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:133
+msgid "Connection failed. Unknown host."
+msgstr "Αποτυχία σύνδεσης. Άγνωστος υπολογιστής"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
+msgid "Connection refused."
+msgstr "Άρνηση σύνδεσης"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
+msgid "Connection failed."
+msgstr "Αποτυχία σύνδεσης."
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:124
+msgid "Start game"
+msgstr "Έναρξη παιχνιδιού"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:140
+msgid "Players"
+msgstr "Παίκτες"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:158
+msgid "Expansions"
+msgstr "Επεκτάσεις"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:172
+msgid "Rules"
+msgstr "Κανόνες"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:197
+msgid "Presets"
+msgstr "Προεπιλογές"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:217
+msgid "Preset name"
+msgstr "Προεπιλεγμένο όνομα"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:276
+msgid "Delete"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:143
+msgid "Unassigned player"
+msgstr "Αναίρεση εκχώρησης παίκτη"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:175
+msgid "Local player"
+msgstr "Τοπικός παίκτης"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:151
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:179
+msgid "Remote player"
+msgstr "Απομακρυσμένος παίκτης"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:185
+msgid "Computer player"
+msgstr "Τεχνητή νοημοσύνη (υπολογιστής)"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:169
+msgid "Open player slot"
+msgstr "Ανοιχτή θέση για παίχτη"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:16
+msgid ""
+"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
+"scroll the board. Click with <b>middle</b> mouse button to center the board. "
+"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr ""
+"<html>Χρησιμοποίησε τα <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ή <b>τα βελάκια</b> για "
+"μετακινηθήτε επιφάνεια. Πατήστε το <b>μεσαίο</b> κουμπί του ποντικιού για να κεντράρετε.<br/>"
+"Μεγένθυση με το <b>+</b> ή σμίκρυνση με το <b>-</b> πλήκτρο η χρησιμοποιώντας την <b>ροδέλα</b> του ποντικιού.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
+msgid ""
+"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
+"by <b>left</b> click.</html>"
+msgstr ""
+"<html>Περιστρέψτε ένα κομμάτι με το <b>Tab</b> κουμπί ή με το <b>δεξί</b> κουμπί του ποντικιού. "
+"Τοποθετήστε το με το <b>αριστερό</b> κουμπί του ποντικιού.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
+msgid ""
+"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
+"select appropriate action.</html>"
+msgstr ""
+"<html>Όταν ένα κομάτι τοποθετείται, χρησιμοποιήστε το <b>Tab</b> η το <b>δεξί κουμπί</b> του ποντικιού ξανά για να "
+"επιλέξετε την κατάλληλη ενέργεια.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
+msgid ""
+"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
+"no action.</html>"
+msgstr ""
+"<html>Εναλλακτικά μπορείτε να πάτε πάσο με το πλήκτρο <b>Enter</b> ή το <b>Space</b> για να μην κάνετε "
+"καμία ενέργεια.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:31
+msgid ""
+"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"tiles.</html>"
+msgstr "<html>Χρησιμοποιήστε το <b>F</b> για χρωματισμό / αποχρωματισμό χωραφιών, η το <b>X</b> για να δείτε την τελευταία κίνηση "
+"κομματιών.</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:57
+msgid ""
+"Create a new local or network game. You can play against any number of "
+"computer players."
+msgstr ""
+"Δημιουργήστε ένα τοπικό ή δικτυακό παιχνίδι. Μπορείτε να παίξετε με οποιονδήποτε αριθμό "
+"παικτών που τους χειρίζεται ο υπολογιστής."
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
+msgid "Connect to a remote JCloisterZone application with settled new game."
+msgstr "Συνδεθείτε με μία απομακρυσμένη JCloisterZone εφαρμογή που έχει ήδη παιχνίδι σε εξέλιξη"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:93
+msgid "Load from a file previously saved game."
+msgstr "Ανάκτηση από ήδη αποθηκευμένο παιχνίδι."
