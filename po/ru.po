@@ -26,11 +26,11 @@ msgstr "Колесо Фортуны"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Winter Edition"
-msgstr ""
+msgstr "Каркассон. Зимний праздник"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "The Gingerbread man"
-msgstr ""
+msgstr "Пряничный человечек"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "Inns & Cathedrals"
@@ -68,7 +68,7 @@ msgstr "Мосты, Замки и Базары"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "King and Robber Baron"
-msgstr ""
+msgstr "Король и Разбойник"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:64
 msgid "The River"
@@ -121,35 +121,35 @@ msgstr "Фестиваль (Юбилейное изд.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "Little Buildings"
-msgstr ""
+msgstr "Маленькие домики"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Wind Rose"
-msgstr ""
+msgstr "Роза Ветров"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Flier"
-msgstr ""
+msgstr "Летающие машины"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "The Messages"
-msgstr ""
+msgstr "Депеши"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The Ferries"
-msgstr ""
+msgstr "Паромы"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The Goldmines"
-msgstr ""
+msgstr "Золотые Копи"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "Mage & Witch"
-msgstr ""
+msgstr "Маг и Ведьма"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Robber"
-msgstr ""
+msgstr "Грабители"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Corn circles II"
@@ -157,43 +157,43 @@ msgstr "Круги на полях II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The school"
-msgstr ""
+msgstr "Школа"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "La porxada"
-msgstr ""
+msgstr "La Porxada"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
-msgstr ""
+msgstr "Мост"
 
 #: src/main/java/com/jcloisterzone/feature/Castle.java:58
 msgid "Castle"
-msgstr ""
+msgstr "Замок"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:41
 msgid "Cloister"
-msgstr ""
+msgstr "Монастырь"
 
 #: src/main/java/com/jcloisterzone/feature/Farm.java:56
 msgid "Farm"
-msgstr ""
+msgstr "Поле"
 
 #: src/main/java/com/jcloisterzone/feature/Road.java:67
 msgid "Road"
-msgstr ""
+msgstr "Дорога"
 
 #: src/main/java/com/jcloisterzone/feature/Tower.java:33
 msgid "Tower"
-msgstr ""
+msgstr "Башня"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:10
 msgid "Randomize seating order"
-msgstr ""
+msgstr "Случайный порядок игроков"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:12
 msgid "Tiny city is scored only for 2 points."
@@ -205,11 +205,11 @@ msgstr "Принцесса ОБЯЗАНА убирать рыцаря из го�
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:15
 msgid "Dragon movement occurs after scoring."
-msgstr ""
+msgstr "Дракон ходит после подсчёта очков"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:17
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
-msgstr ""
+msgstr "Разрешать побег из осаждённого города через любой монастырь, граничащий с городом."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid "The Pig herd is present on the farm tile."
@@ -355,7 +355,7 @@ msgstr "Показывать последние ходы"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:157
 msgid "Show farm hints"
-msgstr ""
+msgstr "Показывать подсказки по полям"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:168
 msgid "Show discarded tiles"
@@ -397,7 +397,7 @@ msgstr "О программе"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:257
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:38
 msgid "Controls"
-msgstr "Упревление"
+msgstr "Управление"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -405,7 +405,7 @@ msgstr "Сохранённые игры JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ChatPanel.java:166
 msgid "Type to chat"
-msgstr ""
+msgstr "Начните писать, чтобы начать чат"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
 msgid "Skip"
@@ -435,11 +435,11 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:34
 msgid "Undeploy meeple"
-msgstr ""
+msgstr "Отменить размещение подданного"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:41
 msgid "Select meeple to undeploy"
-msgstr ""
+msgstr "Выбрать подданного для отмены размещения"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
@@ -512,7 +512,7 @@ msgstr "Базары"
 #: src/main/java/com/jcloisterzone/ui/dialog/GameOverDialog.java:61
 #, fuzzy
 msgid "Wind rose"
-msgstr "Окно"
+msgstr "Роза ветров"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
 msgid "Choose your tile."
@@ -564,20 +564,20 @@ msgstr "Предложение базара"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
 msgid "Each player…"
-msgstr ""
+msgstr "Каждый игрок…"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
 msgid "may deploy additional follower"
-msgstr ""
+msgstr "может разместить дополнительного подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:50
 msgid "must remove follower"
-msgstr ""
+msgstr "должен убрать подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:63
 #, java-format
 msgid "on/from a {0}."
-msgstr ""
+msgstr "на/из {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:98
 msgid "Corn circle"
@@ -658,16 +658,16 @@ msgstr "Правила"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:197
 msgid "Presets"
-msgstr ""
+msgstr "Сохранённые шаблоны"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:217
 msgid "Preset name"
-msgstr ""
+msgstr "Имя шаблона"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:276
 #, fuzzy
 msgid "Delete"
-msgstr "Выбрать"
+msgstr "Удалить"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:143
 msgid "Unassigned player"
@@ -716,7 +716,7 @@ msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
 msgstr ""
-"<html>После выставления карточки используйте клавишу <b>Tab</b> или "
+"<html>После размещения карточки используйте клавишу <b>Tab</b> или "
 "<b>правую</b> кнопку мыши для выбора соответствующего действия.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
@@ -731,7 +731,8 @@ msgstr ""
 msgid ""
 "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
 "tiles.</html>"
-msgstr ""
+msgstr "<html>Нажмите <b>F</b>, чтобы включить подсказки по полям, или <b>X</b>, "
+"чтобы посмотреть последнюю размещённую карточку.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:57
 msgid ""
@@ -750,7 +751,7 @@ msgid "Load from a file previously saved game."
 msgstr "Загрузить из файла ранее сохранённую игру."
 
 #~ msgid "King and Scout"
-#~ msgstr "Король и Разбойник"
+#~ msgstr "Король и Разведчик"
 
 #~ msgid "Each city is scored with one farm only."
 #~ msgstr "Каждый город даёт очки только одному полю."
