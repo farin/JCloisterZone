@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -28,7 +27,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
-import com.jcloisterzone.feature.visitor.score.AbstractScoreContext;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
@@ -41,6 +39,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 import com.jcloisterzone.game.capability.DragonCapability;
@@ -94,16 +93,16 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
 
 
-    protected void initVars() {
-        packSize = getTilePack().totalSize();
+    protected void initVars(Game game) {
+        packSize = game.getTilePack().totalSize();
         enemyPlayers = game.getAllPlayers().length - 1;
         myTurnsLeft = ((packSize-1) / (enemyPlayers+1)) + 1;
     }
 
     @Override
-    protected double rank() {
+    protected double rank(Game game) {
         double ranking = 0;
-        initVars();
+        initVars(game);
 
         //trigger score
         game.getPhase().next(ScorePhase.class);
@@ -111,16 +110,16 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
         Arrays.fill(openCount, 0);
 
-        ranking += meepleRating();
-        ranking += pointRating();
-        ranking += openObjectRating();
+        ranking += meepleRating(game);
+        ranking += pointRating(game);
+        ranking += openObjectRating(game);
 
-        ranking += rankPossibleFeatureConnections();
-        ranking += rankConvexity();
-        ranking += rankFairy();
+        ranking += rankPossibleFeatureConnections(game);
+        ranking += rankConvexity(game);
+        ranking += rankFairy(game);
 
 //        // --- dbg print --
-//        Tile tile = getGame().getCurrentTile();
+//        Tile tile = game.getCurrentTile();
 //        Feature meeplePlacement = Iterables.find(tile.getFeatures(), new Predicate<Feature>() {
 //            @Override
 //            public boolean apply(Feature f) {
@@ -160,7 +159,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         return 1.0;
     }
 
-    protected double meepleRating() {
+    protected double meepleRating(Game game) {
         double rating = 0;
 
         for (Player p : game.getAllPlayers()) {
@@ -265,7 +264,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
     }
 
-    protected double pointRating() {
+    protected double pointRating(Game game) {
         double rating = 0;
 
         for (Player p : game.getAllPlayers()) {
@@ -288,7 +287,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         { 0.0, 0.0, 0.4, 0.8, 1.2, 2.0, 4.0, 7.0, 11.0 } //cloister
     };
 
-    protected double openObjectRating() {
+    protected double openObjectRating(Game game) {
         double rating = 0;
 
         for (int i = 0; i < OPEN_PENALTY.length; i++ ){
@@ -332,9 +331,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         }
     }
 
-    private double futureConnectionRateConnection(Location toEmpty, Location toFeature, Position f2Pos, double chance) {
-        Tile tile1 = getGame().getCurrentTile();
-        Tile tile2 = getBoard().get(f2Pos);
+    private double futureConnectionRateConnection(Game game, Location toEmpty, Location toFeature, Position f2Pos, double chance) {
+        Tile tile1 = game.getCurrentTile();
+        Tile tile2 = game.getBoard().get(f2Pos);
 
         double rating = 0;
 
@@ -456,16 +455,16 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         return new int[] { myPower, bestEnemy };
     }
 
-    private double rankPossibleFeatureConnections() {
+    private double rankPossibleFeatureConnections(Game game) {
         double rank = 0;
 
-        Tile tile = getGame().getCurrentTile();
+        Tile tile = game.getCurrentTile();
         Position placement = tile.getPosition();
         assert placement != null;
 
         for (Entry<Location, Position> eplace : Position.ADJACENT.entrySet()) {
             Position pos = placement.add(eplace.getValue());
-            if (getBoard().get(pos) != null) continue;
+            if (game.getBoard().get(pos) != null) continue;
 
             double chance = chanceToPlaceTile(pos);
             if (chance < MIN_CHANCE) continue;
@@ -473,16 +472,16 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             for (Entry<Location, Position> econn : Position.ADJACENT.entrySet()) {
                 Position conn = pos.add(econn.getValue());
                 if (conn.equals(placement)) continue;
-                Tile connTile = getBoard().get(conn);
+                Tile connTile = game.getBoard().get(conn);
                 if (connTile == null) continue;
 
-                rank += futureConnectionRateConnection(eplace.getKey(), econn.getKey(), conn, chance);
+                rank += futureConnectionRateConnection(game, eplace.getKey(), econn.getKey(), conn, chance);
             }
         }
         return rank;
     }
 
-    protected double rankFairy() {
+    protected double rankFairy(Game game) {
         if (!game.hasCapability(FairyCapability.class)) return 0;
         FairyCapability fc = game.getCapability(FairyCapability.class);
         Position fairyPos = fc.getFairyPosition();
@@ -529,9 +528,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 //		}
     }
 
-    protected double rankConvexity() {
+    protected double rankConvexity(Game game) {
         Position pos = game.getCurrentTile().getPosition();
-        return 0.001 * getBoard().getAdjacentAndDiagonalTiles(pos).size();
+        return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
     }
 
     protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {
@@ -657,9 +656,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
     }
 
 
-    @Override
-    public void selectDragonMove(Set<Position> positions, int movesLeft) {
-        initVars();
+    //@Override
+    public void selectDragonMove(Game game, Set<Position> positions, int movesLeft) {
+        initVars(game);
         Position dragonPosition = game.getCapability(DragonCapability.class).getDragonPosition();
         double tensionX = 0, tensionY = 0;
 

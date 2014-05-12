@@ -227,7 +227,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                             break;
                         }
                     }
-                    //game.addUserInterface(new AiUserInterfaceAdapter(ai));
+                    game.getEventBus().register(ai);
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
                     logger.error("Unable to create AI player", e);
