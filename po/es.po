@@ -26,10 +26,10 @@ msgstr "La Rueda de la Fortuna"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Winter Edition"
-msgstr "Winter Edition"
+msgstr "Edición de Invierno"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:45
-msgid "The Gingerbread man"
+msgid "El Hombre de Jengibre"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
@@ -84,7 +84,7 @@ msgstr "Los Cátaros"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "The Besiegers"
-msgstr ""
+msgstr "Asediadores"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Count of Carcassonne"
@@ -156,7 +156,7 @@ msgstr "Círculos en los Cultivos II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The school"
-msgstr ""
+msgstr "La escuela"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "La porxada"
@@ -172,7 +172,7 @@ msgstr "Castillo"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
-msgstr "Ciudade"
+msgstr "Ciudad"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:41
 msgid "Cloister"
@@ -180,7 +180,7 @@ msgstr "Monasterio"
 
 #: src/main/java/com/jcloisterzone/feature/Farm.java:56
 msgid "Farm"
-msgstr ""
+msgstr "Granja"
 
 #: src/main/java/com/jcloisterzone/feature/Road.java:67
 msgid "Road"
