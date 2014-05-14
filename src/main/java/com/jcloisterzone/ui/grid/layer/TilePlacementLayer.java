@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.ui.grid.GridPanel;
+import java.util.Iterator;
 
 public class TilePlacementLayer extends AbstractTilePlacementLayer {
 
@@ -54,6 +55,12 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
                 allowedRotation = true;
             } else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
                 previewRotation = realRotation.next();
+                allowedRotation = true;
+            } else if (allowedRotations.size() > 0) {      // Avoid endless loop
+                Iterator<Rotation> allowedIt = allowedRotations.iterator();
+                while (!allowedRotations.contains(previewRotation)) {
+                    previewRotation = allowedIt.next();
+                }
                 allowedRotation = true;
             } else {
                 allowedRotation = false;
