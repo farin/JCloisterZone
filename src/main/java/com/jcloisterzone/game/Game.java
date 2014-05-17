@@ -14,6 +14,8 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -25,7 +27,6 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.collection.LocationsMap;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.City;
@@ -71,9 +72,16 @@ public class Game extends GameSettings {
     private List<Capability> capabilities = new ArrayList<>();
     private FairyCapability fairyCapability; //shortcut
 
-    private final EventBus eventBus = new EventBus("game event bus");
+    //private final EventBus eventBus = new EventBus();
+    private final EventBus eventBus = new EventBus(new SubscriberExceptionHandler() {
+        @Override
+        public void handleException(Throwable exception, SubscriberExceptionContext context) {
+            logger.error("Could not dispatch event: " + context.getSubscriber() + " to " + context.getSubscriberMethod(), exception);
+        }
+    });
 
     private int idSequenceCurrVal = 0;
+
 
     public EventBus getEventBus() {
         return eventBus;

@@ -4,6 +4,9 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 
+/**
+ * Ancestor for all in-game event.
+ */
 public abstract class PlayEvent extends Event {
 
     private final Position position;

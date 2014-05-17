@@ -54,7 +54,7 @@ public class SavePointManager {
 
     }
 
-    //TODO !!! proble must wait for dispatch of all events !!!
+    //TODO !!! probably must wait for dispatch of all events !!!
     public void restore(SavePoint sp) {
         game.getEventBus().unregister(operationRecorder);
         Operation target = sp.getOperation();

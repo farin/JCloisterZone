@@ -2,6 +2,9 @@ package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
 
+/**
+ * Ancestor for all events including non-game events like setup and chat.
+ */
 public abstract class Event {
 
     private final int type;

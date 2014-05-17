@@ -1,15 +1,14 @@
 package com.jcloisterzone.ai;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Executor;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -17,17 +16,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.action.AbbeyPlacementAction;
-import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.SelectFollowerAction;
-import com.jcloisterzone.action.SelectTileAction;
-import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.ai.PositionRanking.SelectedAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -35,15 +27,11 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
-import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.capability.SiegeCapability;
-import com.jcloisterzone.game.phase.AbbeyPhase;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
@@ -53,17 +41,6 @@ import com.jcloisterzone.game.phase.TowerCapturePhase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
 
-    class PositionLocation {
-        Position position;
-        Location location;
-    }
-
-   // private Game original;
-   /// private SavePointManager spm;
-
-//    private AiInteraction defaultInteractionHandler;
-//    private AiInteraction interactionHandler = null;
-
     //private Map<Feature, AiScoreContext> scoreCache = new HashMap<>();
     //private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
@@ -71,14 +48,47 @@ public abstract class RankingAiPlayer extends AiPlayer {
 //        return scoreCache;
 //    }
 
-    public RankingAiPlayer() {
-        //defaultInteractionHandler = createDefaultInteractionHandler();
+    private Step bestChain = null;
+
+
+    protected void popActionChain() {
+        if (bestChain.previous == null) {
+            bestChain.performOnServer();
+            bestChain = null;
+            return;
+        }
+
+        Step step = bestChain;
+        while (step.previous.previous != null) {
+            step = step.previous;
+        }
+        step.previous.performOnServer();
+        step.previous = null;
+    }
+
+    protected void autosave() {
+        DebugConfig debugConfig = game.getConfig().getDebug();
+        if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
+            Snapshot snapshot = new Snapshot(game, 0);
+            if ("plain".equals(debugConfig.getSave_format())) {
+                snapshot.setGzipOutput(false);
+            }
+            try {
+                snapshot.save(new File(debugConfig.getAutosave()));
+            } catch (Exception e) {
+                logger.error("Auto save before ranking failed.", e);
+            }
+        }
     }
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
         if (isAiPlayerActive()) {
-            new Thread(new SelectActionTask(ev)).start();
+            if (bestChain != null) {
+                popActionChain();
+            } else {
+                new Thread(new SelectActionTask(ev)).start();
+            }
         }
     }
 
@@ -103,247 +113,296 @@ public abstract class RankingAiPlayer extends AiPlayer {
         return copy;
     }
 
-    private void performAction(SelectedAction sa) {
-        if (sa == null) {
+    abstract class Step {
+        final SavePoint savePoint;
+        Step previous;
+
+        public Step(Step previous, SavePoint savePoint) {
+            this.previous = previous;
+            this.savePoint = savePoint;
+        }
+
+        public abstract void performLocal(Game game);
+        public abstract void performOnServer();
+    }
+
+    class PlaceTileStep extends Step {
+        final Rotation rot;
+        final Position pos;
+        final TilePlacementAction action;
+
+        public PlaceTileStep(Step previous, SavePoint savePoint, TilePlacementAction action, Rotation rot, Position pos) {
+            super(previous, savePoint);
+            this.action = action;
+            this.rot = rot;
+            this.pos = pos;
+        }
+
+        @Override
+        public void performLocal(Game game) {
+            game.getPhase().placeTile(rot, pos);
+        }
+
+        @Override
+        public void performOnServer() {
+            action.perform(getServer(), rot, pos);
+        }
+    }
+
+    class PlaceAbbeyStep extends Step {
+        final Position pos;
+        final AbbeyPlacementAction action;
+
+        public PlaceAbbeyStep(Step previous, SavePoint savePoint, AbbeyPlacementAction action, Position pos) {
+            super(previous, savePoint);
+            this.action = action;
+            this.pos = pos;
+        }
+
+        @Override
+        public void performLocal(Game game) {
+            game.getPhase().placeTile(Rotation.R0, pos);
+        }
+
+        @Override
+        public void performOnServer() {
+            action.perform(getServer(), pos);
+        }
+    }
+
+
+    class DeployMeepleStep extends Step {
+        final Position pos;
+        final Location loc;
+        final MeepleAction action;
+
+        public DeployMeepleStep(Step previous, SavePoint savePoint, MeepleAction action, Position pos, Location loc) {
+            super(previous, savePoint);
+            this.action = action;
+            this.pos = pos;
+            this.loc = loc;
+        }
+
+        @Override
+        public void performLocal(Game game) {
+            game.getPhase().deployMeeple(pos, loc, action.getMeepleType());
+        }
+
+        @Override
+        public void performOnServer() {
+            action.perform(getServer(), pos, loc);
+        }
+    }
+
+    class PassStep extends Step {
+
+        public PassStep(Step previous, SavePoint savePoint) {
+            super(previous, savePoint);
+        }
+
+        @Override
+        public void performLocal(Game game) {
+            game.getPhase().pass();
+        }
+
+        @Override
+        public void performOnServer() {
             getServer().pass();
-            return;
         }
-        // logger.info("Polling " + sa.action);
-        if (sa.action instanceof MeepleAction) {
-            MeepleAction action = (MeepleAction) sa.action;
-            // debug, should never happen, but it happens sometimes when
-            // Tower game is enabled
-            // try {
-            // getPlayer().getMeepleFromSupply(action.getMeepleType());
-            // } catch (NoSuchElementException e) {
-            // logger.error(e.getMessage(), e);
-            // throw e;
-            // }
-            action.perform(getServer(), sa.position, sa.location);
-            return;
-        }
-        if (sa.action instanceof BarnAction) {
-            BarnAction action = (BarnAction) sa.action;
-            action.perform(getServer(), sa.position, sa.location);
-            return;
-        }
-        if (sa.action instanceof SelectTileAction) {
-            SelectTileAction action = (SelectTileAction) sa.action;
-            action.perform(getServer(), sa.position);
-            return;
-        }
-        if (sa.action instanceof SelectFollowerAction) {
-            SelectFollowerAction action = (SelectFollowerAction) sa.action;
-            action.perform(getServer(), sa.position, sa.location, sa.meepleType, sa.meepleOwner);
-            return;
-        }
-        throw new UnsupportedOperationException("Unhandled action type " + sa.action.getName()); // should never happen
     }
 
 
     class SelectActionTask implements Runnable {
+        Deque<Step> queue = new LinkedList<Step>();
 
-        private SelectActionEvent ev;
-        private PositionRanking bestSoFar;
+        private final SelectActionEvent rootEv;
+
+        private Step step = null;
+       // private PositionRanking bestSoFar;
+        private Step bestSoFarStep = null;
+        private double bestSoFarRank = Double.NEGATIVE_INFINITY;
+
         private SavePointManager spm;
         private Game game;
 
-        public SelectActionTask(SelectActionEvent ev) {
-            this.ev = ev;
-            this.bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
-            this.game = copyGame(this);
-        }
-
-        @Subscribe
-        public void selectAction(SelectActionEvent ev) {
-            if (game.getPhase() instanceof PhantomPhase) return;
-            boolean hasSmallFollower = false;
-            boolean hasPhantom = false;
-            for (PlayerAction a : ev.getActions()) {
-                if (a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(SmallFollower.class))
-                    hasSmallFollower = true;
-                if (a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Phantom.class))
-                    hasPhantom = true;
-            }
-            if (hasSmallFollower && hasPhantom) {
-                rankAction(Collections2.filter(ev.getActions(), new Predicate<PlayerAction>() {
-                    @Override
-                    public boolean apply(PlayerAction a) {
-                        return !(a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Phantom.class));
-                    }
-                }));
-            } else {
-                rankAction(ev.getActions());
-            }
+        public SelectActionTask(SelectActionEvent rootEv) {
+            this.rootEv = rootEv;
         }
 
         @Override
         public void run() {
             try {
-                PlayerAction firstAction = ev.getActions().get(0);
-                if (firstAction instanceof TilePlacementAction) {
-                    selectTilePlacement((TilePlacementAction) firstAction);
-                    return;
-                }
-                if (firstAction instanceof AbbeyPlacementAction) {
-                    selectAbbeyPlacement((AbbeyPlacementAction) firstAction);
-                    return;
-                }
-                if (firstAction instanceof UndeployAction ) {
-                    //hack, AI never use escape, TODO
-                    if (firstAction.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
-                        getServer().pass();
+                autosave();
+
+                this.game = copyGame(this);
+
+                spm = new SavePointManager(game);
+                spm.startRecording();
+
+                handleActionEvent(rootEv);
+
+                while (!queue.isEmpty()) {
+                    step = queue.removeFirst();
+                    spm.restore(step.savePoint);
+                    step.performLocal(game);
+                    if (phaseLoop()) {
+                        //end phase
+                        rankStepChain(step);
                     }
                 }
 
-                //throw new UnsupportedOperationException("Not implemented");
+                bestChain = bestSoFarStep;
+                popActionChain();
             } catch (Exception e) {
-                 handleRuntimeError(e);
-                 selectDummyAction(ev.getActions(), ev.isPassAllowed());
+                //TODO fix exception in abbey phase
+
+                logger.error(e.getMessage(), e);
+                selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
             }
-
-            if (bestSoFar.getRank() == Double.NEGATIVE_INFINITY) { // loaded game or wagon phase or phantom phase
-                System.err.println("TODO ###");
-
-                backupGame();
-                if (ev.isPassAllowed()) rankPass();
-                rankAction(ev.getActions());
-                restoreGame();
-            }
-
-            Deque<SelectedAction> selected = bestSoFar.getSelectedActions();
-            SelectedAction sa = selected.pollFirst();
-            performAction(sa);
         }
 
-        protected void backupGame() {
-            spm = new SavePointManager(game);
-            bestSoFar = new PositionRanking(Double.NEGATIVE_INFINITY);
-            spm.startRecording();
-        }
-
-        protected void restoreGame() {
-            spm.stopRecording();
-            spm = null;
-        }
-
-        /* TODP COPIED FROM CLIENT STUB */
         @SuppressWarnings("unchecked")
-        private void phaseLoop() {
+        private boolean phaseLoop() {
             Phase phase = game.getPhase();
             List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
             while (!phase.isEntered()) {
                 if (!Iterables.contains(allowed, phase.getClass())) {
-                    break;
+                    return true;
                 }
                 //logger.info("  * not entered {} -> {}", phase, phase.getDefaultNext());
                 phase.setEntered(true);
                 phase.enter();
                 phase = game.getPhase();
             }
+            return false;
         }
 
-        protected void selectAbbeyPlacement(AbbeyPlacementAction action) {
-            Map<Position, Set<Rotation>> placements = new HashMap<>();
-            for (Position pos : action.getSites()) {
-                placements.put(pos, Collections.singleton(Rotation.R0));
-            }
-            rankTilePlacement(placements);
-
-            if (bestSoFar.getRank() > 2.0) {
-                getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
-            } else {
-                getServer().pass();
+        private void rankStepChain(Step step) {
+            double currRank = rank(game);
+            //System.out.println(currRank + ": " + step.toString());
+            if (currRank > bestSoFarRank) {
+                bestSoFarRank = currRank;
+                bestSoFarStep = step;
             }
         }
 
-        protected void selectTilePlacement(TilePlacementAction action) {
-            DebugConfig debugConfig = game.getConfig().getDebug();
-            if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
-                Snapshot snapshot = new Snapshot(game, 0);
-                if ("plain".equals(debugConfig.getSave_format())) {
-                    snapshot.setGzipOutput(false);
+        @Subscribe
+        public void handleActionEvent(SelectActionEvent ev) {
+            if (ev.isPassAllowed()) {
+                queue.addFirst(new PassStep(step, spm.save()));
+            }
+
+            List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
+
+            for (PlayerAction action : ev.getActions()) {
+                if (action instanceof MeepleAction) {
+                    meepleActions.add((MeepleAction) action);
+                } else if (action instanceof TilePlacementAction) {
+                    handleTilePlacementAction((TilePlacementAction) action);
+                } else if (action instanceof AbbeyPlacementAction) {
+                    handleAbbeyPlacement((AbbeyPlacementAction) action);
+                } else if (action instanceof UndeployAction ) {
+                    //hack, AI never use escape, TODO
+                    //doesnt work
+//                    if (action.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
+//                        getServer().pass();
+//                        return;
+//                    }
                 }
-                try {
-                    snapshot.save(new File(debugConfig.getAutosave()));
-                } catch (Exception e) {
-                    logger.error("Auto save before ranking failed.", e);
-                }
             }
 
-            Map<Position, Set<Rotation>> placements = action.getAvailablePlacements();
-            rankTilePlacement(placements);
-            getServer().placeTile(bestSoFar.getRotation(), bestSoFar.getPosition());
+            if (!meepleActions.isEmpty()) {
+                handleMeepleActions(preprocessMeepleActions(meepleActions));
+            }
+
+
+
+
+//          if (action instanceof BarnAction) {
+//          BarnAction ba = (BarnAction) action;
+//          rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.get(pos));
+//      }
+//      if (action instanceof FairyAction) {
+//          rankFairyPlacement(currTile, (FairyAction) action);
+//      }
+//      if (action instanceof TowerPieceAction) {
+//          rankTowerPiecePlacement(currTile, (TowerPieceAction) action);
+//      }
+
         }
 
-        protected void rankTilePlacement(Map<Position, Set<Rotation>> placements) {
-            //logger.info("---------- Ranking start ---------------");
-            //logger.info("Positions: {} ", placements.keySet());
 
-            backupGame();
-            SavePoint sp = spm.save();
-            for (Entry<Position, Set<Rotation>> entry : placements.entrySet()) {
+        protected void handleTilePlacementAction(TilePlacementAction action) {
+            SavePoint savePoint = spm.save();
+
+            for (Entry<Position, Set<Rotation>> entry : action.getAvailablePlacements().entrySet()) {
                 Position pos = entry.getKey();
                 for (Rotation rot : entry.getValue()) {
-                    //logger.info("  * phase {} -> {}", game.getPhase(), game.getPhase().getDefaultNext());
-                    //logger.info("  * placing {} {}", pos, rot);
-                    game.getPhase().placeTile(rot, pos);
-                    //logger.info("  * phase {} -> {}", game.getPhase(), game.getPhase().getDefaultNext());
-                    phaseLoop();
-                    double currRank = rank(game);
-                    if (currRank > bestSoFar.getRank()) {
-                        bestSoFar = new PositionRanking(currRank, pos, rot);
+                    queue.addFirst(new PlaceTileStep(step, savePoint, action, rot, pos));
+                }
+            }
+        }
+
+        protected void handleAbbeyPlacement(AbbeyPlacementAction action) {
+            SavePoint savePoint = spm.save();
+            for (Position pos : action.getSites()) {
+                queue.addFirst(new PlaceAbbeyStep(step, savePoint, action, pos));
+            }
+        }
+
+        protected Collection<MeepleAction> preprocessMeepleActions(List<MeepleAction> actions) {
+            if (game.getPhase() instanceof PhantomPhase) return Collections.emptyList();
+            boolean hasSmallFollower = false;
+            boolean hasPhantom = false;
+            for (MeepleAction a : actions) {
+                if (a instanceof MeepleAction && a.getMeepleType().equals(SmallFollower.class))
+                    hasSmallFollower = true;
+                if (a instanceof MeepleAction && a.getMeepleType().equals(Phantom.class))
+                    hasPhantom = true;
+            }
+            if (hasSmallFollower && hasPhantom) {
+                return Collections2.filter(actions, new Predicate<MeepleAction>() {
+                    @Override
+                    public boolean apply(MeepleAction a) {
+                        return !(a.getMeepleType().equals(Phantom.class));
                     }
-                    spm.restore(sp);
-                    //TODO fix hopefulGatePlacement
-                    //now rank meeple placements - must restore because rank change game
-                    //game.getPhase().placeTile(rot, pos);
-                    //hopefulGatePlacements.clear();
-                    //spm.restore(sp);
-                    //TODO add best placements for MAGIC GATE
-                    //game.getPhase().enter();
-                }
+                });
             }
-            restoreGame();
-            logger.info("Rank {} > {}", game.getCurrentTile() == null ? "Abbey" : game.getCurrentTile().getId(), bestSoFar);
+            return actions;
         }
 
-        protected void rankAction(Collection<PlayerAction> actions) {
-            Tile currTile = game.getCurrentTile();
-            Position pos = currTile.getPosition();
-            for (PlayerAction action : actions) {
-                if (action instanceof MeepleAction) {
-                    MeepleAction ma = (MeepleAction) action;
-                    rankMeeplePlacement(currTile, ma, ma.getMeepleType(), pos, ma.getLocationsMap().get(pos));
-//    				for (PositionLocation posloc : hopefulGatePlacements) {
-//    					rankMeepleAction(currTile, ma, posloc.position, Collections.singleton(posloc.location));
-//    				}
+        protected void handleMeepleActions(Collection<MeepleAction> actions) {
+           Tile currTile = game.getCurrentTile();
+           Position pos = currTile.getPosition();
+
+            SavePoint savePoint = spm.save();
+
+            for (MeepleAction action : actions) {
+                Set<Location> locations = action.getLocationsMap().get(pos);
+                if (locations == null) continue;
+
+                for (Location loc : locations) {
+                    queue.addFirst(new DeployMeepleStep(step, savePoint, action, pos, loc));
                 }
-                if (action instanceof BarnAction) {
-                    BarnAction ba = (BarnAction) action;
-                    rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.get(pos));
-                }
-                if (action instanceof FairyAction) {
-                    rankFairyPlacement(currTile, (FairyAction) action);
-                }
-//                if (action instanceof TowerPieceAction) {
-//                    rankTowerPiecePlacement(currTile, (TowerPieceAction) action);
+            }
+        }
+
+        // ---- refactor done boundary -----
+
+
+
+//        protected void rankFairyPlacement(Tile currTile, FairyAction action) {
+//            SavePoint sp = spm.save();
+//            for (Position pos: action.getSites()) {
+//                game.getPhase().moveFairy(pos);
+//                double currRank = rank(game);
+//                if (currRank > bestSoFar.getRank()) {
+//                    bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
+//                    bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, null));
 //                }
-            }
-        }
-
-        protected void rankFairyPlacement(Tile currTile, FairyAction action) {
-            SavePoint sp = spm.save();
-            for (Position pos: action.getSites()) {
-                game.getPhase().moveFairy(pos);
-                double currRank = rank(game);
-                if (currRank > bestSoFar.getRank()) {
-                    bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
-                    bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, null));
-                }
-                spm.restore(sp);
-            }
-        }
+//                spm.restore(sp);
+//            }
+//        }
 
 //        protected void rankTowerPiecePlacementOnTile(final Tile currTile, final TowerPieceAction towerPieceAction, final Position towerPiecePos) {
 //            this.interactionHandler = new AiInteractionAdapter() {
@@ -383,32 +442,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 //            this.interactionHandler = interactionHandlerBackup;
 //        }
 
-        protected void rankMeeplePlacement(Tile currTile, PlayerAction action, Class<? extends Meeple> meepleType, Position pos, Set<Location> locations) {
-            if (locations == null) {
-                return;
-            }
-            SavePoint sp = spm.save();
-            for (Location loc : locations) {
-                //logger.info("    . deploying {}", meepleType);
-                game.getPhase().deployMeeple(pos, loc, meepleType);
-                double currRank = rank(game);
-                if (currRank > bestSoFar.getRank()) {
-                    bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
-                    bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, loc));
-                }
-                spm.restore(sp);
-            }
-        }
 
-        public void rankPass() {
-            SavePoint sp = spm.save();
-            game.getPhase().pass();
-            double currRank = rank(game);
-            if (currRank > bestSoFar.getRank()) {
-                bestSoFar = new PositionRanking(currRank);
-            }
-            spm.restore(sp);
-        }
     }
 
     class SelectDragonMoveTask implements Runnable {
