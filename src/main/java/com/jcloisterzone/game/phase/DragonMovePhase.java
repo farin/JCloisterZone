@@ -54,13 +54,14 @@ public class DragonMovePhase extends Phase {
             throw new IllegalArgumentException("Invalid dragon move.");
         }
         Player player = getActivePlayer();
+        Position fromPosition = dragonCap.getDragonPosition();
         dragonCap.moveDragon(p);
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.at(p) && m.canBeEatenByDragon()) {
                 m.undeploy();
             }
         }
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, p));
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, fromPosition, p));
         selectDragonMove();
     }
 

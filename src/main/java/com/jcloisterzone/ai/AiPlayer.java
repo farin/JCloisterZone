@@ -77,11 +77,6 @@ public abstract class AiPlayer {
         return player.equals(game.getActivePlayer());
     }
 
-
-    protected void handleRuntimeError(Exception e) {
-        logger.error("AI player exception", e);
-    }
-
     // dummy implementations
 
     protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {

@@ -92,6 +92,11 @@ public class SavePointManager {
             }
         }
 
+//        @Subscribe
+//        public void neutalFigure(NeutralFigureMoveEvent ev) {
+//            operations.addLast(new NeutralMoveOperation(/))
+//        }
+
         @Subscribe
         public void scored(ScoreEvent ev) {
             operations.addLast(new ScoreOperation(ev.getPlayer(), ev.getPoints()));

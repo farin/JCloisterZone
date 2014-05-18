@@ -128,8 +128,10 @@ public class ActionPhase extends Phase {
             throw new IllegalArgumentException("The tile has deployed not own follower.");
         }
 
-        game.getCapability(FairyCapability.class).setFairyPosition(p);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), p));
+        FairyCapability cap = game.getCapability(FairyCapability.class);
+        Position fromPosition = cap.getFairyPosition();
+        cap.setFairyPosition(p);
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), fromPosition, p));
         next();
     }
 

@@ -37,9 +37,10 @@ public class DragonCapability extends Capability {
     public void tilePlaced(TileEvent ev) {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT && tile.hasTrigger(TileTrigger.VOLCANO)) {
-            setDragonPosition(tile.getPosition());
+            Position fromPosition = dragonPosition;
+            dragonPosition = tile.getPosition();
             getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, tile.getPosition()));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, fromPosition, dragonPosition));
         }
     }
 
@@ -89,15 +90,8 @@ public class DragonCapability extends Capability {
         return dragonPosition;
     }
 
-    public void setDragonPosition(Position dragonPosition) {
-        this.dragonPosition = dragonPosition;
-    }
-
     public Player getDragonPlayer() {
         return dragonPlayer;
-    }
-    public void setDragonPlayer(Player dragonPlayer) {
-        this.dragonPlayer = dragonPlayer;
     }
 
     public int getDragonMovesLeft() {
@@ -170,7 +164,7 @@ public class DragonCapability extends Capability {
         if (nl.getLength() > 0) {
             Element dragon = (Element) nl.item(0);
             dragonPosition = XmlUtils.extractPosition(dragon);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, dragonPosition));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, null, dragonPosition));
             if (dragon.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));

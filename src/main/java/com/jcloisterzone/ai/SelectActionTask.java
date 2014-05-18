@@ -20,11 +20,15 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.AbbeyPlacementAction;
+import com.jcloisterzone.action.BarnAction;
+import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.ai.step.DeployMeepleStep;
+import com.jcloisterzone.ai.step.MoveFairyStep;
 import com.jcloisterzone.ai.step.PassStep;
 import com.jcloisterzone.ai.step.PlaceAbbeyStep;
 import com.jcloisterzone.ai.step.PlaceTileStep;
@@ -133,6 +137,7 @@ public class SelectActionTask implements Runnable {
             aiPlayer.popActionChain();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            aiPlayer.setBestChain(null);
             aiPlayer.selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
         }
     }
@@ -161,44 +166,47 @@ public class SelectActionTask implements Runnable {
         }
     }
 
+    /*
+     * possible improvements (TODO)
+     *  - pass action for Abbey don't count there is another tile which brings some points
+     *  - Wagon usually not moved (worse rank then pass, expect cloister), common ranking action don't know anything about following wagon phase1
+     *    and wagon is ranked separately
+     */
+
     @Subscribe
     public void handleActionEvent(SelectActionEvent ev) {
         List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
+        SavePoint savePoint = spm.save();
 
         for (PlayerAction action : ev.getActions()) {
             if (action instanceof MeepleAction) {
                 meepleActions.add((MeepleAction) action);
             } else if (action instanceof TilePlacementAction) {
-                handleTilePlacementAction((TilePlacementAction) action);
+                handleTilePlacementAction(savePoint, (TilePlacementAction) action);
             } else if (action instanceof AbbeyPlacementAction) {
-                //TODO pass action don't count there is another tile which brings some points
-                handleAbbeyPlacement((AbbeyPlacementAction) action);
-            } else if (action instanceof UndeployAction ) {
+                handleAbbeyPlacement(savePoint, (AbbeyPlacementAction) action);
+            } else if (action instanceof UndeployAction) {
                 //hack, AI never use escape, TODO
                 //doesnt work
 //                    if (action.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
 //                        getServer().pass();
 //                        return;
 //                    }
+            } else if (action instanceof BarnAction) {
+                handleBarnAction(savePoint, (BarnAction) action);
+            } else if (action instanceof FairyAction) {
+                handleFairyAction(savePoint, (FairyAction) action);
             }
         }
 
         if (!meepleActions.isEmpty()) {
-            handleMeepleActions(preprocessMeepleActions(meepleActions));
+            handleMeepleActions(savePoint, preprocessMeepleActions(meepleActions));
         }
 
         if (ev.isPassAllowed()) {
-            queue.addFirst(new PassStep(step, spm.save()));
+            queue.addFirst(new PassStep(step, savePoint));
         }
 
-
-//          if (action instanceof BarnAction) {
-//          BarnAction ba = (BarnAction) action;
-//          rankMeeplePlacement(currTile, ba, Barn.class, pos, ba.get(pos));
-//      }
-//      if (action instanceof FairyAction) {
-//          rankFairyPlacement(currTile, (FairyAction) action);
-//      }
 //      if (action instanceof TowerPieceAction) {
 //          rankTowerPiecePlacement(currTile, (TowerPieceAction) action);
 //      }
@@ -206,9 +214,7 @@ public class SelectActionTask implements Runnable {
     }
 
 
-    protected void handleTilePlacementAction(TilePlacementAction action) {
-        SavePoint savePoint = spm.save();
-
+    protected void handleTilePlacementAction(SavePoint savePoint, TilePlacementAction action) {
         for (Entry<Position, Set<Rotation>> entry : action.getAvailablePlacements().entrySet()) {
             Position pos = entry.getKey();
             for (Rotation rot : entry.getValue()) {
@@ -217,10 +223,19 @@ public class SelectActionTask implements Runnable {
         }
     }
 
-    protected void handleAbbeyPlacement(AbbeyPlacementAction action) {
-        SavePoint savePoint = spm.save();
+    protected void handleAbbeyPlacement(SavePoint savePoint, AbbeyPlacementAction action) {
         for (Position pos : action.getSites()) {
             queue.addFirst(new PlaceAbbeyStep(step, savePoint, action, pos));
+        }
+    }
+
+    protected void handleBarnAction(SavePoint savePoint, BarnAction ba) {
+        handleMeepleActions(savePoint, Collections.singleton(ba));
+    }
+
+    protected void handleFairyAction(SavePoint savePoint, FairyAction a) {
+        for (Position pos : a.getSites()) {
+            queue.add(new MoveFairyStep(step, savePoint, a, pos));
         }
     }
 
@@ -245,16 +260,14 @@ public class SelectActionTask implements Runnable {
         return actions;
     }
 
-    protected void handleMeepleActions(Collection<MeepleAction> actions) {
-       Tile currTile = game.getCurrentTile();
-       Position pos = currTile.getPosition();
+    protected void handleMeepleActions(SavePoint savePoint, Collection<? extends SelectFeatureAction> actions) {
+        Tile currTile = game.getCurrentTile();
+           Position pos = currTile.getPosition();
 
-        SavePoint savePoint = spm.save();
 
-        for (MeepleAction action : actions) {
+        for (SelectFeatureAction action : actions) {
             Set<Location> locations = action.getLocationsMap().get(pos);
             if (locations == null) continue;
-
             for (Location loc : locations) {
                 queue.addFirst(new DeployMeepleStep(step, savePoint, action, pos, loc));
             }

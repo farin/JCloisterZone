@@ -76,7 +76,7 @@ public class FairyCapability extends Capability {
         if (nl.getLength() > 0) {
             Element fairy = (Element) nl.item(0);
             fairyPosition = XmlUtils.extractPosition(fairy);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, null, fairyPosition));
+            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, null, null, fairyPosition));
         }
     }
 }
