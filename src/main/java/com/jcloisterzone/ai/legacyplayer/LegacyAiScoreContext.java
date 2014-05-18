@@ -21,6 +21,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.Game;
 
 class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableScoreContext, AiScoreContext {
 
@@ -32,7 +33,9 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final LegacyAiPlayer aiPlayer;
+    private final Game game;
+
+    private final LegacyRanking aiPlayer;
     private final CompletableScoreContext ctx;
     //private final Map<Feature, AiScoreContext> scoreCache;
     private boolean valid = true;
@@ -40,7 +43,8 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
     private Map<Position, OpenEdge> openEdgesChanceToClose = new HashMap<>();
     private double chanceToClose = 1.0;
 
-    public LegacyAiScoreContext(LegacyAiPlayer aiPlayer, CompletableScoreContext ctx/*, Map<Feature, AiScoreContext> scoreCache*/) {
+    public LegacyAiScoreContext(Game game, LegacyRanking aiPlayer, CompletableScoreContext ctx/*, Map<Feature, AiScoreContext> scoreCache*/) {
+        this.game = game;
         this.aiPlayer = aiPlayer;
         this.ctx = ctx;
         //this.scoreCache = scoreCache;
@@ -73,7 +77,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
                     Position p = completable.getTile().getPosition().add(side);
                     if (!openEdgesChanceToClose.containsKey(p)) {
                         OpenEdge edge = new OpenEdge();
-                        edge.chanceToClose = aiPlayer.chanceToPlaceTile(p);
+                        edge.chanceToClose = aiPlayer.chanceToPlaceTile(game, p);
                         edge.feature = completable;
                         edge.location = side;
                         openEdgesChanceToClose.put(p, edge);
@@ -94,7 +98,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
         double result = 1.0;
         Position p = cloister.getTile().getPosition();
         for (Position adjacent: p.addMulti(Position.ADJACENT_AND_DIAGONAL.values())) {
-            result *= aiPlayer.chanceToPlaceTile(adjacent);
+            result *= aiPlayer.chanceToPlaceTile(game, adjacent);
         }
         //for "1.6-compatibility" - make it already sense ?
         if (result > 0.85) return 0.85;

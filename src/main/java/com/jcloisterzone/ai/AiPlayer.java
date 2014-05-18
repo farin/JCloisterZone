@@ -72,10 +72,6 @@ public abstract class AiPlayer {
         return clientStub;
     }
 
-    protected boolean isMe(Player p) {
-        return player.equals(p);
-    }
-
     public boolean isAiPlayerActive() {
         if (server == null) return false;
         return player.equals(game.getActivePlayer());
