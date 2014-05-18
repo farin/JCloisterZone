@@ -33,11 +33,13 @@ import com.jcloisterzone.ai.step.PassStep;
 import com.jcloisterzone.ai.step.PlaceAbbeyStep;
 import com.jcloisterzone.ai.step.PlaceTileStep;
 import com.jcloisterzone.ai.step.Step;
+import com.jcloisterzone.ai.step.UndeployMeepleStep;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -122,7 +124,7 @@ public class SelectActionTask implements Runnable {
             handleActionEvent(rootEv);
 
             while (!queue.isEmpty()) {
-                step = queue.removeFirst();
+                step = queue.pop();
                 spm.restore(step.getSavePoint());
                 step.performLocal(game);
                 boolean isFinal = phaseLoop();
@@ -186,12 +188,7 @@ public class SelectActionTask implements Runnable {
             } else if (action instanceof AbbeyPlacementAction) {
                 handleAbbeyPlacement(savePoint, (AbbeyPlacementAction) action);
             } else if (action instanceof UndeployAction) {
-                //hack, AI never use escape, TODO
-                //doesnt work
-//                    if (action.getName().equals(SiegeCapability.UNDEPLOY_ESCAPE)) {
-//                        getServer().pass();
-//                        return;
-//                    }
+                handleUndeployAction(savePoint, (UndeployAction) action);
             } else if (action instanceof BarnAction) {
                 handleBarnAction(savePoint, (BarnAction) action);
             } else if (action instanceof FairyAction) {
@@ -204,7 +201,7 @@ public class SelectActionTask implements Runnable {
         }
 
         if (ev.isPassAllowed()) {
-            queue.addFirst(new PassStep(step, savePoint));
+            queue.push(new PassStep(step, savePoint));
         }
 
 //      if (action instanceof TowerPieceAction) {
@@ -218,14 +215,14 @@ public class SelectActionTask implements Runnable {
         for (Entry<Position, Set<Rotation>> entry : action.getAvailablePlacements().entrySet()) {
             Position pos = entry.getKey();
             for (Rotation rot : entry.getValue()) {
-                queue.addFirst(new PlaceTileStep(step, savePoint, action, rot, pos));
+                queue.push(new PlaceTileStep(step, savePoint, action, rot, pos));
             }
         }
     }
 
     protected void handleAbbeyPlacement(SavePoint savePoint, AbbeyPlacementAction action) {
         for (Position pos : action.getSites()) {
-            queue.addFirst(new PlaceAbbeyStep(step, savePoint, action, pos));
+            queue.push(new PlaceAbbeyStep(step, savePoint, action, pos));
         }
     }
 
@@ -233,9 +230,25 @@ public class SelectActionTask implements Runnable {
         handleMeepleActions(savePoint, Collections.singleton(ba));
     }
 
-    protected void handleFairyAction(SavePoint savePoint, FairyAction a) {
-        for (Position pos : a.getSites()) {
-            queue.addFirst(new MoveFairyStep(step, savePoint, a, pos));
+    protected void handleFairyAction(SavePoint savePoint, FairyAction action) {
+        for (Position pos : action.getSites()) {
+            queue.push(new MoveFairyStep(step, savePoint, action, pos));
+        }
+    }
+
+    protected void handleUndeployAction(SavePoint savePoint, UndeployAction action) {
+        for (Entry<Position, Set<Location>> entry : action.getLocationsMap().entrySet()) {
+            Position pos = entry.getKey();
+            for (Location loc: entry.getValue()) {
+                //TODO ineffective, full descriptor not contained in undeploy action
+                for (Meeple m : game.getDeployedMeeples()) {
+                    if (m.at(pos) && m.getLocation().equals(loc)) {
+                        if (action.getPlayers().isAllowed(m.getPlayer())) {
+                            queue.push(new UndeployMeepleStep(step, savePoint, action, pos, loc, m.getClass(), m.getPlayer()));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -262,34 +275,19 @@ public class SelectActionTask implements Runnable {
 
     protected void handleMeepleActions(SavePoint savePoint, Collection<? extends SelectFeatureAction> actions) {
         Tile currTile = game.getCurrentTile();
-           Position pos = currTile.getPosition();
-
+        Position pos = currTile.getPosition();
 
         for (SelectFeatureAction action : actions) {
             Set<Location> locations = action.getLocationsMap().get(pos);
             if (locations == null) continue;
             for (Location loc : locations) {
-                queue.addFirst(new DeployMeepleStep(step, savePoint, action, pos, loc));
+                queue.push(new DeployMeepleStep(step, savePoint, action, pos, loc));
             }
         }
     }
 
     // ---- refactor done boundary -----
 
-
-
-//        protected void rankFairyPlacement(Tile currTile, FairyAction action) {
-//            SavePoint sp = spm.save();
-//            for (Position pos: action.getSites()) {
-//                game.getPhase().moveFairy(pos);
-//                double currRank = rank(game);
-//                if (currRank > bestSoFar.getRank()) {
-//                    bestSoFar = new PositionRanking(currRank, currTile.getPosition(), currTile.getRotation());
-//                    bestSoFar.getSelectedActions().add(new SelectedAction(action, pos, null));
-//                }
-//                spm.restore(sp);
-//            }
-//        }
 
 //        protected void rankTowerPiecePlacementOnTile(final Tile currTile, final TowerPieceAction towerPieceAction, final Position towerPiecePos) {
 //            this.interactionHandler = new AiInteractionAdapter() {

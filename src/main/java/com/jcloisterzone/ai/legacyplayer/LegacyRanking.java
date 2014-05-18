@@ -1,20 +1,17 @@
 package com.jcloisterzone.ai.legacyplayer;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.common.collect.Iterables;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ai.GameRanking;
-import com.jcloisterzone.ai.RankingAiPlayer;
 import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -43,9 +40,9 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 import com.jcloisterzone.game.phase.ScorePhase;
 
 
@@ -86,11 +83,8 @@ public class LegacyRanking implements GameRanking {
 
     public double getPartialAfterTilePlacement(Game game, Tile tile) {
         Position pos = tile.getPosition();
-        return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
-//        int size = game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
-//        //if (size < 2) return -0.002;
-//        //if (size == 2) return -0.001;
-//        return 0.0;
+        //return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
+        return 0.001 * game.getBoard().getAdjacentTilesMap(pos).size(); //adjacent only is better
     }
 
     @Override
