@@ -24,10 +24,10 @@ public class DragonCapability extends Capability {
 
     public static final int DRAGON_MOVES = 6;
 
-    public Position dragonPosition;
-    public int dragonMovesLeft;
-    public Player dragonPlayer;
-    public Set<Position> dragonVisitedTiles;
+    private Position dragonPosition;
+    private int dragonMovesLeft;
+    private Player dragonPlayer;
+    private Set<Position> dragonVisitedTiles;
 
     public DragonCapability(final Game game) {
         super(game);
@@ -88,6 +88,10 @@ public class DragonCapability extends Capability {
 
     public Position getDragonPosition() {
         return dragonPosition;
+    }
+
+    public void setDragonPosition(Position dragonPosition) {
+        this.dragonPosition = dragonPosition;
     }
 
     public Player getDragonPlayer() {

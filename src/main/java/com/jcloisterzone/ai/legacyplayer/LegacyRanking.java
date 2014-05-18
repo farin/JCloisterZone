@@ -85,7 +85,12 @@ public class LegacyRanking implements GameRanking {
     }
 
     public double getPartialAfterTilePlacement(Game game, Tile tile) {
-        return rankConvexity(game, tile);
+        Position pos = tile.getPosition();
+        return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
+//        int size = game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
+//        //if (size < 2) return -0.002;
+//        //if (size == 2) return -0.001;
+//        return 0.0;
     }
 
     @Override
@@ -519,11 +524,6 @@ public class LegacyRanking implements GameRanking {
 //		for (Player player : onePointPlayers) {
 //			rating += reducePoints(0.8, player);
 //		}
-    }
-
-    protected double rankConvexity(Game game, Tile tile) {
-        Position pos = tile.getPosition();
-        return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
     }
 
     protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {

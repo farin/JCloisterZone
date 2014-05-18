@@ -45,18 +45,20 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     protected void popActionChain() {
+        Step toExecute = null;
         if (bestChain.getPrevious() == null) {
-            bestChain.performOnServer(getServer());
+            toExecute = bestChain;
             bestChain = null;
-            return;
+        } else {
+            Step step = bestChain;
+            while (step.getPrevious().getPrevious() != null) {
+                step = step.getPrevious();
+            }
+            toExecute = step.getPrevious();
+            step.setPrevious(null); //cut last element from chain
         }
-
-        Step step = bestChain;
-        while (step.getPrevious().getPrevious() != null) {
-            step = step.getPrevious();
-        }
-        step.getPrevious().performOnServer(getServer());
-        step.setPrevious(null); //cut last element from chain
+        //execute after chain update is done
+        toExecute.performOnServer(getServer());
     }
 
     private void autosave() {
@@ -81,7 +83,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 popActionChain();
             } else {
                 autosave();
-                new Thread(new SelectActionTask(this, ev)).start();
+                new Thread(new SelectActionTask(this, ev), "AI-selectAction").start();
             }
         }
     }
@@ -89,7 +91,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
         if (isAiPlayerActive()) {
-             new Thread(new SelectDragonMoveTask(this, ev)).start();
+             new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }
 

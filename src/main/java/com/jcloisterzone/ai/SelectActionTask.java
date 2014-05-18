@@ -111,7 +111,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
-        boolean dbgPrint = true;
+        boolean dbgPrint = !false;
         try {
             this.game = aiPlayer.copyGame(this);
             if (dbgPrint) dbgPringHeader();
@@ -235,7 +235,7 @@ public class SelectActionTask implements Runnable {
 
     protected void handleFairyAction(SavePoint savePoint, FairyAction a) {
         for (Position pos : a.getSites()) {
-            queue.add(new MoveFairyStep(step, savePoint, a, pos));
+            queue.addFirst(new MoveFairyStep(step, savePoint, a, pos));
         }
     }
 

@@ -50,6 +50,7 @@ public class SavePointManager {
     public void restore(SavePoint sp) {
         game.getEventBus().unregister(operationRecorder);
         Undoable target = sp.getOperation();
+        assert target == null || operations.contains(target);
         while (operations.peekLast() != target) {
             operations.pollLast().undo(game);
         }
