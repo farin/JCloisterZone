@@ -16,6 +16,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -196,7 +197,7 @@ public class BridgeCapability extends Capability {
         }
         bridgeUsed = true;
         tile.placeBridge(loc);
-        game.fireGameEvent().bridgeDeployed(pos, loc);
+        game.post(new BridgeDeployedEvent(game.getActivePlayer(), pos, loc));
     }
 
 

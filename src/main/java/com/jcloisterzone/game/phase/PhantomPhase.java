@@ -8,6 +8,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
@@ -54,7 +55,7 @@ public class PhantomPhase extends Phase {
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
-            notifyUI(actions, true);
+            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
         }
     }
 

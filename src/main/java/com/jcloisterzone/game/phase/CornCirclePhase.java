@@ -14,6 +14,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -56,7 +58,7 @@ public class CornCirclePhase extends Phase {
             next();
             return;
         }
-        game.getUserInterface().selectCornCircleOption();
+        game.post(new CornCircleSelectOptionEvent(getActivePlayer(), getTile().getPosition()));
     }
 
     private void nextCornPlayer() {
@@ -95,7 +97,8 @@ public class CornCirclePhase extends Phase {
         if (actions.isEmpty()) {
             nextCornPlayer();
         } else {
-            notifyUI(actions, cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT);
+            boolean passAllowed = cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT;
+            game.post(new SelectActionEvent(getActivePlayer(), actions, passAllowed));
         }
     }
 
@@ -195,7 +198,7 @@ public class CornCirclePhase extends Phase {
     public void loadGame(Snapshot snapshot) {
         setEntered(true); //avoid call enter on load phase to this phase switch
         if (cornCircleCap.getCornCircleOption() == null) {
-            game.getUserInterface().selectCornCircleOption();
+            game.post(new CornCircleSelectOptionEvent(game.getActivePlayer(), getTile().getPosition()));
         } else {
             prepareCornAction();
         }

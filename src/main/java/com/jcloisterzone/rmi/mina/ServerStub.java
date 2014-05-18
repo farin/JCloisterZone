@@ -78,6 +78,11 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
     }
 
     @Override
+    public void sessionCreated(IoSession session) throws Exception {
+        Thread.currentThread().setName("Nio-ServerStub");
+    }
+
+    @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         if (message instanceof ClientControllMessage) {
             ClientControllMessage msg = (ClientControllMessage) message;

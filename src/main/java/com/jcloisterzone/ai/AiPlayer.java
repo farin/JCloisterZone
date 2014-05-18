@@ -8,16 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -27,7 +24,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
 
-public abstract class AiPlayer implements UserInterface {
+public abstract class AiPlayer {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,9 +38,9 @@ public abstract class AiPlayer implements UserInterface {
         this.game = game;
     }
 
-    public Game getGame() {
-        return game;
-    }
+//    public Game getGame() {
+//        return game;
+//    }
 
     public ServerIF getServer() {
         return server;
@@ -63,34 +60,21 @@ public abstract class AiPlayer implements UserInterface {
         this.player = player;
     }
 
-    protected Board getBoard() {
-        return game.getBoard();
-    }
+//    protected Board getBoard() {
+//        return game.getBoard();
+//    }
 
-    protected TilePack getTilePack() {
-        return game.getTilePack();
-    }
+//    protected TilePack getTilePack() {
+//        return game.getTilePack();
+//    }
 
     protected ClientStub getClientStub() {
         return clientStub;
     }
 
-    protected boolean isMe(Player p) {
-        return player.equals(p);
-    }
-
     public boolean isAiPlayerActive() {
         if (server == null) return false;
         return player.equals(game.getActivePlayer());
-    }
-
-    @Override
-    public void showWarning(String title, String message) {
-        //do nothing
-    }
-
-    protected void handleRuntimeError(Exception e) {
-        logger.error("AI player exception", e);
     }
 
     // dummy implementations
@@ -135,7 +119,7 @@ public abstract class AiPlayer implements UserInterface {
     protected boolean selectDummyMeepleAction(MeepleAction ma) {
         Position p = ma.getLocationsMap().keySet().iterator().next();
         for (Location loc : ma.getLocationsMap().get(p)) {
-            Feature f = getBoard().get(p).getFeature(loc);
+            Feature f = game.getBoard().get(p).getFeature(loc);
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
                 getServer().deployMeeple(p, loc, ma.getMeepleType());
                 return true;
@@ -147,17 +131,13 @@ public abstract class AiPlayer implements UserInterface {
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         Position p = action.getLocationsMap().keySet().iterator().next();
         Location loc = action.getLocationsMap().get(p).iterator().next();
-        Meeple m = getBoard().get(p).getFeature(loc).getMeeples().get(0);
+        Meeple m = game.getBoard().get(p).getFeature(loc).getMeeples().get(0);
         getServer().takePrisoner(p, loc, m.getClass(), m.getPlayer().getIndex());
         return true;
     }
 
     protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
         getServer().moveDragon(positions.iterator().next());
-    }
-
-    @Override
-    public void chatMessageReceived(Player player, String message) {
     }
 
     @Override

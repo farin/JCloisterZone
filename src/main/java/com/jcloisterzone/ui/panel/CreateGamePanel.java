@@ -192,6 +192,8 @@ public class CreateGamePanel extends JPanel {
         startGameButton.requestFocus();
     }
 
+
+
     private JPanel createPresetPanel() {
         JPanel presetPanel = new JPanel();
         presetPanel.setBorder(new TitledBorder(null, _("Presets"),

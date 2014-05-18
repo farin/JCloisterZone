@@ -12,6 +12,8 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
@@ -145,7 +147,7 @@ public class ScorePhase extends Phase {
         if (meeples.isEmpty()) meeples = castle.getSecondFeature().getMeeples();
         Meeple m = meeples.get(0); //all meeples must share same owner
         m.getPlayer().addPoints(points, PointCategory.CASTLE);
-        game.fireGameEvent().scored(m.getFeature(), points, points+"", m, false);
+        game.post(new ScoreEvent(m.getFeature(), points, PointCategory.CASTLE, m));
         m.undeploy(false);
     }
 
@@ -169,7 +171,7 @@ public class ScorePhase extends Phase {
                 game.scoreCompleted(ctx);
                 game.scoreCompletableFeature(ctx);
                 undeployMeeples(ctx);
-                game.fireGameEvent().completed(master, ctx);
+                game.post(new FeatureCompletedEvent(getActivePlayer(), master, ctx));
             }
         }
     }

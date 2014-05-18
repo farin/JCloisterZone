@@ -25,6 +25,8 @@ public class PlagueLayer extends AbstractGridLayer {
         int sqSize = getSquareSize();
         int boxSize = (int)(sqSize*0.4);
         int i = 0;
+
+        //TODO concurrent modufication possbile, TODO keep list in layer
         for (PlagueSource source: plague.getPlagueSources()) {
             i++;
 

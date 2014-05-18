@@ -7,8 +7,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
-import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,30 +15,38 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Expansion;
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.UserInterface;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.GameEventListener;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.event.BazaarAuctionEndEvent;
+import com.jcloisterzone.event.BazaarMakeBidEvent;
+import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.event.BazaarSelectTileEvent;
+import com.jcloisterzone.event.BazaarTileSelectedEvent;
+import com.jcloisterzone.event.BridgeDeployedEvent;
+import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.ChatEvent;
+import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.SelectDragonMoveEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
+import com.jcloisterzone.event.TunnelPiecePlacedEvent;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
-import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.game.phase.FlierActionPhase;
-import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -54,7 +60,7 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 
-public class ClientController implements GameEventListener, UserInterface {
+public class ClientController  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,18 +71,19 @@ public class ClientController implements GameEventListener, UserInterface {
         this.client = client;
     }
 
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        client.getCreateGamePanel().updateCustomRule(rule, enabled);
+    @Subscribe
+    public void updateCustomRule(RuleChangeEvent ev) {
+        client.getCreateGamePanel().updateCustomRule(ev.getRule(), ev.isEnabled());
     }
 
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        client.getCreateGamePanel().updateExpansion(expansion, enabled);
+    @Subscribe
+    public void updateExpansion(ExpansionChangedEvent ev) {
+        client.getCreateGamePanel().updateExpansion(ev.getExpansion(), ev.isEnabled());
     }
 
-    @Override
-    public void updateSlot(PlayerSlot slot) {
+    @Subscribe
+    public void updateSlot(PlayerSlotChangeEvent ev) {
+        PlayerSlot slot = ev.getSlot();
         if (client.getCreateGamePanel() != null) {
             client.getCreateGamePanel().updateSlot(slot);
         } else {
@@ -91,13 +98,25 @@ public class ClientController implements GameEventListener, UserInterface {
         }
     }
 
-    @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        client.getCreateGamePanel().updateSupportedExpansions(expansions);
+    @Subscribe
+    public void updateSupportedExpansions(SupportedExpansionsChangeEvent ev) {
+        client.getCreateGamePanel().updateSupportedExpansions(ev.getExpansions());
     }
 
-    @Override
-    public void started(Snapshot snapshot) {
+    @Subscribe
+    public void gameStateChange(GameStateChangeEvent ev) {
+        switch (ev.getType()) {
+        case GameStateChangeEvent.GAME_START:
+            started(ev);
+            break;
+        case GameStateChangeEvent.GAME_OVER:
+            client.closeGame(true);
+            new GameOverDialog(client);
+            break;
+        }
+    }
+
+    private void started(GameStateChangeEvent ev) {
         client.cleanContentPane();
 
         Container pane = client.getContentPane();
@@ -110,7 +129,7 @@ public class ClientController implements GameEventListener, UserInterface {
         client.setMainPanel(mainPanel);
         pane.add(mainPanel, BorderLayout.CENTER);
 
-        mainPanel.started(snapshot);
+        mainPanel.started(ev.getSnapshot());
 
         if (keyController == null) {
             // first started game
@@ -126,8 +145,13 @@ public class ClientController implements GameEventListener, UserInterface {
         menu.setIsGameRunning(true);
     }
 
-    @Override
-    public void playerActivated(Player turnPlayer, Player activePlayer) {
+    @Subscribe
+    public void turnChanged(PlayerTurnEvent ev) {
+        playerActivated(ev.getPlayer(), ev.getPlayer());
+    }
+
+    @Deprecated
+    private void playerActivated(Player turnPlayer, Player activePlayer) {
         client.setActivePlayer(activePlayer);
         client.getControlPanel().playerActivated(turnPlayer, activePlayer);
 
@@ -155,126 +179,116 @@ public class ClientController implements GameEventListener, UserInterface {
         client.setTitle(title.toString());
     }
 
-    @Override
-    public void tileDrawn(Tile tile) {
-        client.clearActions();
-        refreshWindowTitle();
-    }
-
-    @Override
-    public void tileDiscarded(Tile tile) {
-        DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
-        if (discardedTilesDialog == null) {
-            discardedTilesDialog = new DiscardedTilesDialog(client);
-            client.setDiscardedTilesDialog(discardedTilesDialog);
-            client.getJMenuBar().setShowDiscardedEnabled(true);
+    @Subscribe
+    public void tileEvent(TileEvent ev) {
+        switch (ev.getType()) {
+        case TileEvent.DRAW:
+            client.clearActions();
+            refreshWindowTitle();
+            break;
+        case TileEvent.DISCARD:
+            DiscardedTilesDialog discardedTilesDialog = client.getDiscardedTilesDialog();
+            if (discardedTilesDialog == null) {
+                discardedTilesDialog = new DiscardedTilesDialog(client);
+                client.setDiscardedTilesDialog(discardedTilesDialog);
+                client.getJMenuBar().setShowDiscardedEnabled(true);
+            }
+            discardedTilesDialog.addTile(ev.getTile());
+            discardedTilesDialog.setVisible(true);
+            break;
+        case TileEvent.PLACEMENT:
+            client.getMainPanel().tilePlaced(ev.getTile());
+            break;
         }
-        discardedTilesDialog.addTile(tile);
-        discardedTilesDialog.setVisible(true);
+
+
     }
 
-    @Override
-    public void tilePlaced(Tile tile) {
-        client.getMainPanel().tilePlaced(tile);
-    }
-
-    @Override
-    public void dragonMoved(Position p) {
-        client.getMainPanel().dragonMoved(p);
-    }
-
-    @Override
-    public void tunnelPiecePlaced(Player player, Position p, Location d, boolean isSecondPiece) {
-        client.getMainPanel().tunnelPiecePlaced(player, p, d, isSecondPiece);
-    }
-
-    @Override
-    public void gameOver() {
-        client.closeGame(true);
-        new GameOverDialog(client);
-    }
-
-    @Override
-    public void phaseEntered(Phase phase) {
-        GridPanel grid = client.getGridPanel();
-        if (grid == null)
-            return;
-
-        if (phase instanceof FlierActionPhase) {
-
+    @Subscribe
+    public void dragonMoved(NeutralFigureMoveEvent ev) {
+        switch (ev.getType()) {
+        case NeutralFigureMoveEvent.DRAGON:
+            client.getMainPanel().dragonMoved(ev.getPosition());
+            break;
+        case NeutralFigureMoveEvent.FAIRY:
+            client.getMainPanel().fairyMoved(ev.getPosition());
+            break;
         }
     }
 
-    @Override
-    public void flierRoll(Position pos, int distance) {
-        client.getMainPanel().flierRoll(pos, distance);
+    @Subscribe
+    public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
+        client.getMainPanel().tunnelPiecePlaced(ev.getPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
     }
 
-    @Override
-    public void fairyMoved(Position p) {
-        client.getMainPanel().fairyMoved(p);
+
+    @Subscribe
+    public void flierRoll(FlierRollEvent ev) {
+        client.getMainPanel().flierRoll(ev.getPosition(), ev.getDistance());
     }
 
-    @Override
-    public void towerIncreased(Position p, Integer height) {
+    @Subscribe
+    public void towerIncreased(TowerIncreasedEvent ev) {
         client.clearActions();
-        client.getMainPanel().towerIncreased(p, height);
-    }
-
-    @Override
-    public void ransomPaid(Player from, Player to, Follower f) {
-        client.getGridPanel().repaint();
+        client.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
     }
 
     // ------------------ Meeple events -----------
 
-    @Override
-    public void deployed(Meeple m) {
-        client.getMainPanel().deployed(m);
+    @Subscribe
+    public void meepleEvent(MeepleEvent ev) {
+        switch (ev.getType()) {
+        case MeepleEvent.DEPLOY:
+            client.getMainPanel().deployed(ev.getMeeple());
+            break;
+        case MeepleEvent.UNDEPLOY:
+            client.getMainPanel().undeployed(ev.getMeeple());
+            break;
+        case MeepleEvent.PRISON:
+        case MeepleEvent.RELEASE:
+            client.getGridPanel().repaint();
+            break;
+        }
+
     }
 
-    @Override
-    public void undeployed(Meeple m) {
-        client.getMainPanel().undeployed(m);
+
+    @Subscribe
+    public void bridgeDeployed(BridgeDeployedEvent ev) {
+        client.getMainPanel().bridgeDeployed(ev.getPosition(), ev.getLocation());
     }
 
-    @Override
-    public void bridgeDeployed(Position pos, Location loc) {
-        client.getMainPanel().bridgeDeployed(pos, loc);
+    @Subscribe
+    public void castleDeployed(CastleDeployedEvent ev) {
+        client.getMainPanel().castleDeployed(ev.getPart1(), ev.getPart2());
     }
 
-    @Override
-    public void castleDeployed(Castle castle1, Castle castle2) {
-        client.getMainPanel().castleDeployed(castle1, castle2);
-    }
+    // ------------------ Feature events ----------
 
-    // ------------------ Feature evnts ----------
 
-    @Override
-    public void completed(Completable feature, CompletableScoreContext ctx) {
-    }
-
-    @Override
-    public void scored(Feature feature, int points, String label, Meeple meeple, boolean finalScoring) {
-        client.getMainPanel().scored(feature, label, meeple, finalScoring);
+    @Subscribe
+    public void scored(ScoreEvent ev) {
+        if (ev.getFeature() == null) {
+            client.getMainPanel().scored(ev.getPosition(), ev.getPlayer(), ev.getLabel(), ev.isFinal());
+        } else {
+            client.getMainPanel().scored(ev.getFeature(), ev.getLabel(), ev.getMeeple(), ev.isFinal());
+        }
         client.getMainPanel().repaint(); // players only
     }
 
-    @Override
-    public void scored(Position position, Player player, int points, String label, boolean finalScoring) {
-        client.getMainPanel().scored(position, player, label, finalScoring);
-        client.getMainPanel().repaint(); // players only
-    }
+
 
     // User interface
 
-    @Override
+    //@Override
     public void showWarning(String title, String message) {
         JOptionPane.showMessageDialog(client, message, title, JOptionPane.WARNING_MESSAGE);
     }
 
-    @Override
-    public void selectDragonMove(Set<Position> positions, int movesLeft) {
+    @Subscribe
+    public void selectDragonMove(SelectDragonMoveEvent ev) {
+        Set<Position> positions = ev.getPositions();
+        int movesLeft = ev.getMovesLeft();
         client.clearActions();
         DragonLayer dragonDecoration = client.getGridPanel().findDecoration(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
@@ -286,15 +300,15 @@ public class ClientController implements GameEventListener, UserInterface {
         }
     }
 
-    @Override
-    public void selectAction(List<PlayerAction> actions, boolean canPass) {
+    @Subscribe
+    public void selectAction(SelectActionEvent ev) {
         client.clearActions();
-        client.getControlPanel().selectAction(actions, canPass);
+        client.getControlPanel().selectAction(ev.getActions(), ev.isPassAllowed());
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void selectCornCircleOption() {
+    @Subscribe
+    public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
         client.clearActions();
         createSecondPanel(CornCirclesPanel.class);
         client.getGridPanel().repaint();
@@ -321,12 +335,12 @@ public class ClientController implements GameEventListener, UserInterface {
         return newPanel;
     }
 
-    @Override
-    public void selectBazaarTile() {
+    @Subscribe
+    public void selectBazaarTile(BazaarSelectTileEvent ev) {
         client.clearActions();
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (client.isClientActive()) {
-            ArrayList<BazaarItem> supply = client.getGame().getCapability(BazaarCapability.class).getBazaarSupply();
+            List<BazaarItem> supply = ev.getBazaarSupply();
             for (int i = 0; i < supply.size(); i++) {
                 // find first allowed item
                 if (supply.get(i).getOwner() == null) {
@@ -341,17 +355,17 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void bazaarTileSelected(int supplyIndex, BazaarItem bazaarItem) {
+    @Subscribe
+    public void bazaarTileSelected(BazaarTileSelectedEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void makeBazaarBid(int supplyIndex) {
+    @Subscribe
+    public void makeBazaarBid(BazaarMakeBidEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
-        bazaarPanel.setSelectedItem(supplyIndex);
+        bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
         } else {
@@ -361,10 +375,10 @@ public class ClientController implements GameEventListener, UserInterface {
         client.getGridPanel().repaint();
     }
 
-    @Override
-    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
+    @Subscribe
+    public void selectBuyOrSellBazaarOffer(BazaarSelectBuyOrSellEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
-        bazaarPanel.setSelectedItem(supplyIndex);
+        bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (client.isClientActive()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
         } else {
@@ -372,20 +386,20 @@ public class ClientController implements GameEventListener, UserInterface {
         }
     }
 
-    @Override
-    public void bazaarAuctionsEnded() {
+    @Subscribe
+    public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
         client.getGridPanel().setSecondPanel(null);
     }
 
-    @Override
-    public void plagueSpread() {
-        client.getGridPanel().repaint();
-    }
+//    @Override
+//    public void plagueSpread() {
+//        client.getGridPanel().repaint();
+//    }
 
-    @Override
-    public void chatMessageReceived(Player player, String message) {
+    @Subscribe
+    public void chatMessageReceived(ChatEvent ev) {
         if (client.getGridPanel().getChatPanel() != null) {
-            client.getGridPanel().getChatPanel().displayChatMessage(player, message);
+            client.getGridPanel().getChatPanel().displayChatMessage(ev.getPlayer(), ev.getMessage());
         }
     }
 }

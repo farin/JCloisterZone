@@ -7,6 +7,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
@@ -72,8 +73,8 @@ public class WagonPhase extends Phase {
             LocationsMap wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
                 wagonCap.setWagonPlayer(player);
-                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                notifyUI(new MeepleAction(Wagon.class, wagonMoves), true);
+                //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class, wagonMoves), true));
                 return true;
             }
         }
