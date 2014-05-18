@@ -269,12 +269,12 @@ public class Game extends GameSettings {
         ScoreEvent scoreEvent;
         if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
-                    points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, follower,
-                    isFinalScoring);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY, follower);
+            scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);
         } else {
-            scoreEvent = new ScoreEvent(follower.getFeature(), points, points+"", follower, isFinalScoring);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points, PointCategory.FAIRY, follower);
         }
+        scoreEvent.setFinal(isFinalScoring);
         post(scoreEvent);
     }
 

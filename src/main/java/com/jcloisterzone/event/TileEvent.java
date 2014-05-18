@@ -1,9 +1,13 @@
 package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.DefaultTilePack;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.Game;
 
-public class TileEvent extends PlayEvent {
+public class TileEvent extends PlayEvent implements Undoable {
 
     public static final int DRAW = 1;
     public static final int PLACEMENT = 2;
@@ -22,6 +26,23 @@ public class TileEvent extends PlayEvent {
 
     public Tile getTile() {
         return tile;
+    }
+
+    @Override
+    public void undo(Game game) {
+        switch (getType()) {
+        case PLACEMENT:
+            game.getBoard().unmergeFeatures(tile);
+            game.getBoard().remove(tile);
+            if (tile.isAbbeyTile()) {
+                tile.setRotation(Rotation.R0);
+                game.setCurrentTile(null);
+                ((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
+            }
+            break;
+        default:
+            throw new UnsupportedOperationException();
+        }
     }
 
 }

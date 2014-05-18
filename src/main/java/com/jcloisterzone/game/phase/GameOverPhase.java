@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
@@ -39,7 +40,9 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
 
     @Override
     public void scoreCastle(Meeple meeple, Castle castle) {
-        game.post(new ScoreEvent(meeple.getFeature(), 0, "0", meeple, true));
+        ScoreEvent ev = new ScoreEvent(meeple.getFeature(), 0, PointCategory.CASTLE, meeple);
+        ev.setFinal(true);
+        game.post(ev);
     }
 
     @Override
@@ -51,8 +54,10 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
     @Override
     public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
         int points = ctx.getBarnPoints();
-        meeple.getPlayer().addPoints(points, ctx.getMasterFeature().getPointCategory());
-        game.post(new ScoreEvent(meeple.getFeature(), points, points+"", meeple, true));
+        meeple.getPlayer().addPoints(points, PointCategory.FARM);
+        ScoreEvent ev = new ScoreEvent(meeple.getFeature(), points, PointCategory.FARM, meeple);
+        ev.setFinal(true);
+        game.post(ev);
     }
 
 

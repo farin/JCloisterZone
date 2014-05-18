@@ -147,7 +147,7 @@ public class ScorePhase extends Phase {
         if (meeples.isEmpty()) meeples = castle.getSecondFeature().getMeeples();
         Meeple m = meeples.get(0); //all meeples must share same owner
         m.getPlayer().addPoints(points, PointCategory.CASTLE);
-        game.post(new ScoreEvent(m.getFeature(), points, points+"", m, false));
+        game.post(new ScoreEvent(m.getFeature(), points, PointCategory.CASTLE, m));
         m.undeploy(false);
     }
 

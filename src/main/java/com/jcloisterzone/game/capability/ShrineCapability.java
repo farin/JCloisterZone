@@ -4,6 +4,7 @@ import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.ScoreEvent;
@@ -32,7 +33,7 @@ public final class ShrineCapability extends Capability {
         boolean first = true;
         for (Meeple m : cloister.getMeeples()) {
             if (first) {
-                game.post(new ScoreEvent(cloister, 0, "0", m, false));
+                game.post(new ScoreEvent(cloister, 0, PointCategory.CLOISTER, m));
                 first = false;
             }
             m.undeploy();

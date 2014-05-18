@@ -29,7 +29,7 @@ public class FairyPhase extends Phase {
             for (Meeple m : game.getDeployedMeeples()) {
                 if (m.at(fairyPos) && m.getPlayer() == getActivePlayer()) {
                     m.getPlayer().addPoints(1, PointCategory.FAIRY);
-                    game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), 1, "1", false));
+                    game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), 1, PointCategory.FAIRY));
                     break;
                 }
             }

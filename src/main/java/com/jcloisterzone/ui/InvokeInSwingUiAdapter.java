@@ -43,7 +43,9 @@ public class InvokeInSwingUiAdapter {
             ScoreEvent sev = (ScoreEvent) ev;
             if (sev.getMeeple() != null) {
                 Meeple m = sev.getMeeple();
-                return new ScoreEvent(sev.getFeature(), sev.getPoints(), sev.getLabel(), (Meeple) m.clone(), sev.isFinal());
+                ScoreEvent copy = new ScoreEvent(sev.getFeature(), sev.getPoints(), sev.getCategory(), (Meeple) m.clone());
+                copy.setFinal(sev.isFinal());
+                return copy;
             }
         }
         return ev;
