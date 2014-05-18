@@ -106,7 +106,10 @@ public class LegacyAiPlayer extends RankingAiPlayer {
 
         //trigger score
         game.getPhase().next(ScorePhase.class);
-        game.getPhase().enter();
+        //skip scoring when no tile is places (eg. ranking pass in AbbeyPhase)
+        if (game.getCurrentTile() != null) {
+            game.getPhase().enter();
+        }
 
         Arrays.fill(openCount, 0);
 

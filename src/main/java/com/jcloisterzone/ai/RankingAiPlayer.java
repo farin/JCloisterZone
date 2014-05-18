@@ -22,6 +22,11 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.action.UndeployAction;
+import com.jcloisterzone.ai.step.DeployMeepleStep;
+import com.jcloisterzone.ai.step.PassStep;
+import com.jcloisterzone.ai.step.PlaceAbbeyStep;
+import com.jcloisterzone.ai.step.PlaceTileStep;
+import com.jcloisterzone.ai.step.Step;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -39,6 +44,7 @@ import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.game.phase.ScorePhase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
@@ -54,18 +60,18 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 
     protected void popActionChain() {
-        if (bestChain.previous == null) {
-            bestChain.performOnServer();
+        if (bestChain.getPrevious() == null) {
+            bestChain.performOnServer(getServer());
             bestChain = null;
             return;
         }
 
         Step step = bestChain;
-        while (step.previous.previous != null) {
-            step = step.previous;
+        while (step.getPrevious().getPrevious() != null) {
+            step = step.getPrevious();
         }
-        step.previous.performOnServer();
-        step.previous = null;
+        step.getPrevious().performOnServer(getServer());
+        step.setPrevious(null); //cut last element from chain
     }
 
     protected void autosave() {
@@ -115,126 +121,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
         return copy;
     }
 
-    abstract class Step {
-        final SavePoint savePoint;
-        Step previous;
-        double ranking = 0.0;
-
-        public Step(Step previous, SavePoint savePoint) {
-            this.previous = previous;
-            this.savePoint = savePoint;
-        }
-
-        public abstract void performLocal(Game game);
-        public abstract void performOnServer();
-    }
-
-    class PlaceTileStep extends Step {
-        final Rotation rot;
-        final Position pos;
-        final TilePlacementAction action;
-
-        public PlaceTileStep(Step previous, SavePoint savePoint, TilePlacementAction action, Rotation rot, Position pos) {
-            super(previous, savePoint);
-            this.action = action;
-            this.rot = rot;
-            this.pos = pos;
-        }
-
-        @Override
-        public void performLocal(Game game) {
-            game.getPhase().placeTile(rot, pos);
-        }
-
-        @Override
-        public void performOnServer() {
-            action.perform(getServer(), rot, pos);
-        }
-
-        @Override
-        public String toString() {
-            return "place " + game.getCurrentTile().getId() + " / " + rot + " tile on " + pos;
-        }
-    }
-
-    class PlaceAbbeyStep extends Step {
-        final Position pos;
-        final AbbeyPlacementAction action;
-
-        public PlaceAbbeyStep(Step previous, SavePoint savePoint, AbbeyPlacementAction action, Position pos) {
-            super(previous, savePoint);
-            this.action = action;
-            this.pos = pos;
-        }
-
-        @Override
-        public void performLocal(Game game) {
-            game.getPhase().placeTile(Rotation.R0, pos);
-        }
-
-        @Override
-        public void performOnServer() {
-            action.perform(getServer(), pos);
-        }
-
-        @Override
-        public String toString() {
-            return "place Abbey tile on " + pos;
-        }
-    }
-
-
-    class DeployMeepleStep extends Step {
-        final Position pos;
-        final Location loc;
-        final MeepleAction action;
-
-        public DeployMeepleStep(Step previous, SavePoint savePoint, MeepleAction action, Position pos, Location loc) {
-            super(previous, savePoint);
-            this.action = action;
-            this.pos = pos;
-            this.loc = loc;
-        }
-
-        @Override
-        public void performLocal(Game game) {
-            game.getPhase().deployMeeple(pos, loc, action.getMeepleType());
-        }
-
-        @Override
-        public void performOnServer() {
-            action.perform(getServer(), pos, loc);
-        }
-
-        @Override
-        public String toString() {
-            return "deploy meeple " + action.getMeepleType().getSimpleName() + " on " + pos + " / " + loc;
-        }
-    }
-
-    class PassStep extends Step {
-
-        public PassStep(Step previous, SavePoint savePoint) {
-            super(previous, savePoint);
-        }
-
-        @Override
-        public void performLocal(Game game) {
-            game.getPhase().pass();
-        }
-
-        @Override
-        public void performOnServer() {
-            getServer().pass();
-        }
-
-        @Override
-        public String toString() {
-            return "pass";
-        }
-    }
-
-
     class SelectActionTask implements Runnable {
         Deque<Step> queue = new LinkedList<Step>();
 
@@ -261,12 +147,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
 
         private void dbgPringFooter() {
-            System.out.println("=== selected chain (reversed) " + bestSoFar.ranking);
+            System.out.println("=== selected chain (reversed) " + bestSoFar.getRanking());
             Step step = bestSoFar;
             while (step != null) {
                 System.out.print("  - ");
                 System.out.println(step.toString());
-                step = step.previous;
+                step = step.getPrevious();
             }
             System.out.println("*** ranking end ***");
         }
@@ -274,9 +160,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
         private void dbgPringStep(Step step, boolean isFinal) {
             Step s = step;
             StringBuilder sb = new StringBuilder("  ");
-            while (s.previous != null) {
+            while (s.getPrevious() != null) {
                 sb.append("  ");
-                s = s.previous;
+                s = s.getPrevious();
             }
             sb.append("- ").append(step.toString()).append(" ");
             if (isFinal) {
@@ -284,7 +170,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
                     sb.append(".");
                 }
                 //if (step.ranking > 0) sb.append(" ");
-                sb.append(" ").append(String.format(Locale.ROOT, "%9.5f", step.ranking));
+                sb.append(" ").append(String.format(Locale.ROOT, "%.5f", step.getRanking()));
             }
             System.out.println(sb);
         }
@@ -306,7 +192,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
                 while (!queue.isEmpty()) {
                     step = queue.removeFirst();
-                    spm.restore(step.savePoint);
+                    spm.restore(step.getSavePoint());
                     step.performLocal(game);
                     boolean isFinal = phaseLoop();
                     if (isFinal) {
@@ -318,8 +204,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 bestChain = bestSoFar;
                 popActionChain();
             } catch (Exception e) {
-                //TODO fix exception in abbey phase
-
                 logger.error(e.getMessage(), e);
                 selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
             }
@@ -333,7 +217,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 if (!Iterables.contains(allowed, phase.getClass())) {
                     return true;
                 }
-                //logger.info("  * not entered {} -> {}", phase, phase.getDefaultNext());
                 phase.setEntered(true);
                 phase.enter();
                 phase = game.getPhase();
@@ -342,18 +225,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
 
         private void rankStepChain(Step step) {
-            step.ranking = rank(game);
-            if (bestSoFar == null || step.ranking > bestSoFar.ranking) {
+            step.setRanking(rank(game));
+            if (bestSoFar == null || step.getRanking() > bestSoFar.getRanking()) {
                 bestSoFar = step;
             }
         }
 
         @Subscribe
         public void handleActionEvent(SelectActionEvent ev) {
-            if (ev.isPassAllowed()) {
-                queue.addFirst(new PassStep(step, spm.save()));
-            }
-
             List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
 
             for (PlayerAction action : ev.getActions()) {
@@ -377,7 +256,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 handleMeepleActions(preprocessMeepleActions(meepleActions));
             }
 
-
+            if (ev.isPassAllowed()) {
+                queue.addFirst(new PassStep(step, spm.save()));
+            }
 
 
 //          if (action instanceof BarnAction) {
