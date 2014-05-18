@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -116,6 +118,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     abstract class Step {
         final SavePoint savePoint;
         Step previous;
+        double ranking = 0.0;
 
         public Step(Step previous, SavePoint savePoint) {
             this.previous = previous;
@@ -147,6 +150,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         public void performOnServer() {
             action.perform(getServer(), rot, pos);
         }
+
+        @Override
+        public String toString() {
+            return "place " + game.getCurrentTile().getId() + " / " + rot + " tile on " + pos;
+        }
     }
 
     class PlaceAbbeyStep extends Step {
@@ -167,6 +175,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         @Override
         public void performOnServer() {
             action.perform(getServer(), pos);
+        }
+
+        @Override
+        public String toString() {
+            return "place Abbey tile on " + pos;
         }
     }
 
@@ -192,6 +205,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         public void performOnServer() {
             action.perform(getServer(), pos, loc);
         }
+
+        @Override
+        public String toString() {
+            return "deploy meeple " + action.getMeepleType().getSimpleName() + " on " + pos + " / " + loc;
+        }
     }
 
     class PassStep extends Step {
@@ -209,6 +227,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         public void performOnServer() {
             getServer().pass();
         }
+
+        @Override
+        public String toString() {
+            return "pass";
+        }
     }
 
 
@@ -218,9 +241,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         private final SelectActionEvent rootEv;
 
         private Step step = null;
-       // private PositionRanking bestSoFar;
-        private Step bestSoFarStep = null;
-        private double bestSoFarRank = Double.NEGATIVE_INFINITY;
+        private Step bestSoFar = null;
 
         private SavePointManager spm;
         private Game game;
@@ -229,12 +250,54 @@ public abstract class RankingAiPlayer extends AiPlayer {
             this.rootEv = rootEv;
         }
 
+        private void dbgPringHeader() {
+            StringBuilder sb = new StringBuilder("*** ranking start * ");
+            sb.append(game.getPhase().getClass().getSimpleName());
+            sb.append(" * ");
+            Player p = game.getActivePlayer();
+            sb.append(p.getNick());
+            sb.append(" ***");
+            System.out.println(sb);
+        }
+
+        private void dbgPringFooter() {
+            System.out.println("=== selected chain (reversed) " + bestSoFar.ranking);
+            Step step = bestSoFar;
+            while (step != null) {
+                System.out.print("  - ");
+                System.out.println(step.toString());
+                step = step.previous;
+            }
+            System.out.println("*** ranking end ***");
+        }
+
+        private void dbgPringStep(Step step, boolean isFinal) {
+            Step s = step;
+            StringBuilder sb = new StringBuilder("  ");
+            while (s.previous != null) {
+                sb.append("  ");
+                s = s.previous;
+            }
+            sb.append("- ").append(step.toString()).append(" ");
+            if (isFinal) {
+                while (sb.length() < 80) {
+                    sb.append(".");
+                }
+                //if (step.ranking > 0) sb.append(" ");
+                sb.append(" ").append(String.format(Locale.ROOT, "%9.5f", step.ranking));
+            }
+            System.out.println(sb);
+        }
+
+
         @Override
         public void run() {
+            boolean dbgPrint = true;
             try {
                 autosave();
 
                 this.game = copyGame(this);
+                if (dbgPrint) dbgPringHeader();
 
                 spm = new SavePointManager(game);
                 spm.startRecording();
@@ -245,13 +308,14 @@ public abstract class RankingAiPlayer extends AiPlayer {
                     step = queue.removeFirst();
                     spm.restore(step.savePoint);
                     step.performLocal(game);
-                    if (phaseLoop()) {
-                        //end phase
+                    boolean isFinal = phaseLoop();
+                    if (isFinal) {
                         rankStepChain(step);
                     }
+                    if (dbgPrint) dbgPringStep(step, isFinal);
                 }
-
-                bestChain = bestSoFarStep;
+                if (dbgPrint) dbgPringFooter();
+                bestChain = bestSoFar;
                 popActionChain();
             } catch (Exception e) {
                 //TODO fix exception in abbey phase
@@ -278,11 +342,9 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
 
         private void rankStepChain(Step step) {
-            double currRank = rank(game);
-            //System.out.println(currRank + ": " + step.toString());
-            if (currRank > bestSoFarRank) {
-                bestSoFarRank = currRank;
-                bestSoFarStep = step;
+            step.ranking = rank(game);
+            if (bestSoFar == null || step.ranking > bestSoFar.ranking) {
+                bestSoFar = step;
             }
         }
 
