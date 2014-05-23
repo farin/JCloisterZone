@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-07 23:56+0100\n"
-"PO-Revision-Date: 2014-01-08 11:24+0100\n"
+"PO-Revision-Date: 2014-05-24 00:17+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: Hungarian\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:40
 msgid "Basic game"
@@ -26,7 +27,7 @@ msgstr "Szerencsekerék"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Winter Edition"
-msgstr ""
+msgstr "Téli kiadás"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "The Gingerbread man"
@@ -120,35 +121,35 @@ msgstr "A fesztivál (10. évf.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "Little Buildings"
-msgstr ""
+msgstr "Kis épületek"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Wind Rose"
-msgstr ""
+msgstr "A szél feltámadt"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Flier"
-msgstr ""
+msgstr "A repülő szerkezet"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "The Messages"
-msgstr ""
+msgstr "Sürgönyök"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The Ferries"
-msgstr ""
+msgstr "Kompok"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The Goldmines"
-msgstr ""
+msgstr "Aranybányák"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "Mage & Witch"
-msgstr ""
+msgstr "Mágus és boszorkány"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Robber"
-msgstr ""
+msgstr "A rablók"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Corn circles II"
@@ -164,7 +165,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
-msgstr ""
+msgstr "Hidak"
 
 #: src/main/java/com/jcloisterzone/feature/Castle.java:58
 msgid "Castle"
@@ -172,7 +173,7 @@ msgstr "Kastélyok"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
-msgstr ""
+msgstr "Városok"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:41
 msgid "Cloister"
@@ -215,8 +216,10 @@ msgid "The Pig herd is present on the farm tile."
 msgstr "A pásztor jelen van a farm lapon."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
-msgid "Allow direct barn placement on a farm where another barn is already placed."
-msgstr "Engedélyezi pajta elhelyezését olyan farmon, ami már rendelkezik pajtával."
+msgid ""
+"Allow direct barn placement on a farm where another barn is already placed."
+msgstr ""
+"Engedélyezi pajta elhelyezését olyan farmon, ami már rendelkezik pajtával."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid "Apply tunnel rule on tunnels from other expansions."
@@ -227,8 +230,12 @@ msgid "No bazaar bidding. Each players just choose one tile."
 msgstr "Bazár lapon nincs licit kör. Minden játékos csak választ egy lapot."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:87
-msgid "Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version."
-msgstr "A távoli és helyi program verziója nem egyezik. Kérlek használjátok a legfrissebb verziót mindkét gépen."
+msgid ""
+"Remote JCloisterZone is not compatible with local application. Please "
+"upgrade both applications to same version."
+msgstr ""
+"A távoli és helyi program verziója nem egyezik. Kérlek, használjátok a "
+"legfrissebb verziót mindkét gépen."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:88
 msgid "Incompatible versions"
@@ -239,7 +246,8 @@ msgid "Load error"
 msgstr "Betöltési hiba"
 
 #: src/main/java/com/jcloisterzone/game/Snapshot.java:254
-msgid "Saved game is incompatible or file is corrupted. Game couldn't work properly."
+msgid ""
+"Saved game is incompatible or file is corrupted. Game couldn't work properly."
 msgstr "A játékmentés megsérült, ezért nem használható."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:295
@@ -260,8 +268,12 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:297
-msgid "Game is running. Do you really want to quit game and also disconnect all other players?"
-msgstr "A játék még nem ért véget. Bezárod, megszakítva ezzel a többi játékos játékát is?"
+msgid ""
+"Game is running. Do you really want to quit game and also disconnect all "
+"other players?"
+msgstr ""
+"A játék még nem ért véget. Bezárod, megszakítva ezzel a többi játékos "
+"játékát is?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:304
 msgid "Game is running. Do you really want to leave it?"
@@ -410,16 +422,17 @@ msgid "Version"
 msgstr "Verzió"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:68
-msgid "Distributed under the terms of GNU Affero General Public License version 3"
+msgid ""
+"Distributed under the terms of GNU Affero General Public License version 3"
 msgstr "Terjeszthető a GPL3 licenc szerint"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:34
 msgid "Undeploy meeple"
-msgstr ""
+msgstr "Követő visszavétele"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:41
 msgid "Select meeple to undeploy"
-msgstr ""
+msgstr "Válassz egy követőt, akit eltávolítasz"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
@@ -499,7 +512,9 @@ msgstr "Válassz lapot"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:152
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>Válassz lapot a következő licithez,<br>és tedd meg az induló ajánlatod.</html>"
+msgstr ""
+"<html>Válassz lapot a következő licithez,<br>és tedd meg az induló ajánlatod."
+"</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:157
 msgid "Raise bid or pass."
@@ -540,20 +555,20 @@ msgstr "Bazár készlet"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
 msgid "Each player…"
-msgstr ""
+msgstr "Minden játékos…"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
 msgid "may deploy additional follower"
-msgstr ""
+msgstr "letehet még egy követőt"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:50
 msgid "must remove follower"
-msgstr ""
+msgstr "el kell távolítson egy követőt"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:63
 #, java-format
 msgid "on/from a {0}."
-msgstr ""
+msgstr "a {0} -ról/re."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:98
 msgid "Corn circle"
@@ -602,7 +617,7 @@ msgstr "Port"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:131
 msgid "Invalid port number."
-msgstr "Érvénytelen port."
+msgstr "Érvénytelen portszám."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:133
 msgid "Connection failed. Unknown host."
@@ -668,27 +683,50 @@ msgid "Open player slot"
 msgstr "Nyitott játékoshelyek"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:16
-msgid "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to scroll the board. Click with <b>middle</b> mouse button to center the board. Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr "<html>Az <b>A</b, <b>S</b>, <b>W</b>, <b>D</b> vagy <b>nyíl</b> billentyűkkel mozoghatsz a táblán. Kattints a <b>középső</b> egér gombbal a középre ugráshoz. Zoom-olj a <b>+</b> vagy <b>-</b> gombokkal vagy az egér <b>görgővel</b>.</html>"
+msgid ""
+"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
+"scroll the board. Click with <b>middle</b> mouse button to center the board. "
+"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr ""
+"<html>Az <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> vagy <b>nyíl</b> "
+"billentyűkkel mozoghatsz a táblán. Kattints a <b>középső</b> egér gombbal a "
+"középre ugráshoz. Zoom-olj a <b>+</b> vagy <b>-</b> gombokkal vagy az egér "
+"<b>görgővel</b>.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:21
-msgid "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it by <b>left</b> click.</html>"
-msgstr "<html>Forgasd a lapot a <b>Tab</b>-bal vagy a <b>jobb</b> kattintással. Helyezd el a lapot a <b>bal</b> kattintással.</html>"
+msgid ""
+"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
+"by <b>left</b> click.</html>"
+msgstr ""
+"<html>Forgasd a lapot a <b>Tab</b>-bal vagy a <b>jobb</b> kattintással. "
+"Helyezd el a lapot a <b>bal</b> kattintással.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
-msgid "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to select appropriate action.</html>"
-msgstr "<html>Az elhelyezett lapon <b>Tab</b>-bal vagy a <b>jobb</b> kattintással választhatsz megfelelő cselekvést.</html>"
+msgid ""
+"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
+"select appropriate action.</html>"
+msgstr ""
+"<html>Az elhelyezett lapon <b>Tab</b>-bal vagy a <b>jobb</b> kattintással "
+"választhatsz megfelelő cselekvést.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
-msgid "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play no action.</html>"
-msgstr "<html>Egyébként passzolhatsz az <b>Enter</b> vagy <b>Szóköz</b> gombbal, ha nem kívánsz cselekedni.</html>"
+msgid ""
+"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
+"no action.</html>"
+msgstr ""
+"<html>Egyébként passzolhatsz az <b>Enter</b> vagy <b>Szóköz</b> gombbal, ha "
+"nem kívánsz cselekedni.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:31
-msgid "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed tiles.</html>"
+msgid ""
+"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"tiles.</html>"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:57
-msgid "Create a new local or network game. You can play against any number of computer players."
+msgid ""
+"Create a new local or network game. You can play against any number of "
+"computer players."
 msgstr "Új helyi vagy távoli játék indítása."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
@@ -698,4 +736,3 @@ msgstr "Csatlakozás egy távoli JCloisterZone játékhoz."
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:93
 msgid "Load from a file previously saved game."
 msgstr "Utolsó mentés betöltése."
-
