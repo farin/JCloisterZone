@@ -499,7 +499,7 @@ msgstr "Wybierz swój kafelek."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:152
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>Wybierz kafelek do następnej licytacji<br>i przygotuj wstępną ofertę.</ html>"
+msgstr "<html>Wybierz kafelek do następnej licytacji<br>i przygotuj wstępną ofertę.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:157
 msgid "Raise bid or pass."
