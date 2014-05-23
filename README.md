@@ -42,10 +42,10 @@ don't compress saves, autosave before each AI play
     autosave: saves/_prerank.jcz
 
 skip game config dialog, player is name or AI class
-you can comment just profile key to disable whole autostart
+you can comment just preset key to disable whole autostart
 
     autostart:
-      profile: default
+      preset: default
       players:
         - Alice
         - Bob
