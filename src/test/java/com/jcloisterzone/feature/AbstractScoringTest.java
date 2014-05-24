@@ -7,6 +7,7 @@ import org.junit.Before;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.AbstractTileTest;
+import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -39,6 +40,7 @@ public class AbstractScoringTest extends AbstractTileTest {
     protected Tile putTile(Position pos, Rotation rot,  Expansion exp, String id) {
         Tile tile = createTile(exp, id);
         tile.setRotation(rot);
+        tile.setEdgePattern(EdgePattern.forTile(tile));
         game.getBoard().refreshAvailablePlacements(tile);
         game.getBoard().add(tile, pos, true);
         game.getBoard().mergeFeatures(tile);
