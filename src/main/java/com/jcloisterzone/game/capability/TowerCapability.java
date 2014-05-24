@@ -186,8 +186,8 @@ public final class TowerCapability extends Capability {
     public void inprison(Meeple m, Player player) {
         assert m.getLocation() == null;
         prisoners.get(player).add((Follower) m);
-        m.setLocation(Location.PRISON);
         game.post(new MeepleEvent(MeepleEvent.PRISON, m));
+        m.setLocation(Location.PRISON);
     }
 
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
@@ -205,7 +205,7 @@ public final class TowerCapability extends Capability {
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
-                game.post(new MeepleEvent(MeepleEvent.RELEASE, meeple));
+                game.post(new MeepleEvent(MeepleEvent.RELEASE, meeple, opponent));
                 game.getPhase().notifyRansomPaid();
                 return;
             }

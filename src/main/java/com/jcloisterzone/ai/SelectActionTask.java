@@ -25,14 +25,18 @@ import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.ai.step.DeployMeepleStep;
 import com.jcloisterzone.ai.step.MoveFairyStep;
 import com.jcloisterzone.ai.step.PassStep;
 import com.jcloisterzone.ai.step.PlaceAbbeyStep;
 import com.jcloisterzone.ai.step.PlaceTileStep;
+import com.jcloisterzone.ai.step.PlaceTowerPieceStep;
 import com.jcloisterzone.ai.step.Step;
+import com.jcloisterzone.ai.step.TakePrisonerStep;
 import com.jcloisterzone.ai.step.UndeployMeepleStep;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -113,7 +117,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
-        boolean dbgPrint = !false;
+        boolean dbgPrint = false;
         try {
             this.game = aiPlayer.copyGame(this);
             if (dbgPrint) dbgPringHeader();
@@ -193,6 +197,10 @@ public class SelectActionTask implements Runnable {
                 handleBarnAction(savePoint, (BarnAction) action);
             } else if (action instanceof FairyAction) {
                 handleFairyAction(savePoint, (FairyAction) action);
+            } else if (action instanceof TowerPieceAction) {
+            	handleTowerPieceAction(savePoint, (TowerPieceAction) action);
+            } else if (action instanceof TakePrisonerAction) {
+            	handleTakePrisonerAction(savePoint, (TakePrisonerAction) action);
             }
         }
 
@@ -203,13 +211,7 @@ public class SelectActionTask implements Runnable {
         if (ev.isPassAllowed()) {
             queue.push(new PassStep(step, savePoint));
         }
-
-//      if (action instanceof TowerPieceAction) {
-//          rankTowerPiecePlacement(currTile, (TowerPieceAction) action);
-//      }
-
     }
-
 
     protected void handleTilePlacementAction(SavePoint savePoint, TilePlacementAction action) {
         for (Entry<Position, Set<Rotation>> entry : action.getAvailablePlacements().entrySet()) {
@@ -226,14 +228,20 @@ public class SelectActionTask implements Runnable {
         }
     }
 
-    protected void handleBarnAction(SavePoint savePoint, BarnAction ba) {
-        handleMeepleActions(savePoint, Collections.singleton(ba));
-    }
-
     protected void handleFairyAction(SavePoint savePoint, FairyAction action) {
         for (Position pos : action.getSites()) {
             queue.push(new MoveFairyStep(step, savePoint, action, pos));
         }
+    }
+    
+    protected void handleTowerPieceAction(SavePoint savePoint, TowerPieceAction action) {
+    	for (Position pos : action.getSites()) {
+            queue.push(new PlaceTowerPieceStep(step, savePoint, action, pos));
+    	}
+    }
+    
+    protected void handleBarnAction(SavePoint savePoint, BarnAction ba) {
+        handleMeepleActions(savePoint, Collections.singleton(ba));
     }
 
     protected void handleUndeployAction(SavePoint savePoint, UndeployAction action) {
@@ -285,6 +293,25 @@ public class SelectActionTask implements Runnable {
             }
         }
     }
+    
+    protected void handleTakePrisonerAction(SavePoint savePoint, TakePrisonerAction action) {
+        for (Entry<Position, Set<Location>> entry : action.getLocationsMap().entrySet()) {
+            Position pos = entry.getKey();
+            for (Location loc: entry.getValue()) {
+            	//TODO copy paste ugly code from undeply action
+                for (Meeple m : game.getDeployedMeeples()) {
+                    if (m.at(pos) && m.getLocation().equals(loc)) {
+                        if (action.getPlayers().isAllowed(m.getPlayer())) {
+                            queue.push(new TakePrisonerStep(step, savePoint, action, pos, loc, m.getClass(), m.getPlayer()));
+                        }
+                    }
+                }
+          
+            }
+        }
+    }
+    
+   
 
     // ---- refactor done boundary -----
 
