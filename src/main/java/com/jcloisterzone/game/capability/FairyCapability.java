@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +13,7 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
@@ -48,15 +49,15 @@ public class FairyCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         FairyAction fairyAction = new FairyAction();
         Player activePlayer = game.getActivePlayer();
         for (Follower m : Iterables.filter(activePlayer.getFollowers(), MeeplePredicates.deployed())) {
             if (!m.at(fairyPosition)) {
-                fairyAction.getSites().add(m.getPosition());
+            	fairyAction.add(m.getPosition());
             }
         }
-        if (!fairyAction.getSites().isEmpty()) {
+        if (!fairyAction.isEmpty()) {
             actions.add(fairyAction);
         }
     }

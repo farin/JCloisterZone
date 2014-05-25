@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,7 +16,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -63,7 +64,7 @@ public class BridgeCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         if (!bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
             BridgeAction action = prepareBridgeAction();
             if (action != null) {
@@ -114,7 +115,7 @@ public class BridgeCapability extends Capability {
     private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action, Location bridgeLoc) {
         if (isBridgePlacementAllowed(tile, tile.getPosition(), bridgeLoc)) {
             if (action == null) action = new BridgeAction();
-            action.getLocationsMap().getOrCreate(tile.getPosition()).add(bridgeLoc);
+            action.add(new FeaturePointer(tile.getPosition(), bridgeLoc));
         }
         return action;
     }

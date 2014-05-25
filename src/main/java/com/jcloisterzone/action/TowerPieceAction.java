@@ -1,9 +1,7 @@
 package com.jcloisterzone.action;
 
 import java.awt.Image;
-import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.grid.GridLayer;
@@ -12,12 +10,9 @@ import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 
 public class TowerPieceAction extends SelectTileAction {
 
-    public TowerPieceAction() {
-        this(Sets.<Position>newHashSet());
-    }
 
-    public TowerPieceAction(Set<Position> sites) {
-        super("towerpiece", sites);
+    public TowerPieceAction() {
+        super("towerpiece");
     }
 
     @Override

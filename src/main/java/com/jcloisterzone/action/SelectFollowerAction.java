@@ -1,40 +1,47 @@
 package com.jcloisterzone.action;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
 
-public abstract class SelectFollowerAction extends SelectFeatureAction {
 
-    /** set null if anybody is allowed */
-    private final PlayerRestriction players;
+public abstract class SelectFollowerAction extends PlayerAction<MeeplePointer> {
 
-    public SelectFollowerAction(String name, PlayerRestriction players) {
+    public SelectFollowerAction(String name) {
         super(name);
-        this.players = players;
     }
-
-    public PlayerRestriction getPlayers() {
-        return players;
-    }
-
+    
     @Override
-    public final void perform(Client2ClientIF server, Position pos, Location loc) {
-        List<Meeple> meeples = client.getGame().getBoard().get(pos).getFeature(loc).getMeeples();
-        for (Meeple m : meeples) {
-            if (players.isAllowed(m.getPlayer())) {
-                perform(server, pos, loc, m.getClass(), m.getPlayer());
-                return;
-            }
-        }
-        throw new IllegalStateException("No legal meeple is placed on feature.");
+    protected GridLayer createGridLayer() {
+        return new FollowerAreaLayer(client.getGridPanel(), this);
     }
-
-    public abstract void perform(Client2ClientIF server, Position pos, Location loc, Class<? extends Meeple> meepleType, Player owner);
+    
+    
+    //temporary legacy, TODO direct meeple selection on client
+    
+    public Map<Position, Set<Location>> groupByPosition() {
+    	Map<Position, Set<Location>> map = new HashMap<>();
+    	for (MeeplePointer fp: options) {
+    		Set<Location> locations = map.get(fp.getPosition());
+    		if (locations == null) {
+    			locations = new HashSet<>();
+    			map.put(fp.getPosition(), locations);
+    		}
+    		locations.add(fp.getLocation());
+    	}
+    	return map;
+    }
+    
+  //TODO direct implementation
+    public Set<Location> getLocations(Position p) {
+    	return groupByPosition().get(p);
+    }
 
 }

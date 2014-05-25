@@ -2,6 +2,7 @@ package com.jcloisterzone.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +25,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.PlayerTurnEvent;
@@ -239,25 +241,26 @@ public class Game extends GameSettings {
     }
 
 
-    public LocationsMap prepareFollowerLocations() {
-        LocationsMap sites = new LocationsMap();
-        Set<Location> locations = prepareFollowerLocations(currentTile, false);
-        if (!locations.isEmpty()) {
-            sites.put(currentTile.getPosition(), locations);
-        }
-        return sites;
+    public Set<FeaturePointer> prepareFollowerLocations() {
+    	return prepareFollowerLocations(currentTile, false);
     }
 
-    public Set<Location> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
+    public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
         if (!isDeployAllowed(tile, Follower.class)) return Collections.emptySet();
-        Set<Location> locations = tile.getUnoccupiedScoreables(excludeFinished);
-        if (hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-            City princessCity = tile.getCityWithPrincess();
-            if (princessCity != null) {
-                locations.remove(princessCity.getLocation());
-            }
+        Set<FeaturePointer> pointers = new HashSet<>();
+        for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
+        	//exclude finished == false -> just placed tile - it means do not check princess for magic portal 
+        	//TODO very cryptic, refactor
+        	if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+        		City princessCity = tile.getCityWithPrincess();
+                if (princessCity != null) {
+                	continue;
+                    
+                }
+        	}
+        	pointers.add(new FeaturePointer(tile.getPosition(), loc));
         }
-        return locations;
+        return pointers;
     }
 
     //scoring helpers
@@ -330,12 +333,12 @@ public class Game extends GameSettings {
         }
     }
 
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         for (Capability cap: capabilities) {
-            cap.prepareActions(actions, commonSites);
+            cap.prepareActions(actions, followerOptions);
         }
         for (Capability cap: capabilities) { //TODO hack for flier
-            cap.postPrepareActions(actions, commonSites);
+            cap.postPrepareActions(actions, followerOptions);
         }
     }
 

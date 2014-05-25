@@ -15,6 +15,9 @@ import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -79,8 +82,8 @@ public abstract class AiPlayer {
 
     // dummy implementations
 
-    protected final void selectDummyAction(List<PlayerAction> actions, boolean canPass) {
-        for (PlayerAction action : actions) {
+    protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
+        for (PlayerAction<?> action : actions) {
             if (action instanceof TilePlacementAction) {
                 if (selectDummyTilePlacement((TilePlacementAction) action)) return;
             }
@@ -103,25 +106,25 @@ public abstract class AiPlayer {
     }
 
     protected boolean selectDummyTilePlacement(TilePlacementAction action) {
-        Position nearest = null, p0 = new Position(0, 0);
+    	TilePlacement nearest = null;
+    	Position p0 = new Position(0, 0);
         int min = Integer.MAX_VALUE;
-        for (Position pos : action.getAvailablePlacements().keySet()) {
-            int dist = pos.squareDistance(p0);
+        for (TilePlacement tp : action) {
+            int dist = tp.getPosition().squareDistance(p0);
             if (dist < min) {
                 min = dist;
-                nearest = pos;
+                nearest = tp;
             }
         }
-        getServer().placeTile(action.getAvailablePlacements().get(nearest).iterator().next(), nearest);
+        getServer().placeTile(nearest.getRotation(), nearest.getPosition());
         return true;
     }
 
     protected boolean selectDummyMeepleAction(MeepleAction ma) {
-        Position p = ma.getLocationsMap().keySet().iterator().next();
-        for (Location loc : ma.getLocationsMap().get(p)) {
-            Feature f = game.getBoard().get(p).getFeature(loc);
+        for (FeaturePointer fp : ma) {
+            Feature f = game.getBoard().get(fp.getPosition()).getFeature(fp.getLocation());
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-                getServer().deployMeeple(p, loc, ma.getMeepleType());
+                getServer().deployMeeple(fp.getPosition(), fp.getLocation(), ma.getMeepleType());
                 return true;
             }
         }
@@ -129,10 +132,8 @@ public abstract class AiPlayer {
     }
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
-        Position p = action.getLocationsMap().keySet().iterator().next();
-        Location loc = action.getLocationsMap().get(p).iterator().next();
-        Meeple m = game.getBoard().get(p).getFeature(loc).getMeeples().get(0);
-        getServer().takePrisoner(p, loc, m.getClass(), m.getPlayer().getIndex());
+    	MeeplePointer mp = action.iterator().next();
+        getServer().takePrisoner(mp.getPosition(), mp.getLocation(), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
         return true;
     }
 

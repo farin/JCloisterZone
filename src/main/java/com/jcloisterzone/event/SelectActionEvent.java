@@ -9,20 +9,20 @@ import com.jcloisterzone.action.PlayerAction;
 public class SelectActionEvent extends PlayEvent {
 
     private final boolean passAllowed;
-    private final List<PlayerAction> actions;
+    private final List<? extends PlayerAction<?>> actions;
 
 
-    public SelectActionEvent(Player player, List<PlayerAction> actions, boolean passAllowed) {
+    public SelectActionEvent(Player player, List<? extends PlayerAction<?>> actions, boolean passAllowed) {
         super(player);
         this.actions = actions;
         this.passAllowed = passAllowed;
     }
 
-    public SelectActionEvent(Player player, PlayerAction action, boolean passAllowed) {
-        this(player, Collections.singletonList(action), passAllowed);
+    public SelectActionEvent(Player player, PlayerAction<?> action, boolean passAllowed) {
+        this(player, Collections.<PlayerAction<?>>singletonList(action), passAllowed);
     }
 
-    public List<PlayerAction> getActions() {
+    public List<? extends PlayerAction<?>> getActions() {
         return actions;
     }
 

@@ -36,7 +36,7 @@ public class AbbeyPhase extends Phase {
         boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
         if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
-                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction(getBoard().getHoles()), true));
+                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
                 return;
             }
         }

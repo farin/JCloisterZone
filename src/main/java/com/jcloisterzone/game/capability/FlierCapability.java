@@ -2,6 +2,7 @@ package com.jcloisterzone.game.capability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,7 +14,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
@@ -96,7 +97,7 @@ public class FlierCapability extends Capability {
     }
 
     @Override
-    public void postPrepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         Tile tile = game.getCurrentTile();
         if (tile.getFlier() == null) return;
 
@@ -105,12 +106,12 @@ public class FlierCapability extends Capability {
 
         followerLoop:
         for (Follower f : game.getActivePlayer().getFollowers()) {
-            for (PlayerAction action : actions) {
+            for (PlayerAction<?> action : actions) {
                 if (action instanceof MeepleAction) {
                     MeepleAction ma = (MeepleAction) action;
                     if (ma.getMeepleType().equals(f.getClass())) {
                         if (isLandingExists(f, reachable)) {
-                            ma.getOrCreate(tile.getPosition()).add(Location.FLIER);
+                        	ma.add(new FeaturePointer(tile.getPosition(), Location.FLIER));
                         }
                         continue followerLoop;
                     }
@@ -119,7 +120,7 @@ public class FlierCapability extends Capability {
 
             if (isLandingExists(f, reachable)) {
                 MeepleAction action = new MeepleAction(f.getClass());
-                action.getOrCreate(getTile().getPosition()).add(Location.FLIER);
+                action.add(new FeaturePointer(getTile().getPosition(), Location.FLIER));
                 actions.add(action);
             }
         }

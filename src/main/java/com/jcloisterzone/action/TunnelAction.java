@@ -3,17 +3,15 @@ package com.jcloisterzone.action;
 import java.awt.Image;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
 public class TunnelAction extends SelectFeatureAction {
 
     private final boolean secondTunnelPiece;
 
-    public TunnelAction(boolean secondTunnelPiece, LocationsMap sites) {
-        super("tunnel", sites);
+    public TunnelAction(boolean secondTunnelPiece) {
+        super("tunnel");
         this.secondTunnelPiece = secondTunnelPiece;
     }
 
@@ -31,8 +29,8 @@ public class TunnelAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position p, Location d) {
-        server.placeTunnelPiece(p, d, secondTunnelPiece);
+    public void perform(Client2ClientIF server, FeaturePointer bp) {
+        server.placeTunnelPiece(bp.getPosition(), bp.getLocation(), secondTunnelPiece);
 
     }
 

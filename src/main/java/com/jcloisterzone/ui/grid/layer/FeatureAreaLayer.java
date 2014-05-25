@@ -3,33 +3,26 @@ package com.jcloisterzone.ui.grid.layer;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.geom.Area;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
-import com.jcloisterzone.action.SelectFollowerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog;
-import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog.AmbiguousUndeployDialogEvent;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 
@@ -43,7 +36,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     }
 
     protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
-        Set<Location> locations = action.getLocationsMap().get(p);
+        Set<Location> locations = action.getLocations(p);
         if (locations == null) return null;
         if (action instanceof BridgeAction) {
             return getClient().getResourceManager().getBridgeAreas(tile, getSquareSize(), locations);
@@ -87,7 +80,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         }
         if (result == JOptionPane.CANCEL_OPTION) {
             //place tower piece instead
-            for (PlayerAction action : getClient().getControlPanel().getActionPanel().getActions()) {
+            for (PlayerAction<?> action : getClient().getControlPanel().getActionPanel().getActions()) {
                 if (action instanceof TowerPieceAction) {
                     ((TowerPieceAction) action).perform(getClient().getServer(), pos);
                     gridPanel.removeLayer(this);
@@ -99,23 +92,6 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         return result == JOptionPane.YES_OPTION;
     }
 
-    private List<Meeple> getDistinctFeatureMeeples(PlayerRestriction allowed, Feature feature) {
-        //little optimalization, almost all time size is 1
-        if (feature.getMeeples().size() == 1) {
-            return feature.getMeeples();
-        }
-        Set<String> used = new HashSet<>();
-        List<Meeple> result = new ArrayList<>();
-        for (Meeple m : feature.getMeeples()) {
-            if (!allowed.isAllowed(m.getPlayer())) continue;
-            String key = m.getPlayer().getIndex() + m.getClass().getSimpleName();
-            if (!used.contains(key)) {
-                result.add(m);
-                used.add(key);
-            }
-        }
-        return result;
-    }
 
     @Override
     protected void performAction(final Position pos, final Location loc) {
@@ -136,20 +112,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 return;
             }
         }
-        if (action instanceof SelectFollowerAction) {
-            final SelectFollowerAction selectFollowerAction = (SelectFollowerAction) action;
-            List<Meeple> meeples = getDistinctFeatureMeeples(selectFollowerAction.getPlayers(), getGame().getBoard().get(pos).getFeature(loc));
-            if (meeples.size() > 1) {
-                new AmbiguousUndeployDialog(getClient(), meeples, new AmbiguousUndeployDialogEvent() {
-                    @Override
-                    public void meepleTypeSelected(Meeple meeple) {
-                       selectFollowerAction.perform(getClient().getServer(), pos, loc, meeple.getClass(), meeple.getPlayer());
-                    }
-                });
-                return;
-            }
-        }
-        action.perform(getClient().getServer(), pos, loc);
+        action.perform(getClient().getServer(), new FeaturePointer(pos, loc));
         return;
     }
 

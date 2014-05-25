@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -18,7 +17,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     protected static final Composite ALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f);
     protected static final Composite DISALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
-    private ImmutableSet<Position> availablePositions;
+    private Set<Position> availablePositions;
 
     private Position previewPosition;
     private Image previewIcon;
@@ -26,7 +25,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
     public AbstractTilePlacementLayer(GridPanel gridPanel, Set<Position> positions) {
         super(gridPanel);
-        availablePositions = ImmutableSet.copyOf(positions);
+        availablePositions = positions;
     }
 
     @Override

@@ -12,8 +12,8 @@ import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 
 public class AbbeyPlacementAction extends SelectTileAction {
 
-    public AbbeyPlacementAction(Set<Position> sites) {
-        super("abbeyplacement", sites);
+    public AbbeyPlacementAction() {
+        super("abbeyplacement");
     }
 
     @Override

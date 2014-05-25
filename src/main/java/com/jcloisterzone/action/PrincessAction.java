@@ -1,12 +1,11 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.PlayerRestriction;
 
-
+//TODO undeploy type 
 public class PrincessAction extends UndeployAction {
 
     public PrincessAction() {
-        super("princess", PlayerRestriction.any());
+        super("princess");
     }
 
     @Override

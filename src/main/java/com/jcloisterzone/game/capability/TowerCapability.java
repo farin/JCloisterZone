@@ -19,11 +19,12 @@ import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
@@ -131,24 +132,26 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareTowerFollowerDeploy(followerLocMap);
+            prepareTowerFollowerDeploy(findFollowerActions(actions));
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
             if (!availTowers.isEmpty()) {
-                actions.add(new TowerPieceAction(availTowers));
+                actions.add(new TowerPieceAction().addAll(availTowers));
             }
         }
     }
 
-    public void prepareTowerFollowerDeploy(LocationsMap followerLocMap) {
+    public void prepareTowerFollowerDeploy(List<MeepleAction> followerActions) {
         Set<Position> availableTowers = getOpenTowers(1);
         if (!availableTowers.isEmpty()) {
             for (Position p : availableTowers) {
                 if (game.isDeployAllowed(getBoard().get(p), Follower.class)) {
-                    followerLocMap.getOrCreate(p).add(Location.TOWER);
+                	for (MeepleAction ma : followerActions) {
+                		ma.add(new FeaturePointer(p, Location.TOWER));
+                	}
                 }
             }
         }

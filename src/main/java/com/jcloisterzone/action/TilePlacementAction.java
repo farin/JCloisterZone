@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,23 +14,23 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 
-public class TilePlacementAction extends PlayerAction {
+public class TilePlacementAction extends PlayerAction<TilePlacement> {
 
     private final Tile tile;
-    private final Map<Position, Set<Rotation>> placements;
 
+    //HACK should be here?, used only for getImage
     private Rotation tileRotation = Rotation.R0;
 
-    public TilePlacementAction(Tile tile, Map<Position, Set<Rotation>> placements) {
+    public TilePlacementAction(Tile tile) {
         super("tileplacement");
         this.tile = tile;
-        this.placements = placements;
     }
 
     public Tile getTile() {
@@ -38,10 +40,25 @@ public class TilePlacementAction extends PlayerAction {
     public Rotation getTileRotation() {
         return tileRotation;
     }
-
-    public Map<Position, Set<Rotation>> getAvailablePlacements() {
-        return placements;
+    
+    public Map<Position, Set<Rotation>> groupByPosition() {
+    	Map<Position, Set<Rotation>> map = new HashMap<>();
+    	for (TilePlacement tp: options) {
+    		Set<Rotation> rotations = map.get(tp.getPosition());
+    		if (rotations == null) {
+    			rotations = new HashSet<>();
+    			map.put(tp.getPosition(), rotations);
+    		}
+    		rotations.add(tp.getRotation());
+    	}
+    	return map;
     }
+    
+    //TODO direct implementation
+    public Set<Rotation> getRotations(Position p) {
+    	return groupByPosition().get(p);
+    }
+
 
     @Override
     public Image getImage(Player player, boolean active) {
@@ -56,8 +73,9 @@ public class TilePlacementAction extends PlayerAction {
         return bi;
     }
 
-    public void perform(Client2ClientIF server, Rotation rotation, Position p) {
-        server.placeTile(rotation, p);
+    @Override
+    public void perform(Client2ClientIF server, TilePlacement tp) {
+        server.placeTile(tp.getRotation(), tp.getPosition());
     }
 
     @Override
