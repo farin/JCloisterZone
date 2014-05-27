@@ -41,4 +41,9 @@ public class MeepleAction extends SelectFeatureAction {
         if (meepleType.equals(Phantom.class)) return 16;
         return 19;
     }
+
+    @Override
+    public String toString() {
+        return "place " + meepleType.getSimpleName();
+    }
 }

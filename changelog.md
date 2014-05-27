@@ -1,12 +1,14 @@
 # Version history
 
-## master branch 
+## master branch
 *appears in next release*
 
-* el (Greek) localization
-* refactoring: game events (EventBus), AI tasks for select actions
+* Greek localization (el locale)
+* rules update: wagon cannot cross a bazaar to the other side
+* fix: builder & bazaar interaction
+* code refactoring: game events (EventBus), AI tasks for select actions
 
-## 2.6 
+## 2.6
 *2014-01-08*
 
 * yaml configuration (ini file not sufficient for stuctured presets)
@@ -43,7 +45,7 @@
 * fix: followers placed on castles are lost after game load
 * fix: sometimes non-zero pack size after game end
 
-## 2.5 
+## 2.5
 *2013-12-08*
 
 * in-game chat
@@ -54,12 +56,12 @@
 * fix: abbey should not trigger builder extra turn when builder is placed in neighbouring city
 * fix: Corn Circles II definition - possible crash or impossible game load
 
-## 2.4.1 
+## 2.4.1
 *2013-10-10*
 
 * fix: builder should trigger only single extra turn (introduced in 2.4)
 
-## 2.4 
+## 2.4
 *2013-10-10*
 
 * Wind Rose expansion
@@ -69,12 +71,12 @@
 * fix: decreased sensitivity to mouse drag (very short drag was recognized as click) - it should prevent ignored "click" bug
 * fix: Cathars - escape action is optional (so player can pass it)
 
-## 2.3.1 
+## 2.3.1
 *2013-08-21*
 
 * fix: sometimes game freezes when playing princess and dragon against AI (introduced in 2.2, know workaround save&load)
 
-## 2.3 
+## 2.3
 *2013-08-20*
 
 * Java 7 required
@@ -87,7 +89,7 @@
 * fix: corn circles - only followers are considered for corn actions
 * fix: synchronization issue causing sometimes useless output in error.log
 
-## 2.2 
+## 2.2
 *2013-05-09*
 
 * 12 extra tiles from Winter-Edition
@@ -99,21 +101,21 @@
 * fix: corn circles T-road - roads are separated
 * note: saved games from previous versions are incompatible
 
-## 2.1.2 
+## 2.1.2
 *2012-08-27*
 
 * ro localization
 * config.ini - ai_place_tile_delay
 * fix: multiplied barn points when two or more barn are placed on same farm
 
-## 2.1.1 
+## 2.1.1
 *2012-06-12*
 
 * fr localization update
 * fix: sometimes bazaars stop triggering auctions
 * fix: control help dialog height updated
 
-## 2.1 
+## 2.1
 *2012-06-09*
 
 * Bridges, Castles and Bazaars expansion
@@ -127,12 +129,12 @@
 * Hungarian localization
 * fix: River I + River II + GQ11 crash bug
 
-## 2.0.4 
+## 2.0.4
 *2012-02-11*
 
 * recompiled 2.0.3 for Java 6 (instead of a mistaken 7)
 
-## 2.0.3 
+## 2.0.3
 *2012-02-09*
 
 * abbey phase: skip button gains focus (so Enter key can skip abbey easily)
@@ -141,7 +143,7 @@
 * fix: invalid load of discarded tiles (when tiles is present in pack more than once)
 * fix: abbey "re-close feature issue" - city resources from vicinity cities can be assigned again, more than correct point for knight&scout bonus can be assigned)
 
-## 2.0.2 
+## 2.0.2
 *2012-01-17*
 
 * Italian translation (thx to Giorgio C.)
@@ -150,7 +152,7 @@
 * fix: some legal wagon moves can be missing
 * fix: game load for Princess and dragon when all dragon tiles were placed caused crash
 
-## 2.0.1 
+## 2.0.1
 *2012-01-06*
 
 * improved predefined names cycling in create game dialog
@@ -165,7 +167,7 @@
 * fix: seducing last follower from city/farm must also remove builder/pig
 * fix: multiple network stubs if 'Create new game' selected from menu more then once
 
-## 2.0 
+## 2.0
 *2011-12-30*
 
 Many changes. Huge code rewrite.
@@ -185,50 +187,50 @@ Remarkable points:
 * better Mac OS X support
 * open source (GitHub)
 
-## 1.6.12 
+## 1.6.12
 *2011-04-10*
 
 * fix: viewport update after board size is extended
 * fix: builder on volcano & AI crash
 
-## 1.6.11 
+## 1.6.11
 *2011-04-07*
 
 * fix: catapult city tile definition
 * fix: rare scoring bug
 
-## 1.6.10 
+## 1.6.10
 *2011-03-17*
 
 * fix: 5/6 six players, color exception
 * backport from 2.0; mouse wheel scroll, scroll bar in control panel
 
-## 1.6.9 
+## 1.6.9
 *2011-03-06*
 
 * Russian translation by Andrew Mitrofanov
 
-## 1.6.8 
+## 1.6.8
 *2011-01-09*
 
 * Dutch translation by Steven Post
 
-## 1.6.7 
+## 1.6.7
 *2010-11-01*
 
 * French translation by Aegir
 
-## 1.6.6 
+## 1.6.6
 *2010-08-31*
 
 * Polish translation by Tomasz Skowronski
 
-## 1.6.5 
+## 1.6.5
 *2010-07-09*
 
 * fixed: 5 and 6 players game broken in 1.6.4
 
-## 1.6.4 
+## 1.6.4
 *2010-06-13*
 
 * project renamed to JCloisterZone
@@ -237,12 +239,12 @@ Remarkable points:
 * fixed: number of tower pieces for 2 or 3 players game
 * fixed: unlimited tunnel pieces
 
-## 1.6.3 
+## 1.6.3
 *2010-05-29*
 
 * Chinese translation (zh_TW, zh_HK, zh_CN locales) by Kingman Leung
 
-## 1.6.2 
+## 1.6.2
 *2010-02-15*
 
 * beep notification is played also for dragon move
@@ -251,12 +253,12 @@ Remarkable points:
 * fixed: tower placement icon, correct display on "just placed" tile
 * fixed: proper meeple position on particular "strange" card from expansions.
 
-## 1.6.1 
+## 1.6.1
 *2010-01-30*
 
 * fixed: non-default 'default settings' in carcassonne.xml config has effect and works correctly
 
-## 1.6 
+## 1.6
 *2010-01-25*
 
 * The Tunnel expansion
@@ -265,7 +267,7 @@ Remarkable points:
 * fixed: farm can contain two pig herds
 * fixed: preview icon remains rarely displayed after tile placement
 
-## 1.5.3 
+## 1.5.3
 *2009-11-28*
 
 * Catapult cards
@@ -287,7 +289,7 @@ Remarkable points:
 * new application icon
 * internal change: tile ids renamed, using expansion namespaces
 
-## 1.4.0 
+## 1.4.0
 *2009-02-09*
 
 * code refactoring -> no backward compatibility !

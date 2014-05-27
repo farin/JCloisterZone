@@ -40,23 +40,23 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     public Rotation getTileRotation() {
         return tileRotation;
     }
-    
+
     public Map<Position, Set<Rotation>> groupByPosition() {
-    	Map<Position, Set<Rotation>> map = new HashMap<>();
-    	for (TilePlacement tp: options) {
-    		Set<Rotation> rotations = map.get(tp.getPosition());
-    		if (rotations == null) {
-    			rotations = new HashSet<>();
-    			map.put(tp.getPosition(), rotations);
-    		}
-    		rotations.add(tp.getRotation());
-    	}
-    	return map;
+        Map<Position, Set<Rotation>> map = new HashMap<>();
+        for (TilePlacement tp: options) {
+            Set<Rotation> rotations = map.get(tp.getPosition());
+            if (rotations == null) {
+                rotations = new HashSet<>();
+                map.put(tp.getPosition(), rotations);
+            }
+            rotations.add(tp.getRotation());
+        }
+        return map;
     }
-    
+
     //TODO direct implementation
     public Set<Rotation> getRotations(Position p) {
-    	return groupByPosition().get(p);
+        return groupByPosition().get(p);
     }
 
 
@@ -95,6 +95,11 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
         tileRotation = tileRotation.prev();
         ActionPanel panel = client.getControlPanel().getActionPanel();
         panel.refreshImageCache();
+    }
+
+    @Override
+    public String toString() {
+        return "place tile";
     }
 
 }

@@ -7,8 +7,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,31 +17,21 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.AbbeyPlacementAction;
-import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.SelectFeatureAction;
-import com.jcloisterzone.action.TakePrisonerAction;
+import com.jcloisterzone.action.SelectFollowerAction;
+import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.action.TowerPieceAction;
-import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.ai.step.DeployMeepleStep;
-import com.jcloisterzone.ai.step.MoveFairyStep;
-import com.jcloisterzone.ai.step.PassStep;
-import com.jcloisterzone.ai.step.PlaceAbbeyStep;
-import com.jcloisterzone.ai.step.PlaceTileStep;
-import com.jcloisterzone.ai.step.PlaceTowerPieceStep;
-import com.jcloisterzone.ai.step.Step;
-import com.jcloisterzone.ai.step.TakePrisonerStep;
-import com.jcloisterzone.ai.step.UndeployMeepleStep;
-import com.jcloisterzone.board.Location;
+import com.jcloisterzone.ai.choice.ActionChoice;
+import com.jcloisterzone.ai.choice.AiChoice;
+import com.jcloisterzone.ai.choice.PassChoice;
+import com.jcloisterzone.ai.choice.TilePlacementChoice;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
@@ -59,10 +47,10 @@ public class SelectActionTask implements Runnable {
 
     private final RankingAiPlayer aiPlayer;
     private final SelectActionEvent rootEv;
-    private final Deque<Step> queue = new LinkedList<Step>();
+    private final Deque<AiChoice> queue = new LinkedList<>();
 
-    private Step step = null;
-    private Step bestSoFar = null;
+    private AiChoice choice = null;
+    private AiChoice bestSoFar = null;
     private double bestSoFarRanking = Double.NEGATIVE_INFINITY;
 
     private SavePointManager spm;
@@ -85,7 +73,7 @@ public class SelectActionTask implements Runnable {
 
     private void dbgPringFooter() {
         System.out.println("=== selected chain (reversed) " + bestSoFarRanking);
-        Step step = bestSoFar;
+        AiChoice step = bestSoFar;
         while (step != null) {
             System.out.print("  - ");
             System.out.println(step.toString());
@@ -94,22 +82,22 @@ public class SelectActionTask implements Runnable {
         System.out.println("*** ranking end ***");
     }
 
-    private void dbgPringStep(Step step, boolean isFinal) {
-        Step s = step;
+    private void dbgPringStep(AiChoice choice, boolean isFinal) {
+        AiChoice ac = choice;
         StringBuilder sb = new StringBuilder("  ");
-        while (s.getPrevious() != null) {
+        while (ac.getPrevious() != null) {
             sb.append("  ");
-            s = s.getPrevious();
+            ac = ac.getPrevious();
         }
-        sb.append("- ").append(step.toString()).append(" ");
+        sb.append("- ").append(choice.toString()).append(" ");
 
         while (sb.length() < 80) {
            sb.append(".");
         }
-        sb.append(" ").append(String.format(Locale.ROOT, "%10.5f", step.getRanking()));
+        sb.append(" ").append(String.format(Locale.ROOT, "%10.5f", choice.getRanking()));
         if (isFinal) {
             sb.append(" ...... ");
-            sb.append(String.format(Locale.ROOT, "%10.5f", step.getChainRanking()));
+            sb.append(String.format(Locale.ROOT, "%10.5f", choice.getChainRanking()));
         }
         System.out.println(sb);
     }
@@ -117,7 +105,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
-        boolean dbgPrint = false;
+        boolean dbgPrint = !false;
         try {
             this.game = aiPlayer.copyGame(this);
             if (dbgPrint) dbgPringHeader();
@@ -128,15 +116,15 @@ public class SelectActionTask implements Runnable {
             handleActionEvent(rootEv);
 
             while (!queue.isEmpty()) {
-                step = queue.pop();
-                spm.restore(step.getSavePoint());
-                step.performLocal(game);
+                choice = queue.pop();
+                spm.restore(choice.getSavePoint());
+                choice.perform(game.getPhase());
                 boolean isFinal = phaseLoop();
-                step.rankPartial(aiPlayer.getGameRanking(), game);
+                choice.rankPartial(aiPlayer.getGameRanking(), game);
                 if (isFinal) {
-                    rankFinal(step);
+                    rankFinal(choice);
                 }
-                if (dbgPrint) dbgPringStep(step, isFinal);
+                if (dbgPrint) dbgPringStep(choice, isFinal);
             }
             if (dbgPrint) dbgPringFooter();
             aiPlayer.setBestChain(bestSoFar);
@@ -163,7 +151,7 @@ public class SelectActionTask implements Runnable {
         return false;
     }
 
-    private void rankFinal(Step step) {
+    private void rankFinal(AiChoice step) {
         step.setRanking(step.getRanking() + aiPlayer.getGameRanking().getFinal(game));
         double currChainRanking = step.getChainRanking();
         if (currChainRanking > bestSoFarRanking) {
@@ -184,82 +172,57 @@ public class SelectActionTask implements Runnable {
         List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
         SavePoint savePoint = spm.save();
 
-        for (PlayerAction action : ev.getActions()) {
+        for (PlayerAction<?> action : ev.getActions()) {
             if (action instanceof MeepleAction) {
                 meepleActions.add((MeepleAction) action);
             } else if (action instanceof TilePlacementAction) {
                 handleTilePlacementAction(savePoint, (TilePlacementAction) action);
-            } else if (action instanceof AbbeyPlacementAction) {
-                handleAbbeyPlacement(savePoint, (AbbeyPlacementAction) action);
-            } else if (action instanceof UndeployAction) {
-                handleUndeployAction(savePoint, (UndeployAction) action);
-            } else if (action instanceof BarnAction) {
-                handleBarnAction(savePoint, (BarnAction) action);
-            } else if (action instanceof FairyAction) {
-                handleFairyAction(savePoint, (FairyAction) action);
-            } else if (action instanceof TowerPieceAction) {
-            	handleTowerPieceAction(savePoint, (TowerPieceAction) action);
-            } else if (action instanceof TakePrisonerAction) {
-            	handleTakePrisonerAction(savePoint, (TakePrisonerAction) action);
+            } else if (action instanceof SelectTileAction) {
+                handleSelectTileAction(savePoint, (SelectTileAction) action);
+            } else if (action instanceof SelectFeatureAction) {
+                handleSelectFeatureAction(savePoint, (SelectFeatureAction) action);
+            } else if (action instanceof SelectFollowerAction) {
+                handleSelectFollowerAction(savePoint, (SelectFollowerAction) action);
             }
         }
 
         if (!meepleActions.isEmpty()) {
-            handleMeepleActions(savePoint, preprocessMeepleActions(meepleActions));
+            for (MeepleAction action : preprocessMeepleActions(meepleActions)) {
+                handleSelectFeatureAction(savePoint, action);
+            }
         }
 
         if (ev.isPassAllowed()) {
-            queue.push(new PassStep(step, savePoint));
+            queue.push(new PassChoice(choice, savePoint));
         }
     }
 
     protected void handleTilePlacementAction(SavePoint savePoint, TilePlacementAction action) {
-        for (Entry<Position, Set<Rotation>> entry : action.getAvailablePlacements().entrySet()) {
-            Position pos = entry.getKey();
-            for (Rotation rot : entry.getValue()) {
-                queue.push(new PlaceTileStep(step, savePoint, action, rot, pos));
-            }
+        for (TilePlacement tp : action.getOptions()) {
+            queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
         }
     }
 
-    protected void handleAbbeyPlacement(SavePoint savePoint, AbbeyPlacementAction action) {
-        for (Position pos : action.getSites()) {
-            queue.push(new PlaceAbbeyStep(step, savePoint, action, pos));
+    protected void handleSelectTileAction(SavePoint savePoint, SelectTileAction action) {
+        for (Position pos : action.getOptions()) {
+            queue.push(new ActionChoice<Position>(choice, savePoint, action, pos));
         }
     }
 
-    protected void handleFairyAction(SavePoint savePoint, FairyAction action) {
-        for (Position pos : action.getSites()) {
-            queue.push(new MoveFairyStep(step, savePoint, action, pos));
-        }
-    }
-    
-    protected void handleTowerPieceAction(SavePoint savePoint, TowerPieceAction action) {
-    	for (Position pos : action.getSites()) {
-            queue.push(new PlaceTowerPieceStep(step, savePoint, action, pos));
-    	}
-    }
-    
-    protected void handleBarnAction(SavePoint savePoint, BarnAction ba) {
-        handleMeepleActions(savePoint, Collections.singleton(ba));
-    }
-
-    protected void handleUndeployAction(SavePoint savePoint, UndeployAction action) {
-        for (Entry<Position, Set<Location>> entry : action.getLocationsMap().entrySet()) {
-            Position pos = entry.getKey();
-            for (Location loc: entry.getValue()) {
-                //TODO ineffective, full descriptor not contained in undeploy action
-                for (Meeple m : game.getDeployedMeeples()) {
-                    if (m.at(pos) && m.getLocation().equals(loc)) {
-                        if (action.getPlayers().isAllowed(m.getPlayer())) {
-                            queue.push(new UndeployMeepleStep(step, savePoint, action, pos, loc, m.getClass(), m.getPlayer()));
-                        }
-                    }
-                }
-            }
+    protected void handleSelectFeatureAction(SavePoint savePoint, SelectFeatureAction action) {
+        for (FeaturePointer fp : action.getOptions()) {
+            queue.push(new ActionChoice<FeaturePointer>(choice, savePoint, action, fp));
         }
     }
 
+
+    protected void handleSelectFollowerAction(SavePoint savePoint, SelectFollowerAction action) {
+        for (MeeplePointer mp : action.getOptions()) {
+            queue.push(new ActionChoice<MeeplePointer>(choice, savePoint, action, mp));
+        }
+    }
+
+    //don't count again for phantom
     protected Collection<MeepleAction> preprocessMeepleActions(List<MeepleAction> actions) {
         if (game.getPhase() instanceof PhantomPhase) return Collections.emptyList();
         boolean hasSmallFollower = false;
@@ -280,38 +243,6 @@ public class SelectActionTask implements Runnable {
         }
         return actions;
     }
-
-    protected void handleMeepleActions(SavePoint savePoint, Collection<? extends SelectFeatureAction> actions) {
-        Tile currTile = game.getCurrentTile();
-        Position pos = currTile.getPosition();
-
-        for (SelectFeatureAction action : actions) {
-            Set<Location> locations = action.getLocationsMap().get(pos);
-            if (locations == null) continue;
-            for (Location loc : locations) {
-                queue.push(new DeployMeepleStep(step, savePoint, action, pos, loc));
-            }
-        }
-    }
-    
-    protected void handleTakePrisonerAction(SavePoint savePoint, TakePrisonerAction action) {
-        for (Entry<Position, Set<Location>> entry : action.getLocationsMap().entrySet()) {
-            Position pos = entry.getKey();
-            for (Location loc: entry.getValue()) {
-            	//TODO copy paste ugly code from undeply action
-                for (Meeple m : game.getDeployedMeeples()) {
-                    if (m.at(pos) && m.getLocation().equals(loc)) {
-                        if (action.getPlayers().isAllowed(m.getPlayer())) {
-                            queue.push(new TakePrisonerStep(step, savePoint, action, pos, loc, m.getClass(), m.getPlayer()));
-                        }
-                    }
-                }
-          
-            }
-        }
-    }
-    
-   
 
     // ---- refactor done boundary -----
 

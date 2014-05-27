@@ -14,4 +14,9 @@ public class BridgeAction extends SelectFeatureAction {
         server.deployBridge(bp.getPosition(), bp.getLocation());
     }
 
+    @Override
+    public String toString() {
+        return "place bridge";
+    }
+
 }

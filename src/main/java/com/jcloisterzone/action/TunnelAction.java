@@ -17,7 +17,7 @@ public class TunnelAction extends SelectFeatureAction {
 
     @Override
     public Image getImage(Player player, boolean active) {
-        if (active && isSecondTunnelPiece()) {        	
+        if (active && isSecondTunnelPiece()) {
             return getImage(client.getPlayerSecondTunelColor(player));
         } else {
             return super.getImage(player, active);
@@ -37,6 +37,11 @@ public class TunnelAction extends SelectFeatureAction {
     @Override
     protected int getSortOrder() {
         return secondTunnelPiece ? 41 : 40;
+    }
+
+    @Override
+    public String toString() {
+        return "place tunnel";
     }
 
 }

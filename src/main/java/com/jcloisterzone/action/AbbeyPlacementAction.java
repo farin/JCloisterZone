@@ -31,4 +31,9 @@ public class AbbeyPlacementAction extends SelectTileAction {
         return new AbbeyPlacementLayer(client.getGridPanel(), this);
     }
 
+    @Override
+    public String toString() {
+        return "place abbey";
+    }
+
 }

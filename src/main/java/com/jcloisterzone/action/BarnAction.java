@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.grid.GridLayer;
@@ -27,5 +26,10 @@ public class BarnAction extends SelectFeatureAction {
     @Override
     protected int getSortOrder() {
         return 9;
+    }
+
+    @Override
+    public String toString() {
+        return "place barn";
     }
 }

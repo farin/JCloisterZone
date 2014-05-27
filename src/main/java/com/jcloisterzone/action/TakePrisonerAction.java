@@ -11,7 +11,12 @@ public class TakePrisonerAction extends SelectFollowerAction {
 
     @Override
     public void perform(Client2ClientIF server, MeeplePointer bp) {
-    	server.takePrisoner(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
+        server.takePrisoner(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
+    }
+
+    @Override
+    public String toString() {
+        return "take prisoner";
     }
 
 

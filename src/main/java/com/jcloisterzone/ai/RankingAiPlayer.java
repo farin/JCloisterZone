@@ -3,7 +3,7 @@ package com.jcloisterzone.ai;
 import java.io.File;
 
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.ai.step.Step;
+import com.jcloisterzone.ai.choice.AiChoice;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
@@ -22,7 +22,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 //    }
 
     private final GameRanking gameRanking;
-    private Step bestChain = null;
+    private AiChoice bestChain = null;
 
 
     public RankingAiPlayer() {
@@ -36,29 +36,29 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
 
-    public Step getBestChain() {
+    public AiChoice getBestChain() {
         return bestChain;
     }
 
-    public void setBestChain(Step bestChain) {
+    public void setBestChain(AiChoice bestChain) {
         this.bestChain = bestChain;
     }
 
     protected void popActionChain() {
-        Step toExecute = null;
+        AiChoice toExecute = null;
         if (bestChain.getPrevious() == null) {
             toExecute = bestChain;
             bestChain = null;
         } else {
-            Step step = bestChain;
-            while (step.getPrevious().getPrevious() != null) {
-                step = step.getPrevious();
+            AiChoice choice = bestChain;
+            while (choice.getPrevious().getPrevious() != null) {
+                choice = choice.getPrevious();
             }
-            toExecute = step.getPrevious();
-            step.setPrevious(null); //cut last element from chain
+            toExecute = choice.getPrevious();
+            choice.setPrevious(null); //cut last element from chain
         }
         //execute after chain update is done
-        toExecute.performOnServer(getServer());
+        toExecute.perform(getServer());
     }
 
     private void autosave() {

@@ -31,4 +31,9 @@ public class TowerPieceAction extends SelectTileAction {
         return new TileActionLayer(client.getGridPanel(), this, gd);
     }
 
+    @Override
+    public String toString() {
+        return "place tower piece";
+    }
+
 }

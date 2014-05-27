@@ -29,4 +29,9 @@ public class FairyAction extends SelectTileAction {
         return new TileActionLayer(client.getGridPanel(), this, gd);
     }
 
+    @Override
+    public String toString() {
+        return "move fairy";
+    }
+
 }
