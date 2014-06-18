@@ -149,9 +149,12 @@ public final class TowerCapability extends Capability {
         if (!availableTowers.isEmpty()) {
             for (Position p : availableTowers) {
                 if (game.isDeployAllowed(getBoard().get(p), Follower.class)) {
-                	for (MeepleAction ma : followerActions) {
-                		ma.add(new FeaturePointer(p, Location.TOWER));
-                	}
+                    for (MeepleAction ma : followerActions) {
+                        //only small, big and phantoms are allowed on top of tower
+                        if (SmallFollower.class.isAssignableFrom(ma.getMeepleType()) || BigFollower.class.isAssignableFrom(ma.getMeepleType())) {
+                            ma.add(new FeaturePointer(p, Location.TOWER));
+                        }
+                    }
                 }
             }
         }

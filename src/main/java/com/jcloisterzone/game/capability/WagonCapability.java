@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import static com.jcloisterzone.XmlUtils.asLocation;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -113,22 +114,21 @@ public class WagonCapability extends Capability {
         returnedWagons.clear();
         wagonPlayer = null;
     }
-    
-    private Set<FeaturePointer> filterWagonLocations(Set<FeaturePointer> followerOptions) {   	
-    	return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
-			@Override
-			public boolean apply(FeaturePointer bp) {
-				Feature fe = getTile().getFeature(bp.getLocation());
-				return fe instanceof Road || fe instanceof City || fe instanceof Cloister;
-			}
-		});
-    	
+
+    private Set<FeaturePointer> filterWagonLocations(Set<FeaturePointer> followerOptions) {
+        return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
+            @Override
+            public boolean apply(FeaturePointer bp) {
+                Feature fe = getTile().getFeature(bp.getLocation());
+                return fe instanceof Road || fe instanceof City || fe instanceof Cloister;
+            }
+        });
     }
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (game.getActivePlayer().hasFollower(Wagon.class) && !followerOptions.isEmpty()) {
-        	Set<FeaturePointer> wagonLocations = filterWagonLocations(followerOptions);
+            Set<FeaturePointer> wagonLocations = filterWagonLocations(followerOptions);
             if (!wagonLocations.isEmpty()) {
                 actions.add(new MeepleAction(Wagon.class).addAll(wagonLocations));
             }

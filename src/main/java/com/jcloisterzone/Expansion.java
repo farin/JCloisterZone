@@ -58,6 +58,7 @@ public enum Expansion {
     CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
     BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }),
+    HILLS_AND_SHEEP("HS", _("Hills and sheep"), false),
 
     //Small expansion
     KING_AND_ROBBER_BARON("KR", _("King and Robber Baron"), new Class[] { KingAndRobberBaronCapability.class }),
@@ -73,8 +74,9 @@ public enum Expansion {
     PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { PlagueCapability.class }),
     PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
-    HOUSES("LB", _("Little Buildings"), false),
+    LITTLE_BUILDINGS("LB", _("Little Buildings"), false),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
+    GERMAN_MONASTERIES("GM", _("The German Monasteries"), false),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),
