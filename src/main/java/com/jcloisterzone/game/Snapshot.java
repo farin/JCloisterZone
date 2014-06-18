@@ -193,8 +193,7 @@ public class Snapshot implements Serializable {
         }
     }
 
-    public void save(File file) throws TransformerException, IOException {
-        OutputStream os = new FileOutputStream(file);
+    public void save(OutputStream os) throws TransformerException, IOException {
         StreamResult streamResult;
         if (gzipOutput) {
             streamResult = new StreamResult(new GZIPOutputStream(os));
@@ -375,8 +374,14 @@ public class Snapshot implements Serializable {
     }
 
     public Game asGame() {
-        Game game = new Game();
+        return asGame(new Game());
+
+    }
+
+    public Game asGame(Game game) {
+        game.getExpansions().clear();
         game.getExpansions().addAll(getExpansions());
+        game.getCustomRules().clear();
         game.getCustomRules().addAll(getCustomRules());
         game.setPlayers(getPlayers(), getTurnPlayer());
         return game;

@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
@@ -380,7 +381,7 @@ public class Client extends JFrame {
                     if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
                     }
-                    snapshot.save(file);
+                    snapshot.save(new FileOutputStream(file));
                 } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

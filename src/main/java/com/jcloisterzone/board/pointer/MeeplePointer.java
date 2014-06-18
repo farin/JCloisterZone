@@ -32,7 +32,7 @@ public class MeeplePointer {
     @Override
     public String toString() {
         return new StringBuilder().append("[x=").append(position.x).append(",y=")
-                .append(position.y).append(",").append(location)
+                .append(position.y).append(",").append(location).append(",")
                 .append(meepleType.getSimpleName()).append(",pl=").append(meepleOwner.getIndex()).append("]").toString();
     }
 

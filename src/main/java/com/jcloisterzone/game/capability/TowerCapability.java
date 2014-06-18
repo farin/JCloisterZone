@@ -120,6 +120,10 @@ public final class TowerCapability extends Capability {
         return towerPieces.get(player);
     }
 
+    public int setTowerPieces(Player player, int pieces) {
+        return towerPieces.put(player, pieces);
+    }
+
     public void decreaseTowerPieces(Player player) {
         int pieces = getTowerPieces(player);
         if (pieces == 0) throw new IllegalStateException("Player has no tower pieces");

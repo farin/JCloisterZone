@@ -2,8 +2,11 @@ package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.TowerCapability;
 
-public class TowerIncreasedEvent extends PlayEvent {
+public class TowerIncreasedEvent extends PlayEvent implements Undoable {
 
     private final int captureRange;
 
@@ -16,4 +19,13 @@ public class TowerIncreasedEvent extends PlayEvent {
         return captureRange;
     }
 
+    @Override
+    public void undo(Game game) {
+        Tile tile = game.getBoard().get(getPosition());
+        assert tile.getTower().getHeight() > 0;
+        tile.getTower().setHeight(tile.getTower().getHeight() - 1);
+
+        TowerCapability cap = game.getCapability(TowerCapability.class);
+        cap.setTowerPieces(getPlayer(), cap.getTowerPieces(getPlayer()) + 1);
+    }
 }

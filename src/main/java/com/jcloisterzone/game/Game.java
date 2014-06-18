@@ -26,7 +26,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.PlayerTurnEvent;
@@ -242,23 +241,23 @@ public class Game extends GameSettings {
 
 
     public Set<FeaturePointer> prepareFollowerLocations() {
-    	return prepareFollowerLocations(currentTile, false);
+        return prepareFollowerLocations(currentTile, false);
     }
 
     public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
         if (!isDeployAllowed(tile, Follower.class)) return Collections.emptySet();
         Set<FeaturePointer> pointers = new HashSet<>();
         for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
-        	//exclude finished == false -> just placed tile - it means do not check princess for magic portal 
-        	//TODO very cryptic, refactor
-        	if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-        		City princessCity = tile.getCityWithPrincess();
+            //exclude finished == false -> just placed tile - it means do not check princess for magic portal
+            //TODO very cryptic, refactor
+            if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+                City princessCity = tile.getCityWithPrincess();
                 if (princessCity != null) {
-                	continue;
-                    
+                    continue;
+
                 }
-        	}
-        	pointers.add(new FeaturePointer(tile.getPosition(), loc));
+            }
+            pointers.add(new FeaturePointer(tile.getPosition(), loc));
         }
         return pointers;
     }
