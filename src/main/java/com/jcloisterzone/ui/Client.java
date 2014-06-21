@@ -399,6 +399,7 @@ public class Client extends JFrame {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            localServer = null;
             closeGame(true);
         }
     }
