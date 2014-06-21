@@ -26,6 +26,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
@@ -196,7 +197,7 @@ public final class TowerCapability extends Capability {
     public void inprison(Meeple m, Player player) {
         assert m.getLocation() == null;
         prisoners.get(player).add((Follower) m);
-        game.post(new MeepleEvent(MeepleEvent.PRISON, m));
+        game.post(new MeeplePrisonEvent(m, null, player));
         m.setLocation(Location.PRISON);
     }
 
@@ -215,7 +216,7 @@ public final class TowerCapability extends Capability {
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
-                game.post(new MeepleEvent(MeepleEvent.RELEASE, meeple, opponent));
+                game.post(new MeeplePrisonEvent(meeple, opponent, null));
                 game.getPhase().notifyRansomPaid();
                 return;
             }

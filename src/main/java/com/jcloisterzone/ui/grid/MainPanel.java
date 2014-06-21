@@ -8,6 +8,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -143,17 +144,17 @@ public class MainPanel extends BackgroundPanel {
             farmHintLayer.tilePlaced(tile);
         }
     }
-
-    public void deployed(Meeple m) {
-        gridPanel.clearActionDecorations();
-        meepleLayer.meepleDeployed(m);
-        farmHintLayer.meepleDeployed(m);
-    }
-
-    public void undeployed(Meeple m) {
-        gridPanel.clearActionDecorations();
-        meepleLayer.meepleUndeployed(m);
-        farmHintLayer.meepleUndeployed(m);
+    
+    public void meepleEvent(MeepleEvent ev) {
+    	gridPanel.clearActionDecorations();
+    	if (ev.getFrom() != null) {
+    		meepleLayer.meepleUndeployed(ev);
+    	}
+    	if (ev.getTo() != null) {
+    		meepleLayer.meepleDeployed(ev);
+    	}
+    	farmHintLayer.meepleEvent(ev);
+    	
     }
 
     public void bridgeDeployed(Position pos, Location loc) {

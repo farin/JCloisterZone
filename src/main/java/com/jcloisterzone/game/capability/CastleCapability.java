@@ -63,9 +63,10 @@ public class CastleCapability extends Capability {
 
     @Subscribe
     public void undeployed(MeepleEvent ev) {
-        Meeple meeple = ev.getMeeple();
-        if (ev.getType() == MeepleEvent.UNDEPLOY && meeple.getFeature() instanceof Castle) {
-            Castle castle = (Castle) meeple.getFeature().getMaster();
+    	if (ev.getFrom() == null) return;
+        Feature f = getBoard().get(ev.getFrom());
+        if (f instanceof Castle) {
+            Castle castle = (Castle) f.getMaster();
             scoreableCastleVicinity.remove(castle);
             emptyCastles.add(castle);
         }

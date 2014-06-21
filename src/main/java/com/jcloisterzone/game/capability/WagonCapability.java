@@ -48,8 +48,8 @@ public class WagonCapability extends Capability {
     @Subscribe
     public void undeployed(MeepleEvent ev) {
         Meeple m = ev.getMeeple();
-        if (ev.getType() == MeepleEvent.UNDEPLOY && m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
-            returnedWagons.put(m.getPlayer(), m.getFeature());
+        if (m instanceof Wagon && ev.getTo() == null && game.getPhase() instanceof ScorePhase) {
+        	returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
         }
     }
 

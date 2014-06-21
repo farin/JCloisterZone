@@ -4,9 +4,16 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 
 public class CornCircleSelectOptionEvent extends PlayEvent {
+	
+	private final Position position;
 
     public CornCircleSelectOptionEvent(Player player, Position position) {
-        super(player, position);
+        super(player);
+        this.position = position;
     }
+    
+    public Position getPosition() {
+		return position;
+	}
 
 }

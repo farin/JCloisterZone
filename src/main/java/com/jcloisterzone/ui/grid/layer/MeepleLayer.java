@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
@@ -77,19 +79,18 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-    private MeeplePositionedImage createMeepleImage(Meeple m) {
-        Feature feature = m.getFeature();
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), m.getClass(), m.getLocation());
-        Color c = m.getPlayer().getColors().getMeepleColor();
-        Image image = getClient().getFigureTheme().getFigureImage(m.getClass(), c,  getExtraDecoration(m));
-        return new MeeplePositionedImage(m, offset, image);
+    private MeeplePositionedImage createMeepleImage(Class<? extends Meeple> type, Color c, FeaturePointer fp) {
+        Feature feature = getGame().getBoard().get(fp);
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), type, fp.getLocation());
+        Image image = getClient().getFigureTheme().getFigureImage(type, c, getExtraDecoration(type, fp));
+        return new MeeplePositionedImage(type, fp, offset, image);
     }
 
-    private void rearrangeMeeples(Position p, Location loc) {
+    private void rearrangeMeeples(FeaturePointer fp) {
         int order = 0;
         //small followers first
         for (MeeplePositionedImage mi : images) {
-            if (mi.location == loc && mi.position.equals(p)) {
+            if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
                 if (mi.meepleType.equals(SmallFollower.class)) {
                     mi.order = order++;
                 }
@@ -97,7 +98,7 @@ public class MeepleLayer extends AbstractGridLayer {
         }
         //others on top
         for (MeeplePositionedImage mi : images) {
-            if (mi.location == loc && mi.position.equals(p)) {
+            if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
                 if (!mi.meepleType.equals(SmallFollower.class)) {
                     mi.order = order++;
                 }
@@ -105,23 +106,22 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    public void meepleDeployed(Meeple m) {
-        images.add(createMeepleImage(m));
-        rearrangeMeeples(m.getPosition(), m.getLocation());
+    public void meepleDeployed(MeepleEvent ev) {
+    	Color c = ev.getMeeple().getPlayer().getColors().getMeepleColor();
+        images.add(createMeepleImage(ev.getMeeple().getClass(), c, ev.getTo()));
+        rearrangeMeeples(ev.getTo());
     }
 
-    public void meepleUndeployed(Meeple m) {
-        if (m.getFeature() != null) {
-            Iterator<MeeplePositionedImage> iter = images.iterator();
-            while (iter.hasNext()) {
-                MeeplePositionedImage mi = iter.next();
-                if (mi.match(m)) {
-                    iter.remove();
-                    break;
-                }
+    public void meepleUndeployed(MeepleEvent ev) {
+        Iterator<MeeplePositionedImage> iter = images.iterator();
+        while (iter.hasNext()) {
+            MeeplePositionedImage mi = iter.next();
+            if (mi.match(ev.getMeeple().getClass(), ev.getFrom())) {
+                iter.remove();
+                break;
             }
-            rearrangeMeeples(m.getPosition(), m.getLocation());
         }
+        rearrangeMeeples(ev.getFrom());
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
@@ -130,12 +130,12 @@ public class MeepleLayer extends AbstractGridLayer {
 
 
     //TODO path from Theme
-    public String getExtraDecoration(Meeple m) {
-        if (m instanceof Follower && m.getFeature() instanceof Farm) {
+    public String getExtraDecoration(Class<? extends Meeple> type, FeaturePointer fp) {
+        if (Follower.class.isAssignableFrom(type) && fp.getLocation().isFarmLocation()) {
             return "farm.png";
         }
-        if (m.getFeature() instanceof Tower) {
-            if (m instanceof BigFollower) {
+        if (fp.getLocation() == Location.TOWER) {
+            if (BigFollower.class.isAssignableFrom(type)) {
                 return "big_tower.png";
             } else {
                 return "tower.png";
@@ -161,15 +161,15 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    private class MeeplePositionedImage extends PositionedImage{
+    private class MeeplePositionedImage extends PositionedImage {
          public final Class<? extends Meeple> meepleType;
          public final Location location;
          public int order;
 
-         public MeeplePositionedImage(Meeple m, ImmutablePoint offset, Image sourceImage) {
-             super(m.getPosition(), offset, sourceImage);
-             meepleType = m.getClass();
-             location = m.getLocation();
+         public MeeplePositionedImage(Class<? extends Meeple> meepleType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage) {
+             super(fp.getPosition(), offset, sourceImage);
+             this.meepleType = meepleType;
+             location = fp.getLocation();
          }
 
          public ImmutablePoint getScaledOffset(int boxSize) {
@@ -180,10 +180,10 @@ public class MeepleLayer extends AbstractGridLayer {
              return point.scale(getSquareSize(), boxSize);
          }
 
-         public boolean match(Meeple m) {
-             if (!m.getClass().equals(meepleType)) return false;
-             if (location != m.getLocation()) return false;
-             if (!position.equals(m.getPosition())) return false;
+         public boolean match(Class<? extends Meeple> meepleType, FeaturePointer fp) {
+             if (!meepleType.equals(this.meepleType)) return false;
+             if (location != fp.getLocation()) return false;
+             if (!position.equals(fp.getPosition())) return false;
              return true;
          }
     }

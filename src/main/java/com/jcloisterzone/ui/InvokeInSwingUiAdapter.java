@@ -35,9 +35,10 @@ public class InvokeInSwingUiAdapter {
 
     private Event freezeEvent(Event ev) {
         if (ev instanceof MeepleEvent) {
-            Meeple m = ((MeepleEvent) ev).getMeeple();
-            return new MeepleEvent(ev.getType(), (Meeple) m.clone());
-
+        	//TODO is it really needed with new meeple events?
+        	MeepleEvent mev = (MeepleEvent) ev;
+            Meeple m = mev.getMeeple();
+            return new MeepleEvent((Meeple) m.clone(), mev.getFrom(), mev.getTo());
         }
         if (ev instanceof ScoreEvent) {
             ScoreEvent sev = (ScoreEvent) ev;

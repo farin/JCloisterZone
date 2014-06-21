@@ -30,6 +30,7 @@ import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
@@ -208,10 +209,10 @@ public class ClientController  {
     public void dragonMoved(NeutralFigureMoveEvent ev) {
         switch (ev.getType()) {
         case NeutralFigureMoveEvent.DRAGON:
-            client.getMainPanel().dragonMoved(ev.getPosition());
+            client.getMainPanel().dragonMoved(ev.getTo());
             break;
         case NeutralFigureMoveEvent.FAIRY:
-            client.getMainPanel().fairyMoved(ev.getPosition());
+            client.getMainPanel().fairyMoved(ev.getTo());
             break;
         }
     }
@@ -237,19 +238,12 @@ public class ClientController  {
 
     @Subscribe
     public void meepleEvent(MeepleEvent ev) {
-        switch (ev.getType()) {
-        case MeepleEvent.DEPLOY:
-            client.getMainPanel().deployed(ev.getMeeple());
-            break;
-        case MeepleEvent.UNDEPLOY:
-            client.getMainPanel().undeployed(ev.getMeeple());
-            break;
-        case MeepleEvent.PRISON:
-        case MeepleEvent.RELEASE:
-            client.getGridPanel().repaint();
-            break;
-        }
-
+    	client.getMainPanel().meepleEvent(ev);
+    }
+    
+    @Subscribe
+    public void meeplePrisonEvent(MeeplePrisonEvent ev) {
+    	client.getGridPanel().repaint();
     }
 
 

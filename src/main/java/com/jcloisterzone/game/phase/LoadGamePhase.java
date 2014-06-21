@@ -6,6 +6,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
@@ -77,7 +78,7 @@ public class LoadGamePhase extends CreateGamePhase {
             }
             m.setFeature(f);
             f.addMeeple(m);
-            game.post(new MeepleEvent(MeepleEvent.DEPLOY, m));
+            game.post(new MeepleEvent(m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
@@ -86,7 +87,7 @@ public abstract class Meeple extends Figure {
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
-        game.post(new MeepleEvent(MeepleEvent.DEPLOY, this));
+        game.post(new MeepleEvent(this, null, new FeaturePointer(tile.getPosition(), loc)));
     }
 
     public final void undeploy() {
@@ -95,9 +96,10 @@ public abstract class Meeple extends Figure {
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
         assert location != null && location != Location.PRISON;
-        game.post(new MeepleEvent(MeepleEvent.UNDEPLOY, this));
+        FeaturePointer source = new FeaturePointer(getPosition(), location);
         feature.removeMeeple(this);
         clearDeployment();
+        game.post(new MeepleEvent(this, source, null));
     }
 
 
@@ -118,18 +120,6 @@ public abstract class Meeple extends Figure {
     }
 
     public void setLocation(Location location) {
-        // DBG TO DEL
-//        if (location != Location.PRISON) {
-//            TowerCapability tc = game.getCapability(TowerCapability.class);
-//            for (List<Follower> l : tc.getPrisoners().values()) {
-//                for (Follower f : l) {
-//                    if (f == this) {
-//                        System.err.print("IN PRISON");
-//                    }
-//                }
-//            }
-//        }
-
         this.location = location;
     }
 

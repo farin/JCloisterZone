@@ -17,6 +17,7 @@ import java.util.Set;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -101,17 +102,15 @@ public class FarmHintsLayer extends AbstractGridLayer {
         refreshHints();
     }
 
-    public void meepleUndeployed(Meeple m) {
-        if (m.getFeature() instanceof Farm) {
+    public void meepleEvent(MeepleEvent ev) {
+        if (
+        	(ev.getFrom() != null && ev.getFrom().getLocation().isFarmLocation()) ||
+        	(ev.getTo() != null && ev.getTo().getLocation().isFarmLocation())
+        ) {
             refreshHints();
         }
     }
 
-    public void meepleDeployed(Meeple m) {
-        if (m.getFeature() instanceof Farm) {
-            refreshHints();
-        }
-    }
 
     public void refreshHints() {
         doRefreshHints = true;

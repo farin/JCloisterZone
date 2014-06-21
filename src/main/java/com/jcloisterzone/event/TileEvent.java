@@ -20,7 +20,7 @@ public class TileEvent extends PlayEvent implements Undoable {
     }
 
     public TileEvent(int type, Player player, Tile tile) {
-        super(type, player, tile.getPosition());
+        super(type, player);
         this.tile = tile;
     }
 

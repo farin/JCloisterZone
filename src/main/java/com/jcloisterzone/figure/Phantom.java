@@ -5,7 +5,9 @@ import com.jcloisterzone.game.Game;
 
 public class Phantom extends SmallFollower {
 
-    public Phantom(Game game, Player player) {
+	private static final long serialVersionUID = 3013786263529361093L;
+
+	public Phantom(Game game, Player player) {
         super(game, player);
     }
 

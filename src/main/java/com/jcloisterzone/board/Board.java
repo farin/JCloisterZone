@@ -11,7 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 
@@ -215,6 +217,11 @@ public class Board {
 
     public Tile get(Position p) {
         return tiles.get(p);
+    }
+    
+    public Feature get(FeaturePointer fp) {
+    	Tile tile =  tiles.get(fp.getPosition());
+    	return tile == null ? null : tile.getFeature(fp.getLocation());
     }
 
     public Collection<Tile> getAllTiles() {
