@@ -104,7 +104,7 @@ public class DrawPhase extends ServerAwarePhase {
             next(DrawPhase.class);
             return;
         }
-        game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile));
+        game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }
 

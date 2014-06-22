@@ -69,7 +69,7 @@ public class RiverCapability extends Capability {
         lake.setRotation(entry.getValue().iterator().next());
         getBoard().add(lake, entry.getKey());
         getBoard().mergeFeatures(lake);
-        game.post(new TileEvent(TileEvent.PLACEMENT, lake));
+        game.post(new TileEvent(TileEvent.PLACEMENT, null, lake, lake.getPosition()));
     }
 
     @Override

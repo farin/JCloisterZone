@@ -3,6 +3,7 @@ package com.jcloisterzone.event;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.capability.BazaarItem;
 
+@Idempotent
 public class BazaarSelectBuyOrSellEvent extends PlayEvent {
 
     private final BazaarItem bazaarItem;

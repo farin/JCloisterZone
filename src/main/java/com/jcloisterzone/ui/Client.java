@@ -60,6 +60,7 @@ import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
+import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
@@ -155,6 +156,7 @@ public class Client extends JFrame {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            MenuFix.installGtkPopupBugWorkaround();
         } catch (Exception e) {
             e.printStackTrace(); //TODO logger
         }

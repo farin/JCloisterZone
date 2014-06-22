@@ -58,7 +58,7 @@ public class AbbeyPhase extends Phase {
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
 
-        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile));
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile, position));
         next(ActionPhase.class);
     }
 }

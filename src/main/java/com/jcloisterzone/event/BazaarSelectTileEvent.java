@@ -5,6 +5,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.capability.BazaarItem;
 
+@Idempotent
 public class BazaarSelectTileEvent extends PlayEvent {
 
     private List<BazaarItem> bazaarSupply;

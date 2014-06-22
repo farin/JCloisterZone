@@ -9,6 +9,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -138,12 +139,13 @@ public class MainPanel extends BackgroundPanel {
         gridPanel.setSecondPanel(null);
     }
 
-    public void tilePlaced(Tile tile) {
-        gridPanel.tilePlaced(tile, tileLayer);
+    public void tileEvent(TileEvent ev) {
+        gridPanel.tileEvent(ev, tileLayer);
         if (farmHintLayer != null) {
-            farmHintLayer.tilePlaced(tile);
+            farmHintLayer.tileEvent(ev);
         }
     }
+    
     
     public void meepleEvent(MeepleEvent ev) {
     	gridPanel.clearActionDecorations();

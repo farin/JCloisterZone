@@ -60,7 +60,7 @@ public class LoadGamePhase extends CreateGamePhase {
             Tile preplaced = iter.next();
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.post(new TileEvent(TileEvent.PLACEMENT, preplaced));
+            game.post(new TileEvent(TileEvent.PLACEMENT, null, preplaced, preplaced.getPosition()));
             if (preplaced.getBridge() != null) {
                 game.post(new BridgeDeployedEvent(null, preplaced.getPosition(), preplaced.getBridge().getLocation()));
             }

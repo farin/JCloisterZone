@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.ui.dialog.HelpDialog;
-import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -27,7 +26,7 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, close, showDiscard, save, load, farmHints;
+    private JMenuItem create, connect, close, showDiscard, undo, save, load, farmHints;
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history;
 
@@ -72,6 +71,18 @@ public class MenuBar extends JMenuBar {
         menu.add(close);
 
 
+        menu.addSeparator();
+        
+        undo = new JMenuItem(_("Undo"));
+        undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        undo.setEnabled(false);
+        undo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.getServer().undo();
+            }
+        });
+        menu.add(undo);
+        
         menu.addSeparator();
 
         save = new JMenuItem(_("Save"));
@@ -284,6 +295,8 @@ public class MenuBar extends JMenuBar {
             showDiscard.setEnabled(false);
         }
         save.setEnabled(isGameRunning);
+        //TODO
+        undo.setEnabled(isGameRunning);
     }
 
     public boolean isGameRunning() {

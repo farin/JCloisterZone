@@ -198,11 +198,10 @@ public class ClientController  {
             discardedTilesDialog.setVisible(true);
             break;
         case TileEvent.PLACEMENT:
-            client.getMainPanel().tilePlaced(ev.getTile());
+        case TileEvent.REMOVE:
+            client.getMainPanel().tileEvent(ev);
             break;
         }
-
-
     }
 
     @Subscribe

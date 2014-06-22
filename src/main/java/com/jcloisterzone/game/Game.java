@@ -28,8 +28,12 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.Idempotent;
+import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -72,8 +76,10 @@ public class Game extends GameSettings {
 
     private List<Capability> capabilities = new ArrayList<>();
     private FairyCapability fairyCapability; //shortcut
+    
+    private Undoable lastUndoable;
+    private Phase lastUndoablePhase;
 
-    //private final EventBus eventBus = new EventBus();
     private final EventBus eventBus = new EventBus(new SubscriberExceptionHandler() {
         @Override
         public void handleException(Throwable exception, SubscriberExceptionContext context) {
@@ -89,7 +95,36 @@ public class Game extends GameSettings {
     }
 
     public void post(Event event) {
+    	System.err.println(event);
+    	if (event instanceof PlayEvent) {
+	    	if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+	    		lastUndoable = (Undoable) event;
+	    		lastUndoablePhase = phase;
+	    	} else {
+	    		if (event.getClass().getAnnotation(Idempotent.class) == null) {
+	    			lastUndoable = null;
+	    			lastUndoablePhase = null;
+	    		}
+	    	}
+    	}
         eventBus.post(event);
+    }
+    
+    public void undo() {
+    	//proof of concept
+    	if (lastUndoable instanceof TileEvent) {
+    		Tile tile = ((TileEvent)lastUndoable).getTile();
+    		Position pos = tile.getPosition();
+    		
+	    	lastUndoable.undo(this);
+	    	phase = lastUndoablePhase;
+	    	lastUndoable = null;
+			lastUndoablePhase = null;
+			
+			//post should be in event undo. silent vs firing undo ?
+			post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
+			phase.enter();
+    	}
     }
 
     public Config getConfig() {

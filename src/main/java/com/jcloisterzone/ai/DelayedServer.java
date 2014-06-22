@@ -145,5 +145,10 @@ public class DelayedServer implements ServerIF {
     public void chatMessage(Integer player, String message) {
         server.chatMessage(player, message);
     }
+    
+    @Override
+    public void undo() {
+    	server.undo();
+    }
 
 }

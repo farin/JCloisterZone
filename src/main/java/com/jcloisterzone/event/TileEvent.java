@@ -2,6 +2,7 @@ package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.DefaultTilePack;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
@@ -12,21 +13,25 @@ public class TileEvent extends PlayEvent implements Undoable {
     public static final int DRAW = 1;
     public static final int PLACEMENT = 2;
     public static final int DISCARD = 3;
+    public static final int REMOVE = 4;
 
     private final Tile tile;
+    private final Position position;
 
-    public TileEvent(int type, Tile tile) {
-        this(type, null, tile);
-    }
-
-    public TileEvent(int type, Player player, Tile tile) {
+    
+    public TileEvent(int type, Player player, Tile tile, Position position) {
         super(type, player);
         this.tile = tile;
+        this.position = position;
     }
 
     public Tile getTile() {
         return tile;
     }
+    
+    public Position getPosition() {
+		return position;
+	}
 
     @Override
     public void undo(Game game) {

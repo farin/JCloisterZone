@@ -12,7 +12,6 @@ public abstract class Event {
         this(0);
     }
 
-
     public Event(int type) {
         this.type = type;
     }
@@ -21,6 +20,12 @@ public abstract class Event {
         return type;
     }
 
-  
+    @Override
+    public String toString() {
+    	if (type != 0) {
+    		return getClass().getSimpleName() + "/" + type;
+    	}
+    	return getClass().getSimpleName();
+    }
 
 }

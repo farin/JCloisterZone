@@ -17,7 +17,9 @@ import java.util.Set;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -88,18 +90,26 @@ public class FarmHintsLayer extends AbstractGridLayer {
         return 10;
     }
 
-    public void tilePlaced(Tile tile) {
-        ResourceManager resourceManager = getClient().getResourceManager();
-        Set<Location> farmLocations = new HashSet<>();
-        for (Feature f : tile.getFeatures()) {
-            if (f instanceof Farm) {
-                farmLocations.add(f.getLocation());
-            }
-        }
-        if (farmLocations.isEmpty()) return;
-        Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
-        areas.put(tile, tAreas);
-        refreshHints();
+    public void tileEvent(TileEvent ev) {
+    	Tile tile = ev.getTile();
+    	if (ev.getType() == TileEvent.PLACEMENT) {
+	        ResourceManager resourceManager = getClient().getResourceManager();
+	        Set<Location> farmLocations = new HashSet<>();
+	        for (Feature f : tile.getFeatures()) {
+	            if (f instanceof Farm) {
+	                farmLocations.add(f.getLocation());
+	            }
+	        }
+	        if (farmLocations.isEmpty()) return;
+	        Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+	        areas.put(tile, tAreas);
+	        refreshHints();
+    	}
+    	if (ev.getType() == TileEvent.REMOVE) {
+    		areas.remove(tile);
+    		refreshHints();
+    	}
+    	
     }
 
     public void meepleEvent(MeepleEvent ev) {

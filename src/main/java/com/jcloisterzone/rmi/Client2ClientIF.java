@@ -46,6 +46,8 @@ public interface Client2ClientIF {
     public void bazaarBuyOrSell(boolean buy);
 
     public void cornCiclesRemoveOrDeploy(boolean remove);
+    
+    public void undo();
 
     /* -------------------- CHAT --------------------- */
 

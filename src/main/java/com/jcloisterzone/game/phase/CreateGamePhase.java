@@ -210,7 +210,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         for (Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.post(new TileEvent(TileEvent.PLACEMENT, preplaced));
+            game.post(new TileEvent(TileEvent.PLACEMENT, null, preplaced, preplaced.getPosition()));
         }
     }
 

@@ -48,6 +48,10 @@ public class TileLayer extends AbstractGridLayer {
     public void tilePlaced(Tile tile) {
         placedTiles.add(tile);
     }
+    
+    public void tileRemoved(Tile tile) {
+    	placedTiles.remove(tile);
+    }
 
 
 

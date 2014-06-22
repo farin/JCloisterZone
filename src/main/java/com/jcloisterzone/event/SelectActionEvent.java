@@ -6,6 +6,7 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 
+@Idempotent
 public class SelectActionEvent extends PlayEvent {
 
     private final boolean passAllowed;

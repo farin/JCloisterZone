@@ -321,5 +321,10 @@ public class Server extends GameSettings implements ServerIF {
     public void chatMessage(Integer author, String message) {
         stub.chatMessage(author, message);
     }
+    
+    @Override
+    public void undo() {
+    	stub.undo();
+    }
 
 }

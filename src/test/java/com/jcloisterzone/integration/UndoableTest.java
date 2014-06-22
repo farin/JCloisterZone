@@ -1,8 +1,7 @@
 package com.jcloisterzone.integration;
 
-import java.io.IOException;
-
-import javax.xml.transform.TransformerException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -17,9 +16,6 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TilePhase;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UndoableTest extends AbstractIntegrationTest {
 

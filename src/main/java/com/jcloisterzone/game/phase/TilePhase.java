@@ -43,7 +43,7 @@ public class TilePhase extends Phase {
          Tile tile = game.getTilePack().drawTile(tileId);
          game.setCurrentTile(tile);
          game.getBoard().refreshAvailablePlacements(tile);
-         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile));
+         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TilePhase extends Phase {
         if (tile.getTower() != null) {
             game.getCapability(TowerCapability.class).registerTower(p);
         }
-        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), tile));
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), tile, p));
 
         if (bridgeRequired) {
             BridgeAction action = bridgeCap.prepareMandatoryBridgeAction();

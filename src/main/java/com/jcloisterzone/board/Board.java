@@ -163,7 +163,7 @@ public class Board {
 
     public void discardTile(Tile tile) {
         discardedTiles.add(tile);
-        game.post(new TileEvent(TileEvent.DISCARD, tile));
+        game.post(new TileEvent(TileEvent.DISCARD, null, tile, null));
     }
 
 
