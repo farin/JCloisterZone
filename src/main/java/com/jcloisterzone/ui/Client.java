@@ -474,7 +474,8 @@ public class Client extends JFrame {
     void clearActions() {
         if (controlPanel.getActionPanel().getActions() != null) {
             controlPanel.clearActions();
-        }
+        }    
+        getJMenuBar().getUndo().setEnabled(false);
     }
 
     public DiscardedTilesDialog getDiscardedTilesDialog() {

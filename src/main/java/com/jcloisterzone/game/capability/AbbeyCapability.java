@@ -57,6 +57,10 @@ public class AbbeyCapability extends Capability {
             throw new IllegalArgumentException("Player alredy used his abbey");
         }
     }
+    
+    public void undoUseAbbey(Player player) {
+    	unusedAbbey.add(player);
+    }
 
     public Player getAbbeyRoundLastPlayer() {
         return abbeyRoundLastPlayer;

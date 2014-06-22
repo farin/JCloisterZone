@@ -4,6 +4,7 @@
 *appears in next release*
 
 * Greek localization (el locale)
+* undo feature (tile placement only)
 * rules update: wagon cannot cross a bazaar to the other side
 * AI: The Tower support
 * fix: builder & bazaar interaction

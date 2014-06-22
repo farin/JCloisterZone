@@ -298,6 +298,10 @@ public class ClientController  {
         client.clearActions();
         client.getControlPanel().selectAction(ev.getActions(), ev.isPassAllowed());
         client.getGridPanel().repaint();
+        //TODO generic solution
+        if (client.getGame().isUndoAllowed() && client.isClientActive()) {
+        	client.getJMenuBar().getUndo().setEnabled(true);
+        }
     }
 
     @Subscribe

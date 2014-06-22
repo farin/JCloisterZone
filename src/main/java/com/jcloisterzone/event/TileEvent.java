@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 
 public class TileEvent extends PlayEvent implements Undoable {
 
@@ -43,6 +44,7 @@ public class TileEvent extends PlayEvent implements Undoable {
                 tile.setRotation(Rotation.R0);
                 game.setCurrentTile(null);
                 ((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
+                game.getCapability(AbbeyCapability.class).undoUseAbbey(getPlayer());
             }
             break;
         default:

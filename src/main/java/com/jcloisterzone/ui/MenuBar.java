@@ -293,10 +293,9 @@ public class MenuBar extends JMenuBar {
         close.setEnabled(isGameRunning);
         if (!isGameRunning) {
             showDiscard.setEnabled(false);
+            undo.setEnabled(false);
         }
         save.setEnabled(isGameRunning);
-        //TODO
-        undo.setEnabled(isGameRunning);
     }
 
     public boolean isGameRunning() {
@@ -306,7 +305,10 @@ public class MenuBar extends JMenuBar {
     public void setShowDiscardedEnabled(boolean enabled) {
         showDiscard.setEnabled(enabled);
     }
-
+    
+    public JMenuItem getUndo() {
+		return undo;
+	}
 
 
 

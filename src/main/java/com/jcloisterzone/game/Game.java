@@ -95,7 +95,6 @@ public class Game extends GameSettings {
     }
 
     public void post(Event event) {
-    	System.err.println(event);
     	if (event instanceof PlayEvent) {
 	    	if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
 	    		lastUndoable = (Undoable) event;
@@ -108,6 +107,10 @@ public class Game extends GameSettings {
 	    	}
     	}
         eventBus.post(event);
+    }
+    
+    public boolean isUndoAllowed() {
+    	return lastUndoable != null;
     }
     
     public void undo() {
