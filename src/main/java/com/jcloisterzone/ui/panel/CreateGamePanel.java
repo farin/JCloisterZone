@@ -43,8 +43,8 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.TextPrompt;
-import com.jcloisterzone.ui.TextPrompt.Show;
+import com.jcloisterzone.ui.component.TextPrompt;
+import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.ui.UiUtils;
 
 public class CreateGamePanel extends JPanel {

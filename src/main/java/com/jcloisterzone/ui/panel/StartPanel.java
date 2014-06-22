@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.MultiLineLabel;
+import com.jcloisterzone.ui.component.MultiLineLabel;
 
 public class StartPanel extends JPanel {
 

@@ -21,7 +21,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.INNS_AND_CATHEDRALS,
             Expansion.TRADERS_AND_BUILDERS,
             Expansion.PRINCESS_AND_DRAGON,
-            //Expansion.TOWER, //causing error sometimes
+            Expansion.TOWER,
             Expansion.KING_AND_ROBBER_BARON,
             Expansion.RIVER,
             Expansion.RIVER_II,
@@ -32,6 +32,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.BESIEGERS,
             Expansion.PHANTOM,
             Expansion.FESTIVAL,
+            //Expansion.FLIER,
             //only tiles
             Expansion.COUNT
             //Expansion.PLAGUE

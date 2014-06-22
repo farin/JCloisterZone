@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui;
+package com.jcloisterzone.ui.component;
 
 import java.awt.Font;
 

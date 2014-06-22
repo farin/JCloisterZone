@@ -1,7 +1,7 @@
 /**
  * http://tips4java.wordpress.com/2009/11/29/text-prompt/
  */
-package com.jcloisterzone.ui;
+package com.jcloisterzone.ui.component;
 
 import java.awt.*;
 import java.awt.event.*;

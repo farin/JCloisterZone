@@ -5,6 +5,7 @@
 
 * Greek localization (el locale)
 * rules update: wagon cannot cross a bazaar to the other side
+* AI: The Tower support
 * fix: builder & bazaar interaction
 * code refactoring: game events (EventBus), AI tasks for select actions
 

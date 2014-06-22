@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.Application;
-import com.jcloisterzone.ui.MultiLineLabel;
+import com.jcloisterzone.ui.component.MultiLineLabel;
 
 
 public class AboutDialog extends JDialog {
