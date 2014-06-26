@@ -8,6 +8,7 @@
 * rules update: wagon cannot cross a bazaar to the other side
 * AI: The Tower support
 * fix: builder & bazaar interaction
+* fix: possible game load crash
 * workaround for GTK look&feel bug - menus without border and separators
 * code refactoring: game events (EventBus), AI tasks for select actions
 

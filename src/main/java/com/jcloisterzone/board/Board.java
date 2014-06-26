@@ -218,10 +218,10 @@ public class Board {
     public Tile get(Position p) {
         return tiles.get(p);
     }
-    
+
     public Feature get(FeaturePointer fp) {
-    	Tile tile =  tiles.get(fp.getPosition());
-    	return tile == null ? null : tile.getFeature(fp.getLocation());
+        Tile tile =  tiles.get(fp.getPosition());
+        return tile == null ? null : tile.getFeaturePartOf(fp.getLocation());
     }
 
     public Collection<Tile> getAllTiles() {
