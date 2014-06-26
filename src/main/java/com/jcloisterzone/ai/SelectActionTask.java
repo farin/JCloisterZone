@@ -105,7 +105,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
-        boolean dbgPrint = !false;
+        boolean dbgPrint = false;
         try {
             this.game = aiPlayer.copyGame(this);
             if (dbgPrint) dbgPringHeader();

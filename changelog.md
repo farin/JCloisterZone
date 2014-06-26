@@ -3,6 +3,9 @@
 ## master branch
 *appears in next release*
 
+## 2.7
+*2014-06-26*
+
 * Greek localization (el locale)
 * undo feature (tile placement only)
 * rules update: wagon cannot cross a bazaar to the other side
