@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-07 23:56+0100\n"
-"PO-Revision-Date: 2014-01-08 11:29+0100\n"
+"POT-Creation-Date: 2014-06-26 19:40+0200\n"
+"PO-Revision-Date: 2014-06-26 19:53+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -57,8 +57,8 @@ msgid "The Catapult"
 msgstr "Catapulta"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:58
-#: src/main/java/com/jcloisterzone/Expansion.java:68
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "tiles only"
 msgstr "doar dale"
 
@@ -66,99 +66,107 @@ msgstr "doar dale"
 msgid "Bridges, Castles and Bazaars"
 msgstr "Poduri, Castele şi Pieţe"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
-msgid "King and Robber Baron"
+#: src/main/java/com/jcloisterzone/Expansion.java:61
+msgid "Hills and sheep"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:64
+msgid "King and Robber Baron"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "The River"
 msgstr "Râul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:65
+#: src/main/java/com/jcloisterzone/Expansion.java:66
 msgid "The River II"
 msgstr "Râul II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:66
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "The Cathars / Siege"
 msgstr "Catharii"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Besiegers"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:68
+#: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The Count of Carcassonne"
 msgstr "Contele de Carcassonne"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Mini Expansion (GQ11)"
 msgstr "Mini-Extensia (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Cult"
 msgstr "Cultul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Tunnel"
 msgstr "Tunelul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Corn Circles"
 msgstr "Cercuri în lan"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Plague"
 msgstr "Molima"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Phantom"
 msgstr "Fantoma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Festival (10th an.)"
 msgstr "Festivalul (a 10-a aniversare)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:76
+#: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "Little Buildings"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Wind Rose"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
-msgid "The Flier"
-msgstr "Zburatorul"
-
-#: src/main/java/com/jcloisterzone/Expansion.java:81
-msgid "The Messages"
+#: src/main/java/com/jcloisterzone/Expansion.java:79
+msgid "The German Monasteries"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
-msgid "The Ferries"
-msgstr "Poduri"
+msgid "The Flier"
+msgstr "Zburatorul"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:83
-msgid "The Goldmines"
+msgid "The Messages"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:84
-msgid "Mage & Witch"
-msgstr ""
+msgid "The Ferries"
+msgstr "Poduri"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
-msgid "The Robber"
+msgid "The Goldmines"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
+msgid "Mage & Witch"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:87
+msgid "The Robber"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "The Corn circles II"
 msgstr "Cercuri în lan II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The school"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "La porxada"
 msgstr ""
 
@@ -234,156 +242,54 @@ msgstr "Versiunea locala a aplicației nu este compatibila cu versiunea aplicaț
 msgid "Incompatible versions"
 msgstr "Versiuni incompatibile."
 
-#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
-msgid "Load error"
-msgstr "Eroare de încărcare."
-
-#: src/main/java/com/jcloisterzone/game/Snapshot.java:254
-msgid "Saved game is incompatible or file is corrupted. Game couldn't work properly."
-msgstr "Salvarea nu este compatibilă sau fișierul este corupt. Jocul nu a putut fi inițializat corect."
-
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:65
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:304
+#: src/main/java/com/jcloisterzone/ui/Client.java:307
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:64
 msgid "Close game"
 msgstr "Terminare joc"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:304
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:313
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:81
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:64
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:74
 msgid "Cancel"
 msgstr "Anulare"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
 msgid "Game is running. Do you really want to quit game and also disconnect all other players?"
 msgstr "Jocul este în desfășurare. Doriți terminarea sa si deconectarea celorlalți jucatori?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:304
+#: src/main/java/com/jcloisterzone/ui/Client.java:306
 msgid "Game is running. Do you really want to leave it?"
 msgstr "Jocul este în desfășurare? Sigur doriți terminarea sa?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:367
+#: src/main/java/com/jcloisterzone/ui/Client.java:369
 msgid "Save game"
 msgstr "Salvare"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:387
-#: src/main/java/com/jcloisterzone/ui/Client.java:401
-#: src/main/java/com/jcloisterzone/ui/Client.java:424
+#: src/main/java/com/jcloisterzone/ui/Client.java:389
+#: src/main/java/com/jcloisterzone/ui/Client.java:403
 #: src/main/java/com/jcloisterzone/ui/Client.java:427
+#: src/main/java/com/jcloisterzone/ui/Client.java:430
 msgid "Error"
 msgstr "Eroare"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:409
+#: src/main/java/com/jcloisterzone/ui/Client.java:412
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
 msgid "Load game"
 msgstr "Încărcare joc"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:490
+#: src/main/java/com/jcloisterzone/ui/Client.java:494
 msgid "JCloisterZone "
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/ClientController.java:153
+#: src/main/java/com/jcloisterzone/ui/ClientController.java:178
 msgid "%d tiles left"
 msgstr "%d dale rămase"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
-msgid "Game"
-msgstr "Joc"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:48
-msgid "New game"
-msgstr "Joc nou"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:66
-msgid "Connect"
-msgstr "Conectare"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:77
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:249
-msgid "Save"
-msgstr "Salvare"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:87
-msgid "Load"
-msgstr "Incărcare"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:99
-msgid "Quit"
-msgstr "Ieșire"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:112
-msgid "Window"
-msgstr "Fereastră"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:113
-msgid "Zoom in"
-msgstr "Mărire"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:122
-msgid "Zoom out"
-msgstr "Micșorare"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:146
-msgid "Show last placements"
-msgstr "Marcare ultime dale folosite"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:157
-msgid "Show farm hints"
-msgstr ""
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:168
-msgid "Show discarded tiles"
-msgstr "Afișare dale refuzate"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:181
-msgid "Settings"
-msgstr "Setări"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:182
-msgid "Beep alert at player turn"
-msgstr "Anunțare sonoră a rândului jucătorului"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:195
-msgid "Confirm placement on a farm"
-msgstr "Confirmare așezare fermă"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:206
-msgid "Confirm placement on a tower"
-msgstr "Confirmare așezare pe un turn"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:316
-msgid "Confirm ransom payment"
-msgstr "Confirmare plată răscumpărare"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:230
-msgid "Confirm game close"
-msgstr "Confirmare terminare joc"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:243
-msgid "Help"
-msgstr "Ajutor"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:247
-msgid "About"
-msgstr "Despre"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:257
-#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:38
-msgid "Controls"
-msgstr "Control joc"
-
-#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
-msgid "JCloisterZone saved games"
-msgstr "Salvări joc JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ChatPanel.java:166
 msgid "Type to chat"
@@ -400,6 +306,11 @@ msgstr "Achitare răscumpărare"
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:315
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Doriți să platiți rasumpărarea de 3 puncte pentru eliberarea prizonierului."
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:316
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:228
+msgid "Confirm ransom payment"
+msgstr "Confirmare plată răscumpărare"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:43
 msgid "About application"
@@ -493,6 +404,11 @@ msgstr "Piață"
 msgid "Wind rose"
 msgstr ""
 
+#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:38
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:268
+msgid "Controls"
+msgstr "Control joc"
+
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:150
 msgid "Choose your tile."
 msgstr "Alegeți numele dumneavoastra."
@@ -559,34 +475,118 @@ msgstr ""
 msgid "Corn circle"
 msgstr "Cercuri în lan"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:57
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
 msgid "Place a follower"
 msgstr "Plasați un slujitor"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:59
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:52
 msgid "Do you really want to place a follower on farm?"
 msgstr "Doriți să plasați un slujitor pe fermă?"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:60
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:76
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:80
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:85
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:53
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:63
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:69
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:73
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:78
 msgid "Confirm follower placement"
 msgstr "Confirmare plasare slujitor"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:72
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:65
 msgid "Place a tower piece"
 msgstr "Plasare segment turn"
 
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:75
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:84
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:68
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:77
 msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
 msgstr ""
 "Doriți sa plasați un slujitor pe trun?\n"
 "(Pentru a preveni adăugarea altor piese deasupra)"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
+msgid "Game"
+msgstr "Joc"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:48
+msgid "New game"
+msgstr "Joc nou"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:66
+msgid "Connect"
+msgstr "Conectare"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:76
+msgid "Undo"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:88
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:252
+msgid "Save"
+msgstr "Salvare"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:98
+msgid "Load"
+msgstr "Incărcare"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:110
+msgid "Quit"
+msgstr "Ieșire"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:123
+msgid "Window"
+msgstr "Fereastră"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:124
+msgid "Zoom in"
+msgstr "Mărire"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:133
+msgid "Zoom out"
+msgstr "Micșorare"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:157
+msgid "Show last placements"
+msgstr "Marcare ultime dale folosite"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:168
+msgid "Show farm hints"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:179
+msgid "Show discarded tiles"
+msgstr "Afișare dale refuzate"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:192
+msgid "Settings"
+msgstr "Setări"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:193
+msgid "Beep alert at player turn"
+msgstr "Anunțare sonoră a rândului jucătorului"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:206
+msgid "Confirm placement on a farm"
+msgstr "Confirmare așezare fermă"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:217
+msgid "Confirm placement on a tower"
+msgstr "Confirmare așezare pe un turn"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:241
+msgid "Confirm game close"
+msgstr "Confirmare terminare joc"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:254
+msgid "Help"
+msgstr "Ajutor"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:258
+msgid "About"
+msgstr "Despre"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:46
 msgid "Connecting"
@@ -616,31 +616,31 @@ msgstr "Conexiune refuzată."
 msgid "Connection failed."
 msgstr "Conexiune eșuată."
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:124
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:125
 msgid "Start game"
 msgstr "Pornire joc"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:142
 msgid "Players"
 msgstr "Jucători"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:158
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:160
 msgid "Expansions"
 msgstr "Extensii"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:172
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:174
 msgid "Rules"
 msgstr "Reguli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:197
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:199
 msgid "Presets"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:217
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:219
 msgid "Preset name"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:276
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:281
 msgid "Delete"
 msgstr ""
 
@@ -698,6 +698,20 @@ msgstr "Conectare la distanță a un nou joc JCloisterZone, pregătit de pornire
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:93
 msgid "Load from a file previously saved game."
 msgstr "Încărcare joc din fișier salvat anterior."
+
+#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
+msgid "JCloisterZone saved games"
+msgstr "Salvări joc JCloisterZone"
+
+#~ msgid "Load error"
+#~ msgstr "Eroare de încărcare."
+
+#~ msgid ""
+#~ "Saved game is incompatible or file is corrupted. Game couldn't work "
+#~ "properly."
+#~ msgstr ""
+#~ "Salvarea nu este compatibilă sau fișierul este corupt. Jocul nu a putut "
+#~ "fi inițializat corect."
 
 #~ msgid "King and Scout"
 #~ msgstr "Rege şi cercetaş"
