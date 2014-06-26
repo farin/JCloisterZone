@@ -95,7 +95,7 @@ public class WagonPhase extends Phase {
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
                     if (nei.walk(new IsOccupiedOrCompleted())) continue;
-                    wagonMoves.add(new FeaturePointer(getTile().getPosition(), nei.getLocation()));
+                    wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
                 }
             }
             return true;
