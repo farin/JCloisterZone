@@ -443,10 +443,15 @@ public class Client extends JFrame {
         new AboutDialog();
     }
 
+    @Deprecated
     public boolean isClientActive() {
-        if (activePlayer == null) return false;
-        if (activePlayer.getSlot().getType() != SlotType.PLAYER) return false;
-        return getClientStub().isLocalPlayer(activePlayer);
+        return isClientActive(activePlayer);
+    }
+
+    public boolean isClientActive(Player player) {
+        if (player == null) return false;
+        if (player.getSlot().getType() != SlotType.PLAYER) return false;
+        return getClientStub().isLocalPlayer(player);
     }
 
     public Player getActivePlayer() {
@@ -474,7 +479,7 @@ public class Client extends JFrame {
     void clearActions() {
         if (controlPanel.getActionPanel().getActions() != null) {
             controlPanel.clearActions();
-        }    
+        }
         getJMenuBar().getUndo().setEnabled(false);
     }
 

@@ -237,12 +237,12 @@ public class ClientController  {
 
     @Subscribe
     public void meepleEvent(MeepleEvent ev) {
-    	client.getMainPanel().meepleEvent(ev);
+        client.getMainPanel().meepleEvent(ev);
     }
-    
+
     @Subscribe
     public void meeplePrisonEvent(MeeplePrisonEvent ev) {
-    	client.getGridPanel().repaint();
+        client.getGridPanel().repaint();
     }
 
 
@@ -287,6 +287,7 @@ public class ClientController  {
         dragonDecoration.setMoves(movesLeft);
         client.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
+        client.setActivePlayer(ev.getPlayer());
         if (client.isClientActive()) {
             client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
             client.beep();
@@ -300,7 +301,7 @@ public class ClientController  {
         client.getGridPanel().repaint();
         //TODO generic solution
         if (client.getGame().isUndoAllowed() && client.isClientActive()) {
-        	client.getJMenuBar().getUndo().setEnabled(true);
+            client.getJMenuBar().getUndo().setEnabled(true);
         }
     }
 
