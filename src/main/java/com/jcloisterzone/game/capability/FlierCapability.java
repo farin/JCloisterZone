@@ -106,19 +106,22 @@ public class FlierCapability extends Capability {
 
         followerLoop:
         for (Follower f : game.getActivePlayer().getFollowers()) {
+            if (!f.isInSupply()) continue;
+            boolean landingExists = isLandingExists(f, reachable);
+
             for (PlayerAction<?> action : actions) {
                 if (action instanceof MeepleAction) {
                     MeepleAction ma = (MeepleAction) action;
                     if (ma.getMeepleType().equals(f.getClass())) {
-                        if (isLandingExists(f, reachable)) {
-                        	ma.add(new FeaturePointer(tile.getPosition(), Location.FLIER));
+                        if (landingExists) {
+                            ma.add(new FeaturePointer(tile.getPosition(), Location.FLIER));
                         }
                         continue followerLoop;
                     }
                 }
             }
 
-            if (isLandingExists(f, reachable)) {
+            if (landingExists) {
                 MeepleAction action = new MeepleAction(f.getClass());
                 action.add(new FeaturePointer(getTile().getPosition(), Location.FLIER));
                 actions.add(action);
