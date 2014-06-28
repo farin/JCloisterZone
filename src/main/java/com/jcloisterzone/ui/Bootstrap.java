@@ -87,6 +87,8 @@ public class Bootstrap  {
         ConfigLoader configLoader = new ConfigLoader();
         Config config = configLoader.load();
 
+        I18nUtils.setLocale(config.getLocaleObject()); //must be set before Expansions enum is initialized
+
         List<Plugin> plugins = loadPlugins(config);
 
         final Client client = new Client(configLoader, config, plugins);
