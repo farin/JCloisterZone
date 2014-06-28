@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.BazaarAuctionEndEvent;
+import com.jcloisterzone.event.BazaarMakeBidEvent;
+import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.event.BazaarSelectTileEvent;
+import com.jcloisterzone.event.BazaarTileSelectedEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
@@ -41,7 +46,7 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         Player p = game.getNextPlayer();
         bazaarCap.setBazaarTileSelectingPlayer(p);
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
             getServer().selectTiles(getTilePack().size(), game.getAllPlayers().length);
@@ -54,21 +59,22 @@ public class BazaarPhase extends ServerAwarePhase {
         Player selecting = bazaarCap.getBazaarTileSelectingPlayer();
         if (selecting != null) {
             Player bidding = bazaarCap.getBazaarBiddingPlayer();
-            int supplyIdx = bazaarCap.getBazaarSupply().indexOf(bazaarCap.getCurrentBazaarAuction());
-            game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+            BazaarItem currentItem = bazaarCap.getCurrentBazaarAuction();
+            int supplyIdx = bazaarCap.getBazaarSupply().indexOf(currentItem);
+            //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
 
             if (bidding == null) {
-                game.getUserInterface().selectBazaarTile();
+                game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
             } else if (selecting == bidding) {
-                game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+                game.post(new BazaarSelectBuyOrSellEvent(bidding, currentItem, supplyIdx));
             } else {
-                game.getUserInterface().makeBazaarBid(supplyIdx);
+                game.post(new BazaarMakeBidEvent(bidding, currentItem, supplyIdx));
             }
         }
     }
 
     private boolean isBazaarTriggered() {
-        if (!getTile().hasTrigger(TileTrigger.BAZAAR)) return false;
+        if (!bazaarCap.isBazaarTriggered()) return false;
         if (getTilePack().size() < game.getAllPlayers().length) return false; //there isn't one tile for each player available
         if (bazaarCap.getBazaarSupply() != null) return false;
         return true;
@@ -81,7 +87,7 @@ public class BazaarPhase extends ServerAwarePhase {
             supply.add(new BazaarItem(getTilePack().drawTile(tileIndex)));
         }
         bazaarCap.setBazaarSupply(supply);
-        game.getUserInterface().selectBazaarTile();
+        game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
     }
 
     private boolean canPlayerBid(Player p) {
@@ -109,14 +115,15 @@ public class BazaarPhase extends ServerAwarePhase {
         bi.setCurrentBidder(getActivePlayer());
 
         if (isTileSelection) {
-            game.fireGameEvent().bazaarTileSelected(supplyIndex, bi);
+            game.post(new BazaarTileSelectedEvent(getActivePlayer(), bi, supplyIndex));
         }
         nextBidder();
     }
 
     private void nextBidder() {
         Player nextBidder = getActivePlayer();
-        int supplyIdx = bazaarCap.getBazaarSupply().indexOf(bazaarCap.getCurrentBazaarAuction());
+        BazaarItem currentItem = bazaarCap.getCurrentBazaarAuction();
+        int supplyIdx = bazaarCap.getBazaarSupply().indexOf(currentItem);
         do {
             nextBidder = game.getNextPlayer(nextBidder);
             if (nextBidder == bazaarCap.getBazaarTileSelectingPlayer()) {
@@ -126,16 +133,16 @@ public class BazaarPhase extends ServerAwarePhase {
                     bazaarBuyOrSell(true);
                 } else {
                     bazaarCap.setBazaarBiddingPlayer(bazaarCap.getBazaarTileSelectingPlayer()); //need for correct save&load
-                    game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                    game.getUserInterface().selectBuyOrSellBazaarOffer(supplyIdx);
+                    //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                    game.post(new BazaarSelectBuyOrSellEvent(getActivePlayer(), currentItem, supplyIdx));
                 }
                 return;
             }
         } while (!canPlayerBid(nextBidder));
 
         bazaarCap.setBazaarBiddingPlayer(nextBidder);
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-        game.getUserInterface().makeBazaarBid(supplyIdx);
+        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        game.post(new BazaarMakeBidEvent(getActivePlayer(), currentItem, supplyIdx));
     }
 
     private void nextSelectingPlayer() {
@@ -147,14 +154,14 @@ public class BazaarPhase extends ServerAwarePhase {
             player = game.getNextPlayer(player);
             if (!bazaarCap.hasTileAuctioned(player)) {
                 bazaarCap.setBazaarTileSelectingPlayer(player);
-                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                game.getUserInterface().selectBazaarTile();
+                //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
                 return;
             }
         } while (player != currentSelectingPlayer);
         //all tiles has been auctioned
         bazaarCap.setBazaarTileSelectingPlayer(null);
-        game.fireGameEvent().bazaarAuctionsEnded();
+        game.post(new BazaarAuctionEndEvent());
         next();
     }
 

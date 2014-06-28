@@ -6,13 +6,14 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
@@ -59,7 +60,7 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Builder.class)) return;
 
@@ -72,15 +73,16 @@ public class BuilderCapability extends Capability {
 
         Position pos = tile.getPosition();
         MeepleAction builderAction = new MeepleAction(Builder.class);
-
-        builderAction.getOrCreate(pos).addAll(roads);
-        builderAction.getOrCreate(pos).addAll(cities);
+        
+        for (Location loc : Iterables.concat(roads, cities)) {
+        	builderAction.add(new FeaturePointer(pos, loc));
+        }
         actions.add(builderAction);
 
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         switch (builderState) {
         case ACTIVATED:
             builderState = BuilderState.BUILDER_TURN;

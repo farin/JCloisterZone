@@ -12,13 +12,17 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
-import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
-import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
@@ -27,7 +31,6 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.ui.PlayerColor;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -66,7 +69,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         } else {
             game.getCustomRules().remove(rule);
         }
-        game.fireGameEvent().updateCustomRule(rule, enabled);
+        game.post(new RuleChangeEvent(rule, enabled));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         } else {
             game.getExpansions().remove(expansion);
         }
-        game.fireGameEvent().updateExpansion(expansion, enabled);
+        game.post(new ExpansionChangedEvent(expansion, enabled));
     }
 
     @Override
@@ -88,10 +91,10 @@ public class CreateGamePhase extends ServerAwarePhase {
 
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
-            game.fireGameEvent().updateExpansion(exp, game.getExpansions().contains(exp));
+            game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
         }
         for (CustomRule rule : CustomRule.values()) {
-            game.fireGameEvent().updateCustomRule(rule, game.getCustomRules().contains(rule));
+            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
         }
     }
 
@@ -104,7 +107,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     @Override
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        game.fireGameEvent().updateSupportedExpansions(expansions);
+        game.post(new SupportedExpansionsChangeEvent(expansions));
     }
 
 
@@ -120,11 +123,12 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void preparePhases() {
-        Phase next = null;
+        Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
-        next = addPhase(next, new CleanUpPhase(game));
+        next = last = addPhase(next, new CleanUpTurnPhase(game));
         next = addPhase(next, new BazaarPhase(game, getServer()));
+        next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
 
@@ -150,9 +154,10 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new TilePhase(game));
         next = addPhase(next, new DrawPhase(game, getServer()));
         next = addPhase(next, new AbbeyPhase(game));
+        next = addPhase(next, new AnyTimeActionPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
-        game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last phase, the first is default
+        last.setDefaultNext(next); //after last phase, the first is default
     }
 
     private void createPlayers() {
@@ -205,7 +210,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         for (Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.fireGameEvent().tilePlaced(preplaced);
+            game.post(new TileEvent(TileEvent.PLACEMENT, null, preplaced, preplaced.getPosition()));
         }
     }
 
@@ -222,7 +227,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                             break;
                         }
                     }
-                    game.addUserInterface(new AiUserInterfaceAdapter(ai));
+                    game.getEventBus().register(ai);
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
                     logger.error("Unable to create AI player", e);
@@ -266,9 +271,10 @@ public class CreateGamePhase extends ServerAwarePhase {
         prepareTilePack();
         prepareAiPlayers();
 
-        game.fireGameEvent().started(getSnapshot());
+        game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_START, getSnapshot()));
         preplaceTiles();
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        game.post(new PlayerTurnEvent(game.getTurnPlayer()));
+        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
 
         next();
     }

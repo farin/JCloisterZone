@@ -166,7 +166,9 @@ public class DefaultTilePack implements TilePack {
 
     @Override
     public TileGroupState getGroupState(String groupId) {
-        return groups.get(groupId).state;
+        TileGroup group = groups.get(groupId);
+        if (group == null) return null;
+        return group.state;
     }
 
     @Override

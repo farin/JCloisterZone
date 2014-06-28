@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
@@ -10,6 +11,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
@@ -25,8 +28,10 @@ public class WindRoseCapability extends Capability {
         super(game);
     }
 
-    @Override
-    public void tilePlaced(Tile tile) {
+    @Subscribe
+    public void tilePlaced(TileEvent ev) {
+        if (ev.getType() != TileEvent.PLACEMENT) return;
+        Tile tile = ev.getTile();
         Location rose = tile.getWindRose();
         if (rose == null) return;
         if (rose == Location.NWSE) {
@@ -37,7 +42,7 @@ public class WindRoseCapability extends Capability {
             if (isInProperQuadrant(rose, tile.getPosition())) {
                 Player p = game.getActivePlayer();
                 p.addPoints(WIND_ROSE_POINTS, PointCategory.WIND_ROSE);
-                game.fireGameEvent().scored(tile.getPosition(), p, WIND_ROSE_POINTS, WIND_ROSE_POINTS+"", false);
+                game.post(new ScoreEvent(tile.getPosition(), p, WIND_ROSE_POINTS, PointCategory.WIND_ROSE));
             }
         }
     }

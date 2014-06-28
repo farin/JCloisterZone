@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
 public class BridgeAction extends SelectFeatureAction {
@@ -11,8 +10,13 @@ public class BridgeAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position p, Location loc) {
-        server.deployBridge(p, loc);
+    public void perform(Client2ClientIF server, FeaturePointer bp) {
+        server.deployBridge(bp.getPosition(), bp.getLocation());
+    }
+
+    @Override
+    public String toString() {
+        return "place bridge";
     }
 
 }

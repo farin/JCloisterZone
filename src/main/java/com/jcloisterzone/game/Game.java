@@ -2,6 +2,7 @@ package com.jcloisterzone.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,20 +14,26 @@ import org.w3c.dom.Element;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.event.EventMulticaster;
-import com.jcloisterzone.event.GameEventAdapter;
-import com.jcloisterzone.event.GameEventListener;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.Idempotent;
+import com.jcloisterzone.event.PlayEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -67,14 +74,61 @@ public class Game extends GameSettings {
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
-    private GameEventListener eventListener = new GameEventAdapter();
-    private UserInterface userInterface;
-
     private List<Capability> capabilities = new ArrayList<>();
     private FairyCapability fairyCapability; //shortcut
+    
+    private Undoable lastUndoable;
+    private Phase lastUndoablePhase;
+
+    private final EventBus eventBus = new EventBus(new SubscriberExceptionHandler() {
+        @Override
+        public void handleException(Throwable exception, SubscriberExceptionContext context) {
+            logger.error("Could not dispatch event: " + context.getSubscriber() + " to " + context.getSubscriberMethod(), exception);
+        }
+    });
 
     private int idSequenceCurrVal = 0;
 
+
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
+    public void post(Event event) {
+    	if (event instanceof PlayEvent) {
+	    	if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+	    		lastUndoable = (Undoable) event;
+	    		lastUndoablePhase = phase;
+	    	} else {
+	    		if (event.getClass().getAnnotation(Idempotent.class) == null) {
+	    			lastUndoable = null;
+	    			lastUndoablePhase = null;
+	    		}
+	    	}
+    	}
+        eventBus.post(event);
+    }
+    
+    public boolean isUndoAllowed() {
+    	return lastUndoable != null;
+    }
+    
+    public void undo() {
+    	//proof of concept
+    	if (lastUndoable instanceof TileEvent) {
+    		Tile tile = ((TileEvent)lastUndoable).getTile();
+    		Position pos = tile.getPosition();
+    		
+	    	lastUndoable.undo(this);
+	    	phase = lastUndoablePhase;
+	    	lastUndoable = null;
+			lastUndoablePhase = null;
+			
+			//post should be in event undo. silent vs firing undo ?
+			post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
+			phase.enter();
+    	}
+    }
 
     public Config getConfig() {
         return config;
@@ -105,22 +159,6 @@ public class Game extends GameSettings {
         return phases;
     }
 
-    public GameEventListener fireGameEvent() {
-        return eventListener;
-    }
-    public void addGameListener(GameEventListener listener) {
-        eventListener = (GameEventListener) EventMulticaster.addListener(eventListener, listener);
-    }
-    public void removeGameListener(GameEventListener listener) {
-        eventListener = (GameEventListener) EventMulticaster.removeListener(eventListener, listener);
-    }
-    public UserInterface getUserInterface() {
-        return userInterface;
-    }
-    public void addUserInterface(UserInterface ui) {
-        userInterface = (UserInterface) EventMulticaster.addListener(userInterface, ui);
-    }
-
     public Iterable<Meeple> getDeployedMeeples() {
         Iterable<Meeple> iter = Collections.emptyList();
         for (Player player : plist) {
@@ -135,7 +173,7 @@ public class Game extends GameSettings {
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
-        fireGameEvent().playerActivated(turnPlayer, turnPlayer);
+        post(new PlayerTurnEvent(turnPlayer));
     }
 
     /**
@@ -214,7 +252,7 @@ public class Game extends GameSettings {
         try {
             Capability capability = clazz.getConstructor(Game.class).newInstance(this);
             capabilities.add(capability);
-            addGameListener(capability);
+            getEventBus().register(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }
@@ -240,25 +278,26 @@ public class Game extends GameSettings {
     }
 
 
-    public LocationsMap prepareFollowerLocations() {
-        LocationsMap sites = new LocationsMap();
-        Set<Location> locations = prepareFollowerLocations(currentTile, false);
-        if (!locations.isEmpty()) {
-            sites.put(currentTile.getPosition(), locations);
-        }
-        return sites;
+    public Set<FeaturePointer> prepareFollowerLocations() {
+        return prepareFollowerLocations(currentTile, false);
     }
 
-    public Set<Location> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
+    public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
         if (!isDeployAllowed(tile, Follower.class)) return Collections.emptySet();
-        Set<Location> locations = tile.getUnoccupiedScoreables(excludeFinished);
-        if (hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-            City princessCity = tile.getCityWithPrincess();
-            if (princessCity != null) {
-                locations.remove(princessCity.getLocation());
+        Set<FeaturePointer> pointers = new HashSet<>();
+        for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
+            //exclude finished == false -> just placed tile - it means do not check princess for magic portal
+            //TODO very cryptic, refactor
+            if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+                City princessCity = tile.getCityWithPrincess();
+                if (princessCity != null) {
+                    continue;
+
+                }
             }
+            pointers.add(new FeaturePointer(tile.getPosition(), loc));
         }
-        return locations;
+        return pointers;
     }
 
     //scoring helpers
@@ -267,14 +306,16 @@ public class Game extends GameSettings {
         p.addPoints(points, ctx.getMasterFeature().getPointCategory());
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
+        ScoreEvent scoreEvent;
         if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            fireGameEvent().scored(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
-                    points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, follower,
-                    isFinalScoring);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY, follower);
+            scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);
         } else {
-            fireGameEvent().scored(follower.getFeature(), points, points+"", follower, isFinalScoring);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points, PointCategory.FAIRY, follower);
         }
+        scoreEvent.setFinal(isFinalScoring);
+        post(scoreEvent);
     }
 
     public void scoreCompletableFeature(CompletableScoreContext ctx) {
@@ -329,14 +370,20 @@ public class Game extends GameSettings {
         }
     }
 
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         for (Capability cap: capabilities) {
-            cap.prepareActions(actions, commonSites);
+            cap.prepareActions(actions, followerOptions);
         }
         for (Capability cap: capabilities) { //TODO hack for flier
-            cap.postPrepareActions(actions, commonSites);
+            cap.postPrepareActions(actions, followerOptions);
         }
     }
+
+//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
+//        for (Capability cap: capabilities) {
+//            cap.prepareAnyTimeActions(actions);
+//        }
+//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         for (Capability cap: capabilities) {
@@ -351,12 +398,15 @@ public class Game extends GameSettings {
         }
     }
 
-    /**
-     * @param doubleTurn true when only first phase is ending and another "turn" of same player follows
-     */
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         for (Capability cap: capabilities) {
-            cap.turnCleanUp(doubleTurn);
+            cap.turnPartCleanUp();
+        }
+    }
+
+    public void turnCleanUp() {
+        for (Capability cap: capabilities) {
+            cap.turnCleanUp();
         }
     }
 

@@ -9,6 +9,7 @@ import java.util.Set;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -21,7 +22,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
     private boolean allowedRotation;
 
     public TilePlacementLayer(GridPanel gridPanel, TilePlacementAction action) {
-        super(gridPanel, action.getAvailablePlacements().keySet());
+        super(gridPanel, action.groupByPosition().keySet());
         this.action = action;
     }
 
@@ -45,7 +46,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
         realRotation = action.getTileRotation();
         previewRotation = realRotation;
 
-        Set<Rotation> allowedRotations = action.getAvailablePlacements().get(p);
+        Set<Rotation> allowedRotations = action.getRotations(p);
         if (allowedRotations.contains(previewRotation)) {
             allowedRotation = true;
         } else {
@@ -78,7 +79,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null && getClient().isClientActive() && allowedRotation) {
                 e.consume();
-                action.perform(getClient().getServer(), previewRotation, p);
+                action.perform(getClient().getServer(), new TilePlacement(p, previewRotation));
             }
         }
     }

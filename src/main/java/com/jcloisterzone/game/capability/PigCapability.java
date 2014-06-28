@@ -9,7 +9,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.Capability;
@@ -27,7 +27,7 @@ public class PigCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Pig.class)) return;
 
@@ -35,12 +35,13 @@ public class PigCapability extends Capability {
         if (!game.isDeployAllowed(tile, Pig.class)) return;
 
         Position pos = tile.getPosition();
-        Set<Location> locations = tile.getPlayerFeatures(player, Farm.class);
-        if (!locations.isEmpty()) {
-            MeepleAction pigAction = new MeepleAction(Pig.class);
-            pigAction.getOrCreate(pos).addAll(locations);
-            actions.add(pigAction);
+        MeepleAction pigAction = null;
+        for (Location loc : tile.getPlayerFeatures(player, Farm.class)) {
+        	if (pigAction == null) {
+        		pigAction = new MeepleAction(Pig.class);
+        		actions.add(pigAction);
+        	}
+        	pigAction.add(new FeaturePointer(pos, loc));
         }
     }
-
 }

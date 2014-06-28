@@ -19,11 +19,15 @@ import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.MeeplePrisonEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
@@ -117,6 +121,10 @@ public final class TowerCapability extends Capability {
         return towerPieces.get(player);
     }
 
+    public int setTowerPieces(Player player, int pieces) {
+        return towerPieces.put(player, pieces);
+    }
+
     public void decreaseTowerPieces(Player player) {
         int pieces = getTowerPieces(player);
         if (pieces == 0) throw new IllegalStateException("Player has no tower pieces");
@@ -129,24 +137,29 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareTowerFollowerDeploy(followerLocMap);
+            prepareTowerFollowerDeploy(findFollowerActions(actions));
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
             if (!availTowers.isEmpty()) {
-                actions.add(new TowerPieceAction(availTowers));
+                actions.add(new TowerPieceAction().addAll(availTowers));
             }
         }
     }
 
-    public void prepareTowerFollowerDeploy(LocationsMap followerLocMap) {
+    public void prepareTowerFollowerDeploy(List<MeepleAction> followerActions) {
         Set<Position> availableTowers = getOpenTowers(1);
         if (!availableTowers.isEmpty()) {
             for (Position p : availableTowers) {
                 if (game.isDeployAllowed(getBoard().get(p), Follower.class)) {
-                    followerLocMap.getOrCreate(p).add(Location.TOWER);
+                    for (MeepleAction ma : followerActions) {
+                        //only small, big and phantoms are allowed on top of tower
+                        if (SmallFollower.class.isAssignableFrom(ma.getMeepleType()) || BigFollower.class.isAssignableFrom(ma.getMeepleType())) {
+                            ma.add(new FeaturePointer(p, Location.TOWER));
+                        }
+                    }
                 }
             }
         }
@@ -184,6 +197,7 @@ public final class TowerCapability extends Capability {
     public void inprison(Meeple m, Player player) {
         assert m.getLocation() == null;
         prisoners.get(player).add((Follower) m);
+        game.post(new MeeplePrisonEvent(m, null, player));
         m.setLocation(Location.PRISON);
     }
 
@@ -198,12 +212,11 @@ public final class TowerCapability extends Capability {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
-                game.fireGameEvent().undeployed(meeple);
                 meeple.clearDeployment();
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
-                game.fireGameEvent().ransomPaid(game.getActivePlayer(), opponent, meeple);
+                game.post(new MeeplePrisonEvent(meeple, opponent, null));
                 game.getPhase().notifyRansomPaid();
                 return;
             }
@@ -212,10 +225,8 @@ public final class TowerCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
-        if (!doubleTurn) {
-            ransomPaidThisTurn = false;
-        }
+    public void turnCleanUp() {
+        ransomPaidThisTurn = false;
     }
 
     @Override
@@ -254,7 +265,7 @@ public final class TowerCapability extends Capability {
             tower.setHeight(Integer.parseInt(te.getAttribute("height")));
             towers.add(towerPos);
             if (tower.getHeight() > 0) {
-                game.fireGameEvent().towerIncreased(towerPos, tower.getHeight());
+                game.post(new TowerIncreasedEvent(null, towerPos, tower.getHeight()));
             }
         }
         nl = node.getElementsByTagName("player");

@@ -15,11 +15,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -58,21 +61,16 @@ public class CastleCapability extends Capability {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void castleDeployed(Castle castle1, Castle castle2) {
-        newCastles.add(castle1.getMaster());
-    }
-
-    @Override
-    public void undeployed(Meeple meeple) {
-        if (meeple.getFeature() instanceof Castle) {
-            Castle castle = (Castle) meeple.getFeature().getMaster();
+    @Subscribe
+    public void undeployed(MeepleEvent ev) {
+    	if (ev.getFrom() == null) return;
+        Feature f = getBoard().get(ev.getFrom());
+        if (f instanceof Castle) {
+            Castle castle = (Castle) f.getMaster();
             scoreableCastleVicinity.remove(castle);
             emptyCastles.add(castle);
         }
     }
-
-
 
     @Override
     public void initPlayer(Player player) {
@@ -159,7 +157,8 @@ public class CastleCapability extends Capability {
         Castle castle2 = replaceCityWithCastle(getBoard().get(pos.add(loc)), loc.rev());
         castle1.getEdges()[0] = castle2;
         castle2.getEdges()[0] = castle1;
-        game.fireGameEvent().castleDeployed(castle1, castle2);
+        newCastles.add(castle1.getMaster());
+        game.post(new CastleDeployedEvent(game.getActivePlayer(), castle1, castle2));
         return castle1.getMaster();
     }
 
@@ -173,7 +172,7 @@ public class CastleCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         for (Castle castle: newCastles) {
             scoreableCastleVicinity.put(castle, castle.getVicinity());
         }

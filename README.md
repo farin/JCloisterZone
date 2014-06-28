@@ -42,10 +42,10 @@ don't compress saves, autosave before each AI play
     autosave: saves/_prerank.jcz
 
 skip game config dialog, player is name or AI class
-you can comment just profile key to disable whole autostart
+you can comment just preset key to disable whole autostart
 
     autostart:
-      profile: default
+      preset: default
       players:
         - Alice
         - Bob
@@ -73,3 +73,22 @@ experimental options
 
     off_capabilities: [ Dragon, Fairy ]
     area_highlight: figure
+
+### gettext
+
+    xgettext -k_ -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
+    msgmerge -U po/cs.po po/keys.pot
+    msgmerge -U po/de.po po/keys.pot
+    msgmerge -U po/el.po po/keys.pot
+    msgmerge -U po/en.po po/keys.pot
+    msgmerge -U po/es.po po/keys.pot
+    msgmerge -U po/fi.po po/keys.pot
+    msgmerge -U po/fr.po po/keys.pot
+    msgmerge -U po/hu.po po/keys.pot
+    msgmerge -U po/it.po po/keys.pot
+    msgmerge -U po/pl.po po/keys.pot
+    msgmerge -U po/ro.po po/keys.pot
+    msgmerge -U po/ru.po po/keys.pot
+    msgmerge -U po/sk.po po/keys.pot
+    rm po/*~
+    rm po/keys.pot

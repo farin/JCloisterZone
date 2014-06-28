@@ -1,11 +1,10 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +22,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.Client;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameOverDialog extends JDialog {
 
@@ -115,7 +116,7 @@ public class GameOverDialog extends JDialog {
     }
 
     private List<Player> getSortedPlayers() {
-        List<Player> players = Arrays.asList(client.getGame().getAllPlayers());
+        List<Player> players = new ArrayList<>(Arrays.asList(client.getGame().getAllPlayers()));
         Collections.sort(players, new Comparator<Player>() {
             @Override
             public int compare(Player o1, Player o2) {

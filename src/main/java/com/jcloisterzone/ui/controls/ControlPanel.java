@@ -233,11 +233,11 @@ public class ControlPanel extends FakeComponent {
         return actionPanel;
     }
 
-    public void selectAction(List<PlayerAction> actions, boolean canPass) {
+    public void selectAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
         // direct collection sort can be unsupported - so copy to array first!
         int i = 0;
-        PlayerAction[] arr = new PlayerAction[actions.size()];
-        for (PlayerAction pa : actions) {
+        PlayerAction<?>[] arr = new PlayerAction[actions.size()];
+        for (PlayerAction<?> pa : actions) {
             pa.setClient(client);
             arr[i++] = pa;
         }

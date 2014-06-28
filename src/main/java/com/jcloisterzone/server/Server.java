@@ -3,7 +3,6 @@ package com.jcloisterzone.server;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Random;
@@ -321,6 +320,11 @@ public class Server extends GameSettings implements ServerIF {
     @Override
     public void chatMessage(Integer author, String message) {
         stub.chatMessage(author, message);
+    }
+    
+    @Override
+    public void undo() {
+    	stub.undo();
     }
 
 }

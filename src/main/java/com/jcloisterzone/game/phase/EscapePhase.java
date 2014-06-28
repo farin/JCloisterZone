@@ -1,10 +1,11 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -29,7 +30,7 @@ public class EscapePhase extends Phase {
     public void enter() {
         UndeployAction action = prepareEscapeAction();
         if (prepareEscapeAction() != null) {
-            notifyUI(action, true);
+            game.post(new SelectActionEvent(getActivePlayer(), action, true));
         } else {
             next();
         }
@@ -100,9 +101,9 @@ public class EscapePhase extends Phase {
             FeatureVisitor<Boolean> visitor = game.hasRule(CustomRule.ESCAPE_RGG) ? new FindNearbyCloisterRgg() : new FindNearbyCloister();
             if (m.getFeature().walk(visitor)) {
                 if (escapeAction == null) {
-                    escapeAction = new UndeployAction(SiegeCapability.UNDEPLOY_ESCAPE, PlayerRestriction.only(getActivePlayer()));
+                    escapeAction = new UndeployAction(SiegeCapability.UNDEPLOY_ESCAPE);
                 }
-                escapeAction.getOrCreate(m.getPosition()).add(m.getLocation());
+                escapeAction.add(new MeeplePointer(m));
             }
         }
         return escapeAction;

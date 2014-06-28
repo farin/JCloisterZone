@@ -4,19 +4,25 @@ import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
 
 public class AbbeyPhase extends Phase {
 
     private AbbeyCapability abbeyCap;
     private BazaarCapability bazaarCap;
+    private BuilderCapability builderCap;
 
     public AbbeyPhase(Game game) {
         super(game);
         abbeyCap = game.getCapability(AbbeyCapability.class);
         bazaarCap = game.getCapability(BazaarCapability.class);
+        builderCap = game.getCapability(BuilderCapability.class);
     }
 
     @Override
@@ -26,9 +32,11 @@ public class AbbeyPhase extends Phase {
 
     @Override
     public void enter() {
-        if (bazaarCap == null || bazaarCap.getBazaarSupply() == null) {
+        boolean baazaarInProgress = bazaarCap != null && bazaarCap.getBazaarSupply() != null;
+        boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
+        if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
-                notifyUI(new AbbeyPlacementAction(getBoard().getHoles()), true);
+                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
                 return;
             }
         }
@@ -50,7 +58,7 @@ public class AbbeyPhase extends Phase {
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
 
-        game.fireGameEvent().tilePlaced(nextTile);
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile, position));
         next(ActionPhase.class);
     }
 }

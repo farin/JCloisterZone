@@ -5,11 +5,11 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -39,26 +39,28 @@ public class PortalCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         if (getTile().hasTrigger(TileTrigger.PORTAL)) {
             if (game.getActivePlayer().hasFollower()) {
-                prepareMagicPortal(commonSites);
+                prepareMagicPortal(findFollowerActions(actions), commonSites);
             }
         }
     }
 
-    public void prepareMagicPortal(LocationsMap commonSites) {
+    public void prepareMagicPortal(List<MeepleAction> followerActions, Set<FeaturePointer> commonSites) {
         if (portalUsed) return;
         for (Tile tile : getBoard().getAllTiles()) {
             if (tile == getTile()) continue; //prepared by basic common
-            Set<Location> locations = game.prepareFollowerLocations(tile, true);
+            Set<FeaturePointer> locations = game.prepareFollowerLocations(tile, true);
             if (locations.isEmpty()) continue;
-            commonSites.put(tile.getPosition(), locations);
+            for (MeepleAction ma : followerActions) {
+            	ma.addAll(locations);
+            }
         }
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         portalUsed = false;
     }
 

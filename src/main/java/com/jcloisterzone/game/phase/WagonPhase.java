@@ -1,12 +1,15 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
@@ -69,37 +72,36 @@ public class WagonPhase extends Phase {
             }
             Player player = game.getAllPlayers()[pi];
             Feature f = rw.remove(player);
-            LocationsMap wagonMoves = prepareWagonMoves(f);
+            List<FeaturePointer> wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
                 wagonCap.setWagonPlayer(player);
-                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                notifyUI(new MeepleAction(Wagon.class, wagonMoves), true);
+                game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
             }
         }
         return false;
     }
 
-    private LocationsMap prepareWagonMoves(Feature source) {
+    private List<FeaturePointer> prepareWagonMoves(Feature source) {
         return source.walk(new FindUnoccupiedNeighbours());
     }
 
-    private class FindUnoccupiedNeighbours implements FeatureVisitor<LocationsMap> {
+    private class FindUnoccupiedNeighbours implements FeatureVisitor<List<FeaturePointer>> {
 
-        private LocationsMap wagonMoves = new LocationsMap();
+        private List<FeaturePointer> wagonMoves = new ArrayList<>();
 
         @Override
         public boolean visit(Feature feature) {
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
                     if (nei.walk(new IsOccupiedOrCompleted())) continue;
-                    wagonMoves.getOrCreate(feature.getTile().getPosition()).add(nei.getLocation());
+                    wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
                 }
             }
             return true;
         }
 
-        public LocationsMap getResult() {
+        public List<FeaturePointer> getResult() {
             return wagonMoves;
         }
     }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,8 @@ import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -97,26 +99,24 @@ public final class TunnelCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         if (isTunnelUsedThisTurn()) return;
-        //TODO double iteration over tunnels
         if (getOpenTunnels().isEmpty()) return;
+        
+        List<TunnelAction> tunnelActions = new ArrayList<>(2);
         TunnelAction tunnelAction = null;
-        LocationsMap sites = new LocationsMap();
         if (getTunnelTokens(game.getActivePlayer(), false) > 0) {
-            tunnelAction = new TunnelAction(false, sites);
-            actions.add(tunnelAction);
+            tunnelActions.add(new TunnelAction(false)); 
         }
         if (getTunnelTokens(game.getActivePlayer(), true) > 0) {
-            tunnelAction = new TunnelAction(true, sites);
-            actions.add(tunnelAction);
+            tunnelActions.add(new TunnelAction(true));
         }
-        //tunnel actions share sites object
-        if (tunnelAction != null) {
-            for (Road tunnelEnd : getOpenTunnels()) {
-                tunnelAction.getOrCreate(tunnelEnd.getTile().getPosition()).add(tunnelEnd.getLocation());
-            }
+        for (TunnelAction ta : tunnelActions) {
+	        for (Road tunnelEnd : getOpenTunnels()) {
+	            ta.add(new FeaturePointer(getTile().getPosition(), tunnelEnd.getLocation()));
+	        }
         }
+        actions.addAll(tunnelActions);
     }
 
     public boolean isTunnelUsedThisTurn() {
@@ -126,20 +126,17 @@ public final class TunnelCapability extends Capability {
         return placedTunnelCurrentTurn;
     }
 
-
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
-        if (!doubleTurn) {
-            placedTunnelCurrentTurn = null;
-        }
+    public void turnCleanUp() {
+        placedTunnelCurrentTurn = null;
     }
 
     private int getTunnelId(Player p, boolean isB) {
         return p.getIndex() + (isB ? 100 : 0);
     }
 
-    public void placeTunnelPiece(Position p, Location d, boolean isB) {
-        Road road = (Road) getBoard().get(p).getFeature(d);
+    public void placeTunnelPiece(Position p, Location loc, boolean isB) {
+        Road road = (Road) getBoard().get(p).getFeature(loc);
         if (!road.isTunnelOpen()) {
             throw new IllegalStateException("No open tunnel here.");
         }
@@ -155,7 +152,7 @@ public final class TunnelCapability extends Capability {
         }
         road.setTunnelEnd(connectionId);
         placedTunnelCurrentTurn = road;
-        game.fireGameEvent().tunnelPiecePlaced(player, p, d, isB);
+        game.post(new TunnelPiecePlacedEvent(player, p, loc, isB));
     }
 
     @Override
@@ -187,7 +184,7 @@ public final class TunnelCapability extends Capability {
             Player player = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
             boolean isB = "yes".equals(el.getAttribute("b"));
             road.setTunnelEnd(getTunnelId(player, isB));
-            game.fireGameEvent().tunnelPiecePlaced(player, pos, loc, isB);
+            game.post(new TunnelPiecePlacedEvent(player, pos, loc, isB));
         }
     }
 

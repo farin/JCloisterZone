@@ -137,6 +137,7 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
             phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
         }
         for (PlayerSlot slot : msg.getSlots()) {
+            if (slot == null) continue;
             slot.setColors(game.getConfig().getPlayerColor(slot));
         }
         phase.setSlots(msg.getSlots());
@@ -155,7 +156,7 @@ public abstract class ClientStub extends IoHandlerAdapter implements InvocationH
                 phase.setEntered(true);
                 phase.enter();
                 phase = game.getPhase();
-                game.fireGameEvent().phaseEntered(phase);
+                //game.post(new PhaseEnterEvent(phase));
             }
         } catch (InvocationTargetException ie) {
             logger.error(ie.getMessage(), ie.getCause());

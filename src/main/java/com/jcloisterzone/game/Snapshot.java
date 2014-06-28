@@ -1,12 +1,9 @@
 package com.jcloisterzone.game;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -193,8 +190,7 @@ public class Snapshot implements Serializable {
         }
     }
 
-    public void save(File file) throws TransformerException, IOException {
-        OutputStream os = new FileOutputStream(file);
+    public void save(OutputStream os) throws TransformerException, IOException {
         StreamResult streamResult;
         if (gzipOutput) {
             streamResult = new StreamResult(new GZIPOutputStream(os));
@@ -216,7 +212,7 @@ public class Snapshot implements Serializable {
         doc = XmlUtils.parseDocument(is);
         root = doc.getDocumentElement();
         String snapshotVersion = root.getAttribute("app-version");
-        if (!snapshotVersion.equals(Application.VERSION)) { //first check simple equality (useful for dev version without numbers)
+        if (!snapshotVersion.equals(Application.VERSION) && !snapshotVersion.equals(Application.DEV_VERSION)) {
             if ((new VersionComparator()).compare(snapshotVersion, Snapshot.COMPATIBLE_FROM) < 0) {
                 throw new SnapshotVersionException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
             }
@@ -251,7 +247,8 @@ public class Snapshot implements Serializable {
                 capability.loadFromSnapshot(doc, el);
             } catch (Exception e) {
                 logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + capabilityName, e);
-                game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
+                //TODO show client error
+                //game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
             }
         }
     }
@@ -374,8 +371,14 @@ public class Snapshot implements Serializable {
     }
 
     public Game asGame() {
-        Game game = new Game();
+        return asGame(new Game());
+
+    }
+
+    public Game asGame(Game game) {
+        game.getExpansions().clear();
         game.getExpansions().addAll(getExpansions());
+        game.getCustomRules().clear();
         game.getCustomRules().addAll(getCustomRules());
         game.setPlayers(getPlayers(), getTurnPlayer());
         return game;

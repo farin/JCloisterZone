@@ -1,24 +1,16 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
 
@@ -50,22 +42,19 @@ public class FlierActionPhase extends Phase {
             return;
         }
 
-        LocationsMap sites = new LocationsMap();
-        Set<Location> locations = new HashSet<>();
+        MeepleAction action = new MeepleAction(meepleType);
         for (Feature f : target.getFeatures()) {
             if (!(f instanceof Completable)) continue;
             if (f.walk(new IsCompleted())) continue;
             if (follower.isDeploymentAllowed(f).result) {
-                locations.add(f.getLocation());
+                action.add(new FeaturePointer(pos, f.getLocation()));
             }
         }
-        if (locations.isEmpty()) {
+        if (action.isEmpty()) {
             next();
             return;
         }
-        sites.put(pos, locations);
-        MeepleAction action = new MeepleAction(meepleType, sites);
-        notifyUI(Collections.<PlayerAction>singletonList(action), false);
+        game.post(new SelectActionEvent(getActivePlayer(), action, false));
     }
 
     @Override

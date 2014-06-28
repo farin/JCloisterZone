@@ -1,6 +1,8 @@
 package com.jcloisterzone.game;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,19 +10,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.collection.LocationsMap;
-import com.jcloisterzone.event.GameEventAdapter;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 
 
-public abstract class Capability extends GameEventAdapter {
+public abstract class Capability {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -74,11 +77,27 @@ public abstract class Capability extends GameEventAdapter {
 
     public void begin() {
     }
+    
+    /** convenient method to find follower action in all actions */
+    protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
+    	List<MeepleAction> followerActions = new ArrayList<>();
+    	for (PlayerAction<?> a : actions) {
+    		if (a instanceof MeepleAction) {
+    			MeepleAction ma = (MeepleAction) a;
+    			if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
+    				followerActions.add(ma);
+    			}
+    		}
+    	}
+    	return followerActions;
+    }
 
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
-    public void postPrepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
+    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
+//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
+//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return true;
@@ -87,8 +106,12 @@ public abstract class Capability extends GameEventAdapter {
     public void scoreCompleted(CompletableScoreContext ctx) {
     }
 
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnCleanUp() {
     }
+
+    public void turnPartCleanUp() {
+    }
+
 
     public void finalScoring() {
     }

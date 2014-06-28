@@ -30,6 +30,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
@@ -184,6 +185,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
+        	if (dragSource == null) return; //threading issues
             //px values
             int dx = e.getX() - dragSource.getX();
             int dy = e.getY() - dragSource.getY();
@@ -192,15 +194,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             double rdy = dy/(double)squareSize;
 
             moveCenterTo(sourceCx-rdx, sourceCy-rdy);
-
-            //System.err.println(cx + " " + cy + " / " + offsetX + " "  + offsetY);
-            //offsetX = calculateCenterX() - (int)(cx * squareSize);
-            //offsetY = calculateCenterY() - (int)(cy * squareSize);
-//            int clickX = e.getX()-offsetX;
-//            int clickY = e.getY()-offsetY;
-//            moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
-            //moveCenterTo(cx-dx*(double)squareSize,cy-dy(double)squareSize);
-            //System.err.println(x + "/" + y);
         }
     }
 
@@ -450,26 +443,32 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     // delegated UI methods
 
-    public void tilePlaced(Tile tile, TileLayer tileLayer) {
-        Position p = tile.getPosition();
+    public void tileEvent(TileEvent ev, TileLayer tileLayer) {
+    	Tile tile = ev.getTile();
+        Position p = ev.getPosition();
 
         removeLayer(AbstractTilePlacementLayer.class);
         removeLayer(PlacementHistory.class);
-
-        if (p.x == left) --left;
-        if (p.x == right) ++right;
-        if (p.y == top) --top;
-        if (p.y == bottom) ++bottom;
-
-        tileLayer.tilePlaced(tile);
-
+        
+        if (ev.getType() == TileEvent.PLACEMENT) {
+	        if (p.x == left) --left;
+	        if (p.x == right) ++right;
+	        if (p.y == top) --top;
+	        if (p.y == bottom) ++bottom;
+	
+	        tileLayer.tilePlaced(tile);
+	
+	        boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
+	        if ((!initialPlacement && !client.isClientActive()) ||
+	            (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
+	            getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
+	        }
+        } else if (ev.getType() == TileEvent.REMOVE) {
+        	tileLayer.tileRemoved(tile);
+        }
+        
         if (client.isShowHistory()) {
             showRecentHistory();
-        }
-        boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
-        if ((!initialPlacement && !client.isClientActive()) ||
-            (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
-            getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
         }
         repaint();
     }

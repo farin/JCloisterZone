@@ -1,13 +1,15 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
@@ -38,27 +40,31 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void enter() {
-        List<PlayerAction> actions = new ArrayList<>();
-        if (getActivePlayer().hasFollower(Phantom.class)) {
-            LocationsMap commonSites = game.prepareFollowerLocations();
-            if (towerCap != null) {
-                towerCap.prepareTowerFollowerDeploy(commonSites);
-            }
-            if (portalCap != null) {
-                portalCap.prepareMagicPortal(commonSites);
-            }
-            if (!commonSites.isEmpty()) {
-                actions.add(new MeepleAction(Phantom.class, commonSites));
-            }
+    	if (!getActivePlayer().hasFollower(Phantom.class)) {
+    		next();
+    	}
+    	MeepleAction phantomAction = new MeepleAction(Phantom.class);
+        List<MeepleAction> actions = Collections.singletonList(phantomAction);
+        phantomAction.addAll(game.prepareFollowerLocations());
+    	Set<FeaturePointer> commonSites = game.prepareFollowerLocations();
+    	if (!commonSites.isEmpty()) {
+	        if (towerCap != null) {
+	            towerCap.prepareTowerFollowerDeploy(actions);
+	        }
+	        if (portalCap != null) {
+	            portalCap.prepareMagicPortal(actions, commonSites);
+	        }
         }
+
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
-            notifyUI(actions, true);
+            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
         }
     }
 
-    private boolean isAutoTurnEnd(List<PlayerAction> actions) {
+    //TODO copy from Action phase -> merge
+    private boolean isAutoTurnEnd(List<? extends PlayerAction<?>> actions) {
         if (!actions.isEmpty()) return false;
         if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
             //player can return phantom figure immediately

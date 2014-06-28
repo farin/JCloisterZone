@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -63,7 +64,7 @@ public class DrawPhase extends ServerAwarePhase {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
                     abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
                 }
-                next(CleanUpPhase.class);
+                next(CleanUpTurnPartPhase.class);
                 return;
             }
             next(GameOverPhase.class);
@@ -103,7 +104,7 @@ public class DrawPhase extends ServerAwarePhase {
             next(DrawPhase.class);
             return;
         }
-        game.fireGameEvent().tileDrawn(tile);
+        game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }
 

@@ -13,6 +13,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MeepleAction;
@@ -20,7 +23,8 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -41,10 +45,11 @@ public class WagonCapability extends Capability {
         super(game);
     }
 
-    @Override
-    public void undeployed(Meeple m) {
-        if (m instanceof Wagon && game.getPhase() instanceof ScorePhase) {
-            returnedWagons.put(m.getPlayer(), m.getFeature());
+    @Subscribe
+    public void undeployed(MeepleEvent ev) {
+        Meeple m = ev.getMeeple();
+        if (m instanceof Wagon && ev.getTo() == null && game.getPhase() instanceof ScorePhase) {
+        	returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
         }
     }
 
@@ -105,35 +110,27 @@ public class WagonCapability extends Capability {
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         returnedWagons.clear();
         wagonPlayer = null;
     }
 
-    private Set<Location> copyWagonsLocations(Set<Location> locations) {
-        Set<Location> result = new HashSet<>();
-        for (Feature piece : getTile().getFeatures()) {
-            Location loc = piece.getLocation();
-            if (piece instanceof Road || piece instanceof City || piece instanceof Cloister) {
-                if (locations.contains(loc)) {
-                    result.add(loc);
-                }
+    private Set<FeaturePointer> filterWagonLocations(Set<FeaturePointer> followerOptions) {
+        return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
+            @Override
+            public boolean apply(FeaturePointer bp) {
+                Feature fe = getTile().getFeature(bp.getLocation());
+                return fe instanceof Road || fe instanceof City || fe instanceof Cloister;
             }
-
-        }
-        return result;
+        });
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap followerLocMap) {
-        Position pos = getTile().getPosition();
-        Set<Location> tileLocations = followerLocMap.get(pos);
-        if (game.getActivePlayer().hasFollower(Wagon.class)) {
-            if (tileLocations != null) {
-                Set<Location> wagonLocations = copyWagonsLocations(tileLocations);
-                if (!wagonLocations.isEmpty()) {
-                    actions.add(new MeepleAction(Wagon.class, pos, wagonLocations));
-                }
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+        if (game.getActivePlayer().hasFollower(Wagon.class) && !followerOptions.isEmpty()) {
+            Set<FeaturePointer> wagonLocations = filterWagonLocations(followerOptions);
+            if (!wagonLocations.isEmpty()) {
+                actions.add(new MeepleAction(Wagon.class).addAll(wagonLocations));
             }
         }
     }

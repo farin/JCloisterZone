@@ -3,13 +3,15 @@ package com.jcloisterzone.game.capability;
 import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsOccupied;
@@ -32,21 +34,21 @@ public class PrincessCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction> actions, LocationsMap commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
         City c = getTile().getCityWithPrincess();
         if (c == null || ! c.walk(new IsOccupied().with(Follower.class))) return;
         Feature cityRepresentative = c.getMaster();
 
-        PrincessAction princessAction = new PrincessAction();
+        PrincessAction princessAction = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m.getFeature() instanceof City)) continue;
             if (m.getFeature().getMaster().equals(cityRepresentative) && m instanceof Follower) {
-                princessAction.getOrCreate(m.getPosition()).add(m.getLocation());
+            	if (princessAction == null) {
+            		princessAction = new PrincessAction();
+            		actions.add(princessAction);
+            	}
+                princessAction.add(new MeeplePointer(m));
             }
         }
-        if (!princessAction.getLocationsMap().isEmpty()) {
-            actions.add(princessAction);
-        }
     }
-
-}
+} 

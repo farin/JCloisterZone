@@ -7,6 +7,7 @@ import java.util.Set;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 
+@Deprecated
 public class LocationsMap extends HashMap<Position, Set<Location>> {
 
     private static final long serialVersionUID = -3854304371401326525L;

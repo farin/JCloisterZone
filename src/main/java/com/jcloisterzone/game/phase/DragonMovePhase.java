@@ -4,6 +4,8 @@ import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
@@ -37,8 +39,8 @@ public class DragonMovePhase extends Phase {
         if (dragonCap.getDragonMovesLeft() > 0) {
             Set<Position> moves = dragonCap.getAvailDragonMoves();
             if (!moves.isEmpty()) {
-                game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-                game.getUserInterface().selectDragonMove(moves, dragonCap.getDragonMovesLeft());
+                //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                game.post(new SelectDragonMoveEvent(getActivePlayer(), moves, dragonCap.getDragonMovesLeft()));
                 return;
             }
         }
@@ -51,13 +53,15 @@ public class DragonMovePhase extends Phase {
         if (!dragonCap.getAvailDragonMoves().contains(p)) {
             throw new IllegalArgumentException("Invalid dragon move.");
         }
+        Player player = getActivePlayer();
+        Position fromPosition = dragonCap.getDragonPosition();
         dragonCap.moveDragon(p);
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.at(p) && m.canBeEatenByDragon()) {
                 m.undeploy();
             }
         }
-        game.fireGameEvent().dragonMoved(p);
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, fromPosition, p));
         selectDragonMove();
     }
 

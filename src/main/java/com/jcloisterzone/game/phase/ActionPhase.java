@@ -2,16 +2,22 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
@@ -42,17 +48,17 @@ public class ActionPhase extends Phase {
 
     @Override
     public void enter() {
-        List<PlayerAction> actions = new ArrayList<>();
+        List<PlayerAction<?>> actions = new ArrayList<>();
 
-        LocationsMap locMap = game.prepareFollowerLocations();
-        if (getActivePlayer().hasFollower(SmallFollower.class)  && !locMap.isEmpty()) {
-            actions.add(new MeepleAction(SmallFollower.class, locMap));
+        Set<FeaturePointer> followerLocations = game.prepareFollowerLocations();
+        if (getActivePlayer().hasFollower(SmallFollower.class)  && !followerLocations.isEmpty()) {
+            actions.add(new MeepleAction(SmallFollower.class).addAll(followerLocations));
         }
-        game.prepareActions(actions, locMap);
+        game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
         if (isAutoTurnEnd(actions)) {
             next();
         } else {
-            notifyUI(actions, true);
+            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
         }
     }
 
@@ -61,7 +67,7 @@ public class ActionPhase extends Phase {
         enter(); //recompute available actions
     }
 
-    private boolean isAutoTurnEnd(List<PlayerAction> actions) {
+    private boolean isAutoTurnEnd(List<? extends PlayerAction<?>> actions) {
         if (!actions.isEmpty()) return false;
         if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer())) {
             //player can return figure immediately
@@ -94,13 +100,13 @@ public class ActionPhase extends Phase {
 
     public TakePrisonerAction prepareCapture(Position p, int range) {
         //TODO custom rule - opponent only
-        TakePrisonerAction captureAction = new TakePrisonerAction(PlayerRestriction.any());
+        TakePrisonerAction captureAction = new TakePrisonerAction();
         for (Meeple pf : game.getDeployedMeeples()) {
             if (!(pf instanceof Follower)) continue;
             Position pos = pf.getPosition();
             if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column
             if (pos.squareDistance(p) > range) continue;
-            captureAction.getOrCreate(pos).add(pf.getLocation());
+            captureAction.add(new MeeplePointer(pf));
         }
         return captureAction;
     }
@@ -108,14 +114,14 @@ public class ActionPhase extends Phase {
     @Override
     public void placeTowerPiece(Position p) {
         int captureRange = doPlaceTowerPiece(p);
-        game.fireGameEvent().towerIncreased(p, captureRange);
+        game.post(new TowerIncreasedEvent(getActivePlayer(), p, captureRange));
         TakePrisonerAction captureAction = prepareCapture(p, captureRange);
-        if (captureAction.getLocationsMap().isEmpty()) {
+        if (captureAction.isEmpty()) {
             next();
             return;
         }
         next(TowerCapturePhase.class);
-        notifyUI(captureAction, false);
+        game.post(new SelectActionEvent(getActivePlayer(), captureAction, false));
     }
 
     @Override
@@ -124,8 +130,10 @@ public class ActionPhase extends Phase {
             throw new IllegalArgumentException("The tile has deployed not own follower.");
         }
 
-        game.getCapability(FairyCapability.class).setFairyPosition(p);
-        game.fireGameEvent().fairyMoved(p);
+        FairyCapability cap = game.getCapability(FairyCapability.class);
+        Position fromPosition = cap.getFairyPosition();
+        cap.setFairyPosition(p);
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), fromPosition, p));
         next();
     }
 
@@ -178,7 +186,7 @@ public class ActionPhase extends Phase {
     @Override
     public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
         flierCap.setFlierDistance(meepleType, distance);
-        game.fireGameEvent().flierRoll(getTile().getPosition(), distance);
+        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
         next(FlierActionPhase.class);
     }
 

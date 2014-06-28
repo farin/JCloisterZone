@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
@@ -37,14 +38,12 @@ import javax.swing.WindowConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.UserInterface;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.event.GameEventListener;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
@@ -60,8 +59,8 @@ import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
+import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
@@ -112,6 +111,8 @@ public class Client extends JFrame {
     //active player must be cached locally because of game's active player record is changed in other thread immediately
     private Player activePlayer;
 
+    private EventBus eventBus;
+
     protected ClientStub getClientStub() {
         return (ClientStub) Proxy.getInvocationHandler(server);
     }
@@ -155,6 +156,7 @@ public class Client extends JFrame {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            MenuFix.installGtkPopupBugWorkaround();
         } catch (Exception e) {
             e.printStackTrace(); //TODO logger
         }
@@ -328,6 +330,7 @@ public class Client extends JFrame {
             discardedTilesDialog = null;
             getJMenuBar().setShowDiscardedEnabled(false);
         }
+        eventBus = null;
         return true;
     }
 
@@ -347,10 +350,9 @@ public class Client extends JFrame {
 
     public void setGame(Game game) {
         this.game = game;
-        Object clientProxy = Proxy.newProxyInstance(Client.class.getClassLoader(),
-                new Class[] { UserInterface.class, GameEventListener.class }, new InvokeInSwingUiAdapter(controller));
-        game.addUserInterface((UserInterface) clientProxy);
-        game.addGameListener((GameEventListener) clientProxy);
+        this.eventBus = new EventBus("UI event bus");
+        eventBus.register(controller);
+        game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 
     public void connect(InetAddress ia, int port) {
@@ -381,7 +383,7 @@ public class Client extends JFrame {
                     if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
                     }
-                    snapshot.save(file);
+                    snapshot.save(new FileOutputStream(file));
                 } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -399,6 +401,7 @@ public class Client extends JFrame {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            localServer = null;
             closeGame(true);
         }
     }
@@ -440,10 +443,15 @@ public class Client extends JFrame {
         new AboutDialog();
     }
 
+    @Deprecated
     public boolean isClientActive() {
-        if (activePlayer == null) return false;
-        if (activePlayer.getSlot().getType() != SlotType.PLAYER) return false;
-        return getClientStub().isLocalPlayer(activePlayer);
+        return isClientActive(activePlayer);
+    }
+
+    public boolean isClientActive(Player player) {
+        if (player == null) return false;
+        if (player.getSlot().getType() != SlotType.PLAYER) return false;
+        return getClientStub().isLocalPlayer(player);
     }
 
     public Player getActivePlayer() {
@@ -472,6 +480,7 @@ public class Client extends JFrame {
         if (controlPanel.getActionPanel().getActions() != null) {
             controlPanel.clearActions();
         }
+        getJMenuBar().getUndo().setEnabled(false);
     }
 
     public DiscardedTilesDialog getDiscardedTilesDialog() {

@@ -45,7 +45,7 @@ public class PlagueCapability extends Capability {
 
     @Override
     public void begin() {
-        //TODO replace with activation ofter 17th tile
+        //TODO replace with activation after 17th tile drawn
         getTilePack().setGroupState("plague", TileGroupState.ACTIVE);
     }
 

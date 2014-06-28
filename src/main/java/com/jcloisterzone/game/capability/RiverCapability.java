@@ -15,6 +15,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileSymmetry;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -68,11 +69,11 @@ public class RiverCapability extends Capability {
         lake.setRotation(entry.getValue().iterator().next());
         getBoard().add(lake, entry.getKey());
         getBoard().mergeFeatures(lake);
-        game.fireGameEvent().tilePlaced(lake);
+        game.post(new TileEvent(TileEvent.PLACEMENT, null, lake, lake.getPosition()));
     }
 
     @Override
-    public void turnCleanUp(boolean doubleTurn) {
+    public void turnPartCleanUp() {
         if (getTile().getRiver() == null) return;
         if (getTilePack().isEmpty()) {
             if (getTilePack().getGroupState("river") == TileGroupState.ACTIVE) {

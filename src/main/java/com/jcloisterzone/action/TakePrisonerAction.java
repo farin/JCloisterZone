@@ -1,21 +1,23 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerRestriction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.rmi.Client2ClientIF;
 
 public class TakePrisonerAction extends SelectFollowerAction {
 
-    public TakePrisonerAction(PlayerRestriction players) {
-        super("takeprisoner", players);
+    public TakePrisonerAction() {
+        super("takeprisoner");
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position pos, Location loc, Class<? extends Meeple> meepleType, Player owner) {
-        server.takePrisoner(pos, loc, meepleType, owner.getIndex());
+    public void perform(Client2ClientIF server, MeeplePointer bp) {
+        server.takePrisoner(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
     }
+
+    @Override
+    public String toString() {
+        return "take prisoner";
+    }
+
 
 }

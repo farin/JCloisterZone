@@ -5,15 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerRestriction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.LocationsMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -56,7 +57,7 @@ public class CornCirclePhase extends Phase {
             next();
             return;
         }
-        game.getUserInterface().selectCornCircleOption();
+        game.post(new CornCircleSelectOptionEvent(getActivePlayer(), getTile().getPosition()));
     }
 
     private void nextCornPlayer() {
@@ -85,7 +86,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private void prepareCornAction() {
-        List<PlayerAction> actions;
+        List<PlayerAction<?>> actions;
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (cornCircleCap.getCornCircleOption() == CornCicleOption.REMOVAL) {
             actions = prepareRemovalAction(cornType);
@@ -95,53 +96,54 @@ public class CornCirclePhase extends Phase {
         if (actions.isEmpty()) {
             nextCornPlayer();
         } else {
-            notifyUI(actions, cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT);
+            boolean passAllowed = cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT;
+            game.post(new SelectActionEvent(getActivePlayer(), actions, passAllowed));
         }
     }
 
-    private List<PlayerAction> prepareDeploymentAction(Class<? extends Feature> cornType) {
-        LocationsMap sites = new LocationsMap();
+    private List<PlayerAction<?>> prepareDeploymentAction(Class<? extends Feature> cornType) {
+        List<FeaturePointer> pointers = new ArrayList<>();
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
-            sites.getOrCreate(m.getPosition()).add(m.getLocation());
+            pointers.add(new FeaturePointer(m.getPosition(), m.getLocation()));
         }
-        if (sites.isEmpty()) return Collections.emptyList();
+        if (pointers.isEmpty()) return Collections.emptyList();
 
-        List<PlayerAction> actions = new ArrayList<>();
-        //TODO nice to do this in generic way independtly on particular followers enumeration
+        List<PlayerAction<?>> actions = new ArrayList<>();
+        //TODO nice to do this in generic way independently on particular followers enumeration
         if (getActivePlayer().hasFollower(SmallFollower.class)) {
-            actions.add(new MeepleAction(SmallFollower.class, sites));
+            actions.add(new MeepleAction(SmallFollower.class).addAll(pointers));
         }
         if (getActivePlayer().hasFollower(BigFollower.class)) {
-            actions.add(new MeepleAction(BigFollower.class, sites));
+            actions.add(new MeepleAction(BigFollower.class).addAll(pointers));
         }
         if (getActivePlayer().hasFollower(Phantom.class)) {
-            actions.add(new MeepleAction(Phantom.class, sites));
+            actions.add(new MeepleAction(Phantom.class).addAll(pointers));
         }
         if (cornType.equals(City.class) && getActivePlayer().hasFollower(Mayor.class)) {
-            actions.add(new MeepleAction(Mayor.class, sites));
+            actions.add(new MeepleAction(Mayor.class).addAll(pointers));
         }
         if (!cornType.equals(Farm.class) && getActivePlayer().hasFollower(Wagon.class)) {
-            actions.add(new MeepleAction(Wagon.class, sites));
+            actions.add(new MeepleAction(Wagon.class).addAll(pointers));
         }
         return actions;
     }
 
-    private List<PlayerAction> prepareRemovalAction(Class<? extends Feature> cornType) {
-        SelectFeatureAction action = null;
+    private List<PlayerAction<?>> prepareRemovalAction(Class<? extends Feature> cornType) {
+    	UndeployAction action = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!cornType.isInstance(m.getFeature())) continue;
             if (action == null) {
-                action = new UndeployAction("undeploy", PlayerRestriction.only(getActivePlayer()));
+                action = new UndeployAction("undeploy");
             }
-            action.getOrCreate(m.getPosition()).add(m.getLocation());
+            action.add(new MeeplePointer(m));
         }
         if (action == null) return Collections.emptyList();
-        return Collections.<PlayerAction>singletonList(action);
+        return Collections.<PlayerAction<?>>singletonList(action);
     }
 
     @Override
@@ -195,7 +197,7 @@ public class CornCirclePhase extends Phase {
     public void loadGame(Snapshot snapshot) {
         setEntered(true); //avoid call enter on load phase to this phase switch
         if (cornCircleCap.getCornCircleOption() == null) {
-            game.getUserInterface().selectCornCircleOption();
+            game.post(new CornCircleSelectOptionEvent(game.getActivePlayer(), getTile().getPosition()));
         } else {
             prepareCornAction();
         }

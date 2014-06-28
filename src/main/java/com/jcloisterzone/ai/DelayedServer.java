@@ -3,7 +3,6 @@ package com.jcloisterzone.ai;
 import java.util.EnumSet;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -145,6 +144,11 @@ public class DelayedServer implements ServerIF {
 
     public void chatMessage(Integer player, String message) {
         server.chatMessage(player, message);
+    }
+    
+    @Override
+    public void undo() {
+    	server.undo();
     }
 
 }

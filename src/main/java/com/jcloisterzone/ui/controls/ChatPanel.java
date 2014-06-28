@@ -44,8 +44,8 @@ import javax.swing.text.ViewFactory;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.TextPrompt;
-import com.jcloisterzone.ui.TextPrompt.Show;
+import com.jcloisterzone.ui.component.TextPrompt;
+import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class ChatPanel extends FakeComponent implements WindowStateListener {

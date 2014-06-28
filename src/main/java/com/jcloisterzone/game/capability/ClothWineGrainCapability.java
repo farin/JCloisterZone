@@ -7,15 +7,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -27,10 +27,10 @@ public class ClothWineGrainCapability extends Capability {
         super(game);
     }
 
-    @Override
-    public void completed(Completable feature, CompletableScoreContext ctx) {
-        if (feature instanceof City) {
-            int cityTradeResources[] = ((CityScoreContext)ctx).getCityTradeResources();
+    @Subscribe
+    public void completed(FeatureCompletedEvent ev) {
+        if (ev.getFeature() instanceof City) {
+            int cityTradeResources[] = ((CityScoreContext)ev.getScoreContent()).getCityTradeResources();
             if (cityTradeResources != null) {
                 int playersTradeResources[] = tradeResources.get(game.getActivePlayer());
                 for (int i = 0; i < cityTradeResources.length; i++) {
