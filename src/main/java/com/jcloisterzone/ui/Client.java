@@ -121,25 +121,6 @@ public class Client extends JFrame {
         return getClientStub().getClientId();
     }
 
-    private Locale getLocaleFromConfig() {
-        String language = config.getLocale();
-        if (language == null) {
-            return Locale.getDefault();
-        }
-        if (language.contains("_")) {
-            String[] tokens = language.split("_", 2);
-            return new Locale(tokens[0], tokens[1]);
-        }
-        return new Locale(language);
-    }
-
-
-
-    @Override
-    public void setLocale(Locale l) {
-        I18nUtils.setLocale(l);
-        super.setLocale(l);
-    }
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
@@ -148,7 +129,7 @@ public class Client extends JFrame {
     }
 
     public void init() {
-        setLocale(getLocaleFromConfig());
+        setLocale(config.getLocaleObject());
         figureTheme = new FigureTheme(this);
         controlsTheme = new ControlsTheme(this);
 

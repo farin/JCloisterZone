@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -265,6 +266,18 @@ public class Config {
 
     public String getLocale() {
         return locale;
+    }
+
+    public Locale getLocaleObject() {
+        String language = getLocale();
+        if (language == null) {
+            return Locale.getDefault();
+        }
+        if (language.contains("_")) {
+            String[] tokens = language.split("_", 2);
+            return new Locale(tokens[0], tokens[1]);
+        }
+        return new Locale(language);
     }
 
     public void setLocale(String locale) {
