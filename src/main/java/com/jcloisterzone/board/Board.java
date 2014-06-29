@@ -281,4 +281,14 @@ public class Board {
         return getMulti(pos.addMulti(Position.ADJACENT_AND_DIAGONAL.values()));
     }
 
+    public int getContinuousRowSize(Position start, Location direction) {
+        start = start.add(direction);
+        int size = 0;
+        while (get(start) != null) {
+            size++;
+            start = start.add(direction);
+        }
+        return size;
+    }
+
 }

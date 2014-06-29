@@ -6,6 +6,8 @@
     </point>
     <point feature="CLOISTER" cx="500" cy="600">
         <apply>BB.LCFc CLOISTER</apply>
+        <apply>GM.Andechs CLOISTER</apply>
+        <apply>GM.Lorch CLOISTER</apply>
     </point>
     <point feature="CLOISTER" cx="500" cy="650">
         <apply>KR.LC CLOISTER</apply>
@@ -56,10 +58,12 @@
         <apply>GQ.CRcR.1 S</apply>
         <apply>C2.RCR W</apply>
         <apply>C2.RCR E</apply>
+        <apply>GM.Lorch S</apply>
     </point>
     <point feature="ROAD" cx="570" cy="140" baseLocation="N"> <!-- short / under _N regular left -->
         <apply>TB.CccR.w S</apply>
         <apply>TB.RCc!.g S</apply>
+        <apply>GM.Andechs S</apply>
     </point>
     <point feature="ROAD" cx="500" cy="140" baseLocation="N"> <!-- short / center -->
         <apply>AM.LRRRR N</apply>
@@ -409,6 +413,12 @@
         <apply>CA.RrR.1 SR.WL.WR.NL.NR.EL</apply>
         <apply>FL.RFr.WE.o WR.NL.NR.EL</apply>
         <apply>FL.RFr.d WR.NL.NR.EL</apply>
+        <apply>GM.Andechs NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>GM.Eberbach NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>GM.Lorch NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>GM.MariaLaach NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>GM.Marienthal NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>GM.Maulbronn NL.NR.EL.ER.SL.SR.WL.WR</apply>
     </point>
     <point feature="FARM" cx="800" cy="800">
         <apply>BB.R.bi NL.NR.EL.ER.SL.SR.WL.WR</apply>

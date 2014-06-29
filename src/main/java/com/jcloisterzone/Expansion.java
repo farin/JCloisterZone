@@ -18,6 +18,7 @@ import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
@@ -76,7 +77,7 @@ public enum Expansion {
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
     LITTLE_BUILDINGS("LB", _("Little Buildings"), false),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
-    GERMAN_MONASTERIES("GM", _("The German Monasteries"), false),
+    GERMAN_MONASTERIES("GM", _("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),

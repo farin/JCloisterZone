@@ -12,6 +12,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 public class Cloister extends TileFeature implements Completable {
 
     private boolean shrine;
+    private boolean monastery;
 
     public boolean isShrine() {
         return shrine;
@@ -19,6 +20,15 @@ public class Cloister extends TileFeature implements Completable {
 
     public void setShrine(boolean shrine) {
         this.shrine = shrine;
+    }
+
+
+    public boolean isMonastery() {
+        return monastery;
+    }
+
+    public void setMonastery(boolean monastery) {
+        this.monastery = monastery;
     }
 
     @Override

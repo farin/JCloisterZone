@@ -1,6 +1,7 @@
 package com.jcloisterzone.feature.visitor.score;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import com.google.common.primitives.Ints;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -22,8 +24,9 @@ import com.jcloisterzone.game.Game;
 public class CloisterScoreContext extends SelfReturningVisitor implements CompletableScoreContext {
 
     private int neigbouringTiles;
-    private Cloister cloister;
-    private Game game;
+    protected Cloister cloister;
+    protected Game game;
+
 
     public CloisterScoreContext(Game game) {
         this.game = game;
@@ -44,6 +47,21 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
         return Collections.singleton(cloister.getTile().getPosition());
     }
 
+    /**
+     * Method filter out abbots. They are not used for common scoring.
+     * @return
+     */
+    @Override
+    public List<Follower> getFollowers() {
+        List<Follower> follwers = new ArrayList<>();
+        for (Meeple m : cloister.getMeeples()) {
+            if (m.getLocation() != Location.ABBOT) {
+                follwers.add((Follower) m);
+            }
+        }
+        return follwers;
+    }
+
     @Override
     public boolean visit(Feature feature) {
         cloister = (Cloister) feature;
@@ -54,25 +72,23 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
 
     @Override
     public Follower getSampleFollower(Player player) {
-        for (Meeple m : cloister.getMeeples()) {
-            if (m instanceof Follower && m.getPlayer() == player) return (Follower) m;
+        for (Follower m : getFollowers()) {
+            if (m.getPlayer() == player) return m;
         }
         return null;
     }
 
     @Override
     public Set<Player> getMajorOwners() {
-        int size = cloister.getMeeples().size();
+        Collection<Follower> followers = getFollowers();
+        int size = followers.size();
         if (size == 0) return Collections.emptySet();
-        if (size == 1) return Collections.singleton(cloister.getMeeples().iterator().next().getPlayer());
+        if (size == 1) return Collections.singleton(followers.iterator().next().getPlayer());
 
         //rare case - more then one follower placed on cloister (possible by Flier expansion)
         int[] power = new int[game.getAllPlayers().length];
-        for (Meeple m : cloister.getMeeples()) {
-            if (m instanceof Follower) {
-                Follower f = (Follower) m;
-                power[f.getPlayer().getIndex()] += f.getPower();
-            }
+        for (Follower f : followers) {
+            power[f.getPlayer().getIndex()] += f.getPower();
         }
         int maxPower = Ints.max(power);
         Set<Player> owners = new HashSet<>();
@@ -85,30 +101,21 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
     }
 
     public Map<Player, Integer> getPowers() {
-        int size = cloister.getMeeples().size();
+        Collection<Follower> followers = getFollowers();
+        int size = followers.size();
         if (size == 0) return Collections.emptyMap();
         if (size == 1) {
-            Follower m = (Follower) cloister.getMeeples().iterator().next();
-            return Collections.singletonMap(m.getPlayer(), m.getPower());
+            Follower follower = followers.iterator().next();
+            return Collections.singletonMap(follower.getPlayer(), follower.getPower());
         }
         //rare cases
         Map<Player, Integer> result = new HashMap<Player, Integer>();
-        for (Meeple m : cloister.getMeeples()) {
-            Follower follower = (Follower) m;
+        for (Follower follower : followers) {
             Integer val = result.get(follower.getPlayer());
             result.put(follower.getPlayer(), val == null ? follower.getPower() : val + follower.getPower());
         }
         return result;
 
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Follower> getFollowers() {
-        //nowdays only followers can be placed on cloister
-        List<Follower> followers = (List<Follower>)(Object)cloister.getMeeples();
-        //copy required - origin is modified during copy iteration
-        return new ArrayList<Follower>(followers);
     }
 
     @Override
@@ -117,9 +124,8 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
     }
 
     @Override
-    public Iterable<Meeple> getMeeples() {
-        //copy required - origin is modified during copy iteration
-        return new ArrayList<Meeple>(cloister.getMeeples());
+    public Iterable<? extends Meeple> getMeeples() {
+        return getFollowers();
     }
 
     @Override

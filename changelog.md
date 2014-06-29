@@ -3,6 +3,8 @@
 ## master branch
 *appears in next release*
 
+* German Monasteries expansion
+
 ## 2.7
 *2014-06-26*
 

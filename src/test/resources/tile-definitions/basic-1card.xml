@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<tile count="1" id="RCr">
-		<road>W E</road>
-		<city>N</city>
-		<farm city="N">EL WR</farm>
-		<farm>ER SL SR WL</farm>
-		<position x="0" y="0"/>
-	</tile>
-	<!--
-	<tile count="1" id="C">
-		<city>N</city>
-		<farm city="N">WL WR SL SR EL ER</farm>
-	</tile>
-	 -->
+    <tile count="1" id="RCr">
+        <road>W E</road>
+        <city>N</city>
+        <farm city="N">EL WR</farm>
+        <farm>ER SL SR WL</farm>
+        <position x="0" y="0"/>
+    </tile>
+    <!--
+    <tile count="1" id="C">
+        <city>N</city>
+        <farm city="N">WL WR SL SR EL ER</farm>
+    </tile>
+     -->
+
+     <tile count="4" id="L" >
+        <cloister/>
+        <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
+    <tile count="2" id="LR">
+        <cloister/>
+        <road>S</road>
+        <farm>NL NR EL ER SL SR WL WR</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER S</neighbouring>
+        </wagon-move>
+    </tile>
+
+    <!-- tile count="9" id="Rr">
+        <road>W S</road>
+        <farm>WR NL NR EL ER SL</farm>
+        <farm>SR WL</farm>
+    </tile-->
 </pack>

@@ -4,7 +4,7 @@ update: ${update}
 port: ${port}
 
 # keep empty for system language or fill to force locale
-# supported locales are cs, de, en, es, fr, hu, it, pl, ro, ru, sk
+# supported locales are cs, de, el, en, es, fr, hu, it, pl, ro, ru, sk
 locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
@@ -30,13 +30,13 @@ plugins: ${plugins}
 #   TOWER, ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS, CATAPULT,
 #   KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT,
 #   GQ11, CULT, TUNNEL, CORN_CIRCLES, PLAGUE, FESTIVAL, PHANTOM, WIND_ROSE,
-#   FLIER, CORN_CIRCLES_II
+#   GERMAN_MONASTERIES, FLIER, CORN_CIRCLES_II
 #
 # possible rules:
 #   RANDOM_SEATING_ORDER,
 #   TINY_CITY_2_POINTS, PRINCESS_MUST_REMOVE_KNIGHT,
 #   DRAGON_MOVE_AFTER_SCORING, ESCAPE_RGG, PIG_HERD_ON_GQ_FARM,
-#   MULTI_BARN_ALLOWEDD, TUNNELIZE_ALL_EXPANSIONS,  BAZAAR_NO_AUCTION,
+#   MULTI_BARN_ALLOWEDD, TUNNELIZE_ALL_EXPANSIONS,  BAZAAR_NO_AUCTION, KEEP_CLOISTERS
 
 presets: ${presets}
 
