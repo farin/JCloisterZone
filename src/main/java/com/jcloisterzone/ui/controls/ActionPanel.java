@@ -25,7 +25,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     public static final int LEFT_MARGIN = 10;
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
-    private PlayerAction[] actions;
+    private PlayerAction<?>[] actions;
     private int selectedActionIndex = -1;
 
     //cached scaled smooth images
@@ -41,11 +41,11 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         client.getGridPanel().repaint();
     }
 
-    public PlayerAction[] getActions() {
+    public PlayerAction<?>[] getActions() {
         return actions;
     }
 
-    public void setActions(PlayerAction[] actions) {
+    public void setActions(PlayerAction<?>[] actions) {
         selected = new Image[actions.length];
         deselected = new Image[actions.length];
         refreshImages = true;
@@ -127,7 +127,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
 
     private void deselectAction() {
         if (this.selectedActionIndex != -1) {
-            PlayerAction prev = actions[this.selectedActionIndex];
+            PlayerAction<?> prev = actions[this.selectedActionIndex];
             prev.deselect();
         }
     }
@@ -135,11 +135,11 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     private void setSelectedActionIndex(int selectedActionIndex) {
         deselectAction();
         this.selectedActionIndex = selectedActionIndex;
-        PlayerAction action = actions[selectedActionIndex];
+        PlayerAction<?> action = actions[selectedActionIndex];
         action.select();
     }
 
-    public PlayerAction getSelectedAction() {
+    public PlayerAction<?> getSelectedAction() {
         return actions[selectedActionIndex];
     }
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -314,17 +315,21 @@ public class Server extends GameSettings implements ServerIF {
     @Override
     public void cornCiclesRemoveOrDeploy(boolean remove) {
         stub.cornCiclesRemoveOrDeploy(remove);
+    }
 
+    @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        stub.placeLittleBuilding(lbType);
     }
 
     @Override
     public void chatMessage(Integer author, String message) {
         stub.chatMessage(author, message);
     }
-    
+
     @Override
     public void undo() {
-    	stub.undo();
+        stub.undo();
     }
 
 }

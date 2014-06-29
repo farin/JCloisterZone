@@ -14,6 +14,7 @@ import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.theme.FigureTheme;
@@ -58,30 +59,31 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
         }
-        TowerCapability tower = client.getGame().getCapability(TowerCapability.class);
-        if (tower != null) {
+        if (client.getGame().hasCapability(TowerCapability.class)) {
             scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
         }
-        KingAndRobberBaronCapability ks = client.getGame().getCapability(KingAndRobberBaronCapability.class);
-        if (ks != null) {
+        if (client.getGame().hasCapability(KingAndRobberBaronCapability.class)) {
             scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));
             scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));
         }
-        BazaarCapability bcb = client.getGame().getCapability(BazaarCapability.class);
-        if (bcb != null) {
+        if (client.getGame().hasCapability(BazaarCapability.class)) {
             scaledImages.put("bridge", scaleImage(theme.getNeutralImage("bridge")));
             scaledImages.put("castle", scaleImage(theme.getNeutralImage("castle")));
         }
-        ClothWineGrainCapability cwg = client.getGame().getCapability(ClothWineGrainCapability.class);
-        if (cwg != null) {
+        if (client.getGame().hasCapability(ClothWineGrainCapability.class)) {
             scaledImages.put("cloth", theme.getNeutralImage("cloth"));
             scaledImages.put("grain", theme.getNeutralImage("grain"));
             scaledImages.put("wine", theme.getNeutralImage("wine"));
         }
-        BarnCapability ab = client.getGame().getCapability(BarnCapability.class);
-        if (ab != null) {
+        if (client.getGame().hasCapability(BarnCapability.class)) {
             scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage()));
         }
+        if (client.getGame().hasCapability(LittleBuildingsCapability.class)) {
+            scaledImages.put("lb-tower", scaleImage(theme.getNeutralImage("lb-tower")));
+            scaledImages.put("lb-house", scaleImage(theme.getNeutralImage("lb-house")));
+            scaledImages.put("lb-shed", scaleImage(theme.getNeutralImage("lb-shed")));
+        }
+
     }
 
 }

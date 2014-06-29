@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import com.google.common.collect.Iterables;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.figure.Follower;
@@ -34,6 +35,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -201,6 +203,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         CastleCapability castleCap = game.getCapability(CastleCapability.class);
         KingAndRobberBaronCapability kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
         ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
+        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
 
         if (abbeyCap != null) {
             drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -216,6 +219,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         }
         if (castleCap != null) {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
+        }
+        if (lbCap != null) {
+            drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
+            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
+            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
         }
 
         if (kingRobberCap != null) {

@@ -1,6 +1,7 @@
 package com.jcloisterzone.rmi;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -46,7 +47,8 @@ public interface Client2ClientIF {
     public void bazaarBuyOrSell(boolean buy);
 
     public void cornCiclesRemoveOrDeploy(boolean remove);
-    
+    public void placeLittleBuilding(LittleBuilding lbType);
+
     public void undo();
 
     /* -------------------- CHAT --------------------- */

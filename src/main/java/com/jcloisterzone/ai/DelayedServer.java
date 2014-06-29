@@ -3,6 +3,7 @@ package com.jcloisterzone.ai;
 import java.util.EnumSet;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -142,13 +143,18 @@ public class DelayedServer implements ServerIF {
         server.cornCiclesRemoveOrDeploy(remove);
     }
 
+    @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        server.placeLittleBuilding(lbType);
+    }
+
     public void chatMessage(Integer player, String message) {
         server.chatMessage(player, message);
     }
-    
+
     @Override
     public void undo() {
-    	server.undo();
+        server.undo();
     }
 
 }

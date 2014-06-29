@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
@@ -28,6 +29,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
@@ -122,6 +124,13 @@ public class ActionPhase extends Phase {
         }
         next(TowerCapturePhase.class);
         game.post(new SelectActionEvent(getActivePlayer(), captureAction, false));
+    }
+
+    @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
+        lbCap.placeLittleBuilding(getActivePlayer(), lbType);
+        next();
     }
 
     @Override

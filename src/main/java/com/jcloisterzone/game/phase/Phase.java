@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
@@ -226,13 +227,18 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "placeLittleBuilding");
+    }
+
+    @Override
     public final void chatMessage(Integer author, String message) {
         game.post(new ChatEvent(game.getPlayer(author), message));
     }
-    
+
     @Override
     public void undo() {
-    	game.undo();
+        game.undo();
     }
 
     @Override
