@@ -124,7 +124,7 @@ msgstr "Festiwal (10-lecie)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "Little Buildings"
-msgstr "Małe budynki"
+msgstr "Małe Budynki"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Wind Rose"
@@ -168,7 +168,7 @@ msgstr "Szkoła"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "La Porxada"
-msgstr ""
+msgstr "La Porxada"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
@@ -285,7 +285,7 @@ msgstr "Wczytaj"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:494
 msgid "JCloisterZone "
-msgstr ""
+msgstr "JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/ClientController.java:178
 msgid "%d tiles left"
