@@ -96,7 +96,7 @@ msgstr "Hrabia"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Mini Expansion (GQ11)"
-msgstr "Mały dodatek (GQ11)"
+msgstr "Mały Dodatek (GQ11)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Cult"
@@ -116,7 +116,7 @@ msgstr "Plaga"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Phantom"
-msgstr "Widmo"
+msgstr "Świta (Fantom)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Festival (10th an.)"
@@ -148,7 +148,7 @@ msgstr "Promy"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Goldmines"
-msgstr "Kopalnie Złota"
+msgstr "Kopalnie złota"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "Mage & Witch"
