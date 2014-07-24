@@ -35,6 +35,7 @@ import com.google.common.base.Objects;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
@@ -105,6 +106,7 @@ public class Snapshot implements Serializable {
 
     private void createRuleElements(Game game) {
         for (CustomRule cr : game.getCustomRules()) {
+            if (cr.equals(CustomRule.RANDOM_SEATING_ORDER)) continue;
             Element el = doc.createElement("rule");
             el.setAttribute("name", cr.name());
             root.appendChild(el);
@@ -143,6 +145,15 @@ public class Snapshot implements Serializable {
             }
             if (p.getSlot().getType() == SlotType.AI) {
                 el.setAttribute("ai-class", p.getSlot().getAiClassName());
+            }
+            for (PointCategory cat : PointCategory.values()) {
+                int points = p.getPointsInCategory(cat);
+                if (points != 0) { //can be <0 (ransom)
+                    Element catEl = doc.createElement("point-category");
+                    catEl.setAttribute("name", cat.name());
+                    catEl.setAttribute("points", "" + points);
+                    el.appendChild(catEl);
+                }
             }
             parent.appendChild(el);
         }
@@ -280,6 +291,12 @@ public class Snapshot implements Serializable {
                 if (el.hasAttribute("local")) {
                     slot.setType(SlotType.PLAYER);
                 }
+            }
+            NodeList categories = el.getElementsByTagName("point-category");
+            for (int j = 0; j < categories.getLength(); j++) {
+                Element catEl = (Element) categories.item(j);
+                PointCategory cat = PointCategory.valueOf(catEl.getAttribute("name"));
+                p.setPointsInCategory(cat, Integer.parseInt(catEl.getAttribute("points")));
             }
             players.add(p);
         }

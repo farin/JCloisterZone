@@ -156,4 +156,8 @@ public class Player implements Serializable {
         return points == null ? 0 : points;
     }
 
+    public void setPointsInCategory(PointCategory category, int points) {
+        pointStats.put(category, points);
+    }
+
 }

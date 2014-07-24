@@ -131,7 +131,7 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) {
-        logger.info("Session error " + session.getRemoteAddress());
+        logger.error("Session error " + session.getRemoteAddress(), cause);
         undelivered.put((Long)session.getAttribute("clientId"), new ArrayList<CallMessage>());
     }
 }

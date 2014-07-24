@@ -212,7 +212,8 @@ public class Server extends GameSettings implements ServerIF {
                 }
             }
         }
-        if (getCustomRules().contains(CustomRule.RANDOM_SEATING_ORDER)) {
+        //ignore random rule for loaded game
+        if (snapshot == null && getCustomRules().contains(CustomRule.RANDOM_SEATING_ORDER)) {
             Random rnd = new Random();
             for (PlayerSlot slot : slots) {
                 if (slot.getType() != SlotType.OPEN) {
@@ -221,6 +222,7 @@ public class Server extends GameSettings implements ServerIF {
                 }
             }
         }
+        this.snapshot = null; //no longer needed
         stub.startGame();
     }
 

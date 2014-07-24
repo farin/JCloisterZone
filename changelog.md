@@ -4,6 +4,8 @@
 *appears in next release*
 
 * German Monasteries expansion
+* fix: loading game resets point statistics
+* fix: in some cases unable to start loaded game initially created with "randomize seating order"
 
 ## 2.7
 *2014-06-26*
