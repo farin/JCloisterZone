@@ -1,6 +1,5 @@
 package com.jcloisterzone.ai;
 
-import java.io.File;
 import java.io.FileOutputStream;
 
 import com.google.common.eventbus.Subscribe;

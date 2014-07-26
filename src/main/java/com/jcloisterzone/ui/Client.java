@@ -18,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +73,7 @@ import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -103,7 +106,7 @@ public class Client extends JFrame {
     private CreateGamePanel createGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
-    private Server localServer;
+    private SimpleServer localServer;
     private ServerIF server;
 
 
@@ -294,7 +297,11 @@ public class Client extends JFrame {
         setTitle(BASE_TITLE);
         resetWindowIcon();
         if (localServer != null) {
-            localServer.stop();
+            try {
+                localServer.stop();
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
             localServer = null;
         } else if (server != null) {
              getClientStub().stop();
@@ -341,7 +348,11 @@ public class Client extends JFrame {
         server = (ServerIF) Proxy.newProxyInstance(ServerIF.class.getClassLoader(),
                 new Class[] { ServerIF.class }, handler);
         handler.setServerProxy(server);
-        handler.connect(ia, port);
+        try {
+            handler.connect(ia, port);
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public void handleSave() {
@@ -376,8 +387,10 @@ public class Client extends JFrame {
     public void createGame() {
         if (!closeGame()) return;
         try {
-            localServer = new Server(config);
-            localServer.start(config.getPort());
+            localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
+            localServer.createGame();
+            localServer.start();
+
             connect(InetAddress.getLocalHost(), config.getPort());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -400,8 +413,9 @@ public class Client extends JFrame {
             if (file != null) {
                 if (!closeGame()) return;
                 try {
-                    localServer = new Server(new Snapshot(file));
-                    localServer.start(config.getPort());
+                    localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
+                    localServer.createGame(new Snapshot(file));
+                    localServer.start();
                     connect(InetAddress.getLocalHost(), config.getPort());
                 } catch (SnapshotVersionException ex1) {
                     //do not create error.log
