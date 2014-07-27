@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
-import com.jcloisterzone.wsio.MessageParser.Command;
+import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 
@@ -16,7 +16,7 @@ public class Connection {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private MessageParser parser = new MessageParser();
+    private WsUtils parser = new WsUtils();
     private WebSocketClient ws;
 
     private String clientId;
@@ -49,13 +49,13 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                sendMessage("HELLO", new HelloMessage("WsFarin"));
+                Connection.this.send("HELLO", new HelloMessage("WsFarin"));
             }
         };
         ws.connect();
     }
 
-    public void sendMessage(String command, Object arg) {
+    public void send(String command, Object arg) {
         ws.send(parser.toJson(command, arg));
     }
 

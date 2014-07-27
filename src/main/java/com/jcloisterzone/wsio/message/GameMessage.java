@@ -7,20 +7,19 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 
 public class GameMessage {
+
+    public enum GameState { OPEN, RUNNING }
+
     private String id;
-    private String state;
-    private Set<CustomRule> customRules;
-    private Set<Expansion> expansions;
-    private Set<Class<? extends Capability>> capabilityClasses;
+    private GameState state;
     private String snapshot;
     private SlotMessage[] slots;
+    private GameSetupMessage gameSetup;
 
-    public GameMessage(String id, String state, Set<CustomRule> customRules, Set<Expansion> expansions, Set<Class<? extends Capability>> capabilityClasses) {
+    public GameMessage(String id, GameState state, GameSetupMessage gameSetup) {
         this.id = id;
         this.state = state;
-        this.customRules = customRules;
-        this.expansions = expansions;
-        this.capabilityClasses = capabilityClasses;
+        this.gameSetup = gameSetup;
     }
 
     public String getId() {
@@ -31,37 +30,12 @@ public class GameMessage {
         this.id = id;
     }
 
-    public String getState() {
+    public GameState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(GameState state) {
         this.state = state;
-    }
-
-    public Set<CustomRule> getCustomRules() {
-        return customRules;
-    }
-
-    public void setCustomRules(Set<CustomRule> customRules) {
-        this.customRules = customRules;
-    }
-
-    public Set<Expansion> getExpansions() {
-        return expansions;
-    }
-
-    public void setExpansions(Set<Expansion> expansions) {
-        this.expansions = expansions;
-    }
-
-    public Set<Class<? extends Capability>> getCapabilityClasses() {
-        return capabilityClasses;
-    }
-
-    public void setCapabilityClasses(
-            Set<Class<? extends Capability>> capabilityClasses) {
-        this.capabilityClasses = capabilityClasses;
     }
 
     public String getSnapshot() {
@@ -80,5 +54,11 @@ public class GameMessage {
         this.slots = slots;
     }
 
+    public GameSetupMessage getGameSetup() {
+        return gameSetup;
+    }
 
+    public void setGameSetup(GameSetupMessage gameSetup) {
+        this.gameSetup = gameSetup;
+    }
 }

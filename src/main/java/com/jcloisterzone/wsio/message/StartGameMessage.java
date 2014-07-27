@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
-public class JoinGameMessage {
+public class StartGameMessage {
     private String gameId;
 
-    public JoinGameMessage(String gameId) {
+    public StartGameMessage(String gameId) {
         super();
         this.gameId = gameId;
     }

@@ -62,41 +62,6 @@ public class CreateGamePhase extends ServerAwarePhase {
         return slots;
     }
 
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        if (enabled) {
-            game.getCustomRules().add(rule);
-        } else {
-            game.getCustomRules().remove(rule);
-        }
-        game.post(new RuleChangeEvent(rule, enabled));
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        if (enabled) {
-            game.getExpansions().add(expansion);
-        } else {
-            game.getExpansions().remove(expansion);
-        }
-        game.post(new ExpansionChangedEvent(expansion, enabled));
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-        game.getExpansions().clear();
-        game.getExpansions().addAll(Arrays.asList(expansions));
-        game.getCustomRules().clear();
-        game.getCustomRules().addAll(Arrays.asList(rules));
-
-        for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
-            game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
-        }
-        for (CustomRule rule : CustomRule.values()) {
-            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
-        }
-    }
 
     @Override
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
@@ -253,7 +218,6 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    @Override
     public void startGame() {
         //temporary code should be configured by player as rules
         prepareCapabilities();

@@ -12,9 +12,6 @@ import com.jcloisterzone.game.PlayerSlot;
  */
 public interface ServerIF extends Client2ClientIF {
 
-    //public void updateSlot(PlayerSlot slot, EnumSet<Expansion> supportedExpansions); //pass null if all expansions are supported
-
-    /* ---------------------- STARTED GAME MESSAGES ------------------*/
 
     /**
      * Generates random tiles indexes. For security reasons all random selections are made on server side.

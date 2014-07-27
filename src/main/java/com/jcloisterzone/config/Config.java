@@ -16,6 +16,8 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -61,7 +63,7 @@ public class Config {
             this.rules = rules;
         }
 
-        public void updateGameSetup(ServerIF server) {
+        public void updateGameSetup(Connection conn, String gameId) {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
             for (String expName : expansions) {
@@ -72,7 +74,7 @@ public class Config {
             for (String ruleName : rules) {
                 ruleSet.add(CustomRule.valueOf(ruleName));
             }
-            server.updateGameSetup(expansionSet.toArray(new Expansion[expansionSet.size()]), ruleSet.toArray(new CustomRule[ruleSet.size()]));
+            conn.send("GAME_SETUP", new GameSetupMessage(gameId, ruleSet, expansionSet, null));
         }
     }
 

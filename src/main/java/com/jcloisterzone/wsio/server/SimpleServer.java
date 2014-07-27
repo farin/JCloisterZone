@@ -5,31 +5,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.wsio.CmdHandler;
-import com.jcloisterzone.wsio.MessageParser;
-import com.jcloisterzone.wsio.MessageParser.Command;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsUtils;
+import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.SetExpansionMessage;
+import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
+import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.server.checks.CheckGameId;
+import com.jcloisterzone.wsio.server.checks.CheckGameRunning;
 
 public class SimpleServer extends WebSocketServer  {
 
@@ -41,7 +55,7 @@ public class SimpleServer extends WebSocketServer  {
 
     public static final String GAME_ID = "_1";
 
-    private MessageParser parser = new MessageParser();
+    private WsUtils parser = new WsUtils();
 
     private GameSettings game;
     protected final ServerPlayerSlot[] slots;
@@ -113,7 +127,8 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private GameMessage createGameMessage(String clientId) {
-        GameMessage gm = new GameMessage(GAME_ID, "open", game.getCustomRules(), game.getExpansions(), game.getCapabilityClasses());
+        GameSetupMessage gsm = new GameSetupMessage(GAME_ID, game.getCustomRules(), game.getExpansions(), game.getCapabilityClasses());
+        GameMessage gm = new GameMessage(GAME_ID,  gameStarted ? GameState.RUNNING : GameState.OPEN, gsm);
         List<SlotMessage> slotMsgs = new ArrayList<>();
         for (ServerPlayerSlot slot : slots) {
             if (slot.isOccupied()) {
@@ -126,41 +141,54 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @CmdHandler("HELLO")
+    @CheckGameRunning(false)
     public void handleHello(WebSocket ws, HelloMessage msg) {
         String clientId = UUID.randomUUID().toString();
         String sessionKey = UUID.randomUUID().toString();
         clientIds.put(ws, clientId);
-        sendMessage(ws, "WELCOME", new WelcomeMessage(clientId, sessionKey));
+        send(ws, "WELCOME", new WelcomeMessage(clientId, sessionKey));
     }
 
     @CmdHandler("CREATE_GAME")
+    @CheckGameRunning(false)
     public void handleCreateGame(WebSocket ws, CreateGameMessage msg) {
         String clientId = getClientId(ws);
         createGame();
-        sendMessage(ws, "GAME", createGameMessage(clientId));
+        send(ws, "GAME", createGameMessage(clientId));
     }
 
 
     @CmdHandler("JOIN_GAME")
+    @CheckGameRunning(false)
+    @CheckGameId
     public void handleJoinGame(WebSocket ws, JoinGameMessage msg) {
         String clientId = getClientId(ws);
         if (this.game == null || !GAME_ID.equals(msg.getGameId())) {
-            sendMessage(ws, "ERR", "Game doesn't exist.");
+            send(ws, "ERR", "Game doesn't exist.");
             return;
         }
-        sendMessage(ws, "GAME", createGameMessage(clientId));
+        send(ws, "GAME", createGameMessage(clientId));
     }
 
+    @CmdHandler("GAME_SETUP")
+    @CheckGameId
+    public void handleGameSetupMessage(WebSocket ws, GameSetupMessage msg) {
+        game.getExpansions().clear();
+        game.getExpansions().addAll(msg.getExpansions());
+        game.getCustomRules().clear();
+        game.getCustomRules().addAll(msg.getCustomRules());
+        broadcast("GAME_SETUP", msg);
+    }
+
+
     @CmdHandler("TAKE_SLOT")
+    @CheckGameRunning(false)
+    @CheckGameId
     public void handleTakeSlot(WebSocket ws, TakeSlotMessage msg) {
         String clientId = getClientId(ws);
-        if (gameStarted) {
-            sendMessage(ws, "ERR", "Game is running.");
-            return;
-        }
         int number = msg.getNumber();
         if (number < 0 || number >= slots.length) {
-            sendMessage(ws, "ERR", "Invalid slot number");
+            send(ws, "ERR", "Invalid slot number");
             return;
 
         }
@@ -171,20 +199,17 @@ public class SimpleServer extends WebSocketServer  {
         slot.setNickname(msg.getNickname());
         slot.setAi(msg.isAi());
         slot.setOwner(clientId);
-        sendMessage(ws, "SLOT", createSlotMessage(clientId, slot));
+        broadcast("SLOT", createSlotMessage(clientId, slot));
     }
 
     @CmdHandler("LEAVE_SLOT")
+    @CheckGameRunning(false)
+    @CheckGameId
     public void handleLeaveSlot(WebSocket ws, LeaveSlotMessage msg) {
-         String clientId = getClientId(ws);
-        //TODO DRY violation
-        if (gameStarted) {
-            sendMessage(ws, "ERR", "Game is running.");
-            return;
-        }
+        String clientId = getClientId(ws);
         int number = msg.getNumber();
         if (number < 0 || number >= slots.length) {
-            sendMessage(ws, "ERR", "Invalid slot number");
+            send(ws, "ERR", "Invalid slot number");
             return;
 
         }
@@ -193,16 +218,65 @@ public class SimpleServer extends WebSocketServer  {
         slot.setSerial(null);
         slot.setOwner(null);
         slot.setAi(false);
-        sendMessage(ws, "SLOT", createSlotMessage(clientId, slot));
+        broadcast("SLOT", createSlotMessage(clientId, slot));
+    }
+
+    @CmdHandler("SET_EXPANSION")
+    @CheckGameRunning(false)
+    @CheckGameId
+    public void handleSetExpansion(WebSocket ws, SetExpansionMessage msg) {
+        Expansion expansion = msg.getExpansion();
+        if (!expansion.isImplemented() || expansion == Expansion.BASIC) {
+            logger.error("Invalid expansion {}", expansion);
+            return;
+        }
+        if (msg.isEnabled()) {
+            game.getExpansions().add(msg.getExpansion());
+        } else {
+            game.getExpansions().remove(msg.getExpansion());
+        }
+        broadcast("SET_EXPANSION", msg);
+    }
+
+    @CmdHandler("SET_RULE")
+    @CheckGameRunning(false)
+    @CheckGameId
+    public void handleSetRule(WebSocket ws, SetRuleMessage msg) {
+        CustomRule rule = msg.getRule();
+        if (msg.isEnabled()) {
+            game.getCustomRules().add(rule);
+        } else {
+            game.getCustomRules().remove(rule);
+        }
+        broadcast("SET_RULE", msg);
+    }
+
+    @CmdHandler("START_GAME")
+    @CheckGameRunning(false)
+    @CheckGameId
+    public void handleStartGame(WebSocket ws, StartGameMessage msg) {
+        gameStarted = true;
+        for (Entry<WebSocket, String> entry : clientIds.entrySet()) {
+            send(entry.getKey(), "GAME", createGameMessage(entry.getValue()));
+        }
+    }
+
+    @CmdHandler("RMI")
+    @CheckGameRunning(true)
+    @CheckGameId
+    public void handleRmi(WebSocket ws, RmiMessage msg) {
+        broadcast("RMI", msg);
     }
 
 
-    public void sendMessage(WebSocket ws, String command, Object data) {
+    public void send(WebSocket ws, String command, Object data) {
         ws.send(parser.toJson(command, data));
     }
 
-//    private void sendToAll(String cmd, Object message) {
-//
-//    }
-
+    public void broadcast(String command, Object data) {
+        String payload = parser.toJson(command, data);
+        for (WebSocket ws : clientIds.keySet()) {
+            ws.send(payload);
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,10 +17,10 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.mina.core.RuntimeIoException;
-
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ConnectGamePanel extends JPanel {

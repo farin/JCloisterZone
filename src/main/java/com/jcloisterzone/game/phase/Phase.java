@@ -103,11 +103,6 @@ public abstract class Phase implements ClientIF {
     //adapter methods
 
     @Override
-    public void startGame() {
-        logger.error(Application.ILLEGAL_STATE_MSG, "startGame");
-    }
-
-    @Override
     public void pass() {
         logger.error(Application.ILLEGAL_STATE_MSG, "pass");
     }
@@ -156,22 +151,6 @@ public abstract class Phase implements ClientIF {
             return;
         }
         towerCap.payRansom(playerIndexToPay, meepleType);
-    }
-
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateCustomRule");
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
-
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-         logger.error(Application.ILLEGAL_STATE_MSG, "updateGameSetup");
     }
 
     @Override

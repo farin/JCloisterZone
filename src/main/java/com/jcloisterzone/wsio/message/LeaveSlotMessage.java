@@ -2,8 +2,8 @@ package com.jcloisterzone.wsio.message;
 
 public class LeaveSlotMessage {
 
-    String gameId;
-    int number;
+    private String gameId;
+    private int number;
 
     public LeaveSlotMessage(String gameId, int number) {
         super();

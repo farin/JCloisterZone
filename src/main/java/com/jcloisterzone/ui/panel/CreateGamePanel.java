@@ -41,6 +41,10 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
+import com.jcloisterzone.wsio.message.SetExpansionMessage;
+import com.jcloisterzone.wsio.message.SetRuleMessage;
+import com.jcloisterzone.wsio.message.StartGameMessage;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -127,7 +131,7 @@ public class CreateGamePanel extends JPanel {
 
         startGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getServer().startGame();
+                client.getConnection().send("START_GAME", new StartGameMessage(SimpleServer.GAME_ID));
             }
         });
 
@@ -205,7 +209,7 @@ public class CreateGamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (presets.getSelectedItem() instanceof Preset) {
                     Preset profile = (Preset) presets.getSelectedItem();
-                    profile.getConfig().updateGameSetup(client.getServer());
+                    profile.getConfig().updateGameSetup(client.getConnection(), SimpleServer.GAME_ID);
                 }
             }
         });
@@ -396,8 +400,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getServer().updateCustomRule(rule,
-                            chbox.isSelected());
+                    client.getConnection().send("SET_RULE", new SetRuleMessage(SimpleServer.GAME_ID, rule, chbox.isSelected()));
                 }
             });
         } else {
@@ -419,7 +422,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getServer().updateExpansion(exp, chbox.isSelected());
+                    client.getConnection().send("SET_EXPANSION", new SetExpansionMessage(SimpleServer.GAME_ID, exp, chbox.isSelected()));
                 }
             });
         }

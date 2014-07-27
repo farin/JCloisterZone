@@ -4,7 +4,6 @@ import java.util.EnumSet;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.PlayerSlot;
 
 /**
  * Declares complete client API.
@@ -13,7 +12,6 @@ import com.jcloisterzone.game.PlayerSlot;
  */
 public interface ClientIF extends Client2ClientIF {
 
-    //public void updateSlot(PlayerSlot slot);
     public void updateSupportedExpansions(EnumSet<Expansion> expansions);
 
     /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/

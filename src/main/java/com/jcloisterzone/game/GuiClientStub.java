@@ -9,6 +9,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -32,14 +33,17 @@ public class GuiClientStub extends ClientStub {
 
     @Override
     @CmdHandler("GAME")
-    public void handleGameMessage(Connection conn, final GameMessage msg) {
-        super.handleGameMessage(conn, msg);
-        final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                client.showCreateGamePanel(msg.getSnapshot() == null, slots);
-            }
-        });
+    public void handleGame(final Connection conn, final GameMessage msg) {
+        super.handleGame(conn, msg);
+        if (msg.getState() == GameState.OPEN) {
+            final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    client.showCreateGamePanel(msg.getSnapshot() == null, slots);
+                    handleGameSetup(conn, msg.getGameSetup());
+                }
+            });
+        }
     }
 
 // AUTOSTART not convered yet

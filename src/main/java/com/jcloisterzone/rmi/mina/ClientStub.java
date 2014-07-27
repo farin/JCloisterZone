@@ -1,27 +1,41 @@
 package com.jcloisterzone.rmi.mina;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
+import com.jcloisterzone.Expansion;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.rmi.CallMessage;
+import com.jcloisterzone.rmi.ClientIF;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.SetExpansionMessage;
+import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
+import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
@@ -70,26 +84,14 @@ public abstract class ClientStub  implements InvocationHandler {
         if (conn == null) {
             logger.info("Not connected. Message ignored");
         } else {
-            //session.write(new CallMessage(method, args));
+            RmiMessage rmi = new RmiMessage(SimpleServer.GAME_ID);
+            rmi.encode(new CallMessage(method, args));
+            conn.send("RMI", rmi);
         }
         return null;
     }
 
-//    @Override
-//    public final void messageReceived(IoSession session, Object message) {
-//        if (message instanceof ControllMessage) {
-//            ControllMessage cm = (ControllMessage) message;
-//            clientId = cm.getClientId();
-//            if (cm.getProtocolVersion() != Application.PROTCOL_VERSION) {
-//                versionMismatch(cm.getProtocolVersion());
-//                session.close(true);
-//                return;
-//            }
-//            controllMessageReceived(cm);
-//        } else {
-//            callMessageReceived((CallMessage) message);
-//        }
-//    }
+
 
     protected void versionMismatch(int version) {
         logger.error("Version mismatch. Server version: " + version +". Client version " + Application.PROTCOL_VERSION);
@@ -107,9 +109,9 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
     @CmdHandler("WELCOME")
-    public void handleWelcomeMessage(Connection conn, WelcomeMessage msg) {
+    public void handleWelcome(Connection conn, WelcomeMessage msg) {
         //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
-        conn.sendMessage("JOIN_GAME", new JoinGameMessage(SimpleServer.GAME_ID));
+        conn.send("JOIN_GAME", new JoinGameMessage(SimpleServer.GAME_ID));
     }
 
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
@@ -123,7 +125,13 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
     @CmdHandler("GAME")
-    public void handleGameMessage(Connection conn, GameMessage msg) {
+    public void handleGame(Connection conn, GameMessage msg) {
+        if (msg.getState() == GameState.RUNNING) {
+            CreateGamePhase phase = (CreateGamePhase)game.getPhase();
+            phase.startGame();
+            phaseLoop();
+            return;
+        }
         game = createGame(msg);
         CreateGamePhase phase;
         if (msg.getSnapshot() == null) {
@@ -145,35 +153,87 @@ public abstract class ClientStub  implements InvocationHandler {
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
+        //HACK - this should be here but is is inside GuiClientStub. we must wait for panle is created
+        //handleGameSetup(Conn, msg.getGameSetup());
+
     }
 
     @CmdHandler("SLOT")
-    public void handleSlotMessage(Connection conn, SlotMessage msg) {
+    public void handleSlot(Connection conn, SlotMessage msg) {
         final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
         game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
     }
 
+    @CmdHandler("GAME_SETUP")
+    public void handleGameSetup(Connection conn, GameSetupMessage msg) {
+        game.getExpansions().clear();
+        game.getExpansions().addAll(msg.getExpansions());
+        game.getCustomRules().clear();
+        game.getCustomRules().addAll(msg.getCustomRules());
 
-//    protected void callMessageReceived(CallMessage msg) {
-//        try {
-//            Phase phase = game.getPhase();
-//            logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
-//            msg.call(phase, ClientIF.class);
-//            phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
-//            while (phase != null && !phase.isEntered()) {
-//                logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
-//                phase.setEntered(true);
-//                phase.enter();
-//                phase = game.getPhase();
-//                //game.post(new PhaseEnterEvent(phase));
-//            }
-//        } catch (InvocationTargetException ie) {
-//            logger.error(ie.getMessage(), ie.getCause());
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//        }
-//    }
+        for (Expansion exp : Expansion.values()) {
+            if (!exp.isImplemented()) continue;
+            game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
+        }
+        for (CustomRule rule : CustomRule.values()) {
+            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
+        }
+    }
+
+
+    @CmdHandler("SET_EXPANSION")
+    public void handleSetExpansion(Connection conn, SetExpansionMessage msg) {
+        Expansion expansion = msg.getExpansion();
+        if (msg.isEnabled()) {
+            game.getExpansions().add(expansion);
+        } else {
+            game.getExpansions().remove(expansion);
+        }
+        game.post(new ExpansionChangedEvent(expansion, msg.isEnabled()));
+    }
+
+    @CmdHandler("SET_RULE")
+    public void handleSetRule(Connection conn, SetRuleMessage msg) {
+        CustomRule rule = msg.getRule();
+        if (msg.isEnabled()) {
+            game.getCustomRules().add(rule);
+        } else {
+            game.getCustomRules().remove(rule);
+        }
+        game.post(new RuleChangeEvent(rule, msg.isEnabled()));
+    }
+
+    @CmdHandler("RMI")
+    public void handleRmi(Connection conn, RmiMessage msg) {
+        CallMessage call = msg.decode();
+        callMessageReceived(call);;
+    }
+
+
+    protected void callMessageReceived(CallMessage msg) {
+        try {
+            Phase phase = game.getPhase();
+            logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
+            msg.call(phase, ClientIF.class);
+            phaseLoop();
+        } catch (InvocationTargetException ie) {
+            logger.error(ie.getMessage(), ie.getCause());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    protected void phaseLoop() {
+        Phase phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
+        while (phase != null && !phase.isEntered()) {
+            logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
+            phase.setEntered(true);
+            phase.enter();
+            phase = game.getPhase();
+            //game.post(new PhaseEnterEvent(phase));
+        }
+    }
 
 
     public String getClientId() {

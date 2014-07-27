@@ -1,13 +1,11 @@
 package com.jcloisterzone.rmi;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
 
 /**
  * Declares broadcast messages called between clients.
@@ -16,13 +14,6 @@ import com.jcloisterzone.game.CustomRule;
  *
  */
 public interface Client2ClientIF {
-
-    /* ---------------------- NEW GAME MESSAGES ------------------*/
-
-    public void updateExpansion(Expansion expansion, Boolean enabled);
-    public void updateCustomRule(CustomRule rule, Boolean enabled);
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules);
-    public void startGame();
 
     /* ---------------------- STARTED GAME MESSAGES ------------------*/
 

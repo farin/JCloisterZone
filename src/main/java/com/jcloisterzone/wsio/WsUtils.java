@@ -10,14 +10,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.SetExpansionMessage;
+import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
+import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 
-public final class MessageParser {
+public final class WsUtils {
 
     private Gson gson = new Gson();
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -29,9 +34,14 @@ public final class MessageParser {
             .put("CREATE_GAME", CreateGameMessage.class)
             .put("JOIN_GAME", JoinGameMessage.class)
             .put("GAME", GameMessage.class)
+            .put("GAME_SETUP", GameSetupMessage.class)
             .put("TAKE_SLOT", TakeSlotMessage.class)
             .put("LEAVE_SLOT", LeaveSlotMessage.class)
             .put("SLOT", SlotMessage.class)
+            .put("SET_EXPANSION", SetExpansionMessage.class)
+            .put("SET_RULE", SetRuleMessage.class)
+            .put("START_GAME", StartGameMessage.class)
+            .put("RMI", RmiMessage.class)
             .build();
 
     public static class Command {
