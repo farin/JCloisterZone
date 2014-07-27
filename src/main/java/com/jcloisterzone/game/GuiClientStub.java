@@ -12,9 +12,11 @@ import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
-import com.jcloisterzone.rmi.ControllMessage;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.wsio.CmdHandler;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage;
 
 
@@ -34,16 +36,24 @@ public class GuiClientStub extends ClientStub {
         client.setGame(game);
         return game;
     }
-//
+
+    @Override
+    @CmdHandler("GAME")
+    public void handleGameMessage(Connection conn, final GameMessage msg) {
+        super.handleGameMessage(conn, msg);
+        final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                client.showCreateGamePanel(msg.getSnapshot() == null, slots);
+            }
+        });
+    }
+
+// AUTOSTART not convered yet
+
 //    @Override
 //    protected void controllMessageReceived(final ControllMessage msg) {
 //        super.controllMessageReceived(msg);
-//
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                client.showCreateGamePanel(msg.getSnapshot() == null, msg.getSlots());
-//            }
-//        });
 //
 //        DebugConfig debugConfig = client.getConfig().getDebug();
 //        if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {

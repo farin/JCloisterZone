@@ -19,7 +19,9 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.phase.CreateGamePhase;
+import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -39,13 +41,14 @@ public abstract class ClientStub  implements InvocationHandler {
     protected Game game;
 
 
-    public void connect(InetAddress ia, int port) throws URISyntaxException {
-        connect(null);
+    public Connection  connect(InetAddress ia, int port) throws URISyntaxException {
+        return connect(null);
     }
 
-    private void connect(SocketAddress endpoint) throws URISyntaxException {
+    private Connection connect(SocketAddress endpoint) throws URISyntaxException {
         ////localhost:8000/ws")) {
         conn = new Connection(new URI("ws://localhost:37447/"), this);
+        return conn;
     }
 
 
@@ -108,14 +111,14 @@ public abstract class ClientStub  implements InvocationHandler {
         return game;
     }
 
-    @Subscribe
-    public void onWelcomeMessage(WelcomeMessage msg) {
+    @CmdHandler("WELCOME")
+    public void handleWelcomeMessage(Connection conn, WelcomeMessage msg) {
         //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
         conn.sendMessage("JOIN_GAME", new JoinGameMessage(SimpleServer.GAME_ID));
     }
 
-    @Subscribe
-    public void onGameMessage(GameMessage msg) {
+    @CmdHandler("GAME")
+    public void handleGameMessage(Connection conn, GameMessage msg) {
         game = createGame(msg);
         CreateGamePhase phase;
         if (msg.getSnapshot() == null) {
@@ -127,7 +130,9 @@ public abstract class ClientStub  implements InvocationHandler {
         // TODO - lagacy bridge
         PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
         for (int i = 0; i < slots.length; i++) {
-            slots[i] = new PlayerSlot(i);
+            PlayerSlot slot = new PlayerSlot(i);
+            slot.setColors(game.getConfig().getPlayerColor(slot));
+            slots[i] = slot;
         }
         for (SlotMessage slotMsg : msg.getSlots()) {
             PlayerSlot slot = slots[slotMsg.getNumber()];
@@ -135,11 +140,20 @@ public abstract class ClientStub  implements InvocationHandler {
             slot.setOwner(slotMsg.isOwn() ? conn.getClientId() : 0);
             slot.setType(SlotType.PLAYER);
             slot.setState(SlotState.ACTIVE);
-            slot.setColors(game.getConfig().getPlayerColor(slot));
         }
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
+    }
+
+    @CmdHandler("SLOT")
+    public void handleSlotMessage(Connection conn, SlotMessage msg) {
+        Phase phase = game.getPhase();
+        final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+        PlayerSlot slot = slots[msg.getNumber()];
+        slot.setSerial(msg.getSerial());
+        slot.setNick(msg.getNickname());
+        phase.updateSlot(slot);
     }
 
 

@@ -1,5 +1,6 @@
 package com.jcloisterzone.wsio;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,6 +12,9 @@ import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.SlotMessage;
+import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 
 public final class MessageParser {
@@ -25,7 +29,9 @@ public final class MessageParser {
             .put("CREATE_GAME", CreateGameMessage.class)
             .put("JOIN_GAME", JoinGameMessage.class)
             .put("GAME", GameMessage.class)
-
+            .put("TAKE_SLOT", TakeSlotMessage.class)
+            .put("LEAVE_SLOT", LeaveSlotMessage.class)
+            .put("SLOT", SlotMessage.class)
             .build();
 
     public static class Command {
@@ -50,6 +56,31 @@ public final class MessageParser {
 
     public String toJson(String command, Object arg) {
         return command + " " + gson.toJson(arg);
+    }
+
+    //TODO what about cache targets
+    public void delegate(Object target, Object subject, Command cmd) {
+        Class<?> type = target.getClass();
+        while (true) {
+            if (delegateScanClass(target, type, subject, cmd)) break;
+            type = type.getSuperclass();
+            if (Object.class.equals(type)) break;
+        }
+    }
+
+    private boolean delegateScanClass(Object target, Class<?> type, Object subject, Command cmd) {
+        for (Method m : type.getDeclaredMethods()) {
+            CmdHandler handler = m.getAnnotation(CmdHandler.class);
+            if (handler != null && handler.value().equals(cmd.command)) {
+                try {
+                    m.invoke(target, subject, cmd.arg);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 }

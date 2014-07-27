@@ -29,6 +29,9 @@ import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.TakeSlotMessage;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 public class CreateGamePlayerPanel extends JPanel {
 
@@ -232,7 +235,8 @@ public class CreateGamePlayerPanel extends JPanel {
                 return;
             }
             slot.setOwner(clientId);
-            client.getServer().updateSlot(slot, supported);
+            sendSlotMessage(slot);
+
         }
     }
 
@@ -250,7 +254,18 @@ public class CreateGamePlayerPanel extends JPanel {
                 return;
             }
             slot.setOwner(clientId);
-            client.getServer().updateSlot(slot, null);
+            sendSlotMessage(slot);
+        }
+    }
+
+    private void sendSlotMessage(PlayerSlot slot) {
+         //TODO clean up, todo supported expansions
+        if (slot.getType() == SlotType.OPEN) {
+            LeaveSlotMessage msg = new LeaveSlotMessage(SimpleServer.GAME_ID, slot.getNumber());
+            client.getConnection().sendMessage("LEAVE_SLOT", msg);
+        } else {
+            TakeSlotMessage msg = new TakeSlotMessage(SimpleServer.GAME_ID, slot.getNumber(), slot.getNick());
+            client.getConnection().sendMessage("TAKE_SLOT", msg);
         }
     }
 
@@ -281,7 +296,7 @@ public class CreateGamePlayerPanel extends JPanel {
         private void requestUpdate() {
             if (update != null && ! update.equals(slot.getNick())) {
                 slot.setNick(update);
-                client.getServer().updateSlot(slot, null);
+                sendSlotMessage(slot);
                 update = null;
             }
         }

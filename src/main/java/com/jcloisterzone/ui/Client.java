@@ -73,6 +73,7 @@ import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
 @SuppressWarnings("serial")
@@ -108,6 +109,7 @@ public class Client extends JFrame {
 
     private SimpleServer localServer;
     private ServerIF server;
+    private Connection conn;
 
 
     private Game game;
@@ -206,8 +208,13 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
+    @Deprecated //replace with connection
     public ServerIF getServer() {
         return server;
+    }
+
+    public Connection getConnection() {
+        return conn;
     }
 
     public Game getGame() {
@@ -257,7 +264,7 @@ public class Client extends JFrame {
         }
     }
 
-	public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
+    public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
         cleanContentPane();
         createGamePanel = new CreateGamePanel(this, mutableSlots, slots);
@@ -307,6 +314,7 @@ public class Client extends JFrame {
              getClientStub().stop();
         }
         server = null;
+        conn = null;
         activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
         if (controlPanel != null) {
@@ -349,7 +357,7 @@ public class Client extends JFrame {
                 new Class[] { ServerIF.class }, handler);
         handler.setServerProxy(server);
         try {
-            handler.connect(ia, port);
+            conn = handler.connect(ia, port);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }

@@ -19,13 +19,10 @@ public class Connection {
     private MessageParser parser = new MessageParser();
     private WebSocketClient ws;
 
-    private EventBus messageBus = new EventBus();
-
     private long clientId = -1; //TODO use Strign, now backward compatible with legacy code
     private String sessionKey;
 
     public Connection(URI uri, final Object receiver) {
-        messageBus.register(receiver);
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
@@ -47,7 +44,7 @@ public class Connection {
                     clientId = welcomeMsg.getClientId().hashCode();
                     sessionKey = welcomeMsg.getSessionKey();
                 }
-                messageBus.post(cmd.arg);
+                parser.delegate(receiver, Connection.this, cmd);
             }
 
             @Override

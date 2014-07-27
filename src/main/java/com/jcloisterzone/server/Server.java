@@ -113,7 +113,7 @@ public class Server extends GameSettings implements ServerIF {
         return merged;
     }
 
-    @Override
+    //@Override
     public void updateSlot(PlayerSlot slot, EnumSet<Expansion> supportedExpansions) {
         if (gameStarted) {
             logger.error(Application.ILLEGAL_STATE_MSG, "updateSlot");
