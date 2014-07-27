@@ -23,12 +23,11 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.rmi.CallMessage;
-import com.jcloisterzone.rmi.ClientControllMessage;
 import com.jcloisterzone.rmi.ControllMessage;
-import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.server.Server;
 
 
+@Deprecated //TODEL
 public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -84,22 +83,22 @@ public class ServerStub extends IoHandlerAdapter implements InvocationHandler {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        if (message instanceof ClientControllMessage) {
-            ClientControllMessage msg = (ClientControllMessage) message;
-            if (msg.getClientId() == null) {
-                session.setAttribute("clientId", session.getId());
-                sessionReceivedControllMessage(session);
-            } else {
-                session.setAttribute("clientId", msg.getClientId());
-                for (CallMessage callMsg : undelivered.remove(msg.getClientId())) {
-                    session.write(callMsg);
-                }
-                server.sessionStateChanged(msg.getClientId(), SlotState.ACTIVE);
-            }
-        } else {
-            //TODO check rights (has token)
-            ((CallMessage) message).call(server, ServerIF.class);
-        }
+//        if (message instanceof ClientControllMessage) {
+//            ClientControllMessage msg = (ClientControllMessage) message;
+//            if (msg.getClientId() == null) {
+//                session.setAttribute("clientId", session.getId());
+//                sessionReceivedControllMessage(session);
+//            } else {
+//                session.setAttribute("clientId", msg.getClientId());
+//                for (CallMessage callMsg : undelivered.remove(msg.getClientId())) {
+//                    session.write(callMsg);
+//                }
+//                server.sessionStateChanged(msg.getClientId(), SlotState.ACTIVE);
+//            }
+//        } else {
+//            //TODO check rights (has token)
+//            ((CallMessage) message).call(server, ServerIF.class);
+//        }
     }
 
     private void sessionReceivedControllMessage(IoSession session) {

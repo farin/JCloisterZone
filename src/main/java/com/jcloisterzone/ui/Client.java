@@ -257,7 +257,7 @@ public class Client extends JFrame {
         }
     }
 
-    public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
+	public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
         cleanContentPane();
         createGamePanel = new CreateGamePanel(this, mutableSlots, slots);

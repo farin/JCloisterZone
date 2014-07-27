@@ -16,11 +16,15 @@ import com.jcloisterzone.Application;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
+import com.jcloisterzone.game.PlayerSlot.SlotType;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
@@ -94,11 +98,12 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
     protected Game createGame(GameMessage message) {
-//        if (msg.getSnapshot() == null) {
-//            game = new Game();
-//        } else {
-//            game = msg.getSnapshot().asGame();
-//        }
+        if (message.getSnapshot() == null) {
+            game = new Game();
+        } else {
+            throw new UnsupportedOperationException("not implemented");
+            //game = msg.getSnapshot().asGame();
+        }
         game = new Game();
         return game;
     }
@@ -111,26 +116,33 @@ public abstract class ClientStub  implements InvocationHandler {
 
     @Subscribe
     public void onGameMessage(GameMessage msg) {
-        System.err.println(msg);
+        game = createGame(msg);
+        CreateGamePhase phase;
+        if (msg.getSnapshot() == null) {
+            phase = new CreateGamePhase(game, getServerProxy());
+        } else {
+            throw new UnsupportedOperationException("not implemented");
+            //phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
+        }
+        // TODO - lagacy bridge
+        PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = new PlayerSlot(i);
+        }
+        for (SlotMessage slotMsg : msg.getSlots()) {
+            PlayerSlot slot = slots[slotMsg.getNumber()];
+            slot.setNick(slotMsg.getNickname());
+            slot.setOwner(slotMsg.isOwn() ? conn.getClientId() : 0);
+            slot.setType(SlotType.PLAYER);
+            slot.setState(SlotState.ACTIVE);
+            slot.setColors(game.getConfig().getPlayerColor(slot));
+        }
+        phase.setSlots(slots);
+        game.getPhases().put(phase.getClass(), phase);
+        game.setPhase(phase);
     }
 
-//    protected void controllMessageReceived(ControllMessage msg) {
-//        game = createGame(msg);
-//        CreateGamePhase phase;
-//        if (msg.getSnapshot() == null) {
-//            phase = new CreateGamePhase(game, getServerProxy());
-//        } else {
-//            phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
-//        }
-//        for (PlayerSlot slot : msg.getSlots()) {
-//            if (slot == null) continue;
-//            slot.setColors(game.getConfig().getPlayerColor(slot));
-//        }
-//        phase.setSlots(msg.getSlots());
-//        game.getPhases().put(phase.getClass(), phase);
-//        game.setPhase(phase);
-//    }
-//
+
 //    protected void callMessageReceived(CallMessage msg) {
 //        try {
 //            Phase phase = game.getPhase();
