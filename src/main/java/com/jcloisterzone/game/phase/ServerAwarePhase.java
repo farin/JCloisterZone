@@ -10,23 +10,18 @@ import com.jcloisterzone.rmi.mina.ClientStub;
 
 public class ServerAwarePhase extends Phase {
 
-	private final ServerIF server;
+    private final ServerIF server;
 
-	public ServerAwarePhase(Game game, ServerIF server) {
-		super(game);
-		this.server = server;
-	}
+    public ServerAwarePhase(Game game, ServerIF server) {
+        super(game);
+        this.server = server;
+    }
 
-	public ServerIF getServer() {
-		return server;
-	}
+    public ServerIF getServer() {
+        return server;
+    }
 
-	public boolean isLocalPlayer(Player player) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalPlayer(player);
-	}
-
-	public boolean isLocalSlot(PlayerSlot slot) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalSlot(slot);
-	}
-
+    public boolean isLocalPlayer(Player player) {
+        return player.getSlot().isOwn();
+    }
 }

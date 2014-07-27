@@ -37,7 +37,6 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
@@ -475,8 +474,8 @@ public class CreateGamePanel extends JPanel {
         throw new IllegalArgumentException("Slot " + number + " does not exit.");
     }
 
-    public void updateSlot(PlayerSlot slot) {
-        getPlayerPanel(slot.getNumber()).updateSlot(slot);
+    public void updateSlot(int number) {
+        getPlayerPanel(number).updateSlot();
         onSlotStateChange();
     }
 
@@ -517,14 +516,13 @@ public class CreateGamePanel extends JPanel {
         boolean allPlayersAssigned = true;
 
         for (Component c : playersPanel.getComponents()) {
-            if (!(c instanceof CreateGamePlayerPanel))
-                continue;
+            if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
-            if (ps == null || ps.getType() == SlotType.OPEN) {
-                allPlayersAssigned = false;
-            } else {
+            if (ps.isOccupied()) {
                 anyPlayerAssigned = true;
+            } else {
+                allPlayersAssigned = false;
             }
         }
         if (mutableSlots) {

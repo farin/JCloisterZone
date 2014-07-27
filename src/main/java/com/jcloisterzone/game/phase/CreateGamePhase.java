@@ -21,6 +21,7 @@ import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
@@ -28,7 +29,6 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
 
@@ -99,13 +99,6 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void updateSlot(PlayerSlot slot) {
-        slot.setColors(slots[slot.getNumber()].getColors()); //colors are transient, copy them to new object
-        slots[slot.getNumber()] = slot;
-        super.updateSlot(slot);
-    }
-
-    @Override
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
         game.post(new SupportedExpansionsChangeEvent(expansions));
     }
@@ -166,7 +159,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         for (int i = 0; i < slots.length; i++) {
             PlayerSlot slot = slots[i];
             if (slot.isOccupied()) {
-                Player player = new Player(slot.getNick(), i, slot);
+                Player player = new Player(slot.getNickname(), i, slot);
                 players.add(player);
             }
         }
@@ -216,7 +209,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     protected void prepareAiPlayers() {
         for (PlayerSlot slot : slots) {
-            if (slot != null && slot.getType() == SlotType.AI && isLocalSlot(slot)) {
+            if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
                     ai.setGame(game);

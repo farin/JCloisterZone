@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -27,11 +25,13 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePlayerPanel extends JPanel {
 
@@ -42,11 +42,11 @@ public class CreateGamePlayerPanel extends JPanel {
     static Font FONT_PLAYER_TYPE = new Font(null, Font.ITALIC, 11);
     static Font FONT_SERIAL = new Font(null, Font.BOLD, 32);
 
-    private PlayerSlot slot;
+    private final PlayerSlot slot;
+    private boolean ownSlot = false;
 
     private final Client client;
     private boolean mutableSlots;
-    private long clientId;
 
     private JButton icon;
     private JLabel status;
@@ -62,9 +62,9 @@ public class CreateGamePlayerPanel extends JPanel {
      * Create the panel.
      */
     public CreateGamePlayerPanel(final Client client, boolean mutableSlots, PlayerSlot slot, NameProvider nameProvider) {
+        this.slot = slot;
         this.client = client;
         this.mutableSlots = mutableSlots;
-        this.clientId = client.getClientId();
         this.nameProvider = nameProvider;
 
         setLayout(new MigLayout("", "[][][10px][grow]", "[][]"));
@@ -87,7 +87,7 @@ public class CreateGamePlayerPanel extends JPanel {
         status.setFont(FONT_PLAYER_TYPE);
         add(status, "cell 3 1,growx");
 
-        updateSlot(slot);
+        updateSlot();
 
         if (mutableSlots) {
             nicknameUpdater = new NicknameUpdater();
@@ -105,21 +105,15 @@ public class CreateGamePlayerPanel extends JPanel {
         }
     }
 
-    private boolean isMySlotBefore(PlayerSlot slot) {
-        if (slot == null || this.slot == null) return false;
-        if (slot.getOwner() == null || this.slot.getOwner() == null) return false;
-        if (slot.getOwner() != clientId || this.slot.getOwner() != clientId) return false;
-        if (slot.getType() != this.slot.getType()) return false;
-        return true;
-    }
 
-    public void updateSlot(PlayerSlot slot) {
+    public void updateSlot() {
         //logger.debug("Updating slot {}", slot);
         if (mutableSlots) {
-            updateSlotMutable(slot);
+            updateSlotMutable();
         } else {
-            updateSlotImmutable(slot);
+            updateSlotImmutable();
         }
+        ownSlot = slot.isOwn();
     }
 
     public PlayerSlot getSlot() {
@@ -138,67 +132,51 @@ public class CreateGamePlayerPanel extends JPanel {
         icon.setEnabled(state);
     }
 
-    public void updateSlotImmutable(PlayerSlot slot) {
-        this.slot = slot;
+    public void updateSlotImmutable() {
         Color color = slot.getColors().getMeepleColor();
-        switch (slot.getType()) {
-            case OPEN:
-                status.setText(_("Unassigned player"));
-                updateIcon("open", color, true);
-                break;
-            case PLAYER:
-                if (slot.getOwner() == clientId) {
-                    status.setText(_("Local player"));
-                    updateIcon("local", color, true);
-                } else {
-                    status.setText(_("Remote player"));
-                    updateIcon("remote", color, false);
-                }
-                break;
-            case AI:
-                status.setText(_("Computer player"));
-                updateIcon("ai", color, false);
-                break;
+        if (!slot.isOccupied()) {
+            status.setText(_("Unassigned player"));
+            updateIcon("open", color, true);
+        } else if (!slot.isAi()) {
+            if (slot.isOwn()) {
+                status.setText(_("Local player"));
+                updateIcon("local", color, true);
+            } else {
+                status.setText(_("Remote player"));
+                updateIcon("remote", color, false);
+            }
+        } else {
+            status.setText(_("Computer player"));
+            updateIcon("ai", color, false);
         }
-        nickname.setText(slot.getNick());
+        nickname.setText(slot.getNickname());
     }
 
-    public void updateSlotMutable(PlayerSlot slot) {
-        boolean myBefore = isMySlotBefore(slot);
-        this.slot = slot;
+    public void updateSlotMutable() {
         Color color = slot.getColors().getMeepleColor();
-        switch (slot.getType()) {
-            case OPEN:
-                status.setText(_("Open player slot"));
-                updateIcon("open", color, true);
+        if (!slot.isOccupied()) {
+            status.setText(_("Open player slot"));
+            updateIcon("open", color, true);
+            updateNickname(false);
+        } else if (!slot.isAi()) {
+            if (slot.isOwn()) {
+                status.setText(_("Local player"));
+                updateIcon("local", color, true);
+                updateNickname(true);
+            } else {
+                status.setText(_("Remote player"));
+                updateIcon("remote", color, false);
                 updateNickname(false);
-                break;
-            case PLAYER:
-                if (slot.getOwner() != null && slot.getOwner() == clientId) {
-                    status.setText(_("Local player"));
-                    updateIcon("local", color, true);
-                    updateNickname(true);
-                } else {
-                    status.setText(_("Remote player"));
-                    updateIcon("remote", color, false);
-                    updateNickname(false);
-                }
-                break;
-            case AI:
-                status.setText(_("Computer player"));
-                //updateIcon("ai", color, slot.getOwner() == clientId);
-                updateIcon("ai", color, true);
-                updateNickname(false);
-                break;
-        }
-        if (!myBefore || ! nickname.isEnabled()) { //probably change by me
-            nickname.setText(slot.getNick());
-        }
-        /*if (slot.getSerial() == null) {
-            serialLabel.setText("");
+            }
         } else {
-            serialLabel.setText(slot.getSerial() + "");
-        }*/
+            status.setText(_("Computer player"));
+            updateIcon("ai", color, true);
+            updateNickname(false);
+        }
+
+        if (!ownSlot || !nickname.isEnabled()) { //probably change by me
+            nickname.setText(slot.getNickname());
+        }
     }
 
     public void setSerialText(String text) {
@@ -210,63 +188,54 @@ public class CreateGamePlayerPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             String nick;
             EnumSet<Expansion> supported = null;
-            switch (slot.getType()) {
-            case OPEN: //-> PLAYER
-                slot.setType(SlotType.PLAYER);
-                nick = nameProvider.reserveName(SlotType.PLAYER, slot.getNumber());
-                slot.setNick(nick);
+            if (!slot.isOccupied()) {  // open --> player
+                nick = nameProvider.reserveName(false, slot.getNumber());
+                slot.setNickname(nick);
                 nickname.setText(nick);
-                break;
-            case PLAYER: //-> AI
-                nameProvider.releaseName(SlotType.PLAYER, slot.getNumber());
-                slot.setType(SlotType.AI);
-                //TODO pryc s hardcoded AI tridou
+                slot.setState(SlotState.OWN);
+                sendTakeSlotMessage(slot);
+            } else if (!slot.isAi()) { //player --> ai
+                nameProvider.releaseName(false, slot.getNumber());
+                //TODO get out hardcoded AI class
                 slot.setAiClassName(LegacyAiPlayer.class.getName());
                 supported = LegacyAiPlayer.supportedExpansions();
-                nick = nameProvider.reserveName(SlotType.AI, slot.getNumber());
-                slot.setNick(nick);
+                nick = nameProvider.reserveName(true, slot.getNumber());
+                slot.setNickname(nick);
                 nickname.setText(nick);
-                break;
-            case AI: //-> OPEN
-                nameProvider.releaseName(SlotType.AI, slot.getNumber());
-                slot.setType(SlotType.OPEN);
-                break;
-            default:
-                return;
+                slot.setState(SlotState.OWN);
+                sendTakeSlotMessage(slot);
+            } else { //ai --> open
+                nameProvider.releaseName(true, slot.getNumber());
+                slot.setNickname(null);
+                slot.setAiClassName(null);
+                slot.setState(SlotState.OPEN);
+                sendLeaveSlotMessage(slot);
             }
-            slot.setOwner(clientId);
-            sendSlotMessage(slot);
-
         }
     }
 
     class ImmutableIconActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            switch (slot.getType()) {
-            case OPEN: //-> PLAYER
-                slot.setType(SlotType.PLAYER);
-                break;
-            case PLAYER: //-> OPEN
-                slot.setType(SlotType.OPEN);
-                break;
-            default:
-                return;
+            if (slot.isOccupied()) {  //player --> open
+                slot.setState(SlotState.OPEN);
+                sendLeaveSlotMessage(slot);
+            } else { // open --> player
+                slot.setState(SlotState.OWN);
+                sendTakeSlotMessage(slot);
             }
-            slot.setOwner(clientId);
-            sendSlotMessage(slot);
         }
     }
 
-    private void sendSlotMessage(PlayerSlot slot) {
-         //TODO clean up, todo supported expansions
-        if (slot.getType() == SlotType.OPEN) {
-            LeaveSlotMessage msg = new LeaveSlotMessage(SimpleServer.GAME_ID, slot.getNumber());
-            client.getConnection().sendMessage("LEAVE_SLOT", msg);
-        } else {
-            TakeSlotMessage msg = new TakeSlotMessage(SimpleServer.GAME_ID, slot.getNumber(), slot.getNick());
-            client.getConnection().sendMessage("TAKE_SLOT", msg);
-        }
+    private void sendTakeSlotMessage(PlayerSlot slot) {
+        TakeSlotMessage msg = new TakeSlotMessage(SimpleServer.GAME_ID, slot.getNumber(), slot.getNickname());
+        msg.setAi(slot.isAi());
+        client.getConnection().sendMessage("TAKE_SLOT", msg);
+    }
+
+    private void sendLeaveSlotMessage(PlayerSlot slot) {
+        LeaveSlotMessage msg = new LeaveSlotMessage(SimpleServer.GAME_ID, slot.getNumber());
+        client.getConnection().sendMessage("LEAVE_SLOT", msg);
     }
 
 
@@ -294,9 +263,9 @@ public class CreateGamePlayerPanel extends JPanel {
 
 
         private void requestUpdate() {
-            if (update != null && ! update.equals(slot.getNick())) {
-                slot.setNick(update);
-                sendSlotMessage(slot);
+            if (slot.isOwn() && update != null && !update.equals(slot.getNickname())) {
+                slot.setNickname(update);
+                sendTakeSlotMessage(slot);
                 update = null;
             }
         }

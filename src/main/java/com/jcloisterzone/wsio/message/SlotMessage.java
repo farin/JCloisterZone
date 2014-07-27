@@ -1,13 +1,16 @@
 package com.jcloisterzone.wsio.message;
 
+import com.jcloisterzone.game.PlayerSlot.SlotState;
+
 public class SlotMessage {
     String gameId;
-    int number, serial;
+    int number;
+    Integer serial;
     String nickname;
     boolean ai;
-    boolean own;
+    SlotState state;
 
-    public SlotMessage(String gameId, int number, int serial, String nickname) {
+    public SlotMessage(String gameId, int number, Integer serial, String nickname) {
         super();
         this.gameId = gameId;
         this.number = number;
@@ -40,17 +43,21 @@ public class SlotMessage {
     public void setAi(boolean ai) {
         this.ai = ai;
     }
-    public boolean isOwn() {
-        return own;
-    }
-    public void setOwn(boolean own) {
-        this.own = own;
-    }
-    public int getSerial() {
+    public Integer getSerial() {
         return serial;
     }
-    public void setSerial(int serial) {
+    public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+
+    public SlotState getState() {
+        return state;
+    }
+
+
+    public void setState(SlotState state) {
+        this.state = state;
     }
 
 

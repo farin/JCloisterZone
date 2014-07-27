@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -46,7 +44,6 @@ import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -60,6 +57,8 @@ import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ClientController  {
 
@@ -86,16 +85,17 @@ public class ClientController  {
     public void updateSlot(PlayerSlotChangeEvent ev) {
         PlayerSlot slot = ev.getSlot();
         if (client.getCreateGamePanel() != null) {
-            client.getCreateGamePanel().updateSlot(slot);
+            client.getCreateGamePanel().updateSlot(slot.getNumber());
         } else {
-            if (slot.getState() == SlotState.CLOSED) {
-                for (Player p : client.getGame().getAllPlayers()) {
-                    if (p.getSlot().getNumber() == slot.getNumber()) {
-                        p.getSlot().setState(SlotState.CLOSED);
-                        client.getGridPanel().repaint();
-                    }
-                }
-            }
+            throw new UnsupportedOperationException("not implemented");
+//            if (slot.getState() == SlotState.CLOSED) {
+//                for (Player p : client.getGame().getAllPlayers()) {
+//                    if (p.getSlot().getNumber() == slot.getNumber()) {
+//                        p.getSlot().setState(SlotState.CLOSED);
+//                        client.getGridPanel().repaint();
+//                    }
+//                }
+//            }
         }
     }
 

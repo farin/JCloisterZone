@@ -1,23 +1,16 @@
 package com.jcloisterzone.game;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.jcloisterzone.config.Config.AutostartConfig;
-import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.config.Config.PresetConfig;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.rmi.mina.ClientStub;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class GuiClientStub extends ClientStub {

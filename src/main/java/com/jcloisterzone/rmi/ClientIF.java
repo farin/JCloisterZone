@@ -13,7 +13,7 @@ import com.jcloisterzone.game.PlayerSlot;
  */
 public interface ClientIF extends Client2ClientIF {
 
-    public void updateSlot(PlayerSlot slot);
+    //public void updateSlot(PlayerSlot slot);
     public void updateSupportedExpansions(EnumSet<Expansion> expansions);
 
     /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/

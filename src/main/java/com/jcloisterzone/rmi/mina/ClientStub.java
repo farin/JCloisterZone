@@ -10,20 +10,15 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Application;
-import com.jcloisterzone.Player;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -117,6 +112,16 @@ public abstract class ClientStub  implements InvocationHandler {
         conn.sendMessage("JOIN_GAME", new JoinGameMessage(SimpleServer.GAME_ID));
     }
 
+    private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
+        PlayerSlot slot = slots[slotMsg.getNumber()];
+        slot.setNickname(slotMsg.getNickname());
+        slot.setState(slotMsg.getState());
+        slot.setSerial(slotMsg.getSerial());
+        if (!slot.isOwn() || !slotMsg.isAi()) {
+            slot.setAiClassName(null);
+        }
+    }
+
     @CmdHandler("GAME")
     public void handleGameMessage(Connection conn, GameMessage msg) {
         game = createGame(msg);
@@ -135,11 +140,7 @@ public abstract class ClientStub  implements InvocationHandler {
             slots[i] = slot;
         }
         for (SlotMessage slotMsg : msg.getSlots()) {
-            PlayerSlot slot = slots[slotMsg.getNumber()];
-            slot.setNick(slotMsg.getNickname());
-            slot.setOwner(slotMsg.isOwn() ? conn.getClientId() : 0);
-            slot.setType(SlotType.PLAYER);
-            slot.setState(SlotState.ACTIVE);
+            updateSlot(slots, slotMsg);
         }
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
@@ -148,12 +149,9 @@ public abstract class ClientStub  implements InvocationHandler {
 
     @CmdHandler("SLOT")
     public void handleSlotMessage(Connection conn, SlotMessage msg) {
-        Phase phase = game.getPhase();
         final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
-        PlayerSlot slot = slots[msg.getNumber()];
-        slot.setSerial(msg.getSerial());
-        slot.setNick(msg.getNickname());
-        phase.updateSlot(slot);
+        updateSlot(slots, msg);
+        game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
     }
 
 
@@ -178,18 +176,8 @@ public abstract class ClientStub  implements InvocationHandler {
 //    }
 
 
-    public long getClientId() {
+    public String getClientId() {
         return conn.getClientId();
-    }
-
-    public boolean isLocalPlayer(Player player) {
-        if (player == null) return false;
-        return Objects.equal(getClientId(), player.getOwnerId());
-    }
-
-    public boolean isLocalSlot(PlayerSlot slot) {
-        if (slot == null) return false;
-        return Objects.equal(getClientId(), slot.getOwner());
     }
 
 //    @Override

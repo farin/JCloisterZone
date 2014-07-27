@@ -119,10 +119,6 @@ public class Player implements Serializable {
         return slot.getColors();
     }
 
-    public Long getOwnerId() {
-        return slot.getOwner();
-    }
-
     public PlayerSlot getSlot() {
         return slot;
     }

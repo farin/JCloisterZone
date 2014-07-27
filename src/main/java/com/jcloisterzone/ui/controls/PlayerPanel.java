@@ -143,9 +143,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         Game game = client.getGame();
 
         //TODO better display
-        if (player.getSlot().getState() == SlotState.CLOSED) {
-            this.color = Color.GRAY;
-        }
+//        if (player.getSlot().getState() == SlotState.CLOSED) {
+//            this.color = Color.GRAY;
+//        }
 
 //		GridPanel gp = client.getGridPanel();
 

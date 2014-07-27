@@ -175,11 +175,6 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void updateSlot(PlayerSlot slot) {
-        game.post(new PlayerSlotChangeEvent(slot));
-    }
-
-    @Override
     public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
         logger.error(Application.ILLEGAL_STATE_MSG, "updateSupportedExpansions");
     }

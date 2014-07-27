@@ -99,8 +99,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
     private Player getSendingPlayer() {
         Player result = null, active = client.getGame().getActivePlayer();
         for (Player player : client.getGame().getAllPlayers()) {
-            boolean isLocal  = ((ClientStub)Proxy.getInvocationHandler(client.getServer())).isLocalPlayer(player);
-            if (isLocal) {
+            if (player.getSlot().isOwn()) {
                 if (result == null) {
                     result = player;
                 } else {

@@ -46,7 +46,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.phase.Phase;
 
 
@@ -64,12 +64,12 @@ public class Snapshot implements Serializable {
     private boolean gzipOutput = true;
 
 
-    public Snapshot(Game game, long clientId) {
+    public Snapshot(Game game) {
         createRootStructure(game);
         createRuleElements(game);
         createExpansionElements(game);
         createCapabilityElements(game);
-        createPlayerElements(game, clientId);
+        createPlayerElements(game);
         createTileElements(game);
         createMeepleElements(game);
     }
@@ -131,7 +131,7 @@ public class Snapshot implements Serializable {
     }
 
 
-    private void createPlayerElements(Game game, long clientId) {
+    private void createPlayerElements(Game game) {
         Element parent = doc.createElement("players");
         parent.setAttribute("turn", "" + game.getTurnPlayer().getIndex());
         root.appendChild(parent);
@@ -140,10 +140,10 @@ public class Snapshot implements Serializable {
             el.setAttribute("name", p.getNick());
             el.setAttribute("points", "" + p.getPoints());
             el.setAttribute("slot", "" + p.getSlot().getNumber());
-            if (Objects.equal(p.getOwnerId(),clientId)) {
+            if (p.getSlot().isOwn()) {
                 el.setAttribute("local", "true");
             }
-            if (p.getSlot().getType() == SlotType.AI) {
+            if (p.getSlot().isAi()) {
                 el.setAttribute("ai-class", p.getSlot().getAiClassName());
             }
             for (PointCategory cat : PointCategory.values()) {
@@ -284,12 +284,12 @@ public class Snapshot implements Serializable {
             Player p = new Player(el.getAttribute("name"), i, slot);
             p.setPoints(Integer.parseInt(el.getAttribute("points")));
             if (el.hasAttribute("ai-class")) {
-                slot.setType(SlotType.AI);
                 String aiClassName = el.getAttribute("ai-class");
                 slot.setAiClassName(aiClassName);
             } else {
                 if (el.hasAttribute("local")) {
-                    slot.setType(SlotType.PLAYER);
+                    throw new UnsupportedOperationException("not implemented");
+                    //slot.setType(SlotType.PLAYER);
                 }
             }
             NodeList categories = el.getElementsByTagName("point-category");
@@ -316,7 +316,7 @@ public class Snapshot implements Serializable {
             for (Player player : players) {
                 PlayerSlot slot = player.getSlot();
                 if (slot.getNumber() == i) {
-                    slot.setNick(player.getNick());
+                    slot.setNickname(player.getNick());
                     slots[i] = slot;
                     break;
                 }

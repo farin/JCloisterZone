@@ -19,7 +19,7 @@ public class Connection {
     private MessageParser parser = new MessageParser();
     private WebSocketClient ws;
 
-    private long clientId = -1; //TODO use Strign, now backward compatible with legacy code
+    private String clientId;
     private String sessionKey;
 
     public Connection(URI uri, final Object receiver) {
@@ -41,7 +41,7 @@ public class Connection {
                 Command cmd = parser.fromJson(message);
                 if ("WELCOME".equals(cmd.command)) {
                     WelcomeMessage welcomeMsg = (WelcomeMessage) cmd.arg;
-                    clientId = welcomeMsg.getClientId().hashCode();
+                    clientId = welcomeMsg.getClientId();
                     sessionKey = welcomeMsg.getSessionKey();
                 }
                 parser.delegate(receiver, Connection.this, cmd);
@@ -63,7 +63,7 @@ public class Connection {
         ws.close();
     }
 
-    public long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 

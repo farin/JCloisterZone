@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -21,7 +19,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -49,13 +46,11 @@ import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.rmi.mina.ClientStub;
-import com.jcloisterzone.server.Server;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -75,6 +70,8 @@ import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -122,10 +119,10 @@ public class Client extends JFrame {
         return (ClientStub) Proxy.getInvocationHandler(server);
     }
 
-    public long getClientId() {
-        return getClientStub().getClientId();
-    }
-
+//    public String getClientId() {
+//        return conn.getClientId();
+//    }
+//
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
@@ -378,7 +375,7 @@ public class Client extends JFrame {
                     file = new File(file.getAbsolutePath() + ".jcz");
                 }
                 try {
-                    Snapshot snapshot = new Snapshot(game, getClientId());
+                    Snapshot snapshot = new Snapshot(game);
                     DebugConfig debugConfig = getConfig().getDebug();
                     if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
@@ -453,8 +450,8 @@ public class Client extends JFrame {
 
     public boolean isClientActive(Player player) {
         if (player == null) return false;
-        if (player.getSlot().getType() != SlotType.PLAYER) return false;
-        return getClientStub().isLocalPlayer(player);
+        if (player.getSlot().getAiClassName() != null) return false;
+        return player.getSlot().isOwn();
     }
 
     public Player getActivePlayer() {
