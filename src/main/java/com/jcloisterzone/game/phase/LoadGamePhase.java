@@ -16,14 +16,15 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.Connection;
 
 public class LoadGamePhase extends CreateGamePhase {
 
     private Snapshot snapshot;
     private LoadGameTilePackFactory tilePackFactory;
 
-    public LoadGamePhase(Game game, Snapshot snapshot, ServerIF server) {
-        super(game, server);
+    public LoadGamePhase(Game game, Snapshot snapshot, ServerIF server, Connection conn) {
+        super(game, server, conn);
         this.snapshot = snapshot;
     }
 

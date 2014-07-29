@@ -27,6 +27,8 @@ import com.jcloisterzone.rmi.ClientIF;
 import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
@@ -135,7 +137,7 @@ public abstract class ClientStub  implements InvocationHandler {
         game = createGame(msg);
         CreateGamePhase phase;
         if (msg.getSnapshot() == null) {
-            phase = new CreateGamePhase(game, getServerProxy());
+            phase = new CreateGamePhase(game, getServerProxy(), conn);
         } else {
             throw new UnsupportedOperationException("not implemented");
             //phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
@@ -204,10 +206,23 @@ public abstract class ClientStub  implements InvocationHandler {
         game.post(new RuleChangeEvent(rule, msg.isEnabled()));
     }
 
+    //TODO add CmdHandler to phase and pass to phase automatically
+    @CmdHandler("RAND_SAMPLE")
+    public void handleRandSample(Connection conn, RandSampleMessage msg) {
+        game.getPhase().handleRandSample(msg);
+        phaseLoop();
+    }
+
+    @CmdHandler("FLIER_DICE")
+    public void handleFlierDice(Connection conn, FlierDiceMessage msg) {
+        game.getPhase().handleFlierDice(msg);
+        phaseLoop();
+    }
+
     @CmdHandler("RMI")
     public void handleRmi(Connection conn, RmiMessage msg) {
-        CallMessage call = msg.decode();
-        callMessageReceived(call);;
+        callMessageReceived(msg.decode());
+        phaseLoop();
     }
 
 
@@ -216,7 +231,6 @@ public abstract class ClientStub  implements InvocationHandler {
             Phase phase = game.getPhase();
             logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
             msg.call(phase, ClientIF.class);
-            phaseLoop();
         } catch (InvocationTargetException ie) {
             logger.error(ie.getMessage(), ie.getCause());
         } catch (Exception e) {

@@ -25,6 +25,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.rmi.ClientIF;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 
 
 public abstract class Phase implements ClientIF {
@@ -160,11 +162,6 @@ public abstract class Phase implements ClientIF {
 
 
     @Override
-    public void drawTiles(int[] tileIndex) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "drawTiles");
-    }
-
-    @Override
     public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
@@ -196,11 +193,6 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "setFlierDistance");
-    }
-
-    @Override
     public void placeLittleBuilding(LittleBuilding lbType) {
         logger.error(Application.ILLEGAL_STATE_MSG, "placeLittleBuilding");
     }
@@ -213,6 +205,14 @@ public abstract class Phase implements ClientIF {
     @Override
     public void undo() {
         game.undo();
+    }
+
+    public void handleRandSample(RandSampleMessage msg) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "handleRandSample");
+    }
+
+    public void handleFlierDice(FlierDiceMessage msg) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "handleFlierDice");
     }
 
     @Override

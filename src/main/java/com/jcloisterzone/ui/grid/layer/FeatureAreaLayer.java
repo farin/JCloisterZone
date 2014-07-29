@@ -24,6 +24,8 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer {
@@ -114,7 +116,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 }
             }
             if (loc == Location.FLIER) {
-                getClient().getServer().rollFlierDice(ma.getMeepleType());
+                getClient().getConnection().send("ROLL_FLIER_DICE", new RollFlierDiceMessage(SimpleServer.GAME_ID, ma.getMeepleType()));
                 return;
             }
             if (loc == Location.CLOISTER && abbotOption) {

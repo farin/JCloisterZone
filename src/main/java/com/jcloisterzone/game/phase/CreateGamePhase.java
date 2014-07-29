@@ -31,6 +31,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.Connection;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -50,8 +51,8 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     protected PlayerSlot[] slots;
 
-    public CreateGamePhase(Game game, ServerIF server) {
-        super(game, server);
+    public CreateGamePhase(Game game, ServerIF server, Connection conn) {
+        super(game, server, conn);
     }
 
     public void setSlots(PlayerSlot[] slots) {
@@ -85,7 +86,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getServer()));
+        next = addPhase(next, new BazaarPhase(game, getServer(), getConnection()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
@@ -110,7 +111,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new ActionPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getServer()));
+        next = addPhase(next, new DrawPhase(game, getServer(), getConnection()));
         next = addPhase(next, new AbbeyPhase(game));
         next = addPhase(next, new AnyTimeActionPhase(game));
         next = addPhase(next, new FairyPhase(game));

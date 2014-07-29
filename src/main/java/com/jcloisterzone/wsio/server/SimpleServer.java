@@ -6,50 +6,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.UUID;
 
 import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.wsio.CmdHandler;
-import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsUtils;
 import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
-import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.server.checks.CheckGameId;
 import com.jcloisterzone.wsio.server.checks.CheckGameRunning;
 
 public class SimpleServer extends WebSocketServer  {
-
-//    static {
-//        WebSocketImpl.DEBUG = true;
-//    }
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,6 +61,8 @@ public class SimpleServer extends WebSocketServer  {
     private boolean gameStarted;
 
     private final Map<WebSocket, String> clientIds = new HashMap<>();
+
+    private Random random = new Random();
 
     public SimpleServer(InetSocketAddress address) {
         super(address);
@@ -259,6 +257,25 @@ public class SimpleServer extends WebSocketServer  {
         for (Entry<WebSocket, String> entry : clientIds.entrySet()) {
             send(entry.getKey(), "GAME", createGameMessage(entry.getValue()));
         }
+    }
+
+    @CmdHandler("GET_RAND_SAMPLE")
+    @CheckGameRunning(true)
+    @CheckGameId
+    public void handleGetRandSample(WebSocket ws, GetRandSampleMessage msg) {
+        int[] result = new int[msg.getK()];
+        int n = msg.getPopulation();
+        for (int i = 0; i < msg.getK(); i++) {
+            result[i] = i + random.nextInt(n--);
+        }
+        broadcast("RAND_SAMPLE", new RandSampleMessage(msg.getGameId(), msg.getName(), msg.getPopulation(), result));
+    }
+
+    @CmdHandler("ROLL_FLIER_DICE")
+    @CheckGameRunning(true)
+    @CheckGameId
+    public void handleRollFlierDice(WebSocket ws, RollFlierDiceMessage msg) {
+        broadcast("FLIER_DICE", new FlierDiceMessage(msg.getGameId(),msg.getMeepleType(), 1+random.nextInt(3)));
     }
 
     @CmdHandler("RMI")

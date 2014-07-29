@@ -1,10 +1,5 @@
 package com.jcloisterzone.wsio.message;
 
-import java.util.Set;
-
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
 
 public class GameMessage {
 

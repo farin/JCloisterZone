@@ -9,12 +9,16 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -41,6 +45,10 @@ public final class WsUtils {
             .put("SET_EXPANSION", SetExpansionMessage.class)
             .put("SET_RULE", SetRuleMessage.class)
             .put("START_GAME", StartGameMessage.class)
+            .put("GET_RAND_SAMPLE", GetRandSampleMessage.class)
+            .put("RAND_SAMPLE", RandSampleMessage.class)
+            .put("ROLL_FLIER_DICE", RollFlierDiceMessage.class)
+            .put("FLIER_DICE", FlierDiceMessage.class)
             .put("RMI", RmiMessage.class)
             .build();
 

@@ -12,6 +12,10 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -22,8 +26,8 @@ public class DrawPhase extends ServerAwarePhase {
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
 
-    public DrawPhase(Game game, ServerIF server) {
-        super(game, server);
+    public DrawPhase(Game game, ServerIF server, Connection conn) {
+        super(game, server, conn);
         DebugConfig debugConfig = game.getConfig().getDebug();
         if (debugConfig != null) {
             debugTiles = debugConfig.getDraw();
@@ -83,18 +87,20 @@ public class DrawPhase extends ServerAwarePhase {
         }
         if (isLocalPlayer(getActivePlayer())) {
             //call only from one client (from the active one)
-            getServer().selectTiles(getTilePack().size(), 1);
+            getConnection().send("GET_RAND_SAMPLE", new GetRandSampleMessage(SimpleServer.GAME_ID, "draw", getTilePack().size(), 1));
         }
     }
 
-
-
     @Override
-    public void drawTiles(int[] tileIndex) {
-        assert tileIndex.length == 1;
-        Tile tile = getTilePack().drawTile(tileIndex[0]);
+    public void handleRandSample(RandSampleMessage msg) {
+        if (!msg.getName().equals("draw") || msg.getPopulation() != getTilePack().size()) {
+            logger.error("Invalid message");
+            return;
+        }
+        Tile tile = getTilePack().drawTile(msg.getValues()[0]);
         nextTile(tile);
     }
+
 
     private void nextTile(Tile tile) {
         game.setCurrentTile(tile);

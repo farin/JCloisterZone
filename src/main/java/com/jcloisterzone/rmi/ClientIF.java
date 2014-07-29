@@ -16,7 +16,7 @@ public interface ClientIF extends Client2ClientIF {
 
     /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/
 
-    void drawTiles(int[] tileIndexes);
-    void setFlierDistance(Class<? extends Meeple> meepleType, int distance);
+    //void drawTiles(int[] tileIndexes);
+    //void setFlierDistance(Class<? extends Meeple> meepleType, int distance);
 
 }
