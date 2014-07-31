@@ -195,7 +195,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
                     ai.setGame(game);
-                    ai.setServer(getServer());
+                    ai.setServer(getConnection(), getServer());
                     for (Player player : game.getAllPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             ai.setPlayer(player);

@@ -1,12 +1,9 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.EnumSet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Board;
@@ -16,21 +13,18 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.ChatEvent;
-import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.rmi.ClientIF;
+import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
 
-public abstract class Phase implements ClientIF {
+public abstract class Phase implements Client2ClientIF {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

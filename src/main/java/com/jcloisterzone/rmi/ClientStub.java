@@ -226,7 +226,7 @@ public abstract class ClientStub  implements InvocationHandler {
         try {
             Phase phase = game.getPhase();
             logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
-            msg.call(phase, ClientIF.class);
+            msg.call(phase, Client2ClientIF.class);
         } catch (InvocationTargetException ie) {
             logger.error(ie.getMessage(), ie.getCause());
         } catch (Exception e) {

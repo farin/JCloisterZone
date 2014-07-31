@@ -1,63 +1,23 @@
 package com.jcloisterzone.ai;
 
-import java.util.EnumSet;
-
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class DelayedServer implements ServerIF {
+public class DelayedServer implements Client2ClientIF {
 
-    private final ServerIF server;
+    private final Client2ClientIF server;
     private final int placeTileDelay;
 
-    public DelayedServer(ServerIF server, int placeTileDelay) {
+    public DelayedServer(Client2ClientIF server, int placeTileDelay) {
         this.server = server;
         this.placeTileDelay = placeTileDelay;
     }
 
-    @Override
-    public void updateSlot(PlayerSlot slot,
-            EnumSet<Expansion> supportedExpansions) {
-        server.updateSlot(slot, supportedExpansions);
-    }
-
-    @Override
-    public void selectTiles(int tilesCount, int drawCount) {
-        server.selectTiles(tilesCount, drawCount);
-    }
-
-    @Override
-    public void rollFlierDice(Class<? extends Meeple> meepleType) {
-        server.rollFlierDice(null);
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        server.updateExpansion(expansion, enabled);
-    }
-
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        server.updateCustomRule(rule, enabled);
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-        server.updateGameSetup(expansions, rules);
-    }
-
-    @Override
-    public void startGame() {
-        server.startGame();
-    }
 
     @Override
     public void pass() {

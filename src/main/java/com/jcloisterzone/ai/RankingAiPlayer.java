@@ -64,7 +64,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     private void autosave() {
         DebugConfig debugConfig = game.getConfig().getDebug();
         if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
-            Snapshot snapshot = new Snapshot(game, 0);
+            Snapshot snapshot = new Snapshot(game);
             if ("plain".equals(debugConfig.getSave_format())) {
                 snapshot.setGzipOutput(false);
             }
@@ -97,11 +97,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     //TODO is there faster game copying without snapshot? or without re-creating board and tile instances
     protected Game copyGame(Object gameListener) {
-        Snapshot snapshot = new Snapshot(game, 0);
+        Snapshot snapshot = new Snapshot(game);
         Game copy = snapshot.asGame();
         copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
-        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, null);
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getServer(), getConnection());
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);

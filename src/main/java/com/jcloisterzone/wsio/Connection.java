@@ -7,7 +7,6 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
@@ -38,13 +37,13 @@ public class Connection {
             @Override
             public void onMessage(String message) {
                 logger.info(message);
-                Command cmd = parser.fromJson(message);
-                if ("WELCOME".equals(cmd.command)) {
-                    WelcomeMessage welcomeMsg = (WelcomeMessage) cmd.arg;
+                WsMessage msg = parser.fromJson(message);
+                if (msg instanceof WelcomeMessage) {
+                    WelcomeMessage welcomeMsg = (WelcomeMessage) msg;
                     clientId = welcomeMsg.getClientId();
                     sessionKey = welcomeMsg.getSessionKey();
                 }
-                parser.delegate(receiver, Connection.this, cmd);
+                parser.delegate(receiver, Connection.this, msg);
             }
 
             @Override

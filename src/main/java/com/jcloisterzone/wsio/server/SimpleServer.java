@@ -23,19 +23,18 @@ import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.WsUtils;
-import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
+import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
@@ -99,10 +98,9 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @Override
-    public void onMessage(WebSocket ws, String message) {
-        logger.info(message);
-        Command cmd = parser.fromJson(message);
-        parser.delegate(this, ws, cmd);
+    public void onMessage(WebSocket ws, String payload) {
+        logger.info(payload);
+        parser.delegate(this, ws, parser.fromJson(payload));
     }
 
     @Override

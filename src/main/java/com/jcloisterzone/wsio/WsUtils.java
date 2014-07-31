@@ -30,20 +30,10 @@ import com.jcloisterzone.wsio.message.WsMessage;
 
 public final class WsUtils {
 
-    public static class Command {
-        public String command;
-        public Object arg;
-
-        public Command(String command, Object arg) {
-            this.command = command;
-            this.arg = arg;
-        }
-    }
-
     private Gson gson = new Gson();
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<String, Class<?>> types = new HashMap<>();
+    private Map<String, Class<? extends WsMessage>> types = new HashMap<>();
 
     public static String getCmdName(Class<? extends WsMessage> msgType) {
         return msgType.getAnnotation(Cmd.class).value();
@@ -75,14 +65,13 @@ public final class WsUtils {
         types.put(getCmdName(type), type);
     }
 
-    public Command fromJson(String payload) {
+    public WsMessage fromJson(String payload) {
         String s[] = payload.split(" ", 2); //command, arg
-        Class<?> type = types.get(s[0]);
+        Class<? extends WsMessage> type = types.get(s[0]);
         if (type == null) {
             throw new IllegalArgumentException("Mapping type is not declared for "+s[0]);
         }
-        Object arg = "null".equals(s[1]) ? null : gson.fromJson(s[1], type);
-        return new Command(s[0], arg);
+        return (WsMessage) gson.fromJson(s[1], type);
     }
 
     public String toJson(WsMessage arg) {
@@ -90,23 +79,24 @@ public final class WsUtils {
     }
 
     //TODO what about cache targets
-    public void delegate(Object target, Object subject, Command cmd) {
+    public void delegate(Object target, Object subject, WsMessage msg) {
         Class<?> type = target.getClass();
         while (true) {
-            if (delegateScanClass(target, type, subject, cmd)) break;
+            if (delegateScanClass(target, type, subject, msg)) break;
             type = type.getSuperclass();
             if (Object.class.equals(type)) break;
         }
     }
 
     @SuppressWarnings("unchecked")
-    private boolean delegateScanClass(Object target, Class<?> type, Object subject, Command cmd) {
+    private boolean delegateScanClass(Object target, Class<?> type, Object subject,  WsMessage msg) {
         for (Method m : type.getDeclaredMethods()) {
             CmdHandler handler = m.getAnnotation(CmdHandler.class);
             if (handler != null) {
-                if (cmd.command.equals(getCmdName((Class<? extends WsMessage>) m.getParameterTypes()[1]))) {
+                Class<? extends WsMessage> cls = (Class<? extends WsMessage>) m.getParameterTypes()[1];
+                if (cls.equals(msg.getClass())) {
                     try {
-                        m.invoke(target, subject, cmd.arg);
+                        m.invoke(target, subject, msg);
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }

@@ -24,6 +24,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.rmi.ClientStub;
+import com.jcloisterzone.wsio.Connection;
 
 public abstract class AiPlayer {
 
@@ -31,6 +32,7 @@ public abstract class AiPlayer {
 
     protected Game game;
 
+    private Connection conn;
     private Client2ClientIF server;
     private ClientStub clientStub;
     private Player player;
@@ -39,18 +41,15 @@ public abstract class AiPlayer {
         this.game = game;
     }
 
-//    public Game getGame() {
-//        return game;
-//    }
-
     public Client2ClientIF getServer() {
         return server;
     }
 
-    public void setServer(Client2ClientIF server) {
+    public void setServer(Connection conn, Client2ClientIF server) {
         Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
         this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
         this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
+        this.conn = conn;
     }
 
     public Player getPlayer() {
@@ -61,16 +60,12 @@ public abstract class AiPlayer {
         this.player = player;
     }
 
-//    protected Board getBoard() {
-//        return game.getBoard();
-//    }
-
-//    protected TilePack getTilePack() {
-//        return game.getTilePack();
-//    }
-
     protected ClientStub getClientStub() {
         return clientStub;
+    }
+
+    protected Connection getConnection() {
+        return conn;
     }
 
     public boolean isAiPlayerActive() {
