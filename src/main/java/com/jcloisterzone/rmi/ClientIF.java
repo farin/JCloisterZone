@@ -12,7 +12,7 @@ import com.jcloisterzone.figure.Meeple;
  */
 public interface ClientIF extends Client2ClientIF {
 
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions);
+    //public void updateSupportedExpansions(EnumSet<Expansion> expansions);
 
     /* ---------------------- STARTED GAME MESSAGES (server triggered) ------------------*/
 

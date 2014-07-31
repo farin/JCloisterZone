@@ -187,7 +187,6 @@ public class CreateGamePlayerPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             String nick;
-            EnumSet<Expansion> supported = null;
             if (!slot.isOccupied()) {  // open --> player
                 nick = nameProvider.reserveName(false, slot.getNumber());
                 slot.setNickname(nick);
@@ -198,7 +197,6 @@ public class CreateGamePlayerPanel extends JPanel {
                 nameProvider.releaseName(false, slot.getNumber());
                 //TODO get out hardcoded AI class
                 slot.setAiClassName(LegacyAiPlayer.class.getName());
-                supported = LegacyAiPlayer.supportedExpansions();
                 nick = nameProvider.reserveName(true, slot.getNumber());
                 slot.setNickname(nick);
                 nickname.setText(nick);
@@ -229,13 +227,18 @@ public class CreateGamePlayerPanel extends JPanel {
 
     private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(SimpleServer.GAME_ID, slot.getNumber(), slot.getNickname());
-        msg.setAi(slot.isAi());
-        client.getConnection().send("TAKE_SLOT", msg);
+        if (slot.isAi()) {
+            msg.setAi(true);
+            //todo devel only
+            assert slot.getAiClassName().equals(LegacyAiPlayer.class.getName());
+            msg.setSupportedExpansions(LegacyAiPlayer.supportedExpansions().toArray(new Expansion[0]));
+        }
+        client.getConnection().send(msg);
     }
 
     private void sendLeaveSlotMessage(PlayerSlot slot) {
         LeaveSlotMessage msg = new LeaveSlotMessage(SimpleServer.GAME_ID, slot.getNumber());
-        client.getConnection().send("LEAVE_SLOT", msg);
+        client.getConnection().send(msg);
     }
 
 

@@ -1,5 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-public class CreateGameMessage {
+import com.jcloisterzone.wsio.Cmd;
+
+@Cmd("CREATE_GAME")
+public class CreateGameMessage implements WsMessage {
 
 }

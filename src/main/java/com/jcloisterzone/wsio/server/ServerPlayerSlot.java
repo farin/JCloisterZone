@@ -1,13 +1,16 @@
 package com.jcloisterzone.wsio.server;
 
+import com.jcloisterzone.Expansion;
 
+//TODO use slot messge directly
 public class ServerPlayerSlot {
 
     private final int number;
-    private Integer serial; //server assign sequence number when type is occupied
+    private Integer serial; // server assign sequence number when type is occupied
     private String nickname;
     private String owner;
     private boolean ai;
+    private Expansion[] supportedExpansions;
 
     public ServerPlayerSlot(int number) {
         this.number = number;
@@ -53,6 +56,12 @@ public class ServerPlayerSlot {
         return number;
     }
 
+    public Expansion[] getSupportedExpansions() {
+        return supportedExpansions;
+    }
 
+    public void setSupportedExpansions(Expansion[] supportedExpansions) {
+        this.supportedExpansions = supportedExpansions;
+    }
 
 }

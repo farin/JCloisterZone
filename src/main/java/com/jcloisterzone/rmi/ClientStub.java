@@ -1,4 +1,4 @@
-package com.jcloisterzone.rmi.mina;
+package com.jcloisterzone.rmi;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,22 +21,18 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.rmi.CallMessage;
-import com.jcloisterzone.rmi.ClientIF;
-import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.wsio.CmdHandler;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
@@ -47,7 +42,7 @@ public abstract class ClientStub  implements InvocationHandler {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Connection conn;
-    private ServerIF serverProxy;
+    private Client2ClientIF serverProxy;
 
     protected Game game;
 
@@ -63,11 +58,11 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
 
-    public ServerIF getServerProxy() {
+    public Client2ClientIF getServerProxy() {
         return serverProxy;
     }
 
-    public void setServerProxy(ServerIF serverProxy) {
+    public void setServerProxy(Client2ClientIF serverProxy) {
         this.serverProxy = serverProxy;
     }
 
@@ -88,7 +83,7 @@ public abstract class ClientStub  implements InvocationHandler {
         } else {
             RmiMessage rmi = new RmiMessage(SimpleServer.GAME_ID);
             rmi.encode(new CallMessage(method, args));
-            conn.send("RMI", rmi);
+            conn.send(rmi);
         }
         return null;
     }
@@ -110,10 +105,10 @@ public abstract class ClientStub  implements InvocationHandler {
         return game;
     }
 
-    @CmdHandler("WELCOME")
+    @CmdHandler
     public void handleWelcome(Connection conn, WelcomeMessage msg) {
         //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
-        conn.send("JOIN_GAME", new JoinGameMessage(SimpleServer.GAME_ID));
+        conn.send(new JoinGameMessage(SimpleServer.GAME_ID));
     }
 
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
@@ -126,7 +121,7 @@ public abstract class ClientStub  implements InvocationHandler {
         }
     }
 
-    @CmdHandler("GAME")
+    @CmdHandler
     public void handleGame(Connection conn, GameMessage msg) {
         if (msg.getState() == GameState.RUNNING) {
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
@@ -160,14 +155,15 @@ public abstract class ClientStub  implements InvocationHandler {
 
     }
 
-    @CmdHandler("SLOT")
+    @CmdHandler
     public void handleSlot(Connection conn, SlotMessage msg) {
         final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
         game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
+        game.getPhase().handleSlotMessage(msg);
     }
 
-    @CmdHandler("GAME_SETUP")
+    @CmdHandler
     public void handleGameSetup(Connection conn, GameSetupMessage msg) {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
@@ -184,7 +180,7 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
 
-    @CmdHandler("SET_EXPANSION")
+    @CmdHandler
     public void handleSetExpansion(Connection conn, SetExpansionMessage msg) {
         Expansion expansion = msg.getExpansion();
         if (msg.isEnabled()) {
@@ -195,7 +191,7 @@ public abstract class ClientStub  implements InvocationHandler {
         game.post(new ExpansionChangedEvent(expansion, msg.isEnabled()));
     }
 
-    @CmdHandler("SET_RULE")
+    @CmdHandler
     public void handleSetRule(Connection conn, SetRuleMessage msg) {
         CustomRule rule = msg.getRule();
         if (msg.isEnabled()) {
@@ -207,19 +203,19 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
     //TODO add CmdHandler to phase and pass to phase automatically
-    @CmdHandler("RAND_SAMPLE")
+    @CmdHandler
     public void handleRandSample(Connection conn, RandSampleMessage msg) {
         game.getPhase().handleRandSample(msg);
         phaseLoop();
     }
 
-    @CmdHandler("FLIER_DICE")
+    @CmdHandler
     public void handleFlierDice(Connection conn, FlierDiceMessage msg) {
         game.getPhase().handleFlierDice(msg);
         phaseLoop();
     }
 
-    @CmdHandler("RMI")
+    @CmdHandler
     public void handleRmi(Connection conn, RmiMessage msg) {
         callMessageReceived(msg.decode());
         phaseLoop();

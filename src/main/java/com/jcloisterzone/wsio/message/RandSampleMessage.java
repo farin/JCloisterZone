@@ -1,11 +1,14 @@
 package com.jcloisterzone.wsio.message;
 
-public class RandSampleMessage {
+import com.jcloisterzone.wsio.Cmd;
+
+@Cmd("RAND_SAMPLE")
+public class RandSampleMessage implements WsMessage {
 
     private String gameId;
     private String name;
-    int population;
-    int[] values;
+    private int population;
+    private int[] values;
 
     public RandSampleMessage(String gameId, String name, int population, int[] values) {
         super();

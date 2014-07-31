@@ -5,14 +5,17 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.wsio.Cmd;
 
-public class GameSetupMessage {
+@Cmd("GAME_SETUP")
+public class GameSetupMessage implements WsMessage {
     private String gameId;
     private Set<CustomRule> customRules;
     private Set<Expansion> expansions;
     private Set<Class<? extends Capability>> capabilityClasses;
 
-    public GameSetupMessage(String gameId, Set<CustomRule> customRules, Set<Expansion> expansions, Set<Class<? extends Capability>> capabilityClasses) {
+    public GameSetupMessage(String gameId, Set<CustomRule> customRules, Set<Expansion> expansions,
+            Set<Class<? extends Capability>> capabilityClasses) {
         this.gameId = gameId;
         this.customRules = customRules;
         this.expansions = expansions;
@@ -22,6 +25,7 @@ public class GameSetupMessage {
     public String getGameId() {
         return gameId;
     }
+
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
@@ -46,11 +50,8 @@ public class GameSetupMessage {
         return capabilityClasses;
     }
 
-    public void setCapabilityClasses(
-            Set<Class<? extends Capability>> capabilityClasses) {
+    public void setCapabilityClasses(Set<Class<? extends Capability>> capabilityClasses) {
         this.capabilityClasses = capabilityClasses;
     }
-
-
 
 }

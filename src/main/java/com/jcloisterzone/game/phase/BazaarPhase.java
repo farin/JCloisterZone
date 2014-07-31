@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -16,7 +15,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
@@ -26,7 +25,7 @@ public class BazaarPhase extends ServerAwarePhase {
 
     private final BazaarCapability bazaarCap;
 
-    public BazaarPhase(Game game, ServerIF server, Connection conn) {
+    public BazaarPhase(Game game, Client2ClientIF server, Connection conn) {
         super(game, server, conn);
         bazaarCap = game.getCapability(BazaarCapability.class);
     }
@@ -54,7 +53,7 @@ public class BazaarPhase extends ServerAwarePhase {
         //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
-            getConnection().send("GET_RAND_SAMPLE", new GetRandSampleMessage(SimpleServer.GAME_ID, "bazaar", getTilePack().size(), game.getAllPlayers().length));
+            getConnection().send(new GetRandSampleMessage(SimpleServer.GAME_ID, "bazaar", getTilePack().size(), game.getAllPlayers().length));
         }
     }
 

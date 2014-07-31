@@ -1,8 +1,11 @@
 package com.jcloisterzone.wsio.message;
 
-public class WelcomeMessage {
-    String clientId;
-    String sessionKey;
+import com.jcloisterzone.wsio.Cmd;
+
+@Cmd("WELCOME")
+public class WelcomeMessage implements WsMessage {
+    private String clientId;
+    private String sessionKey;
 
     public WelcomeMessage(String clientId, String sessionKey) {
         this.clientId = clientId;
@@ -24,6 +27,5 @@ public class WelcomeMessage {
     public void setSessionKey(String sessionKey) {
         this.sessionKey = sessionKey;
     }
-
 
 }

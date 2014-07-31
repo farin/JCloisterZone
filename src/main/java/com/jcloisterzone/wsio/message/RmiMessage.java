@@ -10,13 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import com.jcloisterzone.rmi.CallMessage;
+import com.jcloisterzone.wsio.Cmd;
 
-public class RmiMessage {
+@Cmd("RMI")
+public class RmiMessage implements WsMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private String gameId;
-    private String method; //for debug purposes
+    private String method; // for debug purposes
     private String call;
 
     public RmiMessage(String gameId) {
@@ -40,7 +42,7 @@ public class RmiMessage {
         try {
             byte[] data = Base64Coder.decode(call);
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            Object o  = ois.readObject();
+            Object o = ois.readObject();
             ois.close();
             return (CallMessage) o;
         } catch (Exception e) {

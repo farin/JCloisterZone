@@ -1,14 +1,15 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.wsio.Cmd;
 
-public class RollFlierDiceMessage {
+@Cmd("ROLL_FLIER_DICE")
+public class RollFlierDiceMessage implements WsMessage {
 
     private String gameId;
     private String meepleType;
 
     public RollFlierDiceMessage(String gameId, Class<? extends Meeple> meepleType) {
-        super();
         this.gameId = gameId;
         this.meepleType = meepleType.getSimpleName();
     }
@@ -24,10 +25,9 @@ public class RollFlierDiceMessage {
     public String getMeepleType() {
         return meepleType;
     }
+
     public void setMeepleType(String meepleType) {
         this.meepleType = meepleType;
     }
-
-
 
 }

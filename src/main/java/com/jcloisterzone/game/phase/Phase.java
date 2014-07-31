@@ -27,6 +27,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.rmi.ClientIF;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public abstract class Phase implements ClientIF {
@@ -156,12 +157,6 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateSupportedExpansions");
-    }
-
-
-    @Override
     public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
@@ -213,6 +208,10 @@ public abstract class Phase implements ClientIF {
 
     public void handleFlierDice(FlierDiceMessage msg) {
         logger.error(Application.ILLEGAL_STATE_MSG, "handleFlierDice");
+    }
+
+    public void handleSlotMessage(SlotMessage msg) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "handleSlotMessage");
     }
 
     @Override

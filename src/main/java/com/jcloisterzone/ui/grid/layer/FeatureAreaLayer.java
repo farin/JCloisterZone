@@ -116,7 +116,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 }
             }
             if (loc == Location.FLIER) {
-                getClient().getConnection().send("ROLL_FLIER_DICE", new RollFlierDiceMessage(SimpleServer.GAME_ID, ma.getMeepleType()));
+                getClient().getConnection().send(new RollFlierDiceMessage(SimpleServer.GAME_ID, ma.getMeepleType()));
                 return;
             }
             if (loc == Location.CLOISTER && abbotOption) {

@@ -13,7 +13,6 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -22,10 +21,9 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.rmi.mina.ClientStub;
+import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.ClientStub;
 
 public abstract class AiPlayer {
 
@@ -33,7 +31,7 @@ public abstract class AiPlayer {
 
     protected Game game;
 
-    private ServerIF server;
+    private Client2ClientIF server;
     private ClientStub clientStub;
     private Player player;
 
@@ -45,11 +43,11 @@ public abstract class AiPlayer {
 //        return game;
 //    }
 
-    public ServerIF getServer() {
+    public Client2ClientIF getServer() {
         return server;
     }
 
-    public void setServer(ServerIF server) {
+    public void setServer(Client2ClientIF server) {
         Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
         this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
         this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
@@ -106,8 +104,8 @@ public abstract class AiPlayer {
     }
 
     protected boolean selectDummyTilePlacement(TilePlacementAction action) {
-    	TilePlacement nearest = null;
-    	Position p0 = new Position(0, 0);
+        TilePlacement nearest = null;
+        Position p0 = new Position(0, 0);
         int min = Integer.MAX_VALUE;
         for (TilePlacement tp : action) {
             int dist = tp.getPosition().squareDistance(p0);
@@ -132,7 +130,7 @@ public abstract class AiPlayer {
     }
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
-    	MeeplePointer mp = action.iterator().next();
+        MeeplePointer mp = action.iterator().next();
         getServer().takePrisoner(mp.getPosition(), mp.getLocation(), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
         return true;
     }

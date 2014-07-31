@@ -49,8 +49,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.rmi.mina.ClientStub;
+import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -105,7 +105,7 @@ public class Client extends JFrame {
     private DiscardedTilesDialog discardedTilesDialog;
 
     private SimpleServer localServer;
-    private ServerIF server;
+    private Client2ClientIF server;
     private Connection conn;
 
 
@@ -206,7 +206,7 @@ public class Client extends JFrame {
     }
 
     @Deprecated //replace with connection
-    public ServerIF getServer() {
+    public Client2ClientIF getServer() {
         return server;
     }
 
@@ -350,8 +350,8 @@ public class Client extends JFrame {
 
     public void connect(InetAddress ia, int port) {
         GuiClientStub handler = new GuiClientStub(this);
-        server = (ServerIF) Proxy.newProxyInstance(ServerIF.class.getClassLoader(),
-                new Class[] { ServerIF.class }, handler);
+        server = (Client2ClientIF) Proxy.newProxyInstance(Client2ClientIF.class.getClassLoader(),
+                new Class[] { Client2ClientIF.class }, handler);
         handler.setServerProxy(server);
         try {
             conn = handler.connect(ia, port);

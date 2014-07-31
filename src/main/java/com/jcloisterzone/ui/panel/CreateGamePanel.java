@@ -131,7 +131,7 @@ public class CreateGamePanel extends JPanel {
 
         startGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getConnection().send("START_GAME", new StartGameMessage(SimpleServer.GAME_ID));
+                client.getConnection().send(new StartGameMessage(SimpleServer.GAME_ID));
             }
         });
 
@@ -400,7 +400,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send("SET_RULE", new SetRuleMessage(SimpleServer.GAME_ID, rule, chbox.isSelected()));
+                    client.getConnection().send(new SetRuleMessage(SimpleServer.GAME_ID, rule, chbox.isSelected()));
                 }
             });
         } else {
@@ -422,7 +422,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send("SET_EXPANSION", new SetExpansionMessage(SimpleServer.GAME_ID, exp, chbox.isSelected()));
+                    client.getConnection().send(new SetExpansionMessage(SimpleServer.GAME_ID, exp, chbox.isSelected()));
                 }
             });
         }

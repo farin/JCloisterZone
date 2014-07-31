@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -20,9 +21,6 @@ import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
@@ -30,8 +28,9 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -50,8 +49,9 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected PlayerSlot[] slots;
+    protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, ServerIF server, Connection conn) {
+    public CreateGamePhase(Game game, Client2ClientIF server, Connection conn) {
         super(game, server, conn);
     }
 
@@ -65,8 +65,24 @@ public class CreateGamePhase extends ServerAwarePhase {
 
 
     @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        game.post(new SupportedExpansionsChangeEvent(expansions));
+    public void handleSlotMessage(SlotMessage msg) {
+        slotSupportedExpansions[msg.getNumber()] = msg.getSupportedExpansions();
+        game.post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));
+    }
+
+    private EnumSet<Expansion> mergeSupportedExpansions() {
+        EnumSet<Expansion> merged = null;
+        for (int i = 0; i < slotSupportedExpansions.length; i++) {
+            Expansion[] supported = slotSupportedExpansions[i];
+            if (supported == null) continue;
+            if (merged == null) {
+                merged = EnumSet.allOf(Expansion.class);
+            }
+            EnumSet<Expansion> supp = EnumSet.noneOf(Expansion.class);
+            Collections.addAll(supp, supported);
+            merged.retainAll(supp);
+        }
+        return merged;
     }
 
 

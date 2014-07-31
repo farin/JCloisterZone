@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-@Deprecated
+//TODO convert to direct WsMessages
 public class CallMessage implements Serializable {
 
     private static final long serialVersionUID = 15L;

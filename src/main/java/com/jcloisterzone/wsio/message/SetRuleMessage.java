@@ -1,12 +1,13 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.wsio.Cmd;
 
-public class SetRuleMessage {
-
-    String gameId;
-      CustomRule rule;
-    boolean enabled;
+@Cmd("SET_RULE")
+public class SetRuleMessage implements WsMessage {
+    private String gameId;
+    private CustomRule rule;
+    private boolean enabled;
 
     public SetRuleMessage(String gameId, CustomRule rule, boolean enabled) {
         this.gameId = gameId;
@@ -17,9 +18,11 @@ public class SetRuleMessage {
     public String getGameId() {
         return gameId;
     }
+
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
+
     public CustomRule getRule() {
         return rule;
     }
@@ -31,6 +34,7 @@ public class SetRuleMessage {
     public boolean isEnabled() {
         return enabled;
     }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

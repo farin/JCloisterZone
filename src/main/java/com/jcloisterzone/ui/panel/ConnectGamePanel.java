@@ -129,13 +129,14 @@ public class ConnectGamePanel extends JPanel {
                 message.setText( _("Invalid port number."));
             } catch (UnknownHostException e1) {
                 message.setText( _("Connection failed. Unknown host."));
-            } catch (RuntimeIoException ex) {
-                if (ex.getCause() instanceof ConnectException) {
-                    message.setText( _("Connection refused."));
-                } else {
-                    message.setText( _("Connection failed."));
-                }
             }
+            //TODO refy
+//                if (ex.getCause() instanceof ConnectException) {
+//                    message.setText( _("Connection refused."));
+//                } else {
+//                    message.setText( _("Connection failed."));
+//                }
+//            }
             message.setForeground(Color.RED);
             btnConnect.setEnabled(true);
         }

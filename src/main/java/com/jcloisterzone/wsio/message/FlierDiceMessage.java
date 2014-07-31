@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.wsio.Cmd;
 
-public class FlierDiceMessage {
+@Cmd("FLIER_DICE")
+public class FlierDiceMessage implements WsMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -23,7 +25,7 @@ public class FlierDiceMessage {
     @SuppressWarnings("unchecked")
     public Class<? extends Meeple> getMeepleTypeClass() {
         try {
-            return (Class<? extends Meeple>) Class.forName("com.jcloisterzone.figure."+meepleType);
+            return (Class<? extends Meeple>) Class.forName("com.jcloisterzone.figure." + meepleType);
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage(), e);
             return null;
@@ -33,18 +35,23 @@ public class FlierDiceMessage {
     public String getGameId() {
         return gameId;
     }
+
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
+
     public String getMeepleType() {
         return meepleType;
     }
+
     public void setMeepleType(String meepleType) {
         this.meepleType = meepleType;
     }
+
     public int getDistance() {
         return distance;
     }
+
     public void setDistance(int distance) {
         this.distance = distance;
     }

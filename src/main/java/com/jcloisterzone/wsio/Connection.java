@@ -7,10 +7,10 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.wsio.WsUtils.Command;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
+import com.jcloisterzone.wsio.message.WsMessage;
 
 public class Connection {
 
@@ -49,14 +49,14 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                Connection.this.send("HELLO", new HelloMessage("WsFarin"));
+                Connection.this.send(new HelloMessage("WsFarin"));
             }
         };
         ws.connect();
     }
 
-    public void send(String command, Object arg) {
-        ws.send(parser.toJson(command, arg));
+    public void send(WsMessage arg) {
+        ws.send(parser.toJson(arg));
     }
 
     public void close() {

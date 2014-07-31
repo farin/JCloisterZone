@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.ui.PlayerColor;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
@@ -74,7 +73,7 @@ public class Config {
             for (String ruleName : rules) {
                 ruleSet.add(CustomRule.valueOf(ruleName));
             }
-            conn.send("GAME_SETUP", new GameSetupMessage(gameId, ruleSet, expansionSet, null));
+            conn.send(new GameSetupMessage(gameId, ruleSet, expansionSet, null));
         }
     }
 
