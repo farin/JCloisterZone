@@ -1,6 +1,9 @@
 package com.jcloisterzone.ai;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.xml.transform.TransformerException;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.ai.choice.AiChoice;
@@ -70,7 +73,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
             }
             try {
                 snapshot.save(new FileOutputStream(debugConfig.getAutosave()));
-            } catch (Exception e) {
+            } catch (TransformerException | IOException e) {
                 logger.error("Auto save before ranking failed.", e);
             }
         }

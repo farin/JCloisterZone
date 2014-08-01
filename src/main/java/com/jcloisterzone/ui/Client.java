@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +50,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.rmi.ClientStub;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -381,7 +382,7 @@ public class Client extends JFrame {
                         snapshot.setGzipOutput(false);
                     }
                     snapshot.save(new FileOutputStream(file));
-                } catch (Exception ex) {
+                } catch (IOException | TransformerException ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }

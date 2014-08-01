@@ -1,5 +1,6 @@
 package com.jcloisterzone.rmi;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,7 +20,9 @@ import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
+import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.Connection;
@@ -93,16 +96,6 @@ public abstract class ClientStub  implements InvocationHandler {
         logger.error("Version mismatch. Server version: " + version +". Client version " + Application.PROTCOL_VERSION);
     }
 
-    protected Game createGame(GameMessage message) {
-        if (message.getSnapshot() == null) {
-            game = new Game();
-        } else {
-            throw new UnsupportedOperationException("not implemented");
-            //game = msg.getSnapshot().asGame();
-        }
-        game = new Game();
-        return game;
-    }
 
     @WsSubscribe
     public void handleWelcome(Connection conn, WelcomeMessage msg) {
@@ -120,6 +113,10 @@ public abstract class ClientStub  implements InvocationHandler {
         }
     }
 
+    protected void initGame(Game game) {
+        //empty
+    }
+
     @WsSubscribe
     public void handleGame(Connection conn, GameMessage msg) {
         if (msg.getState() == GameState.RUNNING) {
@@ -128,28 +125,39 @@ public abstract class ClientStub  implements InvocationHandler {
             phaseLoop();
             return;
         }
-        game = createGame(msg);
         CreateGamePhase phase;
-        if (msg.getSnapshot() == null) {
+        Snapshot snapshot = null;
+        if (msg.getSnapshot() != null) {
+            try {
+                snapshot = new Snapshot(msg.getSnapshot());
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+                return;
+            }
+        }
+
+        if (snapshot == null) {
+            game = new Game();
             phase = new CreateGamePhase(game, getServerProxy(), conn);
         } else {
-            throw new UnsupportedOperationException("not implemented");
-            //phase = new LoadGamePhase(game, msg.getSnapshot(), getServerProxy());
+            game = snapshot.asGame();
+            phase = new LoadGamePhase(game, snapshot, getServerProxy(), conn);
         }
-        // TODO - lagacy bridge
+        initGame(game);
+
         PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
-        for (int i = 0; i < slots.length; i++) {
-            PlayerSlot slot = new PlayerSlot(i);
-            slot.setColors(game.getConfig().getPlayerColor(slot));
-            slots[i] = slot;
-        }
+
         for (SlotMessage slotMsg : msg.getSlots()) {
+            int number = slotMsg.getNumber();
+            PlayerSlot slot = new PlayerSlot(number);
+            slot.setColors(game.getConfig().getPlayerColor(slot));
+            slots[number] = slot;
             updateSlot(slots, slotMsg);
         }
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
-        //HACK - this should be here but is is inside GuiClientStub. we must wait for panle is created
+        //HACK - this should be here but is is inside GuiClientStub. we must wait for panel is created
         //handleGameSetup(Conn, msg.getGameSetup());
 
     }

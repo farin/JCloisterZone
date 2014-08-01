@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -34,7 +35,7 @@ public final class WsBus {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     private Map<String, Class<? extends WsMessage>> types = new HashMap<>();
     private List<Object> subscribers = new ArrayList<>();

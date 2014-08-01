@@ -8,10 +8,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 
 /**
- * Declares broadcast messages called between clients.
- * Technically all messges are passed through server but messages
- * from this class has origin on the client side.
- *
+ * Legacy rmi interface, now all calls are translated to RMI command
  */
 public interface RmiProxy {
 

@@ -17,7 +17,7 @@ public class ServerPlayerSlot {
     }
 
     public boolean isOccupied() {
-        return nickname != null;
+        return owner != null;
     }
 
     public Integer getSerial() {

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import com.google.common.base.Objects;
 import com.jcloisterzone.Application;
@@ -84,6 +87,10 @@ public class Snapshot implements Serializable {
                 throw e;
             }
         }
+    }
+
+    public Snapshot(String snapshot) throws IOException {
+        load(snapshot);
     }
 
     public boolean isGzipOutput() {
@@ -202,6 +209,10 @@ public class Snapshot implements Serializable {
     }
 
     public void save(OutputStream os) throws TransformerException, IOException {
+        save(os, gzipOutput);
+    }
+
+    public void save(OutputStream os, boolean gzipOutput) throws TransformerException, IOException {
         StreamResult streamResult;
         if (gzipOutput) {
             streamResult = new StreamResult(new GZIPOutputStream(os));
@@ -219,6 +230,13 @@ public class Snapshot implements Serializable {
         streamResult.getOutputStream().close();
     }
 
+    public String saveToString() throws TransformerException, IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        save(baos, false);
+        baos.close();
+        return new String(baos.toByteArray(),"UTF-8");
+    }
+
     public void load(InputStream is) throws SnapshotCorruptedException {
         doc = XmlUtils.parseDocument(is);
         root = doc.getDocumentElement();
@@ -228,6 +246,12 @@ public class Snapshot implements Serializable {
                 throw new SnapshotVersionException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
             }
         }
+    }
+
+    public void load(String s) throws SnapshotCorruptedException, IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes("UTF-8"));
+        load(bais);
+        bais.close();
     }
 
     private NodeList getSecondLevelElelents(String first, String second) {
@@ -288,8 +312,7 @@ public class Snapshot implements Serializable {
                 slot.setAiClassName(aiClassName);
             } else {
                 if (el.hasAttribute("local")) {
-                    throw new UnsupportedOperationException("not implemented");
-                    //slot.setType(SlotType.PLAYER);
+                    slot.setState(SlotState.OWN);
                 }
             }
             NodeList categories = el.getElementsByTagName("point-category");
@@ -301,28 +324,6 @@ public class Snapshot implements Serializable {
             players.add(p);
         }
         return players;
-    }
-
-    public PlayerSlot[] getPlayerSlots() {
-        List<Player> players = getPlayers();
-        int maxSlotNumber = 0;
-        for (Player player : players) {
-            int slotNumber = player.getSlot().getNumber();
-            if (slotNumber > maxSlotNumber) maxSlotNumber = slotNumber;
-        }
-
-        PlayerSlot[] slots = new PlayerSlot[maxSlotNumber+1];
-        for (int i = 0; i < slots.length; i++) {
-            for (Player player : players) {
-                PlayerSlot slot = player.getSlot();
-                if (slot.getNumber() == i) {
-                    slot.setNickname(player.getNick());
-                    slots[i] = slot;
-                    break;
-                }
-            }
-        }
-        return slots;
     }
 
     public int getTurnPlayer() {

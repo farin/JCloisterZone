@@ -24,11 +24,9 @@ public class GuiClientStub extends ClientStub {
     }
 
     @Override
-    protected Game createGame(GameMessage message) {
-        Game game = super.createGame(message);
+    protected void initGame(Game game) {
         game.setConfig(client.getConfig());
         client.setGame(game);
-        return game;
     }
 
     @Override
