@@ -36,7 +36,7 @@ public class AbstractIntegrationTest {
             Snapshot snapshot = new Snapshot(new File(uri));
             EventCatchingGame game = (EventCatchingGame) snapshot.asGame(new EventCatchingGame());
             game.setConfig(new Config());
-            LoadGamePhase phase = new LoadGamePhase(game, snapshot, null);
+            LoadGamePhase phase = new LoadGamePhase(game, snapshot, null, null);
             game.getPhases().put(phase.getClass(), phase);
             game.setPhase(phase);
             phase.setSlots(new PlayerSlot[0]);
@@ -51,7 +51,7 @@ public class AbstractIntegrationTest {
     protected String snapshotGame(Game game) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            Snapshot snapshot = new Snapshot(game, 1);
+            Snapshot snapshot = new Snapshot(game);
             snapshot.setGzipOutput(false);
             snapshot.save(os);
             return os.toString("utf-8");

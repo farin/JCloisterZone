@@ -15,7 +15,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
 
 public class LoadGamePhase extends CreateGamePhase {
@@ -23,7 +23,7 @@ public class LoadGamePhase extends CreateGamePhase {
     private Snapshot snapshot;
     private LoadGameTilePackFactory tilePackFactory;
 
-    public LoadGamePhase(Game game, Snapshot snapshot, Client2ClientIF server, Connection conn) {
+    public LoadGamePhase(Game game, Snapshot snapshot, RmiProxy server, Connection conn) {
         super(game, server, conn);
         this.snapshot = snapshot;
     }

@@ -2,9 +2,9 @@ package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("SLOT")
+@WsMessageCommand("SLOT")
 public class SlotMessage implements WsMessage {
     private String gameId;
     private int number;

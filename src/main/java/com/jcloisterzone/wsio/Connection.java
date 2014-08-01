@@ -1,6 +1,7 @@
 package com.jcloisterzone.wsio;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -15,18 +16,19 @@ public class Connection {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private WsUtils parser = new WsUtils();
+    private WsBus wsBus = new WsBus();
     private WebSocketClient ws;
 
     private String clientId;
     private String sessionKey;
 
     public Connection(URI uri, final Object receiver) {
+        wsBus.register(this);
+        wsBus.register(receiver);
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
                 // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -35,27 +37,27 @@ public class Connection {
             }
 
             @Override
-            public void onMessage(String message) {
-                logger.info(message);
-                WsMessage msg = parser.fromJson(message);
-                if (msg instanceof WelcomeMessage) {
-                    WelcomeMessage welcomeMsg = (WelcomeMessage) msg;
-                    clientId = welcomeMsg.getClientId();
-                    sessionKey = welcomeMsg.getSessionKey();
-                }
-                parser.delegate(receiver, Connection.this, msg);
+            public void onMessage(String payload) {
+                logger.info(payload);
+                wsBus.receive(Connection.this, payload);
             }
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                Connection.this.send(new HelloMessage("WsFarin"));
+                Connection.this.send(new HelloMessage(UUID.randomUUID().toString()));
             }
         };
         ws.connect();
     }
 
+    @WsSubscribe
+    public void handleWelcome(Connection conn, WelcomeMessage msg) {
+        clientId = msg.getClientId();
+        sessionKey = msg.getSessionKey();
+    }
+
     public void send(WsMessage arg) {
-        ws.send(parser.toJson(arg));
+        ws.send(wsBus.toJson(arg));
     }
 
     public void close() {

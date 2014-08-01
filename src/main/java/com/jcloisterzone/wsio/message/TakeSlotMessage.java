@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("TAKE_SLOT")
+@WsMessageCommand("TAKE_SLOT")
 public class TakeSlotMessage implements WsMessage {
     private String gameId;
     private int number;

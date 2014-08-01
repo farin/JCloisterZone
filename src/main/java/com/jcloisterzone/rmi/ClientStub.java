@@ -21,7 +21,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.wsio.CmdHandler;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -42,7 +42,7 @@ public abstract class ClientStub  implements InvocationHandler {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Connection conn;
-    private Client2ClientIF serverProxy;
+    private RmiProxy serverProxy;
 
     protected Game game;
 
@@ -58,11 +58,11 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
 
-    public Client2ClientIF getServerProxy() {
+    public RmiProxy getServerProxy() {
         return serverProxy;
     }
 
-    public void setServerProxy(Client2ClientIF serverProxy) {
+    public void setServerProxy(RmiProxy serverProxy) {
         this.serverProxy = serverProxy;
     }
 
@@ -81,8 +81,7 @@ public abstract class ClientStub  implements InvocationHandler {
         if (conn == null) {
             logger.info("Not connected. Message ignored");
         } else {
-            RmiMessage rmi = new RmiMessage(SimpleServer.GAME_ID);
-            rmi.encode(new CallMessage(method, args));
+            RmiMessage rmi = new RmiMessage(SimpleServer.GAME_ID, method.getName(), args);
             conn.send(rmi);
         }
         return null;
@@ -105,7 +104,7 @@ public abstract class ClientStub  implements InvocationHandler {
         return game;
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleWelcome(Connection conn, WelcomeMessage msg) {
         //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
         conn.send(new JoinGameMessage(SimpleServer.GAME_ID));
@@ -121,7 +120,7 @@ public abstract class ClientStub  implements InvocationHandler {
         }
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleGame(Connection conn, GameMessage msg) {
         if (msg.getState() == GameState.RUNNING) {
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
@@ -155,7 +154,7 @@ public abstract class ClientStub  implements InvocationHandler {
 
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleSlot(Connection conn, SlotMessage msg) {
         final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
@@ -163,7 +162,7 @@ public abstract class ClientStub  implements InvocationHandler {
         game.getPhase().handleSlotMessage(msg);
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleGameSetup(Connection conn, GameSetupMessage msg) {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
@@ -180,7 +179,7 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
 
-    @CmdHandler
+    @WsSubscribe
     public void handleSetExpansion(Connection conn, SetExpansionMessage msg) {
         Expansion expansion = msg.getExpansion();
         if (msg.isEnabled()) {
@@ -191,7 +190,7 @@ public abstract class ClientStub  implements InvocationHandler {
         game.post(new ExpansionChangedEvent(expansion, msg.isEnabled()));
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleSetRule(Connection conn, SetRuleMessage msg) {
         CustomRule rule = msg.getRule();
         if (msg.isEnabled()) {
@@ -203,30 +202,30 @@ public abstract class ClientStub  implements InvocationHandler {
     }
 
     //TODO add CmdHandler to phase and pass to phase automatically
-    @CmdHandler
+    @WsSubscribe
     public void handleRandSample(Connection conn, RandSampleMessage msg) {
         game.getPhase().handleRandSample(msg);
         phaseLoop();
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleFlierDice(Connection conn, FlierDiceMessage msg) {
         game.getPhase().handleFlierDice(msg);
         phaseLoop();
     }
 
-    @CmdHandler
+    @WsSubscribe
     public void handleRmi(Connection conn, RmiMessage msg) {
-        callMessageReceived(msg.decode());
-        phaseLoop();
-    }
-
-
-    protected void callMessageReceived(CallMessage msg) {
         try {
             Phase phase = game.getPhase();
-            logger.debug("Delegating {} on phase {}", msg.getMethod(), phase.getClass().getSimpleName());
-            msg.call(phase, Client2ClientIF.class);
+            Method[] methods = RmiProxy.class.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                if (methods[i].getName().equals(msg.getMethod())) {
+                    methods[i].invoke(phase, (Object[]) msg.decode(msg.getArgs()));
+                    phaseLoop();
+                    return;
+                }
+            }
         } catch (InvocationTargetException ie) {
             logger.error(ie.getMessage(), ie.getCause());
         } catch (Exception e) {

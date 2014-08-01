@@ -6,7 +6,7 @@ import java.util.Set;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 
@@ -22,7 +22,7 @@ public class AbbeyPlacementAction extends SelectTileAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position p) {
+    public void perform(RmiProxy server, Position p) {
         server.placeTile(Rotation.R0, p);
     }
 

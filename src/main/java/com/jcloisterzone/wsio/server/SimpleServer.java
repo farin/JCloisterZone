@@ -21,8 +21,8 @@ import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.wsio.CmdHandler;
-import com.jcloisterzone.wsio.WsUtils;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.WsBus;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -52,7 +52,7 @@ public class SimpleServer extends WebSocketServer  {
 
     public static final String GAME_ID = "_1";
 
-    private WsUtils parser = new WsUtils();
+    private WsBus wsBus = new WsBus();
 
     private GameSettings game;
     protected final ServerPlayerSlot[] slots;
@@ -67,6 +67,7 @@ public class SimpleServer extends WebSocketServer  {
 
     public SimpleServer(InetSocketAddress address) {
         super(address);
+        wsBus.register(this);
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
         for (int i = 0; i < slots.length; i++) {
             slots[i] = new ServerPlayerSlot(i);
@@ -100,7 +101,7 @@ public class SimpleServer extends WebSocketServer  {
     @Override
     public void onMessage(WebSocket ws, String payload) {
         logger.info(payload);
-        parser.delegate(this, ws, parser.fromJson(payload));
+        wsBus.receive(ws, payload);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class SimpleServer extends WebSocketServer  {
         return gm;
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     public void handleHello(WebSocket ws, HelloMessage msg) {
         String clientId = UUID.randomUUID().toString();
@@ -148,7 +149,7 @@ public class SimpleServer extends WebSocketServer  {
         send(ws,  new WelcomeMessage(clientId, sessionKey));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     public void handleCreateGame(WebSocket ws, CreateGameMessage msg) {
         String clientId = getClientId(ws);
@@ -157,7 +158,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleJoinGame(WebSocket ws, JoinGameMessage msg) {
@@ -169,7 +170,7 @@ public class SimpleServer extends WebSocketServer  {
         send(ws, createGameMessage(clientId));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameId
     public void handleGameSetupMessage(WebSocket ws, GameSetupMessage msg) {
         game.getExpansions().clear();
@@ -180,7 +181,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleTakeSlot(WebSocket ws, TakeSlotMessage msg) {
@@ -202,7 +203,7 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(createSlotMessage(clientId, slot));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleLeaveSlot(WebSocket ws, LeaveSlotMessage msg) {
@@ -222,7 +223,7 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(createSlotMessage(clientId, slot));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleSetExpansion(WebSocket ws, SetExpansionMessage msg) {
@@ -239,7 +240,7 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(msg);
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleSetRule(WebSocket ws, SetRuleMessage msg) {
@@ -252,7 +253,7 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(msg);
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(false)
     @CheckGameId
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
@@ -262,7 +263,7 @@ public class SimpleServer extends WebSocketServer  {
         }
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(true)
     @CheckGameId
     public void handleGetRandSample(WebSocket ws, GetRandSampleMessage msg) {
@@ -274,14 +275,14 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(new RandSampleMessage(msg.getGameId(), msg.getName(), msg.getPopulation(), result));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(true)
     @CheckGameId
     public void handleRollFlierDice(WebSocket ws, RollFlierDiceMessage msg) {
         broadcast(new FlierDiceMessage(msg.getGameId(),msg.getMeepleType(), 1+random.nextInt(3)));
     }
 
-    @CmdHandler
+    @WsSubscribe
     @CheckGameRunning(true)
     @CheckGameId
     public void handleRmi(WebSocket ws, RmiMessage msg) {
@@ -290,11 +291,11 @@ public class SimpleServer extends WebSocketServer  {
 
 
     public void send(WebSocket ws, WsMessage message) {
-        ws.send(parser.toJson(message));
+        ws.send(wsBus.toJson(message));
     }
 
     public void broadcast(WsMessage data) {
-        String payload = parser.toJson(data);
+        String payload = wsBus.toJson(data);
         for (WebSocket ws : clientIds.keySet()) {
             ws.send(payload);
         }

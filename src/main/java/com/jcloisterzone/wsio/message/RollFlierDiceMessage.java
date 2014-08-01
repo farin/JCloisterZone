@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("ROLL_FLIER_DICE")
+@WsMessageCommand("ROLL_FLIER_DICE")
 public class RollFlierDiceMessage implements WsMessage {
 
     private String gameId;

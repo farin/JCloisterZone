@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("LEAVE_SLOT")
+@WsMessageCommand("LEAVE_SLOT")
 public class LeaveSlotMessage implements WsMessage {
 
     private String gameId;

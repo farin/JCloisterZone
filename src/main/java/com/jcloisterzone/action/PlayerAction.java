@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.GridLayer;
@@ -29,7 +29,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
     }
     
     
-    public abstract void perform(Client2ClientIF server, T target);
+    public abstract void perform(RmiProxy server, T target);
     
     @Override
     public Iterator<T> iterator() {

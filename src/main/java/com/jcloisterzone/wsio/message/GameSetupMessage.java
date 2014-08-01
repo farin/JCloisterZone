@@ -5,9 +5,9 @@ import java.util.Set;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("GAME_SETUP")
+@WsMessageCommand("GAME_SETUP")
 public class GameSetupMessage implements WsMessage {
     private String gameId;
     private Set<CustomRule> customRules;

@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("WELCOME")
+@WsMessageCommand("WELCOME")
 public class WelcomeMessage implements WsMessage {
     private String clientId;
     private String sessionKey;

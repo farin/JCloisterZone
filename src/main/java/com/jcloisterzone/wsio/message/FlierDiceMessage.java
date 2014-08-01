@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("FLIER_DICE")
+@WsMessageCommand("FLIER_DICE")
 public class FlierDiceMessage implements WsMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());

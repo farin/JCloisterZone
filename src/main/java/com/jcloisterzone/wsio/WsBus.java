@@ -1,7 +1,9 @@
 package com.jcloisterzone.wsio;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -28,19 +30,16 @@ import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
-public final class WsUtils {
+public final class WsBus {
 
-    private Gson gson = new Gson();
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private Gson gson = new Gson();
+
     private Map<String, Class<? extends WsMessage>> types = new HashMap<>();
+    private List<Object> subscribers = new ArrayList<>();
 
-    public static String getCmdName(Class<? extends WsMessage> msgType) {
-        return msgType.getAnnotation(Cmd.class).value();
-    }
-
-
-    public WsUtils() {
+    public WsBus() {
         registerMsgType(ErrorMessage.class);
         registerMsgType(HelloMessage.class);
         registerMsgType(WelcomeMessage.class);
@@ -61,11 +60,30 @@ public final class WsUtils {
         registerMsgType(RmiMessage.class);
     }
 
+    protected String getCmdName(Class<? extends WsMessage> msgType) {
+        return msgType.getAnnotation(WsMessageCommand.class).value();
+    }
+
     private void registerMsgType(Class<? extends WsMessage> type) {
         types.put(getCmdName(type), type);
     }
 
-    public WsMessage fromJson(String payload) {
+    public void register(Object subscriber) {
+        subscribers.add(subscriber);
+    }
+
+    public void unregister(Object subscriber) {
+        subscribers.remove(subscriber);
+    }
+
+    public void receive(Object context, String message) {
+        WsMessage msg = fromJson(message);
+        for (Object subscriber : subscribers) {
+            delegate(subscriber, context, msg);
+        }
+    }
+
+    protected WsMessage fromJson(String payload) {
         String s[] = payload.split(" ", 2); //command, arg
         Class<? extends WsMessage> type = types.get(s[0]);
         if (type == null) {
@@ -91,7 +109,7 @@ public final class WsUtils {
     @SuppressWarnings("unchecked")
     private boolean delegateScanClass(Object target, Class<?> type, Object subject,  WsMessage msg) {
         for (Method m : type.getDeclaredMethods()) {
-            CmdHandler handler = m.getAnnotation(CmdHandler.class);
+            WsSubscribe handler = m.getAnnotation(WsSubscribe.class);
             if (handler != null) {
                 Class<? extends WsMessage> cls = (Class<? extends WsMessage>) m.getParameterTypes()[1];
                 if (cls.equals(msg.getClass())) {

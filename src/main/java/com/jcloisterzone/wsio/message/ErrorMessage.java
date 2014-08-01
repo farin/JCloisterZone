@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("ERR")
+@WsMessageCommand("ERR")
 public class ErrorMessage implements WsMessage {
     private String origin;
     private String message;

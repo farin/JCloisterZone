@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.wsio.CmdHandler;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
@@ -32,7 +32,7 @@ public class GuiClientStub extends ClientStub {
     }
 
     @Override
-    @CmdHandler
+    @WsSubscribe
     public void handleGame(final Connection conn, final GameMessage msg) {
         super.handleGame(conn, msg);
         if (msg.getState() == GameState.OPEN) {

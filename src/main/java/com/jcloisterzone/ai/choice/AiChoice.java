@@ -3,7 +3,7 @@ package com.jcloisterzone.ai.choice;
 import com.jcloisterzone.ai.GameRanking;
 import com.jcloisterzone.ai.SavePoint;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 public abstract class AiChoice {
 
@@ -17,7 +17,7 @@ public abstract class AiChoice {
         this.ranking = 0.0;
     }
 
-    public abstract void perform(Client2ClientIF server);
+    public abstract void perform(RmiProxy server);
 
     public void rankPartial(GameRanking gr, Game game) {
         //empty default

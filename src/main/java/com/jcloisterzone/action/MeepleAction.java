@@ -9,7 +9,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 public class MeepleAction extends SelectFeatureAction {
 
@@ -26,7 +26,7 @@ public class MeepleAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
+    public void perform(RmiProxy server, FeaturePointer bp) {
         server.deployMeeple(bp.getPosition(), bp.getLocation(), meepleType);
     }
 

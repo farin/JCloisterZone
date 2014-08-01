@@ -28,7 +28,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
@@ -51,7 +51,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected PlayerSlot[] slots;
     protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, Client2ClientIF server, Connection conn) {
+    public CreateGamePhase(Game game, RmiProxy server, Connection conn) {
         super(game, server, conn);
     }
 

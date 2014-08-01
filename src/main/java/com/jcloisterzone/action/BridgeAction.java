@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 public class BridgeAction extends SelectFeatureAction {
 
@@ -10,7 +10,7 @@ public class BridgeAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
+    public void perform(RmiProxy server, FeaturePointer bp) {
         server.deployBridge(bp.getPosition(), bp.getLocation());
     }
 

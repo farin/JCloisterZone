@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("SET_RULE")
+@WsMessageCommand("SET_RULE")
 public class SetRuleMessage implements WsMessage {
     private String gameId;
     private CustomRule rule;

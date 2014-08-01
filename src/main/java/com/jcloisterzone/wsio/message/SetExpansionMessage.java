@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("SET_EXPANSION")
+@WsMessageCommand("SET_EXPANSION")
 public class SetExpansionMessage implements WsMessage {
     private String gameId;
     private Expansion expansion;

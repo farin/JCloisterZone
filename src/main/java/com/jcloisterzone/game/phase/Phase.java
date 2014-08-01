@@ -18,13 +18,13 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
 
-public abstract class Phase implements Client2ClientIF {
+public abstract class Phase implements RmiProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

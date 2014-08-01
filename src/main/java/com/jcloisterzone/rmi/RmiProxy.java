@@ -13,7 +13,7 @@ import com.jcloisterzone.figure.Meeple;
  * from this class has origin on the client side.
  *
  */
-public interface Client2ClientIF {
+public interface RmiProxy {
 
     /* ---------------------- STARTED GAME MESSAGES ------------------*/
 

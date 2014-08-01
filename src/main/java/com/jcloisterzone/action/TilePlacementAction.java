@@ -15,7 +15,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePlacement;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.GridLayer;
@@ -74,7 +74,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     @Override
-    public void perform(Client2ClientIF server, TilePlacement tp) {
+    public void perform(RmiProxy server, TilePlacement tp) {
         server.placeTile(tp.getRotation(), tp.getPosition());
     }
 

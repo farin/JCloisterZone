@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("GET_RAND_SAMPLE")
+@WsMessageCommand("GET_RAND_SAMPLE")
 public class GetRandSampleMessage implements WsMessage {
 
     private String gameId;

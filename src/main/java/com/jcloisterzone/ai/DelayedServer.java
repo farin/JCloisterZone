@@ -6,14 +6,14 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
-public class DelayedServer implements Client2ClientIF {
+public class DelayedServer implements RmiProxy {
 
-    private final Client2ClientIF server;
+    private final RmiProxy server;
     private final int placeTileDelay;
 
-    public DelayedServer(Client2ClientIF server, int placeTileDelay) {
+    public DelayedServer(RmiProxy server, int placeTileDelay) {
         this.server = server;
         this.placeTileDelay = placeTileDelay;
     }

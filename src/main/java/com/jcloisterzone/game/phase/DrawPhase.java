@@ -11,7 +11,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
@@ -26,7 +26,7 @@ public class DrawPhase extends ServerAwarePhase {
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
 
-    public DrawPhase(Game game, Client2ClientIF server, Connection conn) {
+    public DrawPhase(Game game, RmiProxy server, Connection conn) {
         super(game, server, conn);
         DebugConfig debugConfig = game.getConfig().getDebug();
         if (debugConfig != null) {

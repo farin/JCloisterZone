@@ -9,42 +9,43 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import com.jcloisterzone.rmi.CallMessage;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("RMI")
+@WsMessageCommand("RMI")
 public class RmiMessage implements WsMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private String gameId;
-    private String method; // for debug purposes
-    private String call;
+    private String method;
+    private String args; //serialized
 
-    public RmiMessage(String gameId) {
+    public RmiMessage(String gameId, String method, Object[] args) {
         this.gameId = gameId;
+        this.method = method;
+        this.args = encode(args);
     }
 
-    public void encode(CallMessage callMessage) {
+    public String encode(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(callMessage);
+            oos.writeObject(object);
             oos.close();
-            call = new String(Base64Coder.encode(baos.toByteArray()));
-            method = callMessage.getMethod();
+            return new String(Base64Coder.encode(baos.toByteArray()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
-    public CallMessage decode() {
+    public Object decode(String object) {
         try {
-            byte[] data = Base64Coder.decode(call);
+            byte[] data = Base64Coder.decode(object);
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
             Object o = ois.readObject();
             ois.close();
-            return (CallMessage) o;
+            return o;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -59,14 +60,6 @@ public class RmiMessage implements WsMessage {
         this.gameId = gameId;
     }
 
-    public String getCall() {
-        return call;
-    }
-
-    public void setCall(String call) {
-        this.call = call;
-    }
-
     public String getMethod() {
         return method;
     }
@@ -74,4 +67,14 @@ public class RmiMessage implements WsMessage {
     public void setMethod(String method) {
         this.method = method;
     }
+
+    public String getArgs() {
+        return args;
+    }
+
+    public void setArgs(String args) {
+        this.args = args;
+    }
+
+
 }

@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("GAME")
+@WsMessageCommand("GAME")
 public class GameMessage implements WsMessage {
 
     public enum GameState {

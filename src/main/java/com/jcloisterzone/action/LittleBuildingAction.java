@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.LittleBuilding;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
 
@@ -17,7 +17,7 @@ public class LittleBuildingAction extends PlayerAction<LittleBuilding> {
     }
 
     @Override
-    public void perform(Client2ClientIF server, LittleBuilding target) {
+    public void perform(RmiProxy server, LittleBuilding target) {
        server.placeLittleBuilding(target);
     }
 

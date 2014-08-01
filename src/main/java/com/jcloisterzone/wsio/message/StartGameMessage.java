@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("START_GAME")
+@WsMessageCommand("START_GAME")
 public class StartGameMessage implements WsMessage {
     private String gameId;
 

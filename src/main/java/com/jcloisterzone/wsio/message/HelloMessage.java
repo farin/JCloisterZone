@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.Application;
-import com.jcloisterzone.wsio.Cmd;
+import com.jcloisterzone.wsio.WsMessageCommand;
 
-@Cmd("HELLO")
+@WsMessageCommand("HELLO")
 public class HelloMessage implements WsMessage {
 
     private String appVersion = Application.VERSION;

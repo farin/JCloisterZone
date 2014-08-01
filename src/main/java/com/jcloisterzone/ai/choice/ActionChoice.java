@@ -4,7 +4,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ai.GameRanking;
 import com.jcloisterzone.ai.SavePoint;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 public class ActionChoice<T> extends AiChoice{
 
@@ -17,7 +17,7 @@ public class ActionChoice<T> extends AiChoice{
         this.value = value;
     }
 
-    public void perform(Client2ClientIF server) {
+    public void perform(RmiProxy server) {
         action.perform(server, value);
     }
 

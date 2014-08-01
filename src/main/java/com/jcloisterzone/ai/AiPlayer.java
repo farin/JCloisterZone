@@ -22,7 +22,7 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.wsio.Connection;
 
@@ -33,7 +33,7 @@ public abstract class AiPlayer {
     protected Game game;
 
     private Connection conn;
-    private Client2ClientIF server;
+    private RmiProxy server;
     private ClientStub clientStub;
     private Player player;
 
@@ -41,11 +41,11 @@ public abstract class AiPlayer {
         this.game = game;
     }
 
-    public Client2ClientIF getServer() {
+    public RmiProxy getServer() {
         return server;
     }
 
-    public void setServer(Connection conn, Client2ClientIF server) {
+    public void setServer(Connection conn, RmiProxy server) {
         Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
         this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
         this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
