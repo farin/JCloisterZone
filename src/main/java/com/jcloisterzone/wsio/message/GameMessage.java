@@ -10,13 +10,15 @@ public class GameMessage implements WsMessage {
     }
 
     private String gameId;
+    private String name;
     private GameState state;
     private String snapshot;
     private SlotMessage[] slots;
     private GameSetupMessage gameSetup;
 
-    public GameMessage(String id, GameState state, GameSetupMessage gameSetup) {
+    public GameMessage(String id, String name, GameState state, GameSetupMessage gameSetup) {
         this.gameId = id;
+        this.name = name;
         this.state = state;
         this.gameSetup = gameSetup;
     }
@@ -27,6 +29,15 @@ public class GameMessage implements WsMessage {
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public GameState getState() {

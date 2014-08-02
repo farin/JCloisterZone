@@ -161,7 +161,7 @@ public class SimpleServer extends WebSocketServer  {
 
     private GameMessage newGameMessage(String clientId) {
         GameSetupMessage gsm = new GameSetupMessage(game.getGameId(), game.getCustomRules(), game.getExpansions(), game.getCapabilityClasses());
-        GameMessage gm = new GameMessage(game.getGameId(),  gameStarted ? GameState.RUNNING : GameState.OPEN, gsm);
+        GameMessage gm = new GameMessage(game.getGameId(), "", gameStarted ? GameState.RUNNING : GameState.OPEN, gsm);
         List<SlotMessage> slotMsgs = new ArrayList<>();
         for (ServerPlayerSlot slot : slots) {
             if (slot != null) {

@@ -304,8 +304,8 @@ public class ClientStub  implements InvocationHandler, MessageListener {
               Class<?> clazz = null;;
               try {
                   clazz = Class.forName(name);
-                  name = "AI-"+i+"-"+clazz.getSimpleName();
                   ((CreateGamePhase) game.getPhase()).getPlayerSlots()[i].setAiClassName(name);
+                  name = "AI-" + i + "-" + clazz.getSimpleName().replace("AiPlayer", "");
               } catch (ClassNotFoundException e) {
                   //empty
               }

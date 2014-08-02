@@ -3,6 +3,7 @@
 ## master branch
 *appears in next release*
 
+* network protocol changed completely
 * German Monasteries expansion
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
