@@ -83,6 +83,7 @@ public final class WsBus {
         for (Object subscriber : subscribers) {
             delegate(subscriber, context, msg);
         }
+        //TODO unhandled message ?
     }
 
     protected WsMessage fromJson(String payload) {
@@ -99,20 +100,12 @@ public final class WsBus {
     }
 
     //TODO what about cache targets
-    public void delegate(Object target, Object subject, WsMessage msg) {
+    public boolean delegate(Object target, Object subject, WsMessage msg) {
         Class<?> type = target.getClass();
-        while (true) {
-            if (delegateScanClass(target, type, subject, msg)) break;
-            type = type.getSuperclass();
-            if (Object.class.equals(type)) break;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean delegateScanClass(Object target, Class<?> type, Object subject,  WsMessage msg) {
-        for (Method m : type.getDeclaredMethods()) {
+        for (Method m : type.getMethods()) {
             WsSubscribe handler = m.getAnnotation(WsSubscribe.class);
             if (handler != null) {
+                @SuppressWarnings("unchecked")
                 Class<? extends WsMessage> cls = (Class<? extends WsMessage>) m.getParameterTypes()[1];
                 if (cls.equals(msg.getClass())) {
                     try {
@@ -132,5 +125,8 @@ public final class WsBus {
         }
         return false;
     }
+
+
+
 
 }

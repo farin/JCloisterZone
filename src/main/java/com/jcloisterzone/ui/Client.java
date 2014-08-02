@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -37,6 +36,7 @@ import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
@@ -45,10 +45,8 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.rmi.RmiProxy;
@@ -349,13 +347,13 @@ public class Client extends JFrame {
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 
-    public void connect(InetAddress ia, int port) {
-        GuiClientStub handler = new GuiClientStub(this);
+    public void connect(String hostname, int port) {
+        ClientStub handler = new ClientStub(this);
         server = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(),
                 new Class[] { RmiProxy.class }, handler);
         handler.setServerProxy(server);
         try {
-            conn = handler.connect(ia, port);
+            conn = handler.connect(hostname, port);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }
@@ -392,18 +390,10 @@ public class Client extends JFrame {
 
     public void createGame() {
         if (!closeGame()) return;
-        try {
-            localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
-            localServer.createGame();
-            localServer.start();
-
-            connect(InetAddress.getLocalHost(), config.getPort());
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-            localServer = null;
-            closeGame(true);
-        }
+        localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
+        localServer.createGame();
+        localServer.start();
+        connect("localhost", config.getPort());
     }
 
     public void handleLoad() {
@@ -422,13 +412,10 @@ public class Client extends JFrame {
                     localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
                     localServer.createGame(new Snapshot(file));
                     localServer.start();
-                    connect(InetAddress.getLocalHost(), config.getPort());
-                } catch (SnapshotVersionException ex1) {
+                    connect("localhost", config.getPort());
+                } catch (IOException | SAXException ex1) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

@@ -4,20 +4,24 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("ERR")
 public class ErrorMessage implements WsMessage {
-    private String origin;
+
+    public static final String BAD_VERSION = "badVersion";
+
+    private String code;
     private String message;
 
-    public ErrorMessage(String origin, String message) {
-        this.origin = origin;
+    public ErrorMessage(String code, String message) {
+        this.code = code;
         this.message = message;
     }
 
-    public String getOrigin() {
-        return origin;
+
+    public String getCode() {
+        return code;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getMessage() {

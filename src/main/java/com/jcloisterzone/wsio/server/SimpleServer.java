@@ -19,8 +19,10 @@ import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
@@ -114,7 +116,8 @@ public class SimpleServer extends WebSocketServer  {
 
     @Override
     public void onClose(WebSocket ws, int code, String reason, boolean remote) {
-
+        //logger.info("Close " + code + " / " + reason + " " + remote);
+        clientIds.remove(ws);
     }
 
     @Override
@@ -178,6 +181,14 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
+//        //devel
+//        if (clientIds.size() == 1) msg.setProtocolVersion("3.1");
+//        //---
+        if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
+            send(ws, new ErrorMessage(ErrorMessage.BAD_VERSION, "Protocol version " + Application.PROTCOL_VERSION + " required."));
+            ws.close();
+            return;
+        }
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         String clientId = reservedClientId != null ? reservedClientId : getRandomId();
         String sessionKey = getRandomId();

@@ -46,8 +46,9 @@ public class ConnectGamePanel extends JPanel {
                 if (port.equals("")) {
                      portField.setText(ConnectGamePanel.this.client.getConfig().getPort() + "");
                 }
-                (new AsyncConnect()).start();
+                //(new AsyncConnect()).start();
                 saveHistory();
+                connect();
             }
         };
 
@@ -109,37 +110,61 @@ public class ConnectGamePanel extends JPanel {
         client.saveConfig();
     }
 
-    class AsyncConnect extends Thread {
-
-        public AsyncConnect() {
-            setDaemon(true);
-            setName("Connecting to " + hostField.getText());
+    private void connect() {
+        try {
+            String hostname = hostField.getText().trim();
+            String portStr = portField.getText().trim();
+            int port = Integer.parseInt(portStr);
+            client.connect(hostname, port);
+            return;
+        } catch (NumberFormatException nfe) {
+            message.setText( _("Invalid port number."));
         }
-
-        @Override
-        public void run() {
-            try {
-                String hostname = hostField.getText().trim();
-                InetAddress addr = InetAddress.getByName(hostname);
-                String portStr = portField.getText().trim();
-                int port = Integer.parseInt(portStr);
-                client.connect(addr, port);
-                return;
-            } catch (NumberFormatException nfe) {
-                message.setText( _("Invalid port number."));
-            } catch (UnknownHostException e1) {
-                message.setText( _("Connection failed. Unknown host."));
-            }
-            //TODO refy
-//                if (ex.getCause() instanceof ConnectException) {
-//                    message.setText( _("Connection refused."));
-//                } else {
-//                    message.setText( _("Connection failed."));
-//                }
+//        catch (UnknownHostException e1) {
+//            message.setText( _("Connection failed. Unknown host."));
+//        }
+        //TODO refy
+//            if (ex.getCause() instanceof ConnectException) {
+//                message.setText( _("Connection refused."));
+//            } else {
+//                message.setText( _("Connection failed."));
 //            }
-            message.setForeground(Color.RED);
-            btnConnect.setEnabled(true);
-        }
+//        }
+        message.setForeground(Color.RED);
+        btnConnect.setEnabled(true);
     }
+
+//    class AsyncConnect extends Thread {
+//
+//        public AsyncConnect() {
+//            setDaemon(true);
+//            setName("Connecting to " + hostField.getText());
+//        }
+//
+//        @Override
+//        public void run() {
+//            try {
+//                String hostname = hostField.getText().trim();
+//                InetAddress addr = InetAddress.getByName(hostname);
+//                String portStr = portField.getText().trim();
+//                int port = Integer.parseInt(portStr);
+//                client.connect(addr, port);
+//                return;
+//            } catch (NumberFormatException nfe) {
+//                message.setText( _("Invalid port number."));
+//            } catch (UnknownHostException e1) {
+//                message.setText( _("Connection failed. Unknown host."));
+//            }
+//            //TODO refy
+////                if (ex.getCause() instanceof ConnectException) {
+////                    message.setText( _("Connection refused."));
+////                } else {
+////                    message.setText( _("Connection failed."));
+////                }
+////            }
+//            message.setForeground(Color.RED);
+//            btnConnect.setEnabled(true);
+//        }
+//    }
 
 }
