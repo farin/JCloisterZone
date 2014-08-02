@@ -2,7 +2,7 @@ package com.jcloisterzone.wsio;
 
 import com.jcloisterzone.wsio.message.WsMessage;
 
-public interface WsReceiver {
+public interface MessageListener {
 
     void onWebsocketClose(int code, String reason, boolean remote);
     void onWebsocketError(Exception ex);

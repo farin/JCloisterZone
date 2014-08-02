@@ -32,14 +32,13 @@ import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.WsReceiver;
+import com.jcloisterzone.wsio.MessageDispatcher;
+import com.jcloisterzone.wsio.MessageListener;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ErrorMessage;
-import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
@@ -51,15 +50,14 @@ import com.jcloisterzone.wsio.message.WsMessage;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 
-public class ClientStub  implements InvocationHandler, WsReceiver {
+public class ClientStub  implements InvocationHandler, MessageListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Connection conn;
-    private RmiProxy serverProxy;
+    private MessageDispatcher dispatcher = new MessageDispatcher();
 
-    protected Game game;
-
+    private Game game;
     private final Client client;
     private boolean autostartPerfomed;
 
@@ -98,7 +96,10 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
 
     @Override
     public void onWebsocketMessage(WsMessage msg) {
-        if (game != null) {
+        if (game == null) {
+            dispatcher.dispatch(msg, conn, this);
+        } else {
+            dispatcher.dispatch(msg, conn, this, game.getPhase());
             phaseLoop();
         }
     }
@@ -146,7 +147,7 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
 
 
     @WsSubscribe
-    public void handleGame(final Connection conn, final GameMessage msg) {
+    public void handleGame(final GameMessage msg) {
         if (msg.getState() == GameState.RUNNING) {
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
             phase.startGame();
@@ -190,7 +191,7 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
                 public void run() {
                     client.showCreateGamePanel(msg.getSnapshot() == null, slots);
                     //HACK - we must wait for panel is created
-                    handleGameSetup(conn, msg.getGameSetup());
+                    handleGameSetup(msg.getGameSetup());
                     performAutostart();
                 }
             });
@@ -198,15 +199,14 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
     }
 
     @WsSubscribe
-    public void handleSlot(Connection conn, SlotMessage msg) {
+    public void handleSlot(SlotMessage msg) {
         final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
         game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
-        game.getPhase().handleSlotMessage(msg);
     }
 
     @WsSubscribe
-    public void handleGameSetup(Connection conn, GameSetupMessage msg) {
+    public void handleGameSetup(GameSetupMessage msg) {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
@@ -223,7 +223,7 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
 
 
     @WsSubscribe
-    public void handleSetExpansion(Connection conn, SetExpansionMessage msg) {
+    public void handleSetExpansion(SetExpansionMessage msg) {
         Expansion expansion = msg.getExpansion();
         if (msg.isEnabled()) {
             game.getExpansions().add(expansion);
@@ -234,7 +234,7 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
     }
 
     @WsSubscribe
-    public void handleSetRule(Connection conn, SetRuleMessage msg) {
+    public void handleSetRule(SetRuleMessage msg) {
         CustomRule rule = msg.getRule();
         if (msg.isEnabled()) {
             game.getCustomRules().add(rule);
@@ -244,19 +244,8 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
         game.post(new RuleChangeEvent(rule, msg.isEnabled()));
     }
 
-    //TODO add CmdHandler to phase and pass to phase automatically
     @WsSubscribe
-    public void handleRandSample(Connection conn, RandSampleMessage msg) {
-        game.getPhase().handleRandSample(msg);
-    }
-
-    @WsSubscribe
-    public void handleFlierDice(Connection conn, FlierDiceMessage msg) {
-        game.getPhase().handleFlierDice(msg);
-    }
-
-    @WsSubscribe
-    public void handleRmi(Connection conn, RmiMessage msg) {
+    public void handleRmi(RmiMessage msg) {
         try {
             Phase phase = game.getPhase();
             Method[] methods = RmiProxy.class.getMethods();

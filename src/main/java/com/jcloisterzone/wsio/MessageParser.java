@@ -1,10 +1,6 @@
 package com.jcloisterzone.wsio;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -32,16 +28,16 @@ import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
-public final class WsBus {
+public final class MessageParser {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     private Map<String, Class<? extends WsMessage>> types = new HashMap<>();
-    private List<Object> subscribers = new ArrayList<>();
 
-    public WsBus() {
+
+    public MessageParser() {
         registerMsgType(ErrorMessage.class);
         registerMsgType(HelloMessage.class);
         registerMsgType(WelcomeMessage.class);
@@ -70,24 +66,7 @@ public final class WsBus {
         types.put(getCmdName(type), type);
     }
 
-    public void register(Object subscriber) {
-        subscribers.add(subscriber);
-    }
-
-    public void unregister(Object subscriber) {
-        subscribers.remove(subscriber);
-    }
-
-    public WsMessage receive(Object context, String message) {
-        WsMessage msg = fromJson(message);
-        for (Object subscriber : subscribers) {
-            delegate(subscriber, context, msg);
-        }
-        //TODO unhandled message ?
-        return msg;
-    }
-
-    protected WsMessage fromJson(String payload) {
+    public WsMessage fromJson(String payload) {
         String s[] = payload.split(" ", 2); //command, arg
         Class<? extends WsMessage> type = types.get(s[0]);
         if (type == null) {
@@ -100,32 +79,7 @@ public final class WsBus {
         return getCmdName(arg.getClass()) + " " + gson.toJson(arg);
     }
 
-    //TODO what about cache targets
-    public boolean delegate(Object target, Object subject, WsMessage msg) {
-        Class<?> type = target.getClass();
-        for (Method m : type.getMethods()) {
-            WsSubscribe handler = m.getAnnotation(WsSubscribe.class);
-            if (handler != null) {
-                @SuppressWarnings("unchecked")
-                Class<? extends WsMessage> cls = (Class<? extends WsMessage>) m.getParameterTypes()[1];
-                if (cls.equals(msg.getClass())) {
-                    try {
-                        m.invoke(target, subject, msg);
-                    } catch (InvocationTargetException e) {
-                        if (e.getCause() instanceof RuntimeException) {
-                            throw (RuntimeException) e.getCause();
-                        } else {
-                            logger.error(e.getMessage(), e);
-                        }
-                    } catch (IllegalAccessException e) {
-                        logger.error(e.getMessage(), e);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 
 
 

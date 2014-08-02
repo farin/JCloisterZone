@@ -30,6 +30,7 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
 
@@ -64,7 +65,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
 
-    @Override
+    @WsSubscribe
     public void handleSlotMessage(SlotMessage msg) {
         slotSupportedExpansions[msg.getNumber()] = msg.getSupportedExpansions();
         game.post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));

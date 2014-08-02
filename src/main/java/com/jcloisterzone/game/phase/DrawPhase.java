@@ -12,6 +12,7 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 
@@ -89,7 +90,7 @@ public class DrawPhase extends ServerAwarePhase {
         }
     }
 
-    @Override
+    @WsSubscribe
     public void handleRandSample(RandSampleMessage msg) {
         if (!msg.getName().equals("draw") || msg.getPopulation() != getTilePack().size()) {
             logger.error("Invalid message");

@@ -34,6 +34,7 @@ import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 
@@ -195,7 +196,7 @@ public class ActionPhase extends Phase {
         next(ActionPhase.class);
     }
 
-    @Override
+    @WsSubscribe
     public void handleFlierDice(FlierDiceMessage msg) {
         flierCap.setFlierDistance(msg.getMeepleTypeClass(), msg.getDistance());
         game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), msg.getDistance()));

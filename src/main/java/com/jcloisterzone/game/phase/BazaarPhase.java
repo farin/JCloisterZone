@@ -16,6 +16,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 
@@ -82,7 +83,7 @@ public class BazaarPhase extends ServerAwarePhase {
         return true;
     }
 
-    @Override
+    @WsSubscribe
     public void handleRandSample(RandSampleMessage msg) {
         int size = game.getAllPlayers().length;
         if (!msg.getName().equals("bazaar") || msg.getPopulation() != getTilePack().size() || msg.getValues().length != size) {

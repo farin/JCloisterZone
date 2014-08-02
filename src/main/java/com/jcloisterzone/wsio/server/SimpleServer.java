@@ -28,7 +28,8 @@ import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.wsio.WsBus;
+import com.jcloisterzone.wsio.MessageDispatcher;
+import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -53,7 +54,8 @@ public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private WsBus wsBus = new WsBus();
+    private MessageParser parser = new MessageParser();
+    private MessageDispatcher dispatcher = new MessageDispatcher();
 
     private GameSettings game;
     protected final ServerPlayerSlot[] slots;
@@ -69,7 +71,6 @@ public class SimpleServer extends WebSocketServer  {
 
     public SimpleServer(InetSocketAddress address) {
         super(address);
-        wsBus.register(this);
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
 
@@ -132,7 +133,8 @@ public class SimpleServer extends WebSocketServer  {
     @Override
     public void onMessage(WebSocket ws, String payload) {
         logger.info(payload);
-        wsBus.receive(ws, payload);
+        WsMessage msg = parser.fromJson(payload);
+        dispatcher.dispatch(msg, ws, this);
     }
 
     @Override
@@ -322,11 +324,11 @@ public class SimpleServer extends WebSocketServer  {
 
 
     public void send(WebSocket ws, WsMessage message) {
-        ws.send(wsBus.toJson(message));
+        ws.send(parser.toJson(message));
     }
 
     public void broadcast(WsMessage data) {
-        String payload = wsBus.toJson(data);
+        String payload = parser.toJson(data);
         for (WebSocket ws : clientIds.keySet()) {
             ws.send(payload);
         }

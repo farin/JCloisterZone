@@ -196,17 +196,6 @@ public abstract class Phase implements RmiProxy {
         game.undo();
     }
 
-    public void handleRandSample(RandSampleMessage msg) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "handleRandSample");
-    }
-
-    public void handleFlierDice(FlierDiceMessage msg) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "handleFlierDice");
-    }
-
-    public void handleSlotMessage(SlotMessage msg) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "handleSlotMessage");
-    }
 
     @Override
     public String toString() {

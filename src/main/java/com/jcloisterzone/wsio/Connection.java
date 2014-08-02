@@ -19,7 +19,7 @@ public class Connection {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private WsBus wsBus = new WsBus();
+    private MessageParser parser = new MessageParser();
     private WebSocketClient ws;
 
     private String clientId;
@@ -28,25 +28,28 @@ public class Connection {
     //for legacy code, to be able pass connection only
     private RmiProxy rmiProxy;
 
-    public Connection(URI uri, final WsReceiver receiver) {
-        wsBus.register(this);
-        wsBus.register(receiver);
+    public Connection(URI uri, final MessageListener listener) {
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                receiver.onWebsocketClose(code, reason, remote);
+                listener.onWebsocketClose(code, reason, remote);
             }
 
             @Override
             public void onError(Exception ex) {
-                receiver.onWebsocketError(ex);
+                listener.onWebsocketError(ex);
             }
 
             @Override
             public void onMessage(String payload) {
                 logger.info(payload);
-                WsMessage msg = wsBus.receive(Connection.this, payload);
-                receiver.onWebsocketMessage(msg);
+                WsMessage msg = parser.fromJson(payload);
+                if (msg instanceof WelcomeMessage) {
+                    WelcomeMessage welcome = (WelcomeMessage) msg;
+                    clientId = welcome.getClientId();
+                    sessionKey = welcome.getSessionKey();
+                }
+                listener.onWebsocketMessage(msg);
             }
 
             @Override
@@ -71,7 +74,7 @@ public class Connection {
     }
 
     public void send(WsMessage arg) {
-        ws.send(wsBus.toJson(arg));
+        ws.send(parser.toJson(arg));
     }
 
     public void close() {
@@ -93,6 +96,4 @@ public class Connection {
     public void setRmiProxy(RmiProxy rmiProxy) {
         this.rmiProxy = rmiProxy;
     }
-
-
 }
