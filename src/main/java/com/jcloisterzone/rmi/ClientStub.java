@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -14,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.config.Config.AutostartConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
@@ -39,6 +44,8 @@ import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
+import com.jcloisterzone.wsio.message.StartGameMessage;
+import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -91,7 +98,20 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
 
     @Override
     public void onWebsocketMessage(WsMessage msg) {
-        phaseLoop();
+        if (game != null) {
+            phaseLoop();
+        }
+    }
+
+    protected void phaseLoop() {
+        Phase phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
+        while (phase != null && !phase.isEntered()) {
+            logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
+            phase.setEntered(true);
+            phase.enter();
+            phase = game.getPhase();
+            //game.post(new PhaseEnterEvent(phase));
+        }
     }
 
 
@@ -130,7 +150,6 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
         if (msg.getState() == GameState.RUNNING) {
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
             phase.startGame();
-            phaseLoop();
             return;
         }
         CreateGamePhase phase;
@@ -172,10 +191,10 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
                     client.showCreateGamePanel(msg.getSnapshot() == null, slots);
                     //HACK - we must wait for panel is created
                     handleGameSetup(conn, msg.getGameSetup());
+                    performAutostart();
                 }
             });
         }
-
     }
 
     @WsSubscribe
@@ -270,63 +289,48 @@ public class ClientStub  implements InvocationHandler, WsReceiver {
         }
     }
 
-    protected void phaseLoop() {
-        Phase phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
-        while (phase != null && !phase.isEntered()) {
-            logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
-            phase.setEntered(true);
-            phase.enter();
-            phase = game.getPhase();
-            //game.post(new PhaseEnterEvent(phase));
-        }
-    }
-
-
     public String getClientId() {
         return conn.getClientId();
     }
 
- // AUTOSTART not convered yet
 
-//  @Override
-//  protected void controllMessageReceived(final ControllMessage msg) {
-//      super.controllMessageReceived(msg);
-//
-//      DebugConfig debugConfig = client.getConfig().getDebug();
-//      if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
-//          autostartPerfomed = true; //apply autostart only once
-//          AutostartConfig autostartConfig = debugConfig.getAutostart();
-//          final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
-//          if (presetCfg == null) {
-//              logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
-//              return;
-//          }
-//
-//          final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>() : autostartConfig.getPlayers();
-//          if (players.isEmpty()) {
-//              players.add("Player");
-//          }
-//          SwingUtilities.invokeLater(new Runnable() {
-//              public void run() {
-//                  int i = 0;
-//                  for (String name: players) {
-//                      PlayerSlot slot;
-//                      try {
-//                          Class<?> clazz = Class.forName(name);
-//                          slot = new PlayerSlot(i, SlotType.AI, "AI-"+i+"-"+clazz.getSimpleName(), getClientId());
-//                          slot.setAiClassName(clazz.getName());
-//                      } catch (ClassNotFoundException e) {
-//                          slot = new PlayerSlot(i, SlotType.PLAYER, name, getClientId());
-//                      }
-//                      client.getServer().updateSlot(slot, null);
-//                      i++;
-//                  }
-//
-//                  presetCfg.updateGameSetup(client.getServer());
-//                  client.getServer().startGame();
-//              }
-//          });
-//      }
-//  }
+  protected void performAutostart() {
+      DebugConfig debugConfig = client.getConfig().getDebug();
+      if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
+          autostartPerfomed = true; //apply autostart only once
+          AutostartConfig autostartConfig = debugConfig.getAutostart();
+          final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
+          if (presetCfg == null) {
+              logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
+              return;
+          }
+
+          final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>() : autostartConfig.getPlayers();
+          if (players.isEmpty()) {
+              players.add("Player");
+          }
+
+          int i = 0;
+          for (String name: players) {
+              Class<?> clazz = null;;
+              try {
+                  clazz = Class.forName(name);
+                  name = "AI-"+i+"-"+clazz.getSimpleName();
+                  ((CreateGamePhase) game.getPhase()).getPlayerSlots()[i].setAiClassName(name);
+              } catch (ClassNotFoundException e) {
+                  //empty
+              }
+              TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), i, name);
+              if (clazz != null) {
+                  msg.setAi(true);
+              }
+              conn.send(msg);
+              i++;
+          }
+
+          presetCfg.updateGameSetup(conn, game.getGameId());
+          conn.send(new StartGameMessage(game.getGameId()));
+      }
+  }
 
 }
