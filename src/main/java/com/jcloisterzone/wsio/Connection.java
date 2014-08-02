@@ -1,6 +1,8 @@
 package com.jcloisterzone.wsio;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
@@ -44,7 +46,14 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                Connection.this.send(new HelloMessage(UUID.randomUUID().toString()));
+                String name;
+                try {
+                    name = InetAddress.getLocalHost().getHostName();
+                } catch (UnknownHostException e) {
+                    logger.warn(e.getMessage(), e);
+                    name = UUID.randomUUID().toString();
+                }
+                Connection.this.send(new HelloMessage(name));
             }
         };
         ws.connect();

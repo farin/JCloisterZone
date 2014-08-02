@@ -87,7 +87,7 @@ public class GuiClientStub extends ClientStub {
 //        }
 //    }
 
-    protected void versionMismatch(int version) {
+    protected void versionMismatch(String version) {
         super.versionMismatch(version);
         JOptionPane.showMessageDialog(client,
                 _("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version."),

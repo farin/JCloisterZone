@@ -53,7 +53,7 @@ public class BazaarPhase extends ServerAwarePhase {
         //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
-            getConnection().send(new GetRandSampleMessage(SimpleServer.GAME_ID, "bazaar", getTilePack().size(), game.getAllPlayers().length));
+            getConnection().send(new GetRandSampleMessage(game.getGameId(), "bazaar", getTilePack().size(), game.getAllPlayers().length));
         }
     }
 

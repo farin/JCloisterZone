@@ -388,8 +388,8 @@ public class Snapshot implements Serializable {
         return (Class<? extends Phase>) XmlUtils.classForName(root.getAttribute("phase"));
     }
 
-    public Game asGame() {
-        return asGame(new Game());
+    public Game asGame(String gameId) {
+        return asGame(new Game(gameId));
 
     }
 

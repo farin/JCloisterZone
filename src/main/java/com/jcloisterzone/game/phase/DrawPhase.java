@@ -87,7 +87,7 @@ public class DrawPhase extends ServerAwarePhase {
         }
         if (isLocalPlayer(getActivePlayer())) {
             //call only from one client (from the active one)
-            getConnection().send(new GetRandSampleMessage(SimpleServer.GAME_ID, "draw", getTilePack().size(), 1));
+            getConnection().send(new GetRandSampleMessage(game.getGameId(), "draw", getTilePack().size(), 1));
         }
     }
 

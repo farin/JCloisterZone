@@ -10,7 +10,7 @@ import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {
 
-    protected Game game = new Game();
+    protected Game game = new Game("1");
     protected TilePackFactory packFactory = new TilePackFactory();
     protected TileFactory tileFactory = new TileFactory();
 

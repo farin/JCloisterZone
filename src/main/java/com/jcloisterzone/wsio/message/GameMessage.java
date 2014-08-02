@@ -9,24 +9,24 @@ public class GameMessage implements WsMessage {
         OPEN, RUNNING
     }
 
-    private String id;
+    private String gameId;
     private GameState state;
     private String snapshot;
     private SlotMessage[] slots;
     private GameSetupMessage gameSetup;
 
     public GameMessage(String id, GameState state, GameSetupMessage gameSetup) {
-        this.id = id;
+        this.gameId = id;
         this.state = state;
         this.gameSetup = gameSetup;
     }
 
-    public String getId() {
-        return id;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public GameState getState() {

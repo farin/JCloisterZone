@@ -1,5 +1,6 @@
 package com.jcloisterzone.wsio;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,7 +117,13 @@ public final class WsBus {
                 if (cls.equals(msg.getClass())) {
                     try {
                         m.invoke(target, subject, msg);
-                    } catch (Exception e) {
+                    } catch (InvocationTargetException e) {
+                        if (e.getCause() instanceof RuntimeException) {
+                            throw (RuntimeException) e.getCause();
+                        } else {
+                            logger.error(e.getMessage(), e);
+                        }
+                    } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(), e);
                     }
                     return true;

@@ -226,7 +226,7 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void sendTakeSlotMessage(PlayerSlot slot) {
-        TakeSlotMessage msg = new TakeSlotMessage(SimpleServer.GAME_ID, slot.getNumber(), slot.getNickname());
+        TakeSlotMessage msg = new TakeSlotMessage(client.getGame().getGameId(), slot.getNumber(), slot.getNickname());
         if (slot.isAi()) {
             msg.setAi(true);
             //todo devel only
@@ -237,7 +237,7 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void sendLeaveSlotMessage(PlayerSlot slot) {
-        LeaveSlotMessage msg = new LeaveSlotMessage(SimpleServer.GAME_ID, slot.getNumber());
+        LeaveSlotMessage msg = new LeaveSlotMessage(client.getGame().getGameId(), slot.getNumber());
         client.getConnection().send(msg);
     }
 

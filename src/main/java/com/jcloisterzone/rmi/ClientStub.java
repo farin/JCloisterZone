@@ -84,7 +84,7 @@ public abstract class ClientStub  implements InvocationHandler {
         if (conn == null) {
             logger.info("Not connected. Message ignored");
         } else {
-            RmiMessage rmi = new RmiMessage(SimpleServer.GAME_ID, method.getName(), args);
+            RmiMessage rmi = new RmiMessage(game.getGameId(), method.getName(), args);
             conn.send(rmi);
         }
         return null;
@@ -92,7 +92,7 @@ public abstract class ClientStub  implements InvocationHandler {
 
 
 
-    protected void versionMismatch(int version) {
+    protected void versionMismatch(String version) {
         logger.error("Version mismatch. Server version: " + version +". Client version " + Application.PROTCOL_VERSION);
     }
 
@@ -100,7 +100,7 @@ public abstract class ClientStub  implements InvocationHandler {
     @WsSubscribe
     public void handleWelcome(Connection conn, WelcomeMessage msg) {
         //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
-        conn.send(new JoinGameMessage(SimpleServer.GAME_ID));
+        //conn.send(new JoinGameMessage(SimpleServer.GAME_ID));
     }
 
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
@@ -137,10 +137,10 @@ public abstract class ClientStub  implements InvocationHandler {
         }
 
         if (snapshot == null) {
-            game = new Game();
+            game = new Game(msg.getGameId());
             phase = new CreateGamePhase(game, getServerProxy(), conn);
         } else {
-            game = snapshot.asGame();
+            game = snapshot.asGame(msg.getGameId());
             phase = new LoadGamePhase(game, snapshot, getServerProxy(), conn);
         }
         initGame(game);

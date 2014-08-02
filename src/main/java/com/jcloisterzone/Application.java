@@ -14,7 +14,7 @@ public interface Application {
     public String VERSION = DEV_VERSION;
     public String BUILD_DATE = "";
 
-    public int PROTCOL_VERSION = 18; //18 = 2.7
+    public String PROTCOL_VERSION = "3.0";
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }
