@@ -78,12 +78,13 @@ public final class WsBus {
         subscribers.remove(subscriber);
     }
 
-    public void receive(Object context, String message) {
+    public WsMessage receive(Object context, String message) {
         WsMessage msg = fromJson(message);
         for (Object subscriber : subscribers) {
             delegate(subscriber, context, msg);
         }
         //TODO unhandled message ?
+        return msg;
     }
 
     protected WsMessage fromJson(String payload) {

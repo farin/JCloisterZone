@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +16,9 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 
@@ -24,6 +26,8 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ConnectGamePanel extends JPanel {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
 
@@ -110,6 +114,20 @@ public class ConnectGamePanel extends JPanel {
         client.saveConfig();
     }
 
+    public void onWebsocketError(Exception ex) {
+        message.setForeground(Color.RED);
+        btnConnect.setEnabled(true);
+        if (ex instanceof UnresolvedAddressException) {
+            message.setText( _("Connection failed. Unknown host."));
+        } else if (ex instanceof ConnectException && "Connection refused: connect".equals(ex.getMessage())) {
+            message.setText( _("Connection refused."));
+        } else {
+            message.setText( _("Connection failed.") + " (" + ex.getMessage() + ")");
+            logger.warn(ex.getMessage(), ex);
+        }
+
+    }
+
     private void connect() {
         try {
             String hostname = hostField.getText().trim();
@@ -120,51 +138,8 @@ public class ConnectGamePanel extends JPanel {
         } catch (NumberFormatException nfe) {
             message.setText( _("Invalid port number."));
         }
-//        catch (UnknownHostException e1) {
-//            message.setText( _("Connection failed. Unknown host."));
-//        }
-        //TODO refy
-//            if (ex.getCause() instanceof ConnectException) {
-//                message.setText( _("Connection refused."));
-//            } else {
-//                message.setText( _("Connection failed."));
-//            }
-//        }
+
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
     }
-
-//    class AsyncConnect extends Thread {
-//
-//        public AsyncConnect() {
-//            setDaemon(true);
-//            setName("Connecting to " + hostField.getText());
-//        }
-//
-//        @Override
-//        public void run() {
-//            try {
-//                String hostname = hostField.getText().trim();
-//                InetAddress addr = InetAddress.getByName(hostname);
-//                String portStr = portField.getText().trim();
-//                int port = Integer.parseInt(portStr);
-//                client.connect(addr, port);
-//                return;
-//            } catch (NumberFormatException nfe) {
-//                message.setText( _("Invalid port number."));
-//            } catch (UnknownHostException e1) {
-//                message.setText( _("Connection failed. Unknown host."));
-//            }
-//            //TODO refy
-////                if (ex.getCause() instanceof ConnectException) {
-////                    message.setText( _("Connection refused."));
-////                } else {
-////                    message.setText( _("Connection failed."));
-////                }
-////            }
-//            message.setForeground(Color.RED);
-//            btnConnect.setEnabled(true);
-//        }
-//    }
-
 }

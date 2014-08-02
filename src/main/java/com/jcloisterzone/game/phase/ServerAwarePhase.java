@@ -7,18 +7,15 @@ import com.jcloisterzone.wsio.Connection;
 
 public class ServerAwarePhase extends Phase {
 
-    @Deprecated //use connection only
-    private final RmiProxy server;
     private final Connection conn;
 
-    public ServerAwarePhase(Game game, RmiProxy server, Connection conn) {
+    public ServerAwarePhase(Game game, Connection conn) {
         super(game);
-        this.server = server;
         this.conn = conn;
     }
 
     public RmiProxy getServer() {
-        return server;
+        return conn.getRmiProxy();
     }
 
     public Connection getConnection() {

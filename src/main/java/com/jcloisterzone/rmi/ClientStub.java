@@ -25,7 +25,9 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsReceiver;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -37,12 +39,12 @@ import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.WelcomeMessage;
+import com.jcloisterzone.wsio.message.WsMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
 
-public class ClientStub  implements InvocationHandler {
+public class ClientStub  implements InvocationHandler, WsReceiver {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -67,23 +69,31 @@ public class ClientStub  implements InvocationHandler {
         return conn;
     }
 
-    public RmiProxy getServerProxy() {
-        return serverProxy;
-    }
-
-    public void setServerProxy(RmiProxy serverProxy) {
-        this.serverProxy = serverProxy;
-    }
-
     public Game getGame() {
         return game;
     }
 
-    //TODO revise; close from client side ???
-    public void stop() {
-        conn.close();
-        conn = null;
+
+    @Override
+    public void onWebsocketError(Exception ex) {
+        ConnectGamePanel cgp = client.getConnectGamePanel();
+        if (cgp == null) {
+            logger.error(ex.getMessage(), ex);
+        } else {
+            cgp.onWebsocketError(ex);
+        }
     }
+
+    @Override
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+        //empty for now
+    }
+
+    @Override
+    public void onWebsocketMessage(WsMessage msg) {
+        phaseLoop();
+    }
+
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -97,12 +107,6 @@ public class ClientStub  implements InvocationHandler {
     }
 
 
-
-    @WsSubscribe
-    public void handleWelcome(Connection conn, WelcomeMessage msg) {
-        //conn.sendMessage("CREATE_GAME", new CreateGameMessage());
-        //conn.send(new JoinGameMessage(SimpleServer.GAME_ID));
-    }
 
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
@@ -142,10 +146,10 @@ public class ClientStub  implements InvocationHandler {
 
         if (snapshot == null) {
             game = new Game(msg.getGameId());
-            phase = new CreateGamePhase(game, getServerProxy(), conn);
+            phase = new CreateGamePhase(game, conn);
         } else {
             game = snapshot.asGame(msg.getGameId());
-            phase = new LoadGamePhase(game, snapshot, getServerProxy(), conn);
+            phase = new LoadGamePhase(game, snapshot, conn);
         }
         initGame(game);
 
@@ -225,13 +229,11 @@ public class ClientStub  implements InvocationHandler {
     @WsSubscribe
     public void handleRandSample(Connection conn, RandSampleMessage msg) {
         game.getPhase().handleRandSample(msg);
-        phaseLoop();
     }
 
     @WsSubscribe
     public void handleFlierDice(Connection conn, FlierDiceMessage msg) {
         game.getPhase().handleFlierDice(msg);
-        phaseLoop();
     }
 
     @WsSubscribe
@@ -242,7 +244,6 @@ public class ClientStub  implements InvocationHandler {
             for (int i = 0; i < methods.length; i++) {
                 if (methods[i].getName().equals(msg.getMethod())) {
                     methods[i].invoke(phase, (Object[]) msg.decode(msg.getArgs()));
-                    phaseLoop();
                     return;
                 }
             }

@@ -10,6 +10,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
@@ -24,24 +25,28 @@ public class Connection {
     private String clientId;
     private String sessionKey;
 
-    public Connection(URI uri, final Object receiver) {
+    //for legacy code, to be able pass connection only
+    private RmiProxy rmiProxy;
+
+    public Connection(URI uri, final WsReceiver receiver) {
         wsBus.register(this);
         wsBus.register(receiver);
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                // TODO Auto-generated method stub
+                receiver.onWebsocketClose(code, reason, remote);
             }
 
             @Override
             public void onError(Exception ex) {
-                logger.error(ex.getMessage(), ex);
+                receiver.onWebsocketError(ex);
             }
 
             @Override
             public void onMessage(String payload) {
                 logger.info(payload);
-                wsBus.receive(Connection.this, payload);
+                WsMessage msg = wsBus.receive(Connection.this, payload);
+                receiver.onWebsocketMessage(msg);
             }
 
             @Override
@@ -80,4 +85,14 @@ public class Connection {
     public String getSessionKey() {
         return sessionKey;
     }
+
+    public RmiProxy getRmiProxy() {
+        return rmiProxy;
+    }
+
+    public void setRmiProxy(RmiProxy rmiProxy) {
+        this.rmiProxy = rmiProxy;
+    }
+
+
 }

@@ -51,8 +51,8 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected PlayerSlot[] slots;
     protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, RmiProxy server, Connection conn) {
-        super(game, server, conn);
+    public CreateGamePhase(Game game, Connection conn) {
+        super(game, conn);
     }
 
     public void setSlots(PlayerSlot[] slots) {
@@ -102,7 +102,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getServer(), getConnection()));
+        next = addPhase(next, new BazaarPhase(game, getConnection()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
@@ -127,9 +127,8 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new ActionPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getServer(), getConnection()));
+        next = addPhase(next, new DrawPhase(game, getConnection()));
         next = addPhase(next, new AbbeyPhase(game));
-        next = addPhase(next, new AnyTimeActionPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
         last.setDefaultNext(next); //after last phase, the first is default

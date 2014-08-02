@@ -44,7 +44,6 @@ import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.server.SimpleServer;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 

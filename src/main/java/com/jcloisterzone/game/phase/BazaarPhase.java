@@ -15,18 +15,16 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
-import com.jcloisterzone.wsio.server.SimpleServer;
 
 public class BazaarPhase extends ServerAwarePhase {
 
     private final BazaarCapability bazaarCap;
 
-    public BazaarPhase(Game game, RmiProxy server, Connection conn) {
-        super(game, server, conn);
+    public BazaarPhase(Game game, Connection conn) {
+        super(game, conn);
         bazaarCap = game.getCapability(BazaarCapability.class);
     }
 

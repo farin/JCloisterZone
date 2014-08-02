@@ -101,12 +101,11 @@ public class Client extends JFrame {
 
 
     private CreateGamePanel createGamePanel;
+    private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
     private SimpleServer localServer;
-    private RmiProxy server;
     private Connection conn;
-
 
     private Game game;
     //active player must be cached locally because of game's active player record is changed in other thread immediately
@@ -114,14 +113,6 @@ public class Client extends JFrame {
 
     private EventBus eventBus;
 
-    protected ClientStub getClientStub() {
-        return (ClientStub) Proxy.getInvocationHandler(server);
-    }
-
-//    public String getClientId() {
-//        return conn.getClientId();
-//    }
-//
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
@@ -204,13 +195,12 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
-    @Deprecated //replace with connection
-    public RmiProxy getServer() {
-        return server;
-    }
-
     public Connection getConnection() {
         return conn;
+    }
+
+    public RmiProxy getServer() {
+        return conn.getRmiProxy();
     }
 
     public Game getGame() {
@@ -242,6 +232,10 @@ public class Client extends JFrame {
         return createGamePanel;
     }
 
+    public ConnectGamePanel getConnectGamePanel() {
+        return connectGamePanel;
+    }
+
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }
@@ -258,6 +252,7 @@ public class Client extends JFrame {
             createGamePanel.disposePanel();
             createGamePanel = null;
         }
+        this.connectGamePanel = null;
     }
 
     public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
@@ -306,10 +301,10 @@ public class Client extends JFrame {
                 logger.error(e.getMessage(), e);
             }
             localServer = null;
-        } else if (server != null) {
-             getClientStub().stop();
+        } else if (conn != null) {
+            conn.close();
+            conn = null;
         }
-        server = null;
         conn = null;
         activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
@@ -334,7 +329,7 @@ public class Client extends JFrame {
 
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(new ConnectGamePanel(this));
+        envelope.add(connectGamePanel = new ConnectGamePanel(this));
 
         pane.add(envelope, BorderLayout.CENTER);
         pane.setVisible(true);
@@ -349,11 +344,10 @@ public class Client extends JFrame {
 
     public void connect(String hostname, int port) {
         ClientStub handler = new ClientStub(this);
-        server = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(),
-                new Class[] { RmiProxy.class }, handler);
-        handler.setServerProxy(server);
+        RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
             conn = handler.connect(hostname, port);
+            conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }

@@ -104,7 +104,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         Game copy = snapshot.asGame(game.getGameId());
         copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
-        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getServer(), getConnection());
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getConnection());
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);

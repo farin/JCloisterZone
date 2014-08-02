@@ -72,7 +72,7 @@ public class MenuBar extends JMenuBar {
 
 
         menu.addSeparator();
-        
+
         undo = new JMenuItem(_("Undo"));
         undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         undo.setEnabled(false);
@@ -82,7 +82,7 @@ public class MenuBar extends JMenuBar {
             }
         });
         menu.add(undo);
-        
+
         menu.addSeparator();
 
         save = new JMenuItem(_("Save"));
@@ -305,10 +305,10 @@ public class MenuBar extends JMenuBar {
     public void setShowDiscardedEnabled(boolean enabled) {
         showDiscard.setEnabled(enabled);
     }
-    
+
     public JMenuItem getUndo() {
-		return undo;
-	}
+        return undo;
+    }
 
 
 
