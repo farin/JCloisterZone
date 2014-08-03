@@ -147,7 +147,9 @@ public class SelectActionTask implements Runnable {
             phase.setEntered(true);
             phase.enter();
             phase = game.getPhase();
+            game.flushEventQueue();
         }
+        game.flushEventQueue();
         return false;
     }
 

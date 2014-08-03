@@ -111,8 +111,10 @@ public class ClientStub  implements InvocationHandler, MessageListener {
             phase.setEntered(true);
             phase.enter();
             phase = game.getPhase();
+            game.flushEventQueue();
             //game.post(new PhaseEnterEvent(phase));
         }
+        game.flushEventQueue();
     }
 
 

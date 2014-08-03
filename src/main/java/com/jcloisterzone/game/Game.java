@@ -1,7 +1,9 @@
 package com.jcloisterzone.game;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,6 +88,8 @@ public class Game extends GameSettings {
             logger.error("Could not dispatch event: " + context.getSubscriber() + " to " + context.getSubscriberMethod(), exception);
         }
     });
+    //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before swithc is done
+    private final Deque<Event> eventQueue = new ArrayDeque<>();
 
     private int idSequenceCurrVal = 0;
 
@@ -99,18 +103,25 @@ public class Game extends GameSettings {
     }
 
     public void post(Event event) {
-        if (event instanceof PlayEvent) {
-            if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
-                lastUndoable = (Undoable) event;
-                lastUndoablePhase = phase;
-            } else {
-                if (event.getClass().getAnnotation(Idempotent.class) == null) {
-                    lastUndoable = null;
-                    lastUndoablePhase = null;
+        eventQueue.add(event);
+    }
+
+    public void flushEventQueue() {
+        Event event;
+        while ((event = eventQueue.poll()) != null) {
+            if (event instanceof PlayEvent) {
+                if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+                    lastUndoable = (Undoable) event;
+                    lastUndoablePhase = phase;
+                } else {
+                    if (event.getClass().getAnnotation(Idempotent.class) == null) {
+                        lastUndoable = null;
+                        lastUndoablePhase = null;
+                    }
                 }
             }
+            eventBus.post(event);
         }
-        eventBus.post(event);
     }
 
     public boolean isUndoAllowed() {
