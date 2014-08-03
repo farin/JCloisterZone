@@ -49,7 +49,7 @@ public class WagonCapability extends Capability {
     public void undeployed(MeepleEvent ev) {
         Meeple m = ev.getMeeple();
         if (m instanceof Wagon && ev.getTo() == null && game.getPhase() instanceof ScorePhase) {
-        	returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
+            returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
         }
     }
 
@@ -119,7 +119,7 @@ public class WagonCapability extends Capability {
         return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
             @Override
             public boolean apply(FeaturePointer bp) {
-                Feature fe = getTile().getFeature(bp.getLocation());
+                Feature fe = getBoard().get(bp);
                 return fe instanceof Road || fe instanceof City || fe instanceof Cloister;
             }
         });

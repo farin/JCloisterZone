@@ -283,7 +283,11 @@ public class Game extends GameSettings {
 
 
     public Set<FeaturePointer> prepareFollowerLocations() {
-        return prepareFollowerLocations(currentTile, false);
+        Set<FeaturePointer> followerOptions = prepareFollowerLocations(currentTile, false);
+        for (Capability cap: capabilities) {
+            cap.extendFollowOptions(followerOptions);
+        }
+        return followerOptions;
     }
 
     public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
@@ -296,7 +300,6 @@ public class Game extends GameSettings {
                 City princessCity = tile.getCityWithPrincess();
                 if (princessCity != null) {
                     continue;
-
                 }
             }
             pointers.add(new FeaturePointer(tile.getPosition(), loc));

@@ -20,12 +20,10 @@ import com.jcloisterzone.game.capability.TowerCapability;
 public class PhantomPhase extends Phase {
 
     private final TowerCapability towerCap;
-    private final PortalCapability portalCap;
 
     public PhantomPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
-        portalCap = game.getCapability(PortalCapability.class);
     }
 
     @Override
@@ -40,20 +38,17 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void enter() {
-    	if (!getActivePlayer().hasFollower(Phantom.class)) {
-    		next();
-    	}
-    	MeepleAction phantomAction = new MeepleAction(Phantom.class);
+        if (!getActivePlayer().hasFollower(Phantom.class)) {
+            next();
+        }
+        MeepleAction phantomAction = new MeepleAction(Phantom.class);
         List<MeepleAction> actions = Collections.singletonList(phantomAction);
         phantomAction.addAll(game.prepareFollowerLocations());
-    	Set<FeaturePointer> commonSites = game.prepareFollowerLocations();
-    	if (!commonSites.isEmpty()) {
-	        if (towerCap != null) {
-	            towerCap.prepareTowerFollowerDeploy(actions);
-	        }
-	        if (portalCap != null) {
-	            portalCap.prepareMagicPortal(actions, commonSites);
-	        }
+        Set<FeaturePointer> commonSites = game.prepareFollowerLocations();
+        if (!commonSites.isEmpty()) {
+            if (towerCap != null) {
+                towerCap.prepareTowerFollowerDeploy(actions);
+            }
         }
 
         if (isAutoTurnEnd(actions)) {

@@ -33,7 +33,7 @@ public final class BarnCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         Position pos = getTile().getPosition();
 
         if (game.getActivePlayer().hasSpecialMeeple(Barn.class)) {

@@ -60,7 +60,7 @@ public class BuilderCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Builder.class)) return;
 
@@ -73,9 +73,9 @@ public class BuilderCapability extends Capability {
 
         Position pos = tile.getPosition();
         MeepleAction builderAction = new MeepleAction(Builder.class);
-        
+
         for (Location loc : Iterables.concat(roads, cities)) {
-        	builderAction.add(new FeaturePointer(pos, loc));
+            builderAction.add(new FeaturePointer(pos, loc));
         }
         actions.add(builderAction);
 

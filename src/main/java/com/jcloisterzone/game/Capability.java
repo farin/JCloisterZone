@@ -77,27 +77,29 @@ public abstract class Capability {
 
     public void begin() {
     }
-    
+
     /** convenient method to find follower action in all actions */
     protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
-    	List<MeepleAction> followerActions = new ArrayList<>();
-    	for (PlayerAction<?> a : actions) {
-    		if (a instanceof MeepleAction) {
-    			MeepleAction ma = (MeepleAction) a;
-    			if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
-    				followerActions.add(ma);
-    			}
-    		}
-    	}
-    	return followerActions;
+        List<MeepleAction> followerActions = new ArrayList<>();
+        for (PlayerAction<?> a : actions) {
+            if (a instanceof MeepleAction) {
+                MeepleAction ma = (MeepleAction) a;
+                if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
+                    followerActions.add(ma);
+                }
+            }
+        }
+        return followerActions;
+    }
+
+    public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
     }
 
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
+
     public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
-//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
-//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return true;

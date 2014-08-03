@@ -34,7 +34,7 @@ public class PrincessCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         City c = getTile().getCityWithPrincess();
         if (c == null || ! c.walk(new IsOccupied().with(Follower.class))) return;
         Feature cityRepresentative = c.getMaster();
@@ -43,12 +43,12 @@ public class PrincessCapability extends Capability {
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m.getFeature() instanceof City)) continue;
             if (m.getFeature().getMaster().equals(cityRepresentative) && m instanceof Follower) {
-            	if (princessAction == null) {
-            		princessAction = new PrincessAction();
-            		actions.add(princessAction);
-            	}
+                if (princessAction == null) {
+                    princessAction = new PrincessAction();
+                    actions.add(princessAction);
+                }
                 princessAction.add(new MeeplePointer(m));
             }
         }
     }
-} 
+}

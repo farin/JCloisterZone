@@ -12,7 +12,6 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
@@ -36,7 +35,6 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
 
 
 public class ActionPhase extends Phase {

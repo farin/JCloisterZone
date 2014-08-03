@@ -25,7 +25,6 @@ import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
