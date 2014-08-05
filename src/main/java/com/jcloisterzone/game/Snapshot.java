@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,9 +30,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import com.google.common.base.Objects;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -57,7 +53,7 @@ public class Snapshot implements Serializable {
 
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String COMPATIBLE_FROM = "2.6";
+    public static final String COMPATIBLE_FROM = "2.6"; //on incompatible change, remove alsi !capabilityName.startsWith("com.") code
 
     private Document doc;
     private Element root;
@@ -131,7 +127,7 @@ public class Snapshot implements Serializable {
     private void createCapabilityElements(Game game) {
         for (Capability cap : game.getCapabilities()) {
             Element el = doc.createElement("capability");
-            el.setAttribute("name", cap.getClass().getName());
+            el.setAttribute("name", cap.getClass().getSimpleName().replace("Capability", ""));
             root.appendChild(el);
             cap.saveToSnapshot(doc, el);
         }
@@ -202,7 +198,7 @@ public class Snapshot implements Serializable {
             Element tileEl = tileElemens.get(m.getPosition());
             Element el = doc.createElement("meeple");
             el.setAttribute("player", "" + m.getPlayer().getIndex());
-            el.setAttribute("type", "" + m.getClass().getName());
+            el.setAttribute("type", "" + m.getClass().getSimpleName());
             el.setAttribute("loc", "" + m.getLocation());
             tileEl.appendChild(el);
         }
@@ -275,16 +271,14 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             String capabilityName = el.getAttribute("name");
-            try {
-                //TODO instances should be created here, not in load phase
-                Class<? extends Capability> capabilityClass = (Class<? extends Capability>) Class.forName(capabilityName);
-                Capability capability = game.getCapability(capabilityClass);
-                capability.loadFromSnapshot(doc, el);
-            } catch (Exception e) {
-                logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + capabilityName, e);
-                //TODO show client error
-                //game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
+            if (!capabilityName.startsWith("com.")) { //else 2.X loaded game
+                capabilityName = "com.jcloisterzone.game.capability." + el.getAttribute("name") + "Capability";
             }
+
+            //TODO instances should be created here, not in load phase
+            Class<? extends Capability> capabilityClass = (Class<? extends Capability>) XmlUtils.classForName(capabilityName);
+            Capability capability = game.getCapability(capabilityClass);
+            capability.loadFromSnapshot(doc, el);
         }
     }
 
@@ -363,7 +357,11 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Location loc = Location.valueOf(el.getAttribute("loc"));
-            Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(el.getAttribute("type"));
+            String meepleType = el.getAttribute("type");
+            if (!meepleType.startsWith("com.")) { // 2.X snapshot compatibility
+                meepleType = "com.jcloisterzone.figure." + meepleType;
+            }
+            Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(meepleType);
             int playerIndex = Integer.parseInt(el.getAttribute("player"));
             Meeple meeple = game.getPlayer(playerIndex).getMeepleFromSupply(mt);
             meeple.setLocation(loc);

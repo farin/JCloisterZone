@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.FairyCapability;
 
 public class ScoreEvent extends PlayEvent implements Undoable {
 
@@ -42,11 +43,11 @@ public class ScoreEvent extends PlayEvent implements Undoable {
     public Feature getFeature() {
         return feature;
     }
-    
+
     public Position getPosition() {
-		return position;
-	}
-    
+        return position;
+    }
+
     public int getPoints() {
         return points;
     }
@@ -77,6 +78,12 @@ public class ScoreEvent extends PlayEvent implements Undoable {
 
     @Override
     public void undo(Game game) {
-        getPlayer().addPoints(-points, category);
+        if (label != null && label.contains(" + ")) {
+            //HACK: nasty hack, fairy finished object fires score event as one, but points are in two categories
+            getPlayer().addPoints(-FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+            getPlayer().addPoints(-points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, category);
+        } else {
+            getPlayer().addPoints(-points, category);
+        }
     }
 }
