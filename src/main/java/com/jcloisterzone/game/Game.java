@@ -19,6 +19,7 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
+import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -82,12 +83,7 @@ public class Game extends GameSettings {
     private Undoable lastUndoable;
     private Phase lastUndoablePhase;
 
-    private final EventBus eventBus = new EventBus(new SubscriberExceptionHandler() {
-        @Override
-        public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            logger.error("Could not dispatch event: " + context.getSubscriber() + " to " + context.getSubscriberMethod(), exception);
-        }
-    });
+    private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
     //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before swithc is done
     private final Deque<Event> eventQueue = new ArrayDeque<>();
 

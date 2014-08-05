@@ -145,18 +145,18 @@ public class MainPanel extends BackgroundPanel {
             farmHintLayer.tileEvent(ev);
         }
     }
-    
-    
+
+
     public void meepleEvent(MeepleEvent ev) {
-    	gridPanel.clearActionDecorations();
-    	if (ev.getFrom() != null) {
-    		meepleLayer.meepleUndeployed(ev);
-    	}
-    	if (ev.getTo() != null) {
-    		meepleLayer.meepleDeployed(ev);
-    	}
-    	farmHintLayer.meepleEvent(ev);
-    	
+        gridPanel.clearActionDecorations();
+        if (ev.getFrom() != null) {
+            meepleLayer.meepleUndeployed(ev);
+        }
+        if (ev.getTo() != null) {
+            meepleLayer.meepleDeployed(ev);
+        }
+        farmHintLayer.meepleEvent(ev);
+
     }
 
     public void bridgeDeployed(Position pos, Location loc) {
@@ -176,8 +176,8 @@ public class MainPanel extends BackgroundPanel {
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
         Position pos = m.getPosition();
-        Tile tile = getGame().getBoard().get(pos);
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getLocation());
+        Tile tile = scoreable.getTile();
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), scoreable.getLocation());
         animationService.registerAnimation(new ScoreAnimation(
             pos,
             points,

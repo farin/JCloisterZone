@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
@@ -337,7 +338,7 @@ public class Client extends JFrame {
 
     public void setGame(Game game) {
         this.game = game;
-        this.eventBus = new EventBus("UI event bus");
+        this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
         eventBus.register(controller);
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }

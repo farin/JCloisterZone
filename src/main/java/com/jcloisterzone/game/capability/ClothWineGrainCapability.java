@@ -13,6 +13,7 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
@@ -32,9 +33,11 @@ public class ClothWineGrainCapability extends Capability {
         if (ev.getFeature() instanceof City) {
             int cityTradeResources[] = ((CityScoreContext)ev.getScoreContent()).getCityTradeResources();
             if (cityTradeResources != null) {
-                int playersTradeResources[] = tradeResources.get(game.getActivePlayer());
+                Player player = game.getActivePlayer();
+                int playersTradeResources[] = tradeResources.get(player);
                 for (int i = 0; i < cityTradeResources.length; i++) {
                     playersTradeResources[i] += cityTradeResources[i];
+                    game.post(new TradeResourceEvent(player, TradeResource.values()[i], cityTradeResources[i]));
                 }
             }
         }
@@ -94,7 +97,6 @@ public class ClothWineGrainCapability extends Capability {
 
         }
     }
-
 
 
     @Override
