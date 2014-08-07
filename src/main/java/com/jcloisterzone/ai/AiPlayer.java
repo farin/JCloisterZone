@@ -68,11 +68,6 @@ public abstract class AiPlayer {
         return conn;
     }
 
-    public boolean isAiPlayerActive() {
-        if (server == null) return false;
-        return player.equals(game.getActivePlayer());
-    }
-
     // dummy implementations
 
     protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {

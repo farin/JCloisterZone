@@ -24,7 +24,7 @@ public class SavePointManager {
     protected Deque<Undoable> operations = new ArrayDeque<Undoable>();
     private OperationRecorder operationRecorder = new OperationRecorder();
 
-    private static final boolean DEBUG_VERIFY_SAVE_POINT = !false;
+    private static final boolean DEBUG_VERIFY_SAVE_POINT = false;
 
 
     public SavePointManager(Game game) {

@@ -100,6 +100,9 @@ public class Game extends GameSettings {
 
     public void post(Event event) {
         eventQueue.add(event);
+        for (Capability capability: capabilities) {
+            capability.handleEvent(event);
+        }
     }
 
     public void flushEventQueue() {
@@ -263,7 +266,6 @@ public class Game extends GameSettings {
         try {
             Capability capability = clazz.getConstructor(Game.class).newInstance(this);
             capabilities.add(capability);
-            getEventBus().register(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }

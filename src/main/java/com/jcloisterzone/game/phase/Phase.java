@@ -19,9 +19,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.wsio.message.FlierDiceMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
-import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public abstract class Phase implements RmiProxy {

@@ -14,7 +14,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.PhantomCapability;
-import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 
 public class PhantomPhase extends Phase {

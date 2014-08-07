@@ -6,7 +6,6 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;

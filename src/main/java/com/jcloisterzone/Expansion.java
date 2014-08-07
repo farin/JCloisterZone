@@ -77,7 +77,8 @@ public enum Expansion {
     PLAGUE("PL", _("The Plague"), false),
     PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
-    LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
+    //LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
+    LITTLE_BUILDINGS("LB", _("Little Buildings"), false),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
     GERMAN_MONASTERIES("GM", _("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }),
 

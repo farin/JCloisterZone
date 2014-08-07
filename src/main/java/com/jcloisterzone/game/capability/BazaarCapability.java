@@ -8,11 +8,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -164,8 +164,15 @@ public class BazaarCapability extends Capability {
         bazaarTriggered = false;
     }
 
-    @Subscribe
-    public void tileDrawn(TileEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof TileEvent) {
+           tileDrawn((TileEvent) event);
+       }
+
+    }
+
+    private void tileDrawn(TileEvent ev) {
         if (ev.getType() == TileEvent.DRAW && ev.getTile().hasTrigger(TileTrigger.BAZAAR)) {
             bazaarTriggered = true;
         }

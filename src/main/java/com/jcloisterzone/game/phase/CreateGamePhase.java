@@ -28,7 +28,6 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;

@@ -11,7 +11,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -175,8 +174,8 @@ public class MainPanel extends BackgroundPanel {
     }
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
-        Position pos = m.getPosition();
         Tile tile = scoreable.getTile();
+        Position pos = tile.getPosition();
         ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), scoreable.getLocation());
         animationService.registerAnimation(new ScoreAnimation(
             pos,

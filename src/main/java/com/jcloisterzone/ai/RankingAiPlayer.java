@@ -81,7 +81,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        if (isAiPlayerActive()) {
+        if (getPlayer().equals(ev.getPlayer())) {
             if (bestChain != null) {
                 popActionChain();
             } else {
@@ -93,7 +93,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        if (isAiPlayerActive()) {
+        if (getPlayer().equals(ev.getPlayer())) {
              new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }

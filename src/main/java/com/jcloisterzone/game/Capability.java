@@ -17,6 +17,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
@@ -48,6 +49,12 @@ public abstract class Capability {
     }
     protected Tile getTile() {
         return game.getCurrentTile();
+    }
+
+    /* no @Subscribe for Capabilities
+     * it cause post from another event handler and makes trouble with AI tasks
+     * */
+    public void handleEvent(Event event) {
     }
 
     public void saveToSnapshot(Document doc, Element node) {

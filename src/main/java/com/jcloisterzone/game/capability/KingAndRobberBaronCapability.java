@@ -3,10 +3,10 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
@@ -57,8 +57,15 @@ public final class KingAndRobberBaronCapability extends Capability {
         }
     }
 
-    @Subscribe
-    public void completed(FeatureCompletedEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof FeatureCompletedEvent) {
+           completed((FeatureCompletedEvent) event);
+       }
+
+    }
+
+    private void completed(FeatureCompletedEvent ev) {
         Completable feature = ev.getFeature();
         CompletableScoreContext ctx = ev.getScoreContent();
         if (feature instanceof City) {
