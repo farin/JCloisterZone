@@ -56,6 +56,9 @@ public class SelectActionTask implements Runnable {
     private SavePointManager spm;
     private Game game;
 
+    @SuppressWarnings("unchecked")
+    private static final List<Class<? extends Phase>> ALLOWED_IN_PHASE_LOOP = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
+
     public SelectActionTask(RankingAiPlayer aiPlayer, SelectActionEvent rootEv) {
         this.aiPlayer = aiPlayer;
         this.rootEv = rootEv;
@@ -139,9 +142,8 @@ public class SelectActionTask implements Runnable {
     @SuppressWarnings("unchecked")
     private boolean phaseLoop() {
         Phase phase = game.getPhase();
-        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
         while (!phase.isEntered()) {
-            if (!Iterables.contains(allowed, phase.getClass())) {
+            if (!Iterables.contains(ALLOWED_IN_PHASE_LOOP, phase.getClass())) {
                 return true;
             }
             phase.setEntered(true);
