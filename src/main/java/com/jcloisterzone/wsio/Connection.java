@@ -54,11 +54,8 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                String name;
-                try {
-                    name = InetAddress.getLocalHost().getHostName();
-                } catch (UnknownHostException e) {
-                    logger.warn(e.getMessage(), e);
+                String name = System.getProperty("user.name");
+                if (name.equals("")) {
                     name = UUID.randomUUID().toString();
                 }
                 Connection.this.send(new HelloMessage(name));

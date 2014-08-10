@@ -67,7 +67,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
 
     public Connection connect(String hostname, int port) throws URISyntaxException {
-        URI uri = new URI("ws", null, hostname, port, "/", null, null);
+        URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, "/", null, null);
         //URI uri = new URI("ws://localhost:37447/");
         ////localhost:8000/ws")) {
         conn = new Connection(uri, this);

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -56,6 +57,7 @@ public final class MessageParser {
         registerMsgType(RollFlierDiceMessage.class);
         registerMsgType(FlierDiceMessage.class);
         registerMsgType(RmiMessage.class);
+        registerMsgType(ClientListMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {
