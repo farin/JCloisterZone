@@ -1,5 +1,7 @@
 package com.jcloisterzone.rmi;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +21,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
+import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
@@ -35,6 +38,7 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
 import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
@@ -46,8 +50,6 @@ import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ClientStub  implements InvocationHandler, MessageListener {
@@ -198,6 +200,11 @@ public class ClientStub  implements InvocationHandler, MessageListener {
                 }
             });
         }
+    }
+
+    @WsSubscribe
+    public void handleClientList(ClientListMessage msg) {
+        game.post(new ClientListChangedEvent(msg.getClients()));
     }
 
     @WsSubscribe

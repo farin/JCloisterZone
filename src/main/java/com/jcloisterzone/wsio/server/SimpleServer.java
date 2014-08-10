@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 import javax.xml.transform.TransformerException;
 
 import org.java_websocket.WebSocket;
@@ -19,6 +20,8 @@ import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
@@ -118,7 +121,7 @@ public class SimpleServer extends WebSocketServer  {
 
     @Override
     public void onClose(WebSocket ws, int code, String reason, boolean remote) {
-        //logger.info("Close " + code + " / " + reason + " " + remote);
+        if (!remote) return;
         Connection conn = connections.remove(ws);
         if (conn == null) return;
         if (!gameStarted) {
@@ -128,7 +131,9 @@ public class SimpleServer extends WebSocketServer  {
                 }
             }
         }
-        broadcast(newClientListMessage());
+        for (Entry<WebSocket, Connection> entry : connections.entrySet()) {
+            send(entry.getKey(), newClientListMessage(entry.getValue()));
+        }
     }
 
     @Override
@@ -190,8 +195,10 @@ public class SimpleServer extends WebSocketServer  {
         return gm;
     }
 
-    private ClientListMessage newClientListMessage() {
-        Connection[] clients = connections.values().toArray(new Connection[connections.size()]);
+    private ClientListMessage newClientListMessage(Connection client) {
+        Connection[] clients = Collections2.filter(
+            connections.values(), Predicates.not(Predicates.equalTo(client))
+        ).toArray(new Connection[0]);
         return new ClientListMessage(game.getGameId(), clients);
     }
 
@@ -215,7 +222,9 @@ public class SimpleServer extends WebSocketServer  {
         reservedClientId = null;
         send(ws, new WelcomeMessage(clientId, sessionKey));
         send(ws, newGameMessage(client));
-        broadcast(newClientListMessage());
+        for (Entry<WebSocket, Connection> entry : connections.entrySet()) {
+            send(entry.getKey(), newClientListMessage(entry.getValue()));
+        }
     }
 
 

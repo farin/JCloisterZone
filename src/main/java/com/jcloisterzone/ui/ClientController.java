@@ -24,6 +24,7 @@ import com.jcloisterzone.event.BazaarTileSelectedEvent;
 import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.ChatEvent;
+import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
@@ -87,15 +88,16 @@ public class ClientController  {
         if (client.getCreateGamePanel() != null) {
             client.getCreateGamePanel().updateSlot(slot.getNumber());
         } else {
-            throw new UnsupportedOperationException("not implemented");
-//            if (slot.getState() == SlotState.CLOSED) {
-//                for (Player p : client.getGame().getAllPlayers()) {
-//                    if (p.getSlot().getNumber() == slot.getNumber()) {
-//                        p.getSlot().setState(SlotState.CLOSED);
-//                        client.getGridPanel().repaint();
-//                    }
-//                }
-//            }
+            throw new IllegalStateException();
+        }
+    }
+
+    @Subscribe
+    public void updateConnectedClients(ClientListChangedEvent ev) {
+        if (client.getCreateGamePanel() != null) {
+            client.getCreateGamePanel().clientListChanged(ev.getClients());
+        } else {
+            throw new IllegalStateException();
         }
     }
 
