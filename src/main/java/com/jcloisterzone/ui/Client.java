@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -28,7 +30,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -61,6 +62,7 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
+import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
@@ -70,8 +72,6 @@ import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -86,7 +86,7 @@ public class Client extends JFrame {
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
 
-    //non-persistetn settings (TODO move to mainPanel)
+    //non-persistent settings (TODO move to mainPanel)
     private boolean showHistory;
 
     @Deprecated
@@ -95,13 +95,11 @@ public class Client extends JFrame {
     private ControlsTheme controlsTheme;
     //private PlayerColor[] playerColors;
 
+    private GamePanel gamePanel;
+
     //private MenuBar menuBar;
     private StartPanel startPanel;
-    private ControlPanel controlPanel;
-    private MainPanel mainPanel;
 
-
-    private CreateGamePanel createGamePanel;
     private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
@@ -204,34 +202,11 @@ public class Client extends JFrame {
         return conn.getRmiProxy();
     }
 
+    @Deprecated  //TODO game per GamePanel
     public Game getGame() {
         return game;
     }
 
-    public ControlPanel getControlPanel() {
-        return controlPanel;
-    }
-
-    public void setControlPanel(ControlPanel controlPanel) {
-        this.controlPanel = controlPanel;
-    }
-
-    public GridPanel getGridPanel() {
-        if (mainPanel == null) return null;
-        return mainPanel.getGridPanel();
-    }
-
-    public MainPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public void setMainPanel(MainPanel mainPanel) {
-        this.mainPanel = mainPanel;
-    }
-
-    public CreateGamePanel getCreateGamePanel() {
-        return createGamePanel;
-    }
 
     public ConnectGamePanel getConnectGamePanel() {
         return connectGamePanel;
@@ -247,27 +222,28 @@ public class Client extends JFrame {
         pane.setVisible(false);
         pane.removeAll();
         this.startPanel = null;
-        this.mainPanel = null;
-        this.controlPanel = null;
-        if (createGamePanel != null) {
-            createGamePanel.disposePanel();
-            createGamePanel = null;
+        if (gamePanel != null) {
+            gamePanel.disposePanel();
+            gamePanel = null;
         }
         this.connectGamePanel = null;
     }
 
-    public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
+    public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
         cleanContentPane();
-        createGamePanel = new CreateGamePanel(this, mutableSlots, slots);
-        JPanel envelope = new BackgroundPanel();
-        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(createGamePanel);
-
-        JScrollPane scroll = new JScrollPane(envelope);
-        pane.add(scroll, BorderLayout.CENTER);
+        gamePanel = new GamePanel(this, game);
+        gamePanel.showCreateGamePanel(mutableSlots, slots);
+        pane.add(gamePanel);
         pane.setVisible(true);
     }
+
+    @Deprecated
+    public CreateGamePanel getCreateGamePanel() {
+        if (gamePanel == null) return null;
+        return gamePanel.getCreateGamePanel();
+    }
+
 
     public boolean closeGame() {
         return closeGame(false);
@@ -309,9 +285,10 @@ public class Client extends JFrame {
         conn = null;
         activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
-        if (controlPanel != null) {
-            controlPanel.closeGame();
-            mainPanel.closeGame();
+
+        if (gamePanel != null && gamePanel.getMainPanel() != null) {
+            if (gamePanel.getControlPanel() != null) gamePanel.getControlPanel().closeGame();
+            gamePanel.getMainPanel().closeGame();
         }
         if (discardedTilesDialog != null) {
             discardedTilesDialog.dispose();
@@ -460,6 +437,7 @@ public class Client extends JFrame {
     }
 
     void clearActions() {
+        ControlPanel controlPanel = gamePanel.getControlPanel();
         if (controlPanel.getActionPanel().getActions() != null) {
             controlPanel.clearActions();
         }
@@ -518,14 +496,35 @@ public class Client extends JFrame {
 
     public void setShowHistory(boolean showHistory) {
         if (showHistory) {
-            getGridPanel().showRecentHistory();
+            gamePanel.getGridPanel().showRecentHistory();
         } else {
-            getGridPanel().removeLayer(PlacementHistory.class);
+            gamePanel.getGridPanel().removeLayer(PlacementHistory.class);
         }
         this.showHistory = showHistory;
     }
 
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
     //------------------- LEGACY: TODO refactor ---------------
+
+    @Deprecated
+    public ControlPanel getControlPanel() {
+        return gamePanel == null ? null : gamePanel.getControlPanel();
+    }
+
+    @Deprecated
+    public GridPanel getGridPanel() {
+        if (gamePanel == null || gamePanel.getMainPanel() == null) return null;
+        return gamePanel.getMainPanel().getGridPanel();
+    }
+
+    @Deprecated
+    public MainPanel getMainPanel() {
+        if (gamePanel == null) return null;
+        return gamePanel.getMainPanel();
+    }
 
     @Deprecated
     public Color getPlayerSecondTunelColor(Player player) {

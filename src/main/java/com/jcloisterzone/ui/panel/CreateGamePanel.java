@@ -42,6 +42,7 @@ import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -61,6 +62,7 @@ public class CreateGamePanel extends JPanel {
     static Font FONT_RULE_SECTION = new Font(null, Font.ITALIC, 13);
 
     private final Client client;
+    private final Game game;
     private boolean mutableSlots;
 
     private JPanel playersPanel;
@@ -116,8 +118,9 @@ public class CreateGamePanel extends JPanel {
     /**
      * Create the panel.
      */
-    public CreateGamePanel(final Client client, boolean mutableSlots, PlayerSlot[] slots) {
+    public CreateGamePanel(final Client client, final Game game, boolean mutableSlots, PlayerSlot[] slots) {
         this.client = client;
+        this.game = game;
         this.mutableSlots = mutableSlots;
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
@@ -139,7 +142,7 @@ public class CreateGamePanel extends JPanel {
 
         startGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getConnection().send(new StartGameMessage(client.getGame().getGameId()));
+                client.getConnection().send(new StartGameMessage(game.getGameId()));
             }
         });
 
@@ -166,7 +169,7 @@ public class CreateGamePanel extends JPanel {
         add(playersPanel, "cell 0 1");
 
         connectedClientsPanel = new JPanel();
-        connectedClientsPanel.setBorder(new TitledBorder(null, _("Other connected clients"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        connectedClientsPanel.setBorder(new TitledBorder(null, _("Remote connections"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
         connectedClientsPanel.setLayout(new BorderLayout());
 
         connectedClients = new JLabel();
@@ -237,7 +240,7 @@ public class CreateGamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (presets.getSelectedItem() instanceof Preset) {
                     Preset profile = (Preset) presets.getSelectedItem();
-                    profile.getConfig().updateGameSetup(client.getConnection(), client.getGame().getGameId());
+                    profile.getConfig().updateGameSetup(client.getConnection(), game.getGameId());
                 }
             }
         });
@@ -385,12 +388,12 @@ public class CreateGamePanel extends JPanel {
     private PresetConfig createCurrentConfig() {
         List<String> expansions = new ArrayList<>();
         List<String> rules = new ArrayList<>();
-        for (Expansion exp : client.getGame().getExpansions()) {
+        for (Expansion exp : game.getExpansions()) {
             if (exp == Expansion.BASIC)
                 continue;
             expansions.add(exp.name());
         }
-        for (CustomRule rule : client.getGame().getCustomRules()) {
+        for (CustomRule rule : game.getCustomRules()) {
             rules.add(rule.name());
         }
         PresetConfig config = new PresetConfig();
@@ -428,7 +431,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send(new SetRuleMessage(client.getGame().getGameId(), rule, chbox.isSelected()));
+                    client.getConnection().send(new SetRuleMessage(game.getGameId(), rule, chbox.isSelected()));
                 }
             });
         } else {
@@ -450,7 +453,7 @@ public class CreateGamePanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send(new SetExpansionMessage(client.getGame().getGameId(), exp, chbox.isSelected()));
+                    client.getConnection().send(new SetExpansionMessage(game.getGameId(), exp, chbox.isSelected()));
                 }
             });
         }
@@ -526,7 +529,7 @@ public class CreateGamePanel extends JPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
-            boolean randomSeating = client.getGame().hasRule(
+            boolean randomSeating = game.hasRule(
                     CustomRule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
                 if (!(c instanceof CreateGamePlayerPanel))

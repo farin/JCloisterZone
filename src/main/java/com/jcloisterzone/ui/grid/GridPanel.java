@@ -74,15 +74,15 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
     private String errorMessage, hintMessage;
 
-    public GridPanel(Client client, Snapshot snapshot) {
+    public GridPanel(Client client, ControlPanel controlPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
         setLayout(null);
 
         this.client = client;
-        this.controlPanel = client.getControlPanel();
+        this.controlPanel = controlPanel;
 
-        boolean networkGame = false;
+        boolean networkGame = "true".equals(System.getProperty("forceChat"));
         for (Player p : client.getGame().getAllPlayers()) {
             if (!p.getSlot().isOwn()) {
                 networkGame = true;
@@ -118,7 +118,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                controlPanel.layoutSwingComponents(GridPanel.this);
+                GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
                 if (chatPanel != null) {
                     chatPanel.layoutSwingComponents(GridPanel.this);
                 }
@@ -133,7 +133,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             if (secondPanel instanceof ForwardBackwardListener) {
                 ((ForwardBackwardListener) secondPanel).forward();
             }
-            client.getControlPanel().getActionPanel().forward();
+            controlPanel.getActionPanel().forward();
         }
     }
 
@@ -143,7 +143,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             if (secondPanel instanceof ForwardBackwardListener) {
                 ((ForwardBackwardListener) secondPanel).backward();
             }
-            client.getControlPanel().getActionPanel().backward();
+            controlPanel.getActionPanel().backward();
         }
     }
 
@@ -281,21 +281,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return squareSize;
     }
 
-//    public int getLeft() {
-//        return left;
-//    }
-//
-//    public int getRight() {
-//        return right;
-//    }
-//
-//    public int getTop() {
-//        return top;
-//    }
-//
-//    public int getBottom() {
-//        return bottom;
-//    }
 
     public int getOffsetX() {
         return offsetX;

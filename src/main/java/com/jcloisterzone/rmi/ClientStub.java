@@ -193,7 +193,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         if (msg.getState() == GameState.OPEN) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    client.showCreateGamePanel(msg.getSnapshot() == null, slots);
+                    client.newGamePanel(game, msg.getSnapshot() == null, slots);
                     //HACK - we must wait for panel is created
                     handleGameSetup(msg.getGameSetup());
                     performAutostart();

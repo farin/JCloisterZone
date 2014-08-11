@@ -12,7 +12,7 @@ Helpers for more pleasant development and application debugging.
 
 use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
 
-    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -ea
+    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -ea
 
 
 ### debug.yaml

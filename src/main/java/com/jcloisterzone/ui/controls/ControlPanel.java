@@ -22,6 +22,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.BazaarPanel;
@@ -45,18 +46,21 @@ public class ControlPanel extends FakeComponent {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private final Game game;
+
     private JButton passButton;
     private boolean canPass;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
-    public ControlPanel(final Client client) {
+    public ControlPanel(final Client client, Game game) {
         super(client);
+        this.game = game;
 
         actionPanel = new ActionPanel(client);
 
-        Player[] players = client.getGame().getAllPlayers();
+        Player[] players = game.getAllPlayers();
         PlayerPanelImageCache cache = new PlayerPanelImageCache(client);
         playerPanels = new PlayerPanel[players.length];
 
@@ -122,7 +126,7 @@ public class ControlPanel extends FakeComponent {
         GridPanel gp = client.getGridPanel();
         int h = gp.getHeight();
 
-        Player player = client.getGame().getTurnPlayer();
+        Player player = game.getTurnPlayer();
         if (player == null) {
             g2.setColor(PANEL_BG_COLOR);
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, h);
@@ -156,7 +160,7 @@ public class ControlPanel extends FakeComponent {
             );
         }
 
-        player = client.getGame().getActivePlayer();
+        player = game.getActivePlayer();
         if (player != null) {
             g2.setColor(Color.BLACK);
             int y = playerPanels[player.getIndex()].getCenterY();
@@ -180,7 +184,7 @@ public class ControlPanel extends FakeComponent {
 
         paintBackgroundBody(g2);
 
-        TilePack tilePack = client.getGame().getTilePack();
+        TilePack tilePack = game.getTilePack();
         if (tilePack != null) { //null is possible for just loaded game
             g2.setFont(FONT_PACK_SIZE);
             g2.setColor(HEADER_FONT_COLOR);
@@ -194,7 +198,7 @@ public class ControlPanel extends FakeComponent {
 
         g2.translate(0, 60);
 
-        BazaarCapability bcb = client.getGame().getCapability(BazaarCapability.class);
+        BazaarCapability bcb = game.getCapability(BazaarCapability.class);
         if (bcb != null && !(client.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
             List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {

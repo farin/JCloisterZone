@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
-import java.lang.reflect.Proxy;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -42,7 +41,6 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;

@@ -28,6 +28,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.FlierDiceRollAnimation;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
+import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
@@ -47,9 +48,12 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 public class MainPanel extends BackgroundPanel {
 
     private final Client client;
+    private final Game game;
     private AnimationService animationService;
 
     private GridPanel gridPanel;
+    private ControlPanel controlPanel;
+
     private TileLayer tileLayer;
     private MeepleLayer meepleLayer;
     private TowerLayer towerLayer;
@@ -60,8 +64,9 @@ public class MainPanel extends BackgroundPanel {
     private PlagueLayer plagueLayer;
     private FarmHintsLayer farmHintLayer;
 
-    public MainPanel(Client client) {
+    public MainPanel(Client client, Game game) {
         this.client = client;
+        this.game = game;
         animationService = new AnimationService();
         animationService.start();
 
@@ -72,12 +77,12 @@ public class MainPanel extends BackgroundPanel {
         return gridPanel;
     }
 
-    public AnimationService getAnimationService() {
-        return animationService;
+    public ControlPanel getControlPanel() {
+        return controlPanel;
     }
 
-    private Game getGame() {
-        return client.getGame();
+    public AnimationService getAnimationService() {
+        return animationService;
     }
 
     public void setShowFarmHints(boolean showFarmHints) {
@@ -90,7 +95,8 @@ public class MainPanel extends BackgroundPanel {
         removeAll();
         setVisible(false);
 
-        gridPanel = new GridPanel(client, snapshot);
+        controlPanel = new ControlPanel(client, game);
+        gridPanel = new GridPanel(client, controlPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel);
         tileLayer = new TileLayer(gridPanel);
         farmHintLayer = new FarmHintsLayer(gridPanel);
@@ -102,7 +108,7 @@ public class MainPanel extends BackgroundPanel {
 
         animationService.setGridPanel(gridPanel);
 
-        for (Class<? extends Capability> capClass : getGame().getCapabilityClasses()) {
+        for (Class<? extends Capability> capClass : game.getCapabilityClasses()) {
             if (capClass.equals(TowerCapability.class)) {
                 towerLayer = new TowerLayer(gridPanel);
                 gridPanel.addLayer(towerLayer);

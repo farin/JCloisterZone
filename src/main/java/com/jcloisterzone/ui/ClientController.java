@@ -1,8 +1,8 @@
 package com.jcloisterzone.ui;
 
-import java.awt.BorderLayout;
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.util.List;
@@ -46,7 +46,6 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
@@ -55,11 +54,8 @@ import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
-import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ClientController  {
 
@@ -120,27 +116,13 @@ public class ClientController  {
     }
 
     private void started(GameStateChangeEvent ev) {
-        client.cleanContentPane();
-
-        Container pane = client.getContentPane();
-        pane.setLayout(new BorderLayout());
-
-        ControlPanel controlPanel = new ControlPanel(client);
-        client.setControlPanel(controlPanel);
-
-        MainPanel mainPanel = new MainPanel(client);
-        client.setMainPanel(mainPanel);
-        pane.add(mainPanel, BorderLayout.CENTER);
-
-        mainPanel.started(ev.getSnapshot());
+        client.getGamePanel().started(ev);
 
         if (keyController == null) {
             // first started game
             keyController = new KeyController(client);
             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
         }
-
-        pane.setVisible(true);
 
         MenuBar menu = client.getJMenuBar();
         menu.setZoomInEnabled(true);
