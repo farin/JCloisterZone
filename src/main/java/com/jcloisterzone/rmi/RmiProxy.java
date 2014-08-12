@@ -38,8 +38,4 @@ public interface RmiProxy {
     public void placeLittleBuilding(LittleBuilding lbType);
 
     public void undo();
-
-    /* -------------------- CHAT --------------------- */
-
-    public void chatMessage(Integer author, String message);
 }

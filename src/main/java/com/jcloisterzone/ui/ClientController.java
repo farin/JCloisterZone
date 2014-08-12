@@ -46,6 +46,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.BazaarItem;
+import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
@@ -373,15 +374,11 @@ public class ClientController  {
         client.getGridPanel().setSecondPanel(null);
     }
 
-//    @Override
-//    public void plagueSpread() {
-//        client.getGridPanel().repaint();
-//    }
-
     @Subscribe
     public void chatMessageReceived(ChatEvent ev) {
-        if (client.getGridPanel().getChatPanel() != null) {
-            client.getGridPanel().getChatPanel().displayChatMessage(ev.getPlayer(), ev.getMessage());
+        ChatPanel chatPanel = client.getGamePanel().getChatPanel();
+        if (chatPanel != null) {
+            chatPanel.displayChatMessage(ev);
         }
     }
 }

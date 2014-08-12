@@ -28,6 +28,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.FlierDiceRollAnimation;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
+import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
@@ -53,6 +54,7 @@ public class MainPanel extends BackgroundPanel {
 
     private GridPanel gridPanel;
     private ControlPanel controlPanel;
+    private ChatPanel chatPanel;
 
     private TileLayer tileLayer;
     private MeepleLayer meepleLayer;
@@ -64,9 +66,10 @@ public class MainPanel extends BackgroundPanel {
     private PlagueLayer plagueLayer;
     private FarmHintsLayer farmHintLayer;
 
-    public MainPanel(Client client, Game game) {
+    public MainPanel(Client client, Game game, ChatPanel chatPanel) {
         this.client = client;
         this.game = game;
+        this.chatPanel = chatPanel;
         animationService = new AnimationService();
         animationService.start();
 
@@ -96,7 +99,7 @@ public class MainPanel extends BackgroundPanel {
         setVisible(false);
 
         controlPanel = new ControlPanel(client, game);
-        gridPanel = new GridPanel(client, controlPanel, snapshot);
+        gridPanel = new GridPanel(client, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel);
         tileLayer = new TileLayer(gridPanel);
         farmHintLayer = new FarmHintsLayer(gridPanel);

@@ -184,11 +184,6 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public final void chatMessage(Integer author, String message) {
-        game.post(new ChatEvent(game.getPlayer(author), message));
-    }
-
-    @Override
     public void undo() {
         game.undo();
     }

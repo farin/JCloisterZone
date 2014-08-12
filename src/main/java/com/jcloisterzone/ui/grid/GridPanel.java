@@ -74,7 +74,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
     private String errorMessage, hintMessage;
 
-    public GridPanel(Client client, ControlPanel controlPanel, Snapshot snapshot) {
+    public GridPanel(Client client, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
         setLayout(null);
@@ -89,8 +89,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
                 break;
             }
         }
-
-        this.chatPanel = networkGame ? new ChatPanel(client) : null;
+        this.chatPanel = networkGame ? chatPanel : null;
 
         squareSize = INITIAL_SQUARE_SIZE;
         left = 0 - STARTING_GRID_SIZE / 2;
@@ -112,15 +111,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         registerMouseListeners();
         controlPanel.registerSwingComponents(this);
         if (chatPanel != null) {
-            chatPanel.registerSwingComponents(this);
+            this.add(chatPanel.getInput());
+            this.add(chatPanel.getMessagesPane());
+            chatPanel.setParent(this);
+            chatPanel.layoutSwingComponents(this);
         }
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
-                if (chatPanel != null) {
-                    chatPanel.layoutSwingComponents(GridPanel.this);
+                if (GridPanel.this.chatPanel != null) {
+                    GridPanel.this.chatPanel.layoutSwingComponents(GridPanel.this);
                 }
             }
         });
@@ -255,10 +257,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public Client getClient() {
         return client;
-    }
-
-    public ChatPanel getChatPanel() {
-        return chatPanel;
     }
 
     public FakeComponent getSecondPanel() {

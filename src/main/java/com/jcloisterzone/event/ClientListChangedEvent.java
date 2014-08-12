@@ -1,21 +1,21 @@
 package com.jcloisterzone.event;
 
-import com.jcloisterzone.wsio.server.Connection;
+import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class ClientListChangedEvent extends Event {
 
-    private Connection[] clients;
+    private RemoteClient[] clients;
 
-    public ClientListChangedEvent(Connection[] clients) {
+    public ClientListChangedEvent(RemoteClient[] clients) {
         super();
         this.clients = clients;
     }
 
-    public Connection[] getClients() {
+    public RemoteClient[] getClients() {
         return clients;
     }
 
-    public void setClients(Connection[] clients) {
+    public void setClients(RemoteClient[] clients) {
         this.clients = clients;
     }
 }

@@ -1,8 +1,6 @@
 package com.jcloisterzone.wsio;
 
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
@@ -24,6 +22,7 @@ public class Connection {
 
     private String clientId;
     private String sessionKey;
+    private String nickname;
 
     //for legacy code, to be able pass connection only
     private RmiProxy rmiProxy;
@@ -48,6 +47,7 @@ public class Connection {
                     WelcomeMessage welcome = (WelcomeMessage) msg;
                     clientId = welcome.getClientId();
                     sessionKey = welcome.getSessionKey();
+                    nickname = welcome.getNickname();
                 }
                 listener.onWebsocketMessage(msg);
             }
@@ -56,7 +56,7 @@ public class Connection {
             public void onOpen(ServerHandshake arg0) {
                 String name = System.getProperty("user.name");
                 if (name.equals("")) {
-                    name = UUID.randomUUID().toString();
+                    name = UUID.randomUUID().toString().substring(2, 6);
                 }
                 Connection.this.send(new HelloMessage(name));
             }
@@ -80,6 +80,10 @@ public class Connection {
 
     public String getClientId() {
         return clientId;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     public String getSessionKey() {

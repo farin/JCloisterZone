@@ -51,7 +51,7 @@ import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.server.Connection;
+import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -216,11 +216,11 @@ public class CreateGamePanel extends JPanel {
         startGameButton.requestFocus();
     }
 
-    public void clientListChanged(Connection[] clients) {
+    public void clientListChanged(RemoteClient[] clients) {
         connectedClients.setText(Joiner.on(", ").join(
-            Collections2.transform(Arrays.asList(clients), new Function<Connection, String>() {
+            Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
                 @Override
-                public String apply(Connection input) {
+                public String apply(RemoteClient input) {
                     return input.getName();
                 }
         })));

@@ -6,10 +6,12 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class WelcomeMessage implements WsMessage {
     private String clientId;
     private String sessionKey;
+    private String nickname;
 
-    public WelcomeMessage(String clientId, String sessionKey) {
+    public WelcomeMessage(String clientId, String sessionKey, String nickname) {
         this.clientId = clientId;
         this.sessionKey = sessionKey;
+        this.nickname = nickname;
     }
 
     public String getClientId() {
@@ -28,4 +30,11 @@ public class WelcomeMessage implements WsMessage {
         this.sessionKey = sessionKey;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

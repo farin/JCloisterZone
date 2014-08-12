@@ -6,6 +6,7 @@
 * network protocol changed completely
 * German Monasteries expansion
 * list of connected clients is displayed during game setup (can see unassigned players)
+* chat is available during game setup
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
 

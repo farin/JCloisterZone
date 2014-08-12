@@ -1,9 +1,9 @@
 package com.jcloisterzone.wsio.server;
 
-public class Connection {
+public class RemoteClient {
     private String clientId, name;
 
-    public Connection(String clientId, String name) {
+    public RemoteClient(String clientId, String name) {
         super();
         this.clientId = clientId;
         this.name = name;

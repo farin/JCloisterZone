@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
@@ -18,6 +19,7 @@ import com.jcloisterzone.wsio.message.GetRandSampleMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.PostChatMessage;
 import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
@@ -58,6 +60,8 @@ public final class MessageParser {
         registerMsgType(FlierDiceMessage.class);
         registerMsgType(RmiMessage.class);
         registerMsgType(ClientListMessage.class);
+        registerMsgType(PostChatMessage.class);
+        registerMsgType(ChatMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {

@@ -17,8 +17,6 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.SubscriberExceptionContext;
-import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
@@ -47,6 +45,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -288,6 +287,10 @@ public class Game extends GameSettings {
             createCapabilityInstance(capability);
         }
         board = new Board(this);
+    }
+
+    public boolean isStarted() {
+        return !(phase instanceof CreateGamePhase);
     }
 
 

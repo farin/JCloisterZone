@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.panel.GamePanel;
 
 public class KeyController implements KeyEventDispatcher {
 
@@ -25,9 +26,9 @@ public class KeyController implements KeyEventDispatcher {
         if (!isDispatchActive()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
-                if (client.getGridPanel().getChatPanel() != null) {
+                if (client.getGamePanel().getChatPanel() != null) {
                     e.consume();
-                    client.getGridPanel().getChatPanel().activateChat();
+                    client.getGamePanel().getChatPanel().activateChat();
                 }
                 return true;
             }
@@ -60,7 +61,7 @@ public class KeyController implements KeyEventDispatcher {
     }
 
     private boolean isDispatchActive() {
-        GridPanel gp = client.getGridPanel();
+        GamePanel gp = client.getGamePanel();
         if (gp != null && gp.getChatPanel() != null) return !gp.getChatPanel().getInput().hasFocus();
         return true;
     }
