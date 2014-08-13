@@ -30,6 +30,7 @@ import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
@@ -150,7 +151,12 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
-        slot.setState(slotMsg.getState());
+        slot.setClientId(slotMsg.getOwner());
+        if (slotMsg.getOwner() == null) {
+            slot.setState(SlotState.OPEN);
+        } else {
+            slot.setState(slotMsg.getOwner().equals(conn.getClientId()) ? SlotState.OWN : SlotState.REMOTE);
+        }
         slot.setSerial(slotMsg.getSerial());
         if (!slot.isOwn() || !slotMsg.isAi()) {
             slot.setAiClassName(null);

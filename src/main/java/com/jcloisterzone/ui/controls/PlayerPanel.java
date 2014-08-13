@@ -5,7 +5,9 @@ import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -299,8 +301,19 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-        parentGraphics.translate(0, realHeight); //add also padding
 
+        if (player.getSlot().isDisconnected()) {
+            Composite origComposite = parentGraphics.getComposite();
+            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f));
+            parentGraphics.setColor(Color.BLACK);
+            parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
+            parentGraphics.setComposite(origComposite);
+            parentGraphics.setFont(FONT_NICKNAME);
+            parentGraphics.setColor(Color.WHITE);
+            parentGraphics.drawString(_("Connection lost").toUpperCase(), 10, 27);
+        }
+
+        parentGraphics.translate(0, realHeight); //add also padding
         g2 = null;
 
 //		gp.profile(" > complete");

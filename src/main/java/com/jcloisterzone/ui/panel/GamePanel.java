@@ -19,9 +19,11 @@ import net.miginfocom.swing.MigLayout;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -90,13 +92,27 @@ public class GamePanel extends BackgroundPanel {
     }
 
     public void clientListChanged(RemoteClient[] clients) {
-        connectedClients.setText(Joiner.on("\n").join(
-            Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
-                @Override
-                public String apply(RemoteClient input) {
-                    return input.getName();
+        if (game.isStarted()) {
+            for (Player p : game.getAllPlayers()) {
+                PlayerSlot slot = p.getSlot();
+                boolean match = false;
+                for (RemoteClient rc: clients) {
+                    if (rc.getClientId().equals(slot.getClientId())) {
+                        match = true;
+                        break;
+                    }
                 }
-        })));
+                slot.setDisconnected(!match);
+            }
+        } else {
+            connectedClients.setText(Joiner.on("\n").join(
+                Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
+                    @Override
+                    public String apply(RemoteClient input) {
+                        return input.getName();
+                    }
+            })));
+        }
     }
 
     public void started(GameStateChangeEvent ev) {
@@ -104,6 +120,8 @@ public class GamePanel extends BackgroundPanel {
         removeAll();
         setBackgroundImage(null);
 
+        createGamePanel = null;
+        connectedClients = null;
         mainPanel = new MainPanel(client, game, chatPanel);
         add(mainPanel, BorderLayout.CENTER);
         mainPanel.started(ev.getSnapshot());

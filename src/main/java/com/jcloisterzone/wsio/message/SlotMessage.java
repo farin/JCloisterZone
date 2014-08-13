@@ -8,17 +8,18 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class SlotMessage implements WsMessage {
     private String gameId;
     private int number;
+    private String owner;
     private Integer serial;
     private String nickname;
     private boolean ai;
-    private SlotState state;
     private Expansion[] supportedExpansions;
 
-    public SlotMessage(String gameId, int number, Integer serial, String nickname) {
+    public SlotMessage(String gameId, int number, Integer serial, String owner, String nickname) {
         super();
         this.gameId = gameId;
         this.number = number;
         this.serial = serial;
+        this.owner = owner;
         this.nickname = nickname;
     }
 
@@ -62,19 +63,19 @@ public class SlotMessage implements WsMessage {
         this.serial = serial;
     }
 
-    public SlotState getState() {
-        return state;
-    }
-
-    public void setState(SlotState state) {
-        this.state = state;
-    }
-
     public Expansion[] getSupportedExpansions() {
         return supportedExpansions;
     }
 
     public void setSupportedExpansions(Expansion[] supportedExpansions) {
         this.supportedExpansions = supportedExpansions;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

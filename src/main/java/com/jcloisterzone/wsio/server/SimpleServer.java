@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
@@ -157,27 +156,20 @@ public class SimpleServer extends WebSocketServer  {
         return connections.get(ws).getClientId();
     }
 
-    private SlotMessage newSlotMessage(RemoteClient client, ServerPlayerSlot slot) {
-        SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getNickname());
+    private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
+        SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getOwner(), slot.getNickname());
         msg.setAi(slot.isAi());
         msg.setSupportedExpansions(slot.getSupportedExpansions());
-        if (slot.getOwner() == null) {
-            msg.setState(SlotState.OPEN);
-        } else if (client.getClientId().equals(slot.getOwner())) {
-            msg.setState(SlotState.OWN);
-        } else {
-            msg.setState(SlotState.REMOTE);
-        }
         return msg;
     }
 
-    private GameMessage newGameMessage(RemoteClient client) {
+    private GameMessage newGameMessage() {
         GameSetupMessage gsm = new GameSetupMessage(game.getGameId(), game.getCustomRules(), game.getExpansions(), game.getCapabilityClasses());
         GameMessage gm = new GameMessage(game.getGameId(), "", gameStarted ? GameState.RUNNING : GameState.OPEN, gsm);
         List<SlotMessage> slotMsgs = new ArrayList<>();
         for (ServerPlayerSlot slot : slots) {
             if (slot != null) {
-                SlotMessage sm = newSlotMessage(client, slot);
+                SlotMessage sm = newSlotMessage(slot);
                 slotMsgs.add(sm);
             }
         }
@@ -216,7 +208,7 @@ public class SimpleServer extends WebSocketServer  {
         connections.put(ws, client);
         reservedClientId = null;
         send(ws, new WelcomeMessage(clientId, sessionKey, nickname));
-        send(ws, newGameMessage(client));
+        send(ws, newGameMessage());
         broadcast(newClientListMessage());
     }
 
@@ -251,9 +243,7 @@ public class SimpleServer extends WebSocketServer  {
         slot.setAi(msg.isAi());
         slot.setOwner(clientId);
         slot.setSupportedExpansions(msg.getSupportedExpansions());
-        for (Entry<WebSocket, RemoteClient> entry : connections.entrySet()) {
-            send(entry.getKey(), newSlotMessage(entry.getValue(), slot));
-        }
+        broadcast(newSlotMessage(slot));
     }
 
     private void leaveSlot(ServerPlayerSlot slot) {
@@ -262,9 +252,7 @@ public class SimpleServer extends WebSocketServer  {
         slot.setOwner(null);
         slot.setAi(false);
         slot.setSupportedExpansions(null);
-        for (Entry<WebSocket, RemoteClient> entry : connections.entrySet()) {
-            send(entry.getKey(), newSlotMessage(entry.getValue(), slot));
-        }
+        broadcast(newSlotMessage(slot));
     }
 
     @WsSubscribe
@@ -316,9 +304,7 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         gameStarted = true;
-        for (Entry<WebSocket, RemoteClient> entry : connections.entrySet()) {
-            send(entry.getKey(), newGameMessage(entry.getValue()));
-        }
+        broadcast(newGameMessage());
     }
 
     @WsSubscribe

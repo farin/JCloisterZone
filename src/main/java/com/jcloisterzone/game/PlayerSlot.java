@@ -13,11 +13,13 @@ public class PlayerSlot implements Serializable {
     public static final int COUNT = 6;
 
     private final int number;
-    private Integer serial; //server assign sequence number when type is occupied
+    private Integer serial; //server assign sequence number whgen type is occupied
 
+    private String clientId;
     private String nickname;
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
+    private boolean disconnected;
     private transient PlayerColor colors;
 
     public PlayerSlot(int number) {
@@ -58,7 +60,13 @@ public class PlayerSlot implements Serializable {
         this.nickname = nickname;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
 
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public SlotState getState() {
         return state;
@@ -87,6 +95,14 @@ public class PlayerSlot implements Serializable {
     @Override
     public String toString() {
         return "("+ number + ") " + state + (nickname == null ? "" : " " + nickname);
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
+    }
+
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
     }
 
 }
