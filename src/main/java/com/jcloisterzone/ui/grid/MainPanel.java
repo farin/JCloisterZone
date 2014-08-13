@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 
+import javax.swing.JPanel;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -42,11 +44,10 @@ import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TowerLayer;
-import com.jcloisterzone.ui.panel.BackgroundPanel;
 
 
 @SuppressWarnings("serial")
-public class MainPanel extends BackgroundPanel {
+public class MainPanel extends JPanel {
 
     private final Client client;
     private final Game game;

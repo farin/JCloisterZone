@@ -13,6 +13,9 @@ ai_place_tile_delay: ${ai_place_tile_delay} # miliseconds to wait before compute
 beep_alert: ${beep_alert}
 confirm: ${confirm}
 
+# machine identification for remote games
+client_name:
+
 players:
   # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)
   colors: ${colors}

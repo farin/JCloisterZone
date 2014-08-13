@@ -24,6 +24,7 @@ public class KeyController implements KeyEventDispatcher {
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (!client.isActive()) return false; //AWT method on window (it not check if player is active)
         if (!isDispatchActive()) return false;
+        if (client.getGame() == null) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
                 if (client.getGamePanel().getChatPanel() != null) {
@@ -31,6 +32,9 @@ public class KeyController implements KeyEventDispatcher {
                     client.getGamePanel().getChatPanel().activateChat();
                 }
                 return true;
+            }
+            if (!client.getGame().isStarted()) {
+                return false;
             }
             switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:

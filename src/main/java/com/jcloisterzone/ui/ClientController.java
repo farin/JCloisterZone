@@ -63,7 +63,7 @@ public class ClientController  {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
-    private KeyController keyController;
+
 
     public ClientController(Client client) {
         this.client = client;
@@ -91,8 +91,8 @@ public class ClientController  {
 
     @Subscribe
     public void updateConnectedClients(ClientListChangedEvent ev) {
-        if (client.getCreateGamePanel() != null) {
-            client.getCreateGamePanel().clientListChanged(ev.getClients());
+        if (client.getGamePanel() != null) {
+            client.getGamePanel().clientListChanged(ev.getClients());
         } else {
             throw new IllegalStateException();
         }
@@ -118,13 +118,6 @@ public class ClientController  {
 
     private void started(GameStateChangeEvent ev) {
         client.getGamePanel().started(ev);
-
-        if (keyController == null) {
-            // first started game
-            keyController = new KeyController(client);
-            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
-        }
-
         MenuBar menu = client.getJMenuBar();
         menu.setZoomInEnabled(true);
         menu.setZoomOutEnabled(true);

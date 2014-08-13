@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.naming.directory.NoSuchAttributeException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -74,11 +73,11 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     }
 
 
-    public Connection connect(String hostname, int port) throws URISyntaxException {
+    public Connection connect(String username, String hostname, int port) throws URISyntaxException {
         URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, "/", null, null);
         //URI uri = new URI("ws://localhost:37447/");
         ////localhost:8000/ws")) {
-        conn = new Connection(uri, this);
+        conn = new Connection(username, uri, this);
         return conn;
     }
 
@@ -230,7 +229,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
     @WsSubscribe
     public void handleSlot(SlotMessage msg) {
-        final PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+        PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
         game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
     }

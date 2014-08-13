@@ -37,6 +37,7 @@ public class Config {
     private Integer ai_place_tile_delay;
 
     private Boolean beep_alert;
+    private String client_name;
 
     private List<String> plugins;
     private ConfirmConfig confirm;
@@ -354,6 +355,14 @@ public class Config {
         return presets;
     }
 
+    public String getClient_name() {
+        return client_name;
+    }
+
+    public void setClient_name(String client_name) {
+        this.client_name = client_name;
+    }
+
     public void setPresets(Map<String, PresetConfig> presets) {
         this.presets = presets;
     }
@@ -373,7 +382,4 @@ public class Config {
     public void setOrigin(File origin) {
         this.origin = origin;
     }
-
-
-
 }

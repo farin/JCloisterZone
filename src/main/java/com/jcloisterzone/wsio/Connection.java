@@ -27,7 +27,7 @@ public class Connection {
     //for legacy code, to be able pass connection only
     private RmiProxy rmiProxy;
 
-    public Connection(URI uri, final MessageListener listener) {
+    public Connection(final String username, URI uri, final MessageListener listener) {
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
@@ -54,11 +54,7 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                String name = System.getProperty("user.name");
-                if (name.equals("")) {
-                    name = UUID.randomUUID().toString().substring(2, 6);
-                }
-                Connection.this.send(new HelloMessage(name));
+                Connection.this.send(new HelloMessage(username));
             }
         };
         ws.connect();

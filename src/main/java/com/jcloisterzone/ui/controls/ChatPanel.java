@@ -43,6 +43,8 @@ import javax.swing.text.ViewFactory;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
@@ -234,7 +236,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
      */
     private ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
         String nick = ev.getRemoteClient().getName();
-        Color color = Color.BLACK;
+        Color color = Color.DARK_GRAY;
 
         if (game.isStarted()) {
             Player selected = null, active = game.getActivePlayer();
@@ -261,7 +263,14 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
                 color = selected.getColors().getFontColor();
             }
         } else {
-            //TODO scan slots
+             PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+             for (PlayerSlot slot: slots) {
+                 if (slot.isOwn() && !slot.getNickname().equals("")) {
+                     nick = slot.getNickname();
+                     color = slot.getColors().getFontColor();
+                     break;
+                 }
+             }
         }
         return new ReceivedChatMessage(ev, nick, color);
     }

@@ -66,8 +66,7 @@ public class CreateGamePanel extends JPanel {
     private boolean mutableSlots;
 
     private JPanel playersPanel;
-    private JPanel connectedClientsPanel;
-    private JLabel connectedClients;
+
     // private JLabel helpText;
     private JComboBox<Object> presets;
     private JButton presetSave, presetDelete;
@@ -124,7 +123,7 @@ public class CreateGamePanel extends JPanel {
         this.mutableSlots = mutableSlots;
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
-        setLayout(new MigLayout("", "[][grow][grow]", "[][][grow]"));
+        setLayout(new MigLayout("", "[][grow][grow]", "[][grow]"));
 
         panel = new JPanel();
         add(panel, "cell 0 0 3 1,grow");
@@ -166,17 +165,7 @@ public class CreateGamePanel extends JPanel {
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
 
-        add(playersPanel, "cell 0 1");
-
-        connectedClientsPanel = new JPanel();
-        connectedClientsPanel.setBorder(new TitledBorder(null, _("Remote connections"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        connectedClientsPanel.setLayout(new BorderLayout());
-
-        connectedClients = new JLabel();
-        connectedClients.setBorder(new EmptyBorder(10, 10, 10, 10));
-        connectedClientsPanel.add(connectedClients, BorderLayout.NORTH);
-
-        add(connectedClientsPanel, "cell 0 2, grow");
+        add(playersPanel, "cell 0 1, grow");
 
         expansionPanel = new JPanel();
         expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
@@ -190,13 +179,13 @@ public class CreateGamePanel extends JPanel {
             if (!exp.isImplemented()) continue;
             createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
         }
-        add(expansionPanel, "cell 1 1,grow, spany 2");
+        add(expansionPanel, "cell 1 1,grow");
 
         rulesPanel = new JPanel();
         rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
-        add(rulesPanel, "cell 2 1,grow, spany 2");
+        add(rulesPanel, "cell 2 1,grow");
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
@@ -214,16 +203,6 @@ public class CreateGamePanel extends JPanel {
 
         onSlotStateChange();
         startGameButton.requestFocus();
-    }
-
-    public void clientListChanged(RemoteClient[] clients) {
-        connectedClients.setText(Joiner.on(", ").join(
-            Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
-                @Override
-                public String apply(RemoteClient input) {
-                    return input.getName();
-                }
-        })));
     }
 
     private JPanel createPresetPanel() {

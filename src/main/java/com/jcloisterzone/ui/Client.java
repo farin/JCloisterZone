@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -20,6 +21,7 @@ import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -56,6 +58,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.gtk.MenuFix;
@@ -81,6 +84,7 @@ public class Client extends JFrame {
     public static final String BASE_TITLE = "JCloisterZone";
 
     private ClientController controller = new ClientController(this);
+    private KeyController keyController;
 
     private final Config config;
     private final ConfigLoader configLoader;
@@ -161,6 +165,9 @@ public class Client extends JFrame {
         this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
+
+        keyController = new KeyController(this);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
     }
 
     @Override
@@ -320,11 +327,19 @@ public class Client extends JFrame {
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 
+    private String getUserName() {
+        String name = config.getClient_name();
+        name = name == null ? "" : name.trim();
+        if (name.equals("")) name = System.getProperty("user.name");
+        if (name.equals("")) name = UUID.randomUUID().toString().substring(2, 6);
+        return name;
+    }
+
     public void connect(String hostname, int port) {
         ClientStub handler = new ClientStub(this);
         RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
-            conn = handler.connect(hostname, port);
+            conn = handler.connect(getUserName(), hostname, port);
             conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
