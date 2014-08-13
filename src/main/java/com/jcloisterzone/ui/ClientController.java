@@ -4,7 +4,6 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.util.List;
 import java.util.Set;
 
@@ -54,36 +53,40 @@ import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
+import com.jcloisterzone.ui.panel.GamePanel;
 
 public class ClientController  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
+    private final Game game;
+    private final GamePanel gamePanel;
 
 
-    public ClientController(Client client) {
+    public ClientController(Client client, Game game, GamePanel gamePanel) {
         this.client = client;
+        this.game = game;
+        this.gamePanel = gamePanel;
     }
 
     @Subscribe
     public void updateCustomRule(RuleChangeEvent ev) {
-        client.getCreateGamePanel().updateCustomRule(ev.getRule(), ev.isEnabled());
+        gamePanel.getCreateGamePanel().updateCustomRule(ev.getRule(), ev.isEnabled());
     }
 
     @Subscribe
     public void updateExpansion(ExpansionChangedEvent ev) {
-        client.getCreateGamePanel().updateExpansion(ev.getExpansion(), ev.isEnabled());
+        gamePanel.getCreateGamePanel().updateExpansion(ev.getExpansion(), ev.isEnabled());
     }
 
     @Subscribe
     public void updateSlot(PlayerSlotChangeEvent ev) {
         PlayerSlot slot = ev.getSlot();
-        if (client.getCreateGamePanel() != null) {
-            client.getCreateGamePanel().updateSlot(slot.getNumber());
+        if (gamePanel.getCreateGamePanel() != null) {
+            gamePanel.getCreateGamePanel().updateSlot(slot.getNumber());
         } else {
             throw new IllegalStateException();
         }
@@ -91,16 +94,12 @@ public class ClientController  {
 
     @Subscribe
     public void updateConnectedClients(ClientListChangedEvent ev) {
-        if (client.getGamePanel() != null) {
-            client.getGamePanel().clientListChanged(ev.getClients());
-        } else {
-            throw new IllegalStateException();
-        }
+        gamePanel.clientListChanged(ev.getClients());
     }
 
     @Subscribe
     public void updateSupportedExpansions(SupportedExpansionsChangeEvent ev) {
-        client.getCreateGamePanel().updateSupportedExpansions(ev.getExpansions());
+        gamePanel.getCreateGamePanel().updateSupportedExpansions(ev.getExpansions());
     }
 
     @Subscribe
@@ -117,7 +116,7 @@ public class ClientController  {
     }
 
     private void started(GameStateChangeEvent ev) {
-        client.getGamePanel().started(ev);
+        gamePanel.started(ev);
         MenuBar menu = client.getJMenuBar();
         menu.setZoomInEnabled(true);
         menu.setZoomOutEnabled(true);
@@ -132,7 +131,7 @@ public class ClientController  {
     @Deprecated
     private void playerActivated(Player turnPlayer, Player activePlayer) {
         client.setActivePlayer(activePlayer);
-        client.getControlPanel().playerActivated(turnPlayer, activePlayer);
+        gamePanel.getControlPanel().playerActivated(turnPlayer, activePlayer);
 
         if (client.isClientActive()) {
             client.beep();
@@ -146,15 +145,14 @@ public class ClientController  {
 
     public void refreshWindowTitle() {
         StringBuilder title = new StringBuilder(Client.BASE_TITLE);
-        Game game = client.getGame();
-        if (game != null) {
-            Player activePlayer = game.getActivePlayer();
-            if (activePlayer != null) {
-                title.append(" ⋅ ").append(activePlayer.getNick());
-            }
-            int packSize = game.getTilePack().totalSize();
-            title.append(" ⋅ ").append(String.format(_("%d tiles left"), packSize));
+
+        Player activePlayer = game.getActivePlayer();
+        if (activePlayer != null) {
+            title.append(" ⋅ ").append(activePlayer.getNick());
         }
+        int packSize = game.getTilePack().totalSize();
+        title.append(" ⋅ ").append(String.format(_("%d tiles left"), packSize));
+
         client.setTitle(title.toString());
     }
 
@@ -177,7 +175,7 @@ public class ClientController  {
             break;
         case TileEvent.PLACEMENT:
         case TileEvent.REMOVE:
-            client.getMainPanel().tileEvent(ev);
+            gamePanel.getMainPanel().tileEvent(ev);
             break;
         }
     }
@@ -186,52 +184,52 @@ public class ClientController  {
     public void dragonMoved(NeutralFigureMoveEvent ev) {
         switch (ev.getType()) {
         case NeutralFigureMoveEvent.DRAGON:
-            client.getMainPanel().dragonMoved(ev.getTo());
+            gamePanel.getMainPanel().dragonMoved(ev.getTo());
             break;
         case NeutralFigureMoveEvent.FAIRY:
-            client.getMainPanel().fairyMoved(ev.getTo());
+            gamePanel.getMainPanel().fairyMoved(ev.getTo());
             break;
         }
     }
 
     @Subscribe
     public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
-        client.getMainPanel().tunnelPiecePlaced(ev.getPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
+        gamePanel.getMainPanel().tunnelPiecePlaced(ev.getPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
     }
 
 
     @Subscribe
     public void flierRoll(FlierRollEvent ev) {
-        client.getMainPanel().flierRoll(ev.getPosition(), ev.getDistance());
+        gamePanel.getMainPanel().flierRoll(ev.getPosition(), ev.getDistance());
     }
 
     @Subscribe
     public void towerIncreased(TowerIncreasedEvent ev) {
         client.clearActions();
-        client.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
+        gamePanel.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
     }
 
     // ------------------ Meeple events -----------
 
     @Subscribe
     public void meepleEvent(MeepleEvent ev) {
-        client.getMainPanel().meepleEvent(ev);
+        gamePanel.getMainPanel().meepleEvent(ev);
     }
 
     @Subscribe
     public void meeplePrisonEvent(MeeplePrisonEvent ev) {
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
     }
 
 
     @Subscribe
     public void bridgeDeployed(BridgeDeployedEvent ev) {
-        client.getMainPanel().bridgeDeployed(ev.getPosition(), ev.getLocation());
+        gamePanel.getMainPanel().bridgeDeployed(ev.getPosition(), ev.getLocation());
     }
 
     @Subscribe
     public void castleDeployed(CastleDeployedEvent ev) {
-        client.getMainPanel().castleDeployed(ev.getPart1(), ev.getPart2());
+        gamePanel.getMainPanel().castleDeployed(ev.getPart1(), ev.getPart2());
     }
 
     // ------------------ Feature events ----------
@@ -240,11 +238,11 @@ public class ClientController  {
     @Subscribe
     public void scored(ScoreEvent ev) {
         if (ev.getFeature() == null) {
-            client.getMainPanel().scored(ev.getPosition(), ev.getPlayer(), ev.getLabel(), ev.isFinal());
+            gamePanel.getMainPanel().scored(ev.getPosition(), ev.getPlayer(), ev.getLabel(), ev.isFinal());
         } else {
-            client.getMainPanel().scored(ev.getFeature(), ev.getLabel(), ev.getMeeple(), ev.isFinal());
+            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getLabel(), ev.getMeeple(), ev.isFinal());
         }
-        client.getMainPanel().repaint(); // players only
+        gamePanel.getMainPanel().repaint(); // players only
     }
 
 
@@ -261,13 +259,13 @@ public class ClientController  {
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
         client.clearActions();
-        DragonLayer dragonDecoration = client.getGridPanel().findDecoration(DragonLayer.class);
+        DragonLayer dragonDecoration = gamePanel.getGridPanel().findDecoration(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
         client.setActivePlayer(ev.getPlayer());
         if (client.isClientActive()) {
-            client.getGridPanel().addLayer(new DragonAvailableMove(client.getGridPanel(), positions));
+            gamePanel.getGridPanel().addLayer(new DragonAvailableMove(gamePanel.getGridPanel(), positions));
             client.beep();
         }
     }
@@ -275,10 +273,10 @@ public class ClientController  {
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
         client.clearActions();
-        client.getControlPanel().selectAction(ev.getActions(), ev.isPassAllowed());
-        client.getGridPanel().repaint();
+        gamePanel.getControlPanel().selectAction(ev.getActions(), ev.isPassAllowed());
+        gamePanel.getGridPanel().repaint();
         //TODO generic solution
-        if (client.getGame().isUndoAllowed() && client.isClientActive()) {
+        if (game.isUndoAllowed() && client.isClientActive()) {
             client.getJMenuBar().getUndo().setEnabled(true);
         }
     }
@@ -287,12 +285,12 @@ public class ClientController  {
     public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
         client.clearActions();
         createSecondPanel(CornCirclesPanel.class);
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
     }
 
     @SuppressWarnings("unchecked")
     public <T extends FakeComponent> T createSecondPanel(Class<T> type) {
-        GridPanel grid = client.getGridPanel();
+        GridPanel grid = gamePanel.getGridPanel();
         FakeComponent panel = grid.getSecondPanel();
         if (type.isInstance(panel)) {
             return (T) panel;
@@ -328,14 +326,14 @@ public class ClientController  {
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
     }
 
     @Subscribe
     public void bazaarTileSelected(BazaarTileSelectedEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
     }
 
     @Subscribe
@@ -348,7 +346,7 @@ public class ClientController  {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
         client.clearActions();
-        client.getGridPanel().repaint();
+        gamePanel.getGridPanel().repaint();
     }
 
     @Subscribe
@@ -364,12 +362,12 @@ public class ClientController  {
 
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
-        client.getGridPanel().setSecondPanel(null);
+        gamePanel.getGridPanel().setSecondPanel(null);
     }
 
     @Subscribe
     public void chatMessageReceived(ChatEvent ev) {
-        ChatPanel chatPanel = client.getGamePanel().getChatPanel();
+        ChatPanel chatPanel = gamePanel.getChatPanel();
         if (chatPanel != null) {
             chatPanel.displayChatMessage(ev);
         }

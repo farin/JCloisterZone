@@ -1,7 +1,6 @@
 package com.jcloisterzone.wsio;
 
 import java.net.URI;
-import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

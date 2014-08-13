@@ -83,7 +83,6 @@ public class Client extends JFrame {
 
     public static final String BASE_TITLE = "JCloisterZone";
 
-    private ClientController controller = new ClientController(this);
     private KeyController keyController;
 
     private final Config config;
@@ -280,7 +279,7 @@ public class Client extends JFrame {
         resetWindowIcon();
         if (localServer != null) {
             try {
-                localServer.stop();
+                localServer.stop(500);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
@@ -321,9 +320,10 @@ public class Client extends JFrame {
     }
 
     public void setGame(Game game) {
+        assert gamePanel != null;
         this.game = game;
         this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
-        eventBus.register(controller);
+        eventBus.register(new ClientController(this, game, gamePanel));
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 

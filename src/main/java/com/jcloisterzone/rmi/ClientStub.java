@@ -157,15 +157,8 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         }
     }
 
-    //TODO inline
-    protected void initGame(Game game) {
-        game.setConfig(client.getConfig());
-        client.setGame(game);
-    }
-
-
     @WsSubscribe
-    public void handleGame(final GameMessage msg) {
+    public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
         if (msg.getState() == GameState.RUNNING) {
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
             phase.startGame();
@@ -189,7 +182,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
             game = snapshot.asGame(msg.getGameId());
             phase = new LoadGamePhase(game, snapshot, conn);
         }
-        initGame(game);
+        game.setConfig(client.getConfig());
 
         final PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
 
@@ -205,9 +198,10 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         game.setPhase(phase);
 
         if (msg.getState() == GameState.OPEN) {
-            SwingUtilities.invokeLater(new Runnable() {
+            SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
                     client.newGamePanel(game, msg.getSnapshot() == null, slots);
+                    client.setGame(game);
                     //HACK - we must wait for panel is created
                     handleGameSetup(msg.getGameSetup());
                     performAutostart();
