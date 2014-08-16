@@ -40,7 +40,7 @@ public class Connection {
 
             @Override
             public void onMessage(String payload) {
-                logger.info(payload);
+                //logger.info(payload);
                 WsMessage msg = parser.fromJson(payload);
                 if (msg instanceof WelcomeMessage) {
                     WelcomeMessage welcome = (WelcomeMessage) msg;

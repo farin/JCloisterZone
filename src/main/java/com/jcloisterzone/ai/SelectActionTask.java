@@ -108,6 +108,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
+        //logger.info("Select action task started " + aiPlayer.getClientStub().getGame().getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString());
         boolean dbgPrint = false;
         try {
             this.game = aiPlayer.copyGame(this);
@@ -131,6 +132,7 @@ public class SelectActionTask implements Runnable {
             }
             if (dbgPrint) dbgPringFooter();
             aiPlayer.setBestChain(bestSoFar);
+            //logger.info("Select action task finished "  + game.getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString() + " " + bestSoFar.chainToString());
             aiPlayer.popActionChain();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -139,7 +141,6 @@ public class SelectActionTask implements Runnable {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private boolean phaseLoop() {
         Phase phase = game.getPhase();
         while (!phase.isEntered()) {
@@ -173,6 +174,10 @@ public class SelectActionTask implements Runnable {
 
     @Subscribe
     public void handleActionEvent(SelectActionEvent ev) {
+        if (!game.getActivePlayer().equals(aiPlayer.getPlayer())) {
+            return; //e.g. wagon move of other player
+        }
+        //logger.info("....T " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString());
         List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
         SavePoint savePoint = spm.save();
 

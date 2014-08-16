@@ -33,7 +33,7 @@ public class TowerCapturePhase extends Phase {
     public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         Follower m = (Follower) game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
         m.undeploy();
-        //unplace figure returns figure to owner -> we must handle capture / prisoner exchange
+        //undeploy returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
@@ -48,10 +48,10 @@ public class TowerCapturePhase extends Phase {
             if (myCapturedFollowers.isEmpty()) {
                 towerCap.inprison(m, me);
             } else {
-                //opponent has my prisoner - figure exchage
+                //opponent has my prisoner - figure exchange
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
                 boolean removeOk = prisoners.remove(exchanged);
-                assert removeOk;                
+                assert removeOk;
                 exchanged.clearDeployment();
                 game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
             }

@@ -9,6 +9,7 @@
 * chat is available during game setup
 * rules update: wagon moves for special cases of Inns & Cathedrals according to Completely Annotated Rules
 * rules update: wagon cannot move through a fair
+* fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
 * fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
