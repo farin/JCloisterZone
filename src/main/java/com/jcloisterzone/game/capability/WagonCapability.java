@@ -150,6 +150,11 @@ public class WagonCapability extends Capability {
             XmlUtils.injectPosition(el, rv.getValue().getTile().getPosition());
             node.appendChild(el);
         }
+        if (wagonPlayer != null) {
+            Element el = doc.createElement("wagon-player");
+            el.setAttribute("player", ""+wagonPlayer.getIndex());
+            node.appendChild(el);
+        }
     }
 
     @Override
@@ -162,6 +167,11 @@ public class WagonCapability extends Capability {
             int playerIndex = Integer.parseInt(wg.getAttribute("player"));
             Player player = game.getPlayer(playerIndex);
             returnedWagons.put(player, getBoard().get(pos).getFeature(loc));
+        }
+        nl = node.getElementsByTagName("wagon-player");
+        if (nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            wagonPlayer = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
         }
     }
 

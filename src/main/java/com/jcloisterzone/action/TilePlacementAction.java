@@ -99,7 +99,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
 
     @Override
     public String toString() {
-        return "place tile";
+        return "place tile " + tile.getId();
     }
 
 }
