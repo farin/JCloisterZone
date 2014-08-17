@@ -318,7 +318,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
   protected void performAutostart() {
       DebugConfig debugConfig = client.getConfig().getDebug();
-      if (!autostartPerfomed && debugConfig.isAutostartEnabled()) {
+      if (!autostartPerfomed && debugConfig != null && debugConfig.isAutostartEnabled()) {
           autostartPerfomed = true; //apply autostart only once
           AutostartConfig autostartConfig = debugConfig.getAutostart();
           final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
