@@ -53,7 +53,7 @@ import com.jcloisterzone.wsio.message.PostChatMessage;
 public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     public static final int CHAT_WIDTH = 250;
-    public static final int DISPLAY_MESSAGES_INTERVAL = 5000;
+    public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
     private JComponent parent; //TODO move to FakeComponent? hack to re-layout from inside class
     private final Game game;

@@ -40,6 +40,7 @@ import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
+import com.jcloisterzone.game.phase.WagonPhase;
 
 public class SelectActionTask implements Runnable {
 
@@ -57,7 +58,7 @@ public class SelectActionTask implements Runnable {
     private Game game;
 
     @SuppressWarnings("unchecked")
-    private static final List<Class<? extends Phase>> ALLOWED_IN_PHASE_LOOP = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
+    private static final List<Class<? extends Phase>> ALLOWED_IN_PHASE_LOOP = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class, WagonPhase.class);
 
     public SelectActionTask(RankingAiPlayer aiPlayer, SelectActionEvent rootEv) {
         this.aiPlayer = aiPlayer;
@@ -131,13 +132,17 @@ public class SelectActionTask implements Runnable {
                 if (dbgPrint) dbgPringStep(choice, isFinal);
             }
             if (dbgPrint) dbgPringFooter();
-            aiPlayer.setBestChain(bestSoFar);
             //logger.info("Select action task finished "  + game.getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString() + " " + bestSoFar.chainToString());
-            aiPlayer.popActionChain();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        }
+        if (bestSoFar == null) {
+            //in perfect world it should never happen
             aiPlayer.setBestChain(null);
             aiPlayer.selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
+        } else {
+            aiPlayer.setBestChain(bestSoFar);
+            aiPlayer.popActionChain();
         }
     }
 
