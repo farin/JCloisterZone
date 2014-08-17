@@ -14,7 +14,7 @@ beep_alert: ${beep_alert}
 confirm: ${confirm}
 
 # machine identification for remote games
-client_name:
+client_name: ${client_name}
 
 players:
   # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)
