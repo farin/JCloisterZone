@@ -32,6 +32,7 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             Expansion.BESIEGERS,
             Expansion.PHANTOM,
             Expansion.FESTIVAL,
+            Expansion.GERMAN_MONASTERIES,
             //Expansion.FLIER,
             //only tiles
             Expansion.COUNT
