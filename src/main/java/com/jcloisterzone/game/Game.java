@@ -293,6 +293,10 @@ public class Game extends GameSettings {
         return !(phase instanceof CreateGamePhase);
     }
 
+    public boolean isOver() {
+        return !(phase instanceof GameOverPhase);
+    }
+
 
     public Set<FeaturePointer> prepareFollowerLocations() {
         Set<FeaturePointer> followerOptions = prepareFollowerLocations(currentTile, false);

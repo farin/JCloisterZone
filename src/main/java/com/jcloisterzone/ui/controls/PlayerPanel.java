@@ -304,7 +304,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         if (player.getSlot().isDisconnected()) {
             Composite origComposite = parentGraphics.getComposite();
-            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .7f));
+            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f));
             parentGraphics.setColor(Color.BLACK);
             parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
             parentGraphics.setComposite(origComposite);

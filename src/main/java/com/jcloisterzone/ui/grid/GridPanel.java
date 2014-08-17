@@ -72,7 +72,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private MoveCenterAnimation moveAnimation;
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
-    private String errorMessage, hintMessage;
+    private String errorMessage;
+    //private String hintMessage;
 
     public GridPanel(Client client, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
@@ -299,14 +300,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
 
-    public String getHintMessage() {
-        return hintMessage;
-    }
-
-
-    public void setHintMessage(String hintMessage) {
-        this.hintMessage = hintMessage;
-    }
+//    public String getHintMessage() {
+//        return hintMessage;
+//    }
+//
+//
+//    public void setHintMessage(String hintMessage) {
+//        this.hintMessage = hintMessage;
+//    }
 
 
     public void moveCenter(int xSteps, int ySteps) {
@@ -546,14 +547,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     private void paintMessages(Graphics2D g2, int innerWidth) {
         int y = 0;
-        if (hintMessage != null) {
-            g2.setColor(MESSAGE_HINT);
-            g2.fillRect(0, y, innerWidth, 36);
-            g2.setFont(new Font(null, Font.PLAIN, 16));
-            g2.setColor(Color.WHITE);
-            g2.drawString(hintMessage, 30, y+23);
-            y += 42;
-        }
+//        if (hintMessage != null) {
+//            g2.setColor(MESSAGE_HINT);
+//            g2.fillRect(0, y, innerWidth, 36);
+//            g2.setFont(new Font(null, Font.PLAIN, 16));
+//            g2.setColor(Color.WHITE);
+//            g2.drawString(hintMessage, 30, y+23);
+//            y += 42;
+//        }
         if (errorMessage != null) {
             g2.setColor(MESSAGE_ERROR);
             g2.fillRect(0, y, innerWidth, 36);

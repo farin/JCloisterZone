@@ -104,7 +104,7 @@ public class GamePanel extends BackgroundPanel {
                 }
                 slot.setDisconnected(!match);
             }
-        } else {
+        } else if (!game.isOver()) {
             connectedClients.setText(Joiner.on("\n").join(
                 Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
                     @Override
