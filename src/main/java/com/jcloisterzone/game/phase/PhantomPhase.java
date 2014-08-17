@@ -39,6 +39,7 @@ public class PhantomPhase extends Phase {
     public void enter() {
         if (!getActivePlayer().hasFollower(Phantom.class)) {
             next();
+            return;
         }
         MeepleAction phantomAction = new MeepleAction(Phantom.class);
         List<MeepleAction> actions = Collections.singletonList(phantomAction);
