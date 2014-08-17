@@ -1,7 +1,6 @@
 package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SLOT")
@@ -11,7 +10,7 @@ public class SlotMessage implements WsMessage {
     private String owner;
     private Integer serial;
     private String nickname;
-    private boolean ai;
+    private String aiClassName;
     private Expansion[] supportedExpansions;
 
     public SlotMessage(String gameId, int number, Integer serial, String owner, String nickname) {
@@ -47,12 +46,12 @@ public class SlotMessage implements WsMessage {
         this.nickname = nickname;
     }
 
-    public boolean isAi() {
-        return ai;
+    public String getAiClassName() {
+        return aiClassName;
     }
 
-    public void setAi(boolean ai) {
-        this.ai = ai;
+    public void setAiClassName(String aiClassName) {
+        this.aiClassName = aiClassName;
     }
 
     public Integer getSerial() {

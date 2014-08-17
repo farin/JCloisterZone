@@ -158,9 +158,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
             slot.setState(slotMsg.getOwner().equals(conn.getClientId()) ? SlotState.OWN : SlotState.REMOTE);
         }
         slot.setSerial(slotMsg.getSerial());
-        if (!slot.isOwn() || !slotMsg.isAi()) {
-            slot.setAiClassName(null);
-        }
+        slot.setAiClassName(slotMsg.getAiClassName());
     }
 
     @WsSubscribe
@@ -331,16 +329,17 @@ public class ClientStub  implements InvocationHandler, MessageListener {
           int i = 0;
           for (String name: players) {
               Class<?> clazz = null;;
+              PlayerSlot slot =  ((CreateGamePhase) game.getPhase()).getPlayerSlots()[i];
               try {
                   clazz = Class.forName(name);
-                  ((CreateGamePhase) game.getPhase()).getPlayerSlots()[i].setAiClassName(name);
+                  slot.setAiClassName(name);
                   name = "AI-" + i + "-" + clazz.getSimpleName().replace("AiPlayer", "");
               } catch (ClassNotFoundException e) {
                   //empty
               }
               TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), i, name);
-              if (clazz != null) {
-                  msg.setAi(true);
+              if (slot.getAiClassName() != null) {
+                  msg.setAiClassName(slot.getAiClassName());
               }
               conn.send(msg);
               i++;

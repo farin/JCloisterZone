@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.EnumSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -144,8 +146,13 @@ public class CreateGamePlayerPanel extends JPanel {
                 updateIcon("remote", color, false);
             }
         } else {
-            status.setText(_("Computer player"));
-            updateIcon("ai", color, false);
+            if (slot.isOwn()) {
+                status.setText(_("Computer player"));
+                updateIcon("ai", color, false);
+            } else {
+                status.setText(_("Remote computer player"));
+                updateIcon("remote_ai", color, false);
+            }
         }
         nickname.setText(slot.getNickname());
     }
@@ -167,9 +174,15 @@ public class CreateGamePlayerPanel extends JPanel {
                 updateNickname(false);
             }
         } else {
-            status.setText(_("Computer player"));
-            updateIcon("ai", color, true);
+            if (slot.isOwn()) {
+                status.setText(_("Computer player"));
+                updateIcon("ai", color, true);
+            } else {
+                status.setText(_("Remote computer player"));
+                updateIcon("remote_ai", color, false);
+            }
             updateNickname(false);
+
         }
 
         if (!ownSlot || !nickname.isEnabled()) { //probably change by me
@@ -225,11 +238,14 @@ public class CreateGamePlayerPanel extends JPanel {
 
     private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(client.getGame().getGameId(), slot.getNumber(), slot.getNickname());
-        if (slot.isAi()) {
-            msg.setAi(true);
-            //todo devel only
-            assert slot.getAiClassName().equals(LegacyAiPlayer.class.getName());
-            msg.setSupportedExpansions(LegacyAiPlayer.supportedExpansions().toArray(new Expansion[0]));
+        msg.setAiClassName(slot.getAiClassName());
+        if (slot.getAiClassName() != null) {
+            try {
+                EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(slot.getAiClassName()).getMethod("supportedExpansions").invoke(null);
+                msg.setSupportedExpansions(supported.toArray(new Expansion[0]));
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
         }
         client.getConnection().send(msg);
     }

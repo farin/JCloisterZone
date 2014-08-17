@@ -9,7 +9,7 @@ public class ServerPlayerSlot {
     private Integer serial; // server assign sequence number when type is occupied
     private String nickname;
     private String owner;
-    private boolean ai;
+    private String aiClassName;
     private Expansion[] supportedExpansions;
 
     public ServerPlayerSlot(int number) {
@@ -44,12 +44,12 @@ public class ServerPlayerSlot {
         this.owner = owner;
     }
 
-    public boolean isAi() {
-        return ai;
+    public String getAiClassName() {
+        return aiClassName;
     }
 
-    public void setAi(boolean ai) {
-        this.ai = ai;
+    public void setAiClassName(String aiClassName) {
+        this.aiClassName = aiClassName;
     }
 
     public int getNumber() {

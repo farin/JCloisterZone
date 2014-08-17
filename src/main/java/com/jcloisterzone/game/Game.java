@@ -294,7 +294,7 @@ public class Game extends GameSettings {
     }
 
     public boolean isOver() {
-        return !(phase instanceof GameOverPhase);
+        return phase instanceof GameOverPhase;
     }
 
 

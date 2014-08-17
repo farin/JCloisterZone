@@ -93,18 +93,20 @@ public class GamePanel extends BackgroundPanel {
 
     public void clientListChanged(RemoteClient[] clients) {
         if (game.isStarted()) {
-            for (Player p : game.getAllPlayers()) {
-                PlayerSlot slot = p.getSlot();
-                boolean match = false;
-                for (RemoteClient rc: clients) {
-                    if (rc.getClientId().equals(slot.getClientId())) {
-                        match = true;
-                        break;
+            if (!game.isOver()) {
+                for (Player p : game.getAllPlayers()) {
+                    PlayerSlot slot = p.getSlot();
+                    boolean match = false;
+                    for (RemoteClient rc: clients) {
+                        if (rc.getClientId().equals(slot.getClientId())) {
+                            match = true;
+                            break;
+                        }
                     }
+                    slot.setDisconnected(!match);
                 }
-                slot.setDisconnected(!match);
             }
-        } else if (!game.isOver()) {
+        } else {
             connectedClients.setText(Joiner.on("\n").join(
                 Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
                     @Override

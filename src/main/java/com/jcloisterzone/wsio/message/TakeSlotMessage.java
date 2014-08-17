@@ -8,7 +8,7 @@ public class TakeSlotMessage implements WsMessage {
     private String gameId;
     private int number;
     private String nickname;
-    private boolean ai;
+    private String aiClassName;
     private Expansion[] supportedExpansions;
 
     public TakeSlotMessage(String gameId, int number, String nickname) {
@@ -42,12 +42,13 @@ public class TakeSlotMessage implements WsMessage {
         this.nickname = nickname;
     }
 
-    public boolean isAi() {
-        return ai;
+
+    public String getAiClassName() {
+        return aiClassName;
     }
 
-    public void setAi(boolean ai) {
-        this.ai = ai;
+    public void setAiClassName(String aiClassName) {
+        this.aiClassName = aiClassName;
     }
 
     public Expansion[] getSupportedExpansions() {

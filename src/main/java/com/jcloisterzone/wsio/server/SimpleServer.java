@@ -109,7 +109,8 @@ public class SimpleServer extends WebSocketServer  {
             int slotNumber = player.getSlot().getNumber();
             ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
             slot.setNickname(player.getNick());
-            if (player.getSlot().getState() == SlotState.OWN) {
+            slot.setAiClassName(player.getSlot().getAiClassName());
+            if (player.getSlot().getState() == SlotState.OWN || slot.getAiClassName() != null) {
                 slot.setOwner(reservedClientId);
             }
             slots[slotNumber] = slot;
@@ -158,7 +159,7 @@ public class SimpleServer extends WebSocketServer  {
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
         SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getOwner(), slot.getNickname());
-        msg.setAi(slot.isAi());
+        msg.setAiClassName(slot.getAiClassName());
         msg.setSupportedExpansions(slot.getSupportedExpansions());
         return msg;
     }
@@ -189,6 +190,11 @@ public class SimpleServer extends WebSocketServer  {
         return new ClientListMessage(game.getGameId(), clients);
     }
 
+    private String getWebsocketHost(WebSocket ws) {
+        if (ws.getRemoteSocketAddress().getAddress().isLoopbackAddress()) return "localhost";
+        return ws.getRemoteSocketAddress().getHostName();
+    }
+
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
 //        //devel
@@ -202,7 +208,7 @@ public class SimpleServer extends WebSocketServer  {
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         String clientId = reservedClientId != null ? reservedClientId : getRandomId();
         String sessionKey = getRandomId();
-        String nickname = msg.getNickname() + '@' + ws.getRemoteSocketAddress().getHostName();
+        String nickname = msg.getNickname() + '@' + getWebsocketHost(ws);
         RemoteClient client = new RemoteClient(clientId, nickname);
         //Connection client = new Connection(clientId, msg.getNickname());
         connections.put(ws, client);
@@ -240,7 +246,7 @@ public class SimpleServer extends WebSocketServer  {
             slot.setSerial(++slotSerial);
         }
         slot.setNickname(msg.getNickname());
-        slot.setAi(msg.isAi());
+        slot.setAiClassName(msg.getAiClassName());
         slot.setOwner(clientId);
         slot.setSupportedExpansions(msg.getSupportedExpansions());
         broadcast(newSlotMessage(slot));
@@ -250,7 +256,7 @@ public class SimpleServer extends WebSocketServer  {
         slot.setNickname(null);
         slot.setSerial(null);
         slot.setOwner(null);
-        slot.setAi(false);
+        slot.setAiClassName(null);
         slot.setSupportedExpansions(null);
         broadcast(newSlotMessage(slot));
     }
