@@ -3,6 +3,7 @@ package com.jcloisterzone.wsio;
 import java.net.URI;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ public class Connection {
 
     private MessageParser parser = new MessageParser();
     private WebSocketClient ws;
+    private final MessageListener listener;
 
     private String clientId;
     private String sessionKey;
@@ -26,7 +28,8 @@ public class Connection {
     //for legacy code, to be able pass connection only
     private RmiProxy rmiProxy;
 
-    public Connection(final String username, URI uri, final MessageListener listener) {
+    public Connection(final String username, URI uri, MessageListener _listener) {
+        this.listener = _listener;
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
@@ -66,7 +69,11 @@ public class Connection {
     }
 
     public void send(WsMessage arg) {
-        ws.send(parser.toJson(arg));
+        try {
+            ws.send(parser.toJson(arg));
+        } catch (WebsocketNotConnectedException ex) {
+            listener.onWebsocketError(ex);
+        }
     }
 
     public void close() {

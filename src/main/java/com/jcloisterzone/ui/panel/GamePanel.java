@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,11 +8,14 @@ import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
+
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -23,13 +24,14 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GamePanel extends BackgroundPanel {
 
@@ -114,6 +116,19 @@ public class GamePanel extends BackgroundPanel {
                         return input.getName();
                     }
             })));
+        }
+    }
+
+    public void onWebsocketError(Exception ex) {
+        GridPanel gp = getGridPanel();
+        String msg = ex instanceof WebsocketNotConnectedException ? _("Connection lost") + " - save game and load on server side and then connect with client as workaround" : ex.getMessage();
+        if (msg == null || msg.length() == 0) {
+            msg = ex.getClass().getSimpleName();
+        }
+        if (gp != null) {
+            gp.setErrorMessage(msg);
+        } else {
+            JOptionPane.showMessageDialog(client, msg, _("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

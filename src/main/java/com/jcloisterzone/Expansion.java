@@ -1,7 +1,5 @@
 package com.jcloisterzone;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -21,11 +19,9 @@ import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
-import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PigCapability;
-import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
@@ -35,6 +31,8 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("unchecked")
 public enum Expansion {

@@ -37,6 +37,7 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
+import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
@@ -90,11 +91,16 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     @Override
     public void onWebsocketError(Exception ex) {
         ConnectGamePanel cgp = client.getConnectGamePanel();
-        if (cgp == null) {
-            logger.error(ex.getMessage(), ex);
-        } else {
+        if (cgp != null) {
             cgp.onWebsocketError(ex);
+            return;
         }
+        GamePanel gp = client.getGamePanel();
+        if (gp != null) {
+            gp.onWebsocketError(ex);
+            return;
+        }
+        logger.error(ex.getMessage(), ex);
     }
 
     @Override
