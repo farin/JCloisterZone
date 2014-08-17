@@ -1,12 +1,10 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.EnumSet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
@@ -15,18 +13,15 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.ChatEvent;
-import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.rmi.ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 
-public abstract class Phase implements ClientIF {
+public abstract class Phase implements RmiProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -102,11 +97,6 @@ public abstract class Phase implements ClientIF {
     //adapter methods
 
     @Override
-    public void startGame() {
-        logger.error(Application.ILLEGAL_STATE_MSG, "startGame");
-    }
-
-    @Override
     public void pass() {
         logger.error(Application.ILLEGAL_STATE_MSG, "pass");
     }
@@ -158,38 +148,6 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateCustomRule");
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
-
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-         logger.error(Application.ILLEGAL_STATE_MSG, "updateGameSetup");
-    }
-
-    @Override
-    public void updateSlot(PlayerSlot slot) {
-        game.post(new PlayerSlotChangeEvent(slot));
-    }
-
-    @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateSupportedExpansions");
-    }
-
-
-    @Override
-    public void drawTiles(int[] tileIndex) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "drawTiles");
-    }
-
-    @Override
     public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
@@ -221,19 +179,15 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "setFlierDistance");
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "placeLittleBuilding");
     }
 
     @Override
-    public final void chatMessage(Integer author, String message) {
-        game.post(new ChatEvent(game.getPlayer(author), message));
-    }
-    
-    @Override
     public void undo() {
-    	game.undo();
+        game.undo();
     }
+
 
     @Override
     public String toString() {

@@ -31,7 +31,6 @@ import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.animation.AnimationService;
@@ -73,25 +72,25 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private MoveCenterAnimation moveAnimation;
 
     private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
-    private String errorMessage, hintMessage;
+    private String errorMessage;
+    //private String hintMessage;
 
-    public GridPanel(Client client, Snapshot snapshot) {
+    public GridPanel(Client client, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
         setLayout(null);
 
         this.client = client;
-        this.controlPanel = client.getControlPanel();
+        this.controlPanel = controlPanel;
 
-        boolean networkGame = false;
+        boolean networkGame = "true".equals(System.getProperty("forceChat"));
         for (Player p : client.getGame().getAllPlayers()) {
-            if (p.getSlot().getOwner() != client.getClientId()) {
+            if (!p.getSlot().isOwn()) {
                 networkGame = true;
                 break;
             }
         }
-
-        this.chatPanel = networkGame ? new ChatPanel(client) : null;
+        this.chatPanel = networkGame ? chatPanel : null;
 
         squareSize = INITIAL_SQUARE_SIZE;
         left = 0 - STARTING_GRID_SIZE / 2;
@@ -113,15 +112,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         registerMouseListeners();
         controlPanel.registerSwingComponents(this);
         if (chatPanel != null) {
-            chatPanel.registerSwingComponents(this);
+            this.add(chatPanel.getInput());
+            this.add(chatPanel.getMessagesPane());
+            chatPanel.setParent(this);
+            chatPanel.layoutSwingComponents(this);
         }
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                controlPanel.layoutSwingComponents(GridPanel.this);
-                if (chatPanel != null) {
-                    chatPanel.layoutSwingComponents(GridPanel.this);
+                GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
+                if (GridPanel.this.chatPanel != null) {
+                    GridPanel.this.chatPanel.layoutSwingComponents(GridPanel.this);
                 }
             }
         });
@@ -134,7 +136,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             if (secondPanel instanceof ForwardBackwardListener) {
                 ((ForwardBackwardListener) secondPanel).forward();
             }
-            client.getControlPanel().getActionPanel().forward();
+            controlPanel.getActionPanel().forward();
         }
     }
 
@@ -144,7 +146,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             if (secondPanel instanceof ForwardBackwardListener) {
                 ((ForwardBackwardListener) secondPanel).backward();
             }
-            client.getControlPanel().getActionPanel().backward();
+            controlPanel.getActionPanel().backward();
         }
     }
 
@@ -185,7 +187,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-        	if (dragSource == null) return; //threading issues
+            if (dragSource == null) return; //threading issues
             //px values
             int dx = e.getX() - dragSource.getX();
             int dy = e.getY() - dragSource.getY();
@@ -258,10 +260,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return client;
     }
 
-    public ChatPanel getChatPanel() {
-        return chatPanel;
-    }
-
     public FakeComponent getSecondPanel() {
         return secondPanel;
     }
@@ -282,21 +280,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return squareSize;
     }
 
-//    public int getLeft() {
-//        return left;
-//    }
-//
-//    public int getRight() {
-//        return right;
-//    }
-//
-//    public int getTop() {
-//        return top;
-//    }
-//
-//    public int getBottom() {
-//        return bottom;
-//    }
 
     public int getOffsetX() {
         return offsetX;
@@ -317,14 +300,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
 
-    public String getHintMessage() {
-        return hintMessage;
-    }
-
-
-    public void setHintMessage(String hintMessage) {
-        this.hintMessage = hintMessage;
-    }
+//    public String getHintMessage() {
+//        return hintMessage;
+//    }
+//
+//
+//    public void setHintMessage(String hintMessage) {
+//        this.hintMessage = hintMessage;
+//    }
 
 
     public void moveCenter(int xSteps, int ySteps) {
@@ -444,29 +427,29 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     // delegated UI methods
 
     public void tileEvent(TileEvent ev, TileLayer tileLayer) {
-    	Tile tile = ev.getTile();
+        Tile tile = ev.getTile();
         Position p = ev.getPosition();
 
         removeLayer(AbstractTilePlacementLayer.class);
         removeLayer(PlacementHistory.class);
-        
+
         if (ev.getType() == TileEvent.PLACEMENT) {
-	        if (p.x == left) --left;
-	        if (p.x == right) ++right;
-	        if (p.y == top) --top;
-	        if (p.y == bottom) ++bottom;
-	
-	        tileLayer.tilePlaced(tile);
-	
-	        boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
-	        if ((!initialPlacement && !client.isClientActive()) ||
-	            (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
-	            getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
-	        }
+            if (p.x == left) --left;
+            if (p.x == right) ++right;
+            if (p.y == top) --top;
+            if (p.y == bottom) ++bottom;
+
+            tileLayer.tilePlaced(tile);
+
+            boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
+            if ((!initialPlacement && !client.isClientActive()) ||
+                (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
+                getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
+            }
         } else if (ev.getType() == TileEvent.REMOVE) {
-        	tileLayer.tileRemoved(tile);
+            tileLayer.tileRemoved(tile);
         }
-        
+
         if (client.isShowHistory()) {
             showRecentHistory();
         }
@@ -564,14 +547,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     private void paintMessages(Graphics2D g2, int innerWidth) {
         int y = 0;
-        if (hintMessage != null) {
-            g2.setColor(MESSAGE_HINT);
-            g2.fillRect(0, y, innerWidth, 36);
-            g2.setFont(new Font(null, Font.PLAIN, 16));
-            g2.setColor(Color.WHITE);
-            g2.drawString(hintMessage, 30, y+23);
-            y += 42;
-        }
+//        if (hintMessage != null) {
+//            g2.setColor(MESSAGE_HINT);
+//            g2.fillRect(0, y, innerWidth, 36);
+//            g2.setFont(new Font(null, Font.PLAIN, 16));
+//            g2.setColor(Color.WHITE);
+//            g2.drawString(hintMessage, 30, y+23);
+//            y += 42;
+//        }
         if (errorMessage != null) {
             g2.setColor(MESSAGE_ERROR);
             g2.fillRect(0, y, innerWidth, 36);

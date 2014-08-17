@@ -99,22 +99,21 @@ public final class TunnelCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (isTunnelUsedThisTurn()) return;
         if (getOpenTunnels().isEmpty()) return;
-        
+
         List<TunnelAction> tunnelActions = new ArrayList<>(2);
-        TunnelAction tunnelAction = null;
         if (getTunnelTokens(game.getActivePlayer(), false) > 0) {
-            tunnelActions.add(new TunnelAction(false)); 
+            tunnelActions.add(new TunnelAction(false));
         }
         if (getTunnelTokens(game.getActivePlayer(), true) > 0) {
             tunnelActions.add(new TunnelAction(true));
         }
         for (TunnelAction ta : tunnelActions) {
-	        for (Road tunnelEnd : getOpenTunnels()) {
-	            ta.add(new FeaturePointer(getTile().getPosition(), tunnelEnd.getLocation()));
-	        }
+            for (Road tunnelEnd : getOpenTunnels()) {
+                ta.add(new FeaturePointer(getTile().getPosition(), tunnelEnd.getLocation()));
+            }
         }
         actions.addAll(tunnelActions);
     }

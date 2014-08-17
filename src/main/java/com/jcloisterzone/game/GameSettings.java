@@ -8,9 +8,19 @@ import com.jcloisterzone.Expansion;
 
 public class GameSettings {
 
+    private final String gameId;
     private final Set<CustomRule> customRules = EnumSet.noneOf(CustomRule.class);
     private final Set<Expansion> expansions = EnumSet.noneOf(Expansion.class);
     private final Set<Class<? extends Capability>> capabilityClasses = new HashSet<>();
+
+
+    public GameSettings(String gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
 
     public boolean hasExpansion(Expansion expansion) {
         return expansions.contains(expansion);

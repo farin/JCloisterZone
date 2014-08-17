@@ -17,6 +17,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
@@ -50,6 +51,12 @@ public abstract class Capability {
         return game.getCurrentTile();
     }
 
+    /* no @Subscribe for Capabilities
+     * it cause post from another event handler and makes trouble with AI tasks
+     * */
+    public void handleEvent(Event event) {
+    }
+
     public void saveToSnapshot(Document doc, Element node) {
     }
 
@@ -77,27 +84,29 @@ public abstract class Capability {
 
     public void begin() {
     }
-    
+
     /** convenient method to find follower action in all actions */
     protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
-    	List<MeepleAction> followerActions = new ArrayList<>();
-    	for (PlayerAction<?> a : actions) {
-    		if (a instanceof MeepleAction) {
-    			MeepleAction ma = (MeepleAction) a;
-    			if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
-    				followerActions.add(ma);
-    			}
-    		}
-    	}
-    	return followerActions;
+        List<MeepleAction> followerActions = new ArrayList<>();
+        for (PlayerAction<?> a : actions) {
+            if (a instanceof MeepleAction) {
+                MeepleAction ma = (MeepleAction) a;
+                if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
+                    followerActions.add(ma);
+                }
+            }
+        }
+        return followerActions;
+    }
+
+    public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
     }
 
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
+
     public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
-//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
-//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return true;

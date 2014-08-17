@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
-import java.lang.reflect.Proxy;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -42,28 +41,34 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.rmi.mina.ClientStub;
+import com.jcloisterzone.event.ChatEvent;
+import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
-import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.wsio.message.PostChatMessage;
 
 public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     public static final int CHAT_WIDTH = 250;
-    public static final int DISPLAY_MESSAGES_INTERVAL = 5000;
+    public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
-    private JComponent parent; //move to FakeComponent? hack to realoyot from inside class
+    private JComponent parent; //TODO move to FakeComponent? hack to re-layout from inside class
+    private final Game game;
 
     private boolean forceFocus;
     private boolean messageReceivedWhileIconified;
     private JTextField input;
     private JTextPane messagesPane;
-    private final Deque<ChatMessage> formattedMessages = new ArrayDeque<>();
+    private final Deque<ReceivedChatMessage> formattedMessages = new ArrayDeque<>();
     private final Timer repaintTimer;
 
-    public ChatPanel(Client client) {
+
+    public ChatPanel(Client client, Game game) {
         super(client);
+        this.game = game;
         repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +77,11 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
                 repaintTimer.stop();
             }
         });
+    }
+
+
+    public void setParent(JComponent parent) {
+        this.parent = parent;
     }
 
     public void activateChat() {
@@ -92,28 +102,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         client.requestFocusInWindow();
     }
 
-    /**
-     * More then one client can play from one seat. Find local player, prefer active, than human player, latest is AI.
-     * @return
-     */
-    private Player getSendingPlayer() {
-        Player result = null, active = client.getGame().getActivePlayer();
-        for (Player player : client.getGame().getAllPlayers()) {
-            boolean isLocal  = ((ClientStub)Proxy.getInvocationHandler(client.getServer())).isLocalPlayer(player);
-            if (isLocal) {
-                if (result == null) {
-                    result = player;
-                } else {
-                    if (result.getSlot().getAiClassName() != null && player.getSlot().getAiClassName() == null) {
-                        //prefer real user for remote inactive client with more players
-                        result = player;
-                    }
-                }
-                if (player.equals(active)) return player;
-            }
-        }
-        return result;
-    }
+
 
     @Override
     public void registerSwingComponents(JComponent parent) {
@@ -141,7 +130,8 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
                 String msg = input.getText();
                 if (!"".equals(msg)) {
                     forceFocus = true; //prevent panel flashing
-                    client.getServer().chatMessage(getSendingPlayer().getIndex(), msg);
+                    client.getConnection().send(new PostChatMessage(game.getGameId(), msg));
+                    //client.getServer().chatMessage(getSendingPlayer().getIndex(), msg);
                 }
                 clean();
             }
@@ -149,15 +139,15 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         input.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (client.getGridPanel() != null) {
-                    client.getGridPanel().repaint();
+                if (ChatPanel.this.parent != null) {
+                    ChatPanel.this.parent.repaint();
                 }
             }
 
             @Override
             public void focusGained(FocusEvent e) {
                 messagesPane.setVisible(true);
-                client.getGridPanel().repaint();
+                ChatPanel.this.parent.repaint();
             }
         });
 
@@ -208,13 +198,12 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     @Override
     public void paintComponent(Graphics2D g2) {
-        GridPanel gp = client.getGridPanel();
-        int h = gp.getHeight();
+        int h = parent.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
         if (isFolded()) {
             if (messagesPane.isVisible()) messagesPane.setVisible(false);
-            g2.fillRect(0, gp.getHeight() - 45, CHAT_WIDTH, 45);
+            g2.fillRect(0, parent.getHeight() - 45, CHAT_WIDTH, 45);
         } else {
             if (!messagesPane.isVisible()) messagesPane.setVisible(true);
             g2.fillRect(0, 0, CHAT_WIDTH, h);
@@ -223,6 +212,10 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     public JTextField getInput() {
         return input;
+    }
+
+    public JTextPane getMessagesPane() {
+        return messagesPane;
     }
 
     private void setForceFocus() {
@@ -235,8 +228,55 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         }
     }
 
-    public void displayChatMessage(Player player, String message) {
-        ChatMessage fm = new ChatMessage(player, message);
+    /**
+     * More then one client can play from one seat. Find local player, prefer
+     * active, than human player, latest is AI.
+     *
+     * @return
+     */
+    private ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
+        String nick = ev.getRemoteClient().getName();
+        Color color = Color.DARK_GRAY;
+
+        if (game.isStarted()) {
+            Player selected = null, active = game.getActivePlayer();
+            for (Player player : game.getAllPlayers()) {
+                if (player.getSlot().isOwn()) {
+                    if (selected == null) {
+                        selected = player;
+                    } else {
+                        if (selected.getSlot().getAiClassName() != null
+                                && player.getSlot().getAiClassName() == null) {
+                            // prefer real user for remote inactive client with
+                            // more players
+                            selected = player;
+                        }
+                    }
+                    if (player.equals(active)) {
+                        selected = player;
+                        break;
+                    }
+                }
+            }
+            if (selected != null) {
+                nick = selected.getNick();
+                color = selected.getColors().getFontColor();
+            }
+        } else {
+             PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
+             for (PlayerSlot slot: slots) {
+                 if (slot.isOwn() && !slot.getNickname().equals("")) {
+                     nick = slot.getNickname();
+                     color = slot.getColors().getFontColor();
+                     break;
+                 }
+             }
+        }
+        return new ReceivedChatMessage(ev, nick, color);
+    }
+
+    public void displayChatMessage(ChatEvent ev) {
+        ReceivedChatMessage fm = createReceivedMessage(ev);
         formattedMessages.addLast(fm);
 
         if (client.getState() == JFrame.ICONIFIED) {
@@ -248,14 +288,16 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         DefaultStyledDocument doc = new DefaultStyledDocument();
         int offset = 0;
         try {
-            for (ChatMessage msg : formattedMessages) {
+            for (ReceivedChatMessage msg : formattedMessages) {
                 SimpleAttributeSet attrs = new SimpleAttributeSet();
-                ColorConstants.setForeground(attrs, msg.player.getColors().getFontColor());
+                ColorConstants.setForeground(attrs, msg.color);
 
-                doc.insertString(offset, msg.player.getNick() + ": ", attrs);
-                offset += msg.player.getNick().length() + 2;
-                doc.insertString(offset, msg.message + "\n", null);
-                offset += msg.message.length() + 1;
+                String nick = msg.nickname;
+                String text = msg.ev.getText();
+                doc.insertString(offset, nick + ": ", attrs);
+                offset += nick.length() + 2;
+                doc.insertString(offset, text + "\n", null);
+                offset += text.length() + 1;
             }
         } catch (BadLocationException e) {
             e.printStackTrace(); //should never happen
@@ -265,14 +307,16 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
     }
 
 
-    static class ChatMessage {
-        Player player;
-        String message;
-        long time;
+    static class ReceivedChatMessage {
+        final ChatEvent ev;
+        final String nickname;
+        final Color color;
+        final long time;
 
-        public ChatMessage(Player player, String message) {
-            this.player = player;
-            this.message = message;
+        public ReceivedChatMessage(ChatEvent ev, String nickname, Color color) {
+            this.ev = ev;
+            this.color = color;
+            this.nickname = nickname;
             this.time = System.currentTimeMillis();
         }
     }

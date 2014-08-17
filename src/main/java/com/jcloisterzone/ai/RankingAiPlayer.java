@@ -1,7 +1,12 @@
 package com.jcloisterzone.ai;
 
-import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.xml.transform.TransformerException;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.ai.choice.AiChoice;
@@ -15,6 +20,8 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 
 public abstract class RankingAiPlayer extends AiPlayer {
 
+    private static ExecutorService executor = Executors.newFixedThreadPool(1);
+
     //private Map<Feature, AiScoreContext> scoreCache = new HashMap<>();
     //private List<PositionLocation> hopefulGatePlacements = new ArrayList<PositionLocation>();
 
@@ -23,7 +30,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 //    }
 
     private final GameRanking gameRanking;
-    private AiChoice bestChain = null;
+    private final AtomicReference<AiChoice> bestChain = new AtomicReference<>();
 
 
     public RankingAiPlayer() {
@@ -38,26 +45,28 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
 
     public AiChoice getBestChain() {
-        return bestChain;
+        return bestChain.get();
     }
 
     public void setBestChain(AiChoice bestChain) {
-        this.bestChain = bestChain;
+        this.bestChain.set(bestChain);
     }
 
     protected void popActionChain() {
         AiChoice toExecute = null;
-        if (bestChain.getPrevious() == null) {
-            toExecute = bestChain;
-            bestChain = null;
+        AiChoice best = bestChain.get();
+        if (best.getPrevious() == null) {
+            toExecute = best;
+            bestChain.set(null);
         } else {
-            AiChoice choice = bestChain;
+            AiChoice choice = best;
             while (choice.getPrevious().getPrevious() != null) {
                 choice = choice.getPrevious();
             }
             toExecute = choice.getPrevious();
             choice.setPrevious(null); //cut last element from chain
         }
+        //logger.info("pop chain " + this.toString() + ": " + toExecute.toString());
         //execute after chain update is done
         toExecute.perform(getServer());
     }
@@ -65,13 +74,13 @@ public abstract class RankingAiPlayer extends AiPlayer {
     private void autosave() {
         DebugConfig debugConfig = game.getConfig().getDebug();
         if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
-            Snapshot snapshot = new Snapshot(game, 0);
+            Snapshot snapshot = new Snapshot(game);
             if ("plain".equals(debugConfig.getSave_format())) {
                 snapshot.setGzipOutput(false);
             }
             try {
                 snapshot.save(new FileOutputStream(debugConfig.getAutosave()));
-            } catch (Exception e) {
+            } catch (TransformerException | IOException e) {
                 logger.error("Auto save before ranking failed.", e);
             }
         }
@@ -79,30 +88,36 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        if (isAiPlayerActive()) {
-            if (bestChain != null) {
+        if (getPlayer().equals(ev.getPlayer())) {
+            //logger.info("SA " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString() + " ?" + (getBestChain()==null?"null":"chain"));
+            if (getBestChain() != null) {
                 popActionChain();
             } else {
                 autosave();
-                new Thread(new SelectActionTask(this, ev), "AI-selectAction").start();
+                executor.submit(new SelectActionTask(this, ev));
+            }
+        } else {
+            if (getBestChain() != null) {
+                logger.warn("AI action chain wasn't fully used! There is an error in ranking engine.");
+                setBestChain(null);
             }
         }
     }
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        if (isAiPlayerActive()) {
+        if (getPlayer().equals(ev.getPlayer())) {
              new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }
 
     //TODO is there faster game copying without snapshot? or without re-creating board and tile instances
     protected Game copyGame(Object gameListener) {
-        Snapshot snapshot = new Snapshot(game, 0);
-        Game copy = snapshot.asGame();
+        Snapshot snapshot = new Snapshot(game);
+        Game copy = snapshot.asGame(game.getGameId());
         copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
-        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, null);
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getConnection());
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);

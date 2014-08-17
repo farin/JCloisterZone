@@ -35,18 +35,12 @@
         <road>S</road>
         <farm>NR EL ER SL</farm>
         <farm>SR WL WR NL</farm>
-        <wagon-move>
-            <neighbouring>N S</neighbouring>
-        </wagon-move>
     </tile>
     <tile id="RR">
         <road>W</road>
         <road>S</road>
         <farm>WR NL NR EL ER SL</farm>
         <farm>WL SR</farm>
-        <wagon-move>
-            <neighbouring>W S</neighbouring>
-        </wagon-move>
     </tile>
     <tile id="RrR.1">
         <road>W</road>

@@ -24,11 +24,14 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer {
 
     private final SelectFeatureAction action;
+    private boolean abbotOption = false;
 
     public FeatureAreaLayer(GridPanel gridPanel, SelectFeatureAction action) {
         super(gridPanel);
@@ -36,8 +39,13 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
     }
 
     protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
+        abbotOption = false;
         Set<Location> locations = action.getLocations(p);
         if (locations == null) return null;
+        if (locations.contains(Location.ABBOT)) {
+            abbotOption = true;
+            locations.remove(Location.ABBOT);
+        }
         if (action instanceof BridgeAction) {
             return getClient().getResourceManager().getBridgeAreas(tile, getSquareSize(), locations);
         } else {
@@ -94,7 +102,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
 
 
     @Override
-    protected void performAction(final Position pos, final Location loc) {
+    protected void performAction(final Position pos, Location loc) {
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
             Feature piece = gridPanel.getTile(pos).getFeature(loc);
@@ -108,8 +116,18 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 }
             }
             if (loc == Location.FLIER) {
-                getClient().getServer().rollFlierDice(ma.getMeepleType());
+                getClient().getConnection().send(new RollFlierDiceMessage(getGame().getGameId(), ma.getMeepleType()));
                 return;
+            }
+            if (loc == Location.CLOISTER && abbotOption) {
+                String options[] = {_("Place as monk"), _("Place as abbot") };
+                int result = JOptionPane.showOptionDialog(getClient(),
+                    _("How do you want to place follower on monastery?"),
+                    _("Monastery"),
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result == JOptionPane.NO_OPTION) {
+                    loc = Location.ABBOT;
+                }
             }
         }
         action.perform(getClient().getServer(), new FeaturePointer(pos, loc));

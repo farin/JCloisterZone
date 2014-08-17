@@ -14,8 +14,9 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -36,6 +37,7 @@ public class Config {
     private Integer ai_place_tile_delay;
 
     private Boolean beep_alert;
+    private String client_name;
 
     private List<String> plugins;
     private ConfirmConfig confirm;
@@ -61,7 +63,7 @@ public class Config {
             this.rules = rules;
         }
 
-        public void updateGameSetup(ServerIF server) {
+        public void updateGameSetup(Connection conn, String gameId) {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
             for (String expName : expansions) {
@@ -72,7 +74,7 @@ public class Config {
             for (String ruleName : rules) {
                 ruleSet.add(CustomRule.valueOf(ruleName));
             }
-            server.updateGameSetup(expansionSet.toArray(new Expansion[expansionSet.size()]), ruleSet.toArray(new CustomRule[ruleSet.size()]));
+            conn.send(new GameSetupMessage(gameId, ruleSet, expansionSet, null));
         }
     }
 
@@ -353,6 +355,14 @@ public class Config {
         return presets;
     }
 
+    public String getClient_name() {
+        return client_name;
+    }
+
+    public void setClient_name(String client_name) {
+        this.client_name = client_name;
+    }
+
     public void setPresets(Map<String, PresetConfig> presets) {
         this.presets = presets;
     }
@@ -372,7 +382,4 @@ public class Config {
     public void setOrigin(File origin) {
         this.origin = origin;
     }
-
-
-
 }

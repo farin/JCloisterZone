@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -15,14 +15,17 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.message.RandSampleMessage;
 
 public class BazaarPhase extends ServerAwarePhase {
 
     private final BazaarCapability bazaarCap;
 
-    public BazaarPhase(Game game, ServerIF server) {
-        super(game, server);
+    public BazaarPhase(Game game, Connection conn) {
+        super(game, conn);
         bazaarCap = game.getCapability(BazaarCapability.class);
     }
 
@@ -49,7 +52,7 @@ public class BazaarPhase extends ServerAwarePhase {
         //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
-            getServer().selectTiles(getTilePack().size(), game.getAllPlayers().length);
+            getConnection().send(new GetRandSampleMessage(game.getGameId(), "bazaar", getTilePack().size(), game.getAllPlayers().length));
         }
     }
 
@@ -80,11 +83,16 @@ public class BazaarPhase extends ServerAwarePhase {
         return true;
     }
 
-    @Override
-    public void drawTiles(int[] tileIndexes) {
-        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(tileIndexes.length);
-        for (int tileIndex : tileIndexes) {
-            supply.add(new BazaarItem(getTilePack().drawTile(tileIndex)));
+    @WsSubscribe
+    public void handleRandSample(RandSampleMessage msg) {
+        int size = game.getAllPlayers().length;
+        if (!msg.getName().equals("bazaar") || msg.getPopulation() != getTilePack().size() || msg.getValues().length != size) {
+            logger.error("Invalid message");
+            return;
+        }
+        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
+        for (Tile t : getTilePack().drawTiles(msg.getValues())) {
+            supply.add(new BazaarItem(t));
         }
         bazaarCap.setBazaarSupply(supply);
         game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));

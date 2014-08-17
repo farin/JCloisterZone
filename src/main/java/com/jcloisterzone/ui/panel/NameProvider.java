@@ -1,13 +1,10 @@
 package com.jcloisterzone.ui.panel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PlayersConfig;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 
 public class NameProvider {
 
@@ -21,28 +18,28 @@ public class NameProvider {
         }
     }
 
-    private Map<SlotType, List<ReservedName>> namesMap = new HashMap<>();
+    private List<ReservedName> aiNames = new ArrayList<>();
+    private List<ReservedName> playerNames = new ArrayList<>();
 
 
     public NameProvider(Config config) {
         PlayersConfig playersConfig = config.getPlayers();
-        initNames(SlotType.PLAYER, playersConfig == null ? null : playersConfig.getNames());
-        initNames(SlotType.AI, playersConfig == null ? null : playersConfig.getAi_names());
+        initNames(playerNames, playersConfig == null ? null : playersConfig.getNames());
+        initNames(aiNames, playersConfig == null ? null : playersConfig.getAi_names());
     }
 
-    private void initNames(SlotType type, List<String> names) {
-        List<ReservedName> rn = new ArrayList<>();
-        namesMap.put(type, rn);
+    private void initNames(List<ReservedName> lrn, List<String> names) {
         if (names != null) {
             for (String name: names) {
-                rn.add(new ReservedName(name, null));
+                lrn.add(new ReservedName(name, null));
             }
         }
     }
 
     synchronized
-    public String reserveName(SlotType type, int slot) {
-        for (ReservedName rn : namesMap.get(type)) {
+    public String reserveName(boolean ai, int slot) {
+        List<ReservedName> lrn = ai ? aiNames : playerNames;
+        for (ReservedName rn : lrn) {
             if (rn.slot == null) {
                 rn.slot = slot;
                 return rn.name;
@@ -52,8 +49,9 @@ public class NameProvider {
     }
 
     synchronized
-    public void releaseName(SlotType type, int slot) {
-        for (ReservedName rn : namesMap.get(type)) {
+    public void releaseName(boolean ai, int slot) {
+        List<ReservedName> lrn = ai ? aiNames : playerNames;
+        for (ReservedName rn : lrn) {
             if (rn.slot != null && rn.slot == slot) { //autoboxing, must check for null
                 rn.slot = null;
                 return;

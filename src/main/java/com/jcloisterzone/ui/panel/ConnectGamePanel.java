@@ -1,13 +1,10 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,13 +16,18 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.mina.core.RuntimeIoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 
 public class ConnectGamePanel extends JPanel {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
 
@@ -48,8 +50,9 @@ public class ConnectGamePanel extends JPanel {
                 if (port.equals("")) {
                      portField.setText(ConnectGamePanel.this.client.getConfig().getPort() + "");
                 }
-                (new AsyncConnect()).start();
+                //(new AsyncConnect()).start();
                 saveHistory();
+                connect();
             }
         };
 
@@ -111,36 +114,32 @@ public class ConnectGamePanel extends JPanel {
         client.saveConfig();
     }
 
-    class AsyncConnect extends Thread {
-
-        public AsyncConnect() {
-            setDaemon(true);
-            setName("Connecting to " + hostField.getText());
+    public void onWebsocketError(Exception ex) {
+        message.setForeground(Color.RED);
+        btnConnect.setEnabled(true);
+        if (ex instanceof UnresolvedAddressException) {
+            message.setText( _("Connection failed. Unknown host."));
+        } else if (ex instanceof ConnectException && "Connection refused: connect".equals(ex.getMessage())) {
+            message.setText( _("Connection refused."));
+        } else {
+            message.setText( _("Connection failed.") + " (" + ex.getMessage() + ")");
+            logger.warn(ex.getMessage(), ex);
         }
 
-        @Override
-        public void run() {
-            try {
-                String hostname = hostField.getText().trim();
-                InetAddress addr = InetAddress.getByName(hostname);
-                String portStr = portField.getText().trim();
-                int port = Integer.parseInt(portStr);
-                client.connect(addr, port);
-                return;
-            } catch (NumberFormatException nfe) {
-                message.setText( _("Invalid port number."));
-            } catch (UnknownHostException e1) {
-                message.setText( _("Connection failed. Unknown host."));
-            } catch (RuntimeIoException ex) {
-                if (ex.getCause() instanceof ConnectException) {
-                    message.setText( _("Connection refused."));
-                } else {
-                    message.setText( _("Connection failed."));
-                }
-            }
-            message.setForeground(Color.RED);
-            btnConnect.setEnabled(true);
-        }
     }
 
+    private void connect() {
+        try {
+            String hostname = hostField.getText().trim();
+            String portStr = portField.getText().trim();
+            int port = Integer.parseInt(portStr);
+            client.connect(hostname, port);
+            return;
+        } catch (NumberFormatException nfe) {
+            message.setText( _("Invalid port number."));
+        }
+
+        message.setForeground(Color.RED);
+        btnConnect.setEnabled(true);
+    }
 }

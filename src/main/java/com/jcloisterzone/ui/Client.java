@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -17,9 +18,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Locale;
+import java.util.UUID;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,40 +32,40 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GuiClientStub;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.SnapshotVersionException;
 import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.rmi.mina.ClientStub;
-import com.jcloisterzone.server.Server;
+import com.jcloisterzone.rmi.ClientStub;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
+import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
@@ -71,6 +73,8 @@ import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.server.SimpleServer;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -79,13 +83,13 @@ public class Client extends JFrame {
 
     public static final String BASE_TITLE = "JCloisterZone";
 
-    private ClientController controller = new ClientController(this);
+    private KeyController keyController;
 
     private final Config config;
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
 
-    //non-persistetn settings (TODO move to mainPanel)
+    //non-persistent settings (TODO move to mainPanel)
     private boolean showHistory;
 
     @Deprecated
@@ -94,32 +98,22 @@ public class Client extends JFrame {
     private ControlsTheme controlsTheme;
     //private PlayerColor[] playerColors;
 
+    private GamePanel gamePanel;
+
     //private MenuBar menuBar;
     private StartPanel startPanel;
-    private ControlPanel controlPanel;
-    private MainPanel mainPanel;
 
-
-    private CreateGamePanel createGamePanel;
+    private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
-    private Server localServer;
-    private ServerIF server;
-
+    private SimpleServer localServer;
+    private Connection conn;
 
     private Game game;
     //active player must be cached locally because of game's active player record is changed in other thread immediately
     private Player activePlayer;
 
     private EventBus eventBus;
-
-    protected ClientStub getClientStub() {
-        return (ClientStub) Proxy.getInvocationHandler(server);
-    }
-
-    public long getClientId() {
-        return getClientStub().getClientId();
-    }
 
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
@@ -170,6 +164,9 @@ public class Client extends JFrame {
         this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
+
+        keyController = new KeyController(this);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
     }
 
     @Override
@@ -203,37 +200,22 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
-    public ServerIF getServer() {
-        return server;
+    public Connection getConnection() {
+        return conn;
     }
 
+    public RmiProxy getServer() {
+        return conn.getRmiProxy();
+    }
+
+    @Deprecated  //TODO game per GamePanel
     public Game getGame() {
         return game;
     }
 
-    public ControlPanel getControlPanel() {
-        return controlPanel;
-    }
 
-    public void setControlPanel(ControlPanel controlPanel) {
-        this.controlPanel = controlPanel;
-    }
-
-    public GridPanel getGridPanel() {
-        if (mainPanel == null) return null;
-        return mainPanel.getGridPanel();
-    }
-
-    public MainPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public void setMainPanel(MainPanel mainPanel) {
-        this.mainPanel = mainPanel;
-    }
-
-    public CreateGamePanel getCreateGamePanel() {
-        return createGamePanel;
+    public ConnectGamePanel getConnectGamePanel() {
+        return connectGamePanel;
     }
 
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
@@ -246,26 +228,28 @@ public class Client extends JFrame {
         pane.setVisible(false);
         pane.removeAll();
         this.startPanel = null;
-        this.mainPanel = null;
-        this.controlPanel = null;
-        if (createGamePanel != null) {
-            createGamePanel.disposePanel();
-            createGamePanel = null;
+        if (gamePanel != null) {
+            gamePanel.disposePanel();
+            gamePanel = null;
         }
+        this.connectGamePanel = null;
     }
 
-    public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
+    public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
         cleanContentPane();
-        createGamePanel = new CreateGamePanel(this, mutableSlots, slots);
-        JPanel envelope = new BackgroundPanel();
-        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(createGamePanel);
-
-        JScrollPane scroll = new JScrollPane(envelope);
-        pane.add(scroll, BorderLayout.CENTER);
+        gamePanel = new GamePanel(this, game);
+        gamePanel.showCreateGamePanel(mutableSlots, slots);
+        pane.add(gamePanel);
         pane.setVisible(true);
     }
+
+    @Deprecated
+    public CreateGamePanel getCreateGamePanel() {
+        if (gamePanel == null) return null;
+        return gamePanel.getCreateGamePanel();
+    }
+
 
     public boolean closeGame() {
         return closeGame(false);
@@ -294,17 +278,23 @@ public class Client extends JFrame {
         setTitle(BASE_TITLE);
         resetWindowIcon();
         if (localServer != null) {
-            localServer.stop();
+            try {
+                localServer.stop(500);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
             localServer = null;
-        } else if (server != null) {
-             getClientStub().stop();
+        } else if (conn != null) {
+            conn.close();
+            conn = null;
         }
-        server = null;
+        conn = null;
         activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
-        if (controlPanel != null) {
-            controlPanel.closeGame();
-            mainPanel.closeGame();
+
+        if (gamePanel != null && gamePanel.getMainPanel() != null) {
+            if (gamePanel.getControlPanel() != null) gamePanel.getControlPanel().closeGame();
+            gamePanel.getMainPanel().closeGame();
         }
         if (discardedTilesDialog != null) {
             discardedTilesDialog.dispose();
@@ -323,25 +313,37 @@ public class Client extends JFrame {
 
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(new ConnectGamePanel(this));
+        envelope.add(connectGamePanel = new ConnectGamePanel(this));
 
         pane.add(envelope, BorderLayout.CENTER);
         pane.setVisible(true);
     }
 
     public void setGame(Game game) {
+        assert gamePanel != null;
         this.game = game;
-        this.eventBus = new EventBus("UI event bus");
-        eventBus.register(controller);
+        this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
+        eventBus.register(new ClientController(this, game, gamePanel));
         game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
     }
 
-    public void connect(InetAddress ia, int port) {
-        GuiClientStub handler = new GuiClientStub(this);
-        server = (ServerIF) Proxy.newProxyInstance(ServerIF.class.getClassLoader(),
-                new Class[] { ServerIF.class }, handler);
-        handler.setServerProxy(server);
-        handler.connect(ia, port);
+    private String getUserName() {
+        String name = config.getClient_name();
+        name = name == null ? "" : name.trim();
+        if (name.equals("")) name = System.getProperty("user.name");
+        if (name.equals("")) name = UUID.randomUUID().toString().substring(2, 6);
+        return name;
+    }
+
+    public void connect(String hostname, int port) {
+        ClientStub handler = new ClientStub(this);
+        RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
+        try {
+            conn = handler.connect(getUserName(), hostname, port);
+            conn.setRmiProxy(rmiProxy);
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public void handleSave() {
@@ -359,13 +361,13 @@ public class Client extends JFrame {
                     file = new File(file.getAbsolutePath() + ".jcz");
                 }
                 try {
-                    Snapshot snapshot = new Snapshot(game, getClientId());
+                    Snapshot snapshot = new Snapshot(game);
                     DebugConfig debugConfig = getConfig().getDebug();
                     if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
                         snapshot.setGzipOutput(false);
                     }
                     snapshot.save(new FileOutputStream(file));
-                } catch (Exception ex) {
+                } catch (IOException | TransformerException ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }
@@ -375,16 +377,10 @@ public class Client extends JFrame {
 
     public void createGame() {
         if (!closeGame()) return;
-        try {
-            localServer = new Server(config);
-            localServer.start(config.getPort());
-            connect(InetAddress.getLocalHost(), config.getPort());
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            JOptionPane.showMessageDialog(this, e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-            localServer = null;
-            closeGame(true);
-        }
+        localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
+        localServer.createGame();
+        localServer.start();
+        connect("localhost", config.getPort());
     }
 
     public void handleLoad() {
@@ -400,15 +396,13 @@ public class Client extends JFrame {
             if (file != null) {
                 if (!closeGame()) return;
                 try {
-                    localServer = new Server(new Snapshot(file));
-                    localServer.start(config.getPort());
-                    connect(InetAddress.getLocalHost(), config.getPort());
-                } catch (SnapshotVersionException ex1) {
+                    localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
+                    localServer.createGame(new Snapshot(file));
+                    localServer.start();
+                    connect("localhost", config.getPort());
+                } catch (IOException | SAXException ex1) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -431,8 +425,8 @@ public class Client extends JFrame {
 
     public boolean isClientActive(Player player) {
         if (player == null) return false;
-        if (player.getSlot().getType() != SlotType.PLAYER) return false;
-        return getClientStub().isLocalPlayer(player);
+        if (player.getSlot().getAiClassName() != null) return false;
+        return player.getSlot().isOwn();
     }
 
     public Player getActivePlayer() {
@@ -458,6 +452,7 @@ public class Client extends JFrame {
     }
 
     void clearActions() {
+        ControlPanel controlPanel = gamePanel.getControlPanel();
         if (controlPanel.getActionPanel().getActions() != null) {
             controlPanel.clearActions();
         }
@@ -516,14 +511,35 @@ public class Client extends JFrame {
 
     public void setShowHistory(boolean showHistory) {
         if (showHistory) {
-            getGridPanel().showRecentHistory();
+            gamePanel.getGridPanel().showRecentHistory();
         } else {
-            getGridPanel().removeLayer(PlacementHistory.class);
+            gamePanel.getGridPanel().removeLayer(PlacementHistory.class);
         }
         this.showHistory = showHistory;
     }
 
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
     //------------------- LEGACY: TODO refactor ---------------
+
+    @Deprecated
+    public ControlPanel getControlPanel() {
+        return gamePanel == null ? null : gamePanel.getControlPanel();
+    }
+
+    @Deprecated
+    public GridPanel getGridPanel() {
+        if (gamePanel == null || gamePanel.getMainPanel() == null) return null;
+        return gamePanel.getMainPanel().getGridPanel();
+    }
+
+    @Deprecated
+    public MainPanel getMainPanel() {
+        if (gamePanel == null) return null;
+        return gamePanel.getMainPanel();
+    }
 
     @Deprecated
     public Color getPlayerSecondTunelColor(Player player) {

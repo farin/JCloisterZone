@@ -119,10 +119,6 @@ public class Player implements Serializable {
         return slot.getColors();
     }
 
-    public Long getOwnerId() {
-        return slot.getOwner();
-    }
-
     public PlayerSlot getSlot() {
         return slot;
     }
@@ -154,6 +150,10 @@ public class Player implements Serializable {
     public int getPointsInCategory(PointCategory cat) {
         Integer points = pointStats.get(cat);
         return points == null ? 0 : points;
+    }
+
+    public void setPointsInCategory(PointCategory category, int points) {
+        pointStats.put(category, points);
     }
 
 }

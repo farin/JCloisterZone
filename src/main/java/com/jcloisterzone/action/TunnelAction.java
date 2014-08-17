@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 
 public class TunnelAction extends SelectFeatureAction {
 
@@ -29,7 +29,7 @@ public class TunnelAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
+    public void perform(RmiProxy server, FeaturePointer bp) {
         server.placeTunnelPiece(bp.getPosition(), bp.getLocation(), secondTunnelPiece);
 
     }

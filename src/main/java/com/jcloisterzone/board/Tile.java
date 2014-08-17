@@ -102,6 +102,7 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public Feature getFeature(Location loc) {
+        if (loc == Location.ABBOT) loc = Location.CLOISTER;
         for (Feature p : features) {
             if (p.getLocation().equals(loc)) return p;
         }
@@ -109,6 +110,7 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public Feature getFeaturePartOf(Location loc) {
+        if (loc == Location.ABBOT) loc = Location.CLOISTER;
         for (Feature p : features) {
             if (loc.isPartOf(p.getLocation())) {
                 return p;

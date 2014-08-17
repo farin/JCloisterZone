@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.panel.GamePanel;
 
 public class KeyController implements KeyEventDispatcher {
 
@@ -23,13 +24,17 @@ public class KeyController implements KeyEventDispatcher {
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (!client.isActive()) return false; //AWT method on window (it not check if player is active)
         if (!isDispatchActive()) return false;
+        if (client.getGame() == null) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
-                if (client.getGridPanel().getChatPanel() != null) {
+                if (client.getGamePanel().getChatPanel() != null) {
                     e.consume();
-                    client.getGridPanel().getChatPanel().activateChat();
+                    client.getGamePanel().getChatPanel().activateChat();
                 }
                 return true;
+            }
+            if (!client.getGame().isStarted()) {
+                return false;
             }
             switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
@@ -60,7 +65,7 @@ public class KeyController implements KeyEventDispatcher {
     }
 
     private boolean isDispatchActive() {
-        GridPanel gp = client.getGridPanel();
+        GamePanel gp = client.getGamePanel();
         if (gp != null && gp.getChatPanel() != null) return !gp.getChatPanel().getInput().hasFocus();
         return true;
     }

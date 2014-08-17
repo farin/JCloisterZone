@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -20,17 +21,16 @@ import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
@@ -49,9 +49,10 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected PlayerSlot[] slots;
+    protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, ServerIF server) {
-        super(game, server);
+    public CreateGamePhase(Game game, Connection conn) {
+        super(game, conn);
     }
 
     public void setSlots(PlayerSlot[] slots) {
@@ -62,52 +63,26 @@ public class CreateGamePhase extends ServerAwarePhase {
         return slots;
     }
 
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        if (enabled) {
-            game.getCustomRules().add(rule);
-        } else {
-            game.getCustomRules().remove(rule);
-        }
-        game.post(new RuleChangeEvent(rule, enabled));
+
+    @WsSubscribe
+    public void handleSlotMessage(SlotMessage msg) {
+        slotSupportedExpansions[msg.getNumber()] = msg.getSupportedExpansions();
+        game.post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));
     }
 
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        if (enabled) {
-            game.getExpansions().add(expansion);
-        } else {
-            game.getExpansions().remove(expansion);
+    private EnumSet<Expansion> mergeSupportedExpansions() {
+        EnumSet<Expansion> merged = null;
+        for (int i = 0; i < slotSupportedExpansions.length; i++) {
+            Expansion[] supported = slotSupportedExpansions[i];
+            if (supported == null) continue;
+            if (merged == null) {
+                merged = EnumSet.allOf(Expansion.class);
+            }
+            EnumSet<Expansion> supp = EnumSet.noneOf(Expansion.class);
+            Collections.addAll(supp, supported);
+            merged.retainAll(supp);
         }
-        game.post(new ExpansionChangedEvent(expansion, enabled));
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-        game.getExpansions().clear();
-        game.getExpansions().addAll(Arrays.asList(expansions));
-        game.getCustomRules().clear();
-        game.getCustomRules().addAll(Arrays.asList(rules));
-
-        for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
-            game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
-        }
-        for (CustomRule rule : CustomRule.values()) {
-            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
-        }
-    }
-
-    @Override
-    public void updateSlot(PlayerSlot slot) {
-        slot.setColors(slots[slot.getNumber()].getColors()); //colors are transient, copy them to new object
-        slots[slot.getNumber()] = slot;
-        super.updateSlot(slot);
-    }
-
-    @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        game.post(new SupportedExpansionsChangeEvent(expansions));
+        return merged;
     }
 
 
@@ -127,7 +102,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getServer()));
+        next = addPhase(next, new BazaarPhase(game, getConnection()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
@@ -152,9 +127,8 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new ActionPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getServer()));
+        next = addPhase(next, new DrawPhase(game, getConnection()));
         next = addPhase(next, new AbbeyPhase(game));
-        next = addPhase(next, new AnyTimeActionPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
         last.setDefaultNext(next); //after last phase, the first is default
@@ -166,7 +140,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         for (int i = 0; i < slots.length; i++) {
             PlayerSlot slot = slots[i];
             if (slot.isOccupied()) {
-                Player player = new Player(slot.getNick(), i, slot);
+                Player player = new Player(slot.getNickname(), i, slot);
                 players.add(player);
             }
         }
@@ -216,11 +190,11 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     protected void prepareAiPlayers() {
         for (PlayerSlot slot : slots) {
-            if (slot != null && slot.getType() == SlotType.AI && isLocalSlot(slot)) {
+            if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
                     ai.setGame(game);
-                    ai.setServer(getServer());
+                    ai.setServer(getConnection(), getServer());
                     for (Player player : game.getAllPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             ai.setPlayer(player);
@@ -260,7 +234,6 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    @Override
     public void startGame() {
         //temporary code should be configured by player as rules
         prepareCapabilities();

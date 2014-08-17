@@ -37,7 +37,7 @@
         <farm city="N">EL</farm>
         <farm city="N">WR</farm>
         <wagon-move>
-            <neighbouring>N S W E</neighbouring>
+            <neighbouring>W E</neighbouring>
         </wagon-move>
     </tile>
     <tile id="CCc+">

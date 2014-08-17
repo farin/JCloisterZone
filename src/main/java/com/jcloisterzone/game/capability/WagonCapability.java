@@ -1,9 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.asLocation;
-
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +12,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MeepleAction;
@@ -24,6 +20,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
@@ -36,6 +33,8 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.phase.ScorePhase;
 
+import static com.jcloisterzone.XmlUtils.asLocation;
+
 public class WagonCapability extends Capability {
 
     private final Map<Player, Feature> returnedWagons = new HashMap<>();
@@ -45,11 +44,17 @@ public class WagonCapability extends Capability {
         super(game);
     }
 
-    @Subscribe
-    public void undeployed(MeepleEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof MeepleEvent) {
+           undeployed((MeepleEvent) event);
+       }
+    }
+
+    private void undeployed(MeepleEvent ev) {
         Meeple m = ev.getMeeple();
         if (m instanceof Wagon && ev.getTo() == null && game.getPhase() instanceof ScorePhase) {
-        	returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
+            returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
         }
     }
 
@@ -119,7 +124,7 @@ public class WagonCapability extends Capability {
         return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
             @Override
             public boolean apply(FeaturePointer bp) {
-                Feature fe = getTile().getFeature(bp.getLocation());
+                Feature fe = getBoard().get(bp);
                 return fe instanceof Road || fe instanceof City || fe instanceof Cloister;
             }
         });
@@ -145,6 +150,11 @@ public class WagonCapability extends Capability {
             XmlUtils.injectPosition(el, rv.getValue().getTile().getPosition());
             node.appendChild(el);
         }
+        if (wagonPlayer != null) {
+            Element el = doc.createElement("wagon-player");
+            el.setAttribute("player", ""+wagonPlayer.getIndex());
+            node.appendChild(el);
+        }
     }
 
     @Override
@@ -157,6 +167,11 @@ public class WagonCapability extends Capability {
             int playerIndex = Integer.parseInt(wg.getAttribute("player"));
             Player player = game.getPlayer(playerIndex);
             returnedWagons.put(player, getBoard().get(pos).getFeature(loc));
+        }
+        nl = node.getElementsByTagName("wagon-player");
+        if (nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            wagonPlayer = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
         }
     }
 

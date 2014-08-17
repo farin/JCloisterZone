@@ -5,7 +5,9 @@ import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -21,6 +23,7 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import com.google.common.collect.Iterables;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.figure.Follower;
@@ -34,6 +37,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -141,9 +145,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         Game game = client.getGame();
 
         //TODO better display
-        if (player.getSlot().getState() == SlotState.CLOSED) {
-            this.color = Color.GRAY;
-        }
+//        if (player.getSlot().getState() == SlotState.CLOSED) {
+//            this.color = Color.GRAY;
+//        }
 
 //		GridPanel gp = client.getGridPanel();
 
@@ -201,6 +205,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         CastleCapability castleCap = game.getCapability(CastleCapability.class);
         KingAndRobberBaronCapability kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
         ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
+        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
 
         if (abbeyCap != null) {
             drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -216,6 +221,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         }
         if (castleCap != null) {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
+        }
+        if (lbCap != null) {
+            drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
+            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
+            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
         }
 
         if (kingRobberCap != null) {
@@ -291,8 +301,19 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-        parentGraphics.translate(0, realHeight); //add also padding
 
+        if (player.getSlot().isDisconnected()) {
+            Composite origComposite = parentGraphics.getComposite();
+            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f));
+            parentGraphics.setColor(Color.BLACK);
+            parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
+            parentGraphics.setComposite(origComposite);
+            parentGraphics.setFont(FONT_NICKNAME);
+            parentGraphics.setColor(Color.WHITE);
+            parentGraphics.drawString(_("Connection lost").toUpperCase(), 10, 27);
+        }
+
+        parentGraphics.translate(0, realHeight); //add also padding
         g2 = null;
 
 //		gp.profile(" > complete");

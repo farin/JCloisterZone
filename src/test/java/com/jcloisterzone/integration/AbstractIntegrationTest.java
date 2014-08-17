@@ -2,12 +2,9 @@ package com.jcloisterzone.integration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.transform.TransformerException;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
@@ -20,6 +17,10 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 public class AbstractIntegrationTest {
 
     public static class EventCatchingGame extends Game {
+
+        public EventCatchingGame() {
+            super("1");
+        }
 
         public List<Event> events = new ArrayList<>();
 
@@ -51,7 +52,7 @@ public class AbstractIntegrationTest {
     protected String snapshotGame(Game game) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            Snapshot snapshot = new Snapshot(game, 1);
+            Snapshot snapshot = new Snapshot(game);
             snapshot.setGzipOutput(false);
             snapshot.save(os);
             return os.toString("utf-8");

@@ -34,7 +34,7 @@ public class FestivalCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (!getTile().hasTrigger(TileTrigger.FESTIVAL)) return;
 
         Player activePlayer = game.getActivePlayer();

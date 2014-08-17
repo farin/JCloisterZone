@@ -29,6 +29,7 @@ import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.feature.visitor.score.MonasteryAbbotScoreContext;
 import com.jcloisterzone.feature.visitor.score.RoadScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Barn;
@@ -244,6 +245,13 @@ public class LegacyRanking implements GameRanking {
 
         @Override
         public void scoreCompletableFeature(CompletableScoreContext ctx) {
+            if (ctx instanceof MonasteryAbbotScoreContext) {
+                int points = ctx.getPoints();
+                for (Player p : ctx.getMajorOwners()) {
+                    rank += reducePoints(points, p);
+                }
+                return;
+            }
             if (isInTowerDanger(ctx)) return;
             rank += rankUnfishedCompletable(ctx.getMasterFeature(), (LegacyAiScoreContext) ctx);
             rank += rankTrappedMeeples((LegacyAiScoreContext) ctx);

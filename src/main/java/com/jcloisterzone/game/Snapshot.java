@@ -31,10 +31,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Objects;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
@@ -45,7 +45,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.phase.Phase;
 
 
@@ -53,7 +53,7 @@ public class Snapshot implements Serializable {
 
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String COMPATIBLE_FROM = "2.6";
+    public static final String COMPATIBLE_FROM = "2.6"; //on incompatible change, remove alsi !capabilityName.startsWith("com.") code
 
     private Document doc;
     private Element root;
@@ -63,12 +63,12 @@ public class Snapshot implements Serializable {
     private boolean gzipOutput = true;
 
 
-    public Snapshot(Game game, long clientId) {
+    public Snapshot(Game game) {
         createRootStructure(game);
         createRuleElements(game);
         createExpansionElements(game);
         createCapabilityElements(game);
-        createPlayerElements(game, clientId);
+        createPlayerElements(game);
         createTileElements(game);
         createMeepleElements(game);
     }
@@ -83,6 +83,10 @@ public class Snapshot implements Serializable {
                 throw e;
             }
         }
+    }
+
+    public Snapshot(String snapshot) throws IOException {
+        load(snapshot);
     }
 
     public boolean isGzipOutput() {
@@ -105,6 +109,7 @@ public class Snapshot implements Serializable {
 
     private void createRuleElements(Game game) {
         for (CustomRule cr : game.getCustomRules()) {
+            if (cr.equals(CustomRule.RANDOM_SEATING_ORDER)) continue;
             Element el = doc.createElement("rule");
             el.setAttribute("name", cr.name());
             root.appendChild(el);
@@ -122,14 +127,14 @@ public class Snapshot implements Serializable {
     private void createCapabilityElements(Game game) {
         for (Capability cap : game.getCapabilities()) {
             Element el = doc.createElement("capability");
-            el.setAttribute("name", cap.getClass().getName());
+            el.setAttribute("name", cap.getClass().getSimpleName().replace("Capability", ""));
             root.appendChild(el);
             cap.saveToSnapshot(doc, el);
         }
     }
 
 
-    private void createPlayerElements(Game game, long clientId) {
+    private void createPlayerElements(Game game) {
         Element parent = doc.createElement("players");
         parent.setAttribute("turn", "" + game.getTurnPlayer().getIndex());
         root.appendChild(parent);
@@ -138,11 +143,20 @@ public class Snapshot implements Serializable {
             el.setAttribute("name", p.getNick());
             el.setAttribute("points", "" + p.getPoints());
             el.setAttribute("slot", "" + p.getSlot().getNumber());
-            if (Objects.equal(p.getOwnerId(),clientId)) {
+            if (p.getSlot().isOwn()) {
                 el.setAttribute("local", "true");
             }
-            if (p.getSlot().getType() == SlotType.AI) {
+            if (p.getSlot().isAi()) {
                 el.setAttribute("ai-class", p.getSlot().getAiClassName());
+            }
+            for (PointCategory cat : PointCategory.values()) {
+                int points = p.getPointsInCategory(cat);
+                if (points != 0) { //can be <0 (ransom)
+                    Element catEl = doc.createElement("point-category");
+                    catEl.setAttribute("name", cat.name());
+                    catEl.setAttribute("points", "" + points);
+                    el.appendChild(catEl);
+                }
             }
             parent.appendChild(el);
         }
@@ -184,13 +198,17 @@ public class Snapshot implements Serializable {
             Element tileEl = tileElemens.get(m.getPosition());
             Element el = doc.createElement("meeple");
             el.setAttribute("player", "" + m.getPlayer().getIndex());
-            el.setAttribute("type", "" + m.getClass().getName());
+            el.setAttribute("type", "" + m.getClass().getSimpleName());
             el.setAttribute("loc", "" + m.getLocation());
             tileEl.appendChild(el);
         }
     }
 
     public void save(OutputStream os) throws TransformerException, IOException {
+        save(os, gzipOutput);
+    }
+
+    public void save(OutputStream os, boolean gzipOutput) throws TransformerException, IOException {
         StreamResult streamResult;
         if (gzipOutput) {
             streamResult = new StreamResult(new GZIPOutputStream(os));
@@ -208,6 +226,13 @@ public class Snapshot implements Serializable {
         streamResult.getOutputStream().close();
     }
 
+    public String saveToString() throws TransformerException, IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        save(baos, false);
+        baos.close();
+        return new String(baos.toByteArray(),"UTF-8");
+    }
+
     public void load(InputStream is) throws SnapshotCorruptedException {
         doc = XmlUtils.parseDocument(is);
         root = doc.getDocumentElement();
@@ -217,6 +242,12 @@ public class Snapshot implements Serializable {
                 throw new SnapshotVersionException("Saved game is not compatible with current JCloisterZone application. (saved in "+snapshotVersion+")");
             }
         }
+    }
+
+    public void load(String s) throws SnapshotCorruptedException, IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes("UTF-8"));
+        load(bais);
+        bais.close();
     }
 
     private NodeList getSecondLevelElelents(String first, String second) {
@@ -240,16 +271,14 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             String capabilityName = el.getAttribute("name");
-            try {
-                //TODO instances should be created here, not in load phase
-                Class<? extends Capability> capabilityClass = (Class<? extends Capability>) Class.forName(capabilityName);
-                Capability capability = game.getCapability(capabilityClass);
-                capability.loadFromSnapshot(doc, el);
-            } catch (Exception e) {
-                logger.error("Incompatible or corrupted snapshot. Problem with stored expansion: " + capabilityName, e);
-                //TODO show client error
-                //game.getUserInterface().showWarning(_("Load error"), _("Saved game is incompatible or file is corrupted. Game couldn't work properly."));
+            if (!capabilityName.startsWith("com.")) { //else 2.X loaded game
+                capabilityName = "com.jcloisterzone.game.capability." + el.getAttribute("name") + "Capability";
             }
+
+            //TODO instances should be created here, not in load phase
+            Class<? extends Capability> capabilityClass = (Class<? extends Capability>) XmlUtils.classForName(capabilityName);
+            Capability capability = game.getCapability(capabilityClass);
+            capability.loadFromSnapshot(doc, el);
         }
     }
 
@@ -273,39 +302,22 @@ public class Snapshot implements Serializable {
             Player p = new Player(el.getAttribute("name"), i, slot);
             p.setPoints(Integer.parseInt(el.getAttribute("points")));
             if (el.hasAttribute("ai-class")) {
-                slot.setType(SlotType.AI);
                 String aiClassName = el.getAttribute("ai-class");
                 slot.setAiClassName(aiClassName);
             } else {
                 if (el.hasAttribute("local")) {
-                    slot.setType(SlotType.PLAYER);
+                    slot.setState(SlotState.OWN);
                 }
+            }
+            NodeList categories = el.getElementsByTagName("point-category");
+            for (int j = 0; j < categories.getLength(); j++) {
+                Element catEl = (Element) categories.item(j);
+                PointCategory cat = PointCategory.valueOf(catEl.getAttribute("name"));
+                p.setPointsInCategory(cat, Integer.parseInt(catEl.getAttribute("points")));
             }
             players.add(p);
         }
         return players;
-    }
-
-    public PlayerSlot[] getPlayerSlots() {
-        List<Player> players = getPlayers();
-        int maxSlotNumber = 0;
-        for (Player player : players) {
-            int slotNumber = player.getSlot().getNumber();
-            if (slotNumber > maxSlotNumber) maxSlotNumber = slotNumber;
-        }
-
-        PlayerSlot[] slots = new PlayerSlot[maxSlotNumber+1];
-        for (int i = 0; i < slots.length; i++) {
-            for (Player player : players) {
-                PlayerSlot slot = player.getSlot();
-                if (slot.getNumber() == i) {
-                    slot.setNick(player.getNick());
-                    slots[i] = slot;
-                    break;
-                }
-            }
-        }
-        return slots;
     }
 
     public int getTurnPlayer() {
@@ -345,7 +357,11 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Location loc = Location.valueOf(el.getAttribute("loc"));
-            Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(el.getAttribute("type"));
+            String meepleType = el.getAttribute("type");
+            if (!meepleType.startsWith("com.")) { // 2.X snapshot compatibility
+                meepleType = "com.jcloisterzone.figure." + meepleType;
+            }
+            Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(meepleType);
             int playerIndex = Integer.parseInt(el.getAttribute("player"));
             Meeple meeple = game.getPlayer(playerIndex).getMeepleFromSupply(mt);
             meeple.setLocation(loc);
@@ -370,8 +386,8 @@ public class Snapshot implements Serializable {
         return (Class<? extends Phase>) XmlUtils.classForName(root.getAttribute("phase"));
     }
 
-    public Game asGame() {
-        return asGame(new Game());
+    public Game asGame(String gameId) {
+        return asGame(new Game(gameId));
 
     }
 

@@ -8,10 +8,10 @@ public interface Application {
 
     public String DEV_VERSION = "dev-snapshot";
 
-    public String VERSION = "2.7";
-    public String BUILD_DATE = "2014-06-28";
+    public String VERSION = "3.0";
+    public String BUILD_DATE = "2014-08-17";
 
-    public int PROTCOL_VERSION = 18; //18 = 2.7
+    public String PROTCOL_VERSION = "3.0";
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }

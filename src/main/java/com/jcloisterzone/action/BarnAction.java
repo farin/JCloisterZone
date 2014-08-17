@@ -2,7 +2,7 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 
@@ -14,7 +14,7 @@ public class BarnAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
+    public void perform(RmiProxy server, FeaturePointer bp) {
         server.deployMeeple(bp.getPosition(), bp.getLocation(), Barn.class);
     }
 

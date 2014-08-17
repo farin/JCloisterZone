@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,9 +15,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -83,6 +82,9 @@ public class MeepleLayer extends AbstractGridLayer {
         Feature feature = getGame().getBoard().get(fp);
         ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), type, fp.getLocation());
         Image image = getClient().getFigureTheme().getFigureImage(type, c, getExtraDecoration(type, fp));
+        if (fp.getLocation() == Location.ABBOT) {
+            image = rotate(image, 90);
+        }
         return new MeeplePositionedImage(type, fp, offset, image);
     }
 
@@ -107,7 +109,7 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     public void meepleDeployed(MeepleEvent ev) {
-    	Color c = ev.getMeeple().getPlayer().getColors().getMeepleColor();
+        Color c = ev.getMeeple().getPlayer().getColors().getMeepleColor();
         images.add(createMeepleImage(ev.getMeeple().getClass(), c, ev.getTo()));
         rearrangeMeeples(ev.getTo());
     }
@@ -186,6 +188,46 @@ public class MeepleLayer extends AbstractGridLayer {
              if (!position.equals(fp.getPosition())) return false;
              return true;
          }
+    }
+
+    //TODO better use affine transform while drawing
+    @Deprecated
+    public static Image rotate(Image img, double angle) {
+        double sin = Math.abs(Math.sin(Math.toRadians(angle))),
+               cos = Math.abs(Math.cos(Math.toRadians(angle)));
+
+        int w = img.getWidth(null), h = img.getHeight(null);
+
+        int neww = (int) Math.floor(w*cos + h*sin),
+            newh = (int) Math.floor(h*cos + w*sin);
+
+        BufferedImage bimg = new BufferedImage(neww, newh, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bimg.createGraphics();
+
+        g.translate((neww-w)/2, (newh-h)/2);
+        g.rotate(Math.toRadians(angle), w/2, h/2);
+        g.drawRenderedImage(toBufferedImage(img), null);
+        g.dispose();
+        return bimg;
+    }
+
+    private static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
 }

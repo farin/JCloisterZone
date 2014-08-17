@@ -10,13 +10,13 @@ import java.util.Map;
 
 /**
  * bite order                     corresponding constants
- * 							      (farm location) 		
+ * 							      (farm location)
  *
  *     0  1                               1  2
  *   7      2                          128     4
  *   6      3                          64      8
  *     5  4                              32  16
- *      
+ *
  *  city & road locations are shifted by 8 bit left
  *  so farm and road location has no intersection
  */
@@ -94,6 +94,8 @@ public class Location implements Serializable {
     public static final Location PRISON = new Location("PRISON", 1 << 18);
     /** Flier location - follower can be placed here just for moment, before dice roll  */
     public static final Location FLIER = new Location("FLIER", 1 << 19);
+    /** on monastery as Abbot */
+    public static final Location ABBOT = new Location("ABBOT", 1 << 20);
 
     // --- farm locations ---
 

@@ -139,9 +139,9 @@ public abstract class Meeple extends Figure {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Meeple)) return false;
-        if (!super.equals(obj)) return false;
+        if (!super.equals(obj)) return false; //compares exact types
         Meeple o = (Meeple) obj;
+        if (!Objects.equal(player, o.player)) return false;
         if (!Objects.equal(index, o.index)) return false;
         if (!Objects.equal(location, o.location)) return false;
         //do not compare feature - location is enough - feature is changing during time
@@ -151,9 +151,9 @@ public abstract class Meeple extends Figure {
     @Override
     public String toString() {
         if (location == Location.PRISON) {
-            return getClass().getSimpleName() + " " + location.toString();
+            return getClass().getSimpleName() + "(" + player.getIndex() + "," + location.toString() + ")";
         } else {
-            return super.toString();
+            return super.toString() + "(" + player.getIndex() + ")";
         }
     }
 

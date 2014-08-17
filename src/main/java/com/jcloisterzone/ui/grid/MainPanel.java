@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 
+import javax.swing.JPanel;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -11,7 +13,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -29,6 +30,8 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.FlierDiceRollAnimation;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
+import com.jcloisterzone.ui.controls.ChatPanel;
+import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
@@ -41,16 +44,19 @@ import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TowerLayer;
-import com.jcloisterzone.ui.panel.BackgroundPanel;
 
 
 @SuppressWarnings("serial")
-public class MainPanel extends BackgroundPanel {
+public class MainPanel extends JPanel {
 
     private final Client client;
+    private final Game game;
     private AnimationService animationService;
 
     private GridPanel gridPanel;
+    private ControlPanel controlPanel;
+    private ChatPanel chatPanel;
+
     private TileLayer tileLayer;
     private MeepleLayer meepleLayer;
     private TowerLayer towerLayer;
@@ -61,8 +67,10 @@ public class MainPanel extends BackgroundPanel {
     private PlagueLayer plagueLayer;
     private FarmHintsLayer farmHintLayer;
 
-    public MainPanel(Client client) {
+    public MainPanel(Client client, Game game, ChatPanel chatPanel) {
         this.client = client;
+        this.game = game;
+        this.chatPanel = chatPanel;
         animationService = new AnimationService();
         animationService.start();
 
@@ -73,12 +81,12 @@ public class MainPanel extends BackgroundPanel {
         return gridPanel;
     }
 
-    public AnimationService getAnimationService() {
-        return animationService;
+    public ControlPanel getControlPanel() {
+        return controlPanel;
     }
 
-    private Game getGame() {
-        return client.getGame();
+    public AnimationService getAnimationService() {
+        return animationService;
     }
 
     public void setShowFarmHints(boolean showFarmHints) {
@@ -91,7 +99,8 @@ public class MainPanel extends BackgroundPanel {
         removeAll();
         setVisible(false);
 
-        gridPanel = new GridPanel(client, snapshot);
+        controlPanel = new ControlPanel(client, game);
+        gridPanel = new GridPanel(client, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel);
         tileLayer = new TileLayer(gridPanel);
         farmHintLayer = new FarmHintsLayer(gridPanel);
@@ -103,7 +112,7 @@ public class MainPanel extends BackgroundPanel {
 
         animationService.setGridPanel(gridPanel);
 
-        for (Class<? extends Capability> capClass : getGame().getCapabilityClasses()) {
+        for (Class<? extends Capability> capClass : game.getCapabilityClasses()) {
             if (capClass.equals(TowerCapability.class)) {
                 towerLayer = new TowerLayer(gridPanel);
                 gridPanel.addLayer(towerLayer);
@@ -145,18 +154,18 @@ public class MainPanel extends BackgroundPanel {
             farmHintLayer.tileEvent(ev);
         }
     }
-    
-    
+
+
     public void meepleEvent(MeepleEvent ev) {
-    	gridPanel.clearActionDecorations();
-    	if (ev.getFrom() != null) {
-    		meepleLayer.meepleUndeployed(ev);
-    	}
-    	if (ev.getTo() != null) {
-    		meepleLayer.meepleDeployed(ev);
-    	}
-    	farmHintLayer.meepleEvent(ev);
-    	
+        gridPanel.clearActionDecorations();
+        if (ev.getFrom() != null) {
+            meepleLayer.meepleUndeployed(ev);
+        }
+        if (ev.getTo() != null) {
+            meepleLayer.meepleDeployed(ev);
+        }
+        farmHintLayer.meepleEvent(ev);
+
     }
 
     public void bridgeDeployed(Position pos, Location loc) {
@@ -175,9 +184,9 @@ public class MainPanel extends BackgroundPanel {
     }
 
     public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
-        Position pos = m.getPosition();
-        Tile tile = getGame().getBoard().get(pos);
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), m.getLocation());
+        Tile tile = scoreable.getTile();
+        Position pos = tile.getPosition();
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), scoreable.getLocation());
         animationService.registerAnimation(new ScoreAnimation(
             pos,
             points,

@@ -1,27 +1,16 @@
 package com.jcloisterzone.rmi;
 
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
 
 /**
- * Declares broadcast messages called between clients.
- * Technically all messges are passed through server but messages
- * from this class has origin on the client side.
- *
+ * Legacy rmi interface, now all calls are translated to RMI command
  */
-public interface Client2ClientIF {
-
-    /* ---------------------- NEW GAME MESSAGES ------------------*/
-
-    public void updateExpansion(Expansion expansion, Boolean enabled);
-    public void updateCustomRule(CustomRule rule, Boolean enabled);
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules);
-    public void startGame();
+public interface RmiProxy {
 
     /* ---------------------- STARTED GAME MESSAGES ------------------*/
 
@@ -46,10 +35,7 @@ public interface Client2ClientIF {
     public void bazaarBuyOrSell(boolean buy);
 
     public void cornCiclesRemoveOrDeploy(boolean remove);
-    
+    public void placeLittleBuilding(LittleBuilding lbType);
+
     public void undo();
-
-    /* -------------------- CHAT --------------------- */
-
-    public void chatMessage(Integer author, String message);
 }

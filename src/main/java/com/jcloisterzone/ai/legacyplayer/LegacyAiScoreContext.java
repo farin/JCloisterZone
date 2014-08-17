@@ -142,7 +142,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
     }
 
     @Override
-    public Iterable<Meeple> getMeeples() {
+    public Iterable<? extends Meeple> getMeeples() {
         return ctx.getMeeples();
     }
 

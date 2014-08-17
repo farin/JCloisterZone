@@ -8,12 +8,14 @@ import java.util.Set;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.feature.visitor.score.MonasteryAbbotScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -55,6 +57,7 @@ public class ScoreAllFeatureFinder {
         }
     }
 
+
     public void scoreAll(Game game, ScoreAllCallback callback) {
         //first score non-farm features to fill city cache
         for (Meeple m : game.getDeployedMeeples()) {
@@ -68,6 +71,12 @@ public class ScoreAllFeatureFinder {
             if (f instanceof Completable) {
                 if (alreadyRated.contains(m)) continue;
                 scoreCompletable((Completable) f, callback);
+                if (f instanceof Cloister && ((Cloister)f).isMonastery()) {
+                    //additionally to common monk scoring count score for abbots
+                    MonasteryAbbotScoreContext ctx = new MonasteryAbbotScoreContext(game);
+                    ctx.visit(f);
+                    callback.scoreCompletableFeature(ctx);
+                }
             }
         }
 

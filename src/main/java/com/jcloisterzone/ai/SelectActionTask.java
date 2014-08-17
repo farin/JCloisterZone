@@ -40,6 +40,7 @@ import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
+import com.jcloisterzone.game.phase.WagonPhase;
 
 public class SelectActionTask implements Runnable {
 
@@ -55,6 +56,9 @@ public class SelectActionTask implements Runnable {
 
     private SavePointManager spm;
     private Game game;
+
+    @SuppressWarnings("unchecked")
+    private static final List<Class<? extends Phase>> ALLOWED_IN_PHASE_LOOP = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class, WagonPhase.class);
 
     public SelectActionTask(RankingAiPlayer aiPlayer, SelectActionEvent rootEv) {
         this.aiPlayer = aiPlayer;
@@ -105,6 +109,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
+        //logger.info("Select action task started " + aiPlayer.getClientStub().getGame().getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString());
         boolean dbgPrint = false;
         try {
             this.game = aiPlayer.copyGame(this);
@@ -127,27 +132,32 @@ public class SelectActionTask implements Runnable {
                 if (dbgPrint) dbgPringStep(choice, isFinal);
             }
             if (dbgPrint) dbgPringFooter();
-            aiPlayer.setBestChain(bestSoFar);
-            aiPlayer.popActionChain();
+            //logger.info("Select action task finished "  + game.getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString() + " " + bestSoFar.chainToString());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        }
+        if (bestSoFar == null) {
+            //in perfect world it should never happen
             aiPlayer.setBestChain(null);
             aiPlayer.selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
+        } else {
+            aiPlayer.setBestChain(bestSoFar);
+            aiPlayer.popActionChain();
         }
     }
 
-    @SuppressWarnings("unchecked")
     private boolean phaseLoop() {
         Phase phase = game.getPhase();
-        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
         while (!phase.isEntered()) {
-            if (!Iterables.contains(allowed, phase.getClass())) {
+            if (!Iterables.contains(ALLOWED_IN_PHASE_LOOP, phase.getClass())) {
                 return true;
             }
             phase.setEntered(true);
             phase.enter();
             phase = game.getPhase();
+            game.flushEventQueue();
         }
+        game.flushEventQueue();
         return false;
     }
 
@@ -169,6 +179,10 @@ public class SelectActionTask implements Runnable {
 
     @Subscribe
     public void handleActionEvent(SelectActionEvent ev) {
+        if (!game.getActivePlayer().equals(aiPlayer.getPlayer())) {
+            return; //e.g. wagon move of other player
+        }
+        //logger.info("....T " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString());
         List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
         SavePoint savePoint = spm.save();
 

@@ -1,7 +1,5 @@
 package com.jcloisterzone;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -18,12 +16,12 @@ import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PigCapability;
-import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
@@ -33,6 +31,8 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("unchecked")
 public enum Expansion {
@@ -71,12 +71,14 @@ public enum Expansion {
     CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
     TUNNEL("TU", _("The Tunnel"), new Class[] { TunnelCapability.class }),
     CORN_CIRCLES("CC", _("The Corn Circles"), new Class[] { CornCircleCapability.class }),
-    PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { PlagueCapability.class }),
+    //PLAGUE("PL", _("The Plague") + " (" + _("tiles only") + ")", new Class[] { PlagueCapability.class }),
+    PLAGUE("PL", _("The Plague"), false),
     PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
+    //LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
     LITTLE_BUILDINGS("LB", _("Little Buildings"), false),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
-    GERMAN_MONASTERIES("GM", _("The German Monasteries"), false),
+    GERMAN_MONASTERIES("GM", _("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),

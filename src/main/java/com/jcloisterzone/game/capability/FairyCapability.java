@@ -49,12 +49,12 @@ public class FairyCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         FairyAction fairyAction = new FairyAction();
         Player activePlayer = game.getActivePlayer();
         for (Follower m : Iterables.filter(activePlayer.getFollowers(), MeeplePredicates.deployed())) {
             if (!m.at(fairyPosition)) {
-            	fairyAction.add(m.getPosition());
+                fairyAction.add(m.getPosition());
             }
         }
         if (!fairyAction.isEmpty()) {

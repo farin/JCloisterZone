@@ -1,12 +1,9 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -38,24 +35,22 @@ public class PortalCapability extends Capability {
         }
     }
 
+
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
         if (getTile().hasTrigger(TileTrigger.PORTAL)) {
             if (game.getActivePlayer().hasFollower()) {
-                prepareMagicPortal(findFollowerActions(actions), commonSites);
+                prepareMagicPortal(followerOptions);
             }
         }
     }
 
-    public void prepareMagicPortal(List<MeepleAction> followerActions, Set<FeaturePointer> commonSites) {
+    public void prepareMagicPortal(Set<FeaturePointer> followerOptions) {
         if (portalUsed) return;
         for (Tile tile : getBoard().getAllTiles()) {
-            if (tile == getTile()) continue; //prepared by basic common
+            if (tile == getTile()) continue; //already contained in original followerOptions
             Set<FeaturePointer> locations = game.prepareFollowerLocations(tile, true);
-            if (locations.isEmpty()) continue;
-            for (MeepleAction ma : followerActions) {
-            	ma.addAll(locations);
-            }
+            followerOptions.addAll(locations);
         }
     }
 

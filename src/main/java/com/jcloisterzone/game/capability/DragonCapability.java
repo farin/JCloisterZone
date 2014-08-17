@@ -14,6 +14,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.figure.Meeple;
@@ -33,8 +34,15 @@ public class DragonCapability extends Capability {
         super(game);
     }
 
-    @Subscribe
-    public void tilePlaced(TileEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof TileEvent) {
+           tilePlaced((TileEvent) event);
+       }
+
+    }
+
+    private void tilePlaced(TileEvent ev) {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT && tile.hasTrigger(TileTrigger.VOLCANO)) {
             Position fromPosition = dragonPosition;

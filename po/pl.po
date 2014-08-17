@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-26 19:40+0200\n"
-"PO-Revision-Date: 2014-06-26 19:53+0100\n"
+"PO-Revision-Date: 2014-06-28 13:29+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl"
+"Language: pl\n"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:40
 msgid "Basic game"
@@ -96,7 +96,7 @@ msgstr "Hrabia"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Mini Expansion (GQ11)"
-msgstr "Mały dodatek (GQ11)"
+msgstr "Mały Dodatek (GQ11)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Cult"
@@ -116,7 +116,7 @@ msgstr "Plaga"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Phantom"
-msgstr "Widmo"
+msgstr "Świta (Fantom)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Festival (10th an.)"
@@ -124,7 +124,7 @@ msgstr "Festiwal (10-lecie)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "Little Buildings"
-msgstr "Małe budynki"
+msgstr "Małe Budynki"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Wind Rose"
@@ -148,7 +148,7 @@ msgstr "Promy"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Goldmines"
-msgstr "Kopalnie Złota"
+msgstr "Kopalnie złota"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "Mage & Witch"
@@ -168,7 +168,7 @@ msgstr "Szkoła"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "La Porxada"
-msgstr ""
+msgstr "La Porxada"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
@@ -232,7 +232,7 @@ msgstr "Zastosuj zasadę tunelu dla tuneli z innych dodatków."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:25
 msgid "No bazaar bidding. Each players just choose one tile."
-msgstr "Nie można licytować na bazarze. Każdy z graczy po prostu wybiera jedekafelek."
+msgstr "Nie można licytować na bazarze. Każdy z graczy po prostu wybiera jeden kafelek."
 
 #: src/main/java/com/jcloisterzone/game/GuiClientStub.java:87
 msgid "Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version."
@@ -285,7 +285,7 @@ msgstr "Wczytaj"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:494
 msgid "JCloisterZone "
-msgstr ""
+msgstr "JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/ClientController.java:178
 msgid "%d tiles left"
@@ -293,7 +293,7 @@ msgstr "pozostało %d kafelków"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ChatPanel.java:166
 msgid "Type to chat"
-msgstr "Napisza na czacie"
+msgstr "Napisz na czacie"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:76
 msgid "Skip"
@@ -326,11 +326,11 @@ msgstr "Rozpowszechniane na zasadach licencji GNU Affero General Public License 
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:34
 msgid "Undeploy meeple"
-msgstr "Zabierz pionka do rezerw"
+msgstr "Zabierz pionek do rezerw"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AmbiguousUndeployDialog.java:41
 msgid "Select meeple to undeploy"
-msgstr "Wybierz, którego pionka zabrać"
+msgstr "Wybierz, który pionek zabrać"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
@@ -460,20 +460,20 @@ msgstr "Każdy gracz..."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
 msgid "may deploy additional follower"
-msgstr "może dołożyć dodatkowego podwładnego"
+msgstr "może dołożyć dodatkowy pionek"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:50
 msgid "must remove follower"
-msgstr "musi zabrać jednego podwładnego"
+msgstr "musi zabrać pionek"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:63
 #, java-format
 msgid "on/from a {0}."
-msgstr "na kafelek/z kafelka, na którym jest {0}."
+msgstr "na kafelek/z kafelka {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:98
 msgid "Corn circle"
-msgstr "Kręg w zbożu"
+msgstr "Krąg w zbożu"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:50
 msgid "Place a follower"
@@ -493,7 +493,7 @@ msgstr "Potwierdzenie położenie pionka"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:65
 msgid "Place a tower piece"
-msgstr "Połóż część wieży"
+msgstr "Połóż fragment wieży"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:68
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:77
@@ -566,7 +566,7 @@ msgstr "Ustawienia"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:193
 msgid "Beep alert at player turn"
-msgstr "Sygnalizuj ruch gracza."
+msgstr "Sygnalizuj ruch gracza"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:206
 msgid "Confirm placement on a farm"
@@ -681,15 +681,15 @@ msgstr "<html>Kiedy kafelek jest położony użyj <b>Tab</b> lub <b>prawy</b> pr
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:28
 msgid "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play no action.</html>"
-msgstr "<html>Ewentualnie możesz nacisnąć <b>Enter</b> lub <b>Spację</b> aby zrezygnować z akcji.</html>"
+msgstr "<html>Możesz też nacisnąć <b>Enter</b> lub <b>Spację</b> aby zrezygnować z akcji.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:31
 msgid "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed tiles.</html>"
-msgstr "Naciśnij <b>F</b>, aby włączyć lub wyłączyć granice łąk oraz <b>X</b>, aby obejrzeć ostatnio położone kafelki."
+msgstr "<html>Naciśnij <b>F</b>, aby włączyć/wyłączyć pokazywanie granic łąk oraz <b>X</b>, aby obejrzeć ostatnio położone kafelki.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:57
 msgid "Create a new local or network game. You can play against any number of computer players."
-msgstr "Tworzenie nowej gry (lokalnej lub sieciowej). Możesz grać przeciwko dowolnej liczbie graczy komputerowych."
+msgstr "Tworzenie nowej gry (lokalnie lub w sieci). Możesz grać przeciwko dowolnej liczbie graczy komputerowych."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
 msgid "Connect to a remote JCloisterZone application with settled new game."

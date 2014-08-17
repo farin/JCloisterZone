@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TakePrisonerAction;
@@ -28,9 +29,12 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
 
 
 public class ActionPhase extends Phase {
@@ -125,6 +129,13 @@ public class ActionPhase extends Phase {
     }
 
     @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
+        lbCap.placeLittleBuilding(getActivePlayer(), lbType);
+        next();
+    }
+
+    @Override
     public void moveFairy(Position p) {
         if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(p))) {
             throw new IllegalArgumentException("The tile has deployed not own follower.");
@@ -183,11 +194,10 @@ public class ActionPhase extends Phase {
         next(ActionPhase.class);
     }
 
-    @Override
-    public void setFlierDistance(Class<? extends Meeple> meepleType, int distance) {
-        flierCap.setFlierDistance(meepleType, distance);
-        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
+    @WsSubscribe
+    public void handleFlierDice(FlierDiceMessage msg) {
+        flierCap.setFlierDistance(msg.getMeepleTypeClass(), msg.getDistance());
+        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), msg.getDistance()));
         next(FlierActionPhase.class);
     }
-
 }

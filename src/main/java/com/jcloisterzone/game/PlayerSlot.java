@@ -6,60 +6,42 @@ import com.jcloisterzone.ui.PlayerColor;
 
 public class PlayerSlot implements Serializable {
 
+    public enum SlotState { OPEN, OWN, REMOTE };
+
     private static final long serialVersionUID = 6093356973595538191L;
 
     public static final int COUNT = 6;
 
-    public enum SlotType { PLAYER, AI, OPEN }
-    public enum SlotState { ACTIVE, /*DISCONNECTED,*/ CLOSED }
-
     private final int number;
-    private SlotType type = SlotType.OPEN;
-    private SlotState state = null;
-    private String nick;
-    private Long owner; //clientId
-    private Integer serial; //server assign sequence number when type is occupied
+    private Integer serial; //server assign sequence number whgen type is occupied
+
+    private String clientId;
+    private String nickname;
+    private SlotState state = SlotState.OPEN;
     private String aiClassName;
+    private boolean disconnected;
     private transient PlayerColor colors;
 
     public PlayerSlot(int number) {
         this.number = number;
     }
 
-    public PlayerSlot(int number, SlotType type, String nick, Long owner) {
-        this.number = number;
-        this.type = type;
-        this.nick = nick;
-        this.owner = owner;
+    public boolean isOccupied() {
+        return state != SlotState.OPEN;
+    }
+
+    public boolean isAi() {
+        return aiClassName != null;
+    }
+
+    public boolean isOwn() {
+        return state == SlotState.OWN;
     }
 
     public int getNumber() {
         return number;
     }
-    public SlotType getType() {
-        return type;
-    }
-    public void setType(SlotType type) {
-        this.type = type;
-    }
-    public SlotState getState() {
-        return state;
-    }
-    public void setState(SlotState state) {
-        this.state = state;
-    }
-    public String getNick() {
-        return nick;
-    }
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-    public Long getOwner() {
-        return owner;
-    }
-    public void setOwner(Long owner) {
-        this.owner = owner;
-    }
+
     public Integer getSerial() {
         return serial;
     }
@@ -68,8 +50,30 @@ public class PlayerSlot implements Serializable {
         this.serial = serial;
     }
 
-    public boolean isOccupied() {
-        return type == SlotType.PLAYER || type == SlotType.AI;
+
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public SlotState getState() {
+        return state;
+    }
+
+    public void setState(SlotState state) {
+        this.state = state;
     }
 
     public String getAiClassName() {
@@ -90,7 +94,15 @@ public class PlayerSlot implements Serializable {
 
     @Override
     public String toString() {
-        return number + "-" + type + "[" + nick + "]";
+        return "("+ number + ") " + state + (nickname == null ? "" : " " + nickname);
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
+    }
+
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
     }
 
 }

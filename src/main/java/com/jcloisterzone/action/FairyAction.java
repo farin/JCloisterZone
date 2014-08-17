@@ -3,7 +3,7 @@ package com.jcloisterzone.action;
 import java.awt.Image;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 
@@ -14,7 +14,7 @@ public class FairyAction extends SelectTileAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position p) {
+    public void perform(RmiProxy server, Position p) {
         server.moveFairy(p);
     }
 

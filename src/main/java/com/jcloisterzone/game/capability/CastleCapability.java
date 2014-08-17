@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,13 +13,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -31,6 +29,8 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+
+import static com.jcloisterzone.XmlUtils.attributeBoolValue;
 
 public class CastleCapability extends Capability {
 
@@ -61,9 +61,16 @@ public class CastleCapability extends Capability {
         throw new UnsupportedOperationException();
     }
 
-    @Subscribe
-    public void undeployed(MeepleEvent ev) {
-    	if (ev.getFrom() == null) return;
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof MeepleEvent) {
+           undeployed((MeepleEvent) event);
+       }
+
+    }
+
+    private void undeployed(MeepleEvent ev) {
+        if (ev.getFrom() == null) return;
         Feature f = getBoard().get(ev.getFrom());
         if (f instanceof Castle) {
             Castle castle = (Castle) f.getMaster();

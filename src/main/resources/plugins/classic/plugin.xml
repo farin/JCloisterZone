@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugins.classic" version="2.6">
+<plugin id="com.jcloisterzone.plugins.classic" version="3.0">
     <title>Classic art</title>
     <description>Graphics from original board game</description>
     <expansions>
@@ -25,6 +25,7 @@
         <expansion>PLAGUE</expansion>
         <expansion>FESTIVAL</expansion>
         <expansion>WIND_ROSE</expansion>
+        <expansion>GERMAN_MONASTERIES</expansion>
         <expansion>FLIER</expansion>
         <expansion>CORN_CIRCLES_II</expansion>
     </expansions>

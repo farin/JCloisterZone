@@ -1,32 +1,28 @@
 package com.jcloisterzone.game.phase;
 
-import java.lang.reflect.Proxy;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.rmi.mina.ClientStub;
+import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.Connection;
 
 public class ServerAwarePhase extends Phase {
 
-	private final ServerIF server;
+    private final Connection conn;
 
-	public ServerAwarePhase(Game game, ServerIF server) {
-		super(game);
-		this.server = server;
-	}
+    public ServerAwarePhase(Game game, Connection conn) {
+        super(game);
+        this.conn = conn;
+    }
 
-	public ServerIF getServer() {
-		return server;
-	}
+    public RmiProxy getServer() {
+        return conn.getRmiProxy();
+    }
 
-	public boolean isLocalPlayer(Player player) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalPlayer(player);
-	}
+    public Connection getConnection() {
+        return conn;
+    }
 
-	public boolean isLocalSlot(PlayerSlot slot) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalSlot(slot);
-	}
-
+    public boolean isLocalPlayer(Player player) {
+        return player.getSlot().isOwn();
+    }
 }

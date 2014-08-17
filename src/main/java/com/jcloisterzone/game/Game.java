@@ -1,7 +1,9 @@
 package com.jcloisterzone.game;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +17,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.SubscriberExceptionContext;
-import com.google.common.eventbus.SubscriberExceptionHandler;
+import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -44,6 +45,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -76,58 +78,69 @@ public class Game extends GameSettings {
 
     private List<Capability> capabilities = new ArrayList<>();
     private FairyCapability fairyCapability; //shortcut
-    
+
     private Undoable lastUndoable;
     private Phase lastUndoablePhase;
 
-    private final EventBus eventBus = new EventBus(new SubscriberExceptionHandler() {
-        @Override
-        public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            logger.error("Could not dispatch event: " + context.getSubscriber() + " to " + context.getSubscriberMethod(), exception);
-        }
-    });
+    private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
+    //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before swithc is done
+    private final Deque<Event> eventQueue = new ArrayDeque<>();
 
     private int idSequenceCurrVal = 0;
 
+
+    public Game(String gameId) {
+        super(gameId);
+    }
 
     public EventBus getEventBus() {
         return eventBus;
     }
 
     public void post(Event event) {
-    	if (event instanceof PlayEvent) {
-	    	if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
-	    		lastUndoable = (Undoable) event;
-	    		lastUndoablePhase = phase;
-	    	} else {
-	    		if (event.getClass().getAnnotation(Idempotent.class) == null) {
-	    			lastUndoable = null;
-	    			lastUndoablePhase = null;
-	    		}
-	    	}
-    	}
-        eventBus.post(event);
+        eventQueue.add(event);
+        for (Capability capability: capabilities) {
+            capability.handleEvent(event);
+        }
     }
-    
+
+    public void flushEventQueue() {
+        Event event;
+        while ((event = eventQueue.poll()) != null) {
+            if (event instanceof PlayEvent) {
+                if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+                    lastUndoable = (Undoable) event;
+                    lastUndoablePhase = phase;
+                } else {
+                    if (event.getClass().getAnnotation(Idempotent.class) == null) {
+                        lastUndoable = null;
+                        lastUndoablePhase = null;
+                    }
+                }
+            }
+            eventBus.post(event);
+        }
+    }
+
     public boolean isUndoAllowed() {
-    	return lastUndoable != null;
+        return lastUndoable != null;
     }
-    
+
     public void undo() {
-    	//proof of concept
-    	if (lastUndoable instanceof TileEvent) {
-    		Tile tile = ((TileEvent)lastUndoable).getTile();
-    		Position pos = tile.getPosition();
-    		
-	    	lastUndoable.undo(this);
-	    	phase = lastUndoablePhase;
-	    	lastUndoable = null;
-			lastUndoablePhase = null;
-			
-			//post should be in event undo. silent vs firing undo ?
-			post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
-			phase.enter();
-    	}
+        //proof of concept
+        if (lastUndoable instanceof TileEvent) {
+            Tile tile = ((TileEvent)lastUndoable).getTile();
+            Position pos = tile.getPosition();
+
+            lastUndoable.undo(this);
+            phase = lastUndoablePhase;
+            lastUndoable = null;
+            lastUndoablePhase = null;
+
+            //post should be in event undo. silent vs firing undo ?
+            post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
+            phase.enter();
+        }
     }
 
     public Config getConfig() {
@@ -252,7 +265,6 @@ public class Game extends GameSettings {
         try {
             Capability capability = clazz.getConstructor(Game.class).newInstance(this);
             capabilities.add(capability);
-            getEventBus().register(capability);
         } catch (Exception e) {
             logger.error(e.getMessage(), e); //should never happen
         }
@@ -277,9 +289,21 @@ public class Game extends GameSettings {
         board = new Board(this);
     }
 
+    public boolean isStarted() {
+        return !(phase instanceof CreateGamePhase);
+    }
+
+    public boolean isOver() {
+        return phase instanceof GameOverPhase;
+    }
+
 
     public Set<FeaturePointer> prepareFollowerLocations() {
-        return prepareFollowerLocations(currentTile, false);
+        Set<FeaturePointer> followerOptions = prepareFollowerLocations(currentTile, false);
+        for (Capability cap: capabilities) {
+            cap.extendFollowOptions(followerOptions);
+        }
+        return followerOptions;
     }
 
     public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
@@ -292,7 +316,6 @@ public class Game extends GameSettings {
                 City princessCity = tile.getCityWithPrincess();
                 if (princessCity != null) {
                     continue;
-
                 }
             }
             pointers.add(new FeaturePointer(tile.getPosition(), loc));
@@ -303,16 +326,17 @@ public class Game extends GameSettings {
     //scoring helpers
 
     public void scoreFeature(int points, ScoreContext ctx, Player p) {
-        p.addPoints(points, ctx.getMasterFeature().getPointCategory());
+        PointCategory pointCategory = ctx.getMasterFeature().getPointCategory();
+        p.addPoints(points, pointCategory);
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
         ScoreEvent scoreEvent;
         if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY, follower);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, pointCategory, follower);
             scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);
         } else {
-            scoreEvent = new ScoreEvent(follower.getFeature(), points, PointCategory.FAIRY, follower);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points, pointCategory, follower);
         }
         scoreEvent.setFinal(isFinalScoring);
         post(scoreEvent);
