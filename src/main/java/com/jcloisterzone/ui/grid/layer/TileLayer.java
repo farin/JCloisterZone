@@ -30,15 +30,17 @@ public class TileLayer extends AbstractGridLayer {
             for (Tile tile : placedTiles) {
                 Position p = tile.getPosition();
                 if (tile.getPosition() != null) { //threading, tile can be removed
-                	int x = getOffsetX(p), y = getOffsetY(p);
-                	g2.fillRect(x-thickness, y-thickness, squareSize+2*thickness, squareSize+2*thickness);
+                    int x = getOffsetX(p), y = getOffsetY(p);
+                    g2.fillRect(x-thickness, y-thickness, squareSize+2*thickness, squareSize+2*thickness);
                 }
             }
         }
 
         for (Tile tile : placedTiles) {
-            Image img = getClient().getResourceManager().getTileImage(tile);
-            g2.drawImage(img, getAffineTransform(img.getWidth(null), tile.getPosition(), tile.getRotation()), null);
+            if (tile.getPosition() != null) {
+                Image img = getClient().getResourceManager().getTileImage(tile);
+                g2.drawImage(img, getAffineTransform(img.getWidth(null), tile.getPosition(), tile.getRotation()), null);
+            }
         }
     }
 
@@ -50,9 +52,9 @@ public class TileLayer extends AbstractGridLayer {
     public void tilePlaced(Tile tile) {
         placedTiles.add(tile);
     }
-    
+
     public void tileRemoved(Tile tile) {
-    	placedTiles.remove(tile);
+        placedTiles.remove(tile);
     }
 
 

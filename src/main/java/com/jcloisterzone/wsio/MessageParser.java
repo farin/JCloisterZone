@@ -28,6 +28,7 @@ import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
+import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
@@ -59,6 +60,7 @@ public final class MessageParser {
         registerMsgType(RollFlierDiceMessage.class);
         registerMsgType(FlierDiceMessage.class);
         registerMsgType(RmiMessage.class);
+        registerMsgType(UndoMessage.class);
         registerMsgType(ClientListMessage.class);
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);

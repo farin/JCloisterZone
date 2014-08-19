@@ -107,10 +107,4 @@ public class DelayedServer implements RmiProxy {
     public void placeLittleBuilding(LittleBuilding lbType) {
         server.placeLittleBuilding(lbType);
     }
-
-    @Override
-    public void undo() {
-        server.undo();
-    }
-
 }

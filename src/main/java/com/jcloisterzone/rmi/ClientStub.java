@@ -54,6 +54,7 @@ import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
+import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -293,6 +294,11 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    @WsSubscribe
+    public void handleUndo(UndoMessage msg) {
+        game.undo();
     }
 
     @WsSubscribe

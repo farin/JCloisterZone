@@ -102,22 +102,22 @@ public class Game extends GameSettings {
         for (Capability capability: capabilities) {
             capability.handleEvent(event);
         }
+        if (event instanceof PlayEvent) {
+            if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+                lastUndoable = (Undoable) event;
+                lastUndoablePhase = phase;
+            } else {
+                if (event.getClass().getAnnotation(Idempotent.class) == null) {
+                    lastUndoable = null;
+                    lastUndoablePhase = null;
+                }
+            }
+        }
     }
 
     public void flushEventQueue() {
         Event event;
         while ((event = eventQueue.poll()) != null) {
-            if (event instanceof PlayEvent) {
-                if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
-                    lastUndoable = (Undoable) event;
-                    lastUndoablePhase = phase;
-                } else {
-                    if (event.getClass().getAnnotation(Idempotent.class) == null) {
-                        lastUndoable = null;
-                        lastUndoablePhase = null;
-                    }
-                }
-            }
             eventBus.post(event);
         }
     }
