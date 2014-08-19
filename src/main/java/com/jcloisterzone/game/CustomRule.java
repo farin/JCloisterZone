@@ -24,7 +24,7 @@ public enum CustomRule {
 
     BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, _("No bazaar bidding. Each players just choose one tile.")),
 
-    KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, _("Do not remove original cloisters from basic game."));
+    KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, _("Keep basic cloisters in the game."));
 
     String label;
     Expansion expansion;
