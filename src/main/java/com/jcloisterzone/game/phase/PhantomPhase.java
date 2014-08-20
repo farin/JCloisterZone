@@ -37,6 +37,7 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void enter() {
+        //TODO what about pay ransom for phantom now?
         if (!getActivePlayer().hasFollower(Phantom.class)) {
             next();
             return;
@@ -45,27 +46,16 @@ public class PhantomPhase extends Phase {
         List<MeepleAction> actions = Collections.singletonList(phantomAction);
         phantomAction.addAll(game.prepareFollowerLocations());
         Set<FeaturePointer> commonSites = game.prepareFollowerLocations();
-        if (!commonSites.isEmpty()) {
-            if (towerCap != null) {
-                towerCap.prepareTowerFollowerDeploy(actions);
-            }
+
+        if (towerCap != null) {
+            towerCap.prepareTowerFollowerDeploy(actions);
         }
 
-        if (isAutoTurnEnd(actions)) {
+        if (phantomAction.isEmpty()) {
             next();
         } else {
             game.post(new SelectActionEvent(getActivePlayer(), actions, true));
         }
-    }
-
-    //TODO copy from Action phase -> merge
-    private boolean isAutoTurnEnd(List<? extends PlayerAction<?>> actions) {
-        if (!actions.isEmpty()) return false;
-        if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer(), Phantom.class)) {
-            //player can return phantom figure immediately
-            return false;
-        }
-        return true;
     }
 
     @Override

@@ -184,12 +184,6 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void undo() {
-        game.undo();
-    }
-
-
-    @Override
     public String toString() {
         return getClass().getSimpleName();
     }

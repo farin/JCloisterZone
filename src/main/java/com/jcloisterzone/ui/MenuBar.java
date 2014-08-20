@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.ui.dialog.HelpDialog;
+import com.jcloisterzone.wsio.message.UndoMessage;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -30,8 +31,8 @@ public class MenuBar extends JMenuBar {
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history;
 
-    public MenuBar(Client client2) {
-        this.client = client2;
+    public MenuBar(Client _client) {
+        this.client = _client;
 
         boolean isMac = Bootstrap.isMac();
 
@@ -78,7 +79,7 @@ public class MenuBar extends JMenuBar {
         undo.setEnabled(false);
         undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getServer().undo();
+                client.getConnection().send(new UndoMessage(client.getGame().getGameId()));
             }
         });
         menu.add(undo);
