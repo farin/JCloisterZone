@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -33,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.xml.transform.TransformerException;
@@ -106,7 +108,7 @@ public class Client extends JFrame {
     private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
-    private SimpleServer localServer;
+    private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private Connection conn;
 
     private Game game;
@@ -277,18 +279,20 @@ public class Client extends JFrame {
 
         setTitle(BASE_TITLE);
         resetWindowIcon();
-        if (localServer != null) {
-            try {
-                localServer.stop(500);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            }
-            localServer = null;
-        } else if (conn != null) {
+        if (conn != null) {
             conn.close();
             conn = null;
         }
-        conn = null;
+        SimpleServer server = localServer.get();
+        if (server != null) {
+            try {
+                server.stop();
+                Thread.sleep(50); //wait for socket is closed - some ussers have issue close and immediatelly created new
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+            localServer.set(null);
+        }
         activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
 
@@ -376,11 +380,36 @@ public class Client extends JFrame {
     }
 
     public void createGame() {
-        if (!closeGame()) return;
-        localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
-        localServer.createGame();
-        localServer.start();
-        connect("localhost", config.getPort());
+        createGame(null);
+    }
+
+    public void createGame(Snapshot snapshot) {
+        if (closeGame()) {
+            SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
+            localServer.set(server);
+            server.createGame(snapshot);
+            server.start();
+            try {
+                Thread.sleep(50); //hakc - there is not success handler in WebSocket server
+            } catch (InterruptedException e) {
+                //empty
+            }
+            if (localServer.get() != null) { //can be set to null by server error
+                connect("localhost", config.getPort());
+            }
+        }
+    }
+
+    //this method is not called from swing thread
+    public void onServerStartError(final Exception ex) {
+        localServer.set(null);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(Client.this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
     }
 
     public void handleLoad() {
@@ -394,12 +423,8 @@ public class Client extends JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file != null) {
-                if (!closeGame()) return;
                 try {
-                    localServer = new SimpleServer(new InetSocketAddress(config.getPort()));
-                    localServer.createGame(new Snapshot(file));
-                    localServer.start();
-                    connect("localhost", config.getPort());
+                    createGame(new Snapshot(file));
                 } catch (IOException | SAXException ex1) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

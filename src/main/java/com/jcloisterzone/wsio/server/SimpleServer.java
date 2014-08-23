@@ -1,6 +1,7 @@
 package com.jcloisterzone.wsio.server;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.swing.SwingUtilities;
 import javax.xml.transform.TransformerException;
 
 import org.java_websocket.WebSocket;
@@ -27,6 +29,7 @@ import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
@@ -57,6 +60,8 @@ public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final Client client;
+
     private MessageParser parser = new MessageParser();
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
@@ -72,8 +77,9 @@ public class SimpleServer extends WebSocketServer  {
 
     private Random random = new Random();
 
-    public SimpleServer(InetSocketAddress address) {
+    public SimpleServer(InetSocketAddress address, Client client) {
         super(address);
+        this.client = client;
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
 
@@ -83,24 +89,24 @@ public class SimpleServer extends WebSocketServer  {
         return s[s.length-1];
     }
 
-    public void createGame() {
-        game = new GameSettings(getRandomId());
-        game.getExpansions().add(Expansion.BASIC);
-        for (CustomRule cr : CustomRule.defaultEnabled()) {
-            game.getCustomRules().add(cr);
-        }
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = new ServerPlayerSlot(i);
-        }
-    }
-
 
     public void createGame(Snapshot snapshot) {
-        this.snapshot =  snapshot;
-        game = new GameSettings(getRandomId());
-        game.getExpansions().addAll(snapshot.getExpansions());
-        game.getCustomRules().addAll(snapshot.getCustomRules());
-        loadSlotsFromSnapshot();
+        if (snapshot == null) {
+            game = new GameSettings(getRandomId());
+            game.getExpansions().add(Expansion.BASIC);
+            for (CustomRule cr : CustomRule.defaultEnabled()) {
+                game.getCustomRules().add(cr);
+            }
+            for (int i = 0; i < slots.length; i++) {
+                slots[i] = new ServerPlayerSlot(i);
+            }
+        } else {
+            this.snapshot =  snapshot;
+            game = new GameSettings(getRandomId());
+            game.getExpansions().addAll(snapshot.getExpansions());
+            game.getCustomRules().addAll(snapshot.getCustomRules());
+            loadSlotsFromSnapshot();
+        }
     }
 
     private void loadSlotsFromSnapshot() {
@@ -135,9 +141,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @Override
-    public void onError(WebSocket ws, Exception ex) {
+    public void onError(WebSocket ws, final Exception ex) {
         if (ex instanceof ClosedByInterruptException) {
             logger.info(ex.toString()); //exception message is null
+        } else if (ex instanceof BindException) {
+            client.onServerStartError(ex);
         } else {
             logger.error(ex.getMessage(), ex);
         }

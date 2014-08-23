@@ -70,7 +70,8 @@ public class GamePanel extends BackgroundPanel {
         envelope.add(createGamePanel);
 
         JScrollPane scroll = new JScrollPane(envelope);
-        scroll.setViewportBorder(null);
+        scroll.setViewportBorder(null);  //ubuntu jdk
+        scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
         add(scroll, BorderLayout.CENTER);
 
         JPanel chatColumn = new JPanel();
@@ -121,7 +122,14 @@ public class GamePanel extends BackgroundPanel {
 
     public void onWebsocketError(Exception ex) {
         GridPanel gp = getGridPanel();
-        String msg = ex instanceof WebsocketNotConnectedException ? _("Connection lost") + " - save game and load on server side and then connect with client as workaround" : ex.getMessage();
+        String msg = ex.getMessage();
+        if (ex instanceof WebsocketNotConnectedException) {
+            if (game.isStarted()) {
+                msg = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+            } else {
+                msg = _("Connection lost");
+            }
+        }
         if (msg == null || msg.length() == 0) {
             msg = ex.getClass().getSimpleName();
         }
