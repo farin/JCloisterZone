@@ -16,6 +16,8 @@ import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -34,6 +36,8 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GamePanel extends BackgroundPanel {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
     private final Game game;
@@ -129,6 +133,8 @@ public class GamePanel extends BackgroundPanel {
             } else {
                 msg = _("Connection lost");
             }
+        } else {
+            logger.error(ex.getMessage(), ex);
         }
         if (msg == null || msg.length() == 0) {
             msg = ex.getClass().getSimpleName();

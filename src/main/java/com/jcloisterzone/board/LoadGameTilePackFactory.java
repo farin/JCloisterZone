@@ -1,5 +1,6 @@
 package com.jcloisterzone.board;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,11 @@ public class LoadGameTilePackFactory extends TilePackFactory {
             preplaced[i].element = el;
             preplacedMeeples.addAll(snapshot.extractTileMeeples(el, game, preplaced[i].pos));
         }
+    }
+
+    protected URL getCardsConfig(Expansion expansion) {
+        //ignore config overrides
+        return getStandardCardsConfig(expansion);
     }
 
 

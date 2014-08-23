@@ -171,6 +171,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     @WsSubscribe
     public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
         if (msg.getState() == GameState.RUNNING) {
+            handleGameSetup(msg.getGameSetup());
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
             phase.startGame();
             return;

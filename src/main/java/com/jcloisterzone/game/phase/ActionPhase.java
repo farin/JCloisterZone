@@ -90,42 +90,12 @@ public class ActionPhase extends Phase {
         }
     }
 
-    private int doPlaceTowerPiece(Position p) {
-        Tower tower = getBoard().get(p).getTower();
-        if (tower  == null) {
-            throw new IllegalArgumentException("No tower on tile.");
-        }
-        if (tower.getMeeple() != null) {
-            throw new IllegalArgumentException("The tower is sealed");
-        }
-        towerCap.decreaseTowerPieces(getActivePlayer());
-        return tower.increaseHeight();
-    }
-
-    public TakePrisonerAction prepareCapture(Position p, int range) {
-        //TODO custom rule - opponent only
-        TakePrisonerAction captureAction = new TakePrisonerAction();
-        for (Meeple pf : game.getDeployedMeeples()) {
-            if (!(pf instanceof Follower)) continue;
-            Position pos = pf.getPosition();
-            if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column
-            if (pos.squareDistance(p) > range) continue;
-            captureAction.add(new MeeplePointer(pf));
-        }
-        return captureAction;
-    }
+   
 
     @Override
     public void placeTowerPiece(Position p) {
-        int captureRange = doPlaceTowerPiece(p);
-        game.post(new TowerIncreasedEvent(getActivePlayer(), p, captureRange));
-        TakePrisonerAction captureAction = prepareCapture(p, captureRange);
-        if (captureAction.isEmpty()) {
-            next();
-            return;
-        }
+        towerCap.placeTowerPiece(getActivePlayer(), p);
         next(TowerCapturePhase.class);
-        game.post(new SelectActionEvent(getActivePlayer(), captureAction, false));
     }
 
     @Override
