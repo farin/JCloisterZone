@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -318,6 +319,10 @@ public class SimpleServer extends WebSocketServer  {
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
+        for (ServerPlayerSlot slot : slots) {
+            if (slot.getSupportedExpansions() == null) continue;
+            game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+        }
         gameStarted = true;
         broadcast(newGameMessage());
     }

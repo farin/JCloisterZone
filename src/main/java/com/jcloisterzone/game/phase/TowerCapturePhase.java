@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeeplePrisonEvent;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
+import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -15,8 +20,11 @@ import com.jcloisterzone.game.capability.TowerCapability;
 
 public class TowerCapturePhase extends Phase {
 
+    private final TowerCapability towerCap;
+
     public TowerCapturePhase(Game game) {
         super(game);
+        towerCap = game.getCapability(TowerCapability.class);
     }
 
     @Override
@@ -26,7 +34,26 @@ public class TowerCapturePhase extends Phase {
 
     @Override
     public void enter() {
-        //TODO move handle tower placement here from action phase or not ? nice to have but activated tower arg is needed for it
+        Position pos = towerCap.getLastIncreasedTower();
+        TakePrisonerAction captureAction = prepareCapture(pos, getBoard().get(pos).getTower().getHeight());
+        if (captureAction.isEmpty()) {
+            next();
+            return;
+        }
+        game.post(new SelectActionEvent(getActivePlayer(), captureAction, false));
+    }
+
+    private TakePrisonerAction prepareCapture(Position p, int range) {
+        //TODO custom rule - opponent only
+        TakePrisonerAction captureAction = new TakePrisonerAction();
+        for (Meeple pf : game.getDeployedMeeples()) {
+            if (!(pf instanceof Follower)) continue;
+            Position pos = pf.getPosition();
+            if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column
+            if (pos.squareDistance(p) > range) continue;
+            captureAction.add(new MeeplePointer(pf));
+        }
+        return captureAction;
     }
 
     @Override

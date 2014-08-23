@@ -45,6 +45,8 @@ public final class TowerCapability extends Capability {
     private final Map<Player, Integer> towerPieces = new HashMap<>();
     private boolean ransomPaidThisTurn;
 
+    private Position lastIncreasedTower; //needed for persist game in TowerCapturePhase
+
     //key is Player who keeps follower imprisoned
     //synchronized because of GUI is looking inside
     //TODO fix gui hack
@@ -164,6 +166,20 @@ public final class TowerCapability extends Capability {
         }
     }
 
+    public void placeTowerPiece(Player player, Position pos) {
+        Tower tower = getBoard().get(pos).getTower();
+        if (tower  == null) {
+            throw new IllegalArgumentException("No tower on tile.");
+        }
+        if (tower.getMeeple() != null) {
+            throw new IllegalArgumentException("The tower is sealed");
+        }
+        decreaseTowerPieces(player);
+        tower.increaseHeight();
+        lastIncreasedTower = pos;
+        game.post(new TowerIncreasedEvent(player, pos, tower.getHeight()));
+    }
+
     protected Set<Position> getOpenTowers(int minHeight) {
         Set<Position> availTower = new HashSet<>();
         for (Position p : getTowers()) {
@@ -177,6 +193,10 @@ public final class TowerCapability extends Capability {
 
     public Map<Player, List<Follower>> getPrisoners() {
         return prisoners;
+    }
+
+    public Position getLastIncreasedTower() {
+        return lastIncreasedTower;
     }
 
     public boolean hasImprisonedFollower(Player followerOwner) {
@@ -226,11 +246,17 @@ public final class TowerCapability extends Capability {
     @Override
     public void turnCleanUp() {
         ransomPaidThisTurn = false;
+        lastIncreasedTower = null;
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
+        if (lastIncreasedTower != null) {
+            Element it = doc.createElement("increased-tower");
+            XmlUtils.injectPosition(it, lastIncreasedTower);
+            node.appendChild(it);
+        }
         for (Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();
             Element el = doc.createElement("tower");
@@ -256,7 +282,11 @@ public final class TowerCapability extends Capability {
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
         ransomPaidThisTurn = Boolean.parseBoolean(node.getAttribute("ransomPaid"));
-        NodeList nl = node.getElementsByTagName("tower");
+        NodeList nl = node.getElementsByTagName("increased-tower");
+        if (nl.getLength() > 0) {
+            lastIncreasedTower = XmlUtils.extractPosition((Element) nl.item(0));
+        }
+        nl = node.getElementsByTagName("tower");
         for (int i = 0; i < nl.getLength(); i++) {
             Element te = (Element) nl.item(i);
             Position towerPos = XmlUtils.extractPosition(te);

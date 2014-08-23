@@ -77,16 +77,22 @@ public class TilePackFactory {
         return size;
     }
 
-    private URL getCardsConfig(Expansion expansion) {
+    protected  URL getStandardCardsConfig(Expansion expansion) {
+        String fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+        return TilePackFactory.class.getClassLoader().getResource(fileName);
+    }
+
+    protected URL getCardsConfig(Expansion expansion) {
         DebugConfig debugConfig = config.getDebug();
         String fileName = null;
         if (debugConfig != null && debugConfig.getTile_definitions() != null) {
             fileName = debugConfig.getTile_definitions().get(expansion.name());
         }
         if (fileName == null) {
-            fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+            return getStandardCardsConfig(expansion);
+        } else {
+            return TilePackFactory.class.getClassLoader().getResource(fileName);
         }
-        return TilePackFactory.class.getClassLoader().getResource(fileName);
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
