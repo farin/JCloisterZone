@@ -7,15 +7,26 @@ import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class AbbeyPlacementLayer extends AbstractTilePlacementLayer {
+public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<AbbeyPlacementAction> {
 
     private AbbeyPlacementAction action;
 
-    public AbbeyPlacementLayer(GridPanel gridPanel, AbbeyPlacementAction action) {
-        super(gridPanel, action.getOptions());
+    public AbbeyPlacementLayer(GridPanel gridPanel) {
+        super(gridPanel);
+    }
+
+    @Override
+    public void setAction(AbbeyPlacementAction action) {
         this.action = action;
+        setAvailablePositions(action == null ? null : action.getOptions());
+    }
+
+    @Override
+    public AbbeyPlacementAction getAction() {
+        return action;
     }
 
     @Override

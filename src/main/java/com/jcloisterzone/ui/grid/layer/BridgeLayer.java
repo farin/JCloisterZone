@@ -52,10 +52,6 @@ public class BridgeLayer extends AbstractGridLayer {
 
     }
 
-    @Override
-    public int getZIndex() {
-        return 45;
-    }
 
     public void bridgeDeployed(Position pos, Location loc) {
         Tile tile = getClient().getGame().getBoard().get(pos);

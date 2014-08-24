@@ -15,21 +15,20 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
     private Set<Position> positions;
     private Position selected;
 
-    public DragonAvailableMove(GridPanel gridPanel, Set<Position> positions) {
+    public DragonAvailableMove(GridPanel gridPanel) {
         super(gridPanel);
+    }
+
+    public void setPositions(Set<Position> positions) {
         this.positions = positions;
     }
 
     public void paint(Graphics2D g2) {
+        if (positions == null) return;
         Image dragon = getClient().getControlsTheme().getActionDecoration("dragon");
         for (Position pos : positions) {
             g2.drawImage(dragon, getOffsetX(pos), getOffsetY(pos), getSquareSize(), getSquareSize(), null);
         }
-    }
-
-    @Override
-    public int getZIndex() {
-        return 60;
     }
 
     @Override

@@ -15,15 +15,10 @@ public abstract class AbstractTileLayer extends AbstractGridLayer {
     private Position position;
     private Rotation rotation;
 
-    public AbstractTileLayer(GridPanel gridPanel, Position position) {
-        this(gridPanel, position, Rotation.R0);
+    public AbstractTileLayer(GridPanel gridPanel) {
+        super(gridPanel);
     }
 
-    public AbstractTileLayer(GridPanel gridPanel, Position position, Rotation rotation) {
-        super(gridPanel);
-        this.position = position;
-        this.rotation = rotation;
-    }
 
     //convinient methods
 

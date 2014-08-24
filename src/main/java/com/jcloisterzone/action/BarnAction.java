@@ -3,7 +3,7 @@ package com.jcloisterzone.action;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 
 //TODO do not extends select feature, use special type for corner based on position
@@ -19,8 +19,8 @@ public class BarnAction extends SelectFeatureAction {
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        return new BarnAreaLayer(client.getGridPanel(), this);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return BarnAreaLayer.class;
     }
 
     @Override

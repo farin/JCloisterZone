@@ -1,13 +1,12 @@
 package com.jcloisterzone.action;
 
 import java.awt.Image;
-import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 
 public class AbbeyPlacementAction extends SelectTileAction {
@@ -27,8 +26,8 @@ public class AbbeyPlacementAction extends SelectTileAction {
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        return new AbbeyPlacementLayer(client.getGridPanel(), this);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return AbbeyPlacementLayer.class;
     }
 
     @Override

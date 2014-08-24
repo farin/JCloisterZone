@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import javax.swing.SwingUtilities;
 import javax.xml.transform.TransformerException;
 
 import org.java_websocket.WebSocket;
@@ -319,9 +318,16 @@ public class SimpleServer extends WebSocketServer  {
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        for (ServerPlayerSlot slot : slots) {
-            if (slot.getSupportedExpansions() == null) continue;
-            game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+        if (snapshot == null) {
+            for (ServerPlayerSlot slot : slots) {
+                if (slot.getSupportedExpansions() != null) {
+                    game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+                }
+
+                if (game.hasRule(CustomRule.RANDOM_SEATING_ORDER)) {
+                    slot.setSerial(random.nextInt());
+                }
+            }
         }
         gameStarted = true;
         broadcast(newGameMessage());

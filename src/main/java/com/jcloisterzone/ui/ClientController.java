@@ -259,13 +259,15 @@ public class ClientController  {
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
         client.clearActions();
-        DragonLayer dragonDecoration = gamePanel.getGridPanel().findDecoration(DragonLayer.class);
+        DragonLayer dragonDecoration = gamePanel.getGridPanel().findLayer(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
         gamePanel.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
         client.setActivePlayer(ev.getPlayer());
         if (client.isClientActive()) {
-            gamePanel.getGridPanel().addLayer(new DragonAvailableMove(gamePanel.getGridPanel(), positions));
+            DragonAvailableMove availMoves = gamePanel.getGridPanel().findLayer(DragonAvailableMove.class);
+            availMoves.setPositions(positions);
+            gamePanel.getGridPanel().showLayer(availMoves);
             client.beep();
         }
     }

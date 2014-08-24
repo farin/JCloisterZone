@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -17,10 +16,8 @@ public class DragonLayer extends AbstractTileLayer {
     private int moves;
     private Image dragonImage;
 
-
-
-    public DragonLayer(GridPanel gridPanel, Position position) {
-        super(gridPanel, position);
+    public DragonLayer(GridPanel gridPanel) {
+        super(gridPanel);
         dragonImage = getClient().getFigureTheme().getNeutralImage(DRAGON_IMAGE_NAME);
     }
 
@@ -39,11 +36,6 @@ public class DragonLayer extends AbstractTileLayer {
         super.zoomChanged(squareSize);
     }
 
-
-    @Override
-    public int getZIndex() {
-        return 90;
-    }
 
     public void setMoves(int moves) {
         this.moves = moves;

@@ -17,13 +17,19 @@ public class PlacementHistory extends AbstractGridLayer {
     private static final Color COLOR = new Color(0,0,0,128);
     private static final ImmutablePoint POINT = new ImmutablePoint(50,50);
 
-    private Map<Position, String> history = new HashMap<>();
+    private final Map<Position, String> history = new HashMap<>();
+    private final Collection<Tile> placedTilesView;
 
-    public PlacementHistory(GridPanel gridPanel, Collection<Tile> placedTiles) {
+    public PlacementHistory(GridPanel gridPanel, Collection<Tile> placedTilesView) {
         super(gridPanel);
-        int i = placedTiles.size();
+        this.placedTilesView = placedTilesView;
+    }
+
+    public void update() {
+        history.clear();
+        int i = placedTilesView.size();
         int limit = getClient().getGame().getAllPlayers().length;
-        for (Tile t : placedTiles) {
+        for (Tile t : placedTilesView) {
             if (i <= limit) {
                 history.put(t.getPosition(), "" + i);
             }
@@ -39,10 +45,4 @@ public class PlacementHistory extends AbstractGridLayer {
         }
 
     }
-
-    @Override
-    public int getZIndex() {
-        return 1001;
-    }
-
 }

@@ -17,7 +17,6 @@ import java.util.Set;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Farm;
@@ -85,37 +84,32 @@ public class FarmHintsLayer extends AbstractGridLayer {
         g2.setComposite(old);
     }
 
-    @Override
-    public int getZIndex() {
-        return 10;
-    }
-
     public void tileEvent(TileEvent ev) {
-    	Tile tile = ev.getTile();
-    	if (ev.getType() == TileEvent.PLACEMENT) {
-	        ResourceManager resourceManager = getClient().getResourceManager();
-	        Set<Location> farmLocations = new HashSet<>();
-	        for (Feature f : tile.getFeatures()) {
-	            if (f instanceof Farm) {
-	                farmLocations.add(f.getLocation());
-	            }
-	        }
-	        if (farmLocations.isEmpty()) return;
-	        Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
-	        areas.put(tile, tAreas);
-	        refreshHints();
-    	}
-    	if (ev.getType() == TileEvent.REMOVE) {
-    		areas.remove(tile);
-    		refreshHints();
-    	}
-    	
+        Tile tile = ev.getTile();
+        if (ev.getType() == TileEvent.PLACEMENT) {
+            ResourceManager resourceManager = getClient().getResourceManager();
+            Set<Location> farmLocations = new HashSet<>();
+            for (Feature f : tile.getFeatures()) {
+                if (f instanceof Farm) {
+                    farmLocations.add(f.getLocation());
+                }
+            }
+            if (farmLocations.isEmpty()) return;
+            Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+            areas.put(tile, tAreas);
+            refreshHints();
+        }
+        if (ev.getType() == TileEvent.REMOVE) {
+            areas.remove(tile);
+            refreshHints();
+        }
+
     }
 
     public void meepleEvent(MeepleEvent ev) {
         if (
-        	(ev.getFrom() != null && ev.getFrom().getLocation().isFarmLocation()) ||
-        	(ev.getTo() != null && ev.getTo().getLocation().isFarmLocation())
+            (ev.getFrom() != null && ev.getFrom().getLocation().isFarmLocation()) ||
+            (ev.getTo() != null && ev.getTo().getLocation().isFarmLocation())
         ) {
             refreshHints();
         }

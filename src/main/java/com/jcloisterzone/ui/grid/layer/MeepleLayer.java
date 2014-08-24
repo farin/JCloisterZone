@@ -39,11 +39,6 @@ public class MeepleLayer extends AbstractGridLayer {
         super(gridPanel);
     }
 
-    @Override
-    public int getZIndex() {
-        return 50;
-    }
-
     private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {
         ImmutablePoint scaledOffset = mi.getScaledOffset(boxSize);
         //TODO optimize also for scrolling

@@ -172,6 +172,9 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
         if (msg.getState() == GameState.RUNNING) {
             handleGameSetup(msg.getGameSetup());
+            for (SlotMessage slotMsg : msg.getSlots()) {
+                handleSlot(slotMsg);
+            }
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
             phase.startGame();
             return;

@@ -536,9 +536,9 @@ public class Client extends JFrame {
 
     public void setShowHistory(boolean showHistory) {
         if (showHistory) {
-            gamePanel.getGridPanel().showRecentHistory();
+            gamePanel.getMainPanel().showRecentHistory();
         } else {
-            gamePanel.getGridPanel().removeLayer(PlacementHistory.class);
+            gamePanel.getMainPanel().hideRecentHistory();
         }
         this.showHistory = showHistory;
     }

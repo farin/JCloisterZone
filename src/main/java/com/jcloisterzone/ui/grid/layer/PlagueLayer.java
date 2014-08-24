@@ -41,9 +41,4 @@ public class PlagueLayer extends AbstractGridLayer {
         }
     }
 
-    @Override
-    public int getZIndex() {
-        return 45;
-    }
-
 }
