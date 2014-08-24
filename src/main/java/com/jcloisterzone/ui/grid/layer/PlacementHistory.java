@@ -28,7 +28,7 @@ public class PlacementHistory extends AbstractGridLayer {
     public void update() {
         history.clear();
         int i = placedTilesView.size();
-        int limit = getClient().getGame().getAllPlayers().length;
+        int limit = getGame().getAllPlayers().length;
         for (Tile t : placedTilesView) {
             if (i <= limit) {
                 history.put(t.getPosition(), "" + i);

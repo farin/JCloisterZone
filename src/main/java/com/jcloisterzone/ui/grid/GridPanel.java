@@ -14,12 +14,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 import javax.swing.JPanel;
@@ -43,7 +38,6 @@ import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
-import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 
@@ -429,7 +423,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         Position p = ev.getPosition();
 
         hideLayer(AbstractTilePlacementLayer.class);
-        hideLayer(PlacementHistory.class);
 
         if (ev.getType() == TileEvent.PLACEMENT) {
             if (p.x == left) --left;

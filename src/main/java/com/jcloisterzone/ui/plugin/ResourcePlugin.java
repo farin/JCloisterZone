@@ -25,6 +25,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -124,6 +125,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     private Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+        if (Castle.class.equals(featureClass)) {
+            featureClass = City.class;
+        }
         Area area = pluginGeometry.getArea(tile, featureClass, loc);
         if (area == null) {
             area  = defaultGeometry.getArea(tile, featureClass, loc);

@@ -160,11 +160,17 @@ public class CastleCapability extends Capability {
     }
 
     public Castle convertCityToCastle(Position pos, Location loc) {
+        return convertCityToCastle(pos, loc, false);
+    }
+
+    private Castle convertCityToCastle(Position pos, Location loc, boolean loadFromSnaphot) {
         Castle castle1 = replaceCityWithCastle(getBoard().get(pos), loc);
         Castle castle2 = replaceCityWithCastle(getBoard().get(pos.add(loc)), loc.rev());
         castle1.getEdges()[0] = castle2;
         castle2.getEdges()[0] = castle1;
-        newCastles.add(castle1.getMaster());
+        if (!loadFromSnaphot) {
+            newCastles.add(castle1.getMaster());
+        }
         game.post(new CastleDeployedEvent(game.getActivePlayer(), castle1, castle2));
         return castle1.getMaster();
     }
@@ -264,7 +270,7 @@ public class CastleCapability extends Capability {
             Element castleEl = (Element) nl.item(i);
             Position pos = XmlUtils.extractPosition(castleEl);
             Location loc = Location.valueOf(castleEl.getAttribute("location"));
-            Castle castle = convertCityToCastle(pos, loc);
+            Castle castle = convertCityToCastle(pos, loc, true);
             boolean isNew = XmlUtils.attributeBoolValue(castleEl, "new");
             boolean isCompleted = XmlUtils.attributeBoolValue(castleEl, "completed");
             if (isNew) {
