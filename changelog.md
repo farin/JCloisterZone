@@ -11,11 +11,13 @@
 * list of connected clients is displayed during game setup (can see unassigned players)
 * chat is available during game setup
 * rules update: wagon moves for Inns & Cathedrals special cases, according to Completely Annotated Rules
-* rules update: wagon cannot move through a fair
+* rules update: wagon can't move through a fair
+* rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn
 * fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
 * fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
+
 
 ## 2.7
 *2014-06-26*

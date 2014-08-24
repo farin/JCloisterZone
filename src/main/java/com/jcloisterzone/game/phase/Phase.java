@@ -12,7 +12,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -51,11 +50,15 @@ public abstract class Phase implements RmiProxy {
     }
 
     public void next() {
-        game.setPhase(defaultNext);
+        next(defaultNext);
     }
 
     public void next(Class<? extends Phase> phaseClass) {
-        game.setPhase(game.getPhases().get(phaseClass));
+        next(game.getPhases().get(phaseClass));
+    }
+
+    public void next(Phase phase) {
+        game.setPhase(phase);
     }
 
     public void enter() { }

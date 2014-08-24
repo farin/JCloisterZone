@@ -9,20 +9,26 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.FlierDiceMessage;
 
 public class PhantomPhase extends Phase {
 
     private final TowerCapability towerCap;
+    private final FlierCapability flierCap;
 
     public PhantomPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
+        flierCap = game.getCapability(FlierCapability.class);
     }
 
     @Override
@@ -35,6 +41,7 @@ public class PhantomPhase extends Phase {
         enter(); //recompute available actions
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void enter() {
         //TODO what about pay ransom for phantom now?
@@ -43,12 +50,15 @@ public class PhantomPhase extends Phase {
             return;
         }
         MeepleAction phantomAction = new MeepleAction(Phantom.class);
-        List<MeepleAction> actions = Collections.singletonList(phantomAction);
-        phantomAction.addAll(game.prepareFollowerLocations());
-        Set<FeaturePointer> commonSites = game.prepareFollowerLocations();
+        List actions = Collections.singletonList(phantomAction);
+        Set<FeaturePointer> followerLocations = game.prepareFollowerLocations();
+        phantomAction.addAll(followerLocations);
 
         if (towerCap != null) {
             towerCap.prepareTowerFollowerDeploy(actions);
+        }
+        if (flierCap != null) {
+            flierCap.prepareFlier(actions, false);
         }
 
         if (phantomAction.isEmpty()) {
@@ -71,6 +81,11 @@ public class PhantomPhase extends Phase {
     @Override
     public void pass() {
         next();
+    }
+
+    @WsSubscribe
+    public void handleFlierDice(FlierDiceMessage msg) {
+        game.getPhases().getInstance(ActionPhase.class).handleFlierDice(msg);
     }
 
 }

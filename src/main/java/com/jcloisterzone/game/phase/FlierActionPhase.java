@@ -11,6 +11,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
 
@@ -64,8 +65,14 @@ public class FlierActionPhase extends Phase {
 
     @Override
     public void next() {
-        flierCap.setFlierDistance(null, 0);
-        super.next();
+        boolean isPhantom = Phantom.class.equals(flierCap.getMeepleType());
+        flierCap.setFlierDistance(null, 0); //resets meepleType
+        if (isPhantom) {
+            PhantomPhase pp = game.getPhases().getInstance(PhantomPhase.class);
+            super.next(pp.getDefaultNext());
+        } else {
+            super.next();
+        }
     }
 
     @Override
