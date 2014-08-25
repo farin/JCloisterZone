@@ -13,12 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
@@ -41,7 +38,6 @@ import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
-import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 
@@ -71,7 +67,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private double cx = 0.0, cy = 0.0;
     private MoveCenterAnimation moveAnimation;
 
-    private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
+    private List<GridLayer> layers = new ArrayList<GridLayer>();
     private String errorMessage;
     //private String hintMessage;
 
@@ -355,63 +351,59 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         moveCenterTo(cx, cy); //re-check center constraints
     }
 
-    public void showRecentHistory() {
-        Collection<Tile> tiles = client.getGame().getBoard().getAllTiles();
-        addLayer(new PlacementHistory(this, tiles));
+
+    void addLayer(GridLayer layer) {
+       addLayer(layer, true);
     }
 
-    public void addLayer(GridLayer layer) {
-        assert layer != null;
-        synchronized (layers) {
-            ListIterator<GridLayer> iter = layers.listIterator();
-            while(iter.hasNext()) {
-                GridLayer sl = iter.next();
-                if (GridLayer.Z_INDEX_COMPARATOR.compare(layer, sl) <= 0) {
-                    iter.previous();
-                    break;
-                }
-            }
-            iter.add(layer);
+    void addLayer(GridLayer layer, boolean visible) {
+        layers.add(layer);
+        if (visible) {
+            layer.onShow();
         }
-        layer.layerAdded();
+    }
+
+    public void showLayer(GridLayer layer) {
+        layer.onShow();
         repaint();
     }
 
-    public void removeLayer(GridLayer layer) {
-        layers.remove(layer);
-        layer.layerRemoved();
-        repaint();
-    }
-
-    public void removeLayer(Class<? extends GridLayer> type) {
-        Iterator<GridLayer> iter = layers.iterator();
-        while(iter.hasNext()) {
-            GridLayer layer = iter.next();
-            if (type.isInstance(layer)) {
-                iter.remove();
-                layer.layerRemoved();
+    public void showLayer(Class<? extends GridLayer> layerType) {
+        for (GridLayer layer : layers) {
+            if (layerType.isInstance(layer)) {
+                layer.onShow();
             }
         }
         repaint();
     }
 
-    //TODO ok
+    public void hideLayer(GridLayer layer) {
+        layer.onHide();
+        repaint();
+    }
+
+    public void hideLayer(Class<? extends GridLayer> layerType) {
+        for (GridLayer layer : layers) {
+            if (layerType.isInstance(layer)) {
+                layer.onHide();
+            }
+        }
+        repaint();
+    }
+
     @SuppressWarnings("unchecked")
-    synchronized
-    public <T extends GridLayer> T findDecoration(Class<T> type) {
-        synchronized (layers) {
-            for (GridLayer layer : layers) {
-                if (type.isInstance(layer)) {
-                    return (T) layer;
-                }
-            }
-        }
-        return null;
-    }
-
-    public boolean containsDecoration(Class<? extends GridLayer> type) {
+    public <T extends GridLayer> T findLayer(Class<T> type) {
         for (GridLayer layer : layers) {
             if (type.isInstance(layer)) {
+                return (T) layer;
+            }
+        }
+        throw new NoSuchElementException("Layer " + type.toString() + " doesn't exist.");
+    }
+
+    public boolean isLayerVisible(Class<? extends GridLayer> type) {
+        for (GridLayer layer : layers) {
+            if (layer.isVisible() && type.isInstance(layer)) {
                 return true;
             }
         }
@@ -419,9 +411,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void clearActionDecorations() {
-        removeLayer(AbstractAreaLayer.class);
-        removeLayer(TileActionLayer.class);
-        removeLayer(AbbeyPlacementLayer.class);
+        hideLayer(AbstractAreaLayer.class);
+        hideLayer(TileActionLayer.class);
+        hideLayer(AbbeyPlacementLayer.class);
     }
 
     // delegated UI methods
@@ -430,8 +422,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         Tile tile = ev.getTile();
         Position p = ev.getPosition();
 
-        removeLayer(AbstractTilePlacementLayer.class);
-        removeLayer(PlacementHistory.class);
+        hideLayer(AbstractTilePlacementLayer.class);
 
         if (ev.getType() == TileEvent.PLACEMENT) {
             if (p.x == left) --left;
@@ -448,10 +439,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         } else if (ev.getType() == TileEvent.REMOVE) {
             tileLayer.tileRemoved(tile);
-        }
-
-        if (client.isShowHistory()) {
-            showRecentHistory();
         }
         repaint();
     }
@@ -515,12 +502,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //paintGrid(g2);
 
         //paint layers
-        synchronized (layers) {
-            for (GridLayer layer : layers) {
+
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
                 layer.paint(g2);
-//                profile(layer.getClass().getSimpleName());
             }
+//          profile(layer.getClass().getSimpleName());
         }
+
 
         g2.setTransform(origTransform);
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);

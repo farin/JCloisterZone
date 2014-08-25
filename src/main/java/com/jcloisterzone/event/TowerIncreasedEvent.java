@@ -20,10 +20,10 @@ public class TowerIncreasedEvent extends PlayEvent implements Undoable {
     public int getCaptureRange() {
         return captureRange;
     }
-    
+
     public Position getPosition() {
-		return position;
-	}
+        return position;
+    }
 
     @Override
     public void undo(Game game) {
@@ -32,6 +32,7 @@ public class TowerIncreasedEvent extends PlayEvent implements Undoable {
         tile.getTower().setHeight(tile.getTower().getHeight() - 1);
 
         TowerCapability cap = game.getCapability(TowerCapability.class);
+        cap.setLastIncreasedTower(null);
         cap.setTowerPieces(getPlayer(), cap.getTowerPieces(getPlayer()) + 1);
     }
 }

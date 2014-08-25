@@ -20,6 +20,7 @@ import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 
 public class ActionPanel extends FakeComponent implements RegionMouseListener, ForwardBackwardListener {
 
+    public static final int FAKE_ACTION_SIZE = 62;
     public static final int LINE_HEIGHT = 30;
     public static final int PADDING = 3;
     public static final int LEFT_MARGIN = 10;
@@ -32,6 +33,9 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     private Image[] selected, deselected;
     private int imgOffset = 0;
     private boolean refreshImages, refreshMouseRegions;
+
+    private String fakeAction;
+    private Image fakeActionImage;
 
     public ActionPanel(Client client) {
         super(client);
@@ -105,8 +109,11 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         this.selectedActionIndex = -1;
         refreshImages = true;
         refreshMouseRegions = true;
+        fakeAction = null;
         repaint();
     }
+
+
 
     public void forward() {
         if (selectedActionIndex != -1) getSelectedAction().forward();
@@ -150,6 +157,12 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         g2.setColor(ControlPanel.PLAYER_BG_COLOR);
         g2.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 
+        int x = LEFT_MARGIN;
+
+        if (fakeActionImage != null) {
+            g2.drawImage(fakeActionImage, x, ((LINE_HEIGHT-FAKE_ACTION_SIZE) / 2)+imgOffset, FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, null);
+        }
+
         if (actions == null || actions.length == 0) return;
 
         //possible race condition - (but AtomBoolean cannot be used, too slow for painting)
@@ -162,11 +175,10 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
             doRefreshImageCache();
         }
 
-        int x = LEFT_MARGIN;
-
         if (refreshMouseRegions) {
             getMouseRegions().clear();
         }
+
         for (int i = 0; i < actions.length; i++) {
             boolean active = (i == selectedActionIndex);
 
@@ -202,4 +214,20 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
         client.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
+
+    public String getFakeAction() {
+        return fakeAction;
+    }
+
+    public void setFakeAction(String fakeAction) {
+        this.fakeAction = fakeAction;
+        if (fakeAction == null) {
+            fakeActionImage = null;
+        } else {
+            fakeActionImage = client.getFigureTheme().getLayeredImage("actions/"+fakeAction, null).getScaledInstance(FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, Image.SCALE_SMOOTH);
+        }
+        repaint();
+    }
+
+
 }

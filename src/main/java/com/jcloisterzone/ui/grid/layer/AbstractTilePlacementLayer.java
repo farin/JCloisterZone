@@ -23,14 +23,13 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     private Image previewIcon;
 
 
-    public AbstractTilePlacementLayer(GridPanel gridPanel, Set<Position> positions) {
+    public AbstractTilePlacementLayer(GridPanel gridPanel) {
         super(gridPanel);
-        availablePositions = positions;
     }
 
-    @Override
-    public int getZIndex() {
-        return 3;
+
+    public void setAvailablePositions(Set<Position> availablePositions) {
+        this.availablePositions = availablePositions;
     }
 
     public Position getPreviewPosition() {
@@ -42,7 +41,17 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
 
     @Override
+    public void onHide() {
+        super.onHide();
+        previewIcon = null;
+        availablePositions = null;
+        previewPosition = null;
+    }
+
+
+    @Override
     public void paint(Graphics2D g2) {
+        if (availablePositions == null) return;
         int borderSize = getSquareSize() - 4,
             shift = 2,
             thickness = borderSize/14;

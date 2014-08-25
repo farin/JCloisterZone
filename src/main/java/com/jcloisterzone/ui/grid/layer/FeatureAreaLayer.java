@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.geom.Area;
 import java.util.Map;
 import java.util.Set;
@@ -23,19 +21,30 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
-import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
-public class FeatureAreaLayer extends AbstractAreaLayer {
+public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<SelectFeatureAction> {
 
-    private final SelectFeatureAction action;
+    private SelectFeatureAction action;
     private boolean abbotOption = false;
 
-    public FeatureAreaLayer(GridPanel gridPanel, SelectFeatureAction action) {
+    public FeatureAreaLayer(GridPanel gridPanel) {
         super(gridPanel);
+    }
+
+    @Override
+    public void setAction(SelectFeatureAction action) {
         this.action = action;
+    }
+
+    @Override
+    public SelectFeatureAction getAction() {
+        return action;
     }
 
     protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
@@ -65,8 +74,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
 
     private boolean confirmTowerPlacement(Position pos) {
         int result;
-        Player activePlayer = getClient().getGame().getActivePlayer();
-        if (getClient().getGame().getCapability(TowerCapability.class).getTowerPieces(activePlayer) > 0) {
+        Player activePlayer = getGame().getActivePlayer();
+        if (getGame().getCapability(TowerCapability.class).getTowerPieces(activePlayer) > 0) {
             String options[] = {
                 _("Confirm follower placement"),
                 _("Cancel"),
@@ -91,7 +100,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
             for (PlayerAction<?> action : getClient().getControlPanel().getActionPanel().getActions()) {
                 if (action instanceof TowerPieceAction) {
                     ((TowerPieceAction) action).perform(getClient().getServer(), pos);
-                    gridPanel.removeLayer(this);
+                    gridPanel.hideLayer(this);
                     return false;
                 }
             }

@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * @author Roman Krejcik
  */
-public class Position implements Serializable {
+public class Position implements Serializable, Comparable<Position> {
 
     public final int x;
     public final int y;
@@ -97,5 +97,15 @@ public class Position implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public int compareTo(Position o) {
+        if (y == o.y) {
+            return x - o.x;
+        }
+        return y - o.y;
+    }
+
+
 
 }

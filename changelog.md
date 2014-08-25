@@ -4,18 +4,21 @@
 *appears in next release*
 
 ## 3.0
-*2014-08-17*
 
 * network protocol changed completely
 * German Monasteries expansion
 * list of connected clients is displayed during game setup (can see unassigned players)
 * chat is available during game setup
+* more intuitive display of followers on and "under" bridges - bridge with it's follower always above other followers
 * rules update: wagon moves for Inns & Cathedrals special cases, according to Completely Annotated Rules
-* rules update: wagon cannot move through a fair
+* rules update: wagon can't move through a fair
+* rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn
+* rules update: wagon can move to/from abbey
 * fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
 * fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
+
 
 ## 2.7
 *2014-06-26*

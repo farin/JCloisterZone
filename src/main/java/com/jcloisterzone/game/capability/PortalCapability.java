@@ -2,13 +2,16 @@ package com.jcloisterzone.game.capability;
 
 import java.util.Set;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.SnapshotCorruptedException;
 
 public class PortalCapability extends Capability {
 
@@ -67,5 +70,17 @@ public class PortalCapability extends Capability {
         this.portalUsed = portalUsed;
     }
 
+    @Override
+    public void saveToSnapshot(Document doc, Element node) {
+        if (portalUsed) {
+            node.setAttribute("portalUsed", "true");
+        }
+    }
 
+    @Override
+    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+        if (XmlUtils.attributeBoolValue(node, "portalUsed")) {
+            portalUsed = true;
+        }
+    }
 }

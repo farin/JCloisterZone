@@ -18,7 +18,7 @@ import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ActionPanel;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 
 public class TilePlacementAction extends PlayerAction<TilePlacement> {
@@ -79,8 +79,8 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        return new TilePlacementLayer(client.getGridPanel(), this);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TilePlacementLayer.class;
     }
 
     @Override

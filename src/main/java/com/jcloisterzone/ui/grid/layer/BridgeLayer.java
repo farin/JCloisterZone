@@ -20,12 +20,18 @@ public class BridgeLayer extends AbstractGridLayer {
     private static final AlphaComposite BRIDGE_FILL_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
     //private static final AlphaComposite BRIDGE_STROKE_COMPOSITE = AlphaComposite.SrcOver;
 
+    //TODO store direct images as in Meeple layer???
+    private Map<Tile, Location> bridges = new HashMap<>();
+
+    private MeepleLayer meepleLayer;
+
     public BridgeLayer(GridPanel gridPanel) {
         super(gridPanel);
     }
 
-    //TODO store direct images as in Meeple layer???
-    private Map<Tile, Location> bridges = new HashMap<>();
+
+
+
 
     @Override
     public void paint(Graphics2D g2) {
@@ -50,16 +56,22 @@ public class BridgeLayer extends AbstractGridLayer {
 //		g2.setStroke(oldStroke);
         g2.setComposite(oldComposite);
 
+        meepleLayer.paintMeeplesOnBridges(g2);
+
     }
 
-    @Override
-    public int getZIndex() {
-        return 45;
-    }
 
     public void bridgeDeployed(Position pos, Location loc) {
-        Tile tile = getClient().getGame().getBoard().get(pos);
+        Tile tile = getGame().getBoard().get(pos);
         bridges.put(tile, loc);
     }
 
+    public MeepleLayer getMeepleLayer() {
+        return meepleLayer;
+    }
+
+
+    public void setMeepleLayer(MeepleLayer meepleLayer) {
+        this.meepleLayer = meepleLayer;
+    }
 }

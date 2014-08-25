@@ -9,19 +9,14 @@ import com.google.common.collect.Iterables;
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
@@ -90,8 +85,6 @@ public class ActionPhase extends Phase {
         }
     }
 
-   
-
     @Override
     public void placeTowerPiece(Position p) {
         towerCap.placeTowerPiece(getActivePlayer(), p);
@@ -149,7 +142,7 @@ public class ActionPhase extends Phase {
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         m.deployUnoccupied(getBoard().get(p), loc);
-        if (!p.equals(getTile().getPosition()) && portalCap != null) {
+        if (portalCap != null && loc != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !p.equals(getTile().getPosition())) {
             //magic gate usage
             portalCap.setPortalUsed(true);
         }
@@ -166,6 +159,7 @@ public class ActionPhase extends Phase {
 
     @WsSubscribe
     public void handleFlierDice(FlierDiceMessage msg) {
+        flierCap.setFlierUsed(true);
         flierCap.setFlierDistance(msg.getMeepleTypeClass(), msg.getDistance());
         game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), msg.getDistance()));
         next(FlierActionPhase.class);

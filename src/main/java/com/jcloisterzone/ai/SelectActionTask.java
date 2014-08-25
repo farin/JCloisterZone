@@ -29,6 +29,7 @@ import com.jcloisterzone.ai.choice.PassChoice;
 import com.jcloisterzone.ai.choice.TilePlacementChoice;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -212,8 +213,22 @@ public class SelectActionTask implements Runnable {
     }
 
     protected void handleTilePlacementAction(SavePoint savePoint, TilePlacementAction action) {
-        for (TilePlacement tp : action.getOptions()) {
-            queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+        TileSymmetry sym = action.getTile().getSymmetry();
+        //do not symmetric tiles
+        if (sym == TileSymmetry.S4) {
+            List<TilePlacement> options = new ArrayList<>(action.getOptions());
+            Collections.sort(options);
+            int size = options.size();
+            for (int i = 0; i < size; i++) {
+                TilePlacement tp = options.get(i);
+                if (i == 0 || !options.get(i-1).getPosition().equals(tp.getPosition())) {
+                    queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+                }
+            }
+        } else {
+            for (TilePlacement tp : action.getOptions()) {
+                queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+            }
         }
     }
 

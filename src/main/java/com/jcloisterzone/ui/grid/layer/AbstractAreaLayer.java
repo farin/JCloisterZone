@@ -28,6 +28,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     private static final AlphaComposite AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
     private static final AlphaComposite FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .75f);
 
+    private Player player;
     private Map<Location, Area> areas;
     private Location selectedLocation;
     private Position selectedPosition;
@@ -43,6 +44,19 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         if (debugConfig != null && "figure".equals(debugConfig.getArea_highlight())) {
             figureHighlight = true;
         }
+    }
+
+    @Override
+    public void onShow() {
+        super.onShow();
+        player = getGame().getActivePlayer();
+    }
+
+    @Override
+    public void onHide() {
+        super.onHide();
+        player = null;
+        cleanAreas();
     }
 
     private class MoveTrackingGridMouseAdapter extends GridMouseAdapter {
@@ -154,7 +168,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(selectedPosition);
         ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
-        Player p = getClient().getGame().getActivePlayer();
+        Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
         Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
@@ -165,17 +179,11 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     /** standard highlight **/
     private void paintAreaHighlight(Graphics2D g2) {
-        Player p = getClient().getGame().getActivePlayer();
-        if (p != null) { //sync issue
+        Player p = getGame().getActivePlayer();
+        if (p.equals(player)) { //sync issue
             g2.setColor(p.getColors().getMeepleColor());
             g2.setComposite(AREA_ALPHA_COMPOSITE);
             g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
         }
     }
-
-    @Override
-    public int getZIndex() {
-        return 100;
-    }
-
 }

@@ -11,9 +11,10 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileSymmetry;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class TilePlacementLayer extends AbstractTilePlacementLayer {
+public class TilePlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<TilePlacementAction> {
 
     private TilePlacementAction action;
 
@@ -21,9 +22,24 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer {
     private Rotation previewRotation;
     private boolean allowedRotation;
 
-    public TilePlacementLayer(GridPanel gridPanel, TilePlacementAction action) {
-        super(gridPanel, action.groupByPosition().keySet());
+    public TilePlacementLayer(GridPanel gridPanel) {
+        super(gridPanel);
+    }
+
+    @Override
+    public void setAction(TilePlacementAction action) {
         this.action = action;
+        if (action == null) {
+            setAvailablePositions(null);
+            realRotation = null;
+        } else {
+            setAvailablePositions(action.groupByPosition().keySet());
+        };
+    }
+
+    @Override
+    public TilePlacementAction getAction() {
+        return null;
     }
 
     @Override

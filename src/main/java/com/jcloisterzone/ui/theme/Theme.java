@@ -76,7 +76,7 @@ public abstract class Theme {
         return Toolkit.getDefaultToolkit().getImage(getResource(relativePath));
     }
 
-    protected Image getLayeredImage(String name, Color color) {
+    public Image getLayeredImage(String name, Color color) {
         String key;
         if (color == null) {
             key = name;

@@ -26,11 +26,4 @@ public class AnimationLayer extends AbstractGridLayer {
             if (a instanceof ScoreAnimation) a.paint(this, g2);
         }
     }
-
-    @Override
-    public int getZIndex() {
-        return 800;
-    }
-
-
 }

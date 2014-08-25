@@ -26,6 +26,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
+    protected boolean visible;
     protected final GridPanel gridPanel;
     private MouseInputListener mouseListener;
 
@@ -57,8 +58,13 @@ public abstract class AbstractGridLayer implements GridLayer {
         return new GridMouseAdapter(gridPanel, listener);
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
     @Override
-    public void layerAdded() {
+    public void onShow() {
+        visible = true;
         if (this instanceof GridMouseListener && getClient().isClientActive()) {
             mouseListener = new DragInsensitiveMouseClickListener(createGridMouserAdapter((GridMouseListener) this));
             gridPanel.addMouseListener(mouseListener);
@@ -68,7 +74,8 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     @Override
-    public void layerRemoved() {
+    public void onHide() {
+        visible = false;
         if (mouseListener != null) {
             gridPanel.removeMouseMotionListener(mouseListener);
             gridPanel.removeMouseListener(mouseListener);

@@ -23,7 +23,7 @@ public class TileLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g2) {
         //TODO nice shadow
-        if (!getClient().getGridPanel().containsDecoration(AbstractTilePlacementLayer.class)) {
+        if (!getClient().getGridPanel().isLayerVisible(AbstractTilePlacementLayer.class)) {
             g2.setColor(Color.WHITE);
             int squareSize = getSquareSize(),
                 thickness = squareSize / 11;
@@ -42,11 +42,6 @@ public class TileLayer extends AbstractGridLayer {
                 g2.drawImage(img, getAffineTransform(img.getWidth(null), tile.getPosition(), tile.getRotation()), null);
             }
         }
-    }
-
-    @Override
-    public int getZIndex() {
-        return 2;
     }
 
     public void tilePlaced(Tile tile) {

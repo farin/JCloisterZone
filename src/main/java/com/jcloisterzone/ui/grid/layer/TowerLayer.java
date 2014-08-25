@@ -34,11 +34,6 @@ public class TowerLayer extends AbstractGridLayer {
         }
     }
 
-    @Override
-    public int getZIndex() {
-        return 5;
-    }
-
     public void setTowerHeight(Position p, int towerHeight) {
         heights.put(p, towerHeight);
     }

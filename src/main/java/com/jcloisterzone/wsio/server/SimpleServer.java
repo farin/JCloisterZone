@@ -319,9 +319,17 @@ public class SimpleServer extends WebSocketServer  {
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        for (ServerPlayerSlot slot : slots) {
-            if (slot.getSupportedExpansions() == null) continue;
-            game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+        if (snapshot == null) {
+            for (ServerPlayerSlot slot : slots) {
+                if (!slot.isOccupied()) continue;
+                if (slot.getSupportedExpansions() != null) {
+                    game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+                }
+
+                if (game.hasRule(CustomRule.RANDOM_SEATING_ORDER)) {
+                    slot.setSerial(random.nextInt());
+                }
+            }
         }
         gameStarted = true;
         broadcast(newGameMessage());

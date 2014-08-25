@@ -9,22 +9,22 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class BarnAreaLayer extends AbstractAreaLayer {
+public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<BarnAction> {
 
-    final BarnAction action;
+    private BarnAction action;
 
-    public BarnAreaLayer(GridPanel gridPanel, BarnAction action) {
+    public BarnAreaLayer(GridPanel gridPanel) {
         super(gridPanel);
-        this.action = action;
     }
 
     @Override
     protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
         //quick fix
-        if (getClient().getGame().getCurrentTile().getPosition().equals(p)) {
-        	Set<Location> locations = action.getLocations(p);
+        if (getGame().getCurrentTile().getPosition().equals(p)) {
+            Set<Location> locations = action.getLocations(p);
             return getClient().getResourceManager().getBarnTileAreas(tile, getSquareSize(), locations);
         }
         return null;
@@ -33,6 +33,17 @@ public class BarnAreaLayer extends AbstractAreaLayer {
     @Override
     protected void performAction(Position pos, Location selected) {
         action.perform(getClient().getServer(), new FeaturePointer(pos, selected));
+    }
+
+    @Override
+    public void setAction(BarnAction action) {
+        this.action = action;
+
+    }
+
+    @Override
+    public BarnAction getAction() {
+        return action;
     }
 
 }

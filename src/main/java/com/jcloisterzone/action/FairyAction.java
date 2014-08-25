@@ -1,10 +1,8 @@
 package com.jcloisterzone.action;
 
-import java.awt.Image;
-
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 
 public class FairyAction extends SelectTileAction {
@@ -24,9 +22,8 @@ public class FairyAction extends SelectTileAction {
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        Image gd = client.getControlsTheme().getActionDecoration("fairy");
-        return new TileActionLayer(client.getGridPanel(), this, gd);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TileActionLayer.class;
     }
 
     @Override

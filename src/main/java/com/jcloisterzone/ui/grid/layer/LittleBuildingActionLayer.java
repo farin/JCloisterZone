@@ -7,25 +7,35 @@ import java.util.Map;
 
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.LittleBuildingAction;
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.theme.FigureTheme;
 
-public class LittleBuildingActionLayer extends AbstractTileLayer {
+public class LittleBuildingActionLayer extends AbstractTileLayer implements ActionLayer<LittleBuildingAction> {
 
     private Map<LittleBuilding, Image> images = new HashMap<>();
     private LittleBuildingAction action;
 
-    public LittleBuildingActionLayer(GridPanel gridPanel, Position pos, LittleBuildingAction action) {
-        super(gridPanel, pos);
-        this.action = action;
+    public LittleBuildingActionLayer(GridPanel gridPanel) {
+        super(gridPanel);
 
         FigureTheme theme = getClient().getFigureTheme();
-        for (LittleBuilding lb : action.getOptions()) {
+        for (LittleBuilding lb : LittleBuilding.values()) {
             //System.err.println("lb-"+lb.name().toLowerCase());
             Image img = theme.getNeutralImage("lb-"+lb.name().toLowerCase());
             images.put(lb, img);
         }
+    }
+
+    @Override
+    public void setAction(LittleBuildingAction action) {
+        this.action = action;
+        setPosition(action == null ? null : getGame().getCurrentTile().getPosition());
+    }
+
+    @Override
+    public LittleBuildingAction getAction() {
+        return action;
     }
 
     @Override
@@ -42,10 +52,4 @@ public class LittleBuildingActionLayer extends AbstractTileLayer {
         }
 
     }
-
-    @Override
-    public int getZIndex() {
-        return 100;
-    }
-
 }
