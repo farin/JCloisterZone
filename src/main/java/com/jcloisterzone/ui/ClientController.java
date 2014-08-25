@@ -259,6 +259,7 @@ public class ClientController  {
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
         client.clearActions();
+        client.getControlPanel().getActionPanel().setFakeAction("dragonmove");
         DragonLayer dragonDecoration = gamePanel.getGridPanel().findLayer(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
         gamePanel.getGridPanel().repaint();

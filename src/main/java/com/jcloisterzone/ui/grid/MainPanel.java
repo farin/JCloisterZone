@@ -177,7 +177,7 @@ public class MainPanel extends JPanel {
         animationService.setGridPanel(gridPanel);
 
         placementHistoryLayer = new PlacementHistory(gridPanel, game.getBoard().getAllTiles());
-        gridPanel.addLayer(placementHistoryLayer);
+        gridPanel.addLayer(placementHistoryLayer, false);
 
         add(gridPanel);
         setVisible(true);
