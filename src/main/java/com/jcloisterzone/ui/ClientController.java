@@ -240,7 +240,7 @@ public class ClientController  {
         if (ev.getFeature() == null) {
             gamePanel.getMainPanel().scored(ev.getPosition(), ev.getPlayer(), ev.getLabel(), ev.isFinal());
         } else {
-            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getLabel(), ev.getMeeple(), ev.isFinal());
+            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
         }
         gamePanel.getMainPanel().repaint(); // players only
     }

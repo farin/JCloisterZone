@@ -266,7 +266,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                 groupedByType = new HashMap<>();
                 for (Player opponent : game.getAllPlayers()) {
                     if (opponent == player) continue;
-                    boolean isOpponentActive = game.getActivePlayer() == opponent;
+                    boolean isOpponentActive = client.isClientActive(opponent);
                     boolean clickable = isOpponentActive && !towerCap.isRansomPaidThisTurn();
                     for (Follower f : capturedFigures) {
                         if (f.getPlayer() == opponent) {

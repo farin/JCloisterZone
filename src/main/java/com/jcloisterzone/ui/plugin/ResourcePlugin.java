@@ -113,7 +113,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (!containsTile(tile.getId())) return null;
         if (type.equals(Barn.class)) return null;
         Feature piece = tile.getFeature(loc);
-        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
+        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tile, piece.getClass(), loc);
         if (point == null) {
             point = defaultGeometry.getMeeplePlacement(tile, piece.getClass(), piece.getLocation());
         }

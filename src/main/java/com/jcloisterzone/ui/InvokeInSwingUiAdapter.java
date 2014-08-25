@@ -9,7 +9,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.figure.Meeple;
 
 
@@ -35,19 +34,10 @@ public class InvokeInSwingUiAdapter {
 
     private Event freezeEvent(Event ev) {
         if (ev instanceof MeepleEvent) {
-        	//TODO is it really needed with new meeple events?
-        	MeepleEvent mev = (MeepleEvent) ev;
+            //TODO is it really needed with new meeple events?
+            MeepleEvent mev = (MeepleEvent) ev;
             Meeple m = mev.getMeeple();
             return new MeepleEvent((Meeple) m.clone(), mev.getFrom(), mev.getTo());
-        }
-        if (ev instanceof ScoreEvent) {
-            ScoreEvent sev = (ScoreEvent) ev;
-            if (sev.getMeeple() != null) {
-                Meeple m = sev.getMeeple();
-                ScoreEvent copy = new ScoreEvent(sev.getFeature(), sev.getPoints(), sev.getCategory(), (Meeple) m.clone());
-                copy.setFinal(sev.isFinal());
-                return copy;
-            }
         }
         return ev;
     }

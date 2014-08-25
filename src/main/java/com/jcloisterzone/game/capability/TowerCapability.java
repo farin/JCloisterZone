@@ -199,6 +199,10 @@ public final class TowerCapability extends Capability {
         return lastIncreasedTower;
     }
 
+    public void setLastIncreasedTower(Position lastIncreasedTower) {
+        this.lastIncreasedTower = lastIncreasedTower;
+    }
+
     public boolean hasImprisonedFollower(Player followerOwner) {
         for (Follower m : followerOwner.getFollowers()) {
             if (m.getLocation() == Location.PRISON) return true;

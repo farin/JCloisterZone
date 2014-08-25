@@ -235,15 +235,15 @@ public class MainPanel extends JPanel {
         return duration == null ? 10 : Math.max(duration, 1);
     }
 
-    public void scored(Feature scoreable, String points, Meeple m, boolean finalScoring) {
+    public void scored(Feature scoreable, Player player, String points, Class<? extends Meeple> meepleType, boolean finalScoring) {
         Tile tile = scoreable.getTile();
         Position pos = tile.getPosition();
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, m.getClass(), scoreable.getLocation());
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, meepleType, scoreable.getLocation());
         animationService.registerAnimation(new ScoreAnimation(
             pos,
             points,
             offset,
-            m.getPlayer().getColors().getMeepleColor(),
+            player.getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
     }

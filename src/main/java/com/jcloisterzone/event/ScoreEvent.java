@@ -17,7 +17,7 @@ public class ScoreEvent extends PlayEvent implements Undoable {
 
     private final int points;
     private final PointCategory category;
-    private final Meeple meeple;
+    private final Class<? extends Meeple> meepleType;
 
     private String label;
     private boolean isFinal;
@@ -28,14 +28,14 @@ public class ScoreEvent extends PlayEvent implements Undoable {
         this.position = feature.getTile().getPosition();
         this.points = points;
         this.category = category;
-        this.meeple = meeple;
+        this.meepleType = meeple.getClass();
     }
 
     public ScoreEvent(Position position, Player player, int points, PointCategory category) {
         super(player);
         this.position = position;
         this.feature = null;
-        this.meeple = null;
+        this.meepleType = null;
         this.points = points;
         this.category = category;
     }
@@ -60,8 +60,8 @@ public class ScoreEvent extends PlayEvent implements Undoable {
         return label == null ? points + "" : label;
     }
 
-    public Meeple getMeeple() {
-        return meeple;
+    public Class<? extends Meeple> getMeepleType() {
+        return meepleType;
     }
 
     public PointCategory getCategory() {
