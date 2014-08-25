@@ -320,6 +320,7 @@ public class SimpleServer extends WebSocketServer  {
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         if (snapshot == null) {
             for (ServerPlayerSlot slot : slots) {
+                if (!slot.isOccupied()) continue;
                 if (slot.getSupportedExpansions() != null) {
                     game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
                 }

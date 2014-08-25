@@ -15,6 +15,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
@@ -53,13 +54,24 @@ public class MeepleLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g) {
         int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
-        for (PositionedImage mi : images) {
-            paintPositionedImage(g, mi, boxSize );
+        for (MeeplePositionedImage mi : images) {
+            if (!mi.bridgePlacement) {
+                paintPositionedImage(g, mi, boxSize);
+            }
         }
         for (PositionedImage mi : permanentImages) {
             paintPositionedImage(g, mi, boxSize );
         }
 
+    }
+
+    public void paintMeeplesOnBridges(Graphics2D g) {
+        int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
+        for (MeeplePositionedImage mi : images) {
+            if (mi.bridgePlacement) {
+                paintPositionedImage(g, mi, boxSize );
+            }
+        }
     }
 
     @Override
@@ -80,7 +92,7 @@ public class MeepleLayer extends AbstractGridLayer {
         if (fp.getLocation() == Location.ABBOT) {
             image = rotate(image, 90);
         }
-        return new MeeplePositionedImage(type, fp, offset, image);
+        return new MeeplePositionedImage(type, fp, offset, image, feature instanceof Bridge);
     }
 
     private void rearrangeMeeples(FeaturePointer fp) {
@@ -161,12 +173,14 @@ public class MeepleLayer extends AbstractGridLayer {
     private class MeeplePositionedImage extends PositionedImage {
          public final Class<? extends Meeple> meepleType;
          public final Location location;
+         public final boolean bridgePlacement;
          public int order;
 
-         public MeeplePositionedImage(Class<? extends Meeple> meepleType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage) {
+         public MeeplePositionedImage(Class<? extends Meeple> meepleType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
              super(fp.getPosition(), offset, sourceImage);
              this.meepleType = meepleType;
              location = fp.getLocation();
+             this.bridgePlacement = bridgePlacement;
          }
 
          public ImmutablePoint getScaledOffset(int boxSize) {

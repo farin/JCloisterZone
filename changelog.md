@@ -4,12 +4,12 @@
 *appears in next release*
 
 ## 3.0
-*2014-08-17*
 
 * network protocol changed completely
 * German Monasteries expansion
 * list of connected clients is displayed during game setup (can see unassigned players)
 * chat is available during game setup
+* more intuitive display of followers on and "under" bridges - bridge with it's follower always above other followers
 * rules update: wagon moves for Inns & Cathedrals special cases, according to Completely Annotated Rules
 * rules update: wagon can't move through a fair
 * rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn

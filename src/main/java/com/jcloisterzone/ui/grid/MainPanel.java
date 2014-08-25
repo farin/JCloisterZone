@@ -123,10 +123,6 @@ public class MainPanel extends JPanel {
 
         gridPanel.addLayer(farmHintLayer); //zindex 10
 
-        if (game.hasCapability(BridgeCapability.class)) {
-            bridgeLayer = new BridgeLayer(gridPanel);
-            gridPanel.addLayer(bridgeLayer);  //45
-        }
         if (game.hasCapability(CastleCapability.class)) {
             castleLayer = new CastleLayer(gridPanel);
             gridPanel.addLayer(castleLayer); //45
@@ -137,7 +133,15 @@ public class MainPanel extends JPanel {
         }
 
         gridPanel.addLayer(meepleLayer); //zindex 50
+        if (game.hasCapability(BridgeCapability.class)) {
+            bridgeLayer = new BridgeLayer(gridPanel);
+            bridgeLayer.setMeepleLayer(meepleLayer);
+            gridPanel.addLayer(bridgeLayer);
+        }
+
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel), false); //70
+
+
 
         if (game.hasCapability(DragonCapability.class)) {
             gridPanel.addLayer(new DragonAvailableMove(gridPanel), false);
