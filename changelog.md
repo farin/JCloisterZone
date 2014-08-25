@@ -13,6 +13,7 @@
 * rules update: wagon moves for Inns & Cathedrals special cases, according to Completely Annotated Rules
 * rules update: wagon can't move through a fair
 * rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn
+* rules update: wagon can move to/from abbey
 * fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
 * fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
 * fix: loading game resets point statistics

@@ -3,14 +3,17 @@ package com.jcloisterzone.game.phase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
@@ -66,7 +69,7 @@ public class WagonPhase extends Phase {
         Map<Player, Feature> rw = wagonCap.getReturnedWagons();
         while (!rw.isEmpty()) {
             int pi = game.getTurnPlayer().getIndex();
-            while(! rw.containsKey(game.getAllPlayers()[pi])) {
+            while (!rw.containsKey(game.getAllPlayers()[pi])) {
                 pi++;
                 if (pi == game.getAllPlayers().length) pi = 0;
             }
@@ -83,7 +86,18 @@ public class WagonPhase extends Phase {
     }
 
     private List<FeaturePointer> prepareWagonMoves(Feature source) {
-        return source.walk(new FindUnoccupiedNeighbours());
+        if (source.getTile().isAbbeyTile()) {
+            List<FeaturePointer> wagonMoves = new ArrayList<>();
+            for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(source.getTile().getPosition()).entrySet()) {
+                Tile tile = entry.getValue();
+                Feature f = tile.getFeaturePartOf(entry.getKey().rev());
+                if (f == null || f.walk(new IsOccupiedOrCompleted())) continue;
+                wagonMoves.add(new FeaturePointer(tile.getPosition(), f.getLocation()));
+            }
+            return wagonMoves;
+        } else {
+            return source.walk(new FindUnoccupiedNeighbours());
+        }
     }
 
     private class FindUnoccupiedNeighbours implements FeatureVisitor<List<FeaturePointer>> {
@@ -92,6 +106,31 @@ public class WagonPhase extends Phase {
 
         @Override
         public boolean visit(Feature feature) {
+            if (feature instanceof MultiTileFeature) {
+                MultiTileFeature f = (MultiTileFeature) feature;
+                MultiTileFeature[] edges = f.getEdges();
+                for (int i = 0; i < edges.length; i++) {
+                    if (edges[i] == f) { //special value - neigbouring abbey
+                        int j = 0;
+                        for (Location side : Location.sides()) {
+                            if (side.intersect(f.getLocation()) != null) {
+                                if (j == i) {
+                                    //Abbey at side;
+                                    Position target = f.getTile().getPosition().add(side);
+                                    Tile abbeyTile = getBoard().get(target);
+                                    assert abbeyTile.isAbbeyTile();
+                                    if (!abbeyTile.getCloister().walk(new IsOccupiedOrCompleted())) {
+                                        wagonMoves.add(new FeaturePointer(target, Location.CLOISTER));
+                                    }
+                                }
+                                j++;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
                     if (nei.walk(new IsOccupiedOrCompleted())) continue;
