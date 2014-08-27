@@ -21,6 +21,9 @@ public class RuleChangeEvent extends Event {
         return enabled;
     }
 
-
+    @Override
+    public String toString() {
+        return super.toString() + " " + rule.name() + (enabled ? " on" : " off");
+    }
 
 }

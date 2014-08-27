@@ -78,9 +78,8 @@ public class RmiMessage implements WsMessage {
 
     @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder();
-        sb.append("RMI: ").append(method).append("(");
+        sb.append("RMI {\"gameID\": \"").append(gameId).append("\", \"method\": \"").append(method).append("\"} args=[");
         Object[] oargs = (Object[]) decode(args);
         if (oargs != null) {
             for (int i = 0; i < oargs.length; i++) {
@@ -88,7 +87,7 @@ public class RmiMessage implements WsMessage {
                 sb.append(oargs[i].toString());
             }
         }
-        sb.append(")");
+        sb.append("]");
         return sb.toString();
     }
 

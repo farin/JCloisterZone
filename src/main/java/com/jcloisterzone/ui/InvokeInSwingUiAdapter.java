@@ -23,7 +23,7 @@ public class InvokeInSwingUiAdapter {
     }
 
     @Subscribe public void handleAllEvents(Event event) {
-        logger.debug("Event received {}", event);
+        logger.info("event: {}", event);
         final Object freezedEvent = freezeEvent(event);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

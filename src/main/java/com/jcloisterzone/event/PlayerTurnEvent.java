@@ -8,4 +8,9 @@ public class PlayerTurnEvent extends PlayEvent {
         super(player);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " player:" + getPlayer();
+    }
+
 }

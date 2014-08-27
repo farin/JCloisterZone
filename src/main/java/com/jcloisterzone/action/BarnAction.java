@@ -25,7 +25,7 @@ public class BarnAction extends SelectFeatureAction {
 
     @Override
     protected int getSortOrder() {
-        return 9;
+        return 11;
     }
 
     @Override

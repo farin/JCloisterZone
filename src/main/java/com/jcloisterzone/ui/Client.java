@@ -288,7 +288,6 @@ public class Client extends JFrame {
         if (server != null) {
             try {
                 server.stop();
-                Thread.sleep(50); //wait for socket is closed - some ussers have issue close and immediatelly created new
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
@@ -391,7 +390,9 @@ public class Client extends JFrame {
             server.createGame(snapshot);
             server.start();
             try {
-                Thread.sleep(50); //hakc - there is not success handler in WebSocket server
+                //HACK - there is not success handler in WebSocket server
+                //we must wait for start to now connect to 
+                Thread.sleep(50); 
             } catch (InterruptedException e) {
                 //empty
             }

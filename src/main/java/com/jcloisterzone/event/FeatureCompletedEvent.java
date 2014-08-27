@@ -23,4 +23,9 @@ public class FeatureCompletedEvent extends PlayEvent {
         return scoreContent;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " feature:" + feature;
+    }
+
 }

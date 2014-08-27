@@ -18,4 +18,9 @@ public class ClientListChangedEvent extends Event {
     public void setClients(RemoteClient[] clients) {
         this.clients = clients;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + clients;
+    }
 }

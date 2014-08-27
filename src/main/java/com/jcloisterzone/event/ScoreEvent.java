@@ -86,4 +86,10 @@ public class ScoreEvent extends PlayEvent implements Undoable {
             getPlayer().addPoints(-points, category);
         }
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return super.toString() + " feature:"+feature + " position:"+position;
+    }
 }
