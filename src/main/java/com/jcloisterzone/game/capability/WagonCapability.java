@@ -20,59 +20,43 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.TileFeature;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.phase.ScorePhase;
 
 import static com.jcloisterzone.XmlUtils.asLocation;
 
 public class WagonCapability extends Capability {
 
-    private final Map<Player, Feature> returnedWagons = new HashMap<>();
-    private Player wagonPlayer;
+    private final Map<Player, Feature> scoredWagons = new HashMap<>();
 
     public WagonCapability(final Game game) {
         super(game);
     }
 
-    @Override
-    public void handleEvent(Event event) {
-       if (event instanceof MeepleEvent) {
-           undeployed((MeepleEvent) event);
-       }
+    public void wagonScored(Wagon m, Feature feature) {
+        scoredWagons.put(m.getPlayer(), feature);
     }
 
-    private void undeployed(MeepleEvent ev) {
-        Meeple m = ev.getMeeple();
-        if (m instanceof Wagon && ev.getTo() == null && game.getPhase() instanceof ScorePhase) {
-            returnedWagons.put(m.getPlayer(), getBoard().get(ev.getFrom()));
-        }
+    public void removeScoredWagon(Player owner) {
+        scoredWagons.remove(owner);
     }
 
     @Override
     public Object backup() {
-        return new Object[] {
-            wagonPlayer,
-            new HashMap<>(returnedWagons)
-        };
+        return new HashMap<>(scoredWagons);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        wagonPlayer = (Player) a[0];
-        returnedWagons.clear();
-        returnedWagons.putAll((Map<Player, Feature>) a[1]);
+        scoredWagons.clear();
+        scoredWagons.putAll((Map<Player, Feature>) data);
     }
 
     @Override
@@ -80,8 +64,8 @@ public class WagonCapability extends Capability {
         player.addMeeple(new Wagon(game, player));
     }
 
-    public Map<Player, Feature> getReturnedWagons() {
-        return returnedWagons;
+    public Map<Player, Feature> getScoredWagons() {
+        return scoredWagons;
     }
 
     @Override
@@ -106,8 +90,7 @@ public class WagonCapability extends Capability {
             Feature[] neighbouring = new Feature[te.length - 1];
             int ni = 0;
             for (int j = 0; j < te.length; j++) {
-                if (j == i)
-                    continue;
+                if (j == i) continue;
                 neighbouring[ni++] = te[j];
             }
             ((TileFeature) te[i]).addNeighbouring(neighbouring);
@@ -116,8 +99,17 @@ public class WagonCapability extends Capability {
 
     @Override
     public void turnPartCleanUp() {
-        returnedWagons.clear();
-        wagonPlayer = null;
+        scoredWagons.clear();
+    }
+
+    public Player getWagonPlayer() {
+        if (scoredWagons.isEmpty()) return null;
+        int pi = game.getTurnPlayer().getIndex();
+        while (!scoredWagons.containsKey(game.getAllPlayers()[pi])) {
+            pi++;
+            if (pi == game.getAllPlayers().length) pi = 0;
+        }
+        return game.getAllPlayers()[pi];
     }
 
     private Set<FeaturePointer> filterWagonLocations(Set<FeaturePointer> followerOptions) {
@@ -143,16 +135,11 @@ public class WagonCapability extends Capability {
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
-        for (Entry<Player, Feature> rv : returnedWagons.entrySet()) {
+        for (Entry<Player, Feature> rv : scoredWagons.entrySet()) {
             Element el = doc.createElement("wagon");
             el.setAttribute("player", "" + rv.getKey().getIndex());
             el.setAttribute("loc", "" + rv.getValue().getLocation());
             XmlUtils.injectPosition(el, rv.getValue().getTile().getPosition());
-            node.appendChild(el);
-        }
-        if (wagonPlayer != null) {
-            Element el = doc.createElement("wagon-player");
-            el.setAttribute("player", ""+wagonPlayer.getIndex());
             node.appendChild(el);
         }
     }
@@ -166,21 +153,7 @@ public class WagonCapability extends Capability {
             Position pos = XmlUtils.extractPosition(wg);
             int playerIndex = Integer.parseInt(wg.getAttribute("player"));
             Player player = game.getPlayer(playerIndex);
-            returnedWagons.put(player, getBoard().get(pos).getFeature(loc));
-        }
-        nl = node.getElementsByTagName("wagon-player");
-        if (nl.getLength() > 0) {
-            Element el = (Element) nl.item(0);
-            wagonPlayer = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
+            scoredWagons.put(player, getBoard().get(pos).getFeature(loc));
         }
     }
-
-    public Player getWagonPlayer() {
-        return wagonPlayer;
-    }
-
-    public void setWagonPlayer(Player wagonPlayer) {
-        this.wagonPlayer = wagonPlayer;
-    }
-
 }
