@@ -29,7 +29,5 @@ public class NeutralFigureMoveEvent extends MoveEvent<Position> implements Undoa
         default:
             throw new UnsupportedOperationException();
         }
-
     }
-
 }

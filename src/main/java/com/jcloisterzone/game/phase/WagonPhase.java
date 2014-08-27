@@ -45,6 +45,8 @@ public class WagonPhase extends Phase {
 
     @Override
     public void pass() {
+        Player player = wagonCap.getWagonPlayer();
+        wagonCap.removeScoredWagon(player);
         enter();
     }
 
@@ -54,8 +56,10 @@ public class WagonPhase extends Phase {
             logger.error("Illegal figure type.");
             return;
         }
-        Meeple m = getActivePlayer().getMeepleFromSupply(Wagon.class);
+        Player player = wagonCap.getWagonPlayer();
+        Meeple m = player.getMeepleFromSupply(Wagon.class);
         m.deployUnoccupied(getBoard().get(p), loc);
+        wagonCap.removeScoredWagon(player);
         enter();
     }
 
@@ -66,20 +70,16 @@ public class WagonPhase extends Phase {
     }
 
     private boolean existsLegalMove() {
-        Map<Player, Feature> rw = wagonCap.getReturnedWagons();
-        while (!rw.isEmpty()) {
-            int pi = game.getTurnPlayer().getIndex();
-            while (!rw.containsKey(game.getAllPlayers()[pi])) {
-                pi++;
-                if (pi == game.getAllPlayers().length) pi = 0;
-            }
-            Player player = game.getAllPlayers()[pi];
-            Feature f = rw.remove(player);
+        Map<Player, Feature> rw = wagonCap.getScoredWagons();
+        Player wagonPlayer;
+        while ((wagonPlayer = wagonCap.getWagonPlayer()) != null) {
+            Feature f = rw.get(wagonPlayer);
             List<FeaturePointer> wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
-                wagonCap.setWagonPlayer(player);
                 game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
+            } else {
+                rw.remove(wagonPlayer);
             }
         }
         return false;

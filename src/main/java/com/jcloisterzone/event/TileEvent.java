@@ -19,7 +19,7 @@ public class TileEvent extends PlayEvent implements Undoable {
     private final Tile tile;
     private final Position position;
 
-    
+
     public TileEvent(int type, Player player, Tile tile, Position position) {
         super(type, player);
         this.tile = tile;
@@ -29,10 +29,10 @@ public class TileEvent extends PlayEvent implements Undoable {
     public Tile getTile() {
         return tile;
     }
-    
+
     public Position getPosition() {
-		return position;
-	}
+        return position;
+    }
 
     @Override
     public void undo(Game game) {
@@ -50,6 +50,11 @@ public class TileEvent extends PlayEvent implements Undoable {
         default:
             throw new UnsupportedOperationException();
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " tile:" + tile.getId() + " position:" + position;
     }
 
 }

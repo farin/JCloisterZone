@@ -20,4 +20,9 @@ public class ExpansionChangedEvent extends Event {
     public boolean isEnabled() {
         return enabled;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + expansion.name() + (enabled ? " on" : " off");
+    }
 }

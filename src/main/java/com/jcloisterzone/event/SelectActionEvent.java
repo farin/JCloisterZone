@@ -30,4 +30,9 @@ public class SelectActionEvent extends PlayEvent {
     public boolean isPassAllowed() {
         return passAllowed;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " passAllowed:" + passAllowed + " actions:" + actions;
+    }
 }

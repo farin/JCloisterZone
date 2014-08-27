@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.message.HelloMessage;
+import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
@@ -43,8 +44,16 @@ public class Connection {
 
             @Override
             public void onMessage(String payload) {
-                logger.info(payload);
                 WsMessage msg = parser.fromJson(payload);
+                if (logger.isInfoEnabled()) {
+                    if (msg instanceof RmiMessage) {
+                        logger.info(((RmiMessage)msg).toString());
+                    } else {
+                        logger.info(payload);
+                    }
+                }
+
+
                 if (msg instanceof WelcomeMessage) {
                     WelcomeMessage welcome = (WelcomeMessage) msg;
                     clientId = welcome.getClientId();

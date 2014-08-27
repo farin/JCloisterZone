@@ -32,8 +32,8 @@ public class MeepleAction extends SelectFeatureAction {
 
     @Override
     protected int getSortOrder() {
-        if (meepleType.equals(SmallFollower.class)) return 10;
-        if (meepleType.equals(BigFollower.class)) return 11;
+        if (meepleType.equals(SmallFollower.class)) return 9;
+        if (meepleType.equals(BigFollower.class)) return 10;
         if (meepleType.equals(Wagon.class)) return 12;
         if (meepleType.equals(Mayor.class)) return 13;
         if (meepleType.equals(Builder.class)) return 14;
@@ -44,6 +44,6 @@ public class MeepleAction extends SelectFeatureAction {
 
     @Override
     public String toString() {
-        return "place " + meepleType.getSimpleName();
+        return "place " + meepleType.getSimpleName() + " ? " + getOptions();
     }
 }

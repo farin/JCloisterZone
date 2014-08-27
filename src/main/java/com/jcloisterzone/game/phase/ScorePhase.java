@@ -27,11 +27,13 @@ import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.WagonCapability;
 
 public class ScorePhase extends Phase {
 
@@ -41,6 +43,7 @@ public class ScorePhase extends Phase {
     private final BuilderCapability builderCap;
     private final CastleCapability castleCap;
     private final TunnelCapability tunnelCap;
+    private final WagonCapability wagonCap;
 
     public ScorePhase(Game game) {
         super(game);
@@ -48,6 +51,7 @@ public class ScorePhase extends Phase {
         builderCap = game.getCapability(BuilderCapability.class);
         tunnelCap = game.getCapability(TunnelCapability.class);
         castleCap = game.getCapability(CastleCapability.class);
+        wagonCap = game.getCapability(WagonCapability.class);
     }
 
     private void scoreCompletedOnTile(Tile tile) {
@@ -87,7 +91,7 @@ public class ScorePhase extends Phase {
             }
             for (Meeple m : ctx.getMeeples()) {
                 if (!(m instanceof Barn)) {
-                    m.undeploy(false);
+                    undeloyMeeple(m);
                 }
             }
         }
@@ -138,7 +142,15 @@ public class ScorePhase extends Phase {
 
     protected void undeployMeeples(CompletableScoreContext ctx) {
         for (Meeple m : ctx.getMeeples()) {
-            m.undeploy(false);
+            undeloyMeeple(m);
+        }
+    }
+
+    protected void undeloyMeeple(Meeple m) {
+        Feature feature = m.getFeature();
+        m.undeploy(false);
+        if (m instanceof Wagon && wagonCap != null) {
+            wagonCap.wagonScored((Wagon) m, feature);
         }
     }
 
@@ -148,7 +160,7 @@ public class ScorePhase extends Phase {
         Meeple m = meeples.get(0); //all meeples must share same owner
         m.getPlayer().addPoints(points, PointCategory.CASTLE);
         game.post(new ScoreEvent(m.getFeature(), points, PointCategory.CASTLE, m));
-        m.undeploy(false);
+        undeloyMeeple(m);
     }
 
     private void scoreCompleted(Completable completable, boolean triggerBuilder) {
