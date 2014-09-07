@@ -37,6 +37,7 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
+import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
@@ -76,10 +77,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     }
 
 
-    public Connection connect(String username, String hostname, int port) throws URISyntaxException {
-        URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, "/", null, null);
-        //URI uri = new URI("ws://localhost:37447/");
-        ////localhost:8000/ws")) {
+    public Connection connect(String username, URI uri) {
         conn = new Connection(username, uri, this);
         return conn;
     }
@@ -91,7 +89,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
     @Override
     public void onWebsocketError(Exception ex) {
-        ConnectGamePanel cgp = client.getConnectGamePanel();
+        ConnectPanel cgp = client.getConnectGamePanel();
         if (cgp != null) {
             cgp.onWebsocketError(ex);
             return;

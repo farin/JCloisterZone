@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
@@ -67,6 +68,8 @@ import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
+import com.jcloisterzone.ui.panel.ConnectPanel;
+import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
@@ -106,7 +109,8 @@ public class Client extends JFrame {
     //private MenuBar menuBar;
     private StartPanel startPanel;
 
-    private ConnectGamePanel connectGamePanel;
+    private ConnectPanel connectPanel;
+    //private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
@@ -217,8 +221,8 @@ public class Client extends JFrame {
     }
 
 
-    public ConnectGamePanel getConnectGamePanel() {
-        return connectGamePanel;
+    public ConnectPanel getConnectGamePanel() {
+        return connectPanel;
     }
 
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
@@ -235,7 +239,7 @@ public class Client extends JFrame {
             gamePanel.disposePanel();
             gamePanel = null;
         }
-        this.connectGamePanel = null;
+        this.connectPanel = null;
     }
 
     public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
@@ -317,7 +321,25 @@ public class Client extends JFrame {
 
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(connectGamePanel = new ConnectGamePanel(this));
+        ConnectGamePanel panel = new ConnectGamePanel(this);
+        envelope.add(panel);
+        connectPanel = panel;
+
+        pane.add(envelope, BorderLayout.CENTER);
+        pane.setVisible(true);
+    }
+
+    public void showConnectPlayOnlinePanel() {
+        if (!closeGame()) return;
+
+        Container pane = this.getContentPane();
+        cleanContentPane();
+
+        JPanel envelope = new BackgroundPanel();
+        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
+        ConnectPlayOnlinePanel panel = new ConnectPlayOnlinePanel(this);
+        envelope.add(panel);
+        connectPanel = panel;
 
         pane.add(envelope, BorderLayout.CENTER);
         pane.setVisible(true);
@@ -339,11 +361,12 @@ public class Client extends JFrame {
         return name;
     }
 
-    public void connect(String hostname, int port) {
+    public void connect(String username, String hostname, int port, boolean playOnline) {
         ClientStub handler = new ClientStub(this);
         RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
-            conn = handler.connect(getUserName(), hostname, port);
+            URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
+            conn = handler.connect(username == null ? getUserName() : username, uri);
             conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
@@ -391,13 +414,13 @@ public class Client extends JFrame {
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server
-                //we must wait for start to now connect to 
-                Thread.sleep(50); 
+                //we must wait for start to now connect to
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 //empty
             }
             if (localServer.get() != null) { //can be set to null by server error
-                connect("localhost", config.getPort());
+                connect(null, "localhost", config.getPort(), false);
             }
         }
     }

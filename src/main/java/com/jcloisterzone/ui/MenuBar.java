@@ -27,7 +27,7 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, close, showDiscard, undo, save, load, farmHints;
+    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints;
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history;
 
@@ -61,6 +61,15 @@ public class MenuBar extends JMenuBar {
             }
         });
         menu.add(connect);
+
+        playOnline = new JMenuItem(_("Play online"));
+        playOnline.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        playOnline.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.showConnectPlayOnlinePanel();
+            }
+        });
+        menu.add(playOnline);
 
         close = new JMenuItem(_("Close game"));
         close.setEnabled(false);
@@ -291,6 +300,7 @@ public class MenuBar extends JMenuBar {
         this.isGameRunning = isGameRunning;
         create.setEnabled(!isGameRunning);
         connect.setEnabled(!isGameRunning);
+        playOnline.setEnabled(!isGameRunning);
         close.setEnabled(isGameRunning);
         if (!isGameRunning) {
             showDiscard.setEnabled(false);

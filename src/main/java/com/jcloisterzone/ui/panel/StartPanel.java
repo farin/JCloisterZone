@@ -32,66 +32,79 @@ public class StartPanel extends JPanel {
      */
     public StartPanel() {
         setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        setLayout(new MigLayout("", "[center, grow]20[center, grow]20[center, grow]", "[]20[]10[]"));
+        setLayout(new MigLayout("", "[center,grow]20[center,grow]", "[]20[]10[]"));
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
-        add(lblNewLabel, "span 3, wrap, center");
+        add(lblNewLabel, "span 2, wrap, center");
         helpPanel = new HelpPanel();
-        add(helpPanel, "span 3, wrap, grow, gap 30 30");
+        add(helpPanel, "span 2, wrap, grow, gap 30 30");
 
         JPanel createPanel = new JPanel();
         createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         add(createPanel, "grow, width :250:");
-                createPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        createPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
-                JButton create = new JButton(_("New game"));
-                createPanel.add(create, "wrap, alignx center,aligny top");
-                create.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        client.createGame();
-                    }
-                });
-                create.setFont(FONT_LARGE_BUTTON);
-                createPanel.add(new MultiLineLabel(
-                    _("Create a new local or network game. You can play against any number of computer players.")),
-                "wrap, grow");
+        JButton btn = new JButton(_("New game"));
+        createPanel.add(btn, "wrap, alignx center,aligny top");
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.createGame();
+            }
+        });
+        btn.setFont(FONT_LARGE_BUTTON);
+        createPanel.add(new MultiLineLabel(
+            _("Create a new local or network game. You can play against any number of computer players.")),
+        "wrap, grow");
 
 
         JPanel connectPanel = new JPanel();
         connectPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        add(connectPanel, "grow, width :250:");
-                connectPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        add(connectPanel, "grow, width :250:, wrap");
+        connectPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
-                JButton connect = new JButton(_("Connect"));
-                connectPanel.add(connect, "wrap, alignx center,aligny top");
-                connect.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        client.showConnectGamePanel();
-                    }
-                });
-                connect.setFont(FONT_LARGE_BUTTON);
-                connectPanel.add(new MultiLineLabel(
-                    _("Connect to a remote JCloisterZone application with settled new game.")),
-                "wrap, grow");
+        btn = new JButton(_("Connect"));
+        connectPanel.add(btn, "wrap, alignx center,aligny top");
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.showConnectGamePanel();
+            }
+        });
+        btn.setFont(FONT_LARGE_BUTTON);
+        connectPanel.add(new MultiLineLabel(
+            _("Connect to a remote JCloisterZone application with settled new game.")),
+        "wrap, grow");
 
 
         JPanel loadPanel = new JPanel();
         loadPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         add(loadPanel, "grow, width :250:");
-                loadPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        loadPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
-                JButton load = new JButton(_("Load game"));
-                loadPanel.add(load, "wrap, alignx center,aligny top");
-                load.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        client.handleLoad();
-                    }
-                });
-                load.setFont(FONT_LARGE_BUTTON);
-                loadPanel.add(new MultiLineLabel(
-                    _("Load from a file previously saved game.")),
-                "wrap, grow");
+        btn = new JButton(_("Load game"));
+        loadPanel.add(btn, "wrap, alignx center,aligny top");
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.handleLoad();
+            }
+        });
+        btn.setFont(FONT_LARGE_BUTTON);
+        loadPanel.add(new MultiLineLabel(_("Load from a file previously saved game.")), "wrap, grow");
+
+        JPanel playOnlinePanel = new JPanel();
+        playOnlinePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        add(playOnlinePanel, "grow, width :250:, wrap");
+        playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+
+        btn = new JButton(_("Play online"));
+        playOnlinePanel.add(btn, "wrap, alignx center,aligny top");
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.showConnectPlayOnlinePanel();
+            }
+        });
+        btn.setFont(FONT_LARGE_BUTTON);
+        playOnlinePanel.add(new MultiLineLabel(_("Experimental!")), "wrap, grow");
     }
 
     public Client getClient() {

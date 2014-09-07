@@ -15,6 +15,7 @@ confirm: ${confirm}
 
 # machine identification for remote games
 client_name: ${client_name}
+play_online_host: ${play_online_host}
 
 players:
   # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)

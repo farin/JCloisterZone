@@ -38,6 +38,7 @@ public class Config {
 
     private Boolean beep_alert;
     private String client_name;
+    private String play_online_host;
 
     private List<String> plugins;
     private ConfirmConfig confirm;
@@ -361,6 +362,14 @@ public class Config {
 
     public void setClient_name(String client_name) {
         this.client_name = client_name;
+    }
+
+    public String getPlay_online_host() {
+        return play_online_host;
+    }
+
+    public void setPlay_online_host(String play_online_host) {
+        this.play_online_host = play_online_host;
     }
 
     public void setPresets(Map<String, PresetConfig> presets) {

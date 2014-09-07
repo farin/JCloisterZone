@@ -119,6 +119,7 @@ public class ConfigLoader {
         config.setScore_display_duration(7);
         config.setAi_place_tile_delay(250);
         config.setClient_name("");
+        config.setPlay_online_host("play.jcloisterzone.com");
         config.getConfirm().setTower_place(true);
         config.getConfirm().setRansom_payment(true);
         config.getConfirm().setGame_close(true);
@@ -153,6 +154,7 @@ public class ConfigLoader {
         model.put("ai_place_tile_delay", config.getAi_place_tile_delay());
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
+        model.put("play_online_host", config.getPlay_online_host());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));

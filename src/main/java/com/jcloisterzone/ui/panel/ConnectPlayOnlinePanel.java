@@ -1,12 +1,12 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.ConnectException;
 import java.nio.channels.UnresolvedAddressException;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,36 +22,28 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 
-import static com.jcloisterzone.ui.I18nUtils._;
 
-
-public class ConnectGamePanel extends JPanel implements ConnectPanel {
+public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
 
-    private JTextField hostField;
-    private JTextField portField;
+    private JTextField nickField;
     private JButton btnConnect;
     private JLabel message;
 
     /**
      * Create the panel.
      */
-    public ConnectGamePanel(Client client) {
+    public ConnectPlayOnlinePanel(Client client) {
         this.client = client;
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
                 message.setText(_("Connecting") + "...");
-                String port = portField.getText().trim();
-                if (port.equals("")) {
-                     portField.setText(ConnectGamePanel.this.client.getConfig().getPort() + "");
-                }
-                //(new AsyncConnect()).start();
-                saveHistory();
+                saveClientName();
                 connect();
             }
         };
@@ -60,57 +52,40 @@ public class ConnectGamePanel extends JPanel implements ConnectPanel {
 
         setLayout(new MigLayout("", "[80.00][grow]", "[][][][][]"));
 
-        JLabel helpLabel = new JLabel("Enter remote host address.");
+        JLabel helpLabel = new JLabel("Enter your nickname");
         add(helpLabel, "cell 0 0 2 1");
 
-        JLabel hostLabel = new JLabel(_("Host"));
+        JLabel hostLabel = new JLabel(_("Nickname"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
 
-        String[] hostPost = getDefaultHostPort();
 
-        hostField = new JTextField();
-        hostField.addActionListener(actionListener);
-        add(hostField, "cell 1 1,growx, width 250::");
-        hostField.setColumns(10);
-        hostField.setText(hostPost[0]);
-
-        JLabel portLabel = new JLabel(_("Port"));
-        add(portLabel, "cell 0 2,alignx left, gaptop 5");
-
-        portField = new JTextField();
-        portField.addActionListener(actionListener);
-        add(portField, "cell 1 2,growx, width 250::");
-        portField.setColumns(10);
-        portField.setText(hostPost[1]);
+        nickField = new JTextField();
+        nickField.addActionListener(actionListener);
+        add(nickField, "cell 1 1,growx, width 250::");
+        nickField .setColumns(20);
+        nickField.setText(getDefaultNick());
 
         btnConnect = new JButton(_("Connect"));
         btnConnect.addActionListener(actionListener);
-        add(btnConnect, "cell 1 3");
+        add(btnConnect, "cell 1 2");
 
         message = new JLabel("");
         message.setForeground(Color.BLACK);
-        add(message, "cell 1 4, height 20");
+        add(message, "cell 1 3, height 20");
     }
 
-    private String[] getDefaultHostPort() {
-        List<String> history = client.getConfig().getConnection_history();
-        if (history == null || history.isEmpty()) {
-            return new String[] {"", client.getConfig().getPort() + ""};
-        } else {
-            String[] hp = history.get(0).split(":");
-            if (hp.length > 1) return hp;
-            return new String[] {hp[0], client.getConfig().getPort() + ""};
-        }
+    private String getDefaultNick() {
+        String name = client.getConfig().getClient_name();
+        name = name == null ? "" : name.trim();
+        if (name.equals("")) name = System.getProperty("user.name");
+        return name;
+
     }
 
-    private void saveHistory() {
+    private void saveClientName() {
         Config cfg = client.getConfig();
-        String record = hostField.getText().trim();
-        String port = portField.getText().trim();
-        if (!port.equals(client.getConfig().getPort() + "")) {
-            record = record + ":" + port;
-        }
-        cfg.setConnection_history(Collections.singletonList(record));
+        String nick = nickField.getText().trim();
+        cfg.setClient_name(nick);
         client.saveConfig();
     }
 
@@ -130,10 +105,13 @@ public class ConnectGamePanel extends JPanel implements ConnectPanel {
 
     private void connect() {
         try {
-            String hostname = hostField.getText().trim();
-            String portStr = portField.getText().trim();
-            int port = Integer.parseInt(portStr);
-            client.connect(null, hostname, port, false);
+            String nick = nickField.getText().trim();
+            String[] hp = client.getConfig().getPlay_online_host().split(":");
+            int port = 80;
+            if (hp.length > 1) {
+               port = Integer.parseInt(hp[1]);
+            }
+            client.connect(nick, hp[0], port, true);
             return;
         } catch (NumberFormatException nfe) {
             message.setText( _("Invalid port number."));
