@@ -4,6 +4,7 @@
 *appears in next release*
 
 ## 3.0
+*2014-08-27*
 
 * network protocol changed completely
 * German Monasteries expansion
