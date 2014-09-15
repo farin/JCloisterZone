@@ -1,11 +1,10 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -16,8 +15,11 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.wsio.message.UndoMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -29,7 +31,7 @@ public class MenuBar extends JMenuBar {
 
     private JMenuItem create, connect, close, showDiscard, undo, save, load, farmHints;
     private JMenuItem zoomIn, zoomOut;
-    private JMenuItem history;
+    private JMenuItem history, reportBug;
 
     public MenuBar(Client _client) {
         this.client = _client;
@@ -274,6 +276,15 @@ public class MenuBar extends JMenuBar {
         });
         menu.add(menuItem);
 
+        reportBug = new JMenuItem(_("Report bug"));
+        reportBug.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new BugReportDialog(client.getReportingTool());
+            }
+        });
+        reportBug.setEnabled(false);
+        menu.add(reportBug);
+
         this.add(menu);
 
     }
@@ -292,6 +303,7 @@ public class MenuBar extends JMenuBar {
         create.setEnabled(!isGameRunning);
         connect.setEnabled(!isGameRunning);
         close.setEnabled(isGameRunning);
+        reportBug.setEnabled(isGameRunning);
         if (!isGameRunning) {
             showDiscard.setEnabled(false);
             undo.setEnabled(false);

@@ -8,6 +8,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
@@ -17,6 +18,7 @@ import com.jcloisterzone.wsio.message.WsMessage;
 public class Connection {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
 
     private MessageParser parser = new MessageParser();
     private WebSocketClient ws;
@@ -52,6 +54,13 @@ public class Connection {
                         logger.info(payload);
                     }
                 }
+                if (reportingTool != null) {
+                    if (msg instanceof RmiMessage) {
+                        reportingTool.report(((RmiMessage)msg).toString());
+                    } else {
+                        reportingTool.report(payload);
+                    }
+                }
 
 
                 if (msg instanceof WelcomeMessage) {
@@ -70,6 +79,7 @@ public class Connection {
         };
         ws.connect();
     }
+
 
     @WsSubscribe
     public void handleWelcome(Connection conn, WelcomeMessage msg) {
@@ -108,4 +118,16 @@ public class Connection {
     public void setRmiProxy(RmiProxy rmiProxy) {
         this.rmiProxy = rmiProxy;
     }
+
+
+    public ReportingTool getReportingTool() {
+        return reportingTool;
+    }
+
+
+    public void setReportingTool(ReportingTool reportingTool) {
+        this.reportingTool = reportingTool;
+    }
+
+
 }

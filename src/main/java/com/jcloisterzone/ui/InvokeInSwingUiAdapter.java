@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.figure.Meeple;
@@ -15,6 +16,7 @@ import com.jcloisterzone.figure.Meeple;
 public class InvokeInSwingUiAdapter {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
 
     private final EventBus uiEventBus;
 
@@ -24,6 +26,9 @@ public class InvokeInSwingUiAdapter {
 
     @Subscribe public void handleAllEvents(Event event) {
         logger.info("event: {}", event);
+        if (reportingTool != null) {
+            reportingTool.report("event: " + event);
+        }
         final Object freezedEvent = freezeEvent(event);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -40,5 +45,13 @@ public class InvokeInSwingUiAdapter {
             return new MeepleEvent((Meeple) m.clone(), mev.getFrom(), mev.getTo());
         }
         return ev;
+    }
+
+    public void setReportingTool(ReportingTool reportingTool) {
+        this.reportingTool = reportingTool;
+    }
+
+    public ReportingTool getReportingTool() {
+        return reportingTool;
     }
 }

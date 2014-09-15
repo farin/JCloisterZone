@@ -47,6 +47,7 @@ import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
@@ -83,6 +84,7 @@ import com.jcloisterzone.wsio.server.SimpleServer;
 public class Client extends JFrame {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
 
     public static final String BASE_TITLE = "JCloisterZone";
 
@@ -327,8 +329,12 @@ public class Client extends JFrame {
         assert gamePanel != null;
         this.game = game;
         this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
+        game.setReportingTool(reportingTool);
+        reportingTool.setGame(game);
         eventBus.register(new ClientController(this, game, gamePanel));
-        game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
+        InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
+        uiAdapter.setReportingTool(reportingTool);
+        game.getEventBus().register(uiAdapter);
     }
 
     private String getUserName() {
@@ -344,6 +350,7 @@ public class Client extends JFrame {
         RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
             conn = handler.connect(getUserName(), hostname, port);
+            conn.setReportingTool(reportingTool = new ReportingTool());
             conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
@@ -391,8 +398,8 @@ public class Client extends JFrame {
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server
-                //we must wait for start to now connect to 
-                Thread.sleep(50); 
+                //we must wait for start to now connect to
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 //empty
             }
@@ -551,6 +558,10 @@ public class Client extends JFrame {
         return gamePanel;
     }
 
+    public ReportingTool getReportingTool() {
+        return reportingTool;
+    }
+
     //------------------- LEGACY: TODO refactor ---------------
 
     @Deprecated
@@ -577,6 +588,7 @@ public class Client extends JFrame {
         PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
         return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
+
 
 
 }

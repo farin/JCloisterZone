@@ -209,6 +209,11 @@ public class Snapshot implements Serializable {
     }
 
     public void save(OutputStream os, boolean gzipOutput) throws TransformerException, IOException {
+        save(os, gzipOutput, true);
+    }
+
+    //TODO move close on caller
+    public void save(OutputStream os, boolean gzipOutput, boolean close) throws TransformerException, IOException {
         StreamResult streamResult;
         if (gzipOutput) {
             streamResult = new StreamResult(new GZIPOutputStream(os));
@@ -223,7 +228,9 @@ public class Snapshot implements Serializable {
         serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         serializer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
         serializer.transform(new DOMSource(doc), streamResult);
-        streamResult.getOutputStream().close();
+        if (close) {
+            streamResult.getOutputStream().close();
+        }
     }
 
     public String saveToString() throws TransformerException, IOException {
