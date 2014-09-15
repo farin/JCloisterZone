@@ -27,6 +27,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
@@ -57,6 +58,8 @@ import com.jcloisterzone.game.phase.Phase;
 public class Game extends GameSettings {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
+
     private Config config;
 
     /** pack of remaining tiles */
@@ -462,5 +465,13 @@ public class Game extends GameSettings {
     @Override
     public String toString() {
         return "Game in " + phase.getClass().getSimpleName() + " phase.";
+    }
+
+    public void setReportingTool(ReportingTool reportingTool) {
+        this.reportingTool = reportingTool;
+    }
+
+    public ReportingTool getReportingTool() {
+        return reportingTool;
     }
 }
