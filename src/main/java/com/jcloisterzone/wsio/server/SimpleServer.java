@@ -341,6 +341,7 @@ public class SimpleServer extends WebSocketServer  {
         int[] result = new int[msg.getK()];
         int n = msg.getPopulation();
         for (int i = 0; i < msg.getK(); i++) {
+            //IS PROBABLY WRONG, still can generate same numbers
             result[i] = i + random.nextInt(n--);
         }
         broadcast(new RandSampleMessage(msg.getGameId(), msg.getName(), msg.getPopulation(), result));

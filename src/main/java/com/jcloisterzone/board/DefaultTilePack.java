@@ -79,6 +79,7 @@ public class DefaultTilePack implements TilePack {
     public Tile[] drawTiles(int[] indexes) {
         Tile[] result = new Tile[indexes.length];
         int[] sorted = new int[indexes.length];
+        //THIS IS WRONG - violates probability - first player has gets always tiles from end of list!!!
         System.arraycopy(indexes, 0, sorted, 0, indexes.length);
         Arrays.sort(sorted);
         for (int i = 0; i < sorted.length; i++) {
