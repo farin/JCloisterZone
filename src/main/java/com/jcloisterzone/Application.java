@@ -8,8 +8,8 @@ public interface Application {
 
     public String DEV_VERSION = "dev-snapshot";
 
-    public String VERSION = "3.0";
-    public String BUILD_DATE = "2014-08-27";
+    public String VERSION = "3.0.1";
+    public String BUILD_DATE = "2014-09-15";
 
     public String PROTCOL_VERSION = "3.0";
 
