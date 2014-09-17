@@ -12,12 +12,13 @@ import javax.imageio.ImageIO;
 import javax.xml.transform.TransformerException;
 
 import com.google.common.collect.EvictingQueue;
+import com.jcloisterzone.Application;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 
 public class ReportingTool {
 
-    private EvictingQueue<String> events = EvictingQueue.create(1000);
+    private EvictingQueue<String> events = EvictingQueue.create(200);
     private Game game;
     private Container container;
 
@@ -32,7 +33,7 @@ public class ReportingTool {
     }
 
     public void createReport(FileOutputStream fos, String description) throws IOException, TransformerException {
-        //createStringReport(System.out, description,);
+        //createStringReport(System.out, description);
         createZipReport(fos, description);
     }
 
@@ -43,6 +44,13 @@ public class ReportingTool {
         ze = new ZipEntry("description.txt");
         zos.putNextEntry(ze);
         zos.write(description.getBytes());
+        zos.write("\r\n--- reported with -----\r\n".getBytes());
+        zos.write((Application.VERSION + " " + Application.BUILD_DATE + " \r\n").getBytes());
+        zos.write((System.getProperty("os.name")+" ").getBytes());
+        zos.write((System.getProperty("os.arch")+" ").getBytes());
+        zos.write((System.getProperty("os.version")+"\r\n").getBytes());
+        zos.write((System.getProperty("java.vendor")+" ").getBytes());
+        zos.write((System.getProperty("java.version")+"\r\n").getBytes());
         zos.closeEntry();
 
         ze = new ZipEntry("events.txt");
@@ -67,12 +75,10 @@ public class ReportingTool {
             ImageIO.write(im, "PNG", zos);
             zos.closeEntry();
         }
-
-
-
         zos.close();
     }
 
+    //dev purpose only, currently not used
     public void createStringReport(PrintStream out, String description) throws IOException, TransformerException {
         out.println("---------- description ------------");
         out.println(description);
@@ -87,7 +93,7 @@ public class ReportingTool {
         out.println(snapshot.saveToString());
 
         out.println("---------- system env ------------");
-        out.println(System.getenv());
+        out.println(System.getProperty("java.version"));
     }
 
     public void setGame(Game game) {

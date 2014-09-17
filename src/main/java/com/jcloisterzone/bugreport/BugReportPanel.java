@@ -1,37 +1,26 @@
 package com.jcloisterzone.bugreport;
 
-import javax.swing.JPanel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
 
-import net.miginfocom.swing.MigLayout;
-
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.filechooser.FileFilter;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.ui.SavegameFileFilter;
-
 import static com.jcloisterzone.ui.I18nUtils._;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.filechooser.FileFilter;
-import javax.xml.transform.TransformerException;
-
-import java.awt.Font;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class BugReportPanel extends JPanel {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,27 +29,29 @@ public class BugReportPanel extends JPanel {
     private JDialog parent;
 
     public BugReportPanel() {
-        setLayout(new MigLayout("", "[grow]", "[][grow,fill][][]"));
+        setLayout(new MigLayout("insets dialog, gapy unrel", "[grow]", "[][][grow,fill][][]"));
 
+        JLabel headerLabel = new JLabel(_("<html>Bug report tool pack saved game, internal game log and system information to simplify debugging process.</html>"));
+        add(headerLabel, "cell 0 0");
 
-        JLabel lblNewLabel = new JLabel("Please describe bug...");
-        add(lblNewLabel, "cell 0 0,grow");
+        JLabel describeLabel = new JLabel(_("Please describe bug..."));
+        add(describeLabel, "cell 0 1,grow");
 
         final JTextArea textArea = new JTextArea();
         textArea.setFont(new Font("SansSerif", Font.PLAIN, 11));
-        add(textArea, "cell 0 1,grow");
+        add(textArea, "cell 0 2,grow");
 
-        JButton download = new JButton("Download report");
-        download.addActionListener(new ActionListener() {
+        JButton downloadButton = new JButton("Download report");
+        downloadButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 selectFile(textArea.getText());
             }
         });
 
-        JLabel lblThenDownload = new JLabel("... then download report file and send via email to farin@farin.cz");
-        add(lblThenDownload, "cell 0 2");
-        add(download, "cell 0 3");
+        JLabel downloadLabel = new JLabel(_("...then download report archive and send via email to farin@farin.cz"));
+        add(downloadLabel, "cell 0 3");
+        add(downloadButton, "cell 0 4");
     }
 
     public void selectFile(String description) {
@@ -110,10 +101,8 @@ public class BugReportPanel extends JPanel {
 
         @Override
         public String getDescription() {
-            return _("Bug reports");
+            return "*.zip";
         }
-
-
     }
 
 }
