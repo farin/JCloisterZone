@@ -17,6 +17,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     protected static final Composite ALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f);
     protected static final Composite DISALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
+    private boolean active;
     private Set<Position> availablePositions;
 
     private Position previewPosition;
@@ -35,6 +36,17 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     public Position getPreviewPosition() {
         return previewPosition;
     };
+
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
 
     abstract protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position pos);
     abstract protected Image createPreviewIcon();
@@ -73,7 +85,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
             }
             drawPreviewIcon(g2, previewIcon, previewPosition);
         }
-        g2.setColor(getClient().isClientActive() ? Color.BLACK : Color.GRAY);
+        g2.setColor(active ? Color.BLACK : Color.GRAY);
 
     }
 

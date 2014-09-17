@@ -21,7 +21,7 @@ public class TileEvent extends PlayEvent implements Undoable {
 
 
     public TileEvent(int type, Player player, Tile tile, Position position) {
-        super(type, player);
+        super(type, player, type == DRAW ? player : null);
         this.tile = tile;
         this.position = position;
     }
@@ -44,7 +44,7 @@ public class TileEvent extends PlayEvent implements Undoable {
                 tile.setRotation(Rotation.R0);
                 game.setCurrentTile(null);
                 ((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
-                game.getCapability(AbbeyCapability.class).undoUseAbbey(getPlayer());
+                game.getCapability(AbbeyCapability.class).undoUseAbbey(getTriggeringPlayer());
             }
             break;
         default:

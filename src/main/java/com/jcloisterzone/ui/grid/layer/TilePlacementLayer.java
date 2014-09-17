@@ -27,8 +27,9 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     }
 
     @Override
-    public void setAction(TilePlacementAction action) {
+    public void setAction(boolean active, TilePlacementAction action) {
         this.action = action;
+        setActive(active);
         if (action == null) {
             setAvailablePositions(null);
             realRotation = null;
@@ -93,7 +94,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     @Override
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (getPreviewPosition() != null && getClient().isClientActive() && allowedRotation) {
+            if (getPreviewPosition() != null && isActive() && allowedRotation) {
                 e.consume();
                 action.perform(getClient().getServer(), new TilePlacement(p, previewRotation));
             }

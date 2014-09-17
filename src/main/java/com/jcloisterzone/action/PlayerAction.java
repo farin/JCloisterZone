@@ -70,10 +70,10 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
 
 
     /** Called when user select action in action panel */
-    public void select() {
+    public void select(boolean active) {
         @SuppressWarnings("unchecked")
         ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
-        layer.setAction(this);
+        layer.setAction(active, this);
         client.getGamePanel().getGridPanel().showLayer(layer);
     }
 
@@ -81,7 +81,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
     public void deselect() {
         @SuppressWarnings("unchecked")
         ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
-        layer.setAction(null);
+        layer.setAction(false, null);
         client.getGamePanel().getGridPanel().hideLayer(layer);
     }
 

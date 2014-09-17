@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
@@ -56,6 +54,8 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GamePanel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ClientController  {
 
@@ -125,20 +125,14 @@ public class ClientController  {
 
     @Subscribe
     public void turnChanged(PlayerTurnEvent ev) {
-        playerActivated(ev.getPlayer(), ev.getPlayer());
-    }
+        gamePanel.getGridPanel().repaint();
 
-    @Deprecated
-    private void playerActivated(Player turnPlayer, Player activePlayer) {
-        client.setActivePlayer(activePlayer);
-        gamePanel.getControlPanel().playerActivated(turnPlayer, activePlayer);
-
-        if (client.isClientActive()) {
+        if (ev.getTargetPlayer().isLocalHuman()) {
             client.beep();
         }
 
         // TODO better image quality ?
-        Color c = activePlayer.getColors().getMeepleColor();
+        Color c = ev.getTargetPlayer().getColors().getMeepleColor();
         Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
         client.setIconImage(image);
     }
@@ -194,7 +188,7 @@ public class ClientController  {
 
     @Subscribe
     public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
-        gamePanel.getMainPanel().tunnelPiecePlaced(ev.getPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
+        gamePanel.getMainPanel().tunnelPiecePlaced(ev.getTriggeringPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
     }
 
 
@@ -238,9 +232,9 @@ public class ClientController  {
     @Subscribe
     public void scored(ScoreEvent ev) {
         if (ev.getFeature() == null) {
-            gamePanel.getMainPanel().scored(ev.getPosition(), ev.getPlayer(), ev.getLabel(), ev.isFinal());
+            gamePanel.getMainPanel().scored(ev.getPosition(), ev.getTargetPlayer(), ev.getLabel(), ev.isFinal());
         } else {
-            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
+            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getTargetPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
         }
         gamePanel.getMainPanel().repaint(); // players only
     }
@@ -264,8 +258,7 @@ public class ClientController  {
         dragonDecoration.setMoves(movesLeft);
         gamePanel.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
-        client.setActivePlayer(ev.getPlayer());
-        if (client.isClientActive()) {
+        if (ev.getTargetPlayer().isLocalHuman()) {
             DragonAvailableMove availMoves = gamePanel.getGridPanel().findLayer(DragonAvailableMove.class);
             availMoves.setPositions(positions);
             gamePanel.getGridPanel().showLayer(availMoves);
@@ -276,10 +269,10 @@ public class ClientController  {
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
         client.clearActions();
-        gamePanel.getControlPanel().selectAction(ev.getActions(), ev.isPassAllowed());
+        gamePanel.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
         gamePanel.getGridPanel().repaint();
         //TODO generic solution
-        if (game.isUndoAllowed() && client.isClientActive()) {
+        if (game.isUndoAllowed() && ev.getTargetPlayer().isLocalHuman()) {
             client.getJMenuBar().getUndo().setEnabled(true);
         }
     }
@@ -316,7 +309,7 @@ public class ClientController  {
     public void selectBazaarTile(BazaarSelectTileEvent ev) {
         client.clearActions();
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
-        if (client.isClientActive()) {
+        if (ev.getTargetPlayer().isLocalHuman()) {
             List<BazaarItem> supply = ev.getBazaarSupply();
             for (int i = 0; i < supply.size(); i++) {
                 // find first allowed item
@@ -343,7 +336,7 @@ public class ClientController  {
     public void makeBazaarBid(BazaarMakeBidEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
-        if (client.isClientActive()) {
+        if (ev.getTargetPlayer().isLocalHuman()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
@@ -356,7 +349,7 @@ public class ClientController  {
     public void selectBuyOrSellBazaarOffer(BazaarSelectBuyOrSellEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
-        if (client.isClientActive()) {
+        if (ev.getTargetPlayer().isLocalHuman()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);

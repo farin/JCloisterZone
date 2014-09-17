@@ -36,9 +36,9 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
     }
 
     @Override
-    public void setAction(BarnAction action) {
+    public void setAction(boolean active, BarnAction action) {
         this.action = action;
-
+        setActive(active);
     }
 
     @Override

@@ -8,8 +8,8 @@ public class BazaarTileSelectedEvent extends PlayEvent {
     private final BazaarItem bazaarItem;
     private final int supplyIndex;
 
-    public BazaarTileSelectedEvent(Player player, BazaarItem bazaarItem, int supplyIndex) {
-        super(player);
+    public BazaarTileSelectedEvent(Player targetPlayer, BazaarItem bazaarItem, int supplyIndex) {
+        super(null, targetPlayer);
         this.bazaarItem = bazaarItem;
         this.supplyIndex = supplyIndex;
     }

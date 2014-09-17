@@ -19,8 +19,9 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
     }
 
     @Override
-    public void setAction(AbbeyPlacementAction action) {
+    public void setAction(boolean active, AbbeyPlacementAction action) {
         this.action = action;
+        setActive(active);
         setAvailablePositions(action == null ? null : action.getOptions());
     }
 
@@ -45,7 +46,7 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
     @Override
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (getPreviewPosition() != null && getClient().isClientActive()) {
+            if (getPreviewPosition() != null && isActive()) {
                 e.consume();
                 action.perform(getClient().getServer(), p);
             }

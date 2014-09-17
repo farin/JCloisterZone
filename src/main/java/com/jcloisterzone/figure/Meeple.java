@@ -87,7 +87,7 @@ public abstract class Meeple extends Figure {
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
-        game.post(new MeepleEvent(this, null, new FeaturePointer(tile.getPosition(), loc)));
+        game.post(new MeepleEvent(game.getActivePlayer(), this, null, new FeaturePointer(tile.getPosition(), loc)));
     }
 
     public final void undeploy() {
@@ -99,7 +99,7 @@ public abstract class Meeple extends Figure {
         FeaturePointer source = new FeaturePointer(getPosition(), location);
         feature.removeMeeple(this);
         clearDeployment();
-        game.post(new MeepleEvent(this, source, null));
+        game.post(new MeepleEvent(game.getActivePlayer(), this, source, null));
     }
 
 

@@ -10,8 +10,8 @@ public class BazaarSelectTileEvent extends PlayEvent {
 
     private List<BazaarItem> bazaarSupply;
 
-    public BazaarSelectTileEvent(Player player, List<BazaarItem> bazaarSupply) {
-        super(player);
+    public BazaarSelectTileEvent(Player targetPlayer, List<BazaarItem> bazaarSupply) {
+        super(null, targetPlayer);
         this.bazaarSupply = bazaarSupply;
     }
 
