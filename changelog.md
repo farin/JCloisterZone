@@ -6,6 +6,7 @@
 ## 3.0.1
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
+* fix: wrong colors of chat nicknames
 
 ## 3.0
 *2014-08-27*
