@@ -452,24 +452,6 @@ public class Client extends JFrame {
         new AboutDialog();
     }
 
-    @Deprecated
-    public boolean isClientActive() {
-        return isClientActive(activePlayer);
-    }
-
-    public boolean isClientActive(Player player) {
-        if (player == null) return false;
-        if (player.getSlot().getAiClassName() != null) return false;
-        return player.getSlot().isOwn();
-    }
-
-    public Player getActivePlayer() {
-        return activePlayer;
-    }
-
-    public void setActivePlayer(Player activePlayer) {
-        this.activePlayer = activePlayer;
-    }
 
     void beep() {
         if (config.getBeep_alert()) {

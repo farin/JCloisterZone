@@ -128,22 +128,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     @Override
     public void forward() {
-        if (client.isClientActive()) {
-            if (secondPanel instanceof ForwardBackwardListener) {
-                ((ForwardBackwardListener) secondPanel).forward();
-            }
-            controlPanel.getActionPanel().forward();
+        if (secondPanel instanceof ForwardBackwardListener) {
+            ((ForwardBackwardListener) secondPanel).forward();
         }
+        controlPanel.getActionPanel().forward();
     }
 
     @Override
     public void backward() {
-        if (client.isClientActive()) {
-            if (secondPanel instanceof ForwardBackwardListener) {
-                ((ForwardBackwardListener) secondPanel).backward();
-            }
-            controlPanel.getActionPanel().backward();
+        if (secondPanel instanceof ForwardBackwardListener) {
+            ((ForwardBackwardListener) secondPanel).backward();
         }
+        controlPanel.getActionPanel().backward();
     }
 
     class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
@@ -432,8 +428,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
             tileLayer.tilePlaced(tile);
 
-            boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
-            if ((!initialPlacement && !client.isClientActive()) ||
+            boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
+            if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
                 (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
                 getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
             }

@@ -23,7 +23,7 @@ public class ScoreEvent extends PlayEvent implements Undoable {
     private boolean isFinal;
 
     public ScoreEvent(Feature feature, int points, PointCategory category, Meeple meeple) {
-        super(meeple == null ? null : meeple.getPlayer());
+        super(null, meeple == null ? null : meeple.getPlayer());
         this.feature = feature;
         this.position = feature.getTile().getPosition();
         this.points = points;
@@ -31,8 +31,8 @@ public class ScoreEvent extends PlayEvent implements Undoable {
         this.meepleType = meeple.getClass();
     }
 
-    public ScoreEvent(Position position, Player player, int points, PointCategory category) {
-        super(player);
+    public ScoreEvent(Position position, Player targetPlayer, int points, PointCategory category) {
+        super(null, targetPlayer);
         this.position = position;
         this.feature = null;
         this.meepleType = null;
@@ -80,10 +80,10 @@ public class ScoreEvent extends PlayEvent implements Undoable {
     public void undo(Game game) {
         if (label != null && label.contains(" + ")) {
             //HACK: nasty hack, fairy finished object fires score event as one, but points are in two categories
-            getPlayer().addPoints(-FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            getPlayer().addPoints(-points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, category);
+            getTargetPlayer().addPoints(-FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+            getTargetPlayer().addPoints(-points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, category);
         } else {
-            getPlayer().addPoints(-points, category);
+            getTargetPlayer().addPoints(-points, category);
         }
     }
 

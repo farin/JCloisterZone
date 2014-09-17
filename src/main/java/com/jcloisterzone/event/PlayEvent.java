@@ -7,26 +7,24 @@ import com.jcloisterzone.Player;
  */
 public abstract class PlayEvent extends Event {
 
-    //TODO make consistent - old note (there should be always triggering player (but it is true now, eg meeple events)
-    // new note, for select actions, there must be target play ho should response !!! - especially important for AI
-    private final Player player;
+    private final Player triggeringPlayer;
+    private final Player targetPlayer;
 
-    public PlayEvent() {
-        this(null);
+    public PlayEvent(Player triggeringPlayer, Player targetPlayer) {
+        this(0, triggeringPlayer, targetPlayer);
     }
 
-    public PlayEvent(Player player) {
-        super();
-        this.player = player;
-    }
-
-    public PlayEvent(int type, Player player) {
+    public PlayEvent(int type, Player triggeringPlayer, Player targetPlayer) {
         super(type);
-        this.player = player;
+        this.triggeringPlayer = triggeringPlayer;
+        this.targetPlayer = targetPlayer;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getTargetPlayer() {
+        return targetPlayer;
     }
 
+    public Player getTriggeringPlayer() {
+        return triggeringPlayer;
+    }
 }

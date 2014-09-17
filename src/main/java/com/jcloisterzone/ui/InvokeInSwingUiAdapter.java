@@ -42,7 +42,7 @@ public class InvokeInSwingUiAdapter {
             //TODO is it really needed with new meeple events?
             MeepleEvent mev = (MeepleEvent) ev;
             Meeple m = mev.getMeeple();
-            return new MeepleEvent((Meeple) m.clone(), mev.getFrom(), mev.getTo());
+            return new MeepleEvent(((MeepleEvent) ev).getTriggeringPlayer(), (Meeple) m.clone(), mev.getFrom(), mev.getTo());
         }
         return ev;
     }

@@ -39,11 +39,8 @@ public class KeyController implements KeyEventDispatcher {
             switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
             case KeyEvent.VK_ENTER:
-                if (client.isClientActive()) {
-                    client.getControlPanel().pass();
-                    return true;
-                }
-                break;
+                client.getControlPanel().pass();
+                return true;
             case KeyEvent.VK_TAB:
                 if (e.getModifiers() == 0) {
                     client.getGridPanel().forward();

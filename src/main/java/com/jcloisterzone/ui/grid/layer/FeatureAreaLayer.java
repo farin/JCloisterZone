@@ -38,7 +38,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
     }
 
     @Override
-    public void setAction(SelectFeatureAction action) {
+    public void setAction(boolean active, SelectFeatureAction action) {
         this.action = action;
     }
 

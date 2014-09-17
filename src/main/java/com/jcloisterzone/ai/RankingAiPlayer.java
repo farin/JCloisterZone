@@ -88,7 +88,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        if (getPlayer().equals(ev.getPlayer())) {
+        if (getPlayer().equals(ev.getTargetPlayer())) {
             //logger.info("SA " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString() + " ?" + (getBestChain()==null?"null":"chain"));
             if (getBestChain() != null) {
                 popActionChain();
@@ -106,7 +106,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        if (getPlayer().equals(ev.getPlayer())) {
+        if (getPlayer().equals(ev.getTargetPlayer())) {
              new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }

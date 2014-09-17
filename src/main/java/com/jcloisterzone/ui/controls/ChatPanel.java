@@ -241,7 +241,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         if (game.isStarted()) {
             Player selected = null, active = game.getActivePlayer();
             for (Player player : game.getAllPlayers()) {
-                if (player.getSlot().isOwn()) {
+                if (player.getSlot().getClientId().equals(ev.getRemoteClient().getClientId())) {
                     if (selected == null) {
                         selected = player;
                     } else {

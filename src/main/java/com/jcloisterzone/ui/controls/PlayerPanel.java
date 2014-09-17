@@ -59,6 +59,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
+    private final Game game;
     private final Player player;
     private Color color, fontColor;
 
@@ -72,9 +73,10 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private String mouseOverKey = null;
 
-    public PlayerPanel(Client client, Player player, PlayerPanelImageCache cache) {
+    public PlayerPanel(Client client, Game game, Player player, PlayerPanelImageCache cache) {
         super(client);
         this.player = player;
+        this.game = game;
         this.cache = cache;
         this.color = player.getColors().getMeepleColor();
         this.fontColor = player.getColors().getFontColor();
@@ -266,7 +268,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                 groupedByType = new HashMap<>();
                 for (Player opponent : game.getAllPlayers()) {
                     if (opponent == player) continue;
-                    boolean isOpponentActive = client.isClientActive(opponent);
+                    boolean isOpponentActive = opponent.equals(game.getActivePlayer()) && opponent.isLocalHuman();
                     boolean clickable = isOpponentActive && !towerCap.isRansomPaidThisTurn();
                     for (Follower f : capturedFigures) {
                         if (f.getPlayer() == opponent) {
