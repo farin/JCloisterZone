@@ -40,11 +40,11 @@ import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
@@ -335,16 +335,15 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
-    public void handleGetRandSample(WebSocket ws, GetRandSampleMessage msg) {
+    public void handleGetRandSample(WebSocket ws, MakeDrawMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
         int[] result = new int[msg.getK()];
-        int n = msg.getPopulation();
+        int n = msg.getPackSize();
         for (int i = 0; i < msg.getK(); i++) {
-            //IS PROBABLY WRONG, still can generate same numbers
-            result[i] = i + random.nextInt(n--);
+            result[i] = random.nextInt(n--);
         }
-        broadcast(new RandSampleMessage(msg.getGameId(), msg.getName(), msg.getPopulation(), result));
+        broadcast(new DrawMessage(msg.getGameId(), msg.getPackSize(), result));
     }
 
     @WsSubscribe

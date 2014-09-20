@@ -17,8 +17,8 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 
 public class BazaarPhase extends ServerAwarePhase {
 
@@ -52,7 +52,7 @@ public class BazaarPhase extends ServerAwarePhase {
         //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
         if (isLocalPlayer(p)) {
             //call only from one client (from the active one)
-            getConnection().send(new GetRandSampleMessage(game.getGameId(), "bazaar", getTilePack().size(), game.getAllPlayers().length));
+            getConnection().send(new MakeDrawMessage(game.getGameId(), getTilePack().size(), game.getAllPlayers().length));
         }
     }
 
@@ -84,9 +84,9 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     @WsSubscribe
-    public void handleRandSample(RandSampleMessage msg) {
+    public void handleRandSample(DrawMessage msg) {
         int size = game.getAllPlayers().length;
-        if (!msg.getName().equals("bazaar") || msg.getPopulation() != getTilePack().size() || msg.getValues().length != size) {
+        if (msg.getPackSize() != getTilePack().size() || msg.getValues().length != size) {
             logger.error("Invalid message");
             return;
         }

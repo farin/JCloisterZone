@@ -13,8 +13,8 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -86,13 +86,13 @@ public class DrawPhase extends ServerAwarePhase {
         }
         if (isLocalPlayer(getActivePlayer())) {
             //call only from one client (from the active one)
-            getConnection().send(new GetRandSampleMessage(game.getGameId(), "draw", getTilePack().size(), 1));
+            getConnection().send(new MakeDrawMessage(game.getGameId(), getTilePack().size(), 1));
         }
     }
 
     @WsSubscribe
-    public void handleRandSample(RandSampleMessage msg) {
-        if (!msg.getName().equals("draw") || msg.getPopulation() != getTilePack().size()) {
+    public void handleRandSample(DrawMessage msg) {
+        if (msg.getPackSize() != getTilePack().size()) {
             logger.error("Invalid message");
             return;
         }
