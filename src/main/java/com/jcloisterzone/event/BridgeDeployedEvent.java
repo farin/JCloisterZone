@@ -7,8 +7,8 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 
 public class BridgeDeployedEvent extends FeatureEvent {
 
-    public BridgeDeployedEvent(Player player, Position position, Location location) {
-        super(player, new FeaturePointer(position, location));
+    public BridgeDeployedEvent(Player triggeringPlayer, Position position, Location location) {
+        super(triggeringPlayer, new FeaturePointer(position, location));
     }
 
 }

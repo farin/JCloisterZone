@@ -4,13 +4,13 @@ import com.jcloisterzone.Player;
 
 public class PlayerTurnEvent extends PlayEvent {
 
-    public PlayerTurnEvent(Player player) {
-        super(player);
+    public PlayerTurnEvent(Player targetPlayer) {
+        super(null, targetPlayer);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " player:" + getPlayer();
+        return super.toString() + " player:" + getTargetPlayer();
     }
 
 }

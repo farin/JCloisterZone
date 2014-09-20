@@ -29,6 +29,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     private static final AlphaComposite FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .75f);
 
     private Player player;
+    private boolean active;
     private Map<Location, Area> areas;
     private Location selectedLocation;
     private Position selectedPosition;
@@ -46,9 +47,19 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         }
     }
 
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public void onShow() {
         super.onShow();
+        //TODO should ne based on event player
         player = getGame().getActivePlayer();
     }
 

@@ -78,7 +78,7 @@ public class LoadGamePhase extends CreateGamePhase {
             }
             m.setFeature(f);
             f.addMeeple(m);
-            game.post(new MeepleEvent(m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
+            game.post(new MeepleEvent(null, m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
     }

@@ -26,6 +26,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     public static final int LEFT_MARGIN = 10;
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
+    private boolean active;
     private PlayerAction<?>[] actions;
     private int selectedActionIndex = -1;
 
@@ -49,13 +50,14 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         return actions;
     }
 
-    public void setActions(PlayerAction<?>[] actions) {
+    public void setActions(boolean active, PlayerAction<?>[] actions) {
+        this.active = active;
         selected = new Image[actions.length];
         deselected = new Image[actions.length];
         refreshImages = true;
         refreshMouseRegions = true;
         this.actions = actions;
-        if (actions.length > 0 && client.isClientActive()) {
+        if (actions.length > 0 && active) {
             setSelectedActionIndex(0);
         }
         repaint();
@@ -110,21 +112,22 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         refreshImages = true;
         refreshMouseRegions = true;
         fakeAction = null;
+        active = false;
         repaint();
     }
 
 
 
     public void forward() {
-        if (selectedActionIndex != -1) getSelectedAction().forward();
+        if (active && selectedActionIndex != -1) getSelectedAction().forward();
     }
 
     public void backward() {
-        if (selectedActionIndex != -1) getSelectedAction().backward();
+        if (active && selectedActionIndex != -1) getSelectedAction().backward();
     }
 
     public void rollAction(int change) {
-        if (client.isClientActive()) {
+        if (active) {
             if (actions.length == 0) return;
             int idx = (selectedActionIndex + change + actions.length) % actions.length;
             setSelectedActionIndex(idx);
@@ -143,7 +146,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         deselectAction();
         this.selectedActionIndex = selectedActionIndex;
         PlayerAction<?> action = actions[selectedActionIndex];
-        action.select();
+        action.select(active);
     }
 
     public PlayerAction<?> getSelectedAction() {

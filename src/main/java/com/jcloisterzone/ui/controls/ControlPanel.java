@@ -65,7 +65,7 @@ public class ControlPanel extends FakeComponent {
         playerPanels = new PlayerPanel[players.length];
 
         for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, players[i], cache);
+            playerPanels[i] = new PlayerPanel(client, game, players[i], cache);
         }
     }
 
@@ -237,7 +237,7 @@ public class ControlPanel extends FakeComponent {
         return actionPanel;
     }
 
-    public void selectAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
+    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
         // direct collection sort can be unsupported - so copy to array first!
         int i = 0;
         PlayerAction<?>[] arr = new PlayerAction[actions.size()];
@@ -246,8 +246,8 @@ public class ControlPanel extends FakeComponent {
             arr[i++] = pa;
         }
         Arrays.sort(arr);
-        actionPanel.setActions(arr);
-        this.canPass = client.isClientActive() ? canPass : false;
+        actionPanel.setActions(targetPlayer.isLocalHuman(), arr);
+        this.canPass = targetPlayer.isLocalHuman() ? canPass : false;
         refreshComponents();
     }
 
@@ -255,10 +255,6 @@ public class ControlPanel extends FakeComponent {
         actionPanel.clearActions();
         canPass = false;
         refreshComponents();
-    }
-
-    public void playerActivated(Player turn, Player active) {
-        client.getGridPanel().repaint(); // players only
     }
 
     public void closeGame() {

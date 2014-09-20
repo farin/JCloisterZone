@@ -26,8 +26,9 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
     }
 
     @Override
-    public void setAction(SelectFollowerAction action) {
+    public void setAction(boolean active, SelectFollowerAction action) {
         this.action = action;
+        setActive(active);
     }
 
     @Override

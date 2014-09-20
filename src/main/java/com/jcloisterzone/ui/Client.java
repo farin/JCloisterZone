@@ -48,6 +48,7 @@ import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
@@ -86,6 +87,7 @@ import com.jcloisterzone.wsio.server.SimpleServer;
 public class Client extends JFrame {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
 
     public static final String BASE_TITLE = "JCloisterZone";
 
@@ -349,8 +351,12 @@ public class Client extends JFrame {
         assert gamePanel != null;
         this.game = game;
         this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
+        game.setReportingTool(reportingTool);
+        reportingTool.setGame(game);
         eventBus.register(new ClientController(this, game, gamePanel));
-        game.getEventBus().register(new InvokeInSwingUiAdapter(eventBus));
+        InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
+        uiAdapter.setReportingTool(reportingTool);
+        game.getEventBus().register(uiAdapter);
     }
 
     private String getUserName() {
@@ -367,6 +373,7 @@ public class Client extends JFrame {
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
             conn = handler.connect(username == null ? getUserName() : username, uri);
+            conn.setReportingTool(reportingTool = new ReportingTool());
             conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
@@ -468,24 +475,6 @@ public class Client extends JFrame {
         new AboutDialog();
     }
 
-    @Deprecated
-    public boolean isClientActive() {
-        return isClientActive(activePlayer);
-    }
-
-    public boolean isClientActive(Player player) {
-        if (player == null) return false;
-        if (player.getSlot().getAiClassName() != null) return false;
-        return player.getSlot().isOwn();
-    }
-
-    public Player getActivePlayer() {
-        return activePlayer;
-    }
-
-    public void setActivePlayer(Player activePlayer) {
-        this.activePlayer = activePlayer;
-    }
 
     void beep() {
         if (config.getBeep_alert()) {
@@ -574,6 +563,10 @@ public class Client extends JFrame {
         return gamePanel;
     }
 
+    public ReportingTool getReportingTool() {
+        return reportingTool;
+    }
+
     //------------------- LEGACY: TODO refactor ---------------
 
     @Deprecated
@@ -600,6 +593,7 @@ public class Client extends JFrame {
         PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
         return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
+
 
 
 }

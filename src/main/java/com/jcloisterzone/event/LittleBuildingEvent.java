@@ -7,8 +7,8 @@ public class LittleBuildingEvent extends PlayEvent {
 
     private final LittleBuilding building;
 
-    public LittleBuildingEvent(Player player, LittleBuilding building) {
-        super(player);
+    public LittleBuildingEvent(Player triggeringPlayer, LittleBuilding building) {
+        super(triggeringPlayer, null);
         this.building = building;
     }
 

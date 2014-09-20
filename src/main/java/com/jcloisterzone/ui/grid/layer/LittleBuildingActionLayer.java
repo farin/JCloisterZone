@@ -28,7 +28,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
-    public void setAction(LittleBuildingAction action) {
+    public void setAction(boolean active, LittleBuildingAction action) {
         this.action = action;
         setPosition(action == null ? null : getGame().getCurrentTile().getPosition());
     }
