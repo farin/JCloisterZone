@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.Client;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -93,13 +94,14 @@ public class ConnectGamePanel extends JPanel implements ConnectPanel {
     }
 
     private String[] getDefaultHostPort() {
+        int port = client.getConfig().getPort() == null ? ConfigLoader.DEFAULT_PORT : client.getConfig().getPort();
         List<String> history = client.getConfig().getConnection_history();
         if (history == null || history.isEmpty()) {
-            return new String[] {"", client.getConfig().getPort() + ""};
+            return new String[] {"", port + ""};
         } else {
             String[] hp = history.get(0).split(":");
             if (hp.length > 1) return hp;
-            return new String[] {hp[0], client.getConfig().getPort() + ""};
+            return new String[] {hp[0], port + ""};
         }
     }
 
@@ -133,7 +135,7 @@ public class ConnectGamePanel extends JPanel implements ConnectPanel {
             String hostname = hostField.getText().trim();
             String portStr = portField.getText().trim();
             int port = Integer.parseInt(portStr);
-            client.connect(null, hostname, port, false);
+            client.connect(hostname, port);
             return;
         } catch (NumberFormatException nfe) {
             message.setText( _("Invalid port number."));

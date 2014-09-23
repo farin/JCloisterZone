@@ -34,6 +34,12 @@ public class ConfigLoader {
 
     public static final String DEFAULT_CONFIG = "config.yaml";
 
+    public static final String DEFAULT_UPDATE = "http://jcloisterzone.com/version.xml";
+    public static final int DEFAULT_PORT = 37447;
+    public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
+    public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
+    public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
+
     private final Yaml yaml;
     private final Pattern indentPatter = Pattern.compile("^", Pattern.MULTILINE);
 
@@ -114,12 +120,12 @@ public class ConfigLoader {
 
     private Config createDefault() {
         Config config = new Config();
-        config.setUpdate("http://jcloisterzone.com/version.xml");
-        config.setPort(37447);
-        config.setScore_display_duration(7);
-        config.setAi_place_tile_delay(250);
+        config.setUpdate(DEFAULT_UPDATE);
+        config.setPort(DEFAULT_PORT);
+        config.setScore_display_duration(DEFAULT_SCORE_DISPLAY_DURATION);
+        config.setAi_place_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
         config.setClient_name("");
-        config.setPlay_online_host("play.jcloisterzone.com");
+        config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
         config.getConfirm().setTower_place(true);
         config.getConfirm().setRansom_payment(true);
         config.getConfirm().setGame_close(true);

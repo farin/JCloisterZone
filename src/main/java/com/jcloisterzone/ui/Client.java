@@ -68,6 +68,7 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
+import com.jcloisterzone.ui.panel.ChannelPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
@@ -107,6 +108,7 @@ public class Client extends JFrame {
     //private PlayerColor[] playerColors;
 
     private GamePanel gamePanel;
+    private ChannelPanel channelPanel;
 
     //private MenuBar menuBar;
     private StartPanel startPanel;
@@ -253,6 +255,14 @@ public class Client extends JFrame {
         pane.setVisible(true);
     }
 
+    public void newChannelPanel(String name) {
+        Container pane = this.getContentPane();
+        cleanContentPane();
+        channelPanel = new ChannelPanel(this);
+        pane.add(channelPanel);
+        pane.setVisible(true);
+    }
+
     @Deprecated
     public CreateGamePanel getCreateGamePanel() {
         if (gamePanel == null) return null;
@@ -367,7 +377,22 @@ public class Client extends JFrame {
         return name;
     }
 
-    public void connect(String username, String hostname, int port, boolean playOnline) {
+    public void connect(String hostname, int port) {
+        connect(null, hostname, port, false);
+    }
+
+    public void connectPlayOnline(String username) {
+        String configValue =  getConfig().getPlay_online_host();
+        String[] hp = ((configValue == null || configValue.trim().length() == 0) ? ConfigLoader.DEFAULT_PLAY_ONLINE_HOST : configValue).split(":");
+        int port = 80;
+        if (hp.length > 1) {
+           port = Integer.parseInt(hp[1]);
+        }
+        connect(username, hp[0], port, true);
+    }
+
+
+    private void connect(String username, String hostname, int port, boolean playOnline) {
         ClientStub handler = new ClientStub(this);
         RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
@@ -415,7 +440,8 @@ public class Client extends JFrame {
 
     public void createGame(Snapshot snapshot) {
         if (closeGame()) {
-            SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
+            int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
+            SimpleServer server = new SimpleServer(new InetSocketAddress(port), this);
             localServer.set(server);
             server.createGame(snapshot);
             server.start();
@@ -427,7 +453,7 @@ public class Client extends JFrame {
                 //empty
             }
             if (localServer.get() != null) { //can be set to null by server error
-                connect(null, "localhost", config.getPort(), false);
+                connect(null, "localhost", port, false);
             }
         }
     }

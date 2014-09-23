@@ -1,13 +1,10 @@
 package com.jcloisterzone.rmi;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,13 +33,13 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
 import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
@@ -58,6 +55,8 @@ import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ClientStub  implements InvocationHandler, MessageListener {
@@ -221,6 +220,15 @@ public class ClientStub  implements InvocationHandler, MessageListener {
                 }
             });
         }
+    }
+
+    @WsSubscribe
+    public void handleChannel(final ChannelMessage msg) throws InvocationTargetException, InterruptedException {
+        SwingUtilities.invokeAndWait(new Runnable() {
+            public void run() {
+                client.newChannelPanel(msg.getName());
+            }
+        });
     }
 
     @WsSubscribe

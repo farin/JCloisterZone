@@ -83,6 +83,7 @@ public class Config {
 
         private String preset;
         private List<String> players;
+        private Boolean online;
 
         public String getPreset() {
             return preset;
@@ -96,6 +97,12 @@ public class Config {
         public void setPlayers(List<String> players) {
             this.players = players;
         }
+        public Boolean getOnline() {
+            return online;
+        }
+        public void setOnline(Boolean online) {
+            this.online = online;
+        }
     }
 
     public static class DebugConfig {
@@ -108,7 +115,7 @@ public class Config {
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
-            return autostart != null && autostart.getPreset() != null;
+            return autostart != null && (autostart.getPreset() != null || Boolean.TRUE.equals(autostart.getOnline()));
         }
 
         public String getSave_format() {

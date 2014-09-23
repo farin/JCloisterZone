@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
@@ -64,6 +65,7 @@ public final class MessageParser {
         registerMsgType(ClientListMessage.class);
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);
+        registerMsgType(ChannelMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {

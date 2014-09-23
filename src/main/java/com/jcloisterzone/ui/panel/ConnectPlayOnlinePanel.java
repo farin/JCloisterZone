@@ -106,12 +106,7 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
     private void connect() {
         try {
             String nick = nickField.getText().trim();
-            String[] hp = client.getConfig().getPlay_online_host().split(":");
-            int port = 80;
-            if (hp.length > 1) {
-               port = Integer.parseInt(hp[1]);
-            }
-            client.connect(nick, hp[0], port, true);
+            client.connectPlayOnline(nick);
             return;
         } catch (NumberFormatException nfe) {
             message.setText( _("Invalid port number."));

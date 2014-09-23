@@ -105,7 +105,11 @@ public class Bootstrap  {
 
                 DebugConfig debugConfig = client.getConfig().getDebug();
                 if (debugConfig != null && debugConfig.isAutostartEnabled()) {
-                    client.createGame();
+                    if (Boolean.TRUE.equals(debugConfig.getAutostart().getOnline())) {
+                        client.connectPlayOnline(null);
+                    } else {
+                        client.createGame();
+                    }
                 }
             }
         });
