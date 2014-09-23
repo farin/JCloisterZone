@@ -1,10 +1,5 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -31,7 +26,6 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -40,7 +34,13 @@ import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
+
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
 public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
@@ -59,7 +59,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
-    private final Game game;
+    private final GameController gc;
     private final Player player;
     private Color color, fontColor;
 
@@ -73,10 +73,10 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private String mouseOverKey = null;
 
-    public PlayerPanel(Client client, Game game, Player player, PlayerPanelImageCache cache) {
+    public PlayerPanel(Client client, GameController gc, Player player, PlayerPanelImageCache cache) {
         super(client);
         this.player = player;
-        this.game = game;
+        this.gc = gc;
         this.cache = cache;
         this.color = player.getColors().getMeepleColor();
         this.fontColor = player.getColors().getFontColor();
@@ -340,7 +340,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.YES_OPTION != result) return;
             }
-            client.getServer().payRansom(player.getIndex(), followerClass);
+            gc.getRmiProxy().payRansom(player.getIndex(), followerClass);
         }
     }
 

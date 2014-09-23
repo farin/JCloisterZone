@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 
 import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 
@@ -20,11 +21,14 @@ public class CornCirclesPanel extends FakeComponent {
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
 
+    private final GameController gc;
+
     private JLabel header, footer;
     private JButton deploymentOption, removalOption;
 
-    public CornCirclesPanel(Client client) {
+    public CornCirclesPanel(Client client, GameController gc) {
         super(client);
+        this.gc = gc;
     }
 
     @Override
@@ -40,8 +44,8 @@ public class CornCirclesPanel extends FakeComponent {
         deploymentOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.getServer().cornCiclesRemoveOrDeploy(false);
-                client.getGridPanel().setSecondPanel(null);
+                gc.getRmiProxy().cornCiclesRemoveOrDeploy(false);
+                gc.getGamePanel().getGridPanel().setSecondPanel(null);
             }
         });
         parent.add(deploymentOption);
@@ -51,22 +55,22 @@ public class CornCirclesPanel extends FakeComponent {
         removalOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.getServer().cornCiclesRemoveOrDeploy(true);
-                client.getGridPanel().setSecondPanel(null);
+                gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
+                gc.getGamePanel().getGridPanel().setSecondPanel(null);
             }
         });
 
 
         parent.add(removalOption);
 
-        String feature = TileFeature.getLocalizedNamefor (client.getGame().getCurrentTile().getCornCircle());
+        String feature = TileFeature.getLocalizedNamefor (gc.getGame().getCurrentTile().getCornCircle());
         footer = new JLabel(_("on/from a {0}.", feature.toLowerCase()));
         parent.add(footer);
     }
 
     @Override
     public void layoutSwingComponents(JComponent parent) {
-        int panelX = client.getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60,
+        int panelX = gc.getGamePanel().getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60,
             left = panelX + 20;
 
         header.setBounds(left, 34, ControlPanel.PANEL_WIDTH-10, 30);
@@ -87,7 +91,7 @@ public class CornCirclesPanel extends FakeComponent {
     public void paintComponent(Graphics2D g2) {
         super.paintComponent(g2);
 
-        GridPanel gp = client.getGridPanel();
+        GridPanel gp = gc.getGamePanel().getGridPanel();
         int h = gp.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);

@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog;
 import com.jcloisterzone.ui.dialog.AmbiguousUndeployDialog.AmbiguousUndeployDialogEvent;
 import com.jcloisterzone.ui.grid.ActionLayer;
@@ -21,8 +22,8 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
 
     private SelectFollowerAction action;
 
-    public FollowerAreaLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public FollowerAreaLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
             }
         }
         if (pointers.size() == 1) {
-            action.perform(getClient().getServer(), pointers.get(0));
+            action.perform(getRmiProxy(), pointers.get(0));
             return;
         }
 
@@ -62,7 +63,7 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
         new AmbiguousUndeployDialog(getClient(), pointers, new AmbiguousUndeployDialogEvent() {
             @Override
             public void meepleTypeSelected(MeeplePointer mp) {
-               action.perform(getClient().getServer(), mp);
+               action.perform(getRmiProxy(), mp);
             }
         });
     }

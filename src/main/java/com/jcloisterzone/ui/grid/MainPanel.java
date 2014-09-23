@@ -28,6 +28,7 @@ import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.FlierDiceRollAnimation;
@@ -60,6 +61,7 @@ import com.jcloisterzone.ui.grid.layer.TowerLayer;
 public class MainPanel extends JPanel {
 
     private final Client client;
+    private final GameController gc;
     private final Game game;
     private AnimationService animationService;
 
@@ -78,10 +80,12 @@ public class MainPanel extends JPanel {
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
-    public MainPanel(Client client, Game game, ChatPanel chatPanel) {
+    public MainPanel(Client client, GameController gc, ChatPanel chatPanel) {
         this.client = client;
-        this.game = game;
+        this.gc = gc;
+        this.game = gc.getGame();
         this.chatPanel = chatPanel;
+
         animationService = new AnimationService();
         animationService.start();
 
@@ -110,73 +114,70 @@ public class MainPanel extends JPanel {
         removeAll();
         setVisible(false);
 
-        controlPanel = new ControlPanel(client, game);
+        controlPanel = new ControlPanel(client, gc);
         gridPanel = new GridPanel(client, controlPanel, chatPanel, snapshot);
-        meepleLayer = new MeepleLayer(gridPanel);
-        tileLayer = new TileLayer(gridPanel);
-        farmHintLayer = new FarmHintsLayer(gridPanel);
+        meepleLayer = new MeepleLayer(gridPanel, gc);
+        tileLayer = new TileLayer(gridPanel, gc);
+        farmHintLayer = new FarmHintsLayer(gridPanel, gc);
         gridPanel.addLayer(tileLayer);  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
-            towerLayer = new TowerLayer(gridPanel);
+            towerLayer = new TowerLayer(gridPanel, gc);
             gridPanel.addLayer(towerLayer); //5
         }
 
         gridPanel.addLayer(farmHintLayer); //zindex 10
 
         if (game.hasCapability(CastleCapability.class)) {
-            castleLayer = new CastleLayer(gridPanel);
+            castleLayer = new CastleLayer(gridPanel, gc);
             gridPanel.addLayer(castleLayer); //45
         }
         if (game.hasCapability(PlagueCapability.class)) {
-            plagueLayer = new PlagueLayer(gridPanel);
+            plagueLayer = new PlagueLayer(gridPanel, gc);
             gridPanel.addLayer(plagueLayer); //45
         }
 
         gridPanel.addLayer(meepleLayer); //zindex 50
         if (game.hasCapability(BridgeCapability.class)) {
-            bridgeLayer = new BridgeLayer(gridPanel);
+            bridgeLayer = new BridgeLayer(gridPanel, gc);
             bridgeLayer.setMeepleLayer(meepleLayer);
             gridPanel.addLayer(bridgeLayer);
         }
 
-        gridPanel.addLayer(new FollowerAreaLayer(gridPanel), false); //70
-
-
+        gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
 
         if (game.hasCapability(DragonCapability.class)) {
-            gridPanel.addLayer(new DragonAvailableMove(gridPanel), false);
-            dragonLayer = new DragonLayer(gridPanel);
+            gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc), false);
+            dragonLayer = new DragonLayer(gridPanel, gc);
             gridPanel.addLayer(dragonLayer); //90
         }
         if (game.hasCapability(FairyCapability.class)) {
-            fairyLayer = new FairyLayer(gridPanel);
+            fairyLayer = new FairyLayer(gridPanel, gc);
             gridPanel.addLayer(fairyLayer); //90
         }
 
         if (game.hasCapability(BarnCapability.class)) {
-            gridPanel.addLayer(new BarnAreaLayer(gridPanel), false);
+            gridPanel.addLayer(new BarnAreaLayer(gridPanel, gc), false);
         }
 
-        gridPanel.addLayer(new TilePlacementLayer(gridPanel), false);
-        gridPanel.addLayer(new FeatureAreaLayer(gridPanel), false);
+        gridPanel.addLayer(new TilePlacementLayer(gridPanel, gc), false);
+        gridPanel.addLayer(new FeatureAreaLayer(gridPanel, gc), false);
         if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class)) {
-            gridPanel.addLayer(new TileActionLayer(gridPanel), false);
+            gridPanel.addLayer(new TileActionLayer(gridPanel, gc), false);
         }
         if (game.hasCapability(AbbeyCapability.class)) {
-            gridPanel.addLayer(new AbbeyPlacementLayer(gridPanel), false);
+            gridPanel.addLayer(new AbbeyPlacementLayer(gridPanel, gc), false);
         }
         if (game.hasCapability(LittleBuildingsCapability.class)) {
-            gridPanel.addLayer(new LittleBuildingActionLayer(gridPanel), false); //100
+            gridPanel.addLayer(new LittleBuildingActionLayer(gridPanel, gc), false); //100
         }
-
 
         //abstractare - zindex 100
         //tile placement 3
 
-        gridPanel.addLayer(new AnimationLayer(gridPanel, animationService)); //zindex 800
+        gridPanel.addLayer(new AnimationLayer(gridPanel, gc, animationService)); //zindex 800
         animationService.setGridPanel(gridPanel);
 
-        placementHistoryLayer = new PlacementHistory(gridPanel, game.getBoard().getAllTiles());
+        placementHistoryLayer = new PlacementHistory(gridPanel, gc, game.getBoard().getAllTiles());
         gridPanel.addLayer(placementHistoryLayer, false);
 
         add(gridPanel);
@@ -290,5 +291,4 @@ public class MainPanel extends JPanel {
     public void fairyMoved(Position p) {
         fairyLayer.setPosition(p);
     }
-
 }

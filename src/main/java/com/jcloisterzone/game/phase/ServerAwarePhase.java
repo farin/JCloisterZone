@@ -2,24 +2,29 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public class ServerAwarePhase extends Phase {
 
-    private final Connection conn;
+    private final GameController gc;
 
-    public ServerAwarePhase(Game game, Connection conn) {
+    public ServerAwarePhase(Game game, GameController gc) {
         super(game);
-        this.conn = conn;
+        this.gc = gc;
     }
 
     public RmiProxy getServer() {
-        return conn.getRmiProxy();
+        return gc.getRmiProxy();
     }
 
     public Connection getConnection() {
-        return conn;
+        return gc.getConnection();
+    }
+
+    public GameController getGameController() {
+        return gc;
     }
 
     public boolean isLocalPlayer(Player player) {

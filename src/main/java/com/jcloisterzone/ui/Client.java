@@ -204,12 +204,9 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
+    //should be referenced from Controller
     public Connection getConnection() {
         return conn;
-    }
-
-    public RmiProxy getServer() {
-        return conn.getRmiProxy();
     }
 
     @Deprecated  //TODO game per GamePanel
@@ -239,14 +236,14 @@ public class Client extends JFrame {
         this.connectPanel = null;
     }
 
-    public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
+    public GamePanel newGamePanel(GameController gc, boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
         cleanContentPane();
-        gamePanel = new GamePanel(this, game);
+        gamePanel = new GamePanel(this, gc);
         gamePanel.showCreateGamePanel(mutableSlots, slots);
         pane.add(gamePanel);
         pane.setVisible(true);
-        activity = new GameController(this, game, gamePanel);
+        return gamePanel;
     }
 
     public void newChannelPanel(Channel channel, String name) {
@@ -380,12 +377,10 @@ public class Client extends JFrame {
 
     private void connect(String username, String hostname, int port, boolean playOnline) {
         ClientStub handler = new ClientStub(this);
-        RmiProxy rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, handler);
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
             conn = handler.connect(username == null ? getUserName() : username, uri);
             conn.setReportingTool(reportingTool = new ReportingTool());
-            conn.setRmiProxy(rmiProxy);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }
@@ -550,6 +545,10 @@ public class Client extends JFrame {
 
     public Activity getActivity() {
         return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     public GamePanel getGamePanel() {

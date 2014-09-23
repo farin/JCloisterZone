@@ -15,17 +15,17 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
 
 public class BazaarPhase extends ServerAwarePhase {
 
     private final BazaarCapability bazaarCap;
 
-    public BazaarPhase(Game game, Connection conn) {
-        super(game, conn);
+    public BazaarPhase(Game game, GameController controller) {
+        super(game, controller);
         bazaarCap = game.getCapability(BazaarCapability.class);
     }
 

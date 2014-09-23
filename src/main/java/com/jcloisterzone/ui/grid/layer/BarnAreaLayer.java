@@ -9,6 +9,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -16,8 +17,8 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
 
     private BarnAction action;
 
-    public BarnAreaLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public BarnAreaLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
 
     @Override
     protected void performAction(Position pos, Location selected) {
-        action.perform(getClient().getServer(), new FeaturePointer(pos, selected));
+        action.perform(getRmiProxy(), new FeaturePointer(pos, selected));
     }
 
     @Override

@@ -68,7 +68,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
         //logger.info("pop chain " + this.toString() + ": " + toExecute.toString());
         //execute after chain update is done
-        toExecute.perform(getServer());
+        toExecute.perform(getRmiProxy());
     }
 
     private void autosave() {
@@ -117,7 +117,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         Game copy = snapshot.asGame(game.getGameId());
         copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
-        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getConnection());
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getGameController());
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);

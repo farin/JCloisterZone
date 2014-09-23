@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -60,13 +59,14 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 //TODO find better name
-public class ClientStub  implements InvocationHandler, MessageListener {
+public class ClientStub implements MessageListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Connection conn;
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
+    private GameController gc;
     private Game game;
     private Channel channel;
 
@@ -141,19 +141,6 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     }
 
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (conn == null) {
-            logger.info("Not connected. Message ignored");
-        } else {
-            RmiMessage rmi = new RmiMessage(game.getGameId(), method.getName(), args);
-            conn.send(rmi);
-        }
-        return null;
-    }
-
-
-
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
@@ -191,10 +178,12 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
         if (snapshot == null) {
             game = new Game(msg.getGameId());
-            phase = new CreateGamePhase(game, conn);
+            gc = new GameController(client, game);
+            phase = new CreateGamePhase(game, gc);
         } else {
             game = snapshot.asGame(msg.getGameId());
-            phase = new LoadGamePhase(game, snapshot, conn);
+            gc = new GameController(client, game);
+            phase = new LoadGamePhase(game, snapshot, gc);
         }
         game.setConfig(client.getConfig());
         game.setReportingTool(conn.getReportingTool());
@@ -216,7 +205,10 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         if (msg.getState() == GameState.OPEN) {
             SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
-                    client.newGamePanel(game, msg.getSnapshot() == null, slots);
+                    GamePanel panel = client.newGamePanel(gc, msg.getSnapshot() == null, slots);
+                    gc.setGamePanel(panel);
+
+                    client.setActivity(gc);
                     client.setGame(game);
 
                     //HACK - we must wait for panel is created

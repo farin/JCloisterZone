@@ -21,6 +21,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
@@ -33,8 +34,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
     private SelectFeatureAction action;
     private boolean abbotOption = false;
 
-    public FeatureAreaLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public FeatureAreaLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
             //place tower piece instead
             for (PlayerAction<?> action : getClient().getControlPanel().getActionPanel().getActions()) {
                 if (action instanceof TowerPieceAction) {
-                    ((TowerPieceAction) action).perform(getClient().getServer(), pos);
+                    ((TowerPieceAction) action).perform(getRmiProxy(), pos);
                     gridPanel.hideLayer(this);
                     return false;
                 }
@@ -139,7 +140,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
                 }
             }
         }
-        action.perform(getClient().getServer(), new FeaturePointer(pos, loc));
+        action.perform(getRmiProxy(), new FeaturePointer(pos, loc));
         return;
     }
 

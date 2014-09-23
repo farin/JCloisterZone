@@ -21,6 +21,7 @@ import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -36,8 +37,8 @@ public class MeepleLayer extends AbstractGridLayer {
     //TODO own layer ???
     private List<PositionedImage> permanentImages = new ArrayList<>();
 
-    public MeepleLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public MeepleLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {

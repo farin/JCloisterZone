@@ -29,6 +29,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Activity;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -44,6 +45,7 @@ public class GamePanel extends BackgroundPanel {
 
     private final Client client;
     private final Game game;
+    private final GameController gc;
 
     private ChatPanel chatPanel;
     private CreateGamePanel createGamePanel;
@@ -52,9 +54,10 @@ public class GamePanel extends BackgroundPanel {
     private MainPanel mainPanel;
 
 
-    public GamePanel(Client client, Game game) {
+    public GamePanel(Client client, GameController gc) {
         this.client = client;
-        this.game = game;
+        this.gc = gc;
+        this.game = gc.getGame();
         setLayout(new BorderLayout());
     }
 
@@ -156,7 +159,7 @@ public class GamePanel extends BackgroundPanel {
 
         createGamePanel = null;
         connectedClients = null;
-        mainPanel = new MainPanel(client, game, chatPanel);
+        mainPanel = new MainPanel(client, gc, chatPanel);
         add(mainPanel, BorderLayout.CENTER);
         game.getReportingTool().setContainer(getMainPanel());
         mainPanel.started(ev.getSnapshot());

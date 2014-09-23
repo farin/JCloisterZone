@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -19,8 +20,8 @@ public class TowerLayer extends AbstractGridLayer {
 
     private Map<Position, Integer> heights = new HashMap<>();
 
-    public TowerLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public TowerLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class TowerLayer extends AbstractGridLayer {
             Area ra = getClient().getResourceManager().getMeepleTileArea(gridPanel.getTile(entry.getKey()), getSquareSize(), Location.TOWER);
             g2.fill(transformArea(ra, entry.getKey()));
             drawAntialiasedTextCenteredNoScale(g2,"" + entry.getValue(), 22, entry.getKey(),
-                    new ImmutablePoint((int)ra.getBounds2D().getCenterX(),(int)ra.getBounds2D().getCenterY()), Color.WHITE, null);
+                    new ImmutablePoint((int)ra.getBounds2D().getCenterX(), (int)ra.getBounds2D().getCenterY()), Color.WHITE, null);
         }
     }
 

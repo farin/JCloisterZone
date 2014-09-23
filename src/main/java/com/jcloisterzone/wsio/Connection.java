@@ -27,9 +27,6 @@ public class Connection {
     private String sessionKey;
     private String nickname;
 
-    //for legacy code, to be able pass connection only
-    private RmiProxy rmiProxy;
-
     public Connection(final String username, URI uri, MessageListener _listener) {
         this.listener = _listener;
         ws = new WebSocketClient(uri) {
@@ -107,14 +104,6 @@ public class Connection {
 
     public String getSessionKey() {
         return sessionKey;
-    }
-
-    public RmiProxy getRmiProxy() {
-        return rmiProxy;
-    }
-
-    public void setRmiProxy(RmiProxy rmiProxy) {
-        this.rmiProxy = rmiProxy;
     }
 
 

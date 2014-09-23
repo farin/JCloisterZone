@@ -8,6 +8,7 @@ import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -19,8 +20,8 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
     private boolean active;
     private Image gridDecoration;
 
-    public TileActionLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public TileActionLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (action.getOptions().contains(p)) {
                 e.consume();
-                action.perform(getClient().getServer(), p);
+                action.perform(getRmiProxy(), p);
             }
         }
     }

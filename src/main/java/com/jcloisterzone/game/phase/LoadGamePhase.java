@@ -15,6 +15,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.Connection;
 
 public class LoadGamePhase extends CreateGamePhase {
@@ -22,8 +23,8 @@ public class LoadGamePhase extends CreateGamePhase {
     private Snapshot snapshot;
     private LoadGameTilePackFactory tilePackFactory;
 
-    public LoadGamePhase(Game game, Snapshot snapshot, Connection conn) {
-        super(game, conn);
+    public LoadGamePhase(Game game, Snapshot snapshot, GameController controller) {
+        super(game, controller);
         this.snapshot = snapshot;
     }
 

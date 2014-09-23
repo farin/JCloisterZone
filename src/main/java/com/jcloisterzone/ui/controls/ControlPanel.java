@@ -25,6 +25,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -46,6 +47,7 @@ public class ControlPanel extends FakeComponent {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private final GameController gc;
     private final Game game;
 
     private JButton passButton;
@@ -54,9 +56,10 @@ public class ControlPanel extends FakeComponent {
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
-    public ControlPanel(final Client client, Game game) {
+    public ControlPanel(final Client client, GameController gc) {
         super(client);
-        this.game = game;
+        this.gc = gc;
+        this.game = gc.getGame();
 
         actionPanel = new ActionPanel(client);
 
@@ -65,7 +68,7 @@ public class ControlPanel extends FakeComponent {
         playerPanels = new PlayerPanel[players.length];
 
         for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, game, players[i], cache);
+            playerPanels[i] = new PlayerPanel(client, gc, players[i], cache);
         }
     }
 
@@ -229,7 +232,7 @@ public class ControlPanel extends FakeComponent {
 
     public void pass() {
         if (canPass) {
-            client.getServer().pass();
+            gc.getRmiProxy().pass();
         }
     }
 

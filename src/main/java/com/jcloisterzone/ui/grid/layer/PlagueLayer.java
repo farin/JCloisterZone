@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.PlagueCapability.PlagueSource;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -15,8 +16,8 @@ public class PlagueLayer extends AbstractGridLayer {
 
     private final PlagueCapability plague;
 
-    public PlagueLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public PlagueLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         plague = getGame().getCapability(PlagueCapability.class);
     }
 

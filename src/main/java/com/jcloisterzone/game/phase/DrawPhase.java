@@ -11,10 +11,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -25,8 +25,8 @@ public class DrawPhase extends ServerAwarePhase {
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
 
-    public DrawPhase(Game game, Connection conn) {
-        super(game, conn);
+    public DrawPhase(Game game, GameController controller) {
+        super(game, controller);
         DebugConfig debugConfig = game.getConfig().getDebug();
         if (debugConfig != null) {
             debugTiles = debugConfig.getDraw();

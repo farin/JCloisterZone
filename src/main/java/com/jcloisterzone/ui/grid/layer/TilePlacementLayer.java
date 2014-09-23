@@ -11,6 +11,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileSymmetry;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -22,8 +23,8 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     private Rotation previewRotation;
     private boolean allowedRotation;
 
-    public TilePlacementLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public TilePlacementLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null && isActive() && allowedRotation) {
                 e.consume();
-                action.perform(getClient().getServer(), new TilePlacement(p, previewRotation));
+                action.perform(getRmiProxy(), new TilePlacement(p, previewRotation));
             }
         }
     }

@@ -2,6 +2,9 @@ package com.jcloisterzone.ui;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Set;
 
@@ -59,32 +62,56 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GamePanel;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
 //TOOD rename to something like GameController or GameDispatcher
-public class GameController implements Activity {
+public class GameController implements Activity, InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
     private final Game game;
-    private final GamePanel gamePanel;
 
-    private EventBus eventBus;
+    private final RmiProxy rmiProxy;
+    private final EventBus eventBus;
 
+    private GamePanel gamePanel;
 
-    public GameController(Client client, Game game, GamePanel gamePanel) {
+    public GameController(Client client, Game game) {
         this.client = client;
         this.game = game;
-        this.gamePanel = gamePanel;
+
+        rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
 
         eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
         eventBus.register(this);
         InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
         uiAdapter.setReportingTool(game.getReportingTool());
         game.getEventBus().register(uiAdapter);
+    }
+
+    public Connection getConnection() {
+        return client.getConnection();
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (getConnection() == null) {
+            logger.info("Not connected. Message ignored");
+        } else {
+            RmiMessage rmi = new RmiMessage(game.getGameId(), method.getName(), args);
+            getConnection().send(rmi);
+        }
+        return null;
     }
 
     void clearActions() {
@@ -395,7 +422,19 @@ public class GameController implements Activity {
         }
     }
 
-    // activity interface
+    public RmiProxy getRmiProxy() {
+        return rmiProxy;
+    }
+
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
+    public void setGamePanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+    }
+
+    //activity interface
 
     @Override
     public void undo() {
@@ -422,5 +461,7 @@ public class GameController implements Activity {
     public void zoom(double steps) {
         gamePanel.zoom(steps);
     }
+
+
 
 }

@@ -24,6 +24,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.controls.MouseListeningRegion;
@@ -37,6 +38,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
 
     public static enum BazaarPanelState { INACTIVE, SELECT_TILE, MAKE_BID, BUY_OR_SELL};
 
+    final GameController gc;
     final BazaarCapability bcb;
 
     private int selectedItem = -1;
@@ -51,10 +53,11 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
     private SpinnerNumberModel bidAmountModel;
 
 
-    public BazaarPanel(Client client) {
+    public BazaarPanel(Client client, GameController gc) {
        super(client);
-       noAuction = client.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
-       bcb = client.getGame().getCapability(BazaarCapability.class);
+       this.gc = gc;
+       noAuction = gc.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
+       bcb = gc.getGame().getCapability(BazaarCapability.class);
        bidAmountModel = new SpinnerNumberModel(0,0,1,1);
     }
 
@@ -78,10 +81,10 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
                 switch (state) {
                 case SELECT_TILE:
                 case MAKE_BID:
-                    client.getServer().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
+                    gc.getRmiProxy().bazaarBid(selectedItem, bidAmountModel.getNumber().intValue());
                     break;
                 case BUY_OR_SELL:
-                    client.getServer().bazaarBuyOrSell(true);
+                    gc.getRmiProxy().bazaarBuyOrSell(true);
                     break;
                 }
 
@@ -99,10 +102,10 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
                 switch (state) {
                 case SELECT_TILE:
                 case MAKE_BID:
-                    client.getServer().pass();
+                    gc.getRmiProxy().pass();
                     break;
                 case BUY_OR_SELL:
-                    client.getServer().bazaarBuyOrSell(false);
+                    gc.getRmiProxy().bazaarBuyOrSell(false);
                     break;
                 }
             }
@@ -169,7 +172,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
             }
         }
 
-        layoutSwingComponents(client.getGridPanel());
+        layoutSwingComponents(gc.getGamePanel().getGridPanel());
     }
 
 
