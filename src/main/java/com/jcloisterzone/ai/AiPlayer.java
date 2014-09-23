@@ -1,6 +1,5 @@
 package com.jcloisterzone.ai;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Set;
 
@@ -22,9 +21,8 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AiPlayer {
 
@@ -34,7 +32,6 @@ public abstract class AiPlayer {
 
     private Connection conn;
     private RmiProxy server;
-    private ClientStub clientStub;
     private Player player;
 
     public void setGame(Game game) {
@@ -48,7 +45,6 @@ public abstract class AiPlayer {
     public void setServer(Connection conn, RmiProxy server) {
         Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
         this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
-        this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
         this.conn = conn;
     }
 
@@ -58,10 +54,6 @@ public abstract class AiPlayer {
 
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    protected ClientStub getClientStub() {
-        return clientStub;
     }
 
     protected Connection getConnection() {

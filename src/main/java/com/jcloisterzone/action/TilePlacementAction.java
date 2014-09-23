@@ -15,11 +15,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePlacement;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class TilePlacementAction extends PlayerAction<TilePlacement> {
 

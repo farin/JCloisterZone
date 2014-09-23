@@ -4,7 +4,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ai.GameRanking;
 import com.jcloisterzone.ai.SavePoint;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class ActionChoice<T> extends AiChoice{
 

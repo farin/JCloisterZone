@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.bugreport.ReportingTool;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
@@ -61,7 +60,6 @@ public class Connection {
                         reportingTool.report(payload);
                     }
                 }
-
 
                 if (msg instanceof WelcomeMessage) {
                     WelcomeMessage welcome = (WelcomeMessage) msg;

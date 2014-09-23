@@ -9,7 +9,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class MeepleAction extends SelectFeatureAction {
 

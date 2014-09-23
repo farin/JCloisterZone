@@ -5,9 +5,9 @@ import java.awt.Image;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class AbbeyPlacementAction extends SelectTileAction {
 

@@ -1,4 +1,4 @@
-package com.jcloisterzone.rmi;
+package com.jcloisterzone.ui;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -33,12 +33,12 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.online.Channel;
-import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
+import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;

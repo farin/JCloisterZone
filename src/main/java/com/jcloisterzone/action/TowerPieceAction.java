@@ -1,9 +1,9 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
 
 public class TowerPieceAction extends SelectTileAction {

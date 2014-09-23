@@ -9,10 +9,10 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
         ForwardBackwardListener, Iterable<T> {

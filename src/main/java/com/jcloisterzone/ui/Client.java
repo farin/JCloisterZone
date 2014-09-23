@@ -53,8 +53,6 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.online.Channel;
-import com.jcloisterzone.rmi.ClientStub;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -77,6 +75,7 @@ import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
 import static com.jcloisterzone.ui.I18nUtils._;

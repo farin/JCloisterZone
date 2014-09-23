@@ -1,4 +1,4 @@
-package com.jcloisterzone.rmi;
+package com.jcloisterzone.wsio;
 
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
