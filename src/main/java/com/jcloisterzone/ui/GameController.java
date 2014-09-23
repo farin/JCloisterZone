@@ -10,9 +10,12 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -43,7 +46,9 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.BazaarItem;
+import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ChatPanel;
+import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.dialog.GameOverDialog;
@@ -54,10 +59,12 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GamePanel;
+import com.jcloisterzone.wsio.message.UndoMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-public class ClientController  {
+//TOOD rename to something like GameController or GameDispatcher
+public class GameController implements Activity {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,12 +72,31 @@ public class ClientController  {
     private final Game game;
     private final GamePanel gamePanel;
 
+    private EventBus eventBus;
 
-    public ClientController(Client client, Game game, GamePanel gamePanel) {
+
+    public GameController(Client client, Game game, GamePanel gamePanel) {
         this.client = client;
         this.game = game;
         this.gamePanel = gamePanel;
+
+        eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
+        eventBus.register(this);
+        InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
+        uiAdapter.setReportingTool(game.getReportingTool());
+        game.getEventBus().register(uiAdapter);
     }
+
+    void clearActions() {
+        ControlPanel controlPanel = gamePanel.getControlPanel();
+        ActionPanel ap = controlPanel.getActionPanel();
+        if (ap.getActions() != null) {
+            controlPanel.clearActions();
+        }
+        ap.setFakeAction(null);
+        client.getJMenuBar().getUndo().setEnabled(false);
+    }
+
 
     @Subscribe
     public void updateCustomRule(RuleChangeEvent ev) {
@@ -154,7 +180,7 @@ public class ClientController  {
     public void tileEvent(TileEvent ev) {
         switch (ev.getType()) {
         case TileEvent.DRAW:
-            client.clearActions();
+            clearActions();
             refreshWindowTitle();
             break;
         case TileEvent.DISCARD:
@@ -199,7 +225,7 @@ public class ClientController  {
 
     @Subscribe
     public void towerIncreased(TowerIncreasedEvent ev) {
-        client.clearActions();
+        clearActions();
         gamePanel.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
     }
 
@@ -252,8 +278,8 @@ public class ClientController  {
     public void selectDragonMove(SelectDragonMoveEvent ev) {
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
-        client.clearActions();
-        client.getControlPanel().getActionPanel().setFakeAction("dragonmove");
+        clearActions();
+        gamePanel.getControlPanel().getActionPanel().setFakeAction("dragonmove");
         DragonLayer dragonDecoration = gamePanel.getGridPanel().findLayer(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
         gamePanel.getGridPanel().repaint();
@@ -268,7 +294,7 @@ public class ClientController  {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        client.clearActions();
+        clearActions();
         gamePanel.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
         gamePanel.getGridPanel().repaint();
         //TODO generic solution
@@ -279,7 +305,7 @@ public class ClientController  {
 
     @Subscribe
     public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
-        client.clearActions();
+        clearActions();
         createSecondPanel(CornCirclesPanel.class);
         gamePanel.getGridPanel().repaint();
     }
@@ -307,7 +333,7 @@ public class ClientController  {
 
     @Subscribe
     public void selectBazaarTile(BazaarSelectTileEvent ev) {
-        client.clearActions();
+        clearActions();
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         if (ev.getTargetPlayer().isLocalHuman()) {
             List<BazaarItem> supply = ev.getBazaarSupply();
@@ -341,7 +367,7 @@ public class ClientController  {
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-        client.clearActions();
+        clearActions();
         gamePanel.getGridPanel().repaint();
     }
 
@@ -368,4 +394,33 @@ public class ClientController  {
             chatPanel.displayChatMessage(ev);
         }
     }
+
+    // activity interface
+
+    @Override
+    public void undo() {
+        client.getConnection().send(new UndoMessage(game.getGameId()));
+    }
+
+    @Override
+    public ReportingTool getReportingTool() {
+        return game.getReportingTool();
+    }
+
+    @Override
+    public void toggleRecentHistory(boolean show) {
+        gamePanel.toggleRecentHistory(show);
+
+    }
+
+    @Override
+    public void setShowFarmHints(boolean showFarmHints) {
+        gamePanel.setShowFarmHints(showFarmHints);
+    }
+
+    @Override
+    public void zoom(double steps) {
+        gamePanel.zoom(steps);
+    }
+
 }

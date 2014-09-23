@@ -11,6 +11,7 @@ import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.online.Channel;
+import com.jcloisterzone.ui.Activity;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ChatPanel;
 

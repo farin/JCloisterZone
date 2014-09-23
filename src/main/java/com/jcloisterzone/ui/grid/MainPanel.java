@@ -183,15 +183,14 @@ public class MainPanel extends JPanel {
         setVisible(true);
     }
 
-    public void showRecentHistory() {
-        placementHistoryLayer.update();
-        gridPanel.showLayer(placementHistoryLayer);
+    public void toggleRecentHistory(boolean show) {
+        if (show) {
+            placementHistoryLayer.update();
+            gridPanel.showLayer(placementHistoryLayer);
+        } else {
+            gridPanel.hideLayer(placementHistoryLayer);
+        }
     }
-
-    public void hideRecentHistory() {
-        gridPanel.hideLayer(placementHistoryLayer);
-    }
-
 
     public void closeGame() {
         gridPanel.clearActionDecorations();

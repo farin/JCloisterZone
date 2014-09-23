@@ -42,9 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
@@ -57,7 +55,6 @@ import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -98,33 +95,30 @@ public class Client extends JFrame {
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
 
-    //non-persistent settings (TODO move to mainPanel)
-    private boolean showHistory;
-
     @Deprecated
     private FigureTheme figureTheme;
     @Deprecated
     private ControlsTheme controlsTheme;
-    //private PlayerColor[] playerColors;
 
+    private Activity activity;
+
+    @Deprecated  //keep only activity interface
     private GamePanel gamePanel;
+    @Deprecated //keep only activity interface
     private ChannelPanel channelPanel;
 
-    //private MenuBar menuBar;
     private StartPanel startPanel;
 
     private ConnectPanel connectPanel;
-    //private ConnectGamePanel connectGamePanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private Connection conn;
 
+    @Deprecated
     private Game game;
-    //active player must be cached locally because of game's active player record is changed in other thread immediately
-    private Player activePlayer;
 
-    private EventBus eventBus;
+
 
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
@@ -144,14 +138,14 @@ public class Client extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             MenuFix.installGtkPopupBugWorkaround();
         } catch (Exception e) {
-            e.printStackTrace(); //TODO logger
+            logger.warn(e.getMessage(), e);
         }
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (closeGame() == true) {
+                if (closeGame()) {
                     System.exit(0);
                 }
             }
@@ -253,6 +247,7 @@ public class Client extends JFrame {
         gamePanel.showCreateGamePanel(mutableSlots, slots);
         pane.add(gamePanel);
         pane.setVisible(true);
+        activity = new GameController(this, game, gamePanel);
     }
 
     public void newChannelPanel(Channel channel, String name) {
@@ -261,6 +256,7 @@ public class Client extends JFrame {
         channelPanel = new ChannelPanel(this, channel);
         pane.add(channelPanel);
         pane.setVisible(true);
+        //activity = ...
     }
 
     @Deprecated
@@ -309,7 +305,6 @@ public class Client extends JFrame {
             }
             localServer.set(null);
         }
-        activePlayer = null;
         getJMenuBar().setIsGameRunning(false);
 
         if (gamePanel != null && gamePanel.getMainPanel() != null) {
@@ -321,7 +316,6 @@ public class Client extends JFrame {
             discardedTilesDialog = null;
             getJMenuBar().setShowDiscardedEnabled(false);
         }
-        eventBus = null;
         return true;
     }
 
@@ -360,13 +354,6 @@ public class Client extends JFrame {
     public void setGame(Game game) {
         assert gamePanel != null;
         this.game = game;
-        this.eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
-        game.setReportingTool(reportingTool);
-        reportingTool.setGame(game);
-        eventBus.register(new ClientController(this, game, gamePanel));
-        InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
-        uiAdapter.setReportingTool(reportingTool);
-        game.getEventBus().register(uiAdapter);
     }
 
     private String getUserName() {
@@ -516,16 +503,6 @@ public class Client extends JFrame {
         }
     }
 
-    void clearActions() {
-        ControlPanel controlPanel = gamePanel.getControlPanel();
-        ActionPanel ap = controlPanel.getActionPanel();
-        if (ap.getActions() != null) {
-            controlPanel.clearActions();
-        }
-        ap.setFakeAction(null);
-        getJMenuBar().getUndo().setEnabled(false);
-    }
-
     public DiscardedTilesDialog getDiscardedTilesDialog() {
         return discardedTilesDialog;
     }
@@ -572,25 +549,12 @@ public class Client extends JFrame {
         }
     }
 
-    public boolean isShowHistory() {
-        return showHistory;
-    }
-
-    public void setShowHistory(boolean showHistory) {
-        if (showHistory) {
-            gamePanel.getMainPanel().showRecentHistory();
-        } else {
-            gamePanel.getMainPanel().hideRecentHistory();
-        }
-        this.showHistory = showHistory;
+    public Activity getActivity() {
+        return activity;
     }
 
     public GamePanel getGamePanel() {
         return gamePanel;
-    }
-
-    public ReportingTool getReportingTool() {
-        return reportingTool;
     }
 
     //------------------- LEGACY: TODO refactor ---------------
@@ -619,7 +583,4 @@ public class Client extends JFrame {
         PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
         return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
-
-
-
 }

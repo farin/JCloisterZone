@@ -4,7 +4,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -90,7 +89,7 @@ public class MenuBar extends JMenuBar {
         undo.setEnabled(false);
         undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getConnection().send(new UndoMessage(client.getGame().getGameId()));
+                client.getActivity().undo();
             }
         });
         menu.add(undo);
@@ -138,7 +137,7 @@ public class MenuBar extends JMenuBar {
         zoomIn.setEnabled(false);
         zoomIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getGridPanel().zoom(2.0);
+                client.getActivity().zoom(2.0);
             }
         });
         menu.add(zoomIn);
@@ -147,23 +146,11 @@ public class MenuBar extends JMenuBar {
         zoomOut.setEnabled(false);
         zoomOut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.getGridPanel().zoom(-2.0);
+                client.getActivity().zoom(-2.0);
             }
         });
         menu.add(zoomOut);
 
-//		menuItem = new JMenuItem(_("FullScreen"));
-//		menuItem.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				//fullScreen();
-//				throw new UnsupportedOperationException();
-//			}
-//		});
-//		/*if (!GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported()) {
-//			menuItem.setEnabled(false);
-//		}*/
-//		menuItem.setEnabled(false);
-//		menu.add(menuItem);
 
         menu.addSeparator();
         history = new JCheckBoxMenuItem(_("Show last placements"));
@@ -171,8 +158,7 @@ public class MenuBar extends JMenuBar {
         history.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.setShowHistory(ch.isSelected());
-
+                client.getActivity().toggleRecentHistory(ch.isSelected());
             }
         });
         menu.add(history);
@@ -182,7 +168,7 @@ public class MenuBar extends JMenuBar {
         farmHints.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getMainPanel().setShowFarmHints(ch.isSelected());
+                client.getActivity().setShowFarmHints(ch.isSelected());
             }
         });
         menu.add(farmHints);
@@ -288,7 +274,7 @@ public class MenuBar extends JMenuBar {
         reportBug = new JMenuItem(_("Report bug"));
         reportBug.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new BugReportDialog(client.getReportingTool());
+                new BugReportDialog(client.getActivity().getReportingTool());
             }
         });
         reportBug.setEnabled(false);

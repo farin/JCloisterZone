@@ -59,7 +59,7 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-
+//TODO find better name
 public class ClientStub  implements InvocationHandler, MessageListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -197,6 +197,8 @@ public class ClientStub  implements InvocationHandler, MessageListener {
             phase = new LoadGamePhase(game, snapshot, conn);
         }
         game.setConfig(client.getConfig());
+        game.setReportingTool(conn.getReportingTool());
+        conn.getReportingTool().setGame(game);
 
         final PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
 
@@ -216,6 +218,7 @@ public class ClientStub  implements InvocationHandler, MessageListener {
                 public void run() {
                     client.newGamePanel(game, msg.getSnapshot() == null, slots);
                     client.setGame(game);
+
                     //HACK - we must wait for panel is created
                     handleGameSetup(msg.getGameSetup());
                     performAutostart();
