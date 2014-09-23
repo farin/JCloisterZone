@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -11,6 +10,7 @@ import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.ChatPanel;
 
@@ -18,11 +18,13 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ChannelPanel extends JPanel {
 
+    private final Channel channel;
     private ChatPanel chatPanel;
     private JTextPane connectedClients;
 
 
-    public ChannelPanel(Client client) {
+    public ChannelPanel(Client client, Channel channel) {
+        this.channel = channel;
         setLayout(new MigLayout("", "[]", "[grow]"));
 
         add(createConnectedClientsPanel(), "cell 0 0,");

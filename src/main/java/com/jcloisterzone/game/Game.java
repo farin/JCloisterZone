@@ -49,6 +49,7 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.wsio.server.RemoteClient;
 
 
 /**
@@ -61,6 +62,8 @@ public class Game extends GameSettings {
     private ReportingTool reportingTool;
 
     private Config config;
+
+    private RemoteClient[] remoteClients;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -473,5 +476,13 @@ public class Game extends GameSettings {
 
     public ReportingTool getReportingTool() {
         return reportingTool;
+    }
+
+    public RemoteClient[] getRemoteClients() {
+        return remoteClients;
+    }
+
+    public void setRemoteClients(RemoteClient[] remoteClients) {
+        this.remoteClients = remoteClients;
     }
 }

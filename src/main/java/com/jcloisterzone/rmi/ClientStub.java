@@ -32,6 +32,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.GamePanel;
@@ -64,10 +65,11 @@ public class ClientStub  implements InvocationHandler, MessageListener {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Connection conn;
-    private RemoteClient[] remoteClients;
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
     private Game game;
+    private Channel channel;
+
     private final Client client;
     private boolean autostartPerfomed;
 
@@ -129,8 +131,8 @@ public class ClientStub  implements InvocationHandler, MessageListener {
         game.flushEventQueue();
     }
 
-    public RemoteClient getClientById(String clientId) {;
-        for (RemoteClient remote: remoteClients) {
+    public RemoteClient getClientById(Game game, String clientId) {;
+        for (RemoteClient remote: game.getRemoteClients()) {
             if (remote.getClientId().equals(clientId)) {
                 return remote;
             }
@@ -224,22 +226,27 @@ public class ClientStub  implements InvocationHandler, MessageListener {
 
     @WsSubscribe
     public void handleChannel(final ChannelMessage msg) throws InvocationTargetException, InterruptedException {
+        channel = new Channel(msg.getName());
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
-                client.newChannelPanel(msg.getName());
+                client.newChannelPanel(channel, msg.getName());
             }
         });
     }
 
     @WsSubscribe
     public void handleClientList(ClientListMessage msg) {
-        remoteClients = msg.getClients();
-        game.post(new ClientListChangedEvent(msg.getClients()));
+        if (msg.getChannel() != null) {
+            channel.setRemoteClients(msg.getClients());
+        } else {
+            game.setRemoteClients(msg.getClients());
+            game.post(new ClientListChangedEvent(msg.getClients()));
+        }
     }
 
     @WsSubscribe
     public void handleChat(ChatMessage msg) {
-        game.post(new ChatEvent(getClientById(msg.getClientId()), msg.getText()));
+        game.post(new ChatEvent(getClientById(game, msg.getClientId()), msg.getText()));
     }
 
     @WsSubscribe

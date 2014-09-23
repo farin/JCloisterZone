@@ -7,6 +7,7 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 public class ClientListMessage implements WsMessage {
 
     private String gameId;
+    private String channel;
     private RemoteClient[] clients;
 
     public ClientListMessage(String gameId, RemoteClient[] clients) {
@@ -31,5 +32,11 @@ public class ClientListMessage implements WsMessage {
         this.clients = clients;
     }
 
+    public String getChannel() {
+        return channel;
+    }
 
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }

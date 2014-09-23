@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -56,6 +54,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.GameOverPhase;
+import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.rmi.ClientStub;
 import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.controls.ActionPanel;
@@ -65,7 +64,6 @@ import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ChannelPanel;
@@ -83,6 +81,8 @@ import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -255,10 +255,10 @@ public class Client extends JFrame {
         pane.setVisible(true);
     }
 
-    public void newChannelPanel(String name) {
+    public void newChannelPanel(Channel channel, String name) {
         Container pane = this.getContentPane();
         cleanContentPane();
-        channelPanel = new ChannelPanel(this);
+        channelPanel = new ChannelPanel(this, channel);
         pane.add(channelPanel);
         pane.setVisible(true);
     }
