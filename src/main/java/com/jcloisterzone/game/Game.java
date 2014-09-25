@@ -18,6 +18,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -56,13 +57,14 @@ import com.jcloisterzone.wsio.server.RemoteClient;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game extends GameSettings {
+public class Game {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
     private ReportingTool reportingTool;
 
     private Config config;
 
+    private final GameSettings gameSettings;
     private RemoteClient[] remoteClients;
 
     /** pack of remaining tiles */
@@ -94,9 +96,8 @@ public class Game extends GameSettings {
 
     private int idSequenceCurrVal = 0;
 
-
     public Game(String gameId) {
-        super(gameId);
+        gameSettings = new GameSettings(gameId);
     }
 
     public EventBus getEventBus() {
@@ -484,5 +485,35 @@ public class Game extends GameSettings {
 
     public void setRemoteClients(RemoteClient[] remoteClients) {
         this.remoteClients = remoteClients;
+    }
+
+    // game settings delegation
+
+    public String getGameId() {
+        return gameSettings.getGameId();
+    }
+
+    public boolean hasExpansion(Expansion expansion) {
+        return gameSettings.hasExpansion(expansion);
+    }
+
+    public boolean hasRule(CustomRule rule) {
+        return gameSettings.hasRule(rule);
+    }
+
+    public boolean hasCapability(Class<? extends Capability> c) {
+        return gameSettings.hasCapability(c);
+    }
+
+    public Set<Expansion> getExpansions() {
+        return gameSettings.getExpansions();
+    }
+
+    public Set<CustomRule> getCustomRules() {
+        return gameSettings.getCustomRules();
+    }
+
+    public Set<Class<? extends Capability>> getCapabilityClasses() {
+        return gameSettings.getCapabilityClasses();
     }
 }
