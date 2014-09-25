@@ -24,33 +24,18 @@ import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
 import com.jcloisterzone.event.BazaarSelectTileEvent;
 import com.jcloisterzone.event.BazaarTileSelectedEvent;
-import com.jcloisterzone.event.BridgeDeployedEvent;
-import com.jcloisterzone.event.CastleDeployedEvent;
-import com.jcloisterzone.event.ChatEvent;
-import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
-import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.MeeplePrisonEvent;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
-import com.jcloisterzone.event.TunnelPiecePlacedEvent;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.controls.ActionPanel;
-import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -69,7 +54,6 @@ import com.jcloisterzone.wsio.message.UndoMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-//TOOD rename to something like GameController or GameDispatcher
 public class GameController implements Activity, InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -93,6 +77,10 @@ public class GameController implements Activity, InvocationHandler {
         InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
         uiAdapter.setReportingTool(game.getReportingTool());
         game.getEventBus().register(uiAdapter);
+    }
+
+    public void register(Object subscriber) {
+        eventBus.register(subscriber);
     }
 
     public Connection getConnection() {
@@ -126,40 +114,13 @@ public class GameController implements Activity, InvocationHandler {
 
 
     @Subscribe
-    public void updateCustomRule(RuleChangeEvent ev) {
-        gamePanel.getCreateGamePanel().updateCustomRule(ev.getRule(), ev.isEnabled());
-    }
-
-    @Subscribe
-    public void updateExpansion(ExpansionChangedEvent ev) {
-        gamePanel.getCreateGamePanel().updateExpansion(ev.getExpansion(), ev.isEnabled());
-    }
-
-    @Subscribe
-    public void updateSlot(PlayerSlotChangeEvent ev) {
-        PlayerSlot slot = ev.getSlot();
-        if (gamePanel.getCreateGamePanel() != null) {
-            gamePanel.getCreateGamePanel().updateSlot(slot.getNumber());
-        } else {
-            throw new IllegalStateException();
-        }
-    }
-
-    @Subscribe
-    public void updateConnectedClients(ClientListChangedEvent ev) {
-        gamePanel.clientListChanged(ev.getClients());
-    }
-
-    @Subscribe
-    public void updateSupportedExpansions(SupportedExpansionsChangeEvent ev) {
-        gamePanel.getCreateGamePanel().updateSupportedExpansions(ev.getExpansions());
-    }
-
-    @Subscribe
     public void gameStateChange(GameStateChangeEvent ev) {
         switch (ev.getType()) {
         case GameStateChangeEvent.GAME_START:
-            started(ev);
+            MenuBar menu = client.getJMenuBar();
+            menu.setZoomInEnabled(true);
+            menu.setZoomOutEnabled(true);
+            menu.setIsGameRunning(true);
             break;
         case GameStateChangeEvent.GAME_OVER:
             client.closeGame(true);
@@ -168,13 +129,6 @@ public class GameController implements Activity, InvocationHandler {
         }
     }
 
-    private void started(GameStateChangeEvent ev) {
-        gamePanel.started(ev);
-        MenuBar menu = client.getJMenuBar();
-        menu.setZoomInEnabled(true);
-        menu.setZoomOutEnabled(true);
-        menu.setIsGameRunning(true);
-    }
 
     @Subscribe
     public void turnChanged(PlayerTurnEvent ev) {
@@ -228,70 +182,14 @@ public class GameController implements Activity, InvocationHandler {
     }
 
     @Subscribe
-    public void dragonMoved(NeutralFigureMoveEvent ev) {
-        switch (ev.getType()) {
-        case NeutralFigureMoveEvent.DRAGON:
-            gamePanel.getMainPanel().dragonMoved(ev.getTo());
-            break;
-        case NeutralFigureMoveEvent.FAIRY:
-            gamePanel.getMainPanel().fairyMoved(ev.getTo());
-            break;
-        }
-    }
-
-    @Subscribe
-    public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
-        gamePanel.getMainPanel().tunnelPiecePlaced(ev.getTriggeringPlayer(), ev.getPosition(), ev.getLocation(), ev.isSecondPiece());
-    }
-
-
-    @Subscribe
-    public void flierRoll(FlierRollEvent ev) {
-        gamePanel.getMainPanel().flierRoll(ev.getPosition(), ev.getDistance());
-    }
-
-    @Subscribe
     public void towerIncreased(TowerIncreasedEvent ev) {
         clearActions();
-        gamePanel.getMainPanel().towerIncreased(ev.getPosition(), ev.getCaptureRange());
-    }
-
-    // ------------------ Meeple events -----------
-
-    @Subscribe
-    public void meepleEvent(MeepleEvent ev) {
-        gamePanel.getMainPanel().meepleEvent(ev);
     }
 
     @Subscribe
     public void meeplePrisonEvent(MeeplePrisonEvent ev) {
         gamePanel.getGridPanel().repaint();
     }
-
-
-    @Subscribe
-    public void bridgeDeployed(BridgeDeployedEvent ev) {
-        gamePanel.getMainPanel().bridgeDeployed(ev.getPosition(), ev.getLocation());
-    }
-
-    @Subscribe
-    public void castleDeployed(CastleDeployedEvent ev) {
-        gamePanel.getMainPanel().castleDeployed(ev.getPart1(), ev.getPart2());
-    }
-
-    // ------------------ Feature events ----------
-
-
-    @Subscribe
-    public void scored(ScoreEvent ev) {
-        if (ev.getFeature() == null) {
-            gamePanel.getMainPanel().scored(ev.getPosition(), ev.getTargetPlayer(), ev.getLabel(), ev.isFinal());
-        } else {
-            gamePanel.getMainPanel().scored(ev.getFeature(), ev.getTargetPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
-        }
-        gamePanel.getMainPanel().repaint(); // players only
-    }
-
 
 
     // User interface
@@ -414,14 +312,6 @@ public class GameController implements Activity, InvocationHandler {
         gamePanel.getGridPanel().setSecondPanel(null);
     }
 
-    @Subscribe
-    public void chatMessageReceived(ChatEvent ev) {
-        ChatPanel chatPanel = gamePanel.getChatPanel();
-        if (chatPanel != null) {
-            chatPanel.displayChatMessage(ev);
-        }
-    }
-
     public RmiProxy getRmiProxy() {
         return rmiProxy;
     }
@@ -461,7 +351,4 @@ public class GameController implements Activity, InvocationHandler {
     public void zoom(double steps) {
         gamePanel.zoom(steps);
     }
-
-
-
 }

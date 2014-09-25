@@ -40,6 +40,7 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.game.Game;
@@ -275,6 +276,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         return new ReceivedChatMessage(ev, nick, color);
     }
 
+    @Subscribe
     public void displayChatMessage(ChatEvent ev) {
         ReceivedChatMessage fm = createReceivedMessage(ev);
         formattedMessages.addLast(fm);
@@ -305,7 +307,6 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         messagesPane.setDocument(doc);
         layoutSwingComponents(parent);
     }
-
 
     static class ReceivedChatMessage {
         final ChatEvent ev;

@@ -31,10 +31,15 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -538,6 +543,26 @@ public class CreateGamePanel extends JPanel {
         }
 
         updateSerialLabels();
+    }
+
+    @Subscribe
+    public void updateCustomRule(RuleChangeEvent ev) {
+        updateCustomRule(ev.getRule(), ev.isEnabled());
+    }
+
+    @Subscribe
+    public void updateExpansion(ExpansionChangedEvent ev) {
+        updateExpansion(ev.getExpansion(), ev.isEnabled());
+    }
+
+    @Subscribe
+    public void updateSlot(PlayerSlotChangeEvent ev) {
+        updateSlot(ev.getSlot().getNumber());
+    }
+
+    @Subscribe
+    public void updateSupportedExpansions(SupportedExpansionsChangeEvent ev) {
+        updateSupportedExpansions(ev.getExpansions());
     }
 
 }

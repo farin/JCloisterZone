@@ -6,12 +6,20 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.BridgeDeployedEvent;
+import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.TowerIncreasedEvent;
+import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
@@ -85,6 +93,7 @@ public class MainPanel extends JPanel {
         this.gc = gc;
         this.game = gc.getGame();
         this.chatPanel = chatPanel;
+        gc.register(this);
 
         animationService = new AnimationService();
         animationService.start();
@@ -207,7 +216,7 @@ public class MainPanel extends JPanel {
         }
     }
 
-
+    @Subscribe
     public void meepleEvent(MeepleEvent ev) {
         gridPanel.clearActionDecorations();
         if (ev.getFrom() != null) {
@@ -220,15 +229,18 @@ public class MainPanel extends JPanel {
 
     }
 
+    @Subscribe
     public void bridgeDeployed(Position pos, Location loc) {
         gridPanel.clearActionDecorations();
         bridgeLayer.bridgeDeployed(pos, loc);
     }
 
+    @Subscribe
     public void castleDeployed(Castle castle1, Castle castle2) {
         gridPanel.clearActionDecorations();
         castleLayer.castleDeployed(castle1, castle2);
     }
+
 
     private Integer getScoreAnimationDuration() {
         Integer duration = client.getConfig().getScore_display_duration();
@@ -256,39 +268,56 @@ public class MainPanel extends JPanel {
             player.getColors().getMeepleColor(),
             finalScoring ? null : getScoreAnimationDuration()
         ));
-
     }
 
-    public void flierRoll(Position pos, int distance) {
-        animationService.registerAnimation(new FlierDiceRollAnimation(pos, distance));
+    @Subscribe
+    public void scored(ScoreEvent ev) {
+        if (ev.getFeature() == null) {
+            scored(ev.getPosition(), ev.getTargetPlayer(), ev.getLabel(), ev.isFinal());
+        } else {
+            scored(ev.getFeature(), ev.getTargetPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
+        }
+        repaint();
     }
 
-    public void towerIncreased(Position p, Integer height) {
-        towerLayer.setTowerHeight(p, height);
-        gridPanel.repaint();
+    @Subscribe
+    public void dragonMoved(NeutralFigureMoveEvent ev) {
+        switch (ev.getType()) {
+        case NeutralFigureMoveEvent.DRAGON:
+            dragonLayer.setPosition(ev.getTo());
+            dragonLayer.setMoves(0);
+            gridPanel.hideLayer(DragonAvailableMove.class);
+            gridPanel.repaint();
+            break;
+        case NeutralFigureMoveEvent.FAIRY:
+            fairyLayer.setPosition(ev.getTo());
+            break;
+        }
     }
 
-    public void tunnelPiecePlaced(Player player, Position p, Location loc, boolean isSecondPiece) {
+    @Subscribe
+    public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
+        Player player = ev.getTriggeringPlayer();
         Color c;
-        if (isSecondPiece) {
+        if (ev.isSecondPiece()) {
             c = client.getPlayerSecondTunelColor(player);
         } else {
             c = player.getColors().getMeepleColor();
         }
         Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
-        Tile tile = gridPanel.getTile(p);
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, loc);
-        meepleLayer.addPermanentImage(p, offset, tunnelPiece);
+        Tile tile = gridPanel.getTile(ev.getPosition());
+        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
+        meepleLayer.addPermanentImage(ev.getPosition(), offset, tunnelPiece);
     }
 
-    public void dragonMoved(Position p) {
-        dragonLayer.setPosition(p);
-        dragonLayer.setMoves(0);
-        gridPanel.hideLayer(DragonAvailableMove.class);
+    @Subscribe
+    public void flierRoll(FlierRollEvent ev) {
+        animationService.registerAnimation(new FlierDiceRollAnimation(ev.getPosition(), ev.getDistance()));
+    }
+
+    @Subscribe
+    public void towerIncreased(TowerIncreasedEvent ev) {
+        towerLayer.setTowerHeight(ev.getPosition(), ev.getCaptureRange());
         gridPanel.repaint();
-    }
-
-    public void fairyMoved(Position p) {
-        fairyLayer.setPosition(p);
     }
 }

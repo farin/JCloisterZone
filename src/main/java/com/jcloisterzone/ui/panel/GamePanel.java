@@ -22,19 +22,18 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.bugreport.ReportingTool;
+import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.ui.Activity;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -59,6 +58,7 @@ public class GamePanel extends BackgroundPanel {
         this.gc = gc;
         this.game = gc.getGame();
         setLayout(new BorderLayout());
+        gc.register(this);
     }
 
     private JPanel createConnectedClientsPanel() {
@@ -102,6 +102,9 @@ public class GamePanel extends BackgroundPanel {
         chatPanel.registerSwingComponents(chatBox);
         chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
         chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
+
+        gc.register(createGamePanel);
+        gc.register(chatPanel);
     }
 
     public void clientListChanged(RemoteClient[] clients) {
@@ -152,19 +155,6 @@ public class GamePanel extends BackgroundPanel {
         }
     }
 
-    public void started(GameStateChangeEvent ev) {
-        disposePanel(); //free createGamePanel
-        removeAll();
-        setBackgroundImage(null);
-
-        createGamePanel = null;
-        connectedClients = null;
-        mainPanel = new MainPanel(client, gc, chatPanel);
-        add(mainPanel, BorderLayout.CENTER);
-        game.getReportingTool().setContainer(getMainPanel());
-        mainPanel.started(ev.getSnapshot());
-    }
-
     public void disposePanel() {
         if (createGamePanel != null) createGamePanel.disposePanel();
     }
@@ -213,4 +203,24 @@ public class GamePanel extends BackgroundPanel {
         GridPanel gp = getGridPanel();
         if (gp != null) gp.zoom(steps);
     }
+
+    @Subscribe
+    public void started(GameStateChangeEvent ev) {
+        disposePanel(); //free createGamePanel
+        removeAll();
+        setBackgroundImage(null);
+
+        createGamePanel = null;
+        connectedClients = null;
+        mainPanel = new MainPanel(client, gc, chatPanel);
+        add(mainPanel, BorderLayout.CENTER);
+        game.getReportingTool().setContainer(getMainPanel());
+        mainPanel.started(ev.getSnapshot());
+    }
+
+    @Subscribe
+    public void updateConnectedClients(ClientListChangedEvent ev) {
+        clientListChanged(ev.getClients());
+    }
+
 }
