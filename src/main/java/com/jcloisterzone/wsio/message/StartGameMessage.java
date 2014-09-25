@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("START_GAME")
-public class StartGameMessage implements WsMessage {
+public class StartGameMessage implements WsInGameMessage {
     private String gameId;
 
     public StartGameMessage(String gameId) {

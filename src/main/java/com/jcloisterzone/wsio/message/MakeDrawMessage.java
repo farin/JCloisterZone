@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("MAKE_DRAW")
-public class MakeDrawMessage implements WsMessage {
+public class MakeDrawMessage implements WsInGameMessage {
 
     private String gameId;
     private int packSize, k;

@@ -30,6 +30,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ChatPanel;
@@ -53,6 +54,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
 
     final Client client;
+    final GameController gc;
     final ControlPanel controlPanel;
     final ChatPanel chatPanel;
 
@@ -71,16 +73,17 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private String errorMessage;
     //private String hintMessage;
 
-    public GridPanel(Client client, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
+    public GridPanel(Client client, GameController gc, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
         setLayout(null);
 
         this.client = client;
+        this.gc = gc;
         this.controlPanel = controlPanel;
 
         boolean networkGame = "true".equals(System.getProperty("forceChat"));
-        for (Player p : client.getGame().getAllPlayers()) {
+        for (Player p : gc.getGame().getAllPlayers()) {
             if (!p.getSlot().isOwn()) {
                 networkGame = true;
                 break;
@@ -245,7 +248,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public Tile getTile(Position p) {
-        return client.getGame().getBoard().get(p);
+        return gc.getGame().getBoard().get(p);
     }
 
     public Client getClient() {
@@ -265,7 +268,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public AnimationService getAnimationService() {
-        return client.getMainPanel().getAnimationService();
+        return gc.getGamePanel().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {

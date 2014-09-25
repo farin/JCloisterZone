@@ -4,7 +4,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("ROLL_FLIER_DICE")
-public class RollFlierDiceMessage implements WsMessage {
+public class RollFlierDiceMessage implements WsInGameMessage {
 
     private String gameId;
     private String meepleType;

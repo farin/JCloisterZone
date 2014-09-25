@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("UNDO")
-public class UndoMessage implements WsMessage {
+public class UndoMessage implements WsInGameMessage {
 
     private String gameId;
 

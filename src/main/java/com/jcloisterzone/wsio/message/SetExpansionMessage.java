@@ -4,7 +4,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SET_EXPANSION")
-public class SetExpansionMessage implements WsMessage {
+public class SetExpansionMessage implements WsInGameMessage {
     private String gameId;
     private Expansion expansion;
     private boolean enabled;

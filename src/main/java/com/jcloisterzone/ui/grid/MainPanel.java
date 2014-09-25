@@ -124,7 +124,7 @@ public class MainPanel extends JPanel {
         setVisible(false);
 
         controlPanel = new ControlPanel(client, gc);
-        gridPanel = new GridPanel(client, controlPanel, chatPanel, snapshot);
+        gridPanel = new GridPanel(client, gc, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel, gc);
         tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
@@ -230,15 +230,15 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void bridgeDeployed(Position pos, Location loc) {
+    public void bridgeDeployed(BridgeDeployedEvent ev) {
         gridPanel.clearActionDecorations();
-        bridgeLayer.bridgeDeployed(pos, loc);
+        bridgeLayer.bridgeDeployed(ev.getPosition(), ev.getLocation());
     }
 
     @Subscribe
-    public void castleDeployed(Castle castle1, Castle castle2) {
+    public void castleDeployed(CastleDeployedEvent ev) {
         gridPanel.clearActionDecorations();
-        castleLayer.castleDeployed(castle1, castle2);
+        castleLayer.castleDeployed(ev.getPart1(), ev.getPart2());
     }
 
 

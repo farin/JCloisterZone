@@ -53,6 +53,7 @@ import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -83,10 +84,6 @@ public class ClientMessageListener implements MessageListener {
         return conn;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
 
     @Override
     public void onWebsocketError(Exception ex) {
@@ -95,7 +92,7 @@ public class ClientMessageListener implements MessageListener {
             cgp.onWebsocketError(ex);
             return;
         }
-        GamePanel gp = client.getGamePanel();
+        GamePanel gp = gc == null ? null : gc.getGamePanel();
         if (gp != null) {
             gp.onWebsocketError(ex);
             return;
@@ -110,6 +107,14 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketMessage(WsMessage msg) {
+        //TODO fix this and use
+//        if (msg instanceof WsInGameMessage && game != null && game.getGameId().equals(((WsInGameMessage) msg).getGameId())) {
+//            dispatcher.dispatch(msg, game, this, game.getPhase());
+//            gc.phaseLoop();
+//        } else {
+//            dispatcher.dispatch(msg, conn, this);
+//        }
+
         if (game == null) {
             dispatcher.dispatch(msg, conn, this);
         } else {

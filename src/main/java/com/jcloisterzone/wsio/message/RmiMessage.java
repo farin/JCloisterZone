@@ -12,7 +12,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("RMI")
-public class RmiMessage implements WsMessage {
+public class RmiMessage implements WsInGameMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

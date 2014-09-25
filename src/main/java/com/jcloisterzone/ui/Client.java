@@ -255,13 +255,6 @@ public class Client extends JFrame {
         //activity = ...
     }
 
-    @Deprecated
-    public CreateGamePanel getCreateGamePanel() {
-        if (gamePanel == null) return null;
-        return gamePanel.getCreateGamePanel();
-    }
-
-
     public boolean closeGame() {
         return closeGame(false);
     }
