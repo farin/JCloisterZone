@@ -35,6 +35,7 @@ import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarItem;
+import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -100,6 +101,18 @@ public class GameController implements Activity, InvocationHandler {
             getConnection().send(rmi);
         }
         return null;
+    }
+
+    void phaseLoop() {
+        Phase phase = game.getPhase();
+        while (phase != null && !phase.isEntered()) {
+            logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
+            phase.setEntered(true);
+            phase.enter();
+            phase = game.getPhase();
+            game.flushEventQueue();
+        }
+        game.flushEventQueue();
     }
 
     void clearActions() {

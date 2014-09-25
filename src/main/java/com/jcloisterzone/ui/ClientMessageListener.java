@@ -58,8 +58,8 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-//TODO find better name
-public class ClientStub implements MessageListener {
+
+public class ClientMessageListener implements MessageListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -73,7 +73,7 @@ public class ClientStub implements MessageListener {
     private final Client client;
     private boolean autostartPerfomed;
 
-    public ClientStub(Client client) {
+    public ClientMessageListener(Client client) {
         this.client = client;
     }
 
@@ -114,21 +114,8 @@ public class ClientStub implements MessageListener {
             dispatcher.dispatch(msg, conn, this);
         } else {
             dispatcher.dispatch(msg, conn, this, game.getPhase());
-            phaseLoop();
+            gc.phaseLoop();
         }
-    }
-
-    protected void phaseLoop() {
-        Phase phase = game.getPhase(); //new phase can differ from the phase in prev msg.call !!!
-        while (phase != null && !phase.isEntered()) {
-            logger.debug("Entering phase {}",  phase.getClass().getSimpleName());
-            phase.setEntered(true);
-            phase.enter();
-            phase = game.getPhase();
-            game.flushEventQueue();
-            //game.post(new PhaseEnterEvent(phase));
-        }
-        game.flushEventQueue();
     }
 
     public RemoteClient getClientById(Game game, String clientId) {;

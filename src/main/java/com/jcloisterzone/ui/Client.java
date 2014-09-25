@@ -376,7 +376,7 @@ public class Client extends JFrame {
 
 
     private void connect(String username, String hostname, int port, boolean playOnline) {
-        ClientStub handler = new ClientStub(this);
+        ClientMessageListener handler = new ClientMessageListener(this);
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
             conn = handler.connect(username == null ? getUserName() : username, uri);

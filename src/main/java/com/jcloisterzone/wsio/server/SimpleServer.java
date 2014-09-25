@@ -335,7 +335,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
-    public void handleGetRandSample(WebSocket ws, MakeDrawMessage msg) {
+    public void handleMakeDraw(WebSocket ws, MakeDrawMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
         int[] result = new int[msg.getK()];

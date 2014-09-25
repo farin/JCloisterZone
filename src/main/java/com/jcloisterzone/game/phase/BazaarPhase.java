@@ -84,7 +84,7 @@ public class BazaarPhase extends ServerAwarePhase {
     }
 
     @WsSubscribe
-    public void handleRandSample(DrawMessage msg) {
+    public void handleDraw(DrawMessage msg) {
         int size = game.getAllPlayers().length;
         if (msg.getPackSize() != getTilePack().size() || msg.getValues().length != size) {
             logger.error("Invalid message");

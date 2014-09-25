@@ -91,7 +91,7 @@ public class DrawPhase extends ServerAwarePhase {
     }
 
     @WsSubscribe
-    public void handleRandSample(DrawMessage msg) {
+    public void handleDraw(DrawMessage msg) {
         if (msg.getPackSize() != getTilePack().size()) {
             logger.error("Invalid message");
             return;
