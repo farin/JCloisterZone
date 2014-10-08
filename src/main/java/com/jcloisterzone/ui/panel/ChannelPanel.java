@@ -1,11 +1,18 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -21,6 +28,7 @@ import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -31,11 +39,14 @@ public class ChannelPanel extends JPanel {
     private final ChannelController cc;
     private ChatPanel chatPanel;
     private JTextPane connectedClients;
+    private JPanel gameListPanel;
+
+    private JButton createGameButton;
 
 
     public ChannelPanel(Client client, ChannelController cc) {
         this.cc = cc;
-        setLayout(new MigLayout("", "[][]", "[grow]"));
+        setLayout(new MigLayout("", "[][][grow]", "[grow]"));
 
         add(createConnectedClientsPanel(), "cell 0 0, grow");
 
@@ -49,6 +60,21 @@ public class ChannelPanel extends JPanel {
         chatPanel.registerSwingComponents(chatBox);
         chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
         chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
+
+        gameListPanel = new JPanel();
+        gameListPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        gameListPanel.setBackground(Color.WHITE);
+        add(gameListPanel, "cell 2 0, grow");
+
+        createGameButton = new JButton(_("Create game"));
+        createGameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createGame();
+			}
+		});
+        gameListPanel.add(createGameButton);
+
 
         cc.register(this);
         cc.register(chatPanel);
@@ -65,6 +91,10 @@ public class ChannelPanel extends JPanel {
         connectedClients.setEditable(false);
         panel.add(connectedClients, BorderLayout.CENTER);
         return panel;
+    }
+
+    private void createGame() {
+    	cc.getConnection().send(new CreateGameMessage(cc.getChannel().getName()));
     }
 
 	@Subscribe

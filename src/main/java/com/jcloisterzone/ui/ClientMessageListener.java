@@ -158,8 +158,10 @@ public class ClientMessageListener implements MessageListener {
     public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
         if (msg.getState() == GameState.RUNNING) {
         	Game game = getGame(msg);
+        	msg.getGameSetup().setGameId(game.getGameId());  //fill omitted id
             handleGameSetup(msg.getGameSetup());
             for (SlotMessage slotMsg : msg.getSlots()) {
+            	slotMsg.setGameId(game.getGameId()); //fill omitted id
                 handleSlot(slotMsg);
             }
             CreateGamePhase phase = (CreateGamePhase)game.getPhase();
