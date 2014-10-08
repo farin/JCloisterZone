@@ -30,14 +30,16 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+@SuppressWarnings("serial")
 public class GamePanel extends BackgroundPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -98,7 +100,7 @@ public class GamePanel extends BackgroundPanel {
         chatBox.setLayout(chatBoxLayout);
         chatColumn.add(chatBox, "cell 0 1, grow");
 
-        chatPanel = new ChatPanel(client, game);
+        chatPanel = new GameChatPanel(client, game);
         chatPanel.registerSwingComponents(chatBox);
         chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
         chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
@@ -107,7 +109,9 @@ public class GamePanel extends BackgroundPanel {
         gc.register(chatPanel);
     }
 
-    public void clientListChanged(RemoteClient[] clients) {
+    @Subscribe
+    public void clientListChanged(ClientListChangedEvent ev) {
+    	RemoteClient[] clients = ev.getClients();
         if (game.isStarted()) {
             if (!game.isOver()) {
                 for (Player p : game.getAllPlayers()) {
@@ -217,10 +221,4 @@ public class GamePanel extends BackgroundPanel {
         game.getReportingTool().setContainer(getMainPanel());
         mainPanel.started(ev.getSnapshot());
     }
-
-    @Subscribe
-    public void updateConnectedClients(ClientListChangedEvent ev) {
-        clientListChanged(ev.getClients());
-    }
-
 }

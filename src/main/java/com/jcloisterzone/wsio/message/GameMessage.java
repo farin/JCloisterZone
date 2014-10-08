@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME")
-public class GameMessage implements WsMessage {
+public class GameMessage implements WsMessage, WsInGameMessage {
 
     public enum GameState {
         OPEN, RUNNING
@@ -23,7 +23,8 @@ public class GameMessage implements WsMessage {
         this.gameSetup = gameSetup;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 

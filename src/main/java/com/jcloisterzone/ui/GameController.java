@@ -73,7 +73,7 @@ public class GameController implements Activity, InvocationHandler {
 
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
 
-        eventBus = new EventBus(new EventBusExceptionHandler("ui event bus"));
+        eventBus = new EventBus(new EventBusExceptionHandler("game UI event bus"));
         eventBus.register(this);
         InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
         uiAdapter.setReportingTool(game.getReportingTool());

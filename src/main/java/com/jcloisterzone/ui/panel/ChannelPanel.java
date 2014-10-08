@@ -2,6 +2,8 @@ package com.jcloisterzone.ui.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -10,42 +12,45 @@ import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.jcloisterzone.online.Channel;
-import com.jcloisterzone.ui.Activity;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
+import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.controls.ChatPanel;
+import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
+import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.wsio.server.RemoteClient;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+@SuppressWarnings("serial")
 public class ChannelPanel extends JPanel {
 
-    private final Channel channel;
+    private final ChannelController cc;
     private ChatPanel chatPanel;
     private JTextPane connectedClients;
 
 
-    public ChannelPanel(Client client, Channel channel) {
-        this.channel = channel;
-        setLayout(new MigLayout("", "[]", "[grow]"));
+    public ChannelPanel(Client client, ChannelController cc) {
+        this.cc = cc;
+        setLayout(new MigLayout("", "[][]", "[grow]"));
 
-        add(createConnectedClientsPanel(), "cell 0 0,");
+        add(createConnectedClientsPanel(), "cell 0 0, grow");
 
-//        JPanel chatColumn = new JPanel();
-//        chatColumn.setOpaque(false);
-//        chatColumn.setLayout(new MigLayout("ins 0, gap 0 10", "[grow]", "[60px][grow]"));
-//        chatColumn.setPreferredSize(new Dimension(ChatPanel.CHAT_WIDTH, getHeight()));
-//        add(chatColumn, BorderLayout.WEST);
-//
-//        JPanel chatBox = new JPanel();
-//        chatBox.setBackground(Color.WHITE);
-//        MigLayout chatBoxLayout = new MigLayout("", "[grow]", "[grow][]");
-//        chatBox.setLayout(chatBoxLayout);
-//        chatColumn.add(chatBox, "cell 0 1, grow");
-//
-//        chatPanel = new ChatPanel(client, game);
-//        chatPanel.registerSwingComponents(chatBox);
-//        chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
-//        chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
+        JPanel chatBox = new JPanel();
+        chatBox.setBackground(Color.WHITE);
+        MigLayout chatBoxLayout = new MigLayout("", "[grow]", "[grow][]");
+        chatBox.setLayout(chatBoxLayout);
+        add(chatBox, "cell 1 0, grow, w 250");
+
+        chatPanel = new ChannelChatPanel(client, cc.getChannel());
+        chatPanel.registerSwingComponents(chatBox);
+        chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
+        chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
+
+        cc.register(this);
     }
 
     //copy from GamePanel!!!
@@ -59,6 +64,20 @@ public class ChannelPanel extends JPanel {
         connectedClients.setEditable(false);
         panel.add(connectedClients, BorderLayout.CENTER);
         return panel;
-   }
+    }
+
+	@Subscribe
+	public void clientListChanged(ClientListChangedEvent ev) {
+    	RemoteClient[] clients = ev.getClients();
+
+        connectedClients.setText(Joiner.on("\n").join(
+            Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
+                @Override
+                public String apply(RemoteClient input) {
+                    return input.getName();
+                }
+        })));
+
+    }
 
 }

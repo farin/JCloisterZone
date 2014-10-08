@@ -8,7 +8,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_SETUP")
-public class GameSetupMessage implements WsMessage {
+public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
     private Set<CustomRule> customRules;
     private Set<Expansion> expansions;
@@ -22,7 +22,8 @@ public class GameSetupMessage implements WsMessage {
         this.capabilityClasses = capabilityClasses;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 

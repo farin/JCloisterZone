@@ -15,7 +15,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,7 +51,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -65,7 +63,6 @@ import com.jcloisterzone.ui.panel.ChannelPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
-import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.ui.panel.GamePanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
@@ -75,7 +72,6 @@ import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -246,13 +242,14 @@ public class Client extends JFrame {
         return gamePanel;
     }
 
-    public void newChannelPanel(Channel channel, String name) {
+    public ChannelPanel newChannelPanel(ChannelController cc, String name) {
         Container pane = this.getContentPane();
         cleanContentPane();
-        channelPanel = new ChannelPanel(this, channel);
+        channelPanel = new ChannelPanel(this, cc);
         pane.add(channelPanel);
         pane.setVisible(true);
         //activity = ...
+        return channelPanel;
     }
 
     public boolean closeGame() {

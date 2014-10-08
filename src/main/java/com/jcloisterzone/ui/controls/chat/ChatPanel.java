@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.controls;
+package com.jcloisterzone.ui.controls.chat;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -49,15 +49,17 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
+import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 
-public class ChatPanel extends FakeComponent implements WindowStateListener {
+public abstract class ChatPanel extends FakeComponent implements WindowStateListener {
 
     public static final int CHAT_WIDTH = 250;
     public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
     private JComponent parent; //TODO move to FakeComponent? hack to re-layout from inside class
-    private final Game game;
+
 
     private boolean forceFocus;
     private boolean messageReceivedWhileIconified;
@@ -67,9 +69,8 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
     private final Timer repaintTimer;
 
 
-    public ChatPanel(Client client, Game game) {
+    public ChatPanel(Client client) {
         super(client);
-        this.game = game;
         repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,6 +81,8 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         });
     }
 
+    abstract protected ReceivedChatMessage createReceivedMessage(ChatEvent ev);
+    abstract protected PostChatMessage createPostChatMessage(String msg);
 
     public void setParent(JComponent parent) {
         this.parent = parent;
@@ -131,8 +134,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
                 String msg = input.getText();
                 if (!"".equals(msg)) {
                     forceFocus = true; //prevent panel flashing
-                    client.getConnection().send(new PostChatMessage(game.getGameId(), msg));
-                    //client.getServer().chatMessage(getSendingPlayer().getIndex(), msg);
+                    client.getConnection().send(createPostChatMessage(msg));
                 }
                 clean();
             }
@@ -229,52 +231,6 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         }
     }
 
-    /**
-     * More then one client can play from one seat. Find local player, prefer
-     * active, than human player, latest is AI.
-     *
-     * @return
-     */
-    private ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
-        String nick = ev.getRemoteClient().getName();
-        Color color = Color.DARK_GRAY;
-
-        if (game.isStarted()) {
-            Player selected = null, active = game.getActivePlayer();
-            for (Player player : game.getAllPlayers()) {
-                if (player.getSlot().getClientId().equals(ev.getRemoteClient().getClientId())) {
-                    if (selected == null) {
-                        selected = player;
-                    } else {
-                        if (selected.getSlot().getAiClassName() != null
-                                && player.getSlot().getAiClassName() == null) {
-                            // prefer real user for remote inactive client with
-                            // more players
-                            selected = player;
-                        }
-                    }
-                    if (player.equals(active)) {
-                        selected = player;
-                        break;
-                    }
-                }
-            }
-            if (selected != null) {
-                nick = selected.getNick();
-                color = selected.getColors().getFontColor();
-            }
-        } else {
-             PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
-             for (PlayerSlot slot: slots) {
-                 if (slot.isOwn() && !slot.getNickname().equals("")) {
-                     nick = slot.getNickname();
-                     color = slot.getColors().getFontColor();
-                     break;
-                 }
-             }
-        }
-        return new ReceivedChatMessage(ev, nick, color);
-    }
 
     @Subscribe
     public void displayChatMessage(ChatEvent ev) {
@@ -324,14 +280,16 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
 
     static class WrapEditorKit extends StyledEditorKit {
         ViewFactory defaultFactory=new WrapColumnFactory();
-        public ViewFactory getViewFactory() {
+        @Override
+		public ViewFactory getViewFactory() {
             return defaultFactory;
         }
 
     }
 
     static class WrapColumnFactory implements ViewFactory {
-        public View create(Element elem) {
+        @Override
+		public View create(Element elem) {
             String kind = elem.getName();
             if (kind != null) {
                 if (kind.equals(AbstractDocument.ContentElementName)) {
@@ -357,7 +315,8 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
             super(elem);
         }
 
-        public float getMinimumSpan(int axis) {
+        @Override
+		public float getMinimumSpan(int axis) {
             switch (axis) {
                 case View.X_AXIS:
                     return 0;
