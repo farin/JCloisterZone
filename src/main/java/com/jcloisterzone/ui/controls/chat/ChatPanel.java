@@ -41,11 +41,7 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ChatEvent;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;

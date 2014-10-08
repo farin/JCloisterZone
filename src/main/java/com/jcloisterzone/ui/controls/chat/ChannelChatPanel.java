@@ -4,27 +4,29 @@ import java.awt.Color;
 
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.online.Channel;
+import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 
 public class ChannelChatPanel extends ChatPanel {
 
-	private final Channel channel;
+	private final ChannelController cc;
 
-	public ChannelChatPanel(Client client, Channel chanel) {
+	public ChannelChatPanel(Client client, ChannelController cc) {
 		super(client);
-		this.channel = chanel;
+		this.cc = cc;
 	}
 
 	@Override
 	protected ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
-		return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), Color.BLACK);
+		boolean isMe = cc.getConnection().getClientId().equals(ev.getRemoteClient().getClientId());
+		return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ? Color.BLUE : Color.BLACK);
 	}
 
 	@Override
 	protected PostChatMessage createPostChatMessage(String msg) {
 		PostChatMessage pcm = new PostChatMessage(msg);
-		pcm.setChannel(channel.getName());
+		pcm.setChannel(cc.getChannel().getName());
 		return pcm;
 	}
 

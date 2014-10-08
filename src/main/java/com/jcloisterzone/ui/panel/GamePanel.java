@@ -218,7 +218,7 @@ public class GamePanel extends BackgroundPanel {
         connectedClients = null;
         mainPanel = new MainPanel(client, gc, chatPanel);
         add(mainPanel, BorderLayout.CENTER);
-        game.getReportingTool().setContainer(getMainPanel());
+        gc.getReportingTool().setContainer(getMainPanel());
         mainPanel.started(ev.getSnapshot());
     }
 }

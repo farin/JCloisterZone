@@ -18,6 +18,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
+import com.jcloisterzone.EventBusProxy;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
@@ -57,15 +58,14 @@ import com.jcloisterzone.wsio.server.RemoteClient;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game {
+public class Game implements EventBusProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private ReportingTool reportingTool;
+
 
     private Config config;
 
     private final GameSettings gameSettings;
-    private RemoteClient[] remoteClients;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -100,11 +100,13 @@ public class Game {
         gameSettings = new GameSettings(gameId);
     }
 
-    public EventBus getEventBus() {
+    @Override
+	public EventBus getEventBus() {
         return eventBus;
     }
 
-    public void post(Event event) {
+    @Override
+	public void post(Event event) {
         eventQueue.add(event);
         for (Capability capability: capabilities) {
             capability.handleEvent(event);
@@ -469,22 +471,6 @@ public class Game {
     @Override
     public String toString() {
         return "Game in " + phase.getClass().getSimpleName() + " phase.";
-    }
-
-    public void setReportingTool(ReportingTool reportingTool) {
-        this.reportingTool = reportingTool;
-    }
-
-    public ReportingTool getReportingTool() {
-        return reportingTool;
-    }
-
-    public RemoteClient[] getRemoteClients() {
-        return remoteClients;
-    }
-
-    public void setRemoteClients(RemoteClient[] remoteClients) {
-        this.remoteClients = remoteClients;
     }
 
     // game settings delegation

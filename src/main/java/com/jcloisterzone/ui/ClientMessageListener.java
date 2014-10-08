@@ -123,8 +123,8 @@ public class ClientMessageListener implements MessageListener {
         }
     }
 
-    public RemoteClient getClientById(Game game, String clientId) {;
-        for (RemoteClient remote: game.getRemoteClients()) {
+    public RemoteClient getClientById(AbstractController controller, String clientId) {;
+        for (RemoteClient remote: controller.getRemoteClients()) {
             if (remote.getClientId().equals(clientId)) {
                 return remote;
             }
@@ -181,17 +181,16 @@ public class ClientMessageListener implements MessageListener {
         final GameController gc;
         if (snapshot == null) {
             game = new Game(msg.getGameId());
-            gc = new GameController(client, game);
+            gc = new GameController(client, game, conn.getReportingTool());
             phase = new CreateGamePhase(game, gc);
         } else {
             game = snapshot.asGame(msg.getGameId());
-            gc = new GameController(client, game);
+            gc = new GameController(client, game, conn.getReportingTool());
             phase = new LoadGamePhase(game, snapshot, gc);
         }
         gameControllers.clear(); //TODO remove games on game over - now only single game window is allowed
         gameControllers.put(game.getGameId(), gc);
         game.setConfig(client.getConfig());
-        game.setReportingTool(conn.getReportingTool());
         conn.getReportingTool().setGame(game);
 
         final PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
@@ -239,23 +238,30 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleClientList(ClientListMessage msg) {
-    	Game game = getGame(msg);
-        if (game != null) {
-        	game.setRemoteClients(msg.getClients());
-        	game.post(new ClientListChangedEvent(msg.getClients()));
+    	GameController gc = getGameController(msg);
+    	if (gc != null) {
+        	gc.setRemoteClients(msg.getClients());
+        	gc.getGame().post(new ClientListChangedEvent(msg.getClients()));
         } else if (channelController != null) {
-        	Channel channel = channelController.getChannel();
-        	channel.setRemoteClients(msg.getClients());
-        	channel.post(new ClientListChangedEvent(msg.getClients()));
+        	channelController.setRemoteClients(msg.getClients());
+        	channelController.getChannel().post(new ClientListChangedEvent(msg.getClients()));
         } else {
-        	logger.warn("No target for client list message");
+        	logger.warn("No target for message");
         }
     }
 
     @WsSubscribe
     public void handleChat(ChatMessage msg) {
-    	Game game = getGame(msg);
-        game.post(new ChatEvent(getClientById(game, msg.getClientId()), msg.getText()));
+    	GameController gc = getGameController(msg);
+    	if (gc != null) {
+    		ChatEvent ev = new ChatEvent(getClientById(gc, msg.getClientId()), msg.getText());
+    		gc.getGame().post(ev);
+    	} else if (channelController != null) {
+    		ChatEvent ev = new ChatEvent(getClientById(channelController, msg.getClientId()), msg.getText());
+    		channelController.getChannel().post(ev);
+    	} else {
+    		logger.warn("No target for message");
+    	}
     }
 
     @WsSubscribe

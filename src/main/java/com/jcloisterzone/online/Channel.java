@@ -5,15 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
+import com.jcloisterzone.EventBusProxy;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-public class Channel {
+public class Channel implements EventBusProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private String name;
-    private RemoteClient[] remoteClients;
 
     private final EventBus eventBus;
 
@@ -26,7 +26,8 @@ public class Channel {
     	eventBus.post(event);
     }
 
-    public EventBus getEventBus() {
+    @Override
+	public EventBus getEventBus() {
         return eventBus;
     }
 
@@ -38,14 +39,6 @@ public class Channel {
         this.name = name;
     }
 
-
-    public RemoteClient[] getRemoteClients() {
-        return remoteClients;
-    }
-
-    public void setRemoteClients(RemoteClient[] remoteClients) {
-        this.remoteClients = remoteClients;
-    }
 
     @Override
     public String toString() {

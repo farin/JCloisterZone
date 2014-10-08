@@ -45,12 +45,13 @@ public class ChannelPanel extends JPanel {
         chatBox.setLayout(chatBoxLayout);
         add(chatBox, "cell 1 0, grow, w 250");
 
-        chatPanel = new ChannelChatPanel(client, cc.getChannel());
+        chatPanel = new ChannelChatPanel(client, cc);
         chatPanel.registerSwingComponents(chatBox);
         chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
         chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
 
         cc.register(this);
+        cc.register(chatPanel);
     }
 
     //copy from GamePanel!!!

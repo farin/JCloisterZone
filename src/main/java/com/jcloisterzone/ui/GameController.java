@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.InvocationHandler;
@@ -13,9 +15,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
@@ -48,45 +48,28 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GamePanel;
-import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-public class GameController implements Activity, InvocationHandler {
+public class GameController extends AbstractController implements Activity, InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Client client;
     private final Game game;
 
     private final RmiProxy rmiProxy;
-    private final EventBus eventBus;
-
+    private final ReportingTool reportingTool;
     private GamePanel gamePanel;
 
-    public GameController(Client client, Game game) {
-        this.client = client;
+    public GameController(Client client, Game game, ReportingTool reportingTool) {
+    	super(client, game);
+    	this.reportingTool = reportingTool;
         this.game = game;
-
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
-
-        eventBus = new EventBus(new EventBusExceptionHandler("game UI event bus"));
-        eventBus.register(this);
-        InvokeInSwingUiAdapter uiAdapter = new InvokeInSwingUiAdapter(eventBus);
-        uiAdapter.setReportingTool(game.getReportingTool());
-        game.getEventBus().register(uiAdapter);
+        getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
     }
 
-    public void register(Object subscriber) {
-        eventBus.register(subscriber);
-    }
-
-    public Connection getConnection() {
-        return client.getConnection();
-    }
 
     public Game getGame() {
         return game;
@@ -346,7 +329,7 @@ public class GameController implements Activity, InvocationHandler {
 
     @Override
     public ReportingTool getReportingTool() {
-        return game.getReportingTool();
+        return reportingTool;
     }
 
     @Override

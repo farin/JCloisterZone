@@ -371,7 +371,8 @@ public class SimpleServer extends WebSocketServer  {
     public void handlePostChat(WebSocket ws, PostChatMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         String clientId = getClientId(ws);
-        ChatMessage reMsg = new ChatMessage(msg.getGameId(), clientId, msg.getText());
+        ChatMessage reMsg = new ChatMessage(clientId, msg.getText());
+        reMsg.setGameId(msg.getGameId());
         broadcast(reMsg);
     }
 
