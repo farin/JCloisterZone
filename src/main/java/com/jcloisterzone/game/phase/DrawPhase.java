@@ -27,7 +27,7 @@ public class DrawPhase extends ServerAwarePhase {
 
     public DrawPhase(Game game, GameController controller) {
         super(game, controller);
-        DebugConfig debugConfig = game.getConfig().getDebug();
+        DebugConfig debugConfig = getGameController().getConfig().getDebug();
         if (debugConfig != null) {
             debugTiles = debugConfig.getDraw();
         }

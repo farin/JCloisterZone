@@ -203,7 +203,6 @@ public class ClientMessageListener implements MessageListener {
         }
         gameControllers.clear(); //TODO remove games on game over - now only single game window is allowed
         gameControllers.put(game.getGameId(), gc);
-        game.setConfig(client.getConfig());
         conn.getReportingTool().setGame(game);
 
         final PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
@@ -211,7 +210,7 @@ public class ClientMessageListener implements MessageListener {
         for (SlotMessage slotMsg : msg.getSlots()) {
             int number = slotMsg.getNumber();
             PlayerSlot slot = new PlayerSlot(number);
-            slot.setColors(game.getConfig().getPlayerColor(slot));
+            slot.setColors(client.getConfig().getPlayerColor(slot));
             slots[number] = slot;
             updateSlot(slots, slotMsg);
         }
@@ -265,8 +264,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleGameList(GameListMessage msg) {
-
-
+    	//...
     }
 
     @WsSubscribe

@@ -21,7 +21,6 @@ public class AbstractTileTest {
     @Before
     public void initFactories() {
         Config config = new Config();
-        game.setConfig(config);
         setUpGame(game);
         packFactory.setGame(game);
         packFactory.setConfig(config);

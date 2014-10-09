@@ -44,7 +44,7 @@ public abstract class AiPlayer {
 
     public void setGameController(GameController gc) {
         this.gc = gc;
-        Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
+        Integer placeTileDelay = gc.getConfig().getAi_place_tile_delay();
         rmiProxy = new DelayedServer(gc.getRmiProxy(), placeTileDelay == null ? 0 : placeTileDelay);
     }
 

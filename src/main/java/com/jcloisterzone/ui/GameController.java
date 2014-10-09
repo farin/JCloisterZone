@@ -19,6 +19,7 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;

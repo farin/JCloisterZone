@@ -72,7 +72,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
     }
 
     private void autosave() {
-        DebugConfig debugConfig = game.getConfig().getDebug();
+        DebugConfig debugConfig = gc.getConfig().getDebug();
         if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
             Snapshot snapshot = new Snapshot(game);
             if ("plain".equals(debugConfig.getSave_format())) {
@@ -115,7 +115,6 @@ public abstract class RankingAiPlayer extends AiPlayer {
     protected Game copyGame(Object gameListener) {
         Snapshot snapshot = new Snapshot(game);
         Game copy = snapshot.asGame(game.getGameId());
-        copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
         LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getGameController());
         phase.setSlots(new PlayerSlot[0]);

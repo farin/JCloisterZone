@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -38,6 +39,10 @@ public class EventProxyUiController<T extends EventProxy> {
     public Client getClient() {
 		return client;
 	}
+
+    public Config getConfig() {
+    	return client.getConfig();
+    }
 
     public T getEventProxy() {
 		return eventProxy;

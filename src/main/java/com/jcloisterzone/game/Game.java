@@ -19,7 +19,6 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -29,7 +28,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
@@ -51,21 +49,15 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.wsio.server.RemoteClient;
 
 
 /**
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game implements EventProxy {
+public class Game extends GameSettings implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    private Config config;
-
-    private final GameSettings gameSettings;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -97,7 +89,7 @@ public class Game implements EventProxy {
     private int idSequenceCurrVal = 0;
 
     public Game(String gameId) {
-        gameSettings = new GameSettings(gameId);
+    	super(gameId);
     }
 
     @Override
@@ -150,14 +142,6 @@ public class Game implements EventProxy {
             post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
             phase.enter();
         }
-    }
-
-    public Config getConfig() {
-        return config;
-    }
-
-    public void setConfig(Config config) {
-        this.config = config;
     }
 
     public Tile getCurrentTile() {
@@ -471,35 +455,5 @@ public class Game implements EventProxy {
     @Override
     public String toString() {
         return "Game in " + phase.getClass().getSimpleName() + " phase.";
-    }
-
-    // game settings delegation
-
-    public String getGameId() {
-        return gameSettings.getGameId();
-    }
-
-    public boolean hasExpansion(Expansion expansion) {
-        return gameSettings.hasExpansion(expansion);
-    }
-
-    public boolean hasRule(CustomRule rule) {
-        return gameSettings.hasRule(rule);
-    }
-
-    public boolean hasCapability(Class<? extends Capability> c) {
-        return gameSettings.hasCapability(c);
-    }
-
-    public Set<Expansion> getExpansions() {
-        return gameSettings.getExpansions();
-    }
-
-    public Set<CustomRule> getCustomRules() {
-        return gameSettings.getCustomRules();
-    }
-
-    public Set<Class<? extends Capability>> getCapabilityClasses() {
-        return gameSettings.getCapabilityClasses();
     }
 }

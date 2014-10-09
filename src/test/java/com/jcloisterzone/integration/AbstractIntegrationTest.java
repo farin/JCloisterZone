@@ -36,7 +36,6 @@ public class AbstractIntegrationTest {
             URI uri = getClass().getResource(save).toURI();
             Snapshot snapshot = new Snapshot(new File(uri));
             EventCatchingGame game = (EventCatchingGame) snapshot.asGame(new EventCatchingGame());
-            game.setConfig(new Config());
             LoadGamePhase phase = new LoadGamePhase(game, snapshot, null);
             game.getPhases().put(phase.getClass(), phase);
             game.setPhase(phase);

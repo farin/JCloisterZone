@@ -171,7 +171,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void prepareTilePack() {
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setGame(game);
-        tilePackFactory.setConfig(game.getConfig());
+        tilePackFactory.setConfig(getGameController().getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
         getTilePack().setGroupState("default", TileGroupState.ACTIVE);
@@ -215,7 +215,7 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
-        DebugConfig debugConfig = game.getConfig().getDebug();
+        DebugConfig debugConfig = getGameController().getConfig().getDebug();
         if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
             List<String> offNames =  debugConfig.getOff_capabilities();
             Set<Class<? extends Capability>> off = new HashSet<>();
