@@ -14,6 +14,7 @@ import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
@@ -66,6 +67,7 @@ public final class MessageParser {
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);
         registerMsgType(ChannelMessage.class);
+        registerMsgType(GameListMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {
@@ -82,7 +84,7 @@ public final class MessageParser {
         if (type == null) {
             throw new IllegalArgumentException("Mapping type is not declared for "+s[0]);
         }
-        return (WsMessage) gson.fromJson(s[1], type);
+        return gson.fromJson(s[1], type);
     }
 
     public String toJson(WsMessage arg) {

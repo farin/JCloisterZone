@@ -18,7 +18,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
-import com.jcloisterzone.EventBusProxy;
+import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
@@ -58,7 +58,7 @@ import com.jcloisterzone.wsio.server.RemoteClient;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game implements EventBusProxy {
+public class Game implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

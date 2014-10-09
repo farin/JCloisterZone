@@ -7,6 +7,7 @@ import com.jcloisterzone.bugreport.ReportingTool;
 /**
  * Active panel (in future it can be "tab")  with game / channel
  */
+@Deprecated //use UiController
 public interface Activity {
 
     void undo();

@@ -5,28 +5,30 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
-import com.jcloisterzone.EventBusProxy;
+import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-public class AbstractController {
+public class EventProxyUiController<T extends EventProxy> {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected final Client client;
     private final EventBus eventBus;
+    private final T eventProxy;
 
     private InvokeInSwingUiAdapter invokeInSwingUiAdapter;
 
     private RemoteClient[] remoteClients;
 
-    public AbstractController(Client client, EventBusProxy eventBusProxy) {
+    public EventProxyUiController(Client client, T eventProxy) {
     	this.client = client;
+    	this.eventProxy = eventProxy;
 
     	eventBus = new EventBus(new EventBusExceptionHandler(getClass().getName() + " event bus"));
         eventBus.register(this);
         invokeInSwingUiAdapter = new InvokeInSwingUiAdapter(eventBus);
-        eventBusProxy.getEventBus().register(invokeInSwingUiAdapter);
+        eventProxy.getEventBus().register(invokeInSwingUiAdapter);
     }
 
     public void register(Object subscriber) {
@@ -35,6 +37,10 @@ public class AbstractController {
 
     public Client getClient() {
 		return client;
+	}
+
+    public T getEventProxy() {
+		return eventProxy;
 	}
 
     public Connection getConnection() {

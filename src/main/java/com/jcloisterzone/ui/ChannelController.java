@@ -3,7 +3,7 @@ package com.jcloisterzone.ui;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.panel.ChannelPanel;
 
-public class ChannelController extends AbstractController {
+public class ChannelController extends EventProxyUiController<Channel> {
 
     private final Channel channel;
     private ChannelPanel channelPanel;

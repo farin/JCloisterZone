@@ -46,6 +46,7 @@ import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
+import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
@@ -56,6 +57,7 @@ import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
+import com.jcloisterzone.wsio.message.WsInChannelMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
@@ -71,7 +73,7 @@ public class ClientMessageListener implements MessageListener {
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
     private Map<String, GameController> gameControllers = new HashMap<>();
-    private ChannelController channelController;
+    private Map<String, ChannelController> channelControllers = new HashMap<>();
 
     private final Client client;
     private boolean autostartPerfomed;
@@ -114,16 +116,17 @@ public class ClientMessageListener implements MessageListener {
     @Override
     public void onWebsocketMessage(WsMessage msg) {
         //TODO pass game as context to dispatch
-    	GameController gc = msg instanceof WsInGameMessage ? getGameController((WsInGameMessage) msg) : null;
-        if (gc == null) {
-            dispatcher.dispatch(msg, conn, this);
+    	EventProxyUiController<?> controller = getController(msg);
+        if (controller instanceof GameController) {
+        	GameController gc = (GameController) controller;
+        	dispatcher.dispatch(msg, conn, this, gc.getGame().getPhase());
+        	gc.phaseLoop();
         } else {
-            dispatcher.dispatch(msg, conn, this, gc.getGame().getPhase());
-            gc.phaseLoop();
+        	dispatcher.dispatch(msg, conn, this);
         }
     }
 
-    public RemoteClient getClientById(AbstractController controller, String clientId) {;
+    public RemoteClient getClientById(EventProxyUiController<?> controller, String clientId) {;
         for (RemoteClient remote: controller.getRemoteClients()) {
             if (remote.getClientId().equals(clientId)) {
                 return remote;
@@ -132,12 +135,20 @@ public class ClientMessageListener implements MessageListener {
         throw new NoSuchElementException();
     }
 
-    private GameController getGameController(WsInGameMessage msg) {
-    	return gameControllers.get(msg.getGameId());
+    private EventProxyUiController<?> getController(WsMessage msg) {
+    	if (msg instanceof WsInGameMessage) {
+    		GameController gc = gameControllers.get(((WsInGameMessage) msg).getGameId());
+    		if (gc != null) return gc;
+    	}
+    	if (msg instanceof WsInChannelMessage) {
+    		ChannelController cc = channelControllers.get(((WsInChannelMessage) msg).getChannel());
+    		if (cc != null) return cc;
+    	}
+    	return null;
     }
 
     private Game getGame(WsInGameMessage msg) {
-    	GameController gc = getGameController(msg);
+    	GameController gc = (GameController) getController(msg);
     	return gc == null ? null : gc.getGame();
     }
 
@@ -228,7 +239,10 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleChannel(final ChannelMessage msg) throws InvocationTargetException, InterruptedException {
-        channelController = new ChannelController(client, new Channel(msg.getName()));
+    	Channel channel = new Channel(msg.getName());
+    	final ChannelController channelController = new ChannelController(client, channel);
+    	channelControllers.clear();
+    	channelControllers.put(channel.getName(), channelController);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
 			public void run() {
@@ -240,29 +254,29 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleClientList(ClientListMessage msg) {
-    	GameController gc = getGameController(msg);
-    	if (gc != null) {
-        	gc.setRemoteClients(msg.getClients());
-        	gc.getGame().post(new ClientListChangedEvent(msg.getClients()));
-        } else if (channelController != null) {
-        	channelController.setRemoteClients(msg.getClients());
-        	channelController.getChannel().post(new ClientListChangedEvent(msg.getClients()));
+    	EventProxyUiController<?> controller = getController(msg);
+    	if (controller != null) {
+    		controller.setRemoteClients(msg.getClients());
+    		controller.getEventProxy().post(new ClientListChangedEvent(msg.getClients()));
         } else {
-        	logger.warn("No target for message");
+        	logger.warn("No controller for message {}", msg);
         }
     }
 
     @WsSubscribe
+    public void handleGameList(GameListMessage msg) {
+
+
+    }
+
+    @WsSubscribe
     public void handleChat(ChatMessage msg) {
-    	GameController gc = getGameController(msg);
-    	if (gc != null) {
-    		ChatEvent ev = new ChatEvent(getClientById(gc, msg.getClientId()), msg.getText());
-    		gc.getGame().post(ev);
-    	} else if (channelController != null) {
-    		ChatEvent ev = new ChatEvent(getClientById(channelController, msg.getClientId()), msg.getText());
-    		channelController.getChannel().post(ev);
+    	EventProxyUiController<?> controller = getController(msg);
+    	if (controller != null) {
+    		ChatEvent ev = new ChatEvent(getClientById(controller, msg.getClientId()), msg.getText());
+    		controller.getEventProxy().post(ev);
     	} else {
-    		logger.warn("No target for message");
+    		logger.warn("No controller for message {}", msg);
     	}
     }
 

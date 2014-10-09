@@ -52,7 +52,7 @@ import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
-public class GameController extends AbstractController implements Activity, InvocationHandler {
+public class GameController extends EventProxyUiController<Game> implements Activity, InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -69,7 +69,6 @@ public class GameController extends AbstractController implements Activity, Invo
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
         getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
     }
-
 
     public Game getGame() {
         return game;

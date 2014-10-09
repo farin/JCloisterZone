@@ -8,11 +8,9 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 
 /**
- * Legacy rmi interface, now all calls are translated to RMI command
+ * Legacy RMI interface, all calls are translated to RMI command
  */
 public interface RmiProxy {
-
-    /* ---------------------- STARTED GAME MESSAGES ------------------*/
 
     public void pass();
     public void placeTile(Rotation rotation, Position position);
