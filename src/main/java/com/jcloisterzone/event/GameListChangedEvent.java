@@ -1,5 +1,7 @@
 package com.jcloisterzone.event;
 
+import java.util.Arrays;
+
 import com.jcloisterzone.game.Game;
 
 public class GameListChangedEvent extends Event {
@@ -21,6 +23,6 @@ public class GameListChangedEvent extends Event {
 
 	@Override
     public String toString() {
-        return super.toString() + " " + games;
+        return super.toString() + " " + Arrays.toString(games);
     }
 }

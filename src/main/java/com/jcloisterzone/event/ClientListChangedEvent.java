@@ -1,5 +1,7 @@
 package com.jcloisterzone.event;
 
+import java.util.Arrays;
+
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class ClientListChangedEvent extends Event {
@@ -21,6 +23,6 @@ public class ClientListChangedEvent extends Event {
 
     @Override
     public String toString() {
-        return super.toString() + " " + clients;
+        return super.toString() + " " + Arrays.toString(clients);
     }
 }

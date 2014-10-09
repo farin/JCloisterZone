@@ -22,6 +22,7 @@ import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
@@ -165,33 +166,21 @@ public class ClientMessageListener implements MessageListener {
         slot.setAiClassName(slotMsg.getAiClassName());
     }
 
-    @WsSubscribe
-    public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
-        if (msg.getState() == GameState.RUNNING) {
-        	Game game = getGame(msg);
-        	msg.getGameSetup().setGameId(game.getGameId());  //fill omitted id
-            handleGameSetup(msg.getGameSetup());
-            for (SlotMessage slotMsg : msg.getSlots()) {
-            	slotMsg.setGameId(game.getGameId()); //fill omitted id
-                handleSlot(slotMsg);
-            }
-            CreateGamePhase phase = (CreateGamePhase)game.getPhase();
-            phase.startGame();
-            return;
-        }
-        CreateGamePhase phase;
-        Snapshot snapshot = null;
+
+
+    private GameController createGameController(GameMessage msg) {
+    	Snapshot snapshot = null;
         if (msg.getSnapshot() != null) {
             try {
                 snapshot = new Snapshot(msg.getSnapshot());
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
-                return;
             }
         }
 
-        final Game game;
-        final GameController gc;
+        Game game;
+        GameController gc;
+        CreateGamePhase phase;
         if (snapshot == null) {
             game = new Game(msg.getGameId());
             gc = new GameController(client, game, conn.getReportingTool());
@@ -201,12 +190,7 @@ public class ClientMessageListener implements MessageListener {
             gc = new GameController(client, game, conn.getReportingTool());
             phase = new LoadGamePhase(game, snapshot, gc);
         }
-        gameControllers.clear(); //TODO remove games on game over - now only single game window is allowed
-        gameControllers.put(game.getGameId(), gc);
-        conn.getReportingTool().setGame(game);
-
-        final PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
-
+        PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
         for (SlotMessage slotMsg : msg.getSlots()) {
             int number = slotMsg.getNumber();
             PlayerSlot slot = new PlayerSlot(number);
@@ -217,23 +201,66 @@ public class ClientMessageListener implements MessageListener {
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
+    	return gc;
+    }
 
-        if (msg.getState() == GameState.OPEN) {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-				public void run() {
-                    GamePanel panel = client.newGamePanel(gc, msg.getSnapshot() == null, slots);
-                    gc.setGamePanel(panel);
+    private void handleGameStarted(GameController gc) {
+    	conn.getReportingTool().setGame(gc.getGame());
+        CreateGamePhase phase = (CreateGamePhase)gc.getGame().getPhase();
+        phase.startGame();
+    }
 
-                    client.setActivity(gc);
-                    client.setGame(game);
+    private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {
+    	SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+			public void run() {
+            	Game game = gc.getGame();
+            	CreateGamePhase phase = (CreateGamePhase)game.getPhase();
+                GamePanel panel = client.newGamePanel(gc, msg.getSnapshot() == null, phase.getPlayerSlots());
+                gc.setGamePanel(panel);
 
-                    //we must wait for panel is created
-                    handleGameSetup(msg.getGameSetup());
-                    performAutostart(game);
-                }
-            });
+                client.setActivity(gc);
+                client.setGame(game);
+
+                performAutostart(game); //must wait for panel is created
+            }
+        });
+    }
+
+    @WsSubscribe
+    public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
+    	handleGame(msg, true);
+    }
+
+    public GameController handleGame(final GameMessage msg, boolean openSetupPanel) throws InvocationTargetException, InterruptedException {
+    	msg.getGameSetup().setGameId(msg.getGameId());  //fill omitted id
+    	for (SlotMessage slotMsg : msg.getSlots()) {
+    		slotMsg.setGameId(msg.getGameId()); //fill omitted id
+    	}
+
+        GameController gc = (GameController) getController(msg);
+        if (gc == null) {
+        	gc = createGameController(msg);
+        	//TODO remove games on game over
+        	gameControllers.put(msg.getGameId(), gc);
         }
+
+        handleGameSetup(msg.getGameSetup());
+        for (SlotMessage slotMsg : msg.getSlots()) {
+            handleSlot(slotMsg);
+        }
+
+        switch (msg.getState()) {
+        case OPEN:
+        	if (openSetupPanel) {
+        		openGameSetup(gc, msg);
+        	}
+        	break;
+        case RUNNING:
+        	handleGameStarted(gc);
+        	break;
+        }
+        return gc;
     }
 
     @WsSubscribe
@@ -263,8 +290,16 @@ public class ClientMessageListener implements MessageListener {
     }
 
     @WsSubscribe
-    public void handleGameList(GameListMessage msg) {
-    	//...
+    public void handleGameList(GameListMessage msg) throws InvocationTargetException, InterruptedException {
+    	ChannelController cc = (ChannelController) getController(msg);
+    	Game[] games = new Game[msg.getGames().length];
+    	int i = 0;
+    	for (GameMessage gameMsg : msg.getGames()) {
+    		games[i++] = handleGame(gameMsg, false).getGame();
+    	}
+    	if (games.length > 0) {
+    		cc.getEventProxy().post(new GameListChangedEvent(games));
+    	}
     }
 
     @WsSubscribe
