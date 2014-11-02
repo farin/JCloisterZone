@@ -265,7 +265,7 @@ public class ChatPanel extends FakeComponent implements WindowStateListener {
         } else {
              PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
              for (PlayerSlot slot: slots) {
-                 if (slot.isOwn() && !slot.getNickname().equals("")) {
+                 if (ev.getRemoteClient().getClientId().equals(slot.getClientId()) && !slot.getNickname().equals("")) {
                      nick = slot.getNickname();
                      color = slot.getColors().getFontColor();
                      break;
