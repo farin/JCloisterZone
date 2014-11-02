@@ -4,7 +4,12 @@
 *2014-11-02*
 
 * rules update: taking prisoner is now not mandatory
-* fix: abbot capture
+* rules update: The placement of a princess tile (Princess & Dragon) with removal of a knight
+   from the city cannot be used as a first “follower move” and be followed by placement
+   of the Phantom (e.g. into the now-vacated city). As per the rules for the princess,
+    “if a knight is removed from the city, the player may not deploy or move any other figure.”
+* fix: abbot tower capture
+* fix: wrong nickname in pre-game chat
 
 ## 3.0.1
 *2014-09-17*

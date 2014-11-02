@@ -16,6 +16,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -24,11 +25,13 @@ public class PhantomPhase extends Phase {
 
     private final TowerCapability towerCap;
     private final FlierCapability flierCap;
+    private final PrincessCapability princessCap;
 
     public PhantomPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
         flierCap = game.getCapability(FlierCapability.class);
+        princessCap = game.getCapability(PrincessCapability.class);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class PhantomPhase extends Phase {
     @Override
     public void enter() {
         //TODO what about pay ransom for phantom now?
-        if (!getActivePlayer().hasFollower(Phantom.class)) {
+        if (!getActivePlayer().hasFollower(Phantom.class) || (princessCap != null && princessCap.isPrincessUsed())) {
             next();
             return;
         }
