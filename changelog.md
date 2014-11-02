@@ -1,9 +1,14 @@
 # Version history
 
-## master branch
-*appears in next release*
+## 3.0.2
+*2014-11-02*
+
+* rules update: taking prisoner is now not mandatory
+* fix: abbot capture
 
 ## 3.0.1
+*2014-09-17*
+
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
 * fix: wrong colors of chat nicknames
