@@ -1,9 +1,19 @@
 # Version history
 
-## master branch
-*appears in next release*
+## 3.0.2
+*2014-11-02*
+
+* rules update: taking prisoner is now not mandatory
+* rules update: The placement of a princess tile (Princess & Dragon) with removal of a knight
+   from the city cannot be used as a first “follower move” and be followed by placement
+   of the Phantom (e.g. into the now-vacated city). As per the rules for the princess,
+    “if a knight is removed from the city, the player may not deploy or move any other figure.”
+* fix: abbot tower capture
+* fix: wrong nickname in pre-game chat
 
 ## 3.0.1
+*2014-09-17*
+
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
 * fix: wrong colors of chat nicknames

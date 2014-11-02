@@ -17,6 +17,7 @@ import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
@@ -26,6 +27,7 @@ import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
@@ -37,12 +39,14 @@ public class ActionPhase extends Phase {
     private final TowerCapability towerCap;
     private final FlierCapability flierCap;
     private final PortalCapability portalCap;
+    private final PrincessCapability princessCapability;
 
     public ActionPhase(Game game) {
         super(game);
         towerCap = game.getCapability(TowerCapability.class);
         flierCap = game.getCapability(FlierCapability.class);
         portalCap = game.getCapability(PortalCapability.class);
+        princessCapability = game.getCapability(PrincessCapability.class);
     }
 
     @Override
@@ -116,15 +120,29 @@ public class ActionPhase extends Phase {
     }
 
     private boolean isPrincessUndeploy(Meeple m) {
-        //TODO proper validation
-        return m.getFeature() instanceof City;
+        boolean tileHasPrincess = false;
+        for (Feature f : getTile().getFeatures()) {
+            if (f instanceof City) {
+                City c = (City) f;
+                if (c.isPricenss()) {
+                    tileHasPrincess = true;
+                    break;
+                }
+            }
+        }
+        //check if it is same city should be here to be make exact check
+        return tileHasPrincess && m.getFeature() instanceof City;
     }
 
     @Override
     public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
-        if (isFestivalUndeploy(m) || isPrincessUndeploy(m)) {
+        boolean princess = isPrincessUndeploy(m);
+        if (isFestivalUndeploy(m) || princess) {
             m.undeploy();
+            if (princess) {
+                princessCapability.setPrincessUsed(true);
+            }
             next();
         } else {
             throw new IllegalArgumentException();
