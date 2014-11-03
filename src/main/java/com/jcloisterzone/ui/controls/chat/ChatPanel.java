@@ -227,7 +227,6 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
         }
     }
 
-
     @Subscribe
     public void displayChatMessage(ChatEvent ev) {
         ReceivedChatMessage fm = createReceivedMessage(ev);
@@ -277,7 +276,7 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
     static class WrapEditorKit extends StyledEditorKit {
         ViewFactory defaultFactory=new WrapColumnFactory();
         @Override
-		public ViewFactory getViewFactory() {
+        public ViewFactory getViewFactory() {
             return defaultFactory;
         }
 
@@ -285,7 +284,7 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
 
     static class WrapColumnFactory implements ViewFactory {
         @Override
-		public View create(Element elem) {
+        public View create(Element elem) {
             String kind = elem.getName();
             if (kind != null) {
                 if (kind.equals(AbstractDocument.ContentElementName)) {
@@ -312,7 +311,7 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
         }
 
         @Override
-		public float getMinimumSpan(int axis) {
+        public float getMinimumSpan(int axis) {
             switch (axis) {
                 case View.X_AXIS:
                     return 0;

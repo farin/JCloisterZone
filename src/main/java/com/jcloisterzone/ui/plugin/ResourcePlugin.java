@@ -125,6 +125,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     private Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+        if (loc == Location.ABBOT) loc = Location.CLOISTER;
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
@@ -166,8 +167,12 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Area subsFarm = getFarmSubstractions(tile);
 
         for (Feature piece : tile.getFeatures()) {
+            boolean aliasAbbot = false;
             Location loc = piece.getLocation();
-            if (!locations.contains(loc)) {
+            if (loc == Location.CLOISTER && locations.contains(Location.ABBOT)) {
+                aliasAbbot = true;
+            }
+            if (!aliasAbbot && !locations.contains(loc)) {
                 continue;
             }
 
@@ -186,7 +191,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                     a.subtract(subs);
                 }
             }
-            areas.put(loc, a);
+            areas.put(aliasAbbot ? Location.ABBOT : loc, a);
         }
         if (locations.contains(Location.FLIER)) {
             areas.put(Location.FLIER, getArea(tile, null, Location.FLIER));
