@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,7 +51,6 @@ import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
-import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
@@ -62,8 +63,6 @@ import com.jcloisterzone.wsio.message.WsInChannelMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ClientMessageListener implements MessageListener {
@@ -214,15 +213,8 @@ public class ClientMessageListener implements MessageListener {
     	SwingUtilities.invokeAndWait(new Runnable() {
             @Override
 			public void run() {
-            	Game game = gc.getGame();
-            	CreateGamePhase phase = (CreateGamePhase)game.getPhase();
-                GamePanel panel = client.newGamePanel(gc, msg.getSnapshot() == null, phase.getPlayerSlots());
-                gc.setGamePanel(panel);
-
-                client.setActivity(gc);
-                client.setGame(game);
-
-                performAutostart(game); //must wait for panel is created
+            	client.openGameSetup(gc, msg.getSnapshot() == null);
+                performAutostart(gc.getGame()); //must wait for panel is created
             }
         });
     }
@@ -292,12 +284,12 @@ public class ClientMessageListener implements MessageListener {
     @WsSubscribe
     public void handleGameList(GameListMessage msg) throws InvocationTargetException, InterruptedException {
     	ChannelController cc = (ChannelController) getController(msg);
-    	Game[] games = new Game[msg.getGames().length];
+    	GameController[] gameControllers = new GameController[msg.getGames().length];
     	int i = 0;
     	for (GameMessage gameMsg : msg.getGames()) {
-    		games[i++] = handleGame(gameMsg, false).getGame();
+    		gameControllers[i++] = handleGame(gameMsg, false);
     	}
-  		cc.getEventProxy().post(new GameListChangedEvent(games));
+  		cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
     }
 
     @WsSubscribe

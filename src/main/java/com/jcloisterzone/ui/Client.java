@@ -15,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -50,6 +51,7 @@ import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
@@ -72,6 +74,7 @@ import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -230,6 +233,16 @@ public class Client extends JFrame {
             gamePanel = null;
         }
         this.connectPanel = null;
+    }
+
+    public void openGameSetup(final GameController gc, boolean mutableSlots) {
+    	Game game = gc.getGame();
+    	CreateGamePhase phase = (CreateGamePhase)game.getPhase();
+        GamePanel panel = newGamePanel(gc, mutableSlots, phase.getPlayerSlots());
+        gc.setGamePanel(panel);
+
+        setActivity(gc);
+        setGame(game);
     }
 
     public GamePanel newGamePanel(GameController gc, boolean mutableSlots, PlayerSlot[] slots) {

@@ -2,27 +2,27 @@ package com.jcloisterzone.event;
 
 import java.util.Arrays;
 
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.ui.GameController;
 
 public class GameListChangedEvent extends Event {
 
-    private Game[] games;
+    private GameController[] gameControllers;
 
-    public GameListChangedEvent(Game[] games) {
+    public GameListChangedEvent(GameController[] gameControllers) {
         super();
-        this.games = games;
+        this.gameControllers = gameControllers;
     }
 
-    public Game[] getGames() {
-		return games;
+	public GameController[] getGameControllers() {
+		return gameControllers;
 	}
 
-	public void setGames(Game[] games) {
-		this.games = games;
+	public void setGameControllers(GameController[] gameControllers) {
+		this.gameControllers = gameControllers;
 	}
 
 	@Override
     public String toString() {
-        return super.toString() + " " + Arrays.toString(games);
+        return super.toString() + " " + Arrays.toString(gameControllers);
     }
 }

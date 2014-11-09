@@ -30,6 +30,7 @@ import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
@@ -41,6 +42,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 @SuppressWarnings("serial")
 public class ChannelPanel extends JPanel {
 
+	private final Client client;
     private final ChannelController cc;
     private ChatPanel chatPanel;
     private JTextPane connectedClients;
@@ -50,6 +52,7 @@ public class ChannelPanel extends JPanel {
 
 
     public ChannelPanel(Client client, ChannelController cc) {
+    	this.client = client;
         this.cc = cc;
         setLayout(new MigLayout("", "[][][grow]", "[grow]"));
 
@@ -122,8 +125,8 @@ public class ChannelPanel extends JPanel {
 			gameListPanel.remove(gameListPanel.getComponentCount() - 1);
 		}
 
-		for (Game game : ev.getGames()) {
-			gameListPanel.add(new GameItemPanel(game), "wrap, growx");
+		for (GameController gc : ev.getGameControllers()) {
+			gameListPanel.add(new GameItemPanel(gc), "wrap, growx");
 		}
 		gameListPanel.validate();
 		gameListPanel.repaint();
@@ -131,29 +134,35 @@ public class ChannelPanel extends JPanel {
 
 	class GameItemPanel extends JPanel {
 
-		//private Game game;
-
 		private JLabel name;
 		private JLabel expansionNames;
+		private JLabel connectedClients;
 		private JButton joinButton;
 
-		public GameItemPanel(final Game game) {
-			//this.game = game;
+		public GameItemPanel(final GameController gc) {
+			final Game game = gc.getGame();
 			setLayout(new MigLayout());
 
 			name = new JLabel("Game");
-			Joiner joiner = Joiner.on(", ");
+			Joiner joiner = Joiner.on(", ").skipNulls();
 			expansionNames = new JLabel(joiner.join(game.getExpansions()));
+			connectedClients = new JLabel();
+			if (gc.getRemoteClients() != null) {
+				connectedClients.setText(joiner.join(gc.getRemoteClients()));
+			}
+
 			joinButton = new JButton(_("Join game"));
 			joinButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					cc.getConnection().send(new JoinGameMessage(game.getGameId()));
+					client.openGameSetup(gc, true);
 				}
 			});
 
 			add(name, "wrap");
 			add(expansionNames, "wrap");
+			add(connectedClients, "wrap");
 			add(joinButton, "wrap");
 		}
 	}
