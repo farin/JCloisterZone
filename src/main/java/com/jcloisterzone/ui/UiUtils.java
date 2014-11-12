@@ -1,14 +1,17 @@
 package com.jcloisterzone.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.Timer;
 
 public final class UiUtils {
@@ -61,6 +64,11 @@ public final class UiUtils {
                 throw new IllegalArgumentException("Unknow Color constant: " + colorName);
             }
         }
+    }
+
+    public static void centerDialog(JDialog dialog, int width, int height) {
+    	dialog.setSize(width, height);
+    	dialog.setLocationRelativeTo(null);
     }
 
 }
