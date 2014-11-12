@@ -138,7 +138,8 @@ public class CreateGamePanel extends JPanel {
         panel.add(startGameButton, "width 240, h 40, east");
 
         startGameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.getConnection().send(new StartGameMessage(game.getGameId()));
             }
         });
@@ -402,7 +403,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createRuleCheckbox(final CustomRule rule,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(rule.getLabel());
+        JCheckBox chbox = new JCheckBox(rule.getLabel(), game.hasRule(rule));
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
@@ -419,7 +420,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(exp.toString());
+        JCheckBox chbox = new JCheckBox(exp.toString(), game.hasExpansion(exp));
         if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {

@@ -43,11 +43,15 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;

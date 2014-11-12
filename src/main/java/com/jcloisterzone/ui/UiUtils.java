@@ -30,9 +30,11 @@ public final class UiUtils {
 
     public static void highlightComponent(final JComponent c) {
         if (c.getBackground() == HIGHLIGHT) return; //prevent two timers
+        c.setOpaque(true); //needed to background works under Linux Look&Feel
         c.setBackground(HIGHLIGHT);
         Timer t = new Timer(800, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 c.setBackground(null);
             }
         });

@@ -160,7 +160,14 @@ public class GamePanel extends BackgroundPanel {
     }
 
     public void disposePanel() {
-        if (createGamePanel != null) createGamePanel.disposePanel();
+        if (createGamePanel != null) {
+        	gc.unregister(createGamePanel);
+        	createGamePanel.disposePanel();
+        }
+        if (chatPanel != null) {
+        	gc.unregister(chatPanel);
+        }
+        gc.unregister(this);
     }
 
     public CreateGamePanel getCreateGamePanel() {

@@ -30,6 +30,8 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
