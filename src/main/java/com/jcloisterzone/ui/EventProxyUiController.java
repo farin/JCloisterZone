@@ -37,7 +37,11 @@ public class EventProxyUiController<T extends EventProxy> {
     }
 
     public void unregister(Object subscriber) {
-    	eventBus.unregister(subscriber);
+    	try {
+    		eventBus.unregister(subscriber);
+    	} catch (IllegalArgumentException ex) {
+    		logger.warn("Subscriber not registered.", ex);
+    	}
     }
 
     public Client getClient() {
@@ -67,5 +71,4 @@ public class EventProxyUiController<T extends EventProxy> {
 	protected InvokeInSwingUiAdapter getInvokeInSwingUiAdapter() {
 		return invokeInSwingUiAdapter;
 	}
-
 }

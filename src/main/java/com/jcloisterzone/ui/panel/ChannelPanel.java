@@ -4,6 +4,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -17,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
@@ -36,6 +38,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.LengthRestrictedDocument;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
@@ -45,19 +48,18 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 @SuppressWarnings("serial")
 public class ChannelPanel extends JPanel {
 
+	private static final int MAX_GAME_TITLE_LENGTH = 60;
+
 	private final Client client;
     private final ChannelController cc;
     private ChatPanel chatPanel;
     private JTextPane connectedClients;
     private JPanel gameListPanel;
 
-    private JButton createGameButton;
-
-
     public ChannelPanel(Client client, ChannelController cc) {
     	this.client = client;
         this.cc = cc;
-        setLayout(new MigLayout("", "[][][grow]", "[grow]"));
+        setLayout(new MigLayout("ins 0", "[][][grow]", "[grow]"));
 
         add(createConnectedClientsPanel(), "cell 0 0, grow");
 
@@ -77,17 +79,33 @@ public class ChannelPanel extends JPanel {
         gameListPanel.setBackground(Color.WHITE);
         add(gameListPanel, "cell 2 0, grow");
 
-        createGameButton = new JButton(_("Create game"));
-        createGameButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				createGame();
-			}
-		});
-        gameListPanel.add(createGameButton, "wrap");
+        gameListPanel.add(createCreateGamePanel(), "wrap, growx");
 
         cc.register(this);
         cc.register(chatPanel);
+    }
+
+    private JPanel createCreateGamePanel() {
+    	JPanel createGamePanel = new JPanel(new MigLayout());
+
+    	createGamePanel.add(new JLabel(_("Game title")+":"));
+
+    	String defaultTitle = cc.getConnection().getNickname() + "'s game";
+    	final JTextField gameTitle = new JTextField();
+    	gameTitle.setDocument(new LengthRestrictedDocument(MAX_GAME_TITLE_LENGTH));
+    	gameTitle.setText(defaultTitle); //set after document
+    	createGamePanel.add(gameTitle, "wrap, width 250::");
+
+        JButton createGameButton = new JButton(_("Create game"));
+        createGameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String title = gameTitle.getText().trim();
+				cc.getConnection().send(new CreateGameMessage(title, cc.getChannel().getName()));
+			}
+		});
+        createGamePanel.add(createGameButton, "wrap, span 2");
+        return createGamePanel;
     }
 
     //copy from GamePanel!!!
@@ -103,9 +121,7 @@ public class ChannelPanel extends JPanel {
         return panel;
     }
 
-    private void createGame() {
-    	cc.getConnection().send(new CreateGameMessage(cc.getChannel().getName()));
-    }
+
 
 	@Subscribe
 	public void clientListChanged(ClientListChangedEvent ev) {
@@ -135,6 +151,8 @@ public class ChannelPanel extends JPanel {
 		gameListPanel.repaint();
     }
 
+	private static Font FONT_GAME_TITLE = new Font(null, Font.BOLD, 20);
+
 	class GameItemPanel extends JPanel {
 
 		private JLabel name;
@@ -152,7 +170,8 @@ public class ChannelPanel extends JPanel {
 			expansions = new HashSet<Expansion>(game.getExpansions());
 			expansions.remove(Expansion.BASIC);
 
-			name = new JLabel("Game");
+			name = new JLabel(game.getName());
+			name.setFont(FONT_GAME_TITLE);
 
 			expansionNames = new JLabel();
 			updateExpansionsLabel();
@@ -164,7 +183,7 @@ public class ChannelPanel extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					cc.getConnection().send(new JoinGameMessage(game.getGameId()));
-					client.openGameSetup(gc, true);
+					//client.openGameSetup(gc, true);
 				}
 			});
 
@@ -181,18 +200,19 @@ public class ChannelPanel extends JPanel {
 			if (clients == null) return;
 
 			List<RemoteClient> list = Arrays.asList(clients);
-			connectedClients.setText(joiner.join(Lists.transform(list, new Function<RemoteClient, String>() {
+			String label = joiner.join(Lists.transform(list, new Function<RemoteClient, String>() {
 				@Override
 				public String apply(RemoteClient rc) {
 					return rc.getName();
 				}
-			})));
+			}));
+			connectedClients.setText(_("Players") + ": " + label);
 		}
 
 		private void updateExpansionsLabel() {
 			String label = joiner.join(expansions);
 			if (label.length() == 0) label = Expansion.BASIC.toString();
-			expansionNames.setText(label);
+			expansionNames.setText(_("Expansions") + ": " + label);
 		}
 
 		@Subscribe

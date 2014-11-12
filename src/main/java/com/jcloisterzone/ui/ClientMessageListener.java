@@ -182,6 +182,7 @@ public class ClientMessageListener implements MessageListener {
         CreateGamePhase phase;
         if (snapshot == null) {
             game = new Game(msg.getGameId());
+            game.setName(msg.getName());
             gc = new GameController(client, game, conn.getReportingTool());
             phase = new CreateGamePhase(game, gc);
         } else {
