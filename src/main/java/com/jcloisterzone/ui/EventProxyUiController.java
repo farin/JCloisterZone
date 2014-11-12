@@ -36,6 +36,10 @@ public class EventProxyUiController<T extends EventProxy> {
         eventBus.register(subscriber);
     }
 
+    public void unregister(Object subscriber) {
+    	eventBus.unregister(subscriber);
+    }
+
     public Client getClient() {
 		return client;
 	}
