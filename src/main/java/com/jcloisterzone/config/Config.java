@@ -107,6 +107,7 @@ public class Config {
 
     public static class DebugConfig {
         private String save_format;
+        private String window_size;
         private String autosave;
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
@@ -124,7 +125,15 @@ public class Config {
         public void setSave_format(String save_format) {
             this.save_format = save_format;
         }
-        public String getAutosave() {
+
+        public String getWindow_size() {
+			return window_size;
+		}
+		public void setWindow_size(String window_size) {
+			this.window_size = window_size;
+		}
+
+		public String getAutosave() {
             return autosave;
         }
         public void setAutosave(String autosave) {

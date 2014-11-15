@@ -1,5 +1,8 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -13,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -50,8 +55,6 @@ import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePanel extends JPanel {
 
@@ -121,10 +124,10 @@ public class CreateGamePanel extends JPanel {
         this.mutableSlots = mutableSlots;
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
-        setLayout(new MigLayout("", "[][grow][grow]", "[][grow]"));
+        setLayout(new MigLayout("", "[grow]", "[][grow]"));
 
         panel = new JPanel();
-        add(panel, "cell 0 0 3 1,grow");
+        add(panel, "cell 0 0,grow");
         panel.setLayout(new MigLayout("", "[grow][]", "[]"));
 
         // helpText = new JLabel("[TODO HELP TEXT]");
@@ -148,6 +151,9 @@ public class CreateGamePanel extends JPanel {
             panel.add(createPresetPanel(), "west");
         }
 
+        JPanel scrolled = new JPanel();
+        scrolled.setLayout(new MigLayout("", "[][grow][grow]", "[grow]"));
+
 
         playersPanel = new JPanel();
         playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -164,7 +170,7 @@ public class CreateGamePanel extends JPanel {
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
 
-        add(playersPanel, "cell 0 1, grow");
+        scrolled.add(playersPanel, "cell 0 0, grow");
 
         expansionPanel = new JPanel();
         expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
@@ -178,13 +184,13 @@ public class CreateGamePanel extends JPanel {
             if (!exp.isImplemented()) continue;
             createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
         }
-        add(expansionPanel, "cell 1 1,grow");
+        scrolled.add(expansionPanel, "cell 1 0,grow");
 
         rulesPanel = new JPanel();
         rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
-        add(rulesPanel, "cell 2 1,grow");
+        scrolled.add(rulesPanel, "cell 2 0,grow");
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
@@ -199,6 +205,11 @@ public class CreateGamePanel extends JPanel {
             rulesPanel.add(chbox, "wrap");
             ruleCheckboxes.put(rule, chbox);
         }
+
+        JScrollPane scroll = new JScrollPane(scrolled);
+        scroll.setViewportBorder(null);  //ubuntu jdk
+        scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
+        add(scroll, "cell 0 1, grow");
 
         onSlotStateChange();
         startGameButton.requestFocus();

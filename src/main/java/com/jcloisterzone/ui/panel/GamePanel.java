@@ -78,13 +78,11 @@ public class GamePanel extends BackgroundPanel {
     public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
         createGamePanel = new CreateGamePanel(client, game, mutableSlots, slots);
         JPanel envelope = new BackgroundPanel();
-        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        envelope.add(createGamePanel);
+        envelope.setLayout(new MigLayout("align 50% 50%", "[]", "[]")); //to have centered inner panel
+        envelope.add(createGamePanel, "grow");
 
-        JScrollPane scroll = new JScrollPane(envelope);
-        scroll.setViewportBorder(null);  //ubuntu jdk
-        scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
-        add(scroll, BorderLayout.CENTER);
+        add(envelope, BorderLayout.CENTER);
+
 
         JPanel chatColumn = new JPanel();
         chatColumn.setOpaque(false);

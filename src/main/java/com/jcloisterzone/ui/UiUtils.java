@@ -6,6 +6,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -66,7 +67,7 @@ public final class UiUtils {
         }
     }
 
-    public static void centerDialog(JDialog dialog, int width, int height) {
+    public static void centerDialog(Window dialog, int width, int height) {
     	dialog.setSize(width, height);
     	dialog.setLocationRelativeTo(null);
     }

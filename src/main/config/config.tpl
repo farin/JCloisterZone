@@ -50,6 +50,7 @@ ${if hasDebug}
 debug:
   # plain or zip
   save_format: ${save_format}
+  window_size: ${window_size}
 
   autosave: ${autosave}
 

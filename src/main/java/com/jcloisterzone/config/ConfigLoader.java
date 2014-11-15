@@ -197,6 +197,7 @@ public class ConfigLoader {
         model.put("hasDebug", dc != null);
         if (dc != null) {
             model.put("save_format", dc.getSave_format());
+            model.put("window_size", dc.getWindow_size());
             model.put("autosave", dc.getAutosave());
             if (dc.getAutostart() != null) {
                 model.put("autostart", indent(2, yaml.dumpAs(dc.getAutostart(), Tag.MAP, FlowStyle.BLOCK)));

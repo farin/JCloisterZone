@@ -168,7 +168,18 @@ public class Client extends JFrame {
         envelope.add(startPanel);
 
         this.pack();
-        this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
+        if (windowSize == null || "fullscreen".equals(windowSize)) {
+        	this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        } else {
+        	String[] sizes = windowSize.split("x");
+        	if (sizes.length == 2) {
+        		UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+        	} else {
+        		logger.warn("Invalid configuration value for windows_size");
+        		this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        	}
+        }
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
