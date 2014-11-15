@@ -9,6 +9,7 @@ import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
@@ -45,7 +46,8 @@ public class EscapePhase extends Phase {
 
         private boolean result;
 
-        public Boolean getResult() {
+        @Override
+		public Boolean getResult() {
             return result;
         }
 
@@ -69,7 +71,8 @@ public class EscapePhase extends Phase {
         private boolean isBesieged;
         private boolean cloisterExists;
 
-        public Boolean getResult() {
+        @Override
+		public Boolean getResult() {
             return isBesieged && cloisterExists;
         }
 
@@ -95,6 +98,7 @@ public class EscapePhase extends Phase {
     public UndeployAction prepareEscapeAction() {
         UndeployAction escapeAction = null;
         for (Meeple m : game.getDeployedMeeples()) {
+        	if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!(m.getFeature() instanceof City)) continue;
 
