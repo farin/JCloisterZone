@@ -224,10 +224,10 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
-    	handleGame(msg, true);
+    	handleGame(msg, false);
     }
 
-    public GameController handleGame(final GameMessage msg, boolean openSetupPanel) throws InvocationTargetException, InterruptedException {
+    public GameController handleGame(final GameMessage msg, boolean channelList) throws InvocationTargetException, InterruptedException {
     	msg.getGameSetup().setGameId(msg.getGameId());  //fill omitted id
     	for (SlotMessage slotMsg : msg.getSlots()) {
     		slotMsg.setGameId(msg.getGameId()); //fill omitted id
@@ -245,15 +245,15 @@ public class ClientMessageListener implements MessageListener {
             handleSlot(slotMsg);
         }
 
-        switch (msg.getState()) {
-        case OPEN:
-        	if (openSetupPanel) {
-        		openGameSetup(gc, msg);
-        	}
-        	break;
-        case RUNNING:
-        	handleGameStarted(gc);
-        	break;
+        if (!channelList) {
+	        switch (msg.getState()) {
+	        case OPEN:
+	        	openGameSetup(gc, msg);
+	        	break;
+	        case RUNNING:
+	        	handleGameStarted(gc);
+	        	break;
+	        }
         }
         return gc;
     }
@@ -290,7 +290,7 @@ public class ClientMessageListener implements MessageListener {
     	GameController[] gameControllers = new GameController[msg.getGames().length];
     	int i = 0;
     	for (GameMessage gameMsg : msg.getGames()) {
-    		gameControllers[i++] = handleGame(gameMsg, false);
+    		gameControllers[i++] = handleGame(gameMsg, true);
     	}
   		cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
     }

@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.panel;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -53,6 +52,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
+import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
@@ -70,14 +70,13 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel playersPanel;
 
-    // private JLabel helpText;
     private JComboBox<Object> presets;
     private JButton presetSave, presetDelete;
 
-    private JButton startGameButton;
+    private JButton leaveGameButton, startGameButton;
     private JPanel expansionPanel;
     private JPanel rulesPanel;
-    private JPanel panel;
+    private JPanel header;
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
@@ -128,20 +127,27 @@ public class CreateGamePanel extends JPanel {
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
         setLayout(new MigLayout("", "[grow]", "[][grow]"));
+        add(header = new JPanel(), "cell 0 0, growx");
 
-        panel = new JPanel();
-        add(panel, "cell 0 0,grow");
-        panel.setLayout(new MigLayout("", "[grow][]", "[]"));
-
-        // helpText = new JLabel("[TODO HELP TEXT]");
-        // panel.add(helpText, "growx");
-        // helpText.setText(_("The game has been created. Remote clients can connect now."));
+        header.setLayout(new MigLayout("", "[grow]"));
 
         startGameButton = new JButton(_("Start game"));
         startGameButton.setFont(new Font(null, Font.PLAIN, 25));
 //        startGameButton.setIcon(new ImageIcon(CreateGamePanel.class
 //                .getResource("/sysimages/endTurn.png")));
-        panel.add(startGameButton, "width 240, h 40, east");
+        header.add(startGameButton, "width 240, h 40, east");
+
+        if (gc.getChannel() != null) {
+        	leaveGameButton = new JButton(_("Leave game"));
+        	header.add(leaveGameButton, "h pref!, gapx 10px 10px, east");
+
+        	leaveGameButton.addActionListener(new ActionListener() {
+                @Override
+    			public void actionPerformed(ActionEvent e) {
+                    client.getConnection().send(new LeaveGameMessage(game.getGameId()));
+                }
+            });
+        }
 
         startGameButton.addActionListener(new ActionListener() {
             @Override
@@ -151,7 +157,7 @@ public class CreateGamePanel extends JPanel {
         });
 
         if (mutableSlots) {
-            panel.add(createPresetPanel(), "west");
+            header.add(createPresetPanel(), "west");
         }
 
         JPanel scrolled = new JPanel();
@@ -540,21 +546,30 @@ public class CreateGamePanel extends JPanel {
     }
 
     private void onSlotStateChange() {
-        boolean anyPlayerAssigned = false;
+        int playersAssigned = 0;
+        boolean anyHumanPlayersAssigned = false;
         boolean allPlayersAssigned = true;
+
 
         for (Component c : playersPanel.getComponents()) {
             if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
             if (ps.isOccupied()) {
-                anyPlayerAssigned = true;
+            	playersAssigned++;
+                if (!ps.isAi()) {
+                	anyHumanPlayersAssigned = true;
+                }
             } else {
                 allPlayersAssigned = false;
             }
         }
         if (mutableSlots) {
-            startGameButton.setEnabled(anyPlayerAssigned);
+        	if (gc.getChannel() == null) {
+        		startGameButton.setEnabled(playersAssigned > 0);
+        	} else {
+        		startGameButton.setEnabled(playersAssigned > 1 && anyHumanPlayersAssigned);
+        	}
         } else {
             startGameButton.setEnabled(allPlayersAssigned);
         }

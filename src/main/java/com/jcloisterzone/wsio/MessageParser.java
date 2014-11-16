@@ -17,6 +17,7 @@ import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
+import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
@@ -49,6 +50,7 @@ public final class MessageParser {
         registerMsgType(WelcomeMessage.class);
         registerMsgType(CreateGameMessage.class);
         registerMsgType(JoinGameMessage.class);
+        registerMsgType(LeaveGameMessage.class);
         registerMsgType(GameMessage.class);
         registerMsgType(GameSetupMessage.class);
         registerMsgType(TakeSlotMessage.class);
