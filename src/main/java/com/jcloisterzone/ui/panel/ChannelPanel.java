@@ -7,8 +7,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -18,8 +16,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -32,8 +32,6 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
@@ -59,27 +57,32 @@ public class ChannelPanel extends JPanel {
     public ChannelPanel(Client client, ChannelController cc) {
     	this.client = client;
         this.cc = cc;
-        setLayout(new MigLayout("ins 0", "[][][grow]", "[grow]"));
+        setLayout(new MigLayout("ins 0", "[][]0[grow]", "[][grow]"));
 
-        add(createConnectedClientsPanel(), "cell 0 0, grow");
+        add(createConnectedClientsPanel(), "cell 0 0, sy 2, grow");
 
         JPanel chatBox = new JPanel();
         chatBox.setBackground(Color.WHITE);
         MigLayout chatBoxLayout = new MigLayout("", "[grow]", "[grow][]");
         chatBox.setLayout(chatBoxLayout);
-        add(chatBox, "cell 1 0, grow, w 250");
+        add(chatBox, "cell 1 0, grow, w 250, sy 2");
 
         chatPanel = new ChannelChatPanel(client, cc);
         chatPanel.registerSwingComponents(chatBox);
         chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
         chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
 
-        gameListPanel = new JPanel();
-        gameListPanel.setLayout(new MigLayout("", "[grow]", ""));
-        gameListPanel.setBackground(Color.WHITE);
-        add(gameListPanel, "cell 2 0, grow");
+        add(createCreateGamePanel(), "cell 2 0, growx");
 
-        gameListPanel.add(createCreateGamePanel(), "wrap, growx");
+        gameListPanel = new JPanel();
+        gameListPanel.setLayout(new MigLayout("ins rel 0, gap 0 rel", "[grow]", ""));
+        gameListPanel.setBackground(Color.WHITE);
+
+        JScrollPane scroll = new JScrollPane(gameListPanel);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setViewportBorder(null);  //ubuntu jdk
+        scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
+        add(scroll, "cell 2 1, grow");
 
         cc.register(this);
         cc.register(chatPanel);
@@ -139,11 +142,8 @@ public class ChannelPanel extends JPanel {
 
 	@Subscribe
 	public void gameListChanged(GameListChangedEvent ev) {
-		//remove all expect new game component
-		while (gameListPanel.getComponentCount() > 1) {
-			gameListPanel.remove(gameListPanel.getComponentCount() - 1);
-		}
-
+		//TODO optimize, update instead recreate all
+		gameListPanel.removeAll();
 		for (GameController gc : ev.getGameControllers()) {
 			gameListPanel.add(new GameItemPanel(gc), "wrap, growx");
 		}
