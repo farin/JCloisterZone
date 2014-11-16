@@ -50,8 +50,9 @@ public class ChannelPanel extends JPanel {
 
 	private final Client client;
     private final ChannelController cc;
+
     private ChatPanel chatPanel;
-    private JTextPane connectedClients;
+    private ConnectedClientsPanel connectedClientsPanel;
     private JPanel gameListPanel;
 
     public ChannelPanel(Client client, ChannelController cc) {
@@ -59,7 +60,7 @@ public class ChannelPanel extends JPanel {
         this.cc = cc;
         setLayout(new MigLayout("ins 0", "[][]0[grow]", "[][grow]"));
 
-        add(createConnectedClientsPanel(), "cell 0 0, sy 2, grow");
+        add(connectedClientsPanel = new ConnectedClientsPanel("play.jcz"), "cell 0 0, sy 2, width 150::, grow");
 
         JPanel chatBox = new JPanel();
         chatBox.setBackground(Color.WHITE);
@@ -111,32 +112,11 @@ public class ChannelPanel extends JPanel {
         return createGamePanel;
     }
 
-    //copy from GamePanel!!!
-    private JPanel createConnectedClientsPanel() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setBackground(Color.WHITE);
-        panel.setLayout(new BorderLayout());
-        panel.add(new JLabel(_("Connected clients:")), BorderLayout.NORTH);
-        connectedClients = new JTextPane();
-        connectedClients.setEditable(false);
-        panel.add(connectedClients, BorderLayout.CENTER);
-        return panel;
-    }
-
 
 	@Subscribe
 	public void clientListChanged(ClientListChangedEvent ev) {
     	RemoteClient[] clients = ev.getClients();
-
-        connectedClients.setText(Joiner.on("\n").join(
-            Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
-                @Override
-                public String apply(RemoteClient input) {
-                    return input.getName();
-                }
-        })));
-
+    	connectedClientsPanel.updateClients(clients);
     }
 
 	@Subscribe

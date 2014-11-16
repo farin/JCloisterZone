@@ -6,13 +6,13 @@ Game can be also played against computer AI.
 
 ## Development guide
 
-Helpers for more pleasant development and application debugging.
+Helpers for convenient development and application debugging.
 
 ### VM arguments
 
 use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
 
-    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -ea
+    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat=true -ea
 
 
 ### debug.yaml

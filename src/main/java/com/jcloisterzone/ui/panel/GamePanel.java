@@ -5,13 +5,9 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.Arrays;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -19,9 +15,6 @@ import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ClientListChangedEvent;
@@ -48,7 +41,8 @@ public class GamePanel extends BackgroundPanel {
 
     private ChatPanel chatPanel;
     private CreateGamePanel createGamePanel;
-    private JTextPane connectedClients;
+    private ConnectedClientsPanel connectedClientsPanel;
+
 
     private MainPanel mainPanel;
 
@@ -59,18 +53,6 @@ public class GamePanel extends BackgroundPanel {
         this.game = gc.getGame();
         setLayout(new BorderLayout());
         gc.register(this);
-    }
-
-    private JPanel createConnectedClientsPanel() {
-         JPanel panel = new JPanel();
-         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-         panel.setBackground(Color.WHITE);
-         panel.setLayout(new BorderLayout());
-         panel.add(new JLabel(_("Connected clients:")), BorderLayout.NORTH);
-         connectedClients = new JTextPane();
-         connectedClients.setEditable(false);
-         panel.add(connectedClients, BorderLayout.CENTER);
-         return panel;
     }
 
     public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
@@ -88,7 +70,7 @@ public class GamePanel extends BackgroundPanel {
         chatColumn.setPreferredSize(new Dimension(ChatPanel.CHAT_WIDTH, getHeight()));
         add(chatColumn, BorderLayout.WEST);
 
-        chatColumn.add(createConnectedClientsPanel(), "cell 0 0, grow");
+        chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(game.getName()), "cell 0 0, grow");
 
         JPanel chatBox = new JPanel();
         chatBox.setBackground(Color.WHITE);
@@ -123,13 +105,7 @@ public class GamePanel extends BackgroundPanel {
                 }
             }
         } else {
-            connectedClients.setText(Joiner.on("\n").join(
-                Collections2.transform(Arrays.asList(clients), new Function<RemoteClient, String>() {
-                    @Override
-                    public String apply(RemoteClient input) {
-                        return input.getName();
-                    }
-            })));
+        	connectedClientsPanel.updateClients(clients);
         }
     }
 
@@ -155,11 +131,15 @@ public class GamePanel extends BackgroundPanel {
         }
     }
 
-    public void disposePanel() {
-        if (createGamePanel != null) {
+    public void disposeCreateGamePanel() {
+    	if (createGamePanel != null) {
         	gc.unregister(createGamePanel);
         	createGamePanel.disposePanel();
         }
+    }
+
+    public void disposePanel() {
+        disposeCreateGamePanel();
         if (chatPanel != null) {
         	gc.unregister(chatPanel);
         }
@@ -213,12 +193,12 @@ public class GamePanel extends BackgroundPanel {
 
     @Subscribe
     public void started(GameStateChangeEvent ev) {
-        disposePanel(); //free createGamePanel
+    	disposeCreateGamePanel();
         removeAll();
         setBackgroundImage(null);
 
         createGamePanel = null;
-        connectedClients = null;
+        connectedClientsPanel = null;
         mainPanel = new MainPanel(client, gc, chatPanel);
         add(mainPanel, BorderLayout.CENTER);
         gc.getReportingTool().setContainer(getMainPanel());
