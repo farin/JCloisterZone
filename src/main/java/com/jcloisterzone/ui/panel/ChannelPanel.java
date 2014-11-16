@@ -125,7 +125,6 @@ public class ChannelPanel extends JPanel {
     }
 
 
-
 	@Subscribe
 	public void clientListChanged(ClientListChangedEvent ev) {
     	RemoteClient[] clients = ev.getClients();

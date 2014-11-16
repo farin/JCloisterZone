@@ -39,7 +39,8 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
     public ConnectPlayOnlinePanel(Client client) {
         this.client = client;
         ActionListener actionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
                 message.setText(_("Connecting") + "...");
@@ -75,6 +76,10 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
     }
 
     private String getDefaultNick() {
+    	//for development is useful to change nick with system property
+    	if (System.getProperty("nick") != null) {
+        	return System.getProperty("nick");
+        }
         String name = client.getConfig().getClient_name();
         name = name == null ? "" : name.trim();
         if (name.equals("")) name = System.getProperty("user.name");
@@ -89,7 +94,8 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
         client.saveConfig();
     }
 
-    public void onWebsocketError(Exception ex) {
+    @Override
+	public void onWebsocketError(Exception ex) {
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
         if (ex instanceof UnresolvedAddressException) {

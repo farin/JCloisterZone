@@ -371,6 +371,9 @@ public class Client extends JFrame {
     }
 
     private String getUserName() {
+    	if (System.getProperty("nick") != null) {
+        	return System.getProperty("nick");
+        }
         String name = config.getClient_name();
         name = name == null ? "" : name.trim();
         if (name.equals("")) name = System.getProperty("user.name");
