@@ -58,14 +58,14 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Game game;
+    private String channel;
 
     private final RmiProxy rmiProxy;
-    private final ReportingTool reportingTool;
+    private ReportingTool reportingTool;
     private GamePanel gamePanel;
 
-    public GameController(Client client, Game game, ReportingTool reportingTool) {
+    public GameController(Client client, Game game) {
     	super(client, game);
-    	this.reportingTool = reportingTool;
         this.game = game;
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
         getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
@@ -332,7 +332,19 @@ public class GameController extends EventProxyUiController<Game> implements Acti
         return reportingTool;
     }
 
-    @Override
+    public void setReportingTool(ReportingTool reportingTool) {
+		this.reportingTool = reportingTool;
+	}
+
+    public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	@Override
     public void toggleRecentHistory(boolean show) {
         gamePanel.toggleRecentHistory(show);
 

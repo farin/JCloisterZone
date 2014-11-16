@@ -10,6 +10,7 @@ public class GameMessage implements WsMessage, WsInGameMessage {
     }
 
     private String gameId;
+    private String channel;
     private String name;
     private GameState state;
     private String snapshot;
@@ -32,8 +33,15 @@ public class GameMessage implements WsMessage, WsInGameMessage {
         this.gameId = gameId;
     }
 
+    public String getChannel() {
+		return channel;
+	}
 
-    public String getName() {
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getName() {
         return name;
     }
 

@@ -65,7 +65,7 @@ public class GameChatPanel extends ChatPanel {
         } else {
              PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
              for (PlayerSlot slot: slots) {
-                 if (slot.isOwn() && !slot.getNickname().equals("")) {
+                 if (slot != null && slot.isOwn() && !slot.isAi() && !slot.getNickname().equals("")) {
                      nick = slot.getNickname();
                      color = slot.getColors().getFontColor();
                      break;

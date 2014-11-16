@@ -132,7 +132,7 @@ public class SimpleServer extends WebSocketServer  {
         if (conn == null) return;
         if (!gameStarted) {
             for (ServerPlayerSlot slot : slots) {
-                if (conn.getClientId().equals(slot.getOwner())) {
+                if (slot != null && conn.getClientId().equals(slot.getOwner())) {
                     leaveSlot(slot);
                 }
             }
@@ -262,11 +262,13 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private void leaveSlot(ServerPlayerSlot slot) {
-        slot.setNickname(null);
+    	if (snapshot == null) {
+    		slot.setNickname(null);
+    		slot.setAiClassName(null);
+            slot.setSupportedExpansions(null);
+    	}
         slot.setSerial(null);
         slot.setOwner(null);
-        slot.setAiClassName(null);
-        slot.setSupportedExpansions(null);
         broadcast(newSlotMessage(slot));
     }
 

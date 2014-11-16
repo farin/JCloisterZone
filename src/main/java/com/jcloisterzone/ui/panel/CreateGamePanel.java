@@ -49,6 +49,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
@@ -64,6 +65,7 @@ public class CreateGamePanel extends JPanel {
 
     private final Client client;
     private final Game game;
+    private final GameController gc;
     private boolean mutableSlots;
 
     private JPanel playersPanel;
@@ -118,9 +120,10 @@ public class CreateGamePanel extends JPanel {
     /**
      * Create the panel.
      */
-    public CreateGamePanel(final Client client, final Game game, boolean mutableSlots, PlayerSlot[] slots) {
+    public CreateGamePanel(final Client client, final GameController gc, boolean mutableSlots, PlayerSlot[] slots) {
         this.client = client;
-        this.game = game;
+        this.gc = gc;
+        this.game = gc.getGame();
         this.mutableSlots = mutableSlots;
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
@@ -161,7 +164,9 @@ public class CreateGamePanel extends JPanel {
 
         for (PlayerSlot slot : slots) {
             if (slot != null) {
-                playersPanel.add(new CreateGamePlayerPanel(client, mutableSlots, slot, nameProvider), "wrap");
+            	CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, game, gc.getChannel() != null, mutableSlots, slot, slots);
+            	panel.setNameProvider(nameProvider);
+                playersPanel.add(panel, "wrap");
             }
         }
         if (mutableSlots) {

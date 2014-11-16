@@ -1,16 +1,16 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
@@ -36,8 +36,6 @@ import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.wsio.server.RemoteClient;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class GamePanel extends BackgroundPanel {
@@ -76,7 +74,7 @@ public class GamePanel extends BackgroundPanel {
     }
 
     public void showCreateGamePanel(boolean mutableSlots, PlayerSlot[] slots) {
-        createGamePanel = new CreateGamePanel(client, game, mutableSlots, slots);
+        createGamePanel = new CreateGamePanel(client, gc, mutableSlots, slots);
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new MigLayout("align 50% 50%", "[]", "[]")); //to have centered inner panel
         envelope.add(createGamePanel, "grow");

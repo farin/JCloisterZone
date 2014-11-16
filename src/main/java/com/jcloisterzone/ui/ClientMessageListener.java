@@ -183,13 +183,15 @@ public class ClientMessageListener implements MessageListener {
         if (snapshot == null) {
             game = new Game(msg.getGameId());
             game.setName(msg.getName());
-            gc = new GameController(client, game, conn.getReportingTool());
+            gc = new GameController(client, game);
             phase = new CreateGamePhase(game, gc);
         } else {
             game = snapshot.asGame(msg.getGameId());
-            gc = new GameController(client, game, conn.getReportingTool());
+            gc = new GameController(client, game);
             phase = new LoadGamePhase(game, snapshot, gc);
         }
+        gc.setReportingTool(conn.getReportingTool());
+        gc.setChannel(msg.getChannel());
         PlayerSlot[] slots = new PlayerSlot[PlayerSlot.COUNT];
         for (SlotMessage slotMsg : msg.getSlots()) {
             int number = slotMsg.getNumber();
