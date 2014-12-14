@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -458,7 +460,9 @@ public class Client extends JFrame {
             try {
                 BufferedInputStream fileInStream = new BufferedInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
                 AudioInputStream beepStream = AudioSystem.getAudioInputStream(fileInStream);
-                Clip c = AudioSystem.getClip();
+                AudioFormat format = beepStream.getFormat();
+                DataLine.Info info = new DataLine.Info(Clip.class, format);
+                Clip c = (Clip)AudioSystem.getLine(info);
                 c.open(beepStream);
                 c.start();
             } catch (Exception e) {
