@@ -124,9 +124,6 @@ public abstract class Capability {
 
     public void finalScoring() {
     }
-    
-    public void virtualScoring() {
-    }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
         return true;

@@ -442,12 +442,6 @@ public class Game extends GameSettings {
             cap.finalScoring();
         }
     }
-    
-    public void virtualScoring() {
-        for (Capability cap: capabilities) {
-            cap.virtualScoring();
-        }
-    }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
         for (Capability cap: capabilities) {

@@ -31,6 +31,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -49,7 +50,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
-    private static Font FONT_VIRTUAL_POINTS = new Font("Georgia", Font.BOLD, 12);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_KING_ROBBER_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
@@ -172,9 +172,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         g2.setFont(FONT_NICKNAME);
         drawTextShadow(player.getNick(), 78, 27);
-        
-        g2.setFont(FONT_VIRTUAL_POINTS);
-        drawTextShadow("("+player.getVirtualPoints()+")", 170, 27);
 
 //		gp.profile(" > nick & score");
 

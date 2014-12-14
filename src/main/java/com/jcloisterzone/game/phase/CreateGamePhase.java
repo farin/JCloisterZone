@@ -101,8 +101,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
-        next = last = addPhase(next, new VirtualScorePhase(game)); 
-        next = addPhase(next, new CleanUpTurnPhase(game));
+        next = last = addPhase(next, new CleanUpTurnPhase(game));
         next = addPhase(next, new BazaarPhase(game, getConnection()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
