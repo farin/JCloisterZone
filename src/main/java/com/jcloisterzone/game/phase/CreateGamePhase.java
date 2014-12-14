@@ -32,7 +32,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
-
 public class CreateGamePhase extends ServerAwarePhase {
 
     private final class PlayerSlotComparator implements Comparator<PlayerSlot> {

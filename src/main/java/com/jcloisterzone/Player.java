@@ -18,7 +18,6 @@ import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.PlayerColor;
 
-
 /**
  * Represents one player in game. Contains information about figures, points and
  * control informations.<br>

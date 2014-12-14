@@ -150,4 +150,5 @@ public class ClothWineGrainCapability extends Capability {
             addTradeResources(player, TradeResource.CLOTH, Integer.parseInt(playerEl.getAttribute("cloth")));
         }
     }
+    
 }

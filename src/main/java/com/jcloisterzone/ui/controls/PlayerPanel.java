@@ -369,4 +369,5 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             client.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
+    
 }

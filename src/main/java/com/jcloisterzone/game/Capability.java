@@ -23,7 +23,6 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 
-
 public abstract class Capability {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());

@@ -167,6 +167,5 @@ public final class KingAndRobberBaronCapability extends Capability {
         completedRoads = Integer.parseInt(node.getAttribute("completedRoads"));
         longestRoadLength = Integer.parseInt(node.getAttribute("longestRoadLength"));
     }
-
 }
 
