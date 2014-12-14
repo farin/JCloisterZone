@@ -90,5 +90,4 @@ public class VirtualScorePhase extends Phase implements ScoreAllCallback {
     public Player getActivePlayer() {
         return null;
     }
-
 }

@@ -170,5 +170,4 @@ public class Player implements Serializable {
     public boolean isLocalHuman() {
         return getSlot().isOwn() && !getSlot().isAi();
     }
-
 }

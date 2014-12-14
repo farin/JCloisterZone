@@ -252,5 +252,4 @@ public class CreateGamePhase extends ServerAwarePhase {
 
         next();
     }
-
 }

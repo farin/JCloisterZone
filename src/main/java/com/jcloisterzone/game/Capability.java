@@ -136,5 +136,4 @@ public abstract class Capability {
     public String toString() {
         return getClass().getSimpleName().replace("Capability", "");
     }
-
 }

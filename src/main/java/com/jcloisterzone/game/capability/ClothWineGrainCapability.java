@@ -13,7 +13,6 @@ import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.FeatureCompletedEvent;
-import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;

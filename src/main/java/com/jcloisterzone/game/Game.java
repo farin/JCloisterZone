@@ -480,4 +480,5 @@ public class Game extends GameSettings {
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
+    
 }
