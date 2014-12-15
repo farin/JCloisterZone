@@ -13,7 +13,6 @@ import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.FeatureCompletedEvent;
-import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
@@ -89,13 +88,8 @@ public class ClothWineGrainCapability extends Capability {
     @Override
     public void finalScoring() {
         for (TradeResource tr : TradeResource.values()) {
-            int hiVal = 1;
-            for (Player player: game.getAllPlayers()) {
-                int playerValue = getTradeResources(player, tr);
-                if (playerValue > hiVal) {
-                    hiVal = playerValue;
-                }
-            }
+            int hiVal = getHiValue(tr);
+            
             for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
@@ -105,6 +99,32 @@ public class ClothWineGrainCapability extends Capability {
 
         }
     }
+    
+    @Override
+    public void virtualScoring() {
+        for (TradeResource tr : TradeResource.values()) {
+            int hiVal = getHiValue(tr);
+            
+            for (Player player: game.getAllPlayers()) {
+                int playerValue = getTradeResources(player, tr);
+                if (playerValue == hiVal) {
+                    player.addVirtualPoints(10, PointCategory.TRADE_GOODS);
+                }
+            }
+
+        }
+    }
+
+	private int getHiValue(TradeResource tr) {
+		int hiVal = 1;
+		for (Player player: game.getAllPlayers()) {
+		    int playerValue = getTradeResources(player, tr);
+		    if (playerValue > hiVal) {
+		        hiVal = playerValue;
+		    }
+		}
+		return hiVal;
+	}
 
 
     @Override
@@ -130,4 +150,5 @@ public class ClothWineGrainCapability extends Capability {
             addTradeResources(player, TradeResource.CLOTH, Integer.parseInt(playerEl.getAttribute("cloth")));
         }
     }
+    
 }

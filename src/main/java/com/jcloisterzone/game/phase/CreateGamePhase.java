@@ -32,7 +32,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
-
 public class CreateGamePhase extends ServerAwarePhase {
 
     private final class PlayerSlotComparator implements Comparator<PlayerSlot> {
@@ -101,7 +100,8 @@ public class CreateGamePhase extends ServerAwarePhase {
         Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
                addPhase(next, new GameOverPhase(game));
-        next = last = addPhase(next, new CleanUpTurnPhase(game));
+        next = last = addPhase(next, new VirtualScorePhase(game)); 
+        next = addPhase(next, new CleanUpTurnPhase(game));
         next = addPhase(next, new BazaarPhase(game, getConnection()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
@@ -251,5 +251,4 @@ public class CreateGamePhase extends ServerAwarePhase {
 
         next();
     }
-
 }

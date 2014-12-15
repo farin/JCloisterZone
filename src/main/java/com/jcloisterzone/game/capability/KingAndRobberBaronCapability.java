@@ -103,6 +103,16 @@ public final class KingAndRobberBaronCapability extends Capability {
             robberBaron.addPoints(completedRoads, PointCategory.LONGEST_ROAD);
         }
     }
+    
+    @Override
+    public void virtualScoring() {
+        if (king != null) {
+            king.addVirtualPoints(completedCities, PointCategory.BIGGEST_CITY);
+        }
+        if (robberBaron != null) {
+            robberBaron.addVirtualPoints(completedRoads, PointCategory.LONGEST_ROAD);
+        }
+    }
 
     public int getCompletedCities() {
         return completedCities;
@@ -157,7 +167,5 @@ public final class KingAndRobberBaronCapability extends Capability {
         completedRoads = Integer.parseInt(node.getAttribute("completedRoads"));
         longestRoadLength = Integer.parseInt(node.getAttribute("longestRoadLength"));
     }
-
-
 }
 

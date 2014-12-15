@@ -23,7 +23,6 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 
-
 public abstract class Capability {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -124,6 +123,9 @@ public abstract class Capability {
 
     public void finalScoring() {
     }
+    
+    public void virtualScoring() {
+    }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
         return true;
@@ -133,5 +135,4 @@ public abstract class Capability {
     public String toString() {
         return getClass().getSimpleName().replace("Capability", "");
     }
-
 }

@@ -18,7 +18,6 @@ import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.PlayerColor;
 
-
 /**
  * Represents one player in game. Contains information about figures, points and
  * control informations.<br>
@@ -30,6 +29,7 @@ public class Player implements Serializable {
     private static final long serialVersionUID = -7276471952562769832L;
 
     private int points;
+    private int virtualPoints;
     private final Map<PointCategory, Integer> pointStats = new HashMap<>();
 
     private final List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
@@ -96,9 +96,17 @@ public class Player implements Serializable {
             pointStats.put(category, points);
         }
     }
+    
+    public void addVirtualPoints(int virtualPoints, PointCategory category) {
+        this.virtualPoints += virtualPoints;
+    }
 
     public int getPoints() {
         return points;
+    }
+    
+    public int getVirtualPoints() {
+        return virtualPoints;
     }
 
     public String getNick() {
@@ -145,8 +153,11 @@ public class Player implements Serializable {
         this.points = points;
     }
 
+    public void setVirtualPoints(int virtualPoints) {
+		this.virtualPoints = virtualPoints;
+	}
 
-    public int getPointsInCategory(PointCategory cat) {
+	public int getPointsInCategory(PointCategory cat) {
         Integer points = pointStats.get(cat);
         return points == null ? 0 : points;
     }
@@ -158,5 +169,4 @@ public class Player implements Serializable {
     public boolean isLocalHuman() {
         return getSlot().isOwn() && !getSlot().isAi();
     }
-
 }
