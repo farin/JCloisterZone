@@ -60,8 +60,7 @@ public class VirtualScoringCallback implements ScoreAllCallback {
 
     @Override
     public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-        int points = ctx.getBarnPoints();
-        map.get(meeple.getPlayer()).addVirtualPoints(points);
+    	virtualScoreFeature(ctx.getBarnPoints(), ctx, meeple.getPlayer());
     }
 
 
@@ -83,12 +82,8 @@ public class VirtualScoringCallback implements ScoreAllCallback {
 		}
 	}
 
-	private void virtualScoreFeature(int points, ScoreContext ctx, Player p) {
-		PlayerPanel playerPanel = map.get(p);
-		
-		if (playerPanel != null) {
-			playerPanel.addVirtualPoints(points);
-		}
+	private void virtualScoreFeature(int points, ScoreContext ctx, Player p) {		
+        scoringStrategy.addPoints(p, points, ctx.getMasterFeature().getPointCategory());		
     }
     
     @Override
