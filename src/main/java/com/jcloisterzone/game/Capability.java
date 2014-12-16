@@ -19,6 +19,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -122,7 +123,7 @@ public abstract class Capability {
     }
 
 
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy scoringStrategy) {
     }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {

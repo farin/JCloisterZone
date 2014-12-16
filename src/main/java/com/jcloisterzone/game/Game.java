@@ -28,7 +28,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.PlayEvent;
@@ -424,12 +423,6 @@ public class Game extends GameSettings implements EventProxy {
     public void turnCleanUp() {
         for (Capability cap: capabilities) {
             cap.turnCleanUp();
-        }
-    }
-
-    public void finalScoring() {
-        for (Capability cap: capabilities) {
-            cap.finalScoring();
         }
     }
 

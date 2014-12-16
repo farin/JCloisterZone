@@ -11,6 +11,7 @@ import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.game.Capability;
@@ -95,12 +96,12 @@ public final class KingAndRobberBaronCapability extends Capability {
     }
 
     @Override
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy scoringStrategy) {
         if (king != null) {
-            king.addPoints(completedCities, PointCategory.BIGGEST_CITY);
+            scoringStrategy.addPoints(king, completedCities, PointCategory.BIGGEST_CITY);
         }
         if (robberBaron != null) {
-            robberBaron.addPoints(completedRoads, PointCategory.LONGEST_ROAD);
+        	scoringStrategy.addPoints(robberBaron, completedRoads, PointCategory.LONGEST_ROAD);
         }
     }
 

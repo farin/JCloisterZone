@@ -22,6 +22,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
@@ -55,6 +56,8 @@ public class ControlPanel extends FakeComponent {
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
+    
+    private boolean showVirtualScore;
 
     public ControlPanel(final Client client, GameController gc) {
         super(client);
@@ -265,5 +268,24 @@ public class ControlPanel extends FakeComponent {
         canPass = false;
         refreshComponents();
     }
-
+    
+    public void doVirtualScoring() {
+    	
+    	if (showVirtualScore) {
+    		new ScoreAllFeatureFinder().scoreAll(game, new VirtualScoringCallback(game, playerPanels));
+    	}
+    	
+    }
+	
+	public void setShowVirtualScore(boolean showVirtualScore) {
+    	this.showVirtualScore = showVirtualScore;
+    	
+    	doVirtualScoring();
+    	
+    	for (PlayerPanel playerPanel : playerPanels) {
+    		playerPanel.setShowVirtualScore(showVirtualScore);
+    	}
+    	
+    	client.getGridPanel().repaint();
+	}
 }

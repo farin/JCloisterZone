@@ -1,5 +1,10 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -37,11 +42,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
-
 public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
@@ -50,6 +50,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
+    private static Font FONT_VIRTUAL_POINTS = new Font("Georgia", Font.BOLD, 12);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_KING_ROBBER_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
@@ -62,6 +63,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private final GameController gc;
     private final Player player;
     private Color color, fontColor;
+    
+    private boolean showVirtualScore;
+    private int virtualPoints = 0;
 
     private final PlayerPanelImageCache cache;
 
@@ -97,6 +101,18 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.drawString(text, x+0.6f, y+0.5f);
         g2.setColor(fontColor);
         g2.drawString(text, x, y);
+    }
+    
+    public Player getPlayer() {
+		return player;
+	}
+    
+    public void setVirtualPoints(int virtualPoints) {
+    	this.virtualPoints = virtualPoints;
+    }
+    
+    public void addVirtualPoints(int virtualPoints) {
+    	this.virtualPoints += virtualPoints;
     }
 
     private Rectangle drawMeepleBox(Player playerKey, String imgKey, int count, boolean showOne) {
@@ -172,6 +188,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         g2.setFont(FONT_NICKNAME);
         drawTextShadow(player.getNick(), 78, 27);
+        
+        if (showVirtualScore) {
+	        g2.setFont(FONT_VIRTUAL_POINTS);
+	        drawTextShadow("("+virtualPoints+")", 170, 27);
+        }
 
 //		gp.profile(" > nick & score");
 
@@ -366,5 +387,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             client.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
+
+	public void setShowVirtualScore(boolean showVirtualScore) {
+		this.showVirtualScore = showVirtualScore;
+	}
 
 }

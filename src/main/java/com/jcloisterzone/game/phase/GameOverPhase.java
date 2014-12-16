@@ -9,18 +9,29 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
 
 
 public class GameOverPhase extends Phase implements ScoreAllCallback {
 
+	private ScoringStrategy scoringStrategy;
+	
     public GameOverPhase(Game game) {
         super(game);
+        
+        scoringStrategy = new ScoringStrategy() {
+			@Override
+			public void addPoints(Player player, int points, PointCategory category) {
+				player.addPoints(points, category);
+			}
+		};
     }
 
     @Override
@@ -31,10 +42,8 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
             fairyCap.setFairyPosition(null);
         }
 
-        ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
-        scoreAll.scoreAll(game, this);
-
-        game.finalScoring();
+        new ScoreAllFeatureFinder().scoreAll(game, this);
+        
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_OVER));
     }
 
@@ -59,7 +68,13 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
         ev.setFinal(true);
         game.post(ev);
     }
-
+    
+    @Override
+	public void scoreCapabilities() {    	
+    	for (Capability cap: game.getCapabilities()) {
+            cap.finalScoring(scoringStrategy);
+        }    	
+	}
 
     @Override
     public void scoreCompletableFeature(CompletableScoreContext ctx) {

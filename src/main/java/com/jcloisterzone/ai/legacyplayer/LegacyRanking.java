@@ -244,6 +244,11 @@ public class LegacyRanking implements GameRanking {
         }
 
         @Override
+		public void scoreCapabilities() {
+			// TODO: Capability scoring could be taken into account?
+		}
+
+		@Override
         public void scoreCompletableFeature(CompletableScoreContext ctx) {
             if (ctx instanceof MonasteryAbbotScoreContext) {
                 int points = ctx.getPoints();

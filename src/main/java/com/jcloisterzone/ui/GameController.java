@@ -19,7 +19,6 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -133,6 +132,8 @@ public class GameController extends EventProxyUiController<Game> implements Acti
         if (ev.getTargetPlayer().isLocalHuman()) {
             client.beep();
         }
+        
+        gamePanel.getControlPanel().doVirtualScoring();
 
         // TODO better image quality ?
         Color c = ev.getTargetPlayer().getColors().getMeepleColor();
@@ -354,6 +355,11 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     public void setShowFarmHints(boolean showFarmHints) {
         gamePanel.setShowFarmHints(showFarmHints);
     }
+    
+    @Override
+	public void setShowVirtualScore(boolean showVirtualScore) {
+		gamePanel.getControlPanel().setShowVirtualScore(showVirtualScore);
+	}
 
     @Override
     public void zoom(double steps) {
