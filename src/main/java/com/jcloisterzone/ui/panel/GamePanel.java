@@ -193,15 +193,18 @@ public class GamePanel extends BackgroundPanel {
 
     @Subscribe
     public void started(GameStateChangeEvent ev) {
-    	disposeCreateGamePanel();
-        removeAll();
-        setBackgroundImage(null);
-
-        createGamePanel = null;
-        connectedClientsPanel = null;
-        mainPanel = new MainPanel(client, gc, chatPanel);
-        add(mainPanel, BorderLayout.CENTER);
-        gc.getReportingTool().setContainer(getMainPanel());
-        mainPanel.started(ev.getSnapshot());
+    	
+    	if (GameStateChangeEvent.GAME_START == ev.getType()) {
+	    	disposeCreateGamePanel();
+	        removeAll();
+	        setBackgroundImage(null);
+	
+	        createGamePanel = null;
+	        connectedClientsPanel = null;
+	        mainPanel = new MainPanel(client, gc, chatPanel);
+	        add(mainPanel, BorderLayout.CENTER);
+	        gc.getReportingTool().setContainer(getMainPanel());
+	        mainPanel.started(ev.getSnapshot());
+    	}
     }
 }
