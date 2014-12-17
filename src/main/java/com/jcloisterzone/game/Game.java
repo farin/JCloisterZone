@@ -176,9 +176,11 @@ public class Game extends GameSettings implements EventProxy {
         return turnPlayer;
     }
 
-    public void setTurnPlayer(Player turnPlayer) {
-        this.turnPlayer = turnPlayer;
-        post(new PlayerTurnEvent(turnPlayer));
+    public void setTurnPlayer(Player nextPlayer) {
+    	Player previousPlayer = this.turnPlayer;
+        this.turnPlayer = nextPlayer;
+        
+        post(new PlayerTurnEvent(previousPlayer, nextPlayer));
     }
 
     /**

@@ -127,18 +127,20 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     @Subscribe
     public void turnChanged(PlayerTurnEvent ev) {
-        gamePanel.getGridPanel().repaint();
-
-        if (ev.getTargetPlayer().isLocalHuman()) {
-            client.beep();
-        }
-        
-        gamePanel.getControlPanel().doVirtualScoring();
-
-        // TODO better image quality ?
-        Color c = ev.getTargetPlayer().getColors().getMeepleColor();
-        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
-        client.setIconImage(image);
+    	gamePanel.getControlPanel().doVirtualScoring();
+    	
+    	if (ev.getTriggeringPlayer() != ev.getTargetPlayer()) {
+	        gamePanel.getGridPanel().repaint();
+	
+	        if (ev.getTargetPlayer().isLocalHuman()) {
+	            client.beep();
+	        }
+	
+	        // TODO better image quality ?
+	        Color c = ev.getTargetPlayer().getColors().getMeepleColor();
+	        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
+	        client.setIconImage(image);
+    	}
     }
 
     public void refreshWindowTitle() {
