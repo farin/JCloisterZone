@@ -1,94 +1,18 @@
-# JCloisterZone
+# [JCloisterZone](http://jcloisterzone.com/)
 
-JCloisterZone is a Java implementation of a popular board game Carcassonne.
+
+JCloisterZone is a Java implementation of a popular board game [Carcassonne](https://en.wikipedia.org/wiki/Carcassonne_(board_game)).
 It supports multiplayer game on a local computer or over a network.
-Game can be also played against computer AI.
-
-## Development guide
-
-Helpers for more pleasant development and application debugging.
-
-### VM arguments
-
-use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
-
-    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -ea
+Games can be also played against computer AI.
+The game contains [many of the available expansions](http://www.boardgamegeek.com/boardgame/822/carcassonne), including the small ones, distributed during game expos or in a game magazines.
 
 
-### debug.yaml
+- Download ready-made packages at [jcloisterzone.com](http://jcloisterzone.com/).
+- Build your own version from source by reading [BUILDING.md](https://github.com/farin/JCloisterZone/blob/master/BUILDING.md).
+- Contribute to the project by reading [CONTRIBUTE.md](https://github.com/farin/JCloisterZone/blob/master/CONTRIBUTE.md).
 
-tweaked config.yaml
 
-use unpacked plugins from source
 
-    plugins:
-      - plugins/classic
-      - plugins/rgg_siege
+---
 
-for immediately AI play comment delay option
-
-    # ai_place_tile_delay: 250
-
-#### debug options
-
-use debug options for quick and repeatable game setup with following possible options
-
-    debug:
-      # use some keys described below ...
-
-don't compress saves, autosave before each AI play
-
-    save_format: plain
-    autosave: saves/_prerank.jcz
-
-skip game config dialog, player is name or AI class
-you can comment just preset key to disable whole autostart
-
-    autostart:
-      preset: default
-      players:
-        - Alice
-        - Bob
-        - com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer
-        - com.jcloisterzone.ai.DummyAiPlayer
-
-developing expansion, don't bother with basic tiles. Override any expansion with own set definition.
-
-    tile_definitions:
-      BASIC: tile-definitions/basic-1card.xml
-
-force drawn tiles
-
-    draw:
-      - BA.C
-      - BA.Cccc+
-
-and then force final scoring with dot item
-
-    draw:
-       # ... some tiles ...
-       - .
-
-experimental options
-
-    off_capabilities: [ Dragon, Fairy ]
-    area_highlight: figure
-
-### gettext
-
-    xgettext -k_ -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
-    msgmerge -N -U po/cs.po po/keys.pot
-    msgmerge -N -U po/de.po po/keys.pot
-    msgmerge -N -U po/el.po po/keys.pot
-    msgmerge -N -U po/en.po po/keys.pot
-    msgmerge -N -U po/es.po po/keys.pot
-    msgmerge -N -U po/fi.po po/keys.pot
-    msgmerge -N -U po/fr.po po/keys.pot
-    msgmerge -N -U po/hu.po po/keys.pot
-    msgmerge -N -U po/it.po po/keys.pot
-    msgmerge -N -U po/pl.po po/keys.pot
-    msgmerge -N -U po/ro.po po/keys.pot
-    msgmerge -N -U po/ru.po po/keys.pot
-    msgmerge -N -U po/sk.po po/keys.pot
-    rm po/*~
-    rm po/keys.pot
+JCloisterZone copyright (C) 2004-2014 [Roman Krejčík](http://farin.cz) ([@farin](https://github.com/farin/)). Licensed under the [GNU Affero General Public License, Version 3 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html).
