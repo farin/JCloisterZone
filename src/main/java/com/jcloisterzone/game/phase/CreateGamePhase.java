@@ -18,6 +18,8 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.PreparedGameConfigLoader;
+import com.jcloisterzone.config.PreparedGameConfig;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.TileEvent;
@@ -127,14 +129,25 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new ActionPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getConnection()));
+        next = addPhase(next, determineDrawPhase(game));
         next = addPhase(next, new AbbeyPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
         last.setDefaultNext(next); //after last phase, the first is default
     }
 
-    private void createPlayers() {
+    private Phase determineDrawPhase(Game game) {
+		if(game.isPreparedGame())
+		{
+			return new PreparedDrawPhase(game, getConnection());
+		}
+		else
+		{
+			return new DrawPhase(game, getConnection());
+		}
+	}
+
+	private void createPlayers() {
         List<Player> players = new ArrayList<>();
         Arrays.sort(slots, new PlayerSlotComparator());
         for (int i = 0; i < slots.length; i++) {
@@ -234,11 +247,28 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
+	protected void preparePreparedGame()
+	{
+        //load prepared tiles
+        PreparedGameConfigLoader pcl = new PreparedGameConfigLoader();
+        PreparedGameConfig preparedTiles = pcl.load();
+        game.setPreparedTiles(preparedTiles);
+        if(preparedTiles.getDraw() != null)	
+        {
+        	game.setPreparedGame(true);
+        }
+        else
+        {
+        	game.setPreparedGame(false);
+        }
+		
+	}
     public void startGame() {
         //temporary code should be configured by player as rules
         prepareCapabilities();
 
         game.start();
+        preparePreparedGame();
         preparePlayers();
         preparePhases();
         prepareTilePack();
