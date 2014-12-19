@@ -430,7 +430,7 @@ public class Client extends JFrame {
 
     public void createGame(Snapshot snapshot) {
         if (closeGame()) {
-        	SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
+            SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
             localServer.set(server);
             server.createGame(snapshot);
             server.start();
