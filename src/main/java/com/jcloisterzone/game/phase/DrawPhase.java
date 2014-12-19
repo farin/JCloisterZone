@@ -62,17 +62,11 @@ public class DrawPhase extends ServerAwarePhase {
 
     @Override
     public void enter() {
-        if (getTilePack().isEmpty()) {
-            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
-                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
-                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
-                }
-                next(CleanUpTurnPartPhase.class);
-                return;
-            }
-            next(GameOverPhase.class);
-            return;
+        if(checkForEarlyPhaseChange())
+        {
+        	return;
         }
+        
         if (bazaarCap != null) {
             Tile tile = bazaarCap.drawNextTile();
             if (tile != null) {
@@ -90,15 +84,39 @@ public class DrawPhase extends ServerAwarePhase {
         }
     }
 
+	public boolean checkForEarlyPhaseChange() {
+		if (getTilePack().isEmpty()) {
+            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
+                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
+                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
+                }
+                next(CleanUpTurnPartPhase.class);
+                return true;
+            }
+            next(GameOverPhase.class);
+            return true;
+        }
+		return false;
+	}
+
     @WsSubscribe
     public void handleRandSample(RandSampleMessage msg) {
         if (!msg.getName().equals("draw") || msg.getPopulation() != getTilePack().size()) {
             logger.error("Invalid message");
             return;
         }
-        Tile tile = getTilePack().drawTile(msg.getValues()[0]);
+        Tile tile = drawTileFromPack(msg);
+        if (tile == null)
+        {
+        	next(GameOverPhase.class);
+        }
         nextTile(tile);
     }
+
+	public Tile drawTileFromPack(RandSampleMessage msg) {
+		Tile tile = getTilePack().drawTile(msg.getValues()[0]);
+		return tile;
+	}
 
 
     private void nextTile(Tile tile) {

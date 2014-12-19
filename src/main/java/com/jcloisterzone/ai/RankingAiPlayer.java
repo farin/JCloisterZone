@@ -116,6 +116,8 @@ public abstract class RankingAiPlayer extends AiPlayer {
         Snapshot snapshot = new Snapshot(game);
         Game copy = snapshot.asGame(game.getGameId());
         copy.setConfig(game.getConfig());
+        copy.setPreparedGame(game.isPreparedGame());
+        copy.setPreparedTiles(game.getPreparedTiles());
         copy.getEventBus().register(gameListener);
         LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getConnection());
         phase.setSlots(new PlayerSlot[0]);
