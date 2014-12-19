@@ -1,13 +1,12 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.wsio.message.UndoMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
