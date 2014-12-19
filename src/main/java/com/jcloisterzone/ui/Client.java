@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -244,6 +246,37 @@ public class Client extends JFrame {
         }
         this.connectGamePanel = null;
     }
+    
+   public void takeScreenshot()
+   {
+	   Container container = gamePanel.getGridPanel();
+       BufferedImage im = new BufferedImage(container.getWidth(), container.getHeight(), BufferedImage.TYPE_INT_ARGB);
+       JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator"));
+       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+       fc.setDialogTitle(_("Save Screenshot"));
+       fc.setDialogType(JFileChooser.SAVE_DIALOG);
+       fc.setFileFilter(new PNGFileFilter());
+       fc.setLocale(getLocale());
+       int returnVal = fc.showSaveDialog(this);
+       if (returnVal == JFileChooser.APPROVE_OPTION) {
+           File file = fc.getSelectedFile();
+           if (file != null) {
+               if (!file.getName().endsWith(".png")) {
+                   file = new File(file.getAbsolutePath() + ".png");
+               }
+               try
+               {
+        	       FileOutputStream fos = new FileOutputStream(file);
+        	       container.paint(im.getGraphics());
+        	       ImageIO.write(im, "PNG", fos);
+        	       fos.close();
+               } catch (IOException ex) {
+                   logger.error(ex.getMessage(), ex);
+                   JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+               }
+           }
+       }
+   }
 
     public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();
@@ -397,7 +430,7 @@ public class Client extends JFrame {
 
     public void createGame(Snapshot snapshot) {
         if (closeGame()) {
-            SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
+        	SimpleServer server = new SimpleServer(new InetSocketAddress(config.getPort()), this);
             localServer.set(server);
             server.createGame(snapshot);
             server.start();
