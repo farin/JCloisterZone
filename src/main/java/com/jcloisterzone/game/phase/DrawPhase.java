@@ -106,10 +106,6 @@ public class DrawPhase extends ServerAwarePhase {
             return;
         }
         Tile tile = drawTileFromPack(msg);
-        if (tile == null)
-        {
-        	next(GameOverPhase.class);
-        }
         nextTile(tile);
     }
 
