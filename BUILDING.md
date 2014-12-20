@@ -28,10 +28,7 @@ cd - >/dev/null
                               # Get JCloisterZone.
 git clone https://github.com/farin/JCloisterZone.git
 cd JCloisterZone
-mvn package                   # Create the main jar file.
-                              # Create the plugin/resource jar files.
-jar cfM build/plugins/classic.jar -C src/main/resources/plugins/classic .
-jar cfM build/plugins/rgg_siege.jar -C src/main/resources/plugins/rgg_siege .
+mvn package                   # Create the main and plugin jar files.
 
 open build/JCloisterZone.jar  # Execute the game.
 ```
@@ -61,7 +58,7 @@ The special fork of WebSockets needs to be installed in Maven first.
 
 ### Can't find `$JAVA_HOME` or java compiler version errors.
 
-Maybe `$JAVA_HOME` was not set correctly. Try running `export JAVA_HOME=\`/usr/libexec/java_home -v 1.7\`` before running `mvn` in the same terminal window.
+Maybe `$JAVA_HOME` was not set correctly. Try running ``export JAVA_HOME="`/usr/libexec/java_home -v 1.7`"`` before running `mvn` in the same terminal window.
 
 
 ### Can't find `msgfmt` so there are warnings for each language during `mvn package`.
