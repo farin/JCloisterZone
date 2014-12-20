@@ -103,6 +103,7 @@ public class Snapshot implements Serializable {
         root = doc.createElement("game");
         root.setAttribute("app-version", Application.VERSION);
         root.setAttribute("phase", game.getPhase().getClass().getName());
+        root.setAttribute("prepared-game", ""+game.isPreparedGame());
         doc.appendChild(root);
 
     }
@@ -190,6 +191,12 @@ public class Snapshot implements Serializable {
             Element el = doc.createElement("discard");
             el.setAttribute("name", tile.getId());
             parent.appendChild(el);
+        }
+        
+        for (String tile : game.getPreparedTiles().getDraw()) {
+            Element el = doc.createElement("prepared");
+            el.setAttribute("name", tile);
+            parent.appendChild(el);        	
         }
     }
 
@@ -343,6 +350,21 @@ public class Snapshot implements Serializable {
         return result;
     }
 
+    public boolean isPreparedGame()
+    {
+    	boolean result  = false;
+    	return new Boolean(root.getAttribute("prepared-game"));
+    }
+    public List<String> getPreparedTiles()
+    {
+        List<String> result = new ArrayList<>();
+        NodeList nl = getSecondLevelElelents("tiles", "prepared");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element el = (Element) nl.item(i);
+            result.add(el.getAttribute("name"));
+        }
+        return result;    	
+    }
     public List<String> getDiscardedTiles() {
         List<String> result = new ArrayList<>();
         NodeList nl = getSecondLevelElelents("tiles", "discard");

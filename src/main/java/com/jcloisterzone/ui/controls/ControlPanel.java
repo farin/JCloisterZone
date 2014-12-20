@@ -31,6 +31,7 @@ import com.jcloisterzone.ui.grid.GridPanel;
 public class ControlPanel extends FakeComponent {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
+    private static Font PREPARED_FONT_PACK_SIZE = new Font(null, Font.PLAIN, 15);
 
     public static final Color HEADER_FONT_COLOR = new Color(170, 170, 170, 200);
     public static final Color PLAYER_BG_COLOR = new Color(210, 210, 210, 200);
@@ -186,6 +187,14 @@ public class ControlPanel extends FakeComponent {
 
         TilePack tilePack = game.getTilePack();
         if (tilePack != null) { //null is possible for just loaded game
+        	if(game.isPreparedGame())
+        	{
+        		g2.setFont(PREPARED_FONT_PACK_SIZE);
+        		g2.setColor(HEADER_FONT_COLOR);
+        		String prep = _("prepared:") + game.getPreparedTiles().totalSize();
+        		g2.drawString(prep, PANEL_WIDTH - 90, 38);
+        	}
+        	
             g2.setFont(FONT_PACK_SIZE);
             g2.setColor(HEADER_FONT_COLOR);
             int packSize = tilePack.totalSize();

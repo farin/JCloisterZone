@@ -1,10 +1,11 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -19,8 +20,6 @@ import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
 
@@ -30,7 +29,7 @@ public class MenuBar extends JMenuBar {
     private boolean isGameRunning = false;
 
     private JMenuItem create, connect, close, showDiscard, undo, save, load, farmHints;
-    private JMenuItem zoomIn, zoomOut;
+    private JMenuItem zoomIn, zoomOut, screenShot;
     private JMenuItem history, reportBug;
 
     public MenuBar(Client _client) {
@@ -142,6 +141,17 @@ public class MenuBar extends JMenuBar {
             }
         });
         menu.add(zoomOut);
+        
+        screenShot = new JMenuItem(_("Screenshot"));
+        screenShot.setAccelerator(KeyStroke.getKeyStroke('P'));
+        screenShot.setEnabled(false);
+        screenShot.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.takeScreenshot();
+            }
+        });
+        menu.add(screenShot);
+        
 
 //		menuItem = new JMenuItem(_("FullScreen"));
 //		menuItem.addActionListener(new ActionListener() {
@@ -296,6 +306,11 @@ public class MenuBar extends JMenuBar {
     }
     public void setZoomOutEnabled(boolean state) {
         zoomOut.setEnabled(state);
+    }
+    
+    public void setScreenshotEnabled(boolean state)
+    {
+    	screenShot.setEnabled(state);
     }
 
     public void setIsGameRunning(boolean isGameRunning) {

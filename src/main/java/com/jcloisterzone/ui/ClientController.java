@@ -120,6 +120,7 @@ public class ClientController  {
         MenuBar menu = client.getJMenuBar();
         menu.setZoomInEnabled(true);
         menu.setZoomOutEnabled(true);
+        menu.setScreenshotEnabled(true);
         menu.setIsGameRunning(true);
     }
 

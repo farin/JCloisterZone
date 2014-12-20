@@ -7,6 +7,7 @@ import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.PreparedGameConfig;
 import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
@@ -96,6 +97,15 @@ public class LoadGamePhase extends CreateGamePhase {
             Tile tile = tilePack.drawTile(tileId);
             game.getBoard().discardTile(tile);
         }
+    }
+    
+    @Override
+    protected void preparePreparedGame()
+    {
+    	game.setPreparedGame(snapshot.isPreparedGame());
+    	PreparedGameConfig pc = new PreparedGameConfig();
+    	game.setPreparedTiles(pc);
+    	game.getPreparedTiles().setDraw(snapshot.getPreparedTiles());;
     }
 
     @Override

@@ -29,6 +29,8 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.PreparedGameConfig;
+import com.jcloisterzone.config.PreparedGameConfigLoader;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.PlayEvent;
@@ -61,6 +63,10 @@ public class Game extends GameSettings {
     private ReportingTool reportingTool;
 
     private Config config;
+    
+    private PreparedGameConfig preparedTiles;
+    
+    private boolean isPreparedGame;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -474,4 +480,20 @@ public class Game extends GameSettings {
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
+
+	public PreparedGameConfig getPreparedTiles() {
+		return preparedTiles;
+	}
+
+	public void setPreparedTiles(PreparedGameConfig preparedTiles) {
+		this.preparedTiles = preparedTiles;
+	}
+
+	public boolean isPreparedGame() {
+		return isPreparedGame;
+	}
+
+	public void setPreparedGame(boolean isPreparedGame) {
+		this.isPreparedGame = isPreparedGame;
+	}
 }
