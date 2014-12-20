@@ -15,7 +15,6 @@ public interface ScoreAllCallback {
 	void scoreFarm(FarmScoreContext ctx, Player player);
 	void scoreBarn(FarmScoreContext ctx, Barn meeple);
 	void scoreCastle(Meeple meeple, Castle castle);
-	void scoreCapabilities();
 
 	CompletableScoreContext getCompletableScoreContext(Completable completable);
 	FarmScoreContext getFarmScoreContext(Farm farm);

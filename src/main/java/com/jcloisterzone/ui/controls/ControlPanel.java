@@ -19,10 +19,20 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
+import com.jcloisterzone.feature.score.ScoringStrategy;
+import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
@@ -53,11 +63,10 @@ public class ControlPanel extends FakeComponent {
 
     private JButton passButton;
     private boolean canPass;
+    private boolean showPotentialPoints;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
-    
-    private boolean showVirtualScore;
 
     public ControlPanel(final Client client, GameController gc) {
         super(client);
@@ -268,24 +277,70 @@ public class ControlPanel extends FakeComponent {
         canPass = false;
         refreshComponents();
     }
-    
-    public void doVirtualScoring() {
-    	
-    	if (showVirtualScore) {
-    		new ScoreAllFeatureFinder().scoreAll(game, new VirtualScoringCallback(game, playerPanels));
-    	}
-    	
-    }
-	
-	public void setShowVirtualScore(boolean showVirtualScore) {
-    	this.showVirtualScore = showVirtualScore;
-    	
-    	doVirtualScoring();
-    	
-    	for (PlayerPanel playerPanel : playerPanels) {
-    		playerPanel.setShowVirtualScore(showVirtualScore);
-    	}
-    	
-    	client.getGridPanel().repaint();
+
+	public boolean isShowPotentialPoints() {
+		return showPotentialPoints;
 	}
+
+	public void setShowPotentialPoints(boolean showPotentialPoints) {
+		this.showPotentialPoints = showPotentialPoints;
+		refreshPotentialPoints();
+	}
+
+	private void refreshPotentialPoints() {
+		for (PlayerPanel playerPanel : playerPanels) {
+			playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
+		}
+
+		PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
+		ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
+        scoreAll.scoreAll(game, strategy);
+        game.finalScoring(strategy);
+
+		client.getGridPanel().repaint();
+	}
+
+	class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
+
+		@Override
+		public void addPoints(Player player, int points, PointCategory category) {
+			playerPanels[player.getIndex()].addPotentialPoints(points);
+		}
+
+		@Override
+		public void scoreCompletableFeature(CompletableScoreContext ctx) {
+	        int points = ctx.getPoints();
+	        for (Player p : ctx.getMajorOwners()) {
+	        	addPoints(p, points, null);
+	        }
+		}
+
+		@Override
+		public void scoreFarm(FarmScoreContext ctx, Player player) {
+			addPoints(player, ctx.getPoints(player), null);
+
+		}
+
+		@Override
+		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
+			addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
+
+		}
+
+		@Override
+		public void scoreCastle(Meeple meeple, Castle castle) {
+			//empty
+		}
+
+		@Override
+		public CompletableScoreContext getCompletableScoreContext(Completable completable) {
+			return completable.getScoreContext();
+		}
+
+		@Override
+		public FarmScoreContext getFarmScoreContext(Farm farm) {
+			return farm.getScoreContext();
+		}
+	}
+
 }

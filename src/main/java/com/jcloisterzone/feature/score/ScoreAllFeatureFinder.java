@@ -89,8 +89,5 @@ public class ScoreAllFeatureFinder {
                 scoreFarm((Farm) f, callback);
             }
         }
-        
-        // Capability score
-        callback.scoreCapabilities();
     }
 }

@@ -14,24 +14,14 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
 
 
-public class GameOverPhase extends Phase implements ScoreAllCallback {
+public class GameOverPhase extends Phase implements ScoreAllCallback, ScoringStrategy {
 
-	private ScoringStrategy scoringStrategy;
-	
     public GameOverPhase(Game game) {
         super(game);
-        
-        scoringStrategy = new ScoringStrategy() {
-			@Override
-			public void addPoints(Player player, int points, PointCategory category) {
-				player.addPoints(points, category);
-			}
-		};
     }
 
     @Override
@@ -42,8 +32,10 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
             fairyCap.setFairyPosition(null);
         }
 
-        new ScoreAllFeatureFinder().scoreAll(game, this);
-        
+        ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
+        scoreAll.scoreAll(game, this);
+
+        game.finalScoring(this);
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_OVER));
     }
 
@@ -68,13 +60,7 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
         ev.setFinal(true);
         game.post(ev);
     }
-    
-    @Override
-	public void scoreCapabilities() {    	
-    	for (Capability cap: game.getCapabilities()) {
-            cap.finalScoring(scoringStrategy);
-        }    	
-	}
+
 
     @Override
     public void scoreCompletableFeature(CompletableScoreContext ctx) {
@@ -95,5 +81,10 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
     public Player getActivePlayer() {
         return null;
     }
+
+	@Override
+	public void addPoints(Player player, int points, PointCategory category) {
+		player.addPoints(points, category);
+	}
 
 }

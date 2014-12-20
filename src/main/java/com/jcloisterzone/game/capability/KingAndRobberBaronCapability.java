@@ -96,12 +96,12 @@ public final class KingAndRobberBaronCapability extends Capability {
     }
 
     @Override
-    public void finalScoring(ScoringStrategy scoringStrategy) {
+    public void finalScoring(ScoringStrategy strategy) {
         if (king != null) {
-            scoringStrategy.addPoints(king, completedCities, PointCategory.BIGGEST_CITY);
+        	strategy.addPoints(king, completedCities, PointCategory.BIGGEST_CITY);
         }
         if (robberBaron != null) {
-        	scoringStrategy.addPoints(robberBaron, completedRoads, PointCategory.LONGEST_ROAD);
+        	strategy.addPoints(robberBaron, completedRoads, PointCategory.LONGEST_ROAD);
         }
     }
 

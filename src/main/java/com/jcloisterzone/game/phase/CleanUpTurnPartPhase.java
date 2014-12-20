@@ -24,9 +24,6 @@ public class CleanUpTurnPartPhase extends Phase {
             game.setCurrentTile(null);
         }
         if (builderTakeAnotherTurn) {
-        	// force PlayerTurnEvent
-        	game.setTurnPlayer(game.getTurnPlayer());
-        	
             next(game.hasCapability(AbbeyCapability.class) ? AbbeyPhase.class : DrawPhase.class);
         } else {
             next();

@@ -27,7 +27,7 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints, virtualScore;
+    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints, potentialPoints;
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history, reportBug;
 
@@ -183,17 +183,17 @@ public class MenuBar extends JMenuBar {
             }
         });
         menu.add(farmHints);
-        
-        virtualScore = new JCheckBoxMenuItem(_("Show virtual score"));
-        virtualScore.setAccelerator(KeyStroke.getKeyStroke('v'));
-        virtualScore.addActionListener(new ActionListener() {
+
+        potentialPoints = new JCheckBoxMenuItem(_("Show potential points"));
+        potentialPoints.setAccelerator(KeyStroke.getKeyStroke('v'));
+        potentialPoints.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getActivity().setShowVirtualScore(ch.isSelected());
+                client.getActivity().setShowPotentialPoints(ch.isSelected());
             }
         });
-        menu.add(virtualScore);
+        menu.add(potentialPoints);
 
 
         showDiscard = new JMenuItem(_("Show discarded tiles"));

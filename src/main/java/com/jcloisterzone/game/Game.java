@@ -28,6 +28,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.PlayEvent;
@@ -38,6 +39,7 @@ import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
@@ -176,11 +178,9 @@ public class Game extends GameSettings implements EventProxy {
         return turnPlayer;
     }
 
-    public void setTurnPlayer(Player nextPlayer) {
-    	Player previousPlayer = this.turnPlayer;
-        this.turnPlayer = nextPlayer;
-        
-        post(new PlayerTurnEvent(previousPlayer, nextPlayer));
+    public void setTurnPlayer(Player turnPlayer) {
+        this.turnPlayer = turnPlayer;
+        post(new PlayerTurnEvent(turnPlayer));
     }
 
     /**
@@ -425,6 +425,12 @@ public class Game extends GameSettings implements EventProxy {
     public void turnCleanUp() {
         for (Capability cap: capabilities) {
             cap.turnCleanUp();
+        }
+    }
+
+    public void finalScoring(ScoringStrategy strategy) {
+        for (Capability cap: capabilities) {
+            cap.finalScoring(strategy);
         }
     }
 

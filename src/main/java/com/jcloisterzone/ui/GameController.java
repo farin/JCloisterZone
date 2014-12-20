@@ -19,6 +19,7 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -127,20 +128,16 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     @Subscribe
     public void turnChanged(PlayerTurnEvent ev) {
-    	gamePanel.getControlPanel().doVirtualScoring();
-    	
-    	if (ev.getTriggeringPlayer() != ev.getTargetPlayer()) {
-	        gamePanel.getGridPanel().repaint();
-	
-	        if (ev.getTargetPlayer().isLocalHuman()) {
-	            client.beep();
-	        }
-	
-	        // TODO better image quality ?
-	        Color c = ev.getTargetPlayer().getColors().getMeepleColor();
-	        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
-	        client.setIconImage(image);
-    	}
+        gamePanel.getGridPanel().repaint();
+
+        if (ev.getTargetPlayer().isLocalHuman()) {
+            client.beep();
+        }
+
+        // TODO better image quality ?
+        Color c = ev.getTargetPlayer().getColors().getMeepleColor();
+        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
+        client.setIconImage(image);
     }
 
     public void refreshWindowTitle() {
@@ -357,11 +354,11 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     public void setShowFarmHints(boolean showFarmHints) {
         gamePanel.setShowFarmHints(showFarmHints);
     }
-    
+
     @Override
-	public void setShowVirtualScore(boolean showVirtualScore) {
-		gamePanel.getControlPanel().setShowVirtualScore(showVirtualScore);
-	}
+    public void setShowPotentialPoints(boolean showPotentialPoints) {
+    	gamePanel.getControlPanel().setShowPotentialPoints(showPotentialPoints);
+    }
 
     @Override
     public void zoom(double steps) {

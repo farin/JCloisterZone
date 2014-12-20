@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.BridgeDeployedEvent;
@@ -19,6 +20,7 @@ import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.event.TunnelPiecePlacedEvent;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -114,10 +116,6 @@ public class MainPanel extends JPanel {
     public void setShowFarmHints(boolean showFarmHints) {
          farmHintLayer.setVisible(showFarmHints);
     }
-    
-    public void setShowVirtualScore(boolean showVirtualScore) {
-		controlPanel.setShowVirtualScore(showVirtualScore);
-	}
 
     public void started(Snapshot snapshot) {
         animationService.clearAll();

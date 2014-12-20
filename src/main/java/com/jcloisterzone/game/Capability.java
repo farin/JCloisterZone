@@ -123,7 +123,7 @@ public abstract class Capability {
     }
 
 
-    public void finalScoring(ScoringStrategy scoringStrategy) {
+    public void finalScoring(ScoringStrategy strategy) {
     }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
