@@ -192,7 +192,7 @@
                 <executions>
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
-                        <!-- jar cfM build/t.jar -C src/main/resources/plugins/classic . -->
+                        <!-- jar cfM build/plugins/classic.jar -C src/main/resources/plugins/classic . -->
                         <id>plugin-classic</id>
                         <phase>package</phase>
                         <goals>
@@ -213,7 +213,7 @@
                     </execution>
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
-                        <!-- jar cfM build/t.jar -C src/main/resources/plugins/rgg_siege . -->
+                        <!-- jar cfM build/plugins/rgg_siege.jar -C src/main/resources/plugins/rgg_siege . -->
                         <id>plugin-rgg_siege</id>
                         <phase>package</phase>
                         <goals>
