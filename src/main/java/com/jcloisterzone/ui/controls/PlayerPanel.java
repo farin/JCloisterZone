@@ -1,5 +1,10 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -37,16 +42,12 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
-
 public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
     private static final Color KING_ROBBER_OVERLAY = new Color(0f,0f,0f,0.4f);
+    private static final Color POTENTIAL_POINTS_COLOR = new Color(160, 160, 160);
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
@@ -61,9 +62,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private final GameController gc;
     private final Player player;
-    private Color color, fontColor;
+    private Color fontColor;
 
-    private final PlayerPanelImageCache cache;
+    private int potentialPoints = 0;
+
+	private final PlayerPanelImageCache cache;
 
     private int centerY;
 
@@ -78,7 +81,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         this.player = player;
         this.gc = gc;
         this.cache = cache;
-        this.color = player.getColors().getMeepleColor();
         this.fontColor = player.getColors().getFontColor();
     }
 
@@ -90,14 +92,24 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     }
 
     private void drawTextShadow(String text, int x, int y) {
+    	drawTextShadow(text, x, y, fontColor);
+    }
+
+    private void drawTextShadow(String text, int x, int y, Color color) {
         //TODO shadow color based on color ??
         /*g2.setColor(Color.DARK_GRAY);
         g2.drawString(text, x+0.8f, y+0.7f);*/
         g2.setColor(ControlPanel.FONT_SHADOW_COLOR);
         g2.drawString(text, x+0.6f, y+0.5f);
-        g2.setColor(fontColor);
+        g2.setColor(color);
         g2.drawString(text, x, y);
     }
+
+    public Player getPlayer() {
+		return player;
+	}
+
+
 
     private Rectangle drawMeepleBox(Player playerKey, String imgKey, int count, boolean showOne) {
         return drawMeepleBox(playerKey, imgKey, count, showOne, null, false);
@@ -144,7 +156,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void paintComponent(Graphics2D parentGraphics) {
         super.paintComponent(parentGraphics);
 
-        Game game = client.getGame();
+        Game game = gc.getGame();
 
         //TODO better display
 //        if (player.getSlot().getState() == SlotState.CLOSED) {
@@ -170,8 +182,14 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.setFont(FONT_POINTS);
         drawTextShadow(""+player.getPoints(), PADDING_L, 27);
 
-        g2.setFont(FONT_NICKNAME);
-        drawTextShadow(player.getNick(), 78, 27);
+        //TODO cache ref (same as capabilities)
+        if (gc.getGamePanel().getControlPanel().isShowPotentialPoints()) {
+	        drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
+        } else {
+        	g2.setFont(FONT_NICKNAME);
+        	drawTextShadow(player.getNick(), 78, 27);
+        }
+
 
 //		gp.profile(" > nick & score");
 
@@ -325,6 +343,18 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         return centerY;
     }
 
+    public int getPotentialPoints() {
+		return potentialPoints;
+	}
+
+	public void setPotentialPoints(int potentialPoints) {
+		this.potentialPoints = potentialPoints;
+	}
+
+	public void addPotentialPoints(int potentialPoints) {
+		this.potentialPoints += potentialPoints;
+	}
+
     @SuppressWarnings("unchecked")
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
@@ -366,5 +396,4 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             client.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
-
 }

@@ -9,6 +9,7 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
@@ -17,7 +18,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
 
 
-public class GameOverPhase extends Phase implements ScoreAllCallback {
+public class GameOverPhase extends Phase implements ScoreAllCallback, ScoringStrategy {
 
     public GameOverPhase(Game game) {
         super(game);
@@ -34,7 +35,7 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
         scoreAll.scoreAll(game, this);
 
-        game.finalScoring();
+        game.finalScoring(this);
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_OVER));
     }
 
@@ -80,5 +81,10 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
     public Player getActivePlayer() {
         return null;
     }
+
+	@Override
+	public void addPoints(Player player, int points, PointCategory category) {
+		player.addPoints(points, category);
+	}
 
 }

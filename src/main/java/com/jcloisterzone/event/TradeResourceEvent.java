@@ -16,8 +16,6 @@ public class TradeResourceEvent extends PlayEvent implements Undoable {
         this.count = count;
     }
 
-
-
     public TradeResource getResource() {
         return resource;
     }
@@ -26,12 +24,9 @@ public class TradeResourceEvent extends PlayEvent implements Undoable {
         return count;
     }
 
-
     @Override
     public void undo(Game game) {
         ClothWineGrainCapability cap = game.getCapability(ClothWineGrainCapability.class);
         cap.addTradeResources(getTargetPlayer(), resource, -count);
-
     }
-
 }

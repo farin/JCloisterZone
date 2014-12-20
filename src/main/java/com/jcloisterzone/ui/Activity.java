@@ -14,6 +14,7 @@ public interface Activity {
 
     void toggleRecentHistory(boolean show);
     void setShowFarmHints(boolean showFarmHints);
+    void setShowPotentialPoints(boolean selected);
     void zoom(double steps);
 
     ReportingTool getReportingTool();

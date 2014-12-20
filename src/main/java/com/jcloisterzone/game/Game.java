@@ -39,6 +39,7 @@ import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
@@ -427,9 +428,9 @@ public class Game extends GameSettings implements EventProxy {
         }
     }
 
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy strategy) {
         for (Capability cap: capabilities) {
-            cap.finalScoring();
+            cap.finalScoring(strategy);
         }
     }
 

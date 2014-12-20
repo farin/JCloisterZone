@@ -356,6 +356,11 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     }
 
     @Override
+    public void setShowPotentialPoints(boolean showPotentialPoints) {
+    	gamePanel.getControlPanel().setShowPotentialPoints(showPotentialPoints);
+    }
+
+    @Override
     public void zoom(double steps) {
         gamePanel.zoom(steps);
     }
