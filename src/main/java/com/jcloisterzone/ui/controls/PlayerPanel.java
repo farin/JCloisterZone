@@ -182,8 +182,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.setFont(FONT_POINTS);
         drawTextShadow(""+player.getPoints(), PADDING_L, 27);
 
-        //TODO cache ref (same as capabilities)
-        if (gc.getGamePanel().getControlPanel().isShowPotentialPoints()) {
+
+        //TODO cache ref (also would be fine to cache capabilities above)
+        if (!game.isOver() && gc.getGamePanel().getControlPanel().isShowPotentialPoints()) {
 	        drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
         } else {
         	g2.setFont(FONT_NICKNAME);
