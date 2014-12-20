@@ -17,12 +17,20 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.FeatureEvent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -31,6 +39,7 @@ import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -63,7 +72,7 @@ public class ControlPanel extends FakeComponent {
 
     private JButton passButton;
     private boolean canPass;
-    private boolean showPotentialPoints;
+    private boolean showPotentialPoints, potentialPointsValid = true;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
@@ -72,6 +81,7 @@ public class ControlPanel extends FakeComponent {
         super(client);
         this.gc = gc;
         this.game = gc.getGame();
+        gc.register(this);
 
         actionPanel = new ActionPanel(client);
 
@@ -288,16 +298,65 @@ public class ControlPanel extends FakeComponent {
 	}
 
 	private void refreshPotentialPoints() {
-		for (PlayerPanel playerPanel : playerPanels) {
-			playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
+		if (!showPotentialPoints) return;
+		potentialPointsValid = false;
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				//run only once in one time - refreshPotentialPoints can be triggered by more events
+				if (!potentialPointsValid) {
+					potentialPointsValid = true;
+
+					for (PlayerPanel playerPanel : playerPanels) {
+						playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
+					}
+
+					PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
+					ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
+			        scoreAll.scoreAll(game, strategy);
+			        game.finalScoring(strategy);
+
+					client.getGridPanel().repaint();
+				}
+			}
+		});
+	}
+
+	@Subscribe
+	public void handleScoreEvent(ScoreEvent ev) {
+		refreshPotentialPoints();
+	}
+
+	@Subscribe
+	public void handleTileEvent(TileEvent ev) {
+		if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
+			refreshPotentialPoints();
 		}
+	}
 
-		PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
-		ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
-        scoreAll.scoreAll(game, strategy);
-        game.finalScoring(strategy);
+	@Subscribe
+	public void handleMeepleEvent(MeepleEvent ev) {
+		refreshPotentialPoints();
+	}
 
-		client.getGridPanel().repaint();
+	@Subscribe
+	public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
+		refreshPotentialPoints();
+	}
+
+	@Subscribe
+	public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
+		refreshPotentialPoints();
+	}
+
+	@Subscribe
+	public void handleFeatureEvent(FeatureEvent ev) {
+		refreshPotentialPoints();
+	}
+
+	@Subscribe
+	public void handleMeeplePrisonEvent(FeatureEvent ev) {
+		refreshPotentialPoints();
 	}
 
 	class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
@@ -309,7 +368,12 @@ public class ControlPanel extends FakeComponent {
 
 		@Override
 		public void scoreCompletableFeature(CompletableScoreContext ctx) {
-	        int points = ctx.getPoints();
+			int points;
+			if (ctx instanceof PositionCollectingScoreContext) {
+				points = ((PositionCollectingScoreContext) ctx).getPoints(true);
+			} else {
+				points = ctx.getPoints();
+			}
 	        for (Player p : ctx.getMajorOwners()) {
 	        	addPoints(p, points, null);
 	        }
@@ -324,7 +388,6 @@ public class ControlPanel extends FakeComponent {
 		@Override
 		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
 			addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
-
 		}
 
 		@Override
@@ -342,5 +405,4 @@ public class ControlPanel extends FakeComponent {
 			return farm.getScoreContext();
 		}
 	}
-
 }

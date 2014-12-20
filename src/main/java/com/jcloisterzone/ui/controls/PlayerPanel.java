@@ -64,10 +64,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private final Player player;
     private Color fontColor;
 
-
-    private final ControlPanel controlPanel;
     private int potentialPoints = 0;
-
 
 	private final PlayerPanelImageCache cache;
 
@@ -85,8 +82,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         this.gc = gc;
         this.cache = cache;
         this.fontColor = player.getColors().getFontColor();
-
-        this.controlPanel = gc.getGamePanel().getControlPanel();
     }
 
     private void drawDelimiter(int y) {
@@ -187,7 +182,8 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.setFont(FONT_POINTS);
         drawTextShadow(""+player.getPoints(), PADDING_L, 27);
 
-        if (controlPanel.isShowPotentialPoints()) {
+        //TODO cache ref (same as capabilities)
+        if (gc.getGamePanel().getControlPanel().isShowPotentialPoints()) {
 	        drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
         } else {
         	g2.setFont(FONT_NICKNAME);
