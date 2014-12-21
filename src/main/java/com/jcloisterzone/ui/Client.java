@@ -19,13 +19,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -507,16 +513,72 @@ public class Client extends JFrame {
     void beep() {
         if (config.getBeep_alert()) {
             try {
-                BufferedInputStream fileInStream = new BufferedInputStream(Client.class.getClassLoader().getResource("beep.wav").openStream());
-                AudioInputStream beepStream = AudioSystem.getAudioInputStream(fileInStream);
-                Clip c = AudioSystem.getClip();
-                c.open(beepStream);
-                c.start();
+                playResourceSound("beep.wav");
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
         }
     }
+
+    /*
+     * Map of resource filenames to sound clip objects. TODO: clean up clip
+     * objects on destroy?
+     */
+    private final Map<String, Clip> resourceSounds = new HashMap<String, Clip>();
+
+    /*
+     * Load and play sound clip from resources by filename.
+     */
+    private void playResourceSound(String resourceFilename) throws IOException,
+            UnsupportedAudioFileException, LineUnavailableException {
+        // Load sound if necessary.
+        if (!resourceSounds.containsKey(resourceFilename)) {
+            BufferedInputStream resourceStream = loadResourceAsStream(resourceFilename);
+            Clip loadedClip = loadSoundFromStream(resourceStream);
+            resourceSounds.put(resourceFilename, loadedClip);
+        }
+
+        Clip clip = resourceSounds.get(resourceFilename);
+
+        // Stop before starting, in case it plays rapidly (haven't tested).
+        clip.stop();
+
+        // Always start from the beginning
+        clip.setFramePosition(0);
+        clip.start();
+    }
+
+    private BufferedInputStream loadResourceAsStream(String filename)
+            throws IOException {
+        BufferedInputStream resourceStream = new BufferedInputStream(
+                Client.class.getClassLoader().getResource(filename)
+                        .openStream());
+
+        return resourceStream;
+    }
+
+    /*
+     * Pre-load sound clip so it can play from memory.
+     */
+    private Clip loadSoundFromStream(BufferedInputStream inputStream)
+            throws UnsupportedAudioFileException, IOException,
+            LineUnavailableException {
+        AudioInputStream audioInputStream = AudioSystem
+                .getAudioInputStream(inputStream);
+
+        // Auto-detect file format.
+        AudioFormat format = audioInputStream.getFormat();
+        DataLine.Info info = new DataLine.Info(Clip.class, format);
+
+        Clip clip = (Clip) AudioSystem.getLine(info);
+        clip.open(audioInputStream);
+
+        // Don't need the stream anymore.
+        audioInputStream.close();
+
+        return clip;
+    }
+
 
     public DiscardedTilesDialog getDiscardedTilesDialog() {
         return discardedTilesDialog;
