@@ -45,6 +45,9 @@ presets: ${presets}
 
 connection_history: ${connection_history}
 
+# Specifies a folder for screenshots to be saved into.  If empty the JCloisterZone runtime directory will be chosen.
+screenshot_folder: ${screenshot_folder}
+
 ${if hasDebug}
 debug:
   # plain or zip

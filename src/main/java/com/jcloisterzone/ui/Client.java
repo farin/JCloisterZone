@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,12 +21,15 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -244,6 +248,36 @@ public class Client extends JFrame {
         }
         this.connectGamePanel = null;
     }
+    
+   public void takeScreenshot()
+   {
+	   Container container = gamePanel.getGridPanel();
+       BufferedImage im = new BufferedImage(container.getWidth(), container.getHeight(), BufferedImage.TYPE_INT_ARGB);
+       
+       String pngExt = ".png";
+       String screenFolderValue = config.getScreenshot_folder();
+       File screenshotFolder;
+       if (screenFolderValue == null || screenFolderValue.isEmpty()){
+           screenshotFolder = new File(System.getProperty("user.dir"));
+       }
+       else{
+           screenshotFolder = new File(screenFolderValue);
+       }
+       //file name
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+       File filename = new File (screenshotFolder,"screenshot_" + getUserName() + "_"+sdf.format(new Date())+ pngExt);
+       //
+       try
+       {
+           FileOutputStream fos = new FileOutputStream(filename);
+           container.paint(im.getGraphics());
+           ImageIO.write(im, "PNG", fos);
+           fos.close();
+       } catch (IOException ex) {
+           logger.error(ex.getMessage(), ex);
+           JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+       }
+   }
 
     public void newGamePanel(Game game, boolean mutableSlots, PlayerSlot[] slots) {
         Container pane = this.getContentPane();

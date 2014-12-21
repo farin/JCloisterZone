@@ -132,6 +132,7 @@ public class ConfigLoader {
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
+        config.setScreenshot_folder("");
         return config;
     }
 
@@ -183,6 +184,9 @@ public class ConfigLoader {
         }
         if (config.getConnection_history() != null && !config.getConnection_history().isEmpty()) {
             model.put("connection_history", yaml.dumpAs(config.getConnection_history(), Tag.SEQ, FlowStyle.FLOW).trim());
+        }
+        if (config.getScreenshot_folder() != null){
+            model.put("screenshot_folder", config.getScreenshot_folder());
         }
 
         DebugConfig dc = config.getDebug();
