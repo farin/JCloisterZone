@@ -48,7 +48,8 @@ public class MenuBar extends JMenuBar {
         create = new JMenuItem(_("New game"));
         create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         create.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.createGame();
             }
         });
@@ -57,7 +58,8 @@ public class MenuBar extends JMenuBar {
         connect = new JMenuItem(_("Connect"));
         connect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         connect.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.showConnectGamePanel();
             }
         });
@@ -66,7 +68,8 @@ public class MenuBar extends JMenuBar {
         close = new JMenuItem(_("Close game"));
         close.setEnabled(false);
         close.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.closeGame();
             }
         });
@@ -79,7 +82,8 @@ public class MenuBar extends JMenuBar {
         undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         undo.setEnabled(false);
         undo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.getConnection().send(new UndoMessage(client.getGame().getGameId()));
             }
         });
@@ -91,7 +95,8 @@ public class MenuBar extends JMenuBar {
         save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         save.setEnabled(false);
         save.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.handleSave();
             }
         });
@@ -100,7 +105,8 @@ public class MenuBar extends JMenuBar {
         load = new JMenuItem(_("Load"));
         load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         load.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.handleLoad();
             }
         });
@@ -112,7 +118,8 @@ public class MenuBar extends JMenuBar {
             menuItem = new JMenuItem(_("Quit"));
             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
             menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     client.handleQuit();
                 }
             });
@@ -127,7 +134,8 @@ public class MenuBar extends JMenuBar {
         zoomIn.setAccelerator(KeyStroke.getKeyStroke('+')); //only show key code, handled by KeyController
         zoomIn.setEnabled(false);
         zoomIn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.getGridPanel().zoom(2.0);
             }
         });
@@ -136,24 +144,26 @@ public class MenuBar extends JMenuBar {
         zoomOut.setAccelerator(KeyStroke.getKeyStroke('-')); //only show key code, handled by KeyController
         zoomOut.setEnabled(false);
         zoomOut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.getGridPanel().zoom(-2.0);
             }
         });
         menu.add(zoomOut);
-        
+
         menu.addSeparator();
-        
+
         screenShot = new JMenuItem(_("Take Screenshot"));
         screenShot.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12,0));
         screenShot.setEnabled(false);
         screenShot.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.takeScreenshot();
             }
         });
         menu.add(screenShot);
-        
+
 
 //		menuItem = new JMenuItem(_("FullScreen"));
 //		menuItem.addActionListener(new ActionListener() {
@@ -172,7 +182,8 @@ public class MenuBar extends JMenuBar {
         history = new JCheckBoxMenuItem(_("Show last placements"));
         history.setAccelerator(KeyStroke.getKeyStroke('x'));
         history.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
                 client.setShowHistory(ch.isSelected());
 
@@ -183,7 +194,8 @@ public class MenuBar extends JMenuBar {
         farmHints = new JCheckBoxMenuItem(_("Show farm hints"));
         farmHints.setAccelerator(KeyStroke.getKeyStroke('f'));
         farmHints.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
                 client.getMainPanel().setShowFarmHints(ch.isSelected());
             }
@@ -195,7 +207,8 @@ public class MenuBar extends JMenuBar {
         showDiscard.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         showDiscard.setEnabled(false);
         showDiscard.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.getDiscardedTilesDialog().setVisible(true);
             }
         });
@@ -207,7 +220,8 @@ public class MenuBar extends JMenuBar {
         menu = new JMenu(_("Settings"));
         menuItem = new JCheckBoxMenuItem(_("Beep alert at player turn"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
                 client.getConfig().setBeep_alert(state);
                 client.saveConfig();
@@ -220,7 +234,8 @@ public class MenuBar extends JMenuBar {
 
         menuItem = new JCheckBoxMenuItem(_("Confirm placement on a farm"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
                 client.getConfig().getConfirm().setFarm_place(state);
                 client.saveConfig();
@@ -231,7 +246,8 @@ public class MenuBar extends JMenuBar {
 
         menuItem = new JCheckBoxMenuItem(_("Confirm placement on a tower"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
                 client.getConfig().getConfirm().setTower_place(state);
                 client.saveConfig();
@@ -242,7 +258,8 @@ public class MenuBar extends JMenuBar {
 
         menuItem = new JCheckBoxMenuItem(_("Confirm ransom payment"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
                 client.getConfig().getConfirm().setRansom_payment(state);
                 client.saveConfig();
@@ -255,7 +272,8 @@ public class MenuBar extends JMenuBar {
 
         menuItem = new JCheckBoxMenuItem(_("Confirm game close"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
                 client.getConfig().getConfirm().setGame_close(state);
                 client.saveConfig();
@@ -272,7 +290,8 @@ public class MenuBar extends JMenuBar {
 
             menuItem = new JMenuItem(_("About"));
             menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     client.handleAbout();
                 }
             });
@@ -282,7 +301,8 @@ public class MenuBar extends JMenuBar {
 
         menuItem = new JMenuItem(_("Controls"));
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 new HelpDialog();
             }
         });
@@ -290,7 +310,8 @@ public class MenuBar extends JMenuBar {
 
         reportBug = new JMenuItem(_("Report bug"));
         reportBug.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 new BugReportDialog(client.getReportingTool());
             }
         });
@@ -309,9 +330,8 @@ public class MenuBar extends JMenuBar {
     public void setZoomOutEnabled(boolean state) {
         zoomOut.setEnabled(state);
     }
-    
-    public void setScreenshotEnabled(boolean state)
-    {
+
+    public void setScreenshotEnabled(boolean state) {
     	screenShot.setEnabled(state);
     }
 

@@ -248,27 +248,24 @@ public class Client extends JFrame {
         }
         this.connectGamePanel = null;
     }
-    
-   public void takeScreenshot()
-   {
+
+   public void takeScreenshot() {
 	   Container container = gamePanel.getGridPanel();
        BufferedImage im = new BufferedImage(container.getWidth(), container.getHeight(), BufferedImage.TYPE_INT_ARGB);
-       
+
        String pngExt = ".png";
        String screenFolderValue = config.getScreenshot_folder();
        File screenshotFolder;
-       if (screenFolderValue == null || screenFolderValue.isEmpty()){
+       if (screenFolderValue == null || screenFolderValue.isEmpty()) {
            screenshotFolder = new File(System.getProperty("user.dir"));
-       }
-       else{
+       } else {
            screenshotFolder = new File(screenFolderValue);
        }
        //file name
        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-       File filename = new File (screenshotFolder,"screenshot_" + getUserName() + "_"+sdf.format(new Date())+ pngExt);
+       File filename = new File(screenshotFolder,"screenshot_"+sdf.format(new Date())+ pngExt);
        //
-       try
-       {
+       try {
            FileOutputStream fos = new FileOutputStream(filename);
            container.paint(im.getGraphics());
            ImageIO.write(im, "PNG", fos);

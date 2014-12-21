@@ -154,6 +154,7 @@ public class ConfigLoader {
         model.put("ai_place_tile_delay", config.getAi_place_tile_delay());
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
+        model.put("screenshot_folder", config.getScreenshot_folder());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));
@@ -184,9 +185,6 @@ public class ConfigLoader {
         }
         if (config.getConnection_history() != null && !config.getConnection_history().isEmpty()) {
             model.put("connection_history", yaml.dumpAs(config.getConnection_history(), Tag.SEQ, FlowStyle.FLOW).trim());
-        }
-        if (config.getScreenshot_folder() != null){
-            model.put("screenshot_folder", config.getScreenshot_folder());
         }
 
         DebugConfig dc = config.getDebug();
