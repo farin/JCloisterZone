@@ -16,16 +16,23 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.GameOverMessage;
 
 
-public class GameOverPhase extends Phase implements ScoreAllCallback, ScoringStrategy {
+public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback, ScoringStrategy {
 
-    public GameOverPhase(Game game) {
-        super(game);
+    public GameOverPhase(Game game, GameController controller) {
+        super(game, controller);
     }
 
     @Override
     public void enter() {
+    	if (isLocalPlayer(game.getTurnPlayer())) {
+            //invoke only by one client
+    		getConnection().send(new GameOverMessage(game.getGameId()));
+        }
+
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         if (fairyCap != null) {
             //erase position to not affect final scoring

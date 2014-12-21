@@ -16,6 +16,7 @@ import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
@@ -70,6 +71,7 @@ public final class MessageParser {
         registerMsgType(ChatMessage.class);
         registerMsgType(ChannelMessage.class);
         registerMsgType(GameListMessage.class);
+        registerMsgType(GameOverMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {

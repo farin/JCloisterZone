@@ -100,7 +100,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void preparePhases() {
         Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
-               addPhase(next, new GameOverPhase(game));
+               addPhase(next, new GameOverPhase(game, getGameController()));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
         next = addPhase(next, new BazaarPhase(game, getGameController()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));

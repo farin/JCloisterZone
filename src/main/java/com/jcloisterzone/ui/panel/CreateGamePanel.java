@@ -568,7 +568,14 @@ public class CreateGamePanel extends JPanel {
         	if (gc.getChannel() == null) {
         		startGameButton.setEnabled(playersAssigned > 0);
         	} else {
-        		startGameButton.setEnabled(playersAssigned > 1 && anyHumanPlayersAssigned);
+        		boolean state;
+        		if ("true".equals(System.getProperty("allowAiOnlyOnlineGame"))) {
+        			state = playersAssigned > 1;
+        		} else {
+        			state = anyHumanPlayersAssigned;
+        		}
+
+        		startGameButton.setEnabled(state);
         	}
         } else {
             startGameButton.setEnabled(allPlayersAssigned);

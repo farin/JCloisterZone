@@ -39,6 +39,7 @@ import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
@@ -376,6 +377,11 @@ public class SimpleServer extends WebSocketServer  {
         ChatMessage reMsg = new ChatMessage(clientId, msg.getText());
         reMsg.setGameId(msg.getGameId());
         broadcast(reMsg);
+    }
+
+    @WsSubscribe
+    public void handleGameOver(WebSocket ws, GameOverMessage msg) {
+    	//empty
     }
 
 
