@@ -18,6 +18,8 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.view.ConnectP2PView;
+import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
 public class StartPanel extends JPanel {
 
@@ -48,7 +50,8 @@ public class StartPanel extends JPanel {
         JButton btn = new JButton(_("New game"));
         createPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.createGame();
             }
         });
@@ -66,8 +69,9 @@ public class StartPanel extends JPanel {
         btn = new JButton(_("Connect"));
         connectPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.showConnectGamePanel();
+            @Override
+			public void actionPerformed(ActionEvent e) {
+                client.mountView(new ConnectP2PView(client));
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
@@ -84,7 +88,8 @@ public class StartPanel extends JPanel {
         btn = new JButton(_("Load game"));
         loadPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 client.handleLoad();
             }
         });
@@ -99,8 +104,9 @@ public class StartPanel extends JPanel {
         btn = new JButton(_("Play online"));
         playOnlinePanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.showConnectPlayOnlinePanel();
+            @Override
+			public void actionPerformed(ActionEvent e) {
+                client.mountView(new ConnectPlayOnlineView(client));
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);

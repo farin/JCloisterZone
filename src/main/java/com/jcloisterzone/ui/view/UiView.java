@@ -6,8 +6,10 @@ import java.awt.event.KeyEvent;
 public interface UiView {
 
 	void show(Container pane);
+	boolean requestHide();
 	void hide();
-	//TODO vetoable hide - replace current Client.closeGame
 
 	boolean dispatchKeyEvent(KeyEvent e);
+
+	void onWebsocketError(Exception ex);
 }

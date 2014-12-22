@@ -23,7 +23,7 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 
 
-public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
+public class ConnectPlayOnlinePanel extends JPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -94,7 +94,6 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
         client.saveConfig();
     }
 
-    @Override
 	public void onWebsocketError(Exception ex) {
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
@@ -106,7 +105,6 @@ public class ConnectPlayOnlinePanel extends JPanel implements ConnectPanel {
             message.setText( _("Connection failed.") + " (" + ex.getMessage() + ")");
             logger.warn(ex.getMessage(), ex);
         }
-
     }
 
     private void connect() {

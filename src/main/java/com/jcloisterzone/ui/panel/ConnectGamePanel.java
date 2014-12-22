@@ -26,7 +26,7 @@ import com.jcloisterzone.ui.Client;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 
-public class ConnectGamePanel extends JPanel implements ConnectPanel {
+public class ConnectGamePanel extends JPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -43,7 +43,8 @@ public class ConnectGamePanel extends JPanel implements ConnectPanel {
     public ConnectGamePanel(Client client) {
         this.client = client;
         ActionListener actionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
                 message.setText(_("Connecting") + "...");

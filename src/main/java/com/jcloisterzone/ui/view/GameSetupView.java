@@ -25,9 +25,8 @@ import com.jcloisterzone.ui.panel.ConnectedClientsPanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-public class GameSetupView implements UiView {
+public class GameSetupView extends AbstractUiView {
 
-	private final Client client;
 	private final GameController gc;
 	private final Game game;
 	private final boolean mutableSlots;
@@ -37,7 +36,7 @@ public class GameSetupView implements UiView {
 	private ConnectedClientsPanel connectedClientsPanel;
 
 	public GameSetupView(Client client, GameController gc, boolean mutableSlots) {
-		this.client = client;
+		super(client);
 		this.gc = gc;
 		this.game = gc.getGame();
 		this.mutableSlots = mutableSlots;
@@ -92,6 +91,11 @@ public class GameSetupView implements UiView {
         gc.register(chatPanel);
         gc.register(this);
     }
+
+	@Override
+	public boolean requestHide() {
+		return client.closeGame();
+	}
 
 	@Override
 	public void hide() {

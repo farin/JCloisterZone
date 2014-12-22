@@ -64,8 +64,6 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ChannelPanel;
-import com.jcloisterzone.ui.panel.ConnectGamePanel;
-import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
@@ -103,7 +101,6 @@ public class Client extends JFrame {
     @Deprecated  //keep only view interface
     private ChannelPanel channelPanel;
 
-    private ConnectPanel connectPanel;
     private DiscardedTilesDialog discardedTilesDialog;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
@@ -119,15 +116,20 @@ public class Client extends JFrame {
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
-    public void mountView(UiView view) {
+    public boolean mountView(UiView view) {
     	if (this.view != null) {
-    		this.view.hide();
+    		if (this.view.requestHide()) {
+    			this.view.hide();
+    		} else {
+    			return false;
+    		}
     	}
     	cleanContentPane();
     	view.show(getContentPane());
     	getContentPane().setVisible(true);
     	this.view = view;
     	logger.info("{} mounted", view.getClass().getSimpleName());
+    	return true;
     }
 
     public UiView getView() {
@@ -232,10 +234,6 @@ public class Client extends JFrame {
     }
 
 
-    public ConnectPanel getConnectGamePanel() {
-        return connectPanel;
-    }
-
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }
@@ -244,10 +242,7 @@ public class Client extends JFrame {
         Container pane = getContentPane();
         pane.setVisible(false);
         pane.removeAll();
-        this.connectPanel = null;
     }
-
-
 
     public ChannelPanel newChannelPanel(ChannelController cc, String name) {
         Container pane = this.getContentPane();
@@ -313,38 +308,6 @@ public class Client extends JFrame {
             getJMenuBar().setShowDiscardedEnabled(false);
         }
         return true;
-    }
-
-    public void showConnectGamePanel() {
-        if (!closeGame()) return;
-
-        Container pane = this.getContentPane();
-        cleanContentPane();
-
-        JPanel envelope = new BackgroundPanel();
-        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        ConnectGamePanel panel = new ConnectGamePanel(this);
-        envelope.add(panel);
-        connectPanel = panel;
-
-        pane.add(envelope, BorderLayout.CENTER);
-        pane.setVisible(true);
-    }
-
-    public void showConnectPlayOnlinePanel() {
-        if (!closeGame()) return;
-
-        Container pane = this.getContentPane();
-        cleanContentPane();
-
-        JPanel envelope = new BackgroundPanel();
-        envelope.setLayout(new GridBagLayout()); //to have centered inner panel
-        ConnectPlayOnlinePanel panel = new ConnectPlayOnlinePanel(this);
-        envelope.add(panel);
-        connectPanel = panel;
-
-        pane.add(envelope, BorderLayout.CENTER);
-        pane.setVisible(true);
     }
 
     @Deprecated
@@ -581,30 +544,21 @@ public class Client extends JFrame {
 
     //TODO pass to view
     public void onWebsocketError(Exception ex) {
-    	ConnectPanel cgp = getConnectGamePanel();
-        if (cgp != null) {
-            cgp.onWebsocketError(ex);
-            return;
-        }
-        GridPanel gp = getGridPanel();
-        String msg = ex.getMessage();
-        if (ex instanceof WebsocketNotConnectedException) {
-            if (game.isStarted()) {
-                msg = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
-            } else {
-                msg = _("Connection lost");
+    	view.onWebsocketError(ex);
+    }
+
+    public void onUnhandledWebsocketError(Exception ex) {
+    	String message;
+    	if (ex instanceof WebsocketNotConnectedException) {
+    		message = _("Connection lost");
+    	} else {
+    		message = ex.getMessage();
+    		if (message == null || message.length() == 0) {
+            	message = ex.getClass().getSimpleName();
             }
-        } else {
-            logger.error(ex.getMessage(), ex);
-        }
-        if (msg == null || msg.length() == 0) {
-            msg = ex.getClass().getSimpleName();
-        }
-        if (gp != null) {
-            gp.setErrorMessage(msg);
-        } else {
-            JOptionPane.showMessageDialog(this, msg, _("Error"), JOptionPane.ERROR_MESSAGE);
-        }
+    		logger.error(message, ex);
+    	}
+    	JOptionPane.showMessageDialog(this, message, _("Error"), JOptionPane.ERROR_MESSAGE);
     }
 
     //------------------- LEGACY: TODO refactor ---------------

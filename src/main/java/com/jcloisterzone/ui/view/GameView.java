@@ -1,10 +1,14 @@
 package com.jcloisterzone.ui.view;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
@@ -21,9 +25,8 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-public class GameView implements UiView {
+public class GameView extends AbstractUiView {
 
-	private final Client client;
 	private final GameController gc;
 	private final Game game;
 
@@ -38,7 +41,7 @@ public class GameView implements UiView {
 
 
 	public GameView(Client client, GameController gc) {
-		this.client = client;
+		super(client);
 		this.gc = gc;
 		this.game = gc.getGame();
 		gc.setGameView(this);
@@ -63,11 +66,30 @@ public class GameView implements UiView {
 	}
 
 	@Override
+	public boolean requestHide() {
+		return client.closeGame();
+	}
+
+	@Override
 	public void hide() {
 		timer.cancel();
 		gc.unregister(chatPanel);
 		gc.unregister(this);
 	}
+
+	@Override
+	public void onWebsocketError(Exception ex) {
+        String message = ex.getMessage();
+        if (ex instanceof WebsocketNotConnectedException) {
+            message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+        } else {
+        	message = ex.getMessage();
+        	if (message == null || message.length() == 0) {
+            	message = ex.getClass().getSimpleName();
+            }
+        }
+        getGridPanel().setErrorMessage(message);
+    }
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent e) {

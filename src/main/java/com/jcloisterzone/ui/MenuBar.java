@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
+import com.jcloisterzone.ui.view.ConnectP2PView;
+import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -59,7 +61,7 @@ public class MenuBar extends JMenuBar {
         connect.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
-                client.showConnectGamePanel();
+                client.mountView(new ConnectP2PView(client));
             }
         });
         menu.add(connect);
@@ -69,7 +71,7 @@ public class MenuBar extends JMenuBar {
         playOnline.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
-                client.showConnectPlayOnlinePanel();
+            	client.mountView(new ConnectPlayOnlineView(client));
             }
         });
         menu.add(playOnline);

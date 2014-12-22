@@ -8,7 +8,6 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagLayout;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -22,14 +21,13 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 
-public class StartView implements UiView {
+public class StartView extends AbstractUiView {
 
-	private final Client client;
 
 	private StartPanel startPanel;
 
 	public StartView(Client client) {
-		this.client = client;
+		super(client);
 	}
 
 	@Override
@@ -41,15 +39,6 @@ public class StartView implements UiView {
         startPanel = new StartPanel();
         startPanel.setClient(client);
         envelope.add(startPanel);
-	}
-
-	@Override
-	public void hide() {
-	}
-
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		return false;
 	}
 
 	public void showUpdateIsAvailable(final AppUpdate appUpdate) {
