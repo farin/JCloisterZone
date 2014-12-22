@@ -29,7 +29,7 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints, potentialPoints;
+    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints, projectedPoints;
     private JMenuItem zoomIn, zoomOut;
     private JMenuItem history, reportBug;
 
@@ -186,16 +186,16 @@ public class MenuBar extends JMenuBar {
         });
         menu.add(farmHints);
 
-        potentialPoints = new JCheckBoxMenuItem(_("Show potential points"));
-        potentialPoints.setAccelerator(KeyStroke.getKeyStroke('v'));
-        potentialPoints.addActionListener(new ActionListener() {
+        projectedPoints = new JCheckBoxMenuItem(_("Show projected points"));
+        projectedPoints.setAccelerator(KeyStroke.getKeyStroke('r'));
+        projectedPoints.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getActivity().setShowPotentialPoints(ch.isSelected());
+                client.getActivity().setShowProjectedPoints(ch.isSelected());
             }
         });
-        menu.add(potentialPoints);
+        menu.add(projectedPoints);
 
 
         showDiscard = new JMenuItem(_("Show discarded tiles"));
