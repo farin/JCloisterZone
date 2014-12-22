@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -528,6 +529,48 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);
+    }
+
+    public BufferedImage takeScreenshot()
+    {        
+        //calculate size of play board
+        int totalWidth = INITIAL_SQUARE_SIZE*(right-left+1);
+        int totalHeight = INITIAL_SQUARE_SIZE*(bottom-top+1);
+    
+        //centre the image
+        int transX = -INITIAL_SQUARE_SIZE*(left);
+        int transY = -INITIAL_SQUARE_SIZE*(top);
+        
+        //create the image
+        BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = (Graphics2D) im.getGraphics();
+    
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);  
+    
+        //centre the image
+        graphics.translate(transX, transY);
+        
+        //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
+        //TODO is this dangerous if GridPanel is rendered while print screening?
+        int orig = squareSize;
+        squareSize = INITIAL_SQUARE_SIZE;
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
+                layer.paint(graphics);
+            }
+        }
+        //set it back
+        squareSize =orig;
+        
+        //reset translation
+        graphics.translate(-transX, -transY);
+        
+        //render the control panel on the far right
+        graphics.translate(totalWidth+20, 0);
+        controlPanel.paintComponent(graphics);
+        
+        return im;
     }
 
     private void paintMessages(Graphics2D g2, int innerWidth) {
