@@ -38,6 +38,7 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.panel.ChannelPanel;
+import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameSetupView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
@@ -252,8 +253,7 @@ public class ClientMessageListener implements MessageListener {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
 			public void run() {
-            	ChannelPanel panel = client.newChannelPanel(channelController, msg.getName());
-            	channelController.setChannelPanel(panel);
+            	client.mountView(new ChannelView(client, channelController));
             }
         });
     }

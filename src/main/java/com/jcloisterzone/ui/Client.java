@@ -96,11 +96,6 @@ public class Client extends JFrame {
     private UiView view;
     private Activity activity;
 
-    //@Deprecated
-    //private GamePanel gamePanel;
-    @Deprecated  //keep only view interface
-    private ChannelPanel channelPanel;
-
     private DiscardedTilesDialog discardedTilesDialog;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
@@ -242,16 +237,6 @@ public class Client extends JFrame {
         Container pane = getContentPane();
         pane.setVisible(false);
         pane.removeAll();
-    }
-
-    public ChannelPanel newChannelPanel(ChannelController cc, String name) {
-        Container pane = this.getContentPane();
-        cleanContentPane();
-        channelPanel = new ChannelPanel(this, cc);
-        pane.add(channelPanel);
-        pane.setVisible(true);
-        //activity = ...
-        return channelPanel;
     }
 
     public boolean closeGame() {

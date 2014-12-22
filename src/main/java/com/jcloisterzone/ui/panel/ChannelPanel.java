@@ -130,6 +130,10 @@ public class ChannelPanel extends JPanel {
 		gameListPanel.repaint();
     }
 
+	public ChatPanel getChatPanel() {
+		return chatPanel;
+	}
+
 	private static Font FONT_GAME_TITLE = new Font(null, Font.BOLD, 20);
 
 	class GameItemPanel extends JPanel {
