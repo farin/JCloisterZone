@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
@@ -59,7 +60,7 @@ public class GameSetupView implements UiView {
         //---
 	}
 
-	public void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {
+	private void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {
         createGamePanel = new CreateGamePanel(client, gc, mutableSlots, slots);
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new MigLayout("align 50% 50%", "[]", "[]")); //to have centered inner panel
@@ -97,6 +98,19 @@ public class GameSetupView implements UiView {
 		gc.unregister(createGamePanel);
         gc.unregister(chatPanel);
         gc.unregister(this);
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		if (chatPanel.getInput().hasFocus()) return false;
+		if (e.getID() == KeyEvent.KEY_PRESSED) {
+            if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
+                e.consume();
+                chatPanel.activateChat();
+                return true;
+            }
+		}
+		return false;
 	}
 
 	@Subscribe

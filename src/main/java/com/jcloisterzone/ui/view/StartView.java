@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -44,6 +45,11 @@ public class StartView implements UiView {
 
 	@Override
 	public void hide() {
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		return false;
 	}
 
 	public void showUpdateIsAvailable(final AppUpdate appUpdate) {

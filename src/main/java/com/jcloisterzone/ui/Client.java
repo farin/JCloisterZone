@@ -6,7 +6,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagLayout;
+import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
@@ -58,7 +60,6 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.grid.KeyController;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -84,8 +85,6 @@ public class Client extends JFrame {
     private ReportingTool reportingTool;
 
     public static final String BASE_TITLE = "JCloisterZone";
-
-    private KeyController keyController;
 
     private final Config config;
     private final ConfigLoader configLoader;
@@ -181,8 +180,14 @@ public class Client extends JFrame {
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
-        keyController = new KeyController(this);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyController);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent ev) {
+				if (!Client.this.isActive()) return false; //AWT method on window (it not check if player is active)
+				if (view == null) return false;
+				return view.dispatchKeyEvent(ev);
+			}
+        });
     }
 
     @Override
