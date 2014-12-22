@@ -72,7 +72,7 @@ public class ControlPanel extends FakeComponent {
 
     private JButton passButton;
     private boolean canPass;
-    private boolean showPotentialPoints, potentialPointsValid = true;
+    private boolean showProjectedPoints, projectedPointsValid = true;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
@@ -289,23 +289,27 @@ public class ControlPanel extends FakeComponent {
     }
 
 	public boolean isShowPotentialPoints() {
-		return showPotentialPoints;
+		return showProjectedPoints;
 	}
 
-	public void setShowPotentialPoints(boolean showPotentialPoints) {
-		this.showPotentialPoints = showPotentialPoints;
-		refreshPotentialPoints();
+	public void setShowProjectedPoints(boolean showProjectedPoints) {
+		this.showProjectedPoints = showProjectedPoints;
+		if (showProjectedPoints) {
+			refreshPotentialPoints();
+		} else {
+			client.getGridPanel().repaint(); //repaint immediately
+		}
 	}
 
 	private void refreshPotentialPoints() {
-		if (!showPotentialPoints) return;
-		potentialPointsValid = false;
+		if (!showProjectedPoints) return;
+		projectedPointsValid = false;
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				//run only once in one time - refreshPotentialPoints can be triggered by more events
-				if (!potentialPointsValid) {
-					potentialPointsValid = true;
+				if (!projectedPointsValid) {
+					projectedPointsValid = true;
 
 					for (PlayerPanel playerPanel : playerPanels) {
 						playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
@@ -368,12 +372,7 @@ public class ControlPanel extends FakeComponent {
 
 		@Override
 		public void scoreCompletableFeature(CompletableScoreContext ctx) {
-			int points;
-			if (ctx instanceof PositionCollectingScoreContext) {
-				points = ((PositionCollectingScoreContext) ctx).getPoints(true);
-			} else {
-				points = ctx.getPoints();
-			}
+			int points = ctx.getPoints();
 	        for (Player p : ctx.getMajorOwners()) {
 	        	addPoints(p, points, null);
 	        }
