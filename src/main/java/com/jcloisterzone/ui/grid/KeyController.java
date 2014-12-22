@@ -6,7 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.panel.GamePanel;
 
 public class KeyController implements KeyEventDispatcher {
 
@@ -27,6 +26,7 @@ public class KeyController implements KeyEventDispatcher {
         if (client.getGame() == null) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
+            	throw new UnsupportedOperationException("TODO fix");
                 if (client.getGamePanel().getChatPanel() != null) {
                     e.consume();
                     client.getGamePanel().getChatPanel().activateChat();

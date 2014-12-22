@@ -45,7 +45,7 @@ public class CornCirclesPanel extends FakeComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getRmiProxy().cornCiclesRemoveOrDeploy(false);
-                gc.getGamePanel().getGridPanel().setSecondPanel(null);
+				gc.getGameView().getGridPanel().setSecondPanel(null);
             }
         });
         parent.add(deploymentOption);
@@ -56,7 +56,7 @@ public class CornCirclesPanel extends FakeComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
-                gc.getGamePanel().getGridPanel().setSecondPanel(null);
+                gc.getGameView().getGridPanel().setSecondPanel(null);
             }
         });
 
@@ -70,7 +70,7 @@ public class CornCirclesPanel extends FakeComponent {
 
     @Override
     public void layoutSwingComponents(JComponent parent) {
-        int panelX = gc.getGamePanel().getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60,
+        int panelX = gc.getGameView().getGridPanel().getWidth()-ControlPanel.PANEL_WIDTH-getWidth()-60,
             left = panelX + 20;
 
         header.setBounds(left, 34, ControlPanel.PANEL_WIDTH-10, 30);
@@ -91,7 +91,7 @@ public class CornCirclesPanel extends FakeComponent {
     public void paintComponent(Graphics2D g2) {
         super.paintComponent(g2);
 
-        GridPanel gp = gc.getGamePanel().getGridPanel();
+        GridPanel gp = gc.getGameView().getGridPanel();
         int h = gp.getHeight();
 
         g2.setColor(ControlPanel.PANEL_BG_COLOR);

@@ -1,21 +1,18 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,33 +32,27 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.xml.transform.TransformerException;
 
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
@@ -75,19 +66,16 @@ import com.jcloisterzone.ui.panel.ChannelPanel;
 import com.jcloisterzone.ui.panel.ConnectGamePanel;
 import com.jcloisterzone.ui.panel.ConnectPanel;
 import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
-import com.jcloisterzone.ui.panel.GamePanel;
-import com.jcloisterzone.ui.panel.HelpPanel;
-import com.jcloisterzone.ui.panel.StartPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.ui.view.GameView;
+import com.jcloisterzone.ui.view.StartView;
+import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -108,14 +96,13 @@ public class Client extends JFrame {
     @Deprecated
     private ControlsTheme controlsTheme;
 
+    private UiView view;
     private Activity activity;
 
-    @Deprecated  //keep only activity interface
-    private GamePanel gamePanel;
-    @Deprecated //keep only activity interface
+    //@Deprecated
+    //private GamePanel gamePanel;
+    @Deprecated  //keep only view interface
     private ChannelPanel channelPanel;
-
-    private StartPanel startPanel;
 
     private ConnectPanel connectPanel;
     private DiscardedTilesDialog discardedTilesDialog;
@@ -127,12 +114,25 @@ public class Client extends JFrame {
     private Game game;
 
 
-
-
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
         this.config = config;
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+    }
+
+    public void mountView(UiView view) {
+    	if (this.view != null) {
+    		this.view.hide();
+    	}
+    	cleanContentPane();
+    	view.show(getContentPane());
+    	getContentPane().setVisible(true);
+    	this.view = view;
+    	logger.info("{} mounted", view.getClass().getSimpleName());
+    }
+
+    public UiView getView() {
+    	return view;
     }
 
     public void init() {
@@ -163,17 +163,9 @@ public class Client extends JFrame {
 
         //Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
 
-        Container pane = getContentPane();
-
-        pane.setLayout(new BorderLayout());
-        JPanel envelope = new BackgroundPanel(new GridBagLayout());
-        pane.add(envelope, BorderLayout.CENTER);
-
-        startPanel = new StartPanel();
-        startPanel.setClient(this);
-        envelope.add(startPanel);
-
+        mountView(new StartView(this));
         this.pack();
+
         String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
         if (windowSize == null || "fullscreen".equals(windowSize)) {
         	this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
@@ -244,37 +236,13 @@ public class Client extends JFrame {
     }
 
     public void cleanContentPane() {
-        //this.requestFocus();
-        Container pane = this.getContentPane();
+        Container pane = getContentPane();
         pane.setVisible(false);
         pane.removeAll();
-        this.startPanel = null;
-        if (gamePanel != null) {
-            gamePanel.disposePanel();
-            gamePanel = null;
-        }
         this.connectPanel = null;
     }
 
-    public void openGameSetup(final GameController gc, boolean mutableSlots) {
-    	Game game = gc.getGame();
-    	CreateGamePhase phase = (CreateGamePhase)game.getPhase();
-        GamePanel panel = newGamePanel(gc, mutableSlots, phase.getPlayerSlots());
-        gc.setGamePanel(panel);
 
-        setActivity(gc);
-        setGame(game);
-    }
-
-    public GamePanel newGamePanel(GameController gc, boolean mutableSlots, PlayerSlot[] slots) {
-        Container pane = this.getContentPane();
-        cleanContentPane();
-        gamePanel = new GamePanel(this, gc);
-        gamePanel.showCreateGamePanel(mutableSlots, slots);
-        pane.add(gamePanel);
-        pane.setVisible(true);
-        return gamePanel;
-    }
 
     public ChannelPanel newChannelPanel(ChannelController cc, String name) {
         Container pane = this.getContentPane();
@@ -327,10 +295,13 @@ public class Client extends JFrame {
         }
         getJMenuBar().setIsGameRunning(false);
 
-        if (gamePanel != null && gamePanel.getMainPanel() != null) {
-            if (gamePanel.getControlPanel() != null) gamePanel.getControlPanel().closeGame();
-            gamePanel.getMainPanel().closeGame();
+        //TODO decouple
+        if (view instanceof GameView) {
+        	MainPanel mainPanel = ((GameView)view).getMainPanel();
+        	if (mainPanel.getControlPanel() != null) mainPanel.getControlPanel().closeGame();
+        	mainPanel.closeGame();
         }
+
         if (discardedTilesDialog != null) {
             discardedTilesDialog.dispose();
             discardedTilesDialog = null;
@@ -371,8 +342,8 @@ public class Client extends JFrame {
         pane.setVisible(true);
     }
 
+    @Deprecated
     public void setGame(Game game) {
-        assert gamePanel != null;
         this.game = game;
     }
 
@@ -585,39 +556,8 @@ public class Client extends JFrame {
     }
 
     public void showUpdateIsAvailable(final AppUpdate appUpdate) {
-        if (isVisible() && startPanel != null) {
-            Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
-            HelpPanel hp = startPanel.getHelpPanel();
-            hp.removeAll();
-            hp.setOpaque(true);
-            hp.setBackground(bg);
-            Font font = new Font(null, Font.BOLD, 14);
-            JLabel label;
-            label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
-            label.setFont(font);
-            hp.add(label, "wrap");
-            label = new JLabel(appUpdate.getDescription());
-            hp.add(label, "wrap");
-
-            final JTextField link = new JTextField(appUpdate.getDownloadUrl());
-            link.setEditable(false);
-            link.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-            link.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    link.setSelectionStart(0);
-                    link.setSelectionEnd(link.getText().length());
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    link.setSelectionStart(0);
-                    link.setSelectionEnd(0);
-                }
-            });
-
-            hp.add(link, "wrap, growx");
-            hp.repaint();
+        if (isVisible() && view instanceof StartView) {
+            ((StartView)view).showUpdateIsAvailable(appUpdate);
         } else {
             //probably it shouln't happen
             System.out.println("JCloisterZone " + appUpdate.getVersion() + " is avaiable for download.");
@@ -634,27 +574,57 @@ public class Client extends JFrame {
         this.activity = activity;
     }
 
-    public GamePanel getGamePanel() {
-        return gamePanel;
+    //TODO pass to view
+    public void onWebsocketError(Exception ex) {
+    	ConnectPanel cgp = getConnectGamePanel();
+        if (cgp != null) {
+            cgp.onWebsocketError(ex);
+            return;
+        }
+        GridPanel gp = getGridPanel();
+        String msg = ex.getMessage();
+        if (ex instanceof WebsocketNotConnectedException) {
+            if (game.isStarted()) {
+                msg = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+            } else {
+                msg = _("Connection lost");
+            }
+        } else {
+            logger.error(ex.getMessage(), ex);
+        }
+        if (msg == null || msg.length() == 0) {
+            msg = ex.getClass().getSimpleName();
+        }
+        if (gp != null) {
+            gp.setErrorMessage(msg);
+        } else {
+            JOptionPane.showMessageDialog(this, msg, _("Error"), JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     //------------------- LEGACY: TODO refactor ---------------
 
+
     @Deprecated
     public ControlPanel getControlPanel() {
-        return gamePanel == null ? null : gamePanel.getControlPanel();
+        MainPanel mainPanel = getMainPanel();
+    	if (mainPanel != null) return mainPanel.getControlPanel();
+        return null;
     }
 
     @Deprecated
     public GridPanel getGridPanel() {
-        if (gamePanel == null || gamePanel.getMainPanel() == null) return null;
-        return gamePanel.getMainPanel().getGridPanel();
+    	MainPanel mainPanel = getMainPanel();
+    	if (mainPanel != null) return mainPanel.getGridPanel();
+        return null;
     }
 
     @Deprecated
     public MainPanel getMainPanel() {
-        if (gamePanel == null) return null;
-        return gamePanel.getMainPanel();
+    	if (view instanceof GameView) {
+    		return ((GameView)view).getMainPanel();
+    	}
+    	return null;
     }
 
     @Deprecated

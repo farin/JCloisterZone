@@ -172,7 +172,7 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
             }
         }
 
-        layoutSwingComponents(gc.getGamePanel().getGridPanel());
+        layoutSwingComponents(gc.getGameView().getGridPanel());
     }
 
 
@@ -268,7 +268,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
         return selectedItem;
     }
 
-    public void forward() {
+    @Override
+	public void forward() {
         if (state == BazaarPanelState.SELECT_TILE) {
             ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
             do {
@@ -282,7 +283,8 @@ public class BazaarPanel extends FakeComponent implements RegionMouseListener, F
         }
     }
 
-    public void backward() {
+    @Override
+	public void backward() {
         if (state == BazaarPanelState.SELECT_TILE) {
             ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
             do {

@@ -48,6 +48,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.view.GameView;
 
 public class ControlPanel extends FakeComponent {
 

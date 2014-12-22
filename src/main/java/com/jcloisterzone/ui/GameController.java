@@ -19,7 +19,6 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
@@ -48,7 +47,7 @@ import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
-import com.jcloisterzone.ui.panel.GamePanel;
+import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
@@ -62,7 +61,8 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     private final RmiProxy rmiProxy;
     private ReportingTool reportingTool;
-    private GamePanel gamePanel;
+
+    private GameView gameView;
 
     public GameController(Client client, Game game) {
     	super(client, game);
@@ -99,7 +99,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     }
 
     void clearActions() {
-        ControlPanel controlPanel = gamePanel.getControlPanel();
+        ControlPanel controlPanel = gameView.getControlPanel();
         ActionPanel ap = controlPanel.getActionPanel();
         if (ap.getActions() != null) {
             controlPanel.clearActions();
@@ -128,7 +128,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     @Subscribe
     public void turnChanged(PlayerTurnEvent ev) {
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
 
         if (ev.getTargetPlayer().isLocalHuman()) {
             client.beep();
@@ -172,7 +172,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
             break;
         case TileEvent.PLACEMENT:
         case TileEvent.REMOVE:
-            gamePanel.getMainPanel().tileEvent(ev);
+            gameView.getMainPanel().tileEvent(ev);
             break;
         }
     }
@@ -184,7 +184,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     @Subscribe
     public void meeplePrisonEvent(MeeplePrisonEvent ev) {
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
 
@@ -200,15 +200,15 @@ public class GameController extends EventProxyUiController<Game> implements Acti
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
         clearActions();
-        gamePanel.getControlPanel().getActionPanel().setFakeAction("dragonmove");
-        DragonLayer dragonDecoration = gamePanel.getGridPanel().findLayer(DragonLayer.class);
+        gameView.getControlPanel().getActionPanel().setFakeAction("dragonmove");
+        DragonLayer dragonDecoration = gameView.getGridPanel().findLayer(DragonLayer.class);
         dragonDecoration.setMoves(movesLeft);
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
         logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
         if (ev.getTargetPlayer().isLocalHuman()) {
-            DragonAvailableMove availMoves = gamePanel.getGridPanel().findLayer(DragonAvailableMove.class);
+            DragonAvailableMove availMoves = gameView.getGridPanel().findLayer(DragonAvailableMove.class);
             availMoves.setPositions(positions);
-            gamePanel.getGridPanel().showLayer(availMoves);
+            gameView.getGridPanel().showLayer(availMoves);
             client.beep();
         }
     }
@@ -216,8 +216,8 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
         clearActions();
-        gamePanel.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
-        gamePanel.getGridPanel().repaint();
+        gameView.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
+        gameView.getGridPanel().repaint();
         //TODO generic solution
         if (game.isUndoAllowed() && ev.getTargetPlayer().isLocalHuman()) {
             client.getJMenuBar().getUndo().setEnabled(true);
@@ -228,12 +228,12 @@ public class GameController extends EventProxyUiController<Game> implements Acti
     public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
         clearActions();
         createSecondPanel(CornCirclesPanel.class);
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
     @SuppressWarnings("unchecked")
     public <T extends FakeComponent> T createSecondPanel(Class<T> type) {
-        GridPanel grid = gamePanel.getGridPanel();
+        GridPanel grid = gameView.getGridPanel();
         FakeComponent panel = grid.getSecondPanel();
         if (type.isInstance(panel)) {
             return (T) panel;
@@ -269,14 +269,14 @@ public class GameController extends EventProxyUiController<Game> implements Acti
         } else {
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
     @Subscribe
     public void bazaarTileSelected(BazaarTileSelectedEvent ev) {
         BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
     @Subscribe
@@ -289,7 +289,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
             bazaarPanel.setState(BazaarPanelState.INACTIVE);
         }
         clearActions();
-        gamePanel.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
     @Subscribe
@@ -305,24 +305,26 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
-        gamePanel.getGridPanel().setSecondPanel(null);
+        gameView.getGridPanel().setSecondPanel(null);
     }
 
     public RmiProxy getRmiProxy() {
         return rmiProxy;
     }
 
-    public GamePanel getGamePanel() {
-        return gamePanel;
-    }
+    public GameView getGameView() {
+		return gameView;
+	}
 
-    public void setGamePanel(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
+	public void setGameView(GameView gameView) {
+		this.gameView = gameView;
+	}
 
     //activity interface
 
-    @Override
+
+
+	@Override
     public void undo() {
         client.getConnection().send(new UndoMessage(game.getGameId()));
     }
@@ -346,22 +348,22 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 
 	@Override
     public void toggleRecentHistory(boolean show) {
-        gamePanel.toggleRecentHistory(show);
+        gameView.toggleRecentHistory(show);
 
     }
 
     @Override
     public void setShowFarmHints(boolean showFarmHints) {
-        gamePanel.setShowFarmHints(showFarmHints);
+        gameView.setShowFarmHints(showFarmHints);
     }
 
     @Override
     public void setShowPotentialPoints(boolean showPotentialPoints) {
-    	gamePanel.getControlPanel().setShowPotentialPoints(showPotentialPoints);
+    	gameView.getControlPanel().setShowPotentialPoints(showPotentialPoints);
     }
 
     @Override
     public void zoom(double steps) {
-        gamePanel.zoom(steps);
+        gameView.zoom(steps);
     }
 }

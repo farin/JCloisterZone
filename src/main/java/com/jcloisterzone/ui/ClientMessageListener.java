@@ -38,8 +38,7 @@ import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.panel.ChannelPanel;
-import com.jcloisterzone.ui.panel.ConnectPanel;
-import com.jcloisterzone.ui.panel.GamePanel;
+import com.jcloisterzone.ui.view.GameSetupView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
@@ -91,21 +90,7 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketError(Exception ex) {
-        ConnectPanel cgp = client.getConnectGamePanel();
-        if (cgp != null) {
-            cgp.onWebsocketError(ex);
-            return;
-        }
-        //TODO temporary code, connection error should be handled at client level
-        if (!gameControllers.isEmpty()) {
-        	GameController gc = gameControllers.values().iterator().next();
-        	GamePanel gp = gc == null ? null : gc.getGamePanel();
-	        if (gp != null) {
-	            gp.onWebsocketError(ex);
-	            return;
-	        }
-        }
-        logger.error(ex.getMessage(), ex);
+        client.onWebsocketError(ex);
     }
 
     @Override
@@ -216,7 +201,7 @@ public class ClientMessageListener implements MessageListener {
     	SwingUtilities.invokeAndWait(new Runnable() {
             @Override
 			public void run() {
-            	client.openGameSetup(gc, msg.getSnapshot() == null);
+            	client.mountView(new GameSetupView(client, gc, msg.getSnapshot() == null));
                 performAutostart(gc.getGame()); //must wait for panel is created
             }
         });

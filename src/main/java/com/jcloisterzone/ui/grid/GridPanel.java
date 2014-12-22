@@ -270,7 +270,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public AnimationService getAnimationService() {
-        return gc.getGamePanel().getMainPanel().getAnimationService();
+        return gc.getGameView().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {
