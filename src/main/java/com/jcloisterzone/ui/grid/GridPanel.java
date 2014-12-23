@@ -544,7 +544,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //create the image
         BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D) im.getGraphics();
-    
+        if(null == System.getProperty("transparentScreenshots")){
+            graphics.setBackground(new Color(240, 240, 240, 255));
+            graphics.clearRect(0, 0, im.getWidth(), im.getHeight());
+        }
         graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);  
     
@@ -553,7 +556,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         
         //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
         //TODO is this dangerous if GridPanel is rendered while print screening?
+        
         int orig = squareSize;
+        setZoomSize(INITIAL_SQUARE_SIZE);
         squareSize = INITIAL_SQUARE_SIZE;
         for (GridLayer layer : layers) {
             if (layer.isVisible()) {
@@ -561,15 +566,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         }
         //set it back
-        squareSize =orig;
+        squareSize = orig;
         
         //reset translation
         graphics.translate(-transX, -transY);
         
         //render the control panel on the far right
-        graphics.translate(totalWidth+20, 0);
+        graphics.translate(totalWidth+30, 0);
         controlPanel.paintComponent(graphics);
-        
         return im;
     }
 
