@@ -558,11 +558,12 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //TODO is this dangerous if GridPanel is rendered while print screening?
         
         int orig = squareSize;
-        setZoomSize(INITIAL_SQUARE_SIZE);
         squareSize = INITIAL_SQUARE_SIZE;
         for (GridLayer layer : layers) {
             if (layer.isVisible()) {
+                layer.zoomChanged(INITIAL_SQUARE_SIZE);
                 layer.paint(graphics);
+                layer.zoomChanged(orig);
             }
         }
         //set it back
