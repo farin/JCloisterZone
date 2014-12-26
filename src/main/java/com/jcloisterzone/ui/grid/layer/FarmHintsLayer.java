@@ -34,7 +34,6 @@ public class FarmHintsLayer extends AbstractGridLayer {
     private static final int FULL_SIZE = 300;
     private static final AlphaComposite HINT_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
-    private boolean visible;
     private boolean doRefreshHints;
     final Map<Tile, Map<Location, Area>> areas = new HashMap<>();
     private final List<FarmHint> hints = new ArrayList<>();
@@ -42,11 +41,6 @@ public class FarmHintsLayer extends AbstractGridLayer {
     public FarmHintsLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         refreshHints();
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-        gridPanel.repaint();
     }
 
     @Override
