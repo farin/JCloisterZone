@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -15,7 +17,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,15 +50,11 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.event.setup.ExpansionChangedEvent;
-import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
@@ -84,10 +81,7 @@ import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.ControlsTheme;
 import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.server.SimpleServer;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -244,6 +238,11 @@ public class Client extends JFrame {
     }
 
     public void cleanContentPane() {
+    	
+    	// (force) disable history & farmHints when content pane is cleared  
+    	getJMenuBar().setHistoryEnabled(false);    	
+    	getJMenuBar().setFarmHintsEnabled(false);
+    	
         //this.requestFocus();
         Container pane = this.getContentPane();
         pane.setVisible(false);
