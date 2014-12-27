@@ -215,7 +215,7 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
-        DebugConfig debugConfig = getGameController().getConfig().getDebug();
+        DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
             List<String> offNames =  debugConfig.getOff_capabilities();
             Set<Class<? extends Capability>> off = new HashSet<>();

@@ -88,7 +88,7 @@ public class LoadGamePhase extends CreateGamePhase {
     protected void prepareTilePack() {
         tilePackFactory = new LoadGameTilePackFactory();
         tilePackFactory.setGame(game);
-        tilePackFactory.setConfig(getGameController().getConfig());
+        tilePackFactory.setConfig(getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         tilePackFactory.setSnapshot(snapshot);
         DefaultTilePack tilePack = tilePackFactory.createTilePack();

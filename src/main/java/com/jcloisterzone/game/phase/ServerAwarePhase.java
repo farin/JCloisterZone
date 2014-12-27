@@ -1,6 +1,8 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.Connection;
@@ -25,6 +27,15 @@ public class ServerAwarePhase extends Phase {
 
     public GameController getGameController() {
         return gc;
+    }
+
+    public Config getConfig() {
+    	return gc == null ? null : gc.getConfig();
+    }
+
+    public DebugConfig getDebugConfig() {
+    	Config config = getConfig();
+    	return config == null ? null : config.getDebug();
     }
 
     public boolean isLocalPlayer(Player player) {
