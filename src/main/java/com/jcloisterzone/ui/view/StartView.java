@@ -31,7 +31,7 @@ public class StartView extends AbstractUiView {
 	}
 
 	@Override
-	public void show(Container pane) {
+	public void show(Container pane, Object ctx) {
 		pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         pane.add(envelope, BorderLayout.CENTER);

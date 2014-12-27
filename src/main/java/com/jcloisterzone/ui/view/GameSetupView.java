@@ -43,7 +43,7 @@ public class GameSetupView extends AbstractUiView {
 	}
 
 	@Override
-	public void show(Container pane) {
+	public void show(Container pane, Object ctx) {
 		Game game = gc.getGame();
     	CreateGamePhase phase = (CreateGamePhase)game.getPhase();
 
@@ -93,8 +93,12 @@ public class GameSetupView extends AbstractUiView {
     }
 
 	@Override
-	public boolean requestHide() {
-		return client.closeGame();
+	public boolean requestHide(Object ctx) {
+		if (ctx != this) {
+			return client.closeGame();
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -123,7 +127,7 @@ public class GameSetupView extends AbstractUiView {
     		GameView view = new GameView(client, gc);
     		view.setChatPanel(chatPanel);
     		view.setSnapshot(ev.getSnapshot());
-    		client.mountView(view);
+    		client.mountView(view, this);
     	}
     }
 

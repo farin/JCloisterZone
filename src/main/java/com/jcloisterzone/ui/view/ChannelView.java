@@ -21,7 +21,7 @@ public class ChannelView extends AbstractUiView {
 	}
 
 	@Override
-	public void show(Container pane) {
+	public void show(Container pane, Object ctx) {
 		channelPanel = new ChannelPanel(client, cc);
         pane.add(channelPanel);
 

@@ -5,8 +5,8 @@ import java.awt.event.KeyEvent;
 
 public interface UiView {
 
-	void show(Container pane);
-	boolean requestHide();
+	void show(Container pane, Object ctx);
+	boolean requestHide(Object ctx);
 	void hide();
 
 	boolean dispatchKeyEvent(KeyEvent e);

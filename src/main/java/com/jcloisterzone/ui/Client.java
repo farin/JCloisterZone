@@ -111,16 +111,22 @@ public class Client extends JFrame {
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
+
     public boolean mountView(UiView view) {
+    	return mountView(view, null);
+    }
+
+
+    public boolean mountView(UiView view, Object ctx) {
     	if (this.view != null) {
-    		if (this.view.requestHide()) {
+    		if (this.view.requestHide(ctx)) {
     			this.view.hide();
     		} else {
     			return false;
     		}
     	}
     	cleanContentPane();
-    	view.show(getContentPane());
+    	view.show(getContentPane(), ctx);
     	getContentPane().setVisible(true);
     	this.view = view;
     	logger.info("{} mounted", view.getClass().getSimpleName());

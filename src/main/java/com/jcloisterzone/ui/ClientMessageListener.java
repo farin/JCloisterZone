@@ -37,7 +37,6 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.online.Channel;
-import com.jcloisterzone.ui.panel.ChannelPanel;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameSetupView;
 import com.jcloisterzone.wsio.Connection;

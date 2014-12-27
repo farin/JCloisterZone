@@ -48,7 +48,7 @@ public class GameView extends AbstractUiView {
 	}
 
 	@Override
-	public void show(Container pane) {
+	public void show(Container pane, Object ctx) {
 		BackgroundPanel bg = new BackgroundPanel();
     	bg.setLayout(new BorderLayout());
     	pane.add(bg);
@@ -66,7 +66,7 @@ public class GameView extends AbstractUiView {
 	}
 
 	@Override
-	public boolean requestHide() {
+	public boolean requestHide(Object ctx) {
 		return client.closeGame();
 	}
 
