@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.BridgeDeployedEvent;
@@ -20,7 +19,6 @@ import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.event.TunnelPiecePlacedEvent;
-import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
@@ -114,7 +112,11 @@ public class MainPanel extends JPanel {
     }
 
     public void setShowFarmHints(boolean showFarmHints) {
-         farmHintLayer.setVisible(showFarmHints);
+    	if (showFarmHints) {
+    		getGridPanel().showLayer(farmHintLayer);
+    	} else {
+    		getGridPanel().hideLayer(farmHintLayer);
+    	}
     }
 
     public void started(Snapshot snapshot) {
@@ -134,7 +136,7 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(towerLayer); //5
         }
 
-        gridPanel.addLayer(farmHintLayer); //zindex 10
+        gridPanel.addLayer(farmHintLayer, false); //zindex 10
 
         if (game.hasCapability(CastleCapability.class)) {
             castleLayer = new CastleLayer(gridPanel, gc);

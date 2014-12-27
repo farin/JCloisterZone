@@ -5,6 +5,8 @@ import static com.jcloisterzone.ui.I18nUtils._;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -29,9 +31,10 @@ public class MenuBar extends JMenuBar {
     private final Client client;
     private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load, farmHints, projectedPoints;
+    private JCheckBoxMenuItem history, farmHints, projectedPoints;
+    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load;
     private JMenuItem zoomIn, zoomOut;
-    private JMenuItem history, reportBug;
+    private JMenuItem reportBug;
 
     public MenuBar(Client _client) {
         this.client = _client;
@@ -166,35 +169,44 @@ public class MenuBar extends JMenuBar {
         menu.addSeparator();
         history = new JCheckBoxMenuItem(_("Show last placements"));
         history.setAccelerator(KeyStroke.getKeyStroke('x'));
-        history.addActionListener(new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getActivity().toggleRecentHistory(ch.isSelected());
-            }
-        });
+        history.setEnabled(false); // disable by default
+        history.addItemListener(new ItemListener() { 
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                if (client.getActivity() != null) {
+                	client.getActivity().toggleRecentHistory(ch.isSelected());
+                }				
+			}
+		});
         menu.add(history);
 
         farmHints = new JCheckBoxMenuItem(_("Show farm hints"));
         farmHints.setAccelerator(KeyStroke.getKeyStroke('f'));
-        farmHints.addActionListener(new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getActivity().setShowFarmHints(ch.isSelected());
-            }
-        });
+        farmHints.setEnabled(false); // disable by default
+        farmHints.addItemListener(new ItemListener() {			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                if (client.getActivity() != null) {
+                	client.getActivity().setShowFarmHints(ch.isSelected());
+                }
+			}
+		});        
         menu.add(farmHints);
 
         projectedPoints = new JCheckBoxMenuItem(_("Show projected points"));
         projectedPoints.setAccelerator(KeyStroke.getKeyStroke('r'));
-        projectedPoints.addActionListener(new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getActivity().setShowProjectedPoints(ch.isSelected());
-            }
-        });
+        projectedPoints.setEnabled(false); // disable by default
+        projectedPoints.addItemListener(new ItemListener() {			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                if (client.getActivity() != null) {
+                	client.getActivity().setShowProjectedPoints(ch.isSelected());
+                }
+			}
+		});
         menu.add(projectedPoints);
 
 
@@ -325,14 +337,42 @@ public class MenuBar extends JMenuBar {
     public void setZoomOutEnabled(boolean state) {
         zoomOut.setEnabled(state);
     }
-
+    
+    private void setJCheckBoxMenuItemEnabled(JCheckBoxMenuItem item, boolean b) {
+    	item.setEnabled(b);
+    	item.setSelected(item.isEnabled() && item.isSelected());
+    }
+    
+    public void setHistoryEnabled(boolean b) {
+    	setJCheckBoxMenuItemEnabled(history, b);
+    }
+    
+    public void setFarmHintsEnabled(boolean b) {
+    	setJCheckBoxMenuItemEnabled(farmHints, b);
+    }
+    
+    public void setProjectedPointsEnabled(boolean b) {
+    	setJCheckBoxMenuItemEnabled(projectedPoints, b);
+    }
+    
     public void setIsGameRunning(boolean isGameRunning) {
+    	boolean oldIsGameRunning = this.isGameRunning;
+    	
         this.isGameRunning = isGameRunning;
         create.setEnabled(!isGameRunning);
         connect.setEnabled(!isGameRunning);
         playOnline.setEnabled(!isGameRunning);
         close.setEnabled(isGameRunning);
         reportBug.setEnabled(isGameRunning);
+        
+        setProjectedPointsEnabled(isGameRunning);
+        
+        // do not disable history & farmHint when game ends (allow history & farm hints on end-screen)
+        if (!oldIsGameRunning && isGameRunning) {        	
+        	setHistoryEnabled(isGameRunning);
+        	setFarmHintsEnabled(isGameRunning);
+        }
+        
         if (!isGameRunning) {
             showDiscard.setEnabled(false);
             undo.setEnabled(false);

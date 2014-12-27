@@ -234,6 +234,10 @@ public class Client extends JFrame {
     }
 
     public void cleanContentPane() {
+    	// (force) disable history & farmHints when content pane is cleared
+    	getJMenuBar().setHistoryEnabled(false);
+    	getJMenuBar().setFarmHintsEnabled(false);
+
         Container pane = getContentPane();
         pane.setVisible(false);
         pane.removeAll();
