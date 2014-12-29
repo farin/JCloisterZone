@@ -21,6 +21,7 @@ import net.miginfocom.swing.MigLayout;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -28,10 +29,12 @@ import static com.jcloisterzone.ui.I18nUtils._;
 public class GameOverDialog extends JDialog {
 
     private final Client client;
+    private final Game game;
 
-    public GameOverDialog(Client client) {
+    public GameOverDialog(Client client, Game game) {
         super(client);
         this.client = client;
+        this.game = game;
 
         setTitle(_("Game overview"));
         Point p = client.getLocation();
@@ -61,7 +64,7 @@ public class GameOverDialog extends JDialog {
         pane.add(new JLabel(_("Bazaars")), getLegendSpec(0, gridy++));
         pane.add(new JLabel(_("Wind rose")), getLegendSpec(0, gridy++));
 
-        Player[] players = getSortedPlayers().toArray(new Player[client.getGame().getAllPlayers().length]);
+        Player[] players = getSortedPlayers().toArray(new Player[game.getAllPlayers().length]);
         for (Player player : players) {
             gridy = 0;
             Color color = player.getColors().getMeepleColor();
@@ -116,7 +119,7 @@ public class GameOverDialog extends JDialog {
     }
 
     private List<Player> getSortedPlayers() {
-        List<Player> players = new ArrayList<>(Arrays.asList(client.getGame().getAllPlayers()));
+        List<Player> players = new ArrayList<>(Arrays.asList(game.getAllPlayers()));
         Collections.sort(players, new Comparator<Player>() {
             @Override
             public int compare(Player o1, Player o2) {

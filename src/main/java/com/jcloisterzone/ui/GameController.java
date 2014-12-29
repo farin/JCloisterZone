@@ -113,7 +113,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     public void gameStateChange(GameStateChangeEvent ev) {
     	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
     		 client.closeGame(true);
-             new GameOverDialog(client);
+             new GameOverDialog(client, game);
     	}
     }
 

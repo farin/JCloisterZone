@@ -17,6 +17,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
+import com.jcloisterzone.ui.view.GameView;
 
 public class ActionPanel extends FakeComponent implements RegionMouseListener, ForwardBackwardListener {
 
@@ -38,12 +39,15 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     private String fakeAction;
     private Image fakeActionImage;
 
-    public ActionPanel(Client client) {
-        super(client);
+    private final GameView gameView;
+
+    public ActionPanel(GameView gameView) {
+    	super(gameView.getClient());
+        this.gameView = gameView;
     }
 
     private void repaint() {
-        client.getGridPanel().repaint();
+    	gameView.getGridPanel().repaint();
     }
 
     public PlayerAction<?>[] getActions() {
@@ -94,7 +98,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         int baseSize = Math.min(maxIconSize, (int) Math.floor(availableWidth / units));
         int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
 
-        Player activePlayer = client.getGame().getActivePlayer();
+        Player activePlayer = gameView.getGame().getActivePlayer();
         for (int i = 0; i < actions.length; i++) {
             selected[i] = new ImageIcon(
                 actions[i].getImage(activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
@@ -118,11 +122,13 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
 
 
 
-    public void forward() {
+    @Override
+	public void forward() {
         if (active && selectedActionIndex != -1) getSelectedAction().forward();
     }
 
-    public void backward() {
+    @Override
+	public void backward() {
         if (active && selectedActionIndex != -1) getSelectedAction().backward();
     }
 
@@ -209,13 +215,13 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
         Integer i = (Integer) origin.getData();
         if (i != selectedActionIndex) {
-            client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
-        client.getGridPanel().setCursor(Cursor.getDefaultCursor());
+    	gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 
     public String getFakeAction() {

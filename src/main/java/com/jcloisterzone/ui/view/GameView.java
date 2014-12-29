@@ -72,13 +72,21 @@ public class GameView extends AbstractUiView {
 		return isGameRunning;
 	}
 
+	public GameController getGameController() {
+		return gc;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
 	@Override
 	public void show(Container pane, Object ctx) {
 		BackgroundPanel bg = new BackgroundPanel();
     	bg.setLayout(new BorderLayout());
     	pane.add(bg);
 
-        mainPanel = new MainPanel(client, gc, chatPanel);
+        mainPanel = new MainPanel(client, this, chatPanel);
         bg.add(mainPanel, BorderLayout.CENTER);
         gc.getReportingTool().setContainer(mainPanel);
         mainPanel.started(snapshot);

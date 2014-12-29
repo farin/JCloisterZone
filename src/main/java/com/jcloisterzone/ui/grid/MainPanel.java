@@ -61,12 +61,14 @@ import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TowerLayer;
+import com.jcloisterzone.ui.view.GameView;
 
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
 
     private final Client client;
+    private final GameView gameView;
     private final GameController gc;
     private final Game game;
     private AnimationService animationService;
@@ -86,9 +88,10 @@ public class MainPanel extends JPanel {
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
-    public MainPanel(Client client, GameController gc, ChatPanel chatPanel) {
+    public MainPanel(Client client, GameView gameView, ChatPanel chatPanel) {
         this.client = client;
-        this.gc = gc;
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
         this.game = gc.getGame();
         this.chatPanel = chatPanel;
         gc.register(this);
@@ -125,8 +128,8 @@ public class MainPanel extends JPanel {
         removeAll();
         setVisible(false);
 
-        controlPanel = new ControlPanel(client, gc);
-        gridPanel = new GridPanel(client, gc, controlPanel, chatPanel, snapshot);
+        controlPanel = new ControlPanel(gameView);
+        gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel, gc);
         tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);

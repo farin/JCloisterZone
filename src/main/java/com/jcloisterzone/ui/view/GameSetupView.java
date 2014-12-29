@@ -52,10 +52,6 @@ public class GameSetupView extends AbstractUiView {
     	pane.add(bg);
 
         showCreateGamePanel(bg, mutableSlots, phase.getPlayerSlots());
-
-        //TODO remove legacy code
-        client.setGame(game);
-        //---
 	}
 
 	private void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {

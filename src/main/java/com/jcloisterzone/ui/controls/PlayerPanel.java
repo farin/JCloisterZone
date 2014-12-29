@@ -41,6 +41,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.view.GameView;
 
 public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
@@ -60,6 +61,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
+    private final GameView gameView;
     private final GameController gc;
     private final Player player;
     private Color fontColor;
@@ -76,10 +78,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
     private String mouseOverKey = null;
 
-    public PlayerPanel(Client client, GameController gc, Player player, PlayerPanelImageCache cache) {
+    public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
         super(client);
         this.player = player;
-        this.gc = gc;
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
         this.cache = cache;
         this.fontColor = player.getColors().getFontColor();
     }
@@ -310,12 +313,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
         int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 
-//        if (isActive) {
-//            //TODO
-//            //parentGraphics.setColor(Color.BLACK);
-//            //parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
-//        }
-
         parentGraphics.setColor(PLAYER_BG_COLOR);
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
 
@@ -361,7 +358,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (!(origin.getData() instanceof Class)) return;
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
-        TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
+        TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
         if (!tg.isRansomPaidThisTurn()) {
             if (client.getConfig().getConfirm().getRansom_payment()) {
                 String options[] = {_("Pay ransom"), _("Cancel") };
@@ -379,11 +376,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
         if (origin.getData() instanceof String) {
             mouseOverKey = (String) origin.getData();
-            client.getGridPanel().repaint();
+            gameView.getGridPanel().repaint();
         } else {
-            TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
+            TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
             if (!tg.isRansomPaidThisTurn()) {
-                client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            	gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         }
     }
@@ -392,9 +389,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
         if (mouseOverKey != null) {
             mouseOverKey = null;
-            client.getGridPanel().repaint();
+            gameView.getGridPanel().repaint();
         } else {
-            client.getGridPanel().setCursor(Cursor.getDefaultCursor());
+        	gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
 }

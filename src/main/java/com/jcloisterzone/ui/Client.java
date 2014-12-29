@@ -89,10 +89,6 @@ public class Client extends JFrame {
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private Connection conn;
 
-    @Deprecated
-    private Game game;
-
-
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
         this.config = config;
@@ -215,11 +211,6 @@ public class Client extends JFrame {
         return conn;
     }
 
-    @Deprecated  //TODO game per GamePanel
-    public Game getGame() {
-        return game;
-    }
-
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }
@@ -280,11 +271,6 @@ public class Client extends JFrame {
             discardedTilesDialog = null;
         }
         return true;
-    }
-
-    @Deprecated
-    public void setGame(Game game) {
-        this.game = game;
     }
 
     private String getUserName() {

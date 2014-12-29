@@ -39,12 +39,10 @@ import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
-import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -68,6 +66,7 @@ public class ControlPanel extends FakeComponent {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private final GameView gameView;
     private final GameController gc;
     private final Game game;
 
@@ -78,27 +77,28 @@ public class ControlPanel extends FakeComponent {
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
-    public ControlPanel(final Client client, GameController gc) {
-        super(client);
-        this.gc = gc;
-        this.game = gc.getGame();
+    public ControlPanel(GameView gameView) {
+        super(gameView.getClient());
+        this.gameView = gameView;
+        this.game = gameView.getGame();
+        this.gc = gameView.getGameController();
         gc.register(this);
 
-        actionPanel = new ActionPanel(client);
+        actionPanel = new ActionPanel(gameView);
 
         Player[] players = game.getAllPlayers();
-        PlayerPanelImageCache cache = new PlayerPanelImageCache(client);
+        PlayerPanelImageCache cache = new PlayerPanelImageCache(client, game);
         playerPanels = new PlayerPanel[players.length];
 
         for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, gc, players[i], cache);
+            playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
         }
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
         refreshComponents();
-        client.getGridPanel().repaint();
+        gameView.getGridPanel().repaint();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ControlPanel extends FakeComponent {
         passButton.setVisible(canPass);
         if (canPass) {
             //TODO hardcoded offset - but no better solution for now
-            int x = client.getGridPanel().getWidth()-PANEL_WIDTH;
+            int x = gameView.getGridPanel().getWidth()-PANEL_WIDTH;
             passButton.setBounds(x, 4, 90, 19);
         }
     }
@@ -141,7 +141,7 @@ public class ControlPanel extends FakeComponent {
     }
 
     private void paintBackgroundBody(Graphics2D g2) {
-        GridPanel gp = client.getGridPanel();
+        GridPanel gp = gameView.getGridPanel();
         int h = gp.getHeight();
 
         g2.setColor(PANEL_BG_COLOR);
@@ -149,7 +149,7 @@ public class ControlPanel extends FakeComponent {
     }
 
     private void paintBackgroundShadow(Graphics2D g2) {
-        GridPanel gp = client.getGridPanel();
+        GridPanel gp = gameView.getGridPanel();
         int h = gp.getHeight();
 
         Player player = game.getTurnPlayer();
@@ -206,7 +206,7 @@ public class ControlPanel extends FakeComponent {
         super.paintComponent(g2);
         AffineTransform origTransform = g2.getTransform();
 
-//		GridPanel gp = client.getGridPanel();
+//		GridPanel gp = gameView.getGridPanel();
 
         paintBackgroundBody(g2);
 
@@ -225,7 +225,7 @@ public class ControlPanel extends FakeComponent {
         g2.translate(0, 60);
 
         BazaarCapability bcb = game.getCapability(BazaarCapability.class);
-        if (bcb != null && !(client.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
+        if (bcb != null && !(gameView.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
             List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {
                 int x = 0;
@@ -298,7 +298,7 @@ public class ControlPanel extends FakeComponent {
 		if (showProjectedPoints) {
 			refreshPotentialPoints();
 		} else {
-			client.getGridPanel().repaint(); //repaint immediately
+			gameView.getGridPanel().repaint(); //repaint immediately
 		}
 	}
 
@@ -321,7 +321,7 @@ public class ControlPanel extends FakeComponent {
 			        scoreAll.scoreAll(game, strategy);
 			        game.finalScoring(strategy);
 
-					client.getGridPanel().repaint();
+					gameView.getGridPanel().repaint();
 				}
 			}
 		});

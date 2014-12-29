@@ -41,6 +41,7 @@ import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
+import com.jcloisterzone.ui.view.GameView;
 
 public class GridPanel extends JPanel implements ForwardBackwardListener {
 
@@ -52,8 +53,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
     private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
 
-
     final Client client;
+    final GameView gameView;
     final GameController gc;
     final ControlPanel controlPanel;
     final ChatPanel chatPanel;
@@ -73,13 +74,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private String errorMessage;
     //private String hintMessage;
 
-    public GridPanel(Client client, GameController gc, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
+    public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
         setLayout(null);
 
         this.client = client;
-        this.gc = gc;
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
         this.controlPanel = controlPanel;
 
         boolean networkGame = "true".equals(System.getProperty("forceChat"));
@@ -435,7 +437,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
             boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
             if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
-                (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
+                (initialPlacement && tile.equals(gameView.getGame().getCurrentTile()))) {
                 getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
             }
         } else if (ev.getType() == TileEvent.REMOVE) {

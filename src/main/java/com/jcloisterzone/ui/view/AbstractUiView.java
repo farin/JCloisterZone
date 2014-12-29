@@ -31,4 +31,8 @@ public abstract class AbstractUiView implements UiView {
 		client.onUnhandledWebsocketError(ex);
 	}
 
+	public Client getClient() {
+		return client;
+	}
+
 }

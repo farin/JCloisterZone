@@ -75,13 +75,13 @@ Helpers for more pleasant development and application debugging.
 
 Use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
 
-    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -ea
+    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -DcloseGameConfirm=false -ea
 
 Command line example:
 
 ```bash
 cd JCloisterZone
-java -jar build/JCloisterZone.jar -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -ea
+java -jar build/JCloisterZone.jar -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -DcloseGameConfirm=false -ea
 ```
 
 
