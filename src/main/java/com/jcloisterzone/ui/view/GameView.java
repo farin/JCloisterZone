@@ -18,6 +18,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.MenuBar;
+import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -29,6 +31,7 @@ public class GameView extends AbstractUiView {
 
 	private final GameController gc;
 	private final Game game;
+	private boolean isGameRunning = true; //is it needed, what about use game state (but foce close don't change it)
 
 	private ChatPanel chatPanel;
 	private Snapshot snapshot;
@@ -47,6 +50,10 @@ public class GameView extends AbstractUiView {
 		gc.setGameView(this);
 	}
 
+	public boolean isGameRunning() {
+		return isGameRunning;
+	}
+
 	@Override
 	public void show(Container pane, Object ctx) {
 		BackgroundPanel bg = new BackgroundPanel();
@@ -63,6 +70,20 @@ public class GameView extends AbstractUiView {
 
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
+
+		MenuBar menu = client.getJMenuBar();
+		menu.setItemEnabled(MenuItem.FARM_HINTS, true);
+		menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
+		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
+
+		menu.setItemEnabled(MenuItem.REPORT_BUG, true);
+		menu.setItemEnabled(MenuItem.CLOSE_GAME, true);
+		menu.setItemEnabled(MenuItem.ZOOM_IN, true);
+		menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
+
+		menu.setItemEnabled(MenuItem.NEW_GAME, false);
+		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, false);
+		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
 	}
 
 	@Override
@@ -75,6 +96,29 @@ public class GameView extends AbstractUiView {
 		timer.cancel();
 		gc.unregister(chatPanel);
 		gc.unregister(this);
+
+		MenuBar menu = client.getJMenuBar();
+		menu.setItemEnabled(MenuItem.FARM_HINTS, false);
+		menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, false);
+		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
+		menu.setItemEnabled(MenuItem.ZOOM_IN, false);
+		menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
+	}
+
+	public void closeGame() {
+		isGameRunning = false;
+		getMainPanel().closeGame();
+    	getControlPanel().closeGame();
+
+    	MenuBar menu = client.getJMenuBar();
+		menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
+		menu.setItemEnabled(MenuItem.UNDO, false);
+		menu.setItemEnabled(MenuItem.REPORT_BUG, false);
+		menu.setItemEnabled(MenuItem.CLOSE_GAME, false);
+
+		menu.setItemEnabled(MenuItem.NEW_GAME, true);
+		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, true);
+		menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
 	}
 
 	@Override

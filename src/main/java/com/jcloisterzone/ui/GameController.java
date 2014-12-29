@@ -36,6 +36,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
@@ -105,24 +106,16 @@ public class GameController extends EventProxyUiController<Game> implements Acti
             controlPanel.clearActions();
         }
         ap.setFakeAction(null);
-        client.getJMenuBar().getUndo().setEnabled(false);
+        client.getJMenuBar().setItemEnabled(MenuItem.UNDO, false);
     }
 
 
     @Subscribe
     public void gameStateChange(GameStateChangeEvent ev) {
-        switch (ev.getType()) {
-        case GameStateChangeEvent.GAME_START:
-            MenuBar menu = client.getJMenuBar();
-            menu.setZoomInEnabled(true);
-            menu.setZoomOutEnabled(true);
-            menu.setIsGameRunning(true);
-            break;
-        case GameStateChangeEvent.GAME_OVER:
-            client.closeGame(true);
-            new GameOverDialog(client);
-            break;
-        }
+    	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
+    		 client.closeGame(true);
+             new GameOverDialog(client);
+    	}
     }
 
 
@@ -165,7 +158,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
             if (discardedTilesDialog == null) {
                 discardedTilesDialog = new DiscardedTilesDialog(client);
                 client.setDiscardedTilesDialog(discardedTilesDialog);
-                client.getJMenuBar().setShowDiscardedEnabled(true);
+                client.getJMenuBar().setItemEnabled(MenuItem.DISCARDED_TILES, true);
             }
             discardedTilesDialog.addTile(ev.getTile());
             discardedTilesDialog.setVisible(true);
@@ -220,7 +213,7 @@ public class GameController extends EventProxyUiController<Game> implements Acti
         gameView.getGridPanel().repaint();
         //TODO generic solution
         if (game.isUndoAllowed() && ev.getTargetPlayer().isLocalHuman()) {
-            client.getJMenuBar().getUndo().setEnabled(true);
+            client.getJMenuBar().setItemEnabled(MenuItem.UNDO, true);
         }
     }
 

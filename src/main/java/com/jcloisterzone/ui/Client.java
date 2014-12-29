@@ -240,10 +240,6 @@ public class Client extends JFrame {
     }
 
     public void cleanContentPane() {
-    	// (force) disable history & farmHints when content pane is cleared
-    	getJMenuBar().setHistoryEnabled(false);
-    	getJMenuBar().setFarmHintsEnabled(false);
-
         Container pane = getContentPane();
         pane.setVisible(false);
         pane.removeAll();
@@ -254,7 +250,7 @@ public class Client extends JFrame {
     }
 
     public boolean closeGame(boolean force) {
-        boolean isGameRunning = getJMenuBar().isGameRunning();
+        boolean isGameRunning = (view instanceof GameView) && ((GameView)view).isGameRunning();
         if (config.getConfirm().getGame_close() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
@@ -288,19 +284,15 @@ public class Client extends JFrame {
             }
             localServer.set(null);
         }
-        getJMenuBar().setIsGameRunning(false);
 
         //TODO decouple
         if (view instanceof GameView) {
-        	MainPanel mainPanel = ((GameView)view).getMainPanel();
-        	if (mainPanel.getControlPanel() != null) mainPanel.getControlPanel().closeGame();
-        	mainPanel.closeGame();
+        	((GameView)view).closeGame();
         }
 
         if (discardedTilesDialog != null) {
             discardedTilesDialog.dispose();
             discardedTilesDialog = null;
-            getJMenuBar().setShowDiscardedEnabled(false);
         }
         return true;
     }
