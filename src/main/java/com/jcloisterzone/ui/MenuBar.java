@@ -42,7 +42,6 @@ public class MenuBar extends JMenuBar {
 		CONFIRM_FARM(_("Confirm placement on a farm")),
 		CONFIRM_TOWER(_("Confirm placement on a tower")),
 		CONFIRM_RANSOM(_("Confirm ransom payment")),
-		CONFIRM_GAME_CLOSE(_("Confirm game close")), //TODO remove, enable always confirmation, add java prop for debug
 		ABOUT(_("About")),
 		CONTROLS(_("Controls")),
 		REPORT_BUG(_("Report bug"));
@@ -172,16 +171,6 @@ public class MenuBar extends JMenuBar {
 			}
 		}));
         chbox.setSelected(client.getConfig().getConfirm().getRansom_payment());
-        menu.addSeparator();
-        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_GAME_CLOSE, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-				client.getConfig().getConfirm().setGame_close(ch.isSelected());
-                client.saveConfig();
-			}
-		}));
-        chbox.setSelected(client.getConfig().getConfirm().getGame_close());
         this.add(menu);
 
         menu = new JMenu(_("Help"));

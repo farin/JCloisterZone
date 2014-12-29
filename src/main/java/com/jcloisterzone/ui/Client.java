@@ -220,7 +220,6 @@ public class Client extends JFrame {
         return game;
     }
 
-
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }
@@ -237,7 +236,7 @@ public class Client extends JFrame {
 
     public boolean closeGame(boolean force) {
         boolean isGameRunning = (view instanceof GameView) && ((GameView)view).isGameRunning();
-        if (config.getConfirm().getGame_close() && isGameRunning) {
+        if (isGameRunning && !"false".equals(System.getProperty("closeGameConfirm"))) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,

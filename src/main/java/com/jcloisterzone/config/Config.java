@@ -174,7 +174,6 @@ public class Config {
     public static class ConfirmConfig {
         private Boolean farm_place;
         private Boolean tower_place;
-        private Boolean game_close;
         private Boolean ransom_payment;
 
         public Boolean getFarm_place() {
@@ -189,11 +188,9 @@ public class Config {
         public void setTower_place(Boolean tower_place) {
             this.tower_place = tower_place;
         }
-        public Boolean getGame_close() {
-            return game_close == null ? Boolean.FALSE : game_close;
-        }
+        @Deprecated
         public void setGame_close(Boolean game_close) {
-            this.game_close = game_close;
+            //ignore - keep for backward compatibility
         }
         public Boolean getRansom_payment() {
             return ransom_payment == null ? Boolean.FALSE : ransom_payment;
