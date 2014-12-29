@@ -46,7 +46,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -84,10 +83,11 @@ public class Client extends JFrame {
 
     private UiView view;
 
+    //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
-    private Connection conn;
+    private ClientMessageListener clientMessageListener;
 
     public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
         this.configLoader = configLoader;
@@ -206,9 +206,9 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
-    //should be referenced from Controller
+    //TODO should be referenced from Controller
     public Connection getConnection() {
-        return conn;
+        return clientMessageListener.getConnection();
     }
 
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
@@ -247,9 +247,9 @@ public class Client extends JFrame {
 
         setTitle(BASE_TITLE);
         resetWindowIcon();
-        if (conn != null) {
-            conn.close();
-            conn = null;
+        if (clientMessageListener != null && !clientMessageListener.isPlayOnline()) {
+            clientMessageListener.getConnection().close();
+            clientMessageListener = null;
         }
         SimpleServer server = localServer.get();
         if (server != null) {
@@ -300,10 +300,10 @@ public class Client extends JFrame {
 
 
     private void connect(String username, String hostname, int port, boolean playOnline) {
-        ClientMessageListener handler = new ClientMessageListener(this);
+        clientMessageListener = new ClientMessageListener(this, playOnline);
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
-            conn = handler.connect(username == null ? getUserName() : username, uri);
+            Connection conn = clientMessageListener.connect(username == null ? getUserName() : username, uri);
             conn.setReportingTool(new ReportingTool());
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);

@@ -74,21 +74,29 @@ public class ClientMessageListener implements MessageListener {
     private Map<String, GameController> gameControllers = new HashMap<>();
     private Map<String, ChannelController> channelControllers = new HashMap<>();
 
+    private final boolean playOnline;
     private final Client client;
     private boolean autostartPerfomed;
 
-    public ClientMessageListener(Client client) {
+    public ClientMessageListener(Client client, boolean playOnline) {
         this.client = client;
+        this.playOnline = playOnline;
     }
-
 
     public Connection connect(String username, URI uri) {
         conn = new Connection(username, uri, this);
         return conn;
     }
 
+    public boolean isPlayOnline() {
+		return playOnline;
+	}
 
-    @Override
+	public Connection getConnection() {
+		return conn;
+	}
+
+	@Override
     public void onWebsocketError(Exception ex) {
         client.onWebsocketError(ex);
     }
