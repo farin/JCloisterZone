@@ -4,14 +4,28 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.xml.transform.TransformerException;
+
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.bugreport.BugReportDialog;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
@@ -19,15 +33,19 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
+import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
+import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class GameView extends AbstractUiView {
+
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final GameController gc;
 	private final Game game;
@@ -72,6 +90,64 @@ public class GameView extends AbstractUiView {
 		timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
 
 		MenuBar menu = client.getJMenuBar();
+		menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	handleSave();
+            }
+        });
+		menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	gc.getConnection().send(new UndoMessage(game.getGameId()));
+            }
+        });
+		menu.setItemActionListener(MenuItem.ZOOM_IN, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	zoom(2.0);
+            }
+        });
+		menu.setItemActionListener(MenuItem.ZOOM_OUT, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	zoom(-2.0);
+            }
+        });
+		menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            	mainPanel.toggleRecentHistory(ch.isSelected());
+            }
+        });
+		menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            	mainPanel.setShowFarmHints(ch.isSelected());
+            }
+        });
+		menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            	getControlPanel().setShowProjectedPoints(ch.isSelected());
+            }
+        });
+		menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	client.getDiscardedTilesDialog().setVisible(true);
+            }
+        });
+		menu.setItemActionListener(MenuItem.REPORT_BUG, new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e) {
+            	new BugReportDialog(gc.getReportingTool());
+            }
+        });
+
 		menu.setItemEnabled(MenuItem.FARM_HINTS, true);
 		menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
 		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
@@ -80,7 +156,8 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.CLOSE_GAME, true);
 		menu.setItemEnabled(MenuItem.ZOOM_IN, true);
 		menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
-
+		menu.setItemEnabled(MenuItem.SAVE, true);
+		menu.setItemEnabled(MenuItem.LOAD, false);
 		menu.setItemEnabled(MenuItem.NEW_GAME, false);
 		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, false);
 		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
@@ -119,6 +196,8 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.NEW_GAME, true);
 		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, true);
 		menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+		menu.setItemEnabled(MenuItem.LOAD, true);
+		menu.setItemEnabled(MenuItem.SAVE, false); //TODO allow saving finished games
 	}
 
 	@Override
@@ -239,17 +318,6 @@ public class GameView extends AbstractUiView {
 	    return mainPanel.getControlPanel();
 	}
 
-	//TODO review legacy Activity interface
-
-	public void toggleRecentHistory(boolean show) {
-        mainPanel.toggleRecentHistory(show);
-    }
-
-
-    public void setShowFarmHints(boolean showFarmHints) {
-        mainPanel.setShowFarmHints(showFarmHints);
-    }
-
     public void zoom(double steps) {
         GridPanel gp = getGridPanel();
         if (gp != null) gp.zoom(steps);
@@ -269,6 +337,35 @@ public class GameView extends AbstractUiView {
                     }
                 }
                 slot.setDisconnected(!match);
+            }
+        }
+    }
+
+	public void handleSave() {
+        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setDialogTitle(_("Save game"));
+        fc.setDialogType(JFileChooser.SAVE_DIALOG);
+        fc.setFileFilter(new SavegameFileFilter());
+        fc.setLocale(client.getLocale());
+        int returnVal = fc.showSaveDialog(client);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            if (file != null) {
+                if (!file.getName().endsWith(".jcz")) {
+                    file = new File(file.getAbsolutePath() + ".jcz");
+                }
+                try {
+                    Snapshot snapshot = new Snapshot(game);
+                    DebugConfig debugConfig = client.getConfig().getDebug();
+                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
+                        snapshot.setGzipOutput(false);
+                    }
+                    snapshot.save(new FileOutputStream(file));
+                } catch (IOException | TransformerException ex) {
+                    logger.error(ex.getMessage(), ex);
+                    JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }

@@ -2,10 +2,8 @@ package com.jcloisterzone.ui;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.GridBagLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -13,7 +11,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -35,11 +32,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.xml.transform.TransformerException;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
@@ -50,21 +45,16 @@ import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
-import com.jcloisterzone.ui.panel.BackgroundPanel;
-import com.jcloisterzone.ui.panel.ChannelPanel;
-import com.jcloisterzone.ui.panel.ConnectPlayOnlinePanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
@@ -80,7 +70,6 @@ import com.jcloisterzone.wsio.server.SimpleServer;
 public class Client extends JFrame {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private ReportingTool reportingTool;
 
     public static final String BASE_TITLE = "JCloisterZone";
 
@@ -94,7 +83,6 @@ public class Client extends JFrame {
     private ControlsTheme controlsTheme;
 
     private UiView view;
-    private Activity activity;
 
     private DiscardedTilesDialog discardedTilesDialog;
 
@@ -111,11 +99,9 @@ public class Client extends JFrame {
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
-
     public boolean mountView(UiView view) {
     	return mountView(view, null);
     }
-
 
     public boolean mountView(UiView view, Object ctx) {
     	if (this.view != null) {
@@ -251,7 +237,7 @@ public class Client extends JFrame {
 
     public boolean closeGame(boolean force) {
         boolean isGameRunning = (view instanceof GameView) && ((GameView)view).isGameRunning();
-        if (config.getConfirm().getGame_close() && isGameRunning && !(game.getPhase() instanceof GameOverPhase)) {
+        if (config.getConfirm().getGame_close() && isGameRunning) {
             if (localServer != null) {
                 String options[] = {_("Close game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
@@ -333,38 +319,9 @@ public class Client extends JFrame {
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
             conn = handler.connect(username == null ? getUserName() : username, uri);
-            conn.setReportingTool(reportingTool = new ReportingTool());
+            conn.setReportingTool(new ReportingTool());
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);
-        }
-    }
-
-    public void handleSave() {
-        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setDialogTitle(_("Save game"));
-        fc.setDialogType(JFileChooser.SAVE_DIALOG);
-        fc.setFileFilter(new SavegameFileFilter());
-        fc.setLocale(getLocale());
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            if (file != null) {
-                if (!file.getName().endsWith(".jcz")) {
-                    file = new File(file.getAbsolutePath() + ".jcz");
-                }
-                try {
-                    Snapshot snapshot = new Snapshot(game);
-                    DebugConfig debugConfig = getConfig().getDebug();
-                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
-                        snapshot.setGzipOutput(false);
-                    }
-                    snapshot.save(new FileOutputStream(file));
-                } catch (IOException | TransformerException ex) {
-                    logger.error(ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                }
-            }
         }
     }
 
@@ -519,14 +476,6 @@ public class Client extends JFrame {
             System.out.println(appUpdate.getDescription());
             System.out.println(appUpdate.getDownloadUrl());
         }
-    }
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
     //TODO pass to view

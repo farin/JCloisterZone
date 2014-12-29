@@ -12,7 +12,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
-import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;

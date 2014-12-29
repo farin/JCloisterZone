@@ -17,7 +17,6 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
@@ -64,12 +63,6 @@ public class MenuBar extends JMenuBar {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
-//    private boolean isGameRunning = false;
-//
-//    private JCheckBoxMenuItem history, farmHints, projectedPoints;
-//    private JMenuItem create, connect, playOnline, close, showDiscard, undo, save, load;
-//    private JMenuItem zoomIn, zoomOut;
-//    private JMenuItem reportBug;
 
     private EnumMap<MenuItem, JMenuItem> items = new EnumMap<>(MenuItem.class);
 
@@ -109,19 +102,9 @@ public class MenuBar extends JMenuBar {
             }
         }, false));
         menu.addSeparator();
-        menu.add(createMenuItem(MenuItem.UNDO, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.getActivity().undo();
-            }
-        }, false));
+        menu.add(createMenuItem(MenuItem.UNDO, false));
         menu.addSeparator();
-        menu.add(createMenuItem(MenuItem.SAVE, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.handleSave();
-            }
-        }, false));
+        menu.add(createMenuItem(MenuItem.SAVE, false));
         menu.add(createMenuItem(MenuItem.LOAD, new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -140,56 +123,15 @@ public class MenuBar extends JMenuBar {
         }
         this.add(menu);
 
-
         menu = new JMenu(_("Window"));
-        menu.add(createMenuItem(MenuItem.ZOOM_IN, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.getActivity().zoom(2.0);
-            }
-        }, false));
-        menu.add(createMenuItem(MenuItem.ZOOM_OUT, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.getActivity().zoom(-2.0);
-            }
-        }, false));
-
-
+        menu.add(createMenuItem(MenuItem.ZOOM_IN, false));
+        menu.add(createMenuItem(MenuItem.ZOOM_OUT, false));
         menu.addSeparator();
-        menu.add(createCheckBoxMenuItem(MenuItem.LAST_PLACEMENTS, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                if (client.getActivity() != null) {
-                	client.getActivity().toggleRecentHistory(ch.isSelected());
-                }
-			}
-		}, false));
-        menu.add(createCheckBoxMenuItem(MenuItem.FARM_HINTS, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                if (client.getActivity() != null) {
-                	client.getActivity().setShowFarmHints(ch.isSelected());
-                }
-			}
-		}, false));
-        menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                if (client.getActivity() != null) {
-                	client.getActivity().setShowProjectedPoints(ch.isSelected());
-                }
-			}
-		}, false));
-        menu.add(createMenuItem(MenuItem.DISCARDED_TILES, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.getDiscardedTilesDialog().setVisible(true);
-            }
-        }, false));
+        menu.add(createCheckBoxMenuItem(MenuItem.LAST_PLACEMENTS, false));
+        menu.add(createCheckBoxMenuItem(MenuItem.FARM_HINTS, false));
+        menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.DISCARDED_TILES, false));
         this.add(menu);
 
         menu = new JMenu(_("Settings"));
@@ -259,12 +201,7 @@ public class MenuBar extends JMenuBar {
             	new HelpDialog();
             }
         }));
-        menu.add(createMenuItem(MenuItem.REPORT_BUG, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	new BugReportDialog(client.getActivity().getReportingTool());
-            }
-        }, false));
+        menu.add(createMenuItem(MenuItem.REPORT_BUG, false));
         this.add(menu);
     }
 

@@ -51,9 +51,8 @@ import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.RmiMessage;
-import com.jcloisterzone.wsio.message.UndoMessage;
 
-public class GameController extends EventProxyUiController<Game> implements Activity, InvocationHandler {
+public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -313,16 +312,6 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 		this.gameView = gameView;
 	}
 
-    //activity interface
-
-
-
-	@Override
-    public void undo() {
-        client.getConnection().send(new UndoMessage(game.getGameId()));
-    }
-
-    @Override
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
@@ -338,25 +327,4 @@ public class GameController extends EventProxyUiController<Game> implements Acti
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
-
-	@Override
-    public void toggleRecentHistory(boolean show) {
-        gameView.toggleRecentHistory(show);
-
-    }
-
-    @Override
-    public void setShowFarmHints(boolean showFarmHints) {
-        gameView.setShowFarmHints(showFarmHints);
-    }
-
-    @Override
-    public void setShowProjectedPoints(boolean showProjectedPoints) {
-    	gameView.getControlPanel().setShowProjectedPoints(showProjectedPoints);
-    }
-
-    @Override
-    public void zoom(double steps) {
-        gameView.zoom(steps);
-    }
 }
