@@ -27,6 +27,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
@@ -37,6 +38,7 @@ import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -49,7 +51,7 @@ public class GameView extends AbstractUiView {
 
 	private final GameController gc;
 	private final Game game;
-	private boolean isGameRunning = true; //is it needed, what about use game state (but foce close don't change it)
+	private boolean gameRunning = true; //is it needed, what about use game state (but foce close don't change it)
 
 	private ChatPanel chatPanel;
 	private Snapshot snapshot;
@@ -69,7 +71,11 @@ public class GameView extends AbstractUiView {
 	}
 
 	public boolean isGameRunning() {
-		return isGameRunning;
+		return gameRunning;
+	}
+
+	public void setGameRunning(boolean gameRunning) {
+		this.gameRunning = gameRunning;
 	}
 
 	public GameController getGameController() {
@@ -188,10 +194,11 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
 		menu.setItemEnabled(MenuItem.ZOOM_IN, false);
 		menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
+		menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
 	}
 
 	public void closeGame() {
-		isGameRunning = false;
+		gameRunning = false;
 		getMainPanel().closeGame();
     	getControlPanel().closeGame();
 
@@ -199,7 +206,6 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
 		menu.setItemEnabled(MenuItem.UNDO, false);
 		menu.setItemEnabled(MenuItem.REPORT_BUG, false);
-		menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
 
 		if (gc.getChannel() == null) {
 			menu.setItemEnabled(MenuItem.NEW_GAME, true);

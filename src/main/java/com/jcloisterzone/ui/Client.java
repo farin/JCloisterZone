@@ -228,18 +228,18 @@ public class Client extends JFrame {
     public boolean closeGame(boolean force) {
         boolean isGameRunning = (view instanceof GameView) && ((GameView)view).isGameRunning();
         if (isGameRunning && !"false".equals(System.getProperty("closeGameConfirm"))) {
-            if (localServer != null) {
-                String options[] = {_("Close game"), _("Cancel") };
+            if (localServer.get() != null) {
+                String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is running. Do you really want to quit game and also disconnect all other players?"),
-                        _("Close game"),
+                        _("Game is in progress. Do you really want to quit game and also disconnect all other players?"),
+                        _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             } else {
-                String options[] = {_("Close game"), _("Cancel") };
+                String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is running. Do you really want to leave it?"),
-                        _("Close game"),
+                        _("Game is in progress. Do you really want to leave it?"),
+                        _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             }
