@@ -71,19 +71,23 @@ Maybe [gettext](https://www.gnu.org/software/gettext/) wasn't in your `$PATH`. T
 
 Helpers for more pleasant development and application debugging.
 
-### VM arguments
+### VM arguments and system properties
 
-Use different configuration file, don't create error.log (console out is enough), change log level and enable assertions
+JCloisterZone supports various system properties to help developmen- 
 
-    -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -DcloseGameConfirm=false -ea
+* `config=foo.yaml` - use custom yaml configuration file
+* `errorLog=false` - don't save error log to file 
+* `closeGameConfirm=false` - close game withiu showing confirmation dialog
+* `nick=Bob` - force default nickname for play online
+* `forceChat=true` - enable chat window for local games
+* `allowAiOnlyOnlineGame=true` - allows online game without human players (must be allowed also by server)
+* `org.slf4j.simpleLogger.defaultLogLevel=info` - set log level
 
 Command line example:
 
 ```bash
-cd JCloisterZone
-java -jar build/JCloisterZone.jar -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat -DcloseGameConfirm=false -ea
+java -jar JCloisterZone.jar -Dconfig=debug.yaml -DerrorLog=false -Dorg.slf4j.simpleLogger.defaultLogLevel=info -DforceChat=true -DcloseGameConfirm=false -ea
 ```
-
 
 ### `debug.yaml`
 

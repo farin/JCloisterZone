@@ -8,9 +8,8 @@ The game contains [many of the available expansions](http://www.boardgamegeek.co
 
 
 - Download ready-made packages at [jcloisterzone.com](http://jcloisterzone.com/).
-- Build your own version from source by reading [BUILDING.md](https://github.com/farin/JCloisterZone/blob/master/BUILDING.md).
-- Contribute to the project by reading [CONTRIBUTE.md](https://github.com/farin/JCloisterZone/blob/master/CONTRIBUTE.md).
-
+- Build your own version from source by reading [BUILDING.md](./BUILDING.md).
+- Contribute to the project by reading [CONTRIBUTE.md](./CONTRIBUTE.md).
 
 
 ---
