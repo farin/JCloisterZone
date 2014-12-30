@@ -62,17 +62,8 @@ public class ChannelPanel extends JPanel {
 
         add(connectedClientsPanel = new ConnectedClientsPanel("play.jcz"), "cell 0 0, sy 2, width 150::, grow");
 
-        JPanel chatBox = new JPanel();
-        chatBox.setBackground(Color.WHITE);
-        MigLayout chatBoxLayout = new MigLayout("", "[grow]", "[grow][]");
-        chatBox.setLayout(chatBoxLayout);
-        add(chatBox, "cell 1 0, grow, w 250, sy 2");
-
         chatPanel = new ChannelChatPanel(client, cc);
-        chatPanel.registerSwingComponents(chatBox);
-        chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
-        chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
-
+        add(chatPanel, "cell 1 0, grow, w 250, sy 2");
         add(createCreateGamePanel(), "cell 2 0, growx");
 
         gameListPanel = new JPanel();

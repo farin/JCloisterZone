@@ -20,6 +20,8 @@ import java.util.NoSuchElementException;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import net.miginfocom.swing.MigLayout;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -77,7 +79,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
-        setLayout(null);
+        setLayout(new MigLayout());
 
         this.client = client;
         this.gameView = gameView;
@@ -113,19 +115,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         registerMouseListeners();
         controlPanel.registerSwingComponents(this);
         if (chatPanel != null) {
-            this.add(chatPanel.getInput());
-            this.add(chatPanel.getMessagesPane());
-            chatPanel.setParent(this);
-            chatPanel.layoutSwingComponents(this);
+        	chatPanel.initHidingMode();
+        	add(chatPanel, "pos 0 0 250 100%");
         }
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
-                if (GridPanel.this.chatPanel != null) {
-                    GridPanel.this.chatPanel.layoutSwingComponents(GridPanel.this);
-                }
             }
         });
     }
@@ -288,11 +285,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return offsetY;
     }
 
+    public ChatPanel getChatPanel() {
+		return chatPanel;
+	}
 
-    public String getErrorMessage() {
+	public String getErrorMessage() {
         return errorMessage;
     }
-
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -529,9 +528,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         g2.setTransform(origTransform);
 
-        if (chatPanel != null) {
-            chatPanel.paintComponent(g2);
-        }
+//        if (chatPanel != null) {
+//            chatPanel.paintComponent(g2);
+//        }
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);

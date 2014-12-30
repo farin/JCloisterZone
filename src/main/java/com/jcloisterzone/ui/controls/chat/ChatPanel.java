@@ -4,9 +4,12 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -18,8 +21,8 @@ import java.awt.event.WindowStateListener;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -40,73 +43,34 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.ui.controls.ControlPanel;
-import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 
-public abstract class ChatPanel extends FakeComponent implements WindowStateListener {
+public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
-    public static final int CHAT_WIDTH = 250;
+
     public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
-    private JComponent parent; //TODO move to FakeComponent? hack to re-layout from inside class
-
+    private final Client client;
 
     private boolean forceFocus;
     private boolean messageReceivedWhileIconified;
     private JTextField input;
     private JTextPane messagesPane;
     private final Deque<ReceivedChatMessage> formattedMessages = new ArrayDeque<>();
-    private final Timer repaintTimer;
+    private Timer repaintTimer;
 
 
-    public ChatPanel(Client client) {
-        super(client);
-        repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                forceFocus = false;
-                parent.repaint();
-                repaintTimer.stop();
-            }
-        });
-    }
+    public ChatPanel(final Client client) {
+        this.client = client;
 
-    abstract protected ReceivedChatMessage createReceivedMessage(ChatEvent ev);
-    abstract protected PostChatMessage createPostChatMessage(String msg);
-
-    public void setParent(JComponent parent) {
-        this.parent = parent;
-    }
-
-    public void activateChat() {
-        input.setFocusable(true);
-        input.requestFocusInWindow();
-        //prevent key event propagate to input - but still not 100%
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                input.requestFocusInWindow();
-            }
-        });
-    }
-
-    private void clean() {
-        input.setText("");
-        input.setFocusable(false);
-        client.requestFocusInWindow();
-    }
-
-
-
-    @Override
-    public void registerSwingComponents(JComponent parent) {
-        this.parent = parent;
         input = new JTextField();
         //prevent unintended focus (by window activate etc. - allow focus just on direct click)
         input.setFocusable(false);
@@ -138,15 +102,13 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
         input.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (ChatPanel.this.parent != null) {
-                    ChatPanel.this.parent.repaint();
-                }
+                repaint();
             }
 
             @Override
             public void focusGained(FocusEvent e) {
                 messagesPane.setVisible(true);
-                ChatPanel.this.parent.repaint();
+                repaint();
             }
         });
 
@@ -162,16 +124,67 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
         messagesPane.setFocusable(false);
         messagesPane.setOpaque(false);
 
-        parent.add(input);
-        parent.add(messagesPane);
+        setBackground(Color.WHITE);
+        setLayout(new MigLayout("", "[grow]", "[grow][]"));
+        add(messagesPane, "cell 0 0, align 0% 100%");
+        add(input, "cell 0 1, growx");
 
-        client.addWindowStateListener(this);
+    }
+
+    public void initHidingMode() {
+    	repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                forceFocus = false;
+                repaint();
+                repaintTimer.stop();
+            }
+        });
+
+        this.addComponentListener(new ComponentAdapter() {
+        	@Override
+        	public void componentHidden(ComponentEvent e) {
+        		repaintTimer.stop();
+        	}
+		});
+
+        setBackground(new Color(0, 0, 0, 0));
+        input.setBackground(Color.WHITE);
     }
 
     @Override
-    public void destroySwingComponents(JComponent parent) {
-        parent.remove(input);
-        client.removeWindowStateListener(this);
+    public void paint(Graphics g) {
+    	Graphics2D g2 = (Graphics2D) g;
+    	g2.setColor(ControlPanel.PANEL_BG_COLOR);
+    	if (isFolded()) {
+    		if (messagesPane.isVisible()) messagesPane.setVisible(false);
+		    g2.fillRect(0, getHeight() - 45, getWidth(), 45);
+		} else {
+		    if (!messagesPane.isVisible()) messagesPane.setVisible(true);
+		    g2.fillRect(0, 0, getWidth(), getHeight());
+		}
+    	super.paint(g);
+    }
+
+    abstract protected ReceivedChatMessage createReceivedMessage(ChatEvent ev);
+    abstract protected PostChatMessage createPostChatMessage(String msg);
+
+    public void activateChat() {
+        input.setFocusable(true);
+        input.requestFocusInWindow();
+        //prevent key event propagate to input - but still not 100%
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                input.requestFocusInWindow();
+            }
+        });
+    }
+
+    private void clean() {
+        input.setText("");
+        input.setFocusable(false);
+        client.requestFocusInWindow();
     }
 
     @Override
@@ -182,31 +195,8 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
         }
     }
 
-    @Override
-    public void layoutSwingComponents(JComponent parent) {
-        input.setBounds(10, parent.getHeight() - 35, CHAT_WIDTH-20, 25);
-
-        messagesPane.setSize(CHAT_WIDTH-20, Short.MAX_VALUE);
-        int height = messagesPane.getPreferredSize().height;
-        messagesPane.setBounds(10, parent.getHeight() - 30 - height, CHAT_WIDTH-20, height);
-    }
-
     private boolean isFolded() {
         return !forceFocus && !input.hasFocus();
-    }
-
-    @Override
-    public void paintComponent(Graphics2D g2) {
-        int h = parent.getHeight();
-
-        g2.setColor(ControlPanel.PANEL_BG_COLOR);
-        if (isFolded()) {
-            if (messagesPane.isVisible()) messagesPane.setVisible(false);
-            g2.fillRect(0, parent.getHeight() - 45, CHAT_WIDTH, 45);
-        } else {
-            if (!messagesPane.isVisible()) messagesPane.setVisible(true);
-            g2.fillRect(0, 0, CHAT_WIDTH, h);
-        }
     }
 
     public JTextField getInput() {
@@ -218,11 +208,12 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
     }
 
     private void setForceFocus() {
+    	if (repaintTimer == null) return;
         if (repaintTimer.isRunning()) {
             repaintTimer.restart();
         } else {
             forceFocus = true;
-            parent.repaint();
+            repaint();
             repaintTimer.start();
         }
     }
@@ -256,7 +247,7 @@ public abstract class ChatPanel extends FakeComponent implements WindowStateList
             e.printStackTrace(); //should never happen
         }
         messagesPane.setDocument(doc);
-        layoutSwingComponents(parent);
+        repaint();
     }
 
     static class ReceivedChatMessage {

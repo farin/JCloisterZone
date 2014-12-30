@@ -41,13 +41,13 @@ import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
-import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
+import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
@@ -115,7 +115,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
     		((GameView)client.getView()).setGameRunning(false);
     		client.closeGame(true);
-            new GameOverDialog(client, game);
+    		GameOverPanel panel = new GameOverPanel(client, game);
+    		client.getGridPanel().add(panel, "pos 0 0 null 100%");
+    		client.getGridPanel().revalidate();
+
+    		//gameView.getGridPanel().setGameOverPanel(new GameOverPanel(client, game));
     	}
     }
 

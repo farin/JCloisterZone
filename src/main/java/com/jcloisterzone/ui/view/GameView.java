@@ -7,6 +7,8 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,20 +40,20 @@ import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
-import com.jcloisterzone.ui.dialog.GameOverDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
+import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-public class GameView extends AbstractUiView {
+public class GameView extends AbstractUiView implements WindowStateListener {
 
 	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final GameController gc;
 	private final Game game;
-	private boolean gameRunning = true; //is it needed, what about use game state (but foce close don't change it)
+	private boolean gameRunning = true; //is it needed, what about use game state (but force close don't change it)
 
 	private ChatPanel chatPanel;
 	private Snapshot snapshot;
@@ -175,6 +177,8 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.NEW_GAME, false);
 		menu.setItemEnabled(MenuItem.CONNECT_P2P, false);
 		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
+
+		client.addWindowStateListener(this);
 	}
 
 	@Override
@@ -195,6 +199,14 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.ZOOM_IN, false);
 		menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
 		menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
+
+		client.removeWindowStateListener(this);
+	}
+
+	@Override
+	public void windowStateChanged(WindowEvent e) {
+		ChatPanel chatPanel = getGridPanel().getChatPanel();
+		chatPanel.windowStateChanged(e);
 	}
 
 	public void closeGame() {

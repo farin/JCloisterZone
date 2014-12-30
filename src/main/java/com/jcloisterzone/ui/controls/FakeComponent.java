@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 
 import com.jcloisterzone.ui.Client;
 
+@Deprecated
 public abstract class FakeComponent extends ComponentAdapter {
 
     private static final int DEFAULT_PANEL_WIDTH = 250;

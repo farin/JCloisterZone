@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -85,21 +84,14 @@ public class GameSetupView extends AbstractUiView {
         JPanel chatColumn = new JPanel();
         chatColumn.setOpaque(false);
         chatColumn.setLayout(new MigLayout("ins 0, gap 0 10", "[grow]", "[60px][grow]"));
-        chatColumn.setPreferredSize(new Dimension(ChatPanel.CHAT_WIDTH, panel.getHeight()));
+        chatColumn.setPreferredSize(new Dimension(250, panel.getHeight()));
         panel.add(chatColumn, BorderLayout.WEST);
 
         chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(game.getName()), "cell 0 0, grow");
 
-        JPanel chatBox = new JPanel();
-        chatBox.setBackground(Color.WHITE);
-        MigLayout chatBoxLayout = new MigLayout("", "[grow]", "[grow][]");
-        chatBox.setLayout(chatBoxLayout);
-        chatColumn.add(chatBox, "cell 0 1, grow");
 
         chatPanel = new GameChatPanel(client, game);
-        chatPanel.registerSwingComponents(chatBox);
-        chatBoxLayout.setComponentConstraints(chatPanel.getMessagesPane(), "cell 0 0, align 0% 100%");
-        chatBoxLayout.setComponentConstraints(chatPanel.getInput(), "cell 0 1, growx");
+        chatColumn.add(chatPanel, "cell 0 1, grow");
 
         gc.register(createGamePanel);
         gc.register(chatPanel);
