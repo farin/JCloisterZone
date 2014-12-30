@@ -144,7 +144,7 @@ public class CreateGamePanel extends JPanel {
         	leaveGameButton.addActionListener(new ActionListener() {
                 @Override
     			public void actionPerformed(ActionEvent e) {
-                    client.getConnection().send(new LeaveGameMessage(game.getGameId()));
+                	gc.leaveGame();
                 }
             });
         }

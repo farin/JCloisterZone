@@ -24,24 +24,29 @@ import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 public class MenuBar extends JMenuBar {
 
 	public static enum MenuItem {
+		//Play
 		NEW_GAME(_("New game"), KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-		DIRECT_CONNECT(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+		CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
 		PLAY_ONLINE(_("Play online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-		CLOSE_GAME(_("Close game")),
-		UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+		DISCONNECT(_("Disconnect")),
+		LEAVE_GAME(_("Leave game")),
 		SAVE(_("Save"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
 		LOAD(_("Load"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
 		QUIT(_("Quit"), KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+		//Game
+		UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
 		ZOOM_IN(_("Zoom in"), KeyStroke.getKeyStroke('+')),
 		ZOOM_OUT(_("Zoom out"), KeyStroke.getKeyStroke('-')),
 		LAST_PLACEMENTS(_("Show last placements"), KeyStroke.getKeyStroke('x')),
 		FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
 		PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('r')),
 		DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+		//Settings
 		BEEP_ALERT(_("Beep alert at player turn")),
 		CONFIRM_FARM(_("Confirm placement on a farm")),
 		CONFIRM_TOWER(_("Confirm placement on a tower")),
 		CONFIRM_RANSOM(_("Confirm ransom payment")),
+		//Help
 		ABOUT(_("About")),
 		CONTROLS(_("Controls")),
 		REPORT_BUG(_("Report bug"));
@@ -73,8 +78,8 @@ public class MenuBar extends JMenuBar {
         JMenu menu;
         JCheckBoxMenuItem chbox;
 
-        menu = new JMenu(_("Game"));
-        menu.setMnemonic(KeyEvent.VK_G);
+        menu = new JMenu(_("Play"));
+        menu.setMnemonic(KeyEvent.VK_P);
 
         menu.add(createMenuItem(MenuItem.NEW_GAME, new ActionListener() {
             @Override
@@ -82,27 +87,29 @@ public class MenuBar extends JMenuBar {
                 client.createGame();
             }
         }));
-        menu.add(createMenuItem(MenuItem.DIRECT_CONNECT, new ActionListener() {
+        menu.add(createMenuItem(MenuItem.CONNECT_P2P, new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
             	client.mountView(new ConnectP2PView(client));
             }
         }));
+        menu.addSeparator();
         menu.add(createMenuItem(MenuItem.PLAY_ONLINE, new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
             	client.mountView(new ConnectPlayOnlineView(client));
             }
         }));
-        menu.add(createMenuItem(MenuItem.CLOSE_GAME, new ActionListener() {
+        menu.add(createMenuItem(MenuItem.DISCONNECT, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.LEAVE_GAME, new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
             	client.closeGame();
             }
         }, false));
         menu.addSeparator();
-        menu.add(createMenuItem(MenuItem.UNDO, false));
-        menu.addSeparator();
+
         menu.add(createMenuItem(MenuItem.SAVE, false));
         menu.add(createMenuItem(MenuItem.LOAD, new ActionListener() {
             @Override
@@ -121,8 +128,10 @@ public class MenuBar extends JMenuBar {
             }));
         }
         this.add(menu);
-
-        menu = new JMenu(_("Window"));
+        menu = new JMenu(_("Game"));
+        menu.setMnemonic(KeyEvent.VK_G);
+        menu.add(createMenuItem(MenuItem.UNDO, false));
+        menu.addSeparator();
         menu.add(createMenuItem(MenuItem.ZOOM_IN, false));
         menu.add(createMenuItem(MenuItem.ZOOM_OUT, false));
         menu.addSeparator();

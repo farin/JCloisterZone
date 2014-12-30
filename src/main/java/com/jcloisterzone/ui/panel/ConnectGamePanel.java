@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.view.StartView;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -34,7 +35,7 @@ public class ConnectGamePanel extends JPanel {
 
     private JTextField hostField;
     private JTextField portField;
-    private JButton btnConnect;
+    private JButton btnConnect, btnBack;
     private JLabel message;
 
     /**
@@ -60,10 +61,10 @@ public class ConnectGamePanel extends JPanel {
 
         setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-        setLayout(new MigLayout("", "[80.00][grow]", "[][][][][]"));
+        setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
 
         JLabel helpLabel = new JLabel("Enter remote host address.");
-        add(helpLabel, "cell 0 0 2 1");
+        add(helpLabel, "cell 0 0,spanx 3");
 
         JLabel hostLabel = new JLabel(_("Host"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
@@ -72,7 +73,7 @@ public class ConnectGamePanel extends JPanel {
 
         hostField = new JTextField();
         hostField.addActionListener(actionListener);
-        add(hostField, "cell 1 1,growx, width 250::");
+        add(hostField, "cell 1 1,spanx 2,growx, width 250::");
         hostField.setColumns(10);
         hostField.setText(hostPost[0]);
 
@@ -81,7 +82,7 @@ public class ConnectGamePanel extends JPanel {
 
         portField = new JTextField();
         portField.addActionListener(actionListener);
-        add(portField, "cell 1 2,growx, width 250::");
+        add(portField, "cell 1 2,spanx 2,growx, width 250::");
         portField.setColumns(10);
         portField.setText(hostPost[1]);
 
@@ -89,9 +90,18 @@ public class ConnectGamePanel extends JPanel {
         btnConnect.addActionListener(actionListener);
         add(btnConnect, "cell 1 3");
 
+        btnBack = new JButton(_("Back"));
+        btnBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ConnectGamePanel.this.client.mountView(new StartView(ConnectGamePanel.this.client));
+			}
+		});
+        add(btnBack, "cell 2 3");
+
         message = new JLabel("");
         message.setForeground(Color.BLACK);
-        add(message, "cell 1 4, height 20");
+        add(message, "cell 1 4, spanx 2, height 20");
     }
 
     private String[] getDefaultHostPort() {

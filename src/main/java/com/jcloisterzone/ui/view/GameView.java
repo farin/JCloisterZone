@@ -161,23 +161,23 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
 
 		menu.setItemEnabled(MenuItem.REPORT_BUG, true);
-		menu.setItemEnabled(MenuItem.CLOSE_GAME, true);
+		menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
 		menu.setItemEnabled(MenuItem.ZOOM_IN, true);
 		menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
 		menu.setItemEnabled(MenuItem.SAVE, true);
 		menu.setItemEnabled(MenuItem.LOAD, false);
 		menu.setItemEnabled(MenuItem.NEW_GAME, false);
-		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, false);
+		menu.setItemEnabled(MenuItem.CONNECT_P2P, false);
 		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
 	}
 
 	@Override
-	public boolean requestHide(Object ctx) {
+	public boolean requestHide(UiView nextView, Object nextCtx) {
 		return client.closeGame();
 	}
 
 	@Override
-	public void hide() {
+	public void hide(UiView nextView, Object nextCtx) {
 		timer.cancel();
 		gc.unregister(chatPanel);
 		gc.unregister(this);
@@ -199,12 +199,14 @@ public class GameView extends AbstractUiView {
 		menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
 		menu.setItemEnabled(MenuItem.UNDO, false);
 		menu.setItemEnabled(MenuItem.REPORT_BUG, false);
-		menu.setItemEnabled(MenuItem.CLOSE_GAME, false);
+		menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
 
-		menu.setItemEnabled(MenuItem.NEW_GAME, true);
-		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, true);
-		menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
-		menu.setItemEnabled(MenuItem.LOAD, true);
+		if (gc.getChannel() == null) {
+			menu.setItemEnabled(MenuItem.NEW_GAME, true);
+			menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
+			menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+			menu.setItemEnabled(MenuItem.LOAD, true);
+		}
 		menu.setItemEnabled(MenuItem.SAVE, false); //TODO allow saving finished games
 	}
 

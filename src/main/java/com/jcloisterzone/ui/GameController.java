@@ -50,6 +50,7 @@ import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 
 public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
@@ -298,6 +299,10 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
         gameView.getGridPanel().setSecondPanel(null);
+    }
+
+    public void leaveGame() {
+    	client.getConnection().send(new LeaveGameMessage(game.getGameId()));
     }
 
     public RmiProxy getRmiProxy() {

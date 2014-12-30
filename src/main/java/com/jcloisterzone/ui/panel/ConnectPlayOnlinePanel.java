@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.view.StartView;
 
 
 public class ConnectPlayOnlinePanel extends JPanel {
@@ -30,7 +31,7 @@ public class ConnectPlayOnlinePanel extends JPanel {
     private final Client client;
 
     private JTextField nickField;
-    private JButton btnConnect;
+    private JButton btnConnect, btnBack;
     private JLabel message;
 
     /**
@@ -51,10 +52,10 @@ public class ConnectPlayOnlinePanel extends JPanel {
 
         setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-        setLayout(new MigLayout("", "[80.00][grow]", "[][][][][]"));
+        setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
 
         JLabel helpLabel = new JLabel("Enter your nickname");
-        add(helpLabel, "cell 0 0 2 1");
+        add(helpLabel, "cell 0 0,spanx 3");
 
         JLabel hostLabel = new JLabel(_("Nickname"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
@@ -62,7 +63,7 @@ public class ConnectPlayOnlinePanel extends JPanel {
 
         nickField = new JTextField();
         nickField.addActionListener(actionListener);
-        add(nickField, "cell 1 1,growx, width 250::");
+        add(nickField, "cell 1 1,spanx 2,growx, width 250::");
         nickField .setColumns(20);
         nickField.setText(getDefaultNick());
 
@@ -70,9 +71,18 @@ public class ConnectPlayOnlinePanel extends JPanel {
         btnConnect.addActionListener(actionListener);
         add(btnConnect, "cell 1 2");
 
+        btnBack = new JButton(_("Back"));
+        btnBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ConnectPlayOnlinePanel.this.client.mountView(new StartView(ConnectPlayOnlinePanel.this.client));
+			}
+		});
+        add(btnBack, "cell 2 2");
+
         message = new JLabel("");
         message.setForeground(Color.BLACK);
-        add(message, "cell 1 3, height 20");
+        add(message, "cell 1 3,spanx 2, height 20");
     }
 
     private String getDefaultNick() {

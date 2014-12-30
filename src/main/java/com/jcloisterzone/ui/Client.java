@@ -101,8 +101,8 @@ public class Client extends JFrame {
 
     public boolean mountView(UiView view, Object ctx) {
     	if (this.view != null) {
-    		if (this.view.requestHide(ctx)) {
-    			this.view.hide();
+    		if (this.view.requestHide(view, ctx)) {
+    			this.view.hide(view, ctx);
     		} else {
     			return false;
     		}

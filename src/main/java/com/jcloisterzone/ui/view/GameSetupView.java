@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
@@ -18,6 +20,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.MenuBar;
+import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -52,6 +56,21 @@ public class GameSetupView extends AbstractUiView {
     	pane.add(bg);
 
         showCreateGamePanel(bg, mutableSlots, phase.getPlayerSlots());
+
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (gc.getChannel() == null) {
+					client.closeGame();
+					client.mountView(new StartView(client));
+				} else {
+					gc.leaveGame();
+				}
+
+			}
+		});
+        menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
 	}
 
 	private void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {
@@ -88,8 +107,8 @@ public class GameSetupView extends AbstractUiView {
     }
 
 	@Override
-	public boolean requestHide(Object ctx) {
-		if (ctx != this) {
+	public boolean requestHide(UiView nextView, Object nextCtx) {
+		if (nextCtx != this) {
 			return client.closeGame();
 		} else {
 			return true;
@@ -97,10 +116,13 @@ public class GameSetupView extends AbstractUiView {
 	}
 
 	@Override
-	public void hide() {
+	public void hide(UiView nextView, Object nextCtx) {
 		gc.unregister(createGamePanel);
         gc.unregister(chatPanel);
         gc.unregister(this);
+
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
 	}
 
 	@Override

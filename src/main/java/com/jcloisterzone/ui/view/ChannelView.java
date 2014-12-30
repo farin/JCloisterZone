@@ -1,6 +1,8 @@
 package com.jcloisterzone.ui.view;
 
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import com.jcloisterzone.ui.ChannelController;
@@ -31,20 +33,30 @@ public class ChannelView extends AbstractUiView {
         cc.setChannelPanel(channelPanel);
 
         MenuBar menu = client.getJMenuBar();
+        menu.setItemActionListener(MenuItem.DISCONNECT, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cc.getConnection().close();
+				client.getJMenuBar().setItemEnabled(MenuItem.DISCONNECT, false);
+				client.mountView(new StartView(client));
+			}
+		});
         menu.setItemEnabled(MenuItem.LOAD, false);
 		menu.setItemEnabled(MenuItem.NEW_GAME, false);
-		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, false);
+		menu.setItemEnabled(MenuItem.CONNECT_P2P, false);
 		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
+		menu.setItemEnabled(MenuItem.DISCONNECT, true);
 	}
 
 	@Override
-	public void hide() {
+	public void hide(UiView nextView, Object nextCtx) {
 		MenuBar menu = client.getJMenuBar();
-		//TODO this doesnt't work - need to disable all time it is connected to channel
-		menu.setItemEnabled(MenuItem.LOAD, true);
-		menu.setItemEnabled(MenuItem.NEW_GAME, true);
-		menu.setItemEnabled(MenuItem.DIRECT_CONNECT, true);
-		menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+		if (!(nextView instanceof GameSetupView)) {
+			menu.setItemEnabled(MenuItem.LOAD, true);
+			menu.setItemEnabled(MenuItem.NEW_GAME, true);
+			menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
+			menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+		}
 	}
 
 	@Override
