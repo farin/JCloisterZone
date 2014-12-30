@@ -117,7 +117,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
         this.mainPanel = ((GameView) client.getView()).getMainPanel();
     }
 
-
-
-
+    public MainPanel getMainPanel() {
+		return mainPanel;
+	}
 }

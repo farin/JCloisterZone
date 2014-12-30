@@ -12,10 +12,12 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class TilePlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<TilePlacementAction> {
+public class TilePlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<TilePlacementAction>, ForwardBackwardListener {
 
     private TilePlacementAction action;
 
@@ -35,6 +37,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
             setAvailablePositions(null);
             realRotation = null;
         } else {
+        	action.setForwardBackwardDelegate(this);
             setAvailablePositions(action.groupByPosition().keySet());
         };
     }
@@ -78,6 +81,45 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
                 allowedRotation = false;
             }
         }
+    }
+
+    @Override
+    public void forward() {
+    	rotate(Rotation.R90);
+    }
+
+    @Override
+    public void backward() {
+    	rotate(Rotation.R270);
+    }
+
+    private void rotate(Rotation spin) {
+    	Rotation current = action.getTileRotation();
+    	Rotation next = current.add(spin);
+    	if (getPreviewPosition() != null) {
+    		Set<Rotation> rotations = action.getRotations(getPreviewPosition());
+    		if (!rotations.isEmpty()) {
+	    		if (rotations.size() == 1) {
+	    			next = rotations.iterator().next();
+	    		} else {
+
+	    			if (rotations.contains(current)) {
+	    				while (!rotations.contains(next)) next = next.add(spin);
+	    			} else {
+	    				if (action.getTile().getSymmetry() == TileSymmetry.S2 && rotations.size() == 2) {
+	    					//if S2 and size == 2 rotate to flip preview to second choice
+	    					next = next.add(spin);
+	    				} else {
+	    					next = current;
+	    				}
+	    				while (!rotations.contains(next)) next = next.add(spin);
+	    			}
+	    		}
+    		}
+    	}
+    	action.setTileRotation(next);
+        ActionPanel panel = action.getMainPanel().getControlPanel().getActionPanel();
+        panel.refreshImageCache();
     }
 
     @Override
