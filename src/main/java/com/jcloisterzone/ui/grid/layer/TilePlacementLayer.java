@@ -16,6 +16,7 @@ import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import java.util.Iterator;
 
 public class TilePlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<TilePlacementAction>, ForwardBackwardListener {
 
@@ -76,6 +77,12 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
                 allowedRotation = true;
             } else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
                 previewRotation = realRotation.next();
+                allowedRotation = true;
+            } else if (allowedRotations.size() > 0) {      // Avoid endless loop
+                Iterator<Rotation> allowedIt = allowedRotations.iterator();
+                while (!allowedRotations.contains(previewRotation)) {
+                    previewRotation = allowedIt.next();
+                }
                 allowedRotation = true;
             } else {
                 allowedRotation = false;
