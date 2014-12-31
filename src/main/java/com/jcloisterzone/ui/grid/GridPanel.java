@@ -113,18 +113,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         }
         registerMouseListeners();
-        controlPanel.registerSwingComponents(this);
+        add(controlPanel, "pos (100%-255) 0 100% 100%");
         if (chatPanel != null) {
         	chatPanel.initHidingMode();
         	add(chatPanel, "pos 0 0 250 100%");
         }
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
-            }
-        });
     }
 
 
@@ -204,48 +197,48 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         });
 
-        MouseAdapter childDelegation = new MouseAdapter() {
-            private void dispatch(MouseEvent e) {
-                if (secondPanel != null) {
-                    secondPanel.dispatchMouseEvent(e);
-                    if (e.isConsumed()) return;
-                }
-                controlPanel.dispatchMouseEvent(e);
-            }
-            @Override
-			public void mouseClicked(MouseEvent e) {
-                dispatch(e);
-            }
-            @Override
-			public void mouseMoved(MouseEvent e) {
-                dispatch(e);
-            }
-        };
-        addMouseListener(childDelegation);
-        addMouseMotionListener(childDelegation);
-
-        addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                controlPanel.componentResized(e);
-                if (secondPanel != null) secondPanel.componentResized(e);
-            }
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                controlPanel.componentMoved(e);
-                if (secondPanel != null) secondPanel.componentMoved(e);
-            }
-            @Override
-            public void componentShown(ComponentEvent e) {
-                controlPanel.componentShown(e);
-                if (secondPanel != null) secondPanel.componentShown(e);
-            }
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                controlPanel.componentHidden(e);
-                if (secondPanel != null) secondPanel.componentHidden(e);
-            }
-        });
+//        MouseAdapter childDelegation = new MouseAdapter() {
+//            private void dispatch(MouseEvent e) {
+//                if (secondPanel != null) {
+//                    secondPanel.dispatchMouseEvent(e);
+//                    if (e.isConsumed()) return;
+//                }
+//                controlPanel.dispatchMouseEvent(e);
+//            }
+//            @Override
+//			public void mouseClicked(MouseEvent e) {
+//                dispatch(e);
+//            }
+//            @Override
+//			public void mouseMoved(MouseEvent e) {
+//                dispatch(e);
+//            }
+//        };
+//        addMouseListener(childDelegation);
+//        addMouseMotionListener(childDelegation);
+//
+//        addComponentListener(new ComponentListener() {
+//            @Override
+//            public void componentResized(ComponentEvent e) {
+//                controlPanel.componentResized(e);
+//                if (secondPanel != null) secondPanel.componentResized(e);
+//            }
+//            @Override
+//            public void componentMoved(ComponentEvent e) {
+//                controlPanel.componentMoved(e);
+//                if (secondPanel != null) secondPanel.componentMoved(e);
+//            }
+//            @Override
+//            public void componentShown(ComponentEvent e) {
+//                controlPanel.componentShown(e);
+//                if (secondPanel != null) secondPanel.componentShown(e);
+//            }
+//            @Override
+//            public void componentHidden(ComponentEvent e) {
+//                controlPanel.componentHidden(e);
+//                if (secondPanel != null) secondPanel.componentHidden(e);
+//            }
+//        });
     }
 
     public Tile getTile(Position p) {
@@ -516,7 +509,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         g2.setTransform(origTransform);
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
-        controlPanel.paintComponent(g2);
 
         int innerWidth;
         if (secondPanel != null) {
@@ -527,10 +519,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
         }
         g2.setTransform(origTransform);
-
-//        if (chatPanel != null) {
-//            chatPanel.paintComponent(g2);
-//        }
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);

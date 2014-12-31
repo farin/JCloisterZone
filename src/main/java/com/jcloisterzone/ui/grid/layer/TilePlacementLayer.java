@@ -120,6 +120,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     	action.setTileRotation(next);
         ActionPanel panel = action.getMainPanel().getControlPanel().getActionPanel();
         panel.refreshImageCache();
+        action.getMainPanel().getGridPanel().repaint();
     }
 
     @Override

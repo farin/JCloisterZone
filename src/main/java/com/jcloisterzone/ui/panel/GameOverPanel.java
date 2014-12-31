@@ -36,10 +36,8 @@ public class GameOverPanel extends JPanel {
         this.game = game;
 
         //setTitle(_("Game overview"));
-//        Point p = client.getLocation();
-//        setLocation(p.x+200,p.y+150);
-//        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        setOpaque(false);
         setBackground(ControlPanel.PANEL_BG_COLOR);
         setLayout(new MigLayout("", "[]", "[][]10[]10[]20[][][][][]20[][]20[][][]"));
         int gridx = 0, gridy = 1;

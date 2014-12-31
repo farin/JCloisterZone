@@ -2,14 +2,15 @@ package com.jcloisterzone.ui.controls;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
 import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -43,7 +44,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.view.GameView;
 
-public class PlayerPanel extends FakeComponent implements RegionMouseListener {
+public class PlayerPanel extends MouseTrackingComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
@@ -61,6 +62,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
+    private final Client client;
     private final GameView gameView;
     private final GameController gc;
     private final Player player;
@@ -70,16 +72,17 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
 	private final PlayerPanelImageCache cache;
 
-    private int centerY;
-
     //paint context variables
+    private int PANEL_WIDTH = 1; //TODO clean
+    private BufferedImage bimg;
     private Graphics2D g2;
+    private int realHeight = 1;
     private int bx, by;
 
     private String mouseOverKey = null;
 
     public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
-        super(client);
+        this.client = client;
         this.player = player;
         this.gameView = gameView;
         this.gc = gameView.getGameController();
@@ -111,8 +114,6 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public Player getPlayer() {
 		return player;
 	}
-
-
 
     private Rectangle drawMeepleBox(Player playerKey, String imgKey, int count, boolean showOne) {
         return drawMeepleBox(playerKey, imgKey, count, showOne, null, false);
@@ -152,28 +153,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         return rect;
     }
 
-    /*
-     * translates parentGraphics, which is not much clean!
-     */
-    @Override
-    public void paintComponent(Graphics2D parentGraphics) {
-        super.paintComponent(parentGraphics);
 
-        Game game = gc.getGame();
+    public boolean repaintContent(int width) {
+    	Game game = gc.getGame();
+    	PANEL_WIDTH = width;
 
-        //TODO better display
-//        if (player.getSlot().getState() == SlotState.CLOSED) {
-//            this.color = Color.GRAY;
-//        }
-
-//		GridPanel gp = client.getGridPanel();
-
-//        boolean isActive = game.getActivePlayer() == player;
-//        boolean playerTurn = game.getTurnPlayer() == player;
-
-//		gp.profile(" > get flags");
-
-        BufferedImage bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
+    	bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
         g2 = bimg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -309,14 +294,31 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         }
 
 //		gp.profile(" > expansions");
+        int oldValue = realHeight;
 
+        realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 
-        int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
+        g2.dispose();
+        g2 = null;
+
+        return realHeight != oldValue;
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+    	return new Dimension(PANEL_WIDTH, realHeight);
+    }
+
+    /*
+     * translates parentGraphics, which is not much clean!
+     */
+    @Override
+    public void paint(Graphics g) {
+    	Graphics2D parentGraphics = (Graphics2D) g;
+
 
         parentGraphics.setColor(PLAYER_BG_COLOR);
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
-
-        centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
 
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
 
@@ -330,16 +332,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             parentGraphics.setColor(Color.WHITE);
             parentGraphics.drawString(_("Connection lost").toUpperCase(), 10, 27);
         }
-
-        parentGraphics.translate(0, realHeight); //add also padding
-        g2 = null;
-
-//		gp.profile(" > complete");
+        super.paintComponent(g);
     }
 
-    public int getCenterY() {
-        return centerY;
-    }
+    public int getRealHeight() {
+		return realHeight;
+	}
 
     public int getPotentialPoints() {
 		return potentialPoints;

@@ -4,20 +4,21 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
@@ -43,12 +44,12 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.BazaarPanel;
-import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.view.GameView;
 
-public class ControlPanel extends FakeComponent {
+public class ControlPanel extends JPanel {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
 
@@ -60,12 +61,14 @@ public class ControlPanel extends FakeComponent {
     @Deprecated
     public static final Color FONT_SHADOW_COLOR = new Color(0, 0, 0, 60);
     public static final int CORNER_DIAMETER = 16;
-    public static final int PANEL_WIDTH = 220;
+    public static final int PANEL_WIDTH = 220; //TOOD remove
     public static final int PANEL_SHADOW_WIDTH = 3;
     public static final int LEFT_PADDING = 20;
+    public static final int LEFT_MARGIN = 15;
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private final Client client;
     private final GameView gameView;
     private final GameController gc;
     private final Game game;
@@ -78,33 +81,17 @@ public class ControlPanel extends FakeComponent {
     private PlayerPanel[] playerPanels;
 
     public ControlPanel(GameView gameView) {
-        super(gameView.getClient());
+    	this.client = gameView.getClient();
         this.gameView = gameView;
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
         gc.register(this);
 
-        actionPanel = new ActionPanel(gameView);
+        setOpaque(false);
+        setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));
 
-        Player[] players = game.getAllPlayers();
-        PlayerPanelImageCache cache = new PlayerPanelImageCache(client, game);
-        playerPanels = new PlayerPanel[players.length];
-
-        for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
-        }
-    }
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        refreshComponents();
-        gameView.getGridPanel().repaint();
-    }
-
-    @Override
-    public void registerSwingComponents(JComponent parent) {
         passButton = new JButton(_("Skip"));
-        passButton.setMargin(new Insets(1,1,1,1));
+        passButton.setBorder(BorderFactory.createEmptyBorder(1, 30, 1, 30));
         passButton.setVisible(false);
         passButton.addActionListener(new ActionListener() {
             @Override
@@ -112,45 +99,36 @@ public class ControlPanel extends FakeComponent {
                 pass();
             }
         });
-        parent.add(passButton);
+        add(passButton, "pos 35 4");
+
+        actionPanel = new ActionPanel(gameView);
+        add(actionPanel, "wrap, growx, gapleft 35, h 106");
+
+        Player[] players = game.getAllPlayers();
+        PlayerPanelImageCache cache = new PlayerPanelImageCache(client, game);
+        playerPanels = new PlayerPanel[players.length];
+
+        for (int i = 0; i < players.length; i++) {
+            playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
+            add(playerPanels[i], "wrap, growx, gapleft 35, gapbottom 12, h pref");
+        }
     }
 
-    @Override
-    public void destroySwingComponents(JComponent parent) {
-        parent.remove(passButton);
-    }
 
-    private void refreshComponents() {
+    private void setCanPass(boolean canPass) {
+    	this.canPass = canPass;
         passButton.setVisible(canPass);
-        if (canPass) {
-            //TODO hardcoded offset - but no better solution for now
-            int x = gameView.getGridPanel().getWidth()-PANEL_WIDTH;
-            passButton.setBounds(x, 4, 90, 19);
-        }
     }
 
-    @Override
-    public void dispatchMouseEvent(MouseEvent e) {
-        super.dispatchMouseEvent(e);
-        if (e.isConsumed()) return;
-        actionPanel.dispatchMouseEvent(e);
-        for (PlayerPanel pp : playerPanels) {
-            if (e.isConsumed()) return;
-            pp.dispatchMouseEvent(e);
-        }
-    }
 
     private void paintBackgroundBody(Graphics2D g2) {
-        GridPanel gp = gameView.getGridPanel();
-        int h = gp.getHeight();
-
         g2.setColor(PANEL_BG_COLOR);
-        g2.fillRect(0 , 0, PANEL_WIDTH, h);
+        g2.fillRect(LEFT_MARGIN+LEFT_PADDING , 0, getWidth()-LEFT_MARGIN-LEFT_PADDING, getHeight());
     }
 
     private void paintBackgroundShadow(Graphics2D g2) {
-        GridPanel gp = gameView.getGridPanel();
-        int h = gp.getHeight();
+        int h = getHeight();
+        g2.translate(LEFT_MARGIN+LEFT_PADDING, 0); //adpat to old legacy code
 
         Player player = game.getTurnPlayer();
         if (player == null) {
@@ -159,7 +137,8 @@ public class ControlPanel extends FakeComponent {
             g2.setColor(PANEL_BG_COLOR_SHADOW);
             g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
         } else {
-            int y = playerPanels[player.getIndex()].getCenterY();
+        	PlayerPanel pp = playerPanels[player.getIndex()];
+            int y = pp.getY() + pp.getRealHeight() / 2;
 
             g2.setColor(PANEL_BG_COLOR);
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, y-ACTIVE_MARKER_SIZE);
@@ -188,8 +167,10 @@ public class ControlPanel extends FakeComponent {
 
         player = game.getActivePlayer();
         if (player != null) {
+        	PlayerPanel pp = playerPanels[player.getIndex()];
+            int y = pp.getY() + pp.getRealHeight() / 2;
+
             g2.setColor(Color.BLACK);
-            int y = playerPanels[player.getIndex()].getCenterY();
 //            g2.fillPolygon(
 //                new int[] { -LEFT_PADDING-PANEL_SHADOW_WIDTH, -PANEL_SHADOW_WIDTH-ACTIVE_MARKER_PADDING, -LEFT_PADDING-PANEL_SHADOW_WIDTH},
 //                new int[] { y-ACTIVE_MARKER_SIZE, y, y+ACTIVE_MARKER_SIZE,}, 3
@@ -199,14 +180,16 @@ public class ControlPanel extends FakeComponent {
                 new int[] { y-ACTIVE_MARKER_SIZE-4, y, y+ACTIVE_MARKER_SIZE+4,}, 3
             );
         }
+
+        g2.translate(-LEFT_MARGIN-LEFT_PADDING, 0);
     }
 
-    @Override
-    public void paintComponent(Graphics2D g2) {
-        super.paintComponent(g2);
-        AffineTransform origTransform = g2.getTransform();
 
-//		GridPanel gp = gameView.getGridPanel();
+    @Override
+    public void paint(Graphics g) {
+    	Graphics2D g2 = (Graphics2D) g;
+        AffineTransform origTransform = g2.getTransform();
+        int w = getWidth();
 
         paintBackgroundBody(g2);
 
@@ -215,14 +198,10 @@ public class ControlPanel extends FakeComponent {
             g2.setFont(FONT_PACK_SIZE);
             g2.setColor(HEADER_FONT_COLOR);
             int packSize = tilePack.totalSize();
-            g2.drawString("" + packSize, PANEL_WIDTH - 42, 24);
+            g2.drawString("" + packSize, w - 42, 24);
         }
 
-        g2.translate(0, 46);
-        actionPanel.paintComponent(g2);
-//		gp.profile("action panel");
-
-        g2.translate(0, 60);
+        g2.translate(0, 106);
 
         BazaarCapability bcb = game.getCapability(BazaarCapability.class);
         if (bcb != null && !(gameView.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
@@ -239,18 +218,23 @@ public class ControlPanel extends FakeComponent {
             }
         }
 
-
+        boolean doRevalidate = false;
         for (PlayerPanel pp : playerPanels) {
-            pp.paintComponent(g2);
-            g2.translate(0, 12);
+        	int h = pp.getHeight();
+        	doRevalidate = doRevalidate || pp.repaintContent(w);
+        }
+        if (doRevalidate) {
+        	revalidate();
         }
 
-//		gp.profile("players");
-
         g2.setTransform(origTransform);
+        super.paint(g2);
+    }
 
-        paintBackgroundShadow(g2);
-
+    @Override
+    protected void paintChildren(Graphics g) {
+    	super.paintChildren(g);
+    	paintBackgroundShadow((Graphics2D) g);
     }
 
     public void pass() {
@@ -273,20 +257,12 @@ public class ControlPanel extends FakeComponent {
         }
         Arrays.sort(arr);
         actionPanel.setActions(targetPlayer.isLocalHuman(), arr);
-        this.canPass = targetPlayer.isLocalHuman() ? canPass : false;
-        refreshComponents();
+        setCanPass(targetPlayer.isLocalHuman() ? canPass : false);
     }
 
     public void clearActions() {
         actionPanel.clearActions();
-        canPass = false;
-        refreshComponents();
-    }
-
-    public void closeGame() {
-        clearActions();
-        canPass = false;
-        refreshComponents();
+        setCanPass(false);
     }
 
 	public boolean isShowPotentialPoints() {

@@ -106,9 +106,4 @@ public abstract class FakeComponent extends ComponentAdapter {
         a.transform(transform);
         return a;
     }
-
-//    protected Rectangle computeBounds(int x, int y, int width, int height) {
-//        return transformRegion(new Rectangle(x, y, width, height)).getBounds();
-//    }
-
 }

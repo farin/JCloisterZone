@@ -212,7 +212,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 	public void closeGame() {
 		gameRunning = false;
 		getMainPanel().closeGame();
-    	getControlPanel().closeGame();
+    	getControlPanel().clearActions();
 
     	MenuBar menu = client.getJMenuBar();
 		menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
