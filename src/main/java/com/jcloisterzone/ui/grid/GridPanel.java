@@ -58,9 +58,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     final Client client;
     final GameView gameView;
     final GameController gc;
+
     final ControlPanel controlPanel;
     final ChatPanel chatPanel;
 
+    //TODO remove
     private FakeComponent secondPanel;
 
     /** current board size */
@@ -196,49 +198,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
                 zoom(-e.getWheelRotation());
             }
         });
-
-//        MouseAdapter childDelegation = new MouseAdapter() {
-//            private void dispatch(MouseEvent e) {
-//                if (secondPanel != null) {
-//                    secondPanel.dispatchMouseEvent(e);
-//                    if (e.isConsumed()) return;
-//                }
-//                controlPanel.dispatchMouseEvent(e);
-//            }
-//            @Override
-//			public void mouseClicked(MouseEvent e) {
-//                dispatch(e);
-//            }
-//            @Override
-//			public void mouseMoved(MouseEvent e) {
-//                dispatch(e);
-//            }
-//        };
-//        addMouseListener(childDelegation);
-//        addMouseMotionListener(childDelegation);
-//
-//        addComponentListener(new ComponentListener() {
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//                controlPanel.componentResized(e);
-//                if (secondPanel != null) secondPanel.componentResized(e);
-//            }
-//            @Override
-//            public void componentMoved(ComponentEvent e) {
-//                controlPanel.componentMoved(e);
-//                if (secondPanel != null) secondPanel.componentMoved(e);
-//            }
-//            @Override
-//            public void componentShown(ComponentEvent e) {
-//                controlPanel.componentShown(e);
-//                if (secondPanel != null) secondPanel.componentShown(e);
-//            }
-//            @Override
-//            public void componentHidden(ComponentEvent e) {
-//                controlPanel.componentHidden(e);
-//                if (secondPanel != null) secondPanel.componentHidden(e);
-//            }
-//        });
     }
 
     public Tile getTile(Position p) {
@@ -249,7 +208,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return client;
     }
 
-    public FakeComponent getSecondPanel() {
+	public FakeComponent getSecondPanel() {
         return secondPanel;
     }
 

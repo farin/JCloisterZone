@@ -225,8 +225,10 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     @Subscribe
     public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
         clearActions();
-        createSecondPanel(CornCirclesPanel.class);
-        gameView.getGridPanel().repaint();
+        CornCirclesPanel panel = new CornCirclesPanel(this);
+        GridPanel gridPanel = gameView.getGridPanel();
+        gridPanel.add(panel, "pos (100%-515) 0 (100%-265) 100%"); //TODO more robust layouting
+        gridPanel.revalidate();
     }
 
     @SuppressWarnings("unchecked")
@@ -238,7 +240,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         }
         T newPanel;
         try {
-            newPanel = type.getConstructor(Client.class).newInstance(client);
+            newPanel = type.getConstructor(Client.class, GameController.class).newInstance(client, this);
         } catch (Exception e) {
             // should never happen;
             e.printStackTrace();

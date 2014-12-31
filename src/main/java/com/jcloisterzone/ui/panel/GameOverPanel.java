@@ -37,7 +37,7 @@ public class GameOverPanel extends JPanel {
 
         //setTitle(_("Game overview"));
 
-        setOpaque(false);
+        setOpaque(true);
         setBackground(ControlPanel.PANEL_BG_COLOR);
         setLayout(new MigLayout("", "[]", "[][]10[]10[]20[][][][][]20[][]20[][][]"));
         int gridx = 0, gridy = 1;
