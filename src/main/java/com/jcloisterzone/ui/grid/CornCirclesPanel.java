@@ -16,6 +16,7 @@ import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
 
+@InteractionPanel
 public class CornCirclesPanel extends JPanel {
 
     private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);

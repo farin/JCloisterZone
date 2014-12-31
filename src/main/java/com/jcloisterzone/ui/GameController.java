@@ -39,7 +39,6 @@ import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
-import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
@@ -227,35 +226,25 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         clearActions();
         CornCirclesPanel panel = new CornCirclesPanel(this);
         GridPanel gridPanel = gameView.getGridPanel();
-        gridPanel.add(panel, "pos (100%-515) 0 (100%-265) 100%"); //TODO more robust layouting
+        gridPanel.add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
         gridPanel.revalidate();
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends FakeComponent> T createSecondPanel(Class<T> type) {
-        GridPanel grid = gameView.getGridPanel();
-        FakeComponent panel = grid.getSecondPanel();
-        if (type.isInstance(panel)) {
-            return (T) panel;
-        }
-        T newPanel;
-        try {
-            newPanel = type.getConstructor(Client.class, GameController.class).newInstance(client, this);
-        } catch (Exception e) {
-            // should never happen;
-            e.printStackTrace();
-            return null;
-        }
-        newPanel.registerSwingComponents(grid);
-        newPanel.layoutSwingComponents(grid);
-        grid.setSecondPanel(newPanel);
-        return newPanel;
+    public BazaarPanel showBazaarPanel() {
+    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+    	if (panel == null) {
+    		panel = new BazaarPanel(client, gameView.getGameController());
+    		gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+    		gameView.getGridPanel().setBazaarPanel(panel);
+
+    	}
+    	return panel;
     }
 
     @Subscribe
     public void selectBazaarTile(BazaarSelectTileEvent ev) {
         clearActions();
-        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
+        BazaarPanel bazaarPanel = showBazaarPanel();
         if (ev.getTargetPlayer().isLocalHuman()) {
             List<BazaarItem> supply = ev.getBazaarSupply();
             for (int i = 0; i < supply.size(); i++) {
@@ -274,14 +263,14 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void bazaarTileSelected(BazaarTileSelectedEvent ev) {
-        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
+        BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         gameView.getGridPanel().repaint();
     }
 
     @Subscribe
     public void makeBazaarBid(BazaarMakeBidEvent ev) {
-        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
+        BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (ev.getTargetPlayer().isLocalHuman()) {
             bazaarPanel.setState(BazaarPanelState.MAKE_BID);
@@ -294,7 +283,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void selectBuyOrSellBazaarOffer(BazaarSelectBuyOrSellEvent ev) {
-        BazaarPanel bazaarPanel = createSecondPanel(BazaarPanel.class);
+        BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (ev.getTargetPlayer().isLocalHuman()) {
             bazaarPanel.setState(BazaarPanelState.BUY_OR_SELL);
@@ -305,7 +294,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
-        gameView.getGridPanel().setSecondPanel(null);
+    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+    	if (panel != null) {
+    		gameView.getGridPanel().remove(panel);
+    		gameView.getGridPanel().setBazaarPanel(null);
+    	}
     }
 
     public void leaveGame() {

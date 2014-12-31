@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.controls;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -80,12 +81,17 @@ public class ControlPanel extends JPanel {
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
 
+    private BazaarCapability bcb;
+    private BazaarSupplyPanel bazaarSupplyPanel;
+
     public ControlPanel(GameView gameView) {
     	this.client = gameView.getClient();
         this.gameView = gameView;
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
         gc.register(this);
+
+        bcb = game.getCapability(BazaarCapability.class);
 
         setOpaque(false);
         setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));
@@ -103,6 +109,13 @@ public class ControlPanel extends JPanel {
 
         actionPanel = new ActionPanel(gameView);
         add(actionPanel, "wrap, growx, gapleft 35, h 106");
+
+        if (bcb != null) {
+        	bazaarSupplyPanel = new BazaarSupplyPanel();
+        	bazaarSupplyPanel.setVisible(false);
+        	add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
+
+        }
 
         Player[] players = game.getAllPlayers();
         PlayerPanelImageCache cache = new PlayerPanelImageCache(client, game);
@@ -201,24 +214,16 @@ public class ControlPanel extends JPanel {
             g2.drawString("" + packSize, w - 42, 24);
         }
 
-        g2.translate(0, 106);
+        boolean doRevalidate = false;
 
-        BazaarCapability bcb = game.getCapability(BazaarCapability.class);
-        if (bcb != null && !(gameView.getGridPanel().getSecondPanel() instanceof BazaarPanel)) { //show bazaar supply only if panel is hidden
-            List<Tile> queue = bcb.getDrawQueue();
-            if (!queue.isEmpty()) {
-                int x = 0;
-                for (Tile tile : queue) {
-                    Image img = client.getResourceManager().getTileImage(tile);
-                    g2.drawImage(img, x, 0, 40, 40, null);
-                    x += 45;
-                }
-
-                g2.translate(0, 50);
-            }
+        if (bazaarSupplyPanel != null) {
+        	boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
+        	if (showSupply ^ bazaarSupplyPanel.isVisible()) {
+        		doRevalidate = true;
+        		bazaarSupplyPanel.setVisible(showSupply);
+        	}
         }
 
-        boolean doRevalidate = false;
         for (PlayerPanel pp : playerPanels) {
         	int h = pp.getHeight();
         	doRevalidate = doRevalidate || pp.repaintContent(w);
@@ -379,6 +384,28 @@ public class ControlPanel extends JPanel {
 		@Override
 		public FarmScoreContext getFarmScoreContext(Farm farm) {
 			return farm.getScoreContext();
+		}
+	}
+
+	class BazaarSupplyPanel extends JPanel {
+
+		public BazaarSupplyPanel() {
+			setOpaque(false);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			List<Tile> queue = bcb.getDrawQueue();
+            if (!queue.isEmpty()) {
+                int x = LEFT_MARGIN+LEFT_PADDING;
+                for (Tile tile : queue) {
+                    Image img = client.getResourceManager().getTileImage(tile);
+                    g2.drawImage(img, x, 0, 40, 40, null);
+                    x += 45;
+                }
+            }
 		}
 	}
 }

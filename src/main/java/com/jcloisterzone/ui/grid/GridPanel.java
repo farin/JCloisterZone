@@ -1,13 +1,11 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -36,7 +34,6 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
-import com.jcloisterzone.ui.controls.FakeComponent;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
@@ -59,11 +56,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     final GameView gameView;
     final GameController gc;
 
-    final ControlPanel controlPanel;
-    final ChatPanel chatPanel;
-
-    //TODO remove
-    private FakeComponent secondPanel;
+    private final ControlPanel controlPanel;
+    private final ChatPanel chatPanel;
+    private BazaarPanel bazaarPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -125,18 +120,29 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     @Override
     public void forward() {
-        if (secondPanel instanceof ForwardBackwardListener) {
-            ((ForwardBackwardListener) secondPanel).forward();
-        }
+    	if (bazaarPanel != null) {
+    		bazaarPanel.forward();
+    	}
         controlPanel.getActionPanel().forward();
     }
 
     @Override
     public void backward() {
-        if (secondPanel instanceof ForwardBackwardListener) {
-            ((ForwardBackwardListener) secondPanel).backward();
-        }
+        if (bazaarPanel != null) {
+    		bazaarPanel.backward();
+    	}
         controlPanel.getActionPanel().backward();
+    }
+
+    public void removeInteractionPanels() {
+    	int l = getComponents().length;
+    	for (int i = l-1; i > 0; i--) {
+    		Component child = getComponent(i);
+    		if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
+    			remove(i);
+    		}
+    	}
+    	bazaarPanel = null;
     }
 
     class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
@@ -208,18 +214,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return client;
     }
 
-	public FakeComponent getSecondPanel() {
-        return secondPanel;
-    }
-
-    public void setSecondPanel(FakeComponent secondPanel) {
-        if (this.secondPanel != null && this.secondPanel != secondPanel) {
-            //destroy previoud panel
-            this.secondPanel.destroySwingComponents(this);
-        }
-        this.secondPanel = secondPanel;
-    }
-
     public AnimationService getAnimationService() {
         return gc.getGameView().getMainPanel().getAnimationService();
     }
@@ -260,7 +254,17 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //    }
 
 
-    public void moveCenter(int xSteps, int ySteps) {
+    public BazaarPanel getBazaarPanel() {
+		return bazaarPanel;
+	}
+
+
+	public void setBazaarPanel(BazaarPanel bazaarPanel) {
+		this.bazaarPanel = bazaarPanel;
+	}
+
+
+	public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
         double dx = xSteps * 30.0f / getSquareSize();
         double dy = ySteps * 30.0f / getSquareSize();
@@ -470,13 +474,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
 
         int innerWidth;
-        if (secondPanel != null) {
-            g2.translate(-secondPanel.getWidth()-60, 0);
-            secondPanel.paintComponent(g2);
-            innerWidth = (int) g2.getTransform().getTranslateX();
-        } else {
+//        if (secondPanel != null) {
+//            g2.translate(-secondPanel.getWidth()-60, 0);
+//            secondPanel.paintComponent(g2);
+//            innerWidth = (int) g2.getTransform().getTranslateX();
+//        } else {
             innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
-        }
+       // }
         g2.setTransform(origTransform);
 
         paintMessages(g2, innerWidth);

@@ -210,7 +210,7 @@ public class MainPanel extends JPanel {
     public void closeGame() {
         gridPanel.clearActionDecorations();
         gridPanel.hideLayer(AbstractTilePlacementLayer.class);
-        gridPanel.setSecondPanel(null);
+        gridPanel.removeInteractionPanels();
     }
 
     public void tileEvent(TileEvent ev) {
