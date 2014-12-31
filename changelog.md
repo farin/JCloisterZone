@@ -451,5 +451,3 @@ many internal changes in code
 ## 0.8
 * initial version
 
-## current dev
-* fix: Cathars escape is not allowed for builder

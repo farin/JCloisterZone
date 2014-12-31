@@ -102,12 +102,7 @@ public class MenuBar extends JMenuBar {
         }));
         menu.add(createMenuItem(MenuItem.DISCONNECT, false));
         menu.addSeparator();
-        menu.add(createMenuItem(MenuItem.LEAVE_GAME, new ActionListener() {
-            @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.closeGame();
-            }
-        }, false));
+        menu.add(createMenuItem(MenuItem.LEAVE_GAME, false));
         menu.addSeparator();
 
         menu.add(createMenuItem(MenuItem.SAVE, false));

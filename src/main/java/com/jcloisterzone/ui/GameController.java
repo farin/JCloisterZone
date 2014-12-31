@@ -48,6 +48,7 @@ import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.ui.view.GameView;
+import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
@@ -114,7 +115,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
     		((GameView)client.getView()).setGameRunning(false);
     		client.closeGame(true);
-    		GameOverPanel panel = new GameOverPanel(client, game);
+    		GameOverPanel panel = new GameOverPanel(client, this);
     		client.getGridPanel().add(panel, "pos 0 0 null 100%");
     		client.getGridPanel().revalidate();
 
@@ -302,7 +303,12 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     public void leaveGame() {
-    	client.getConnection().send(new LeaveGameMessage(game.getGameId()));
+    	if (getChannel() == null) {
+			client.closeGame();
+			client.mountView(new StartView(client));
+		} else {
+			getConnection().send(new LeaveGameMessage(game.getGameId()));
+		}
     }
 
     public RmiProxy getRmiProxy() {

@@ -60,13 +60,7 @@ public class GameSetupView extends AbstractUiView {
         menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (gc.getChannel() == null) {
-					client.closeGame();
-					client.mountView(new StartView(client));
-				} else {
-					gc.leaveGame();
-				}
-
+				gc.leaveGame();
 			}
 		});
         menu.setItemEnabled(MenuItem.LEAVE_GAME, true);

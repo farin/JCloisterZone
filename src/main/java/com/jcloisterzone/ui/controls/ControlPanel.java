@@ -3,7 +3,6 @@ package com.jcloisterzone.ui.controls;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -47,7 +46,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.view.GameView;
 
 public class ControlPanel extends JPanel {
@@ -57,6 +55,7 @@ public class ControlPanel extends JPanel {
     public static final Color HEADER_FONT_COLOR = new Color(170, 170, 170, 200);
     public static final Color PLAYER_BG_COLOR = new Color(210, 210, 210, 200);
     public static final Color PANEL_BG_COLOR = new Color(255, 255, 255, 225);
+    public static final Color PANEL_DARK_BG_COLOR = new Color(255, 255, 255, 245);
     public static final Color PANEL_BG_COLOR_SHADOW = new Color(255, 255, 255, 158);
 
     @Deprecated
