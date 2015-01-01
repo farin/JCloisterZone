@@ -3,6 +3,7 @@
 ## Done in current dev
 
 * play online feature - play through public webserver
+* tile rotation behavior changed - tile is rotated to first valid position 
 * fix: Cathars escape is not allowed for builder
 
 ## Roadmap

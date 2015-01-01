@@ -113,13 +113,16 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     @Subscribe
     public void gameStateChange(GameStateChangeEvent ev) {
     	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
-    		((GameView)client.getView()).setGameRunning(false);
+    		boolean showPlayAgain = client.getLocalServer() != null;
+    		gameView.setGameRunning(false);
+    		if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
+    			gameView.getGridPanel().remove(gameView.getChatPanel());
+    		}
     		client.closeGame(true);
-    		GameOverPanel panel = new GameOverPanel(client, this);
-    		client.getGridPanel().add(panel, "pos 0 0 null 100%");
-    		client.getGridPanel().revalidate();
+    		GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
+    		gameView.getGridPanel().add(panel, "pos 0 0 null 100%");
+    		gameView.getGridPanel().revalidate();
 
-    		//gameView.getGridPanel().setGameOverPanel(new GameOverPanel(client, game));
     	}
     }
 

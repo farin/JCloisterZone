@@ -46,6 +46,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
+import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -206,6 +208,10 @@ public class Client extends JFrame {
         return controlsTheme;
     }
 
+    public SimpleServer getLocalServer() {
+    	return localServer.get();
+    }
+
     //TODO should be referenced from Controller
     public Connection getConnection() {
         return clientMessageListener.getConnection();
@@ -311,15 +317,23 @@ public class Client extends JFrame {
     }
 
     public void createGame() {
-        createGame(null);
+        createGame(null, null);
+    }
+
+    public void createGame(Game settings) {
+    	createGame(null, settings);
     }
 
     public void createGame(Snapshot snapshot) {
+    	createGame(snapshot, null);
+    }
+
+    private void createGame(Snapshot snapshot, Game settings) {
         if (closeGame()) {
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
             SimpleServer server = new SimpleServer(new InetSocketAddress(port), this);
             localServer.set(server);
-            server.createGame(snapshot);
+            server.createGame(snapshot, settings);
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server

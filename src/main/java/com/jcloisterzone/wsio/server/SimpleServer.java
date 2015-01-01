@@ -25,6 +25,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
@@ -91,23 +92,53 @@ public class SimpleServer extends WebSocketServer  {
     }
 
 
-    public void createGame(Snapshot snapshot) {
-        if (snapshot == null) {
-            game = new GameSettings(getRandomId());
-            game.getExpansions().add(Expansion.BASIC);
+    public void createGame(Snapshot snapshot, Game settings) {
+    	game = new GameSettings(getRandomId());
+        if (snapshot != null) {
+        	this.snapshot =  snapshot;
+            game.getExpansions().addAll(snapshot.getExpansions());
+            game.getCustomRules().addAll(snapshot.getCustomRules());
+            loadSlotsFromSnapshot();
+        } else if (settings != null) {
+            game.getExpansions().addAll(settings.getExpansions());
+            game.getCustomRules().addAll(settings.getCustomRules());
+            loadSlotsFromGame(settings);
+        } else {
+        	game.getExpansions().add(Expansion.BASIC);
             for (CustomRule cr : CustomRule.defaultEnabled()) {
                 game.getCustomRules().add(cr);
             }
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new ServerPlayerSlot(i);
             }
-        } else {
-            this.snapshot =  snapshot;
-            game = new GameSettings(getRandomId());
-            game.getExpansions().addAll(snapshot.getExpansions());
-            game.getCustomRules().addAll(snapshot.getCustomRules());
-            loadSlotsFromSnapshot();
         }
+    }
+
+    private void loadSlotsFromGame(Game settings) {
+    	//Game is game from client since, so we can use isLocalHuman
+    	int maxSerial = 0;
+    	reservedClientId = getRandomId();
+    	for (Player player : settings.getAllPlayers()) {
+    		int slotNumber = player.getSlot().getNumber();
+    		ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
+    		slots[slotNumber] = slot;
+    		boolean isAi = player.getSlot().isAi();
+    		if (player.isLocalHuman() || isAi) {
+    			slot.setNickname(player.getNick());
+    			slot.setOwner(reservedClientId);
+    			if (isAi) {
+    				slot.setAiClassName(player.getSlot().getAiClassName());
+    			}
+    			maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
+    			slot.setSerial(player.getSlot().getSerial());
+    		}
+    	}
+    	for (int i = 0; i < slots.length; i++) {
+    		if (slots[i] == null) {
+    			slots[i] = new ServerPlayerSlot(i);
+    		}
+        }
+    	slotSerial = maxSerial + 1;
     }
 
     private void loadSlotsFromSnapshot() {

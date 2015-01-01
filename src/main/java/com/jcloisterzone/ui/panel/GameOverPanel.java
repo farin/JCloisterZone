@@ -42,15 +42,15 @@ public class GameOverPanel extends JPanel {
     private final Client client;
     private final Game game;
 
-    public GameOverPanel(Client client, final GameController gc) {
+    public GameOverPanel(Client client, final GameController gc, boolean showPlayAgain) {
         this.client = client;
         this.game = gc.getGame();
 
         setOpaque(true);
         setBackground(ControlPanel.PANEL_DARK_BG_COLOR);
-        setLayout(new MigLayout("ins 20", "[]", ""));
+        setLayout(new MigLayout("ins 20", "[][grow]", ""));
 
-        add(new PointStatsPanel(), "wrap");
+        add(new PointStatsPanel(), "sx 2, wrap");
         JButton btn;
         btn = new JButton(_("Leave game"));
         btn.addActionListener(new ActionListener() {
@@ -60,6 +60,17 @@ public class GameOverPanel extends JPanel {
 			}
 		});
         add(btn, "");
+
+        if (showPlayAgain) {
+        	btn = new JButton(_("Play again"));
+            btn.addActionListener(new ActionListener() {
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				GameOverPanel.this.client.createGame(game);
+    			}
+    		});
+            add(btn, "gapleft 5");
+        }
     }
 
     class PointStatsPanel extends JPanel {

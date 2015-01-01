@@ -183,7 +183,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
 	@Override
 	public boolean requestHide(UiView nextView, Object nextCtx) {
-		return client.closeGame();
+		if (gameRunning) return client.closeGame();
+		return true;
 	}
 
 	@Override
