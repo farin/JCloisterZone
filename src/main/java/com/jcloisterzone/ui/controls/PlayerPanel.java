@@ -39,6 +39,7 @@ import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
@@ -70,7 +71,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     private int potentialPoints = 0;
 
-	private final PlayerPanelImageCache cache;
+    private final PlayerPanelImageCache cache;
 
     //paint context variables
     private int PANEL_WIDTH = 1; //TODO clean
@@ -81,6 +82,15 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     private String mouseOverKey = null;
 
+    private final AbbeyCapability abbeyCap;
+    private final TowerCapability towerCap;
+    private final BridgeCapability bridgeCap;
+    private final CastleCapability castleCap;
+    private final KingAndRobberBaronCapability kingRobberCap;
+    private final ClothWineGrainCapability cwgCap;
+    private final LittleBuildingsCapability lbCap;
+    private final TunnelCapability tunnelCap;
+
     public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
         this.client = client;
         this.player = player;
@@ -88,6 +98,16 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         this.gc = gameView.getGameController();
         this.cache = cache;
         this.fontColor = player.getColors().getFontColor();
+
+        Game game = gc.getGame();
+        abbeyCap = game.getCapability(AbbeyCapability.class);
+        towerCap = game.getCapability(TowerCapability.class);
+        bridgeCap = game.getCapability(BridgeCapability.class);
+        castleCap = game.getCapability(CastleCapability.class);
+        kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
+        cwgCap = game.getCapability(ClothWineGrainCapability.class);
+        lbCap = game.getCapability(LittleBuildingsCapability.class);
+        tunnelCap = game.getCapability(TunnelCapability.class);
     }
 
     private void drawDelimiter(int y) {
@@ -98,7 +118,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     }
 
     private void drawTextShadow(String text, int x, int y) {
-    	drawTextShadow(text, x, y, fontColor);
+        drawTextShadow(text, x, y, fontColor);
     }
 
     private void drawTextShadow(String text, int x, int y, Color color) {
@@ -112,8 +132,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     }
 
     public Player getPlayer() {
-		return player;
-	}
+        return player;
+    }
 
     private Rectangle drawMeepleBox(Player playerKey, String imgKey, int count, boolean showOne) {
         return drawMeepleBox(playerKey, imgKey, count, showOne, null, false);
@@ -155,10 +175,10 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
 
     public boolean repaintContent(int width) {
-    	Game game = gc.getGame();
-    	PANEL_WIDTH = width;
+        Game game = gc.getGame();
+        PANEL_WIDTH = width;
 
-    	bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
+        bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
         g2 = bimg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -173,10 +193,10 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
         //TODO cache ref (also would be fine to cache capabilities above)
         if (!game.isOver() && gc.getGameView().getControlPanel().isShowPotentialPoints()) {
-	        drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
+            drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
         } else {
-        	g2.setFont(FONT_NICKNAME);
-        	drawTextShadow(player.getNick(), 78, 27);
+            g2.setFont(FONT_NICKNAME);
+            drawTextShadow(player.getNick(), 78, 27);
         }
 
 
@@ -208,13 +228,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
 //		gp.profile(" > special");
 
-        AbbeyCapability abbeyCap = game.getCapability(AbbeyCapability.class);
-        TowerCapability towerCap = game.getCapability(TowerCapability.class);
-        BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
-        CastleCapability castleCap = game.getCapability(CastleCapability.class);
-        KingAndRobberBaronCapability kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
-        ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
-        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
+
 
         if (abbeyCap != null) {
             drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -231,6 +245,11 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         if (castleCap != null) {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
+        if (tunnelCap != null) {
+            drawMeepleBox(player, "tunnelA", tunnelCap.getTunnelTokens(player, false), true);
+            drawMeepleBox(player, "tunnelB", tunnelCap.getTunnelTokens(player, true), true);
+        }
+
         if (lbCap != null) {
             drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
             drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
@@ -306,7 +325,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     @Override
     public Dimension getPreferredSize() {
-    	return new Dimension(PANEL_WIDTH, realHeight);
+        return new Dimension(PANEL_WIDTH, realHeight);
     }
 
     /*
@@ -314,7 +333,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
      */
     @Override
     public void paint(Graphics g) {
-    	Graphics2D parentGraphics = (Graphics2D) g;
+        Graphics2D parentGraphics = (Graphics2D) g;
 
 
         parentGraphics.setColor(PLAYER_BG_COLOR);
@@ -336,20 +355,20 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     }
 
     public int getRealHeight() {
-		return realHeight;
-	}
+        return realHeight;
+    }
 
     public int getPotentialPoints() {
-		return potentialPoints;
-	}
+        return potentialPoints;
+    }
 
-	public void setPotentialPoints(int potentialPoints) {
-		this.potentialPoints = potentialPoints;
-	}
+    public void setPotentialPoints(int potentialPoints) {
+        this.potentialPoints = potentialPoints;
+    }
 
-	public void addPotentialPoints(int potentialPoints) {
-		this.potentialPoints += potentialPoints;
-	}
+    public void addPotentialPoints(int potentialPoints) {
+        this.potentialPoints += potentialPoints;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -378,7 +397,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         } else {
             TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
             if (!tg.isRansomPaidThisTurn()) {
-            	gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         }
     }
@@ -389,7 +408,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             mouseOverKey = null;
             gameView.getGridPanel().repaint();
         } else {
-        	gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
+            gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
 }

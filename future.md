@@ -5,6 +5,7 @@
 * play online feature - play through public webserver
 * tile rotation behavior changed - tile is rotated to first valid position
 * added play again button
+* show tunnel tokens supply in control panel
 * CornCicles ui - don't ask if there is not deployed any follower of that kind (if no player can perform any action)
 * fix: Cathars escape is not allowed for builder
 

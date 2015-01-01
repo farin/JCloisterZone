@@ -17,6 +17,7 @@ import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.theme.FigureTheme;
 
@@ -59,6 +60,10 @@ public class PlayerPanelImageCache {
             Color color = player.getColors().getMeepleColor();
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
+            if (game.hasCapability(TunnelCapability.class)) {
+                scaledImages.put(player.getIndex()+"tunnelA", scaleImage(theme.getTunnelImage(player.getColors().getMeepleColor())));
+                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(client.getPlayerSecondTunelColor(player))));
+            }
         }
         if (game.hasCapability(TowerCapability.class)) {
             scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
@@ -84,7 +89,6 @@ public class PlayerPanelImageCache {
             scaledImages.put("lb-house", scaleImage(theme.getNeutralImage("lb-house")));
             scaledImages.put("lb-shed", scaleImage(theme.getNeutralImage("lb-shed")));
         }
-
     }
 
 }
