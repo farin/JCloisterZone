@@ -53,7 +53,19 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void enter() {
-        if (getTile().getCornCircle() == null) {
+        Class<? extends Feature> cornType = getTile().getCornCircle();
+        if (cornType == null) {
+            next();
+            return;
+        }
+        boolean deployedFollowerExists = false;
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (m instanceof Follower && cornType.isInstance(m.getFeature())) {
+                deployedFollowerExists = true;
+                break;
+            }
+        }
+        if (!deployedFollowerExists) {
             next();
             return;
         }
@@ -132,7 +144,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private List<PlayerAction<?>> prepareRemovalAction(Class<? extends Feature> cornType) {
-    	UndeployAction action = null;
+        UndeployAction action = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;

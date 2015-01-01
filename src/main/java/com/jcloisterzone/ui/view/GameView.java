@@ -49,50 +49,50 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final GameController gc;
-	private final Game game;
-	private boolean gameRunning = true; //is it needed, what about use game state (but force close don't change it)
+    private final GameController gc;
+    private final Game game;
+    private boolean gameRunning = true; //is it needed, what about use game state (but force close don't change it)
 
-	private ChatPanel chatPanel;
-	private Snapshot snapshot;
+    private ChatPanel chatPanel;
+    private Snapshot snapshot;
 
-	private MainPanel mainPanel;
+    private MainPanel mainPanel;
 
-	private Timer timer;
-	boolean repeatLeft, repeatRight, repeatUp, repeatDown;
+    private Timer timer;
+    boolean repeatLeft, repeatRight, repeatUp, repeatDown;
     boolean repeatZoomIn, repeatZoomOut;
 
 
-	public GameView(Client client, GameController gc) {
-		super(client);
-		this.gc = gc;
-		this.game = gc.getGame();
-		gc.setGameView(this);
-	}
+    public GameView(Client client, GameController gc) {
+        super(client);
+        this.gc = gc;
+        this.game = gc.getGame();
+        gc.setGameView(this);
+    }
 
-	public boolean isGameRunning() {
-		return gameRunning;
-	}
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
 
-	public void setGameRunning(boolean gameRunning) {
-		this.gameRunning = gameRunning;
-	}
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
+    }
 
-	public GameController getGameController() {
-		return gc;
-	}
+    public GameController getGameController() {
+        return gc;
+    }
 
-	public Game getGame() {
-		return game;
-	}
+    public Game getGame() {
+        return game;
+    }
 
-	@Override
-	public void show(Container pane, Object ctx) {
-		BackgroundPanel bg = new BackgroundPanel();
-    	bg.setLayout(new BorderLayout());
-    	pane.add(bg);
+    @Override
+    public void show(Container pane, Object ctx) {
+        BackgroundPanel bg = new BackgroundPanel();
+        bg.setLayout(new BorderLayout());
+        pane.add(bg);
 
         mainPanel = new MainPanel(client, this, chatPanel);
         bg.add(mainPanel, BorderLayout.CENTER);
@@ -100,153 +100,155 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         mainPanel.started(snapshot);
 
         gc.register(chatPanel);
-		gc.register(this);
+        gc.register(this);
 
-		timer = new Timer(true);
-		timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
 
-		MenuBar menu = client.getJMenuBar();
-		menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	handleSave();
+            public void actionPerformed(ActionEvent e) {
+                handleSave();
             }
         });
-		menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
+        menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	gc.getConnection().send(new UndoMessage(game.getGameId()));
+            public void actionPerformed(ActionEvent e) {
+                gc.getConnection().send(new UndoMessage(game.getGameId()));
             }
         });
-		menu.setItemActionListener(MenuItem.ZOOM_IN, new ActionListener() {
+        menu.setItemActionListener(MenuItem.ZOOM_IN, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	zoom(2.0);
+            public void actionPerformed(ActionEvent e) {
+                zoom(2.0);
             }
         });
-		menu.setItemActionListener(MenuItem.ZOOM_OUT, new ActionListener() {
+        menu.setItemActionListener(MenuItem.ZOOM_OUT, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	zoom(-2.0);
+            public void actionPerformed(ActionEvent e) {
+                zoom(-2.0);
             }
         });
-		menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, new ActionListener() {
+        menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-            	mainPanel.toggleRecentHistory(ch.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                mainPanel.toggleRecentHistory(ch.isSelected());
             }
         });
-		menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
+        menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-            	mainPanel.setShowFarmHints(ch.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                mainPanel.setShowFarmHints(ch.isSelected());
             }
         });
-		menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
+        menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-            	getControlPanel().setShowProjectedPoints(ch.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                getControlPanel().setShowProjectedPoints(ch.isSelected());
             }
         });
-		menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
+        menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	client.getDiscardedTilesDialog().setVisible(true);
+            public void actionPerformed(ActionEvent e) {
+                client.getDiscardedTilesDialog().setVisible(true);
             }
         });
-		menu.setItemActionListener(MenuItem.REPORT_BUG, new ActionListener() {
+        menu.setItemActionListener(MenuItem.REPORT_BUG, new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
-            	new BugReportDialog(gc.getReportingTool());
+            public void actionPerformed(ActionEvent e) {
+                new BugReportDialog(gc.getReportingTool());
             }
         });
 
-		menu.setItemEnabled(MenuItem.FARM_HINTS, true);
-		menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
-		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
+        menu.setItemEnabled(MenuItem.FARM_HINTS, true);
+        menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
+        menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
 
-		menu.setItemEnabled(MenuItem.REPORT_BUG, true);
-		menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
-		menu.setItemEnabled(MenuItem.ZOOM_IN, true);
-		menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
-		menu.setItemEnabled(MenuItem.SAVE, true);
-		menu.setItemEnabled(MenuItem.LOAD, false);
-		menu.setItemEnabled(MenuItem.NEW_GAME, false);
-		menu.setItemEnabled(MenuItem.CONNECT_P2P, false);
-		menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
+        menu.setItemEnabled(MenuItem.REPORT_BUG, true);
+        menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
+        menu.setItemEnabled(MenuItem.ZOOM_IN, true);
+        menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
+        menu.setItemEnabled(MenuItem.SAVE, true);
+        menu.setItemEnabled(MenuItem.LOAD, false);
+        menu.setItemEnabled(MenuItem.NEW_GAME, false);
+        menu.setItemEnabled(MenuItem.CONNECT_P2P, false);
+        menu.setItemEnabled(MenuItem.PLAY_ONLINE, false);
 
-		client.addWindowStateListener(this);
-	}
+        client.addWindowStateListener(this);
+    }
 
-	@Override
-	public boolean requestHide(UiView nextView, Object nextCtx) {
-		if (gameRunning) return client.closeGame();
-		return true;
-	}
+    @Override
+    public boolean requestHide(UiView nextView, Object nextCtx) {
+        if (gameRunning) return client.closeGame();
+        return true;
+    }
 
-	@Override
-	public void hide(UiView nextView, Object nextCtx) {
-		timer.cancel();
-		gc.unregister(chatPanel);
-		gc.unregister(this);
+    @Override
+    public void hide(UiView nextView, Object nextCtx) {
+        timer.cancel();
+        gc.unregister(chatPanel);
+        gc.unregister(this);
 
-		MenuBar menu = client.getJMenuBar();
-		menu.setItemEnabled(MenuItem.FARM_HINTS, false);
-		menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, false);
-		menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
-		menu.setItemEnabled(MenuItem.ZOOM_IN, false);
-		menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
-		menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemEnabled(MenuItem.FARM_HINTS, false);
+        menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, false);
+        menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
+        menu.setItemEnabled(MenuItem.ZOOM_IN, false);
+        menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
+        menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
 
-		client.removeWindowStateListener(this);
-	}
+        client.removeWindowStateListener(this);
+    }
 
-	@Override
-	public void windowStateChanged(WindowEvent e) {
-		ChatPanel chatPanel = getGridPanel().getChatPanel();
-		chatPanel.windowStateChanged(e);
-	}
+    @Override
+    public void windowStateChanged(WindowEvent e) {
+        ChatPanel chatPanel = getGridPanel().getChatPanel();
+        if (chatPanel != null) {
+            chatPanel.windowStateChanged(e);
+        }
+    }
 
-	public void closeGame() {
-		gameRunning = false;
-		getMainPanel().closeGame();
-    	getControlPanel().clearActions();
+    public void closeGame() {
+        gameRunning = false;
+        getMainPanel().closeGame();
+        getControlPanel().clearActions();
 
-    	MenuBar menu = client.getJMenuBar();
-		menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
-		menu.setItemEnabled(MenuItem.UNDO, false);
-		menu.setItemEnabled(MenuItem.REPORT_BUG, false);
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
+        menu.setItemEnabled(MenuItem.UNDO, false);
+        menu.setItemEnabled(MenuItem.REPORT_BUG, false);
 
-		if (gc.getChannel() == null) {
-			menu.setItemEnabled(MenuItem.NEW_GAME, true);
-			menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
-			menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
-			menu.setItemEnabled(MenuItem.LOAD, true);
-		}
-		menu.setItemEnabled(MenuItem.SAVE, false); //TODO allow saving finished games
-	}
+        if (gc.getChannel() == null) {
+            menu.setItemEnabled(MenuItem.NEW_GAME, true);
+            menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
+            menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+            menu.setItemEnabled(MenuItem.LOAD, true);
+        }
+        menu.setItemEnabled(MenuItem.SAVE, false); //TODO allow saving finished games
+    }
 
-	@Override
-	public void onWebsocketError(Exception ex) {
+    @Override
+    public void onWebsocketError(Exception ex) {
         String message = ex.getMessage();
         if (ex instanceof WebsocketNotConnectedException) {
             message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
         } else {
-        	message = ex.getMessage();
-        	if (message == null || message.length() == 0) {
-            	message = ex.getClass().getSimpleName();
+            message = ex.getMessage();
+            if (message == null || message.length() == 0) {
+                message = ex.getClass().getSimpleName();
             }
         }
         getGridPanel().setErrorMessage(message);
     }
 
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		if (chatPanel.getInput().hasFocus()) return false;
-		if (e.getID() == KeyEvent.KEY_PRESSED) {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        if (chatPanel.getInput().hasFocus()) return false;
+        if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
                 e.consume();
                 chatPanel.activateChat();
@@ -261,23 +263,23 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 if (e.getModifiers() == 0) {
                     mainPanel.getGridPanel().forward();
                 } else if (e.getModifiers() == KeyEvent.SHIFT_MASK) {
-                	mainPanel.getGridPanel().backward();
+                    mainPanel.getGridPanel().backward();
                 }
                 break;
             default:
                 return dispatchReptable(e, true);
             }
-		} else if (e.getID() == KeyEvent.KEY_RELEASED) {
+        } else if (e.getID() == KeyEvent.KEY_RELEASED) {
             boolean result = dispatchReptable(e, false);
             if (result) e.consume();
             return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
             return dispatchKeyTyped(e);
         }
-		return false;
-	}
+        return false;
+    }
 
-	private boolean dispatchReptable(KeyEvent e, boolean pressed) {
+    private boolean dispatchReptable(KeyEvent e, boolean pressed) {
         if (e.getModifiers() != 0) return false;
         switch (e.getKeyCode()) {
         case KeyEvent.VK_LEFT:
@@ -308,7 +310,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         return false;
     }
 
-	private boolean dispatchKeyTyped(KeyEvent e) {
+    private boolean dispatchKeyTyped(KeyEvent e) {
         if (e.getModifiers() != 0) return false;
         if (e.getKeyChar() == '+' || e.getKeyChar() == '-') {
             e.consume();
@@ -317,45 +319,45 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         return false;
     }
 
-	public MainPanel getMainPanel() {
-		return mainPanel;
-	}
+    public MainPanel getMainPanel() {
+        return mainPanel;
+    }
 
-	public ChatPanel getChatPanel() {
-		return chatPanel;
-	}
+    public ChatPanel getChatPanel() {
+        return chatPanel;
+    }
 
-	public void setChatPanel(ChatPanel chatPanel) {
-		this.chatPanel = chatPanel;
-	}
+    public void setChatPanel(ChatPanel chatPanel) {
+        this.chatPanel = chatPanel;
+    }
 
-	public Snapshot getSnapshot() {
-		return snapshot;
-	}
+    public Snapshot getSnapshot() {
+        return snapshot;
+    }
 
-	public void setSnapshot(Snapshot snapshot) {
-		this.snapshot = snapshot;
-	}
+    public void setSnapshot(Snapshot snapshot) {
+        this.snapshot = snapshot;
+    }
 
-	//helpers
+    //helpers
 
-	public GridPanel getGridPanel() {
+    public GridPanel getGridPanel() {
         return mainPanel.getGridPanel();
     }
 
-	public ControlPanel getControlPanel() {
-	    return mainPanel.getControlPanel();
-	}
+    public ControlPanel getControlPanel() {
+        return mainPanel.getControlPanel();
+    }
 
     public void zoom(double steps) {
         GridPanel gp = getGridPanel();
         if (gp != null) gp.zoom(steps);
     }
 
-	@Subscribe
+    @Subscribe
     public void clientListChanged(ClientListChangedEvent ev) {
         if (!game.isOver()) {
-        	RemoteClient[] clients = ev.getClients();
+            RemoteClient[] clients = ev.getClients();
             for (Player p : game.getAllPlayers()) {
                 PlayerSlot slot = p.getSlot();
                 boolean match = false;
@@ -370,7 +372,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         }
     }
 
-	public void handleSave() {
+    public void handleSave() {
         JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Save game"));
@@ -399,7 +401,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         }
     }
 
-	class KeyRepeater extends TimerTask {
+    class KeyRepeater extends TimerTask {
 
         @Override
         public void run() {

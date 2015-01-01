@@ -24,19 +24,19 @@ public class CornCirclesPanel extends JPanel {
     private JButton deploymentOption, removalOption;
 
     public CornCirclesPanel(final GameController gc) {
-    	setOpaque(true);
+        setOpaque(true);
         setBackground(ControlPanel.PANEL_BG_COLOR);
-        setLayout(new MigLayout("", "[grow]", ""));
+        setLayout(new MigLayout("ins 10 20 10 20", "[grow]", ""));
 
         JLabel label;
 
         label = new JLabel(_("Corn circle"));
         label.setFont(FONT_HEADER);
         label.setForeground(ControlPanel.HEADER_FONT_COLOR);
-        add(label, "wrap, gaptop 5, gapbottom 15");
+        add(label, "wrap, gapbottom 10");
 
         label = new JLabel(_("Each player…"));
-        add(label, "wrap");
+        add(label, "wrap, gapbottom 5");
 
         deploymentOption = new JButton();
         //deploymentOption.setFont(FONT_BUTTON);
@@ -50,20 +50,20 @@ public class CornCirclesPanel extends JPanel {
                 gridPanel.revalidate();
             }
         });
-        add(deploymentOption, "wrap, growx, h 40");
+        add(deploymentOption, "wrap, growx, h 40, gapbottom 5");
 
         removalOption = new JButton();
         removalOption.setText(_("must remove follower"));
         removalOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
-            	GridPanel gridPanel = gc.getGameView().getGridPanel();
+                gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
+                GridPanel gridPanel = gc.getGameView().getGridPanel();
                 gridPanel.remove(CornCirclesPanel.this);
                 gridPanel.revalidate();
             }
         });
-        add(removalOption, "wrap, growx, h 40");
+        add(removalOption, "wrap, growx, h 40, gapbottom 5");
 
         String feature = TileFeature.getLocalizedNamefor (gc.getGame().getCurrentTile().getCornCircle());
         label = new JLabel(_("on/from a {0}.", feature.toLowerCase()));
