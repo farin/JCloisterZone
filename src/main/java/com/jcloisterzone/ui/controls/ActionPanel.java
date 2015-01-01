@@ -1,16 +1,13 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
@@ -20,6 +17,8 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.view.GameView;
+
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 
 public class ActionPanel extends MouseTrackingComponent implements ForwardBackwardListener, RegionMouseListener {
 
@@ -47,7 +46,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private final GameView gameView;
 
     public ActionPanel(GameView gameView) {
-    	this.client = gameView.getClient();
+        this.client = gameView.getClient();
         this.gameView = gameView;
 
         setOpaque(false);
@@ -124,16 +123,27 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         repaint();
     }
 
-
-
     @Override
-	public void forward() {
-        if (active && selectedActionIndex != -1) getSelectedAction().forward();
+    public void forward() {
+        if (active && selectedActionIndex != -1) {
+            if (getSelectedAction() instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) getSelectedAction()).forward();
+            } else {
+                rollAction(1);
+            }
+
+        }
     }
 
     @Override
-	public void backward() {
-        if (active && selectedActionIndex != -1) getSelectedAction().backward();
+    public void backward() {
+        if (active && selectedActionIndex != -1) {
+            if (getSelectedAction() instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) getSelectedAction()).backward();
+            } else {
+                rollAction(-1);
+            }
+        }
     }
 
     public void rollAction(int change) {
@@ -165,7 +175,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void paint(Graphics g) {
-    	Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(ControlPanel.PLAYER_BG_COLOR);
         g2.fillRoundRect(0, LINE_Y, getWidth()+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
@@ -201,7 +211,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             int iy = LINE_Y + (LINE_HEIGHT-size) / 2;
 
             if (refreshMouseRegions && selectedActionIndex != -1) {
-            	getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
+                getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
             }
             g2.drawImage(img, x, iy+imgOffset, size, size, null);
             x += size + PADDING;
@@ -209,13 +219,21 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         super.paint(g2);
     }
 
-    //TODO mouse region support
-
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             Integer i = (Integer) origin.getData();
-            setSelectedActionIndex(i);
+            if (selectedActionIndex == i) {
+                if (getSelectedAction() instanceof ForwardBackwardListener) {
+                    if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+                        ((ForwardBackwardListener)getSelectedAction()).backward();
+                    } else {
+                        ((ForwardBackwardListener)getSelectedAction()).forward();
+                    }
+                }
+            } else {
+                setSelectedActionIndex(i);
+            }
         }
     }
 
@@ -229,7 +247,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
-    	gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
+        gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 
     public String getFakeAction() {

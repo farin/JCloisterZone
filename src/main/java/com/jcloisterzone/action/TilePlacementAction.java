@@ -21,7 +21,7 @@ import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 import com.jcloisterzone.wsio.RmiProxy;
 
-public class TilePlacementAction extends PlayerAction<TilePlacement> {
+public class TilePlacementAction extends PlayerAction<TilePlacement> implements ForwardBackwardListener {
 
     private final Tile tile;
     private ForwardBackwardListener forwardBackwardDelegate;
@@ -42,20 +42,20 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     public void setTileRotation(Rotation tileRotation) {
-		this.tileRotation = tileRotation;
-	}
+        this.tileRotation = tileRotation;
+    }
 
     @Override
     public void forward() {
-    	forwardBackwardDelegate.forward();
+        forwardBackwardDelegate.forward();
     }
 
     @Override
     public void backward() {
-    	forwardBackwardDelegate.backward();
+        forwardBackwardDelegate.backward();
     }
 
-	public Map<Position, Set<Rotation>> groupByPosition() {
+    public Map<Position, Set<Rotation>> groupByPosition() {
         Map<Position, Set<Rotation>> map = new HashMap<>();
         for (TilePlacement tp: options) {
             Set<Rotation> rotations = map.get(tp.getPosition());
@@ -69,12 +69,12 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     public Set<Rotation> getRotations(Position p) {
-    	Set<Rotation> rotations = new HashSet<>();
-    	for (TilePlacement tp: options) {
-    		if (tp.getPosition().equals(p)) {
-    			rotations.add(tp.getRotation());
-    		}
-    	}
+        Set<Rotation> rotations = new HashSet<>();
+        for (TilePlacement tp: options) {
+            if (tp.getPosition().equals(p)) {
+                rotations.add(tp.getRotation());
+            }
+        }
         return rotations;
     }
 
@@ -106,12 +106,12 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
         return "place tile " + tile.getId();
     }
 
-	public ForwardBackwardListener getForwardBackwardDelegate() {
-		return forwardBackwardDelegate;
-	}
+    public ForwardBackwardListener getForwardBackwardDelegate() {
+        return forwardBackwardDelegate;
+    }
 
-	public void setForwardBackwardDelegate(
-			ForwardBackwardListener forwardBackwardDelegate) {
-		this.forwardBackwardDelegate = forwardBackwardDelegate;
-	}
+    public void setForwardBackwardDelegate(
+            ForwardBackwardListener forwardBackwardDelegate) {
+        this.forwardBackwardDelegate = forwardBackwardDelegate;
+    }
 }

@@ -16,8 +16,7 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
 
-public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
-        ForwardBackwardListener, Iterable<T> {
+public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>, Iterable<T> {
 
     @Deprecated
     private final String name;
@@ -87,17 +86,6 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
         mainPanel.getGridPanel().hideLayer(layer);
     }
 
-    /** Called after right mouse click */
-    @Override
-	public void forward() {
-        client.getControlPanel().getActionPanel().rollAction(1);
-    }
-
-    @Override
-	public void backward() {
-        client.getControlPanel().getActionPanel().rollAction(-1);
-    }
-
     protected Image getImage(Color color) {
         return client.getFigureTheme().getActionImage(this, color);
     }
@@ -118,6 +106,6 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
     }
 
     public MainPanel getMainPanel() {
-		return mainPanel;
-	}
+        return mainPanel;
+    }
 }
