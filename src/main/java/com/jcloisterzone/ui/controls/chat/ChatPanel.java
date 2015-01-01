@@ -127,12 +127,12 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         setBackground(Color.WHITE);
         setLayout(new MigLayout("", "[grow]", "[grow][]"));
         add(messagesPane, "cell 0 0, align 0% 100%");
-        add(input, "cell 0 1, growx");
+        add(input, "cell 0 1, growx, h 25");
 
     }
 
     public void initHidingMode() {
-    	repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
+        repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 forceFocus = false;
@@ -142,11 +142,11 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         });
 
         this.addComponentListener(new ComponentAdapter() {
-        	@Override
-        	public void componentHidden(ComponentEvent e) {
-        		repaintTimer.stop();
-        	}
-		});
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                repaintTimer.stop();
+            }
+        });
 
         setBackground(new Color(0, 0, 0, 0));
         input.setBackground(Color.WHITE);
@@ -154,16 +154,16 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
     @Override
     public void paint(Graphics g) {
-    	Graphics2D g2 = (Graphics2D) g;
-    	g2.setColor(ControlPanel.PANEL_BG_COLOR);
-    	if (isFolded()) {
-    		if (messagesPane.isVisible()) messagesPane.setVisible(false);
-		    g2.fillRect(0, getHeight() - 45, getWidth(), 45);
-		} else {
-		    if (!messagesPane.isVisible()) messagesPane.setVisible(true);
-		    g2.fillRect(0, 0, getWidth(), getHeight());
-		}
-    	super.paint(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(ControlPanel.PANEL_BG_COLOR);
+        if (isFolded()) {
+            if (messagesPane.isVisible()) messagesPane.setVisible(false);
+            g2.fillRect(0, getHeight() - 40, getWidth(), 40);
+        } else {
+            if (!messagesPane.isVisible()) messagesPane.setVisible(true);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
+        super.paint(g);
     }
 
     abstract protected ReceivedChatMessage createReceivedMessage(ChatEvent ev);
@@ -185,6 +185,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         input.setText("");
         input.setFocusable(false);
         client.requestFocusInWindow();
+        client.getContentPane().repaint(); //need to repain whote grid pane
     }
 
     @Override
@@ -208,7 +209,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
     }
 
     private void setForceFocus() {
-    	if (repaintTimer == null) return;
+        if (repaintTimer == null) return;
         if (repaintTimer.isRunning()) {
             repaintTimer.restart();
         } else {
