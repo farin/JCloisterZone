@@ -534,12 +534,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     public BufferedImage takeScreenshot()
     {        
         //calculate size of play board
-        int totalWidth = INITIAL_SQUARE_SIZE*(right-left+1);
-        int totalHeight = INITIAL_SQUARE_SIZE*(bottom-top+1);
-    
+        int screenshotScale = client.getConfig().getScreenshot_scale();
+        int totalWidth = screenshotScale*(right-left+1);
+        int totalHeight = screenshotScale*(bottom-top+1);
+        if(totalHeight < getHeight()) totalHeight = getHeight();
+        
         //centre the image
-        int transX = -INITIAL_SQUARE_SIZE*(left);
-        int transY = -INITIAL_SQUARE_SIZE*(top);
+        int transX = -screenshotScale*(left);
+        int transY = -screenshotScale*(top);
         
         //create the image
         BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
@@ -558,10 +560,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //TODO is this dangerous if GridPanel is rendered while print screening?
         
         int orig = squareSize;
-        squareSize = INITIAL_SQUARE_SIZE;
+        squareSize = screenshotScale;
         for (GridLayer layer : layers) {
             if (layer.isVisible()) {
-                layer.zoomChanged(INITIAL_SQUARE_SIZE);
+                layer.zoomChanged(screenshotScale);
                 layer.paint(graphics);
                 layer.zoomChanged(orig);
             }

@@ -272,10 +272,10 @@ public class Client extends JFrame {
                 players.append(p.getNick());
             }
         }
-        if (aiCount > 0) players.append("ai_" + aiCount);
+        if (aiCount > 0) players.append("_ai_" + aiCount + "_");
         //file name
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
-        File filename = new File(screenshotFolder, "JCloisterZone_" + players.toString() + sdf.format(new Date()) + pngExt);
+        File filename = new File(screenshotFolder, "JCloisterZone" + players.toString() + sdf.format(new Date()) + pngExt);
        //
        try {
            FileOutputStream fos = new FileOutputStream(filename);
