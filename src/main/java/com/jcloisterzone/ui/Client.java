@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.KeyEventDispatcher;
@@ -47,7 +45,6 @@ import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -66,6 +63,8 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -98,27 +97,27 @@ public class Client extends JFrame {
     }
 
     public boolean mountView(UiView view) {
-    	return mountView(view, null);
+        return mountView(view, null);
     }
 
     public boolean mountView(UiView view, Object ctx) {
-    	if (this.view != null) {
-    		if (this.view.requestHide(view, ctx)) {
-    			this.view.hide(view, ctx);
-    		} else {
-    			return false;
-    		}
-    	}
-    	cleanContentPane();
-    	view.show(getContentPane(), ctx);
-    	getContentPane().setVisible(true);
-    	this.view = view;
-    	logger.info("{} mounted", view.getClass().getSimpleName());
-    	return true;
+        if (this.view != null) {
+            if (this.view.requestHide(view, ctx)) {
+                this.view.hide(view, ctx);
+            } else {
+                return false;
+            }
+        }
+        cleanContentPane();
+        view.show(getContentPane(), ctx);
+        getContentPane().setVisible(true);
+        this.view = view;
+        logger.info("{} mounted", view.getClass().getSimpleName());
+        return true;
     }
 
     public UiView getView() {
-    	return view;
+        return view;
     }
 
     public void init() {
@@ -154,26 +153,26 @@ public class Client extends JFrame {
 
         String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
         if (windowSize == null || "fullscreen".equals(windowSize)) {
-        	this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         } else {
-        	String[] sizes = windowSize.split("x");
-        	if (sizes.length == 2) {
-        		UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
-        	} else {
-        		logger.warn("Invalid configuration value for windows_size");
-        		this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        	}
+            String[] sizes = windowSize.split("x");
+            if (sizes.length == 2) {
+                UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+            } else {
+                logger.warn("Invalid configuration value for windows_size");
+                this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            }
         }
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-			@Override
-			public boolean dispatchKeyEvent(KeyEvent ev) {
-				if (!Client.this.isActive()) return false; //AWT method on window (it not check if player is active)
-				if (view == null) return false;
-				return view.dispatchKeyEvent(ev);
-			}
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent ev) {
+                if (!Client.this.isActive()) return false; //AWT method on window (it not check if player is active)
+                if (view == null) return false;
+                return view.dispatchKeyEvent(ev);
+            }
         });
     }
 
@@ -209,7 +208,7 @@ public class Client extends JFrame {
     }
 
     public SimpleServer getLocalServer() {
-    	return localServer.get();
+        return localServer.get();
     }
 
     //TODO should be referenced from Controller
@@ -269,7 +268,7 @@ public class Client extends JFrame {
 
         //TODO decouple
         if (view instanceof GameView) {
-        	((GameView)view).closeGame();
+            ((GameView)view).closeGame();
         }
 
         if (discardedTilesDialog != null) {
@@ -280,8 +279,8 @@ public class Client extends JFrame {
     }
 
     private String getUserName() {
-    	if (System.getProperty("nick") != null) {
-        	return System.getProperty("nick");
+        if (System.getProperty("nick") != null) {
+            return System.getProperty("nick");
         }
         String name = config.getClient_name();
         name = name == null ? "" : name.trim();
@@ -321,11 +320,11 @@ public class Client extends JFrame {
     }
 
     public void createGame(Game settings) {
-    	createGame(null, settings);
+        createGame(null, settings);
     }
 
     public void createGame(Snapshot snapshot) {
-    	createGame(snapshot, null);
+        createGame(snapshot, null);
     }
 
     private void createGame(Snapshot snapshot, Game settings) {
@@ -479,21 +478,21 @@ public class Client extends JFrame {
 
     //TODO pass to view
     public void onWebsocketError(Exception ex) {
-    	view.onWebsocketError(ex);
+        view.onWebsocketError(ex);
     }
 
     public void onUnhandledWebsocketError(Exception ex) {
-    	String message;
-    	if (ex instanceof WebsocketNotConnectedException) {
-    		message = _("Connection lost");
-    	} else {
-    		message = ex.getMessage();
-    		if (message == null || message.length() == 0) {
-            	message = ex.getClass().getSimpleName();
+        String message;
+        if (ex instanceof WebsocketNotConnectedException) {
+            message = _("Connection lost");
+        } else {
+            message = ex.getMessage();
+            if (message == null || message.length() == 0) {
+                message = ex.getClass().getSimpleName();
             }
-    		logger.error(message, ex);
-    	}
-    	JOptionPane.showMessageDialog(this, message, _("Error"), JOptionPane.ERROR_MESSAGE);
+            logger.error(message, ex);
+        }
+        JOptionPane.showMessageDialog(this, message, _("Error"), JOptionPane.ERROR_MESSAGE);
     }
 
     //------------------- LEGACY: TODO refactor ---------------
@@ -502,23 +501,23 @@ public class Client extends JFrame {
     @Deprecated
     public ControlPanel getControlPanel() {
         MainPanel mainPanel = getMainPanel();
-    	if (mainPanel != null) return mainPanel.getControlPanel();
+        if (mainPanel != null) return mainPanel.getControlPanel();
         return null;
     }
 
     @Deprecated
     public GridPanel getGridPanel() {
-    	MainPanel mainPanel = getMainPanel();
-    	if (mainPanel != null) return mainPanel.getGridPanel();
+        MainPanel mainPanel = getMainPanel();
+        if (mainPanel != null) return mainPanel.getGridPanel();
         return null;
     }
 
     @Deprecated
     public MainPanel getMainPanel() {
-    	if (view instanceof GameView) {
-    		return ((GameView)view).getMainPanel();
-    	}
-    	return null;
+        if (view instanceof GameView) {
+            return ((GameView)view).getMainPanel();
+        }
+        return null;
     }
 
     @Deprecated

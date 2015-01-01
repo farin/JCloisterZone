@@ -9,12 +9,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -157,6 +161,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 client.getDiscardedTilesDialog().setVisible(true);
             }
         });
+        menu.setItemActionListener(MenuItem.TAKE_SCREENSHOT, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                takeScreenshot();
+            }
+        });
         menu.setItemActionListener(MenuItem.REPORT_BUG, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -169,6 +179,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
 
         menu.setItemEnabled(MenuItem.REPORT_BUG, true);
+        menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, true);
         menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
         menu.setItemEnabled(MenuItem.ZOOM_IN, true);
         menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
@@ -200,6 +211,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.ZOOM_IN, false);
         menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
         menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
+        menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, false);
 
         client.removeWindowStateListener(this);
     }
@@ -398,6 +410,45 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                     JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
+        }
+    }
+
+    public void takeScreenshot() {
+        GridPanel container = getGridPanel();
+
+        String pngExt = ".png";
+        String screenFolderValue = client.getConfig().getScreenshot_folder();
+        File screenshotFolder;
+        if (screenFolderValue == null || screenFolderValue.isEmpty()) {
+            screenshotFolder = new File(System.getProperty("user.dir"));
+        } else {
+            screenshotFolder = new File(screenFolderValue);
+        }
+
+         //player names:
+         StringBuilder players = new StringBuilder();
+         int aiCount = 0;
+         for (Player p : game.getAllPlayers()) {
+             players.append('_');
+             if (p.getSlot().isAi()) {
+                 aiCount++;
+             } else {
+                 players.append(p.getNick());
+             }
+         }
+         if (aiCount > 0) players.append("_ai_" + aiCount + "_");
+         //file name
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
+         File filename = new File(screenshotFolder, "JCloisterZone" + players.toString() + sdf.format(new Date()) + pngExt);
+        //
+        try {
+            FileOutputStream fos = new FileOutputStream(filename);
+            BufferedImage im = container.takeScreenshot();
+            ImageIO.write(im, "PNG", fos);
+            fos.close();
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+            JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

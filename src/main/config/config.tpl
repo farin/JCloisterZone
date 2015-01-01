@@ -46,6 +46,12 @@ presets: ${presets}
 
 connection_history: ${connection_history}
 
+# Specifies a folder for screenshots to be saved into.  If empty the JCloisterZone runtime directory will be chosen.
+screenshot_folder: ${screenshot_folder}
+
+# Specifies the size of the tiles when a screenshot is taken; default is 60;
+screenshot_scale: ${screenshot_scale}
+
 ${if hasDebug}
 debug:
   # plain or zip

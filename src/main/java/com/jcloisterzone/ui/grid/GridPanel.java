@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -112,37 +113,37 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         registerMouseListeners();
         add(controlPanel, "pos (100%-255) 0 100% 100%");
         if (chatPanel != null) {
-        	chatPanel.initHidingMode();
-        	add(chatPanel, "pos 0 0 250 100%");
+            chatPanel.initHidingMode();
+            add(chatPanel, "pos 0 0 250 100%");
         }
     }
 
 
     @Override
     public void forward() {
-    	if (bazaarPanel != null) {
-    		bazaarPanel.forward();
-    	}
+        if (bazaarPanel != null) {
+            bazaarPanel.forward();
+        }
         controlPanel.getActionPanel().forward();
     }
 
     @Override
     public void backward() {
         if (bazaarPanel != null) {
-    		bazaarPanel.backward();
-    	}
+            bazaarPanel.backward();
+        }
         controlPanel.getActionPanel().backward();
     }
 
     public void removeInteractionPanels() {
-    	int l = getComponents().length;
-    	for (int i = l-1; i > 0; i--) {
-    		Component child = getComponent(i);
-    		if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
-    			remove(i);
-    		}
-    	}
-    	bazaarPanel = null;
+        int l = getComponents().length;
+        for (int i = l-1; i > 0; i--) {
+            Component child = getComponent(i);
+            if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
+                remove(i);
+            }
+        }
+        bazaarPanel = null;
     }
 
     class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
@@ -232,10 +233,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public ChatPanel getChatPanel() {
-		return chatPanel;
-	}
+        return chatPanel;
+    }
 
-	public String getErrorMessage() {
+    public String getErrorMessage() {
         return errorMessage;
     }
 
@@ -255,16 +256,16 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
 
     public BazaarPanel getBazaarPanel() {
-		return bazaarPanel;
-	}
+        return bazaarPanel;
+    }
 
 
-	public void setBazaarPanel(BazaarPanel bazaarPanel) {
-		this.bazaarPanel = bazaarPanel;
-	}
+    public void setBazaarPanel(BazaarPanel bazaarPanel) {
+        this.bazaarPanel = bazaarPanel;
+    }
 
 
-	public void moveCenter(int xSteps, int ySteps) {
+    public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
         double dx = xSteps * 30.0f / getSquareSize();
         double dy = ySteps * 30.0f / getSquareSize();
@@ -485,6 +486,55 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);
+    }
+
+    public BufferedImage takeScreenshot() {
+        //calculate size of play board
+        int screenshotScale = client.getConfig().getScreenshot_scale() == null ? 60 : client.getConfig().getScreenshot_scale();
+        int totalWidth = screenshotScale*(right-left+1);
+        int totalHeight = screenshotScale*(bottom-top+1);
+        if(totalHeight < getHeight()) totalHeight = getHeight();
+
+        //centre the image
+        int transX = -screenshotScale*(left);
+        int transY = -screenshotScale*(top);
+
+        //create the image
+        BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = (Graphics2D) im.getGraphics();
+        if(null == System.getProperty("transparentScreenshots")){
+            graphics.setBackground(new Color(240, 240, 240, 255));
+            graphics.clearRect(0, 0, im.getWidth(), im.getHeight());
+        }
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //centre the image
+        graphics.translate(transX, transY);
+
+        //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
+        //TODO is this dangerous if GridPanel is rendered while print screening?
+
+        int orig = squareSize;
+        squareSize = screenshotScale;
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
+                //calling zoomChanged can broke something, don't do it
+                layer.zoomChanged(screenshotScale);
+                layer.paint(graphics);
+                layer.zoomChanged(orig);
+            }
+        }
+        //set it back
+        squareSize = orig;
+
+        //reset translation
+        graphics.translate(-transX, -transY);
+
+        //render the control panel on the far right
+        graphics.translate(totalWidth+30, 0);
+        controlPanel.paint(graphics);
+        return im;
     }
 
     private void paintMessages(Graphics2D g2, int innerWidth) {

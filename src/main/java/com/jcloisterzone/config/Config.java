@@ -46,6 +46,8 @@ public class Config {
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
+    private String screenshot_folder;
+    private Integer screenshot_scale;
 
     public static class PresetConfig {
         private List<String> expansions;
@@ -404,4 +406,20 @@ public class Config {
     public void setOrigin(File origin) {
         this.origin = origin;
     }
+    
+    public String getScreenshot_folder() {
+        return screenshot_folder;
+    }
+
+    public void setScreenshot_folder(String screenshot_folder) {
+        this.screenshot_folder = screenshot_folder;
+    }
+
+    public Integer getScreenshot_scale() {
+        return screenshot_scale;
+    }
+
+    public void setScreenshot_scale(Integer screenshot_scale) {
+        this.screenshot_scale = screenshot_scale;
+    }    
 }

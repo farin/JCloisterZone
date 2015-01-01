@@ -139,6 +139,8 @@ public class ConfigLoader {
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
+        config.setScreenshot_folder("");
+        config.setScreenshot_scale(60);
         return config;
     }
 
@@ -161,6 +163,7 @@ public class ConfigLoader {
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
         model.put("play_online_host", config.getPlay_online_host());
+        model.put("screenshot_folder", config.getScreenshot_folder());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));
