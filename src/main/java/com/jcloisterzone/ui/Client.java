@@ -250,8 +250,7 @@ public class Client extends JFrame {
     }
 
    public void takeScreenshot() {
-	   Container container = gamePanel.getGridPanel();
-       BufferedImage im = new BufferedImage(container.getWidth(), container.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	   GridPanel container = gamePanel.getGridPanel();
 
        String pngExt = ".png";
        String screenFolderValue = config.getScreenshot_folder();
@@ -261,13 +260,26 @@ public class Client extends JFrame {
        } else {
            screenshotFolder = new File(screenFolderValue);
        }
-       //file name
-       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-       File filename = new File(screenshotFolder,"screenshot_"+sdf.format(new Date())+ pngExt);
+       
+        //player names:
+        StringBuilder players = new StringBuilder();
+        int aiCount = 0;
+        for (Player p : game.getAllPlayers()) {
+            players.append('_');
+            if (p.getSlot().isAi()) {
+                aiCount++;
+            } else {
+                players.append(p.getNick());
+            }
+        }
+        if (aiCount > 0) players.append("_ai_" + aiCount + "_");
+        //file name
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
+        File filename = new File(screenshotFolder, "JCloisterZone" + players.toString() + sdf.format(new Date()) + pngExt);
        //
        try {
            FileOutputStream fos = new FileOutputStream(filename);
-           container.paint(im.getGraphics());
+           BufferedImage im = container.takeScreenshot();
            ImageIO.write(im, "PNG", fos);
            fos.close();
        } catch (IOException ex) {
