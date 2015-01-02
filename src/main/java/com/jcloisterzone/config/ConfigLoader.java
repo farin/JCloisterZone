@@ -1,10 +1,13 @@
 package com.jcloisterzone.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -32,64 +35,68 @@ public class ConfigLoader {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String DEFAULT_CONFIG = "config.yaml";
-
     public static final String DEFAULT_UPDATE = "http://jcloisterzone.com/version.xml";
     public static final int DEFAULT_PORT = 37447;
     public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
     public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
 
+    private final Path dataDirectory;
     private final Yaml yaml;
     private final Pattern indentPatter = Pattern.compile("^", Pattern.MULTILINE);
 
-    public ConfigLoader() {
+    public ConfigLoader(Path dataDirectory) {
+        this.dataDirectory = dataDirectory;
         yaml = new Yaml(new Constructor(Config.class));
     }
 
-    private String getConfigFile() {
+    private File getConfigFile() {
         String configFile = System.getProperty("config");
-        if (configFile == null) {
-            return DEFAULT_CONFIG;
+        if (configFile != null) {
+            File file = Paths.get(configFile).toFile();
+            if (!file.exists()) { //for dev purposes try to load also from classpath
+                URL resource = Client.class.getClassLoader().getResource(configFile);
+                if (resource != null) {
+                    file = new File(resource.getFile());
+                }
+            }
+            if (file.exists()) {
+                return file;
+            } else {
+                logger.warn("Custom configuration file not found {}. Using default.", file.toString());
+            }
         }
-        return configFile;
+        return dataDirectory.resolve("config.yaml").toFile();
     }
 
     public Config load() {
         Yaml yaml = new Yaml(new Constructor(Config.class));
-        String configFile = getConfigFile();
-        URL configResource = Client.class.getClassLoader().getResource(configFile);
-        if (configResource == null && !configFile.equals(DEFAULT_CONFIG)) {
-            logger.warn("Configuration file not found {}", configFile);
-            configFile = DEFAULT_CONFIG;
-            configResource = Client.class.getClassLoader().getResource(configFile);
-        }
+        File configFile = getConfigFile();
 
         Config config = null;
         boolean save = false;
-        if (configResource == null) {
-            logger.info("Default configuration file {} doesn't exist. Creating new one.", DEFAULT_CONFIG);
+        if (!configFile.exists()) {
+            logger.info("Default configuration file {} doesn't exist. Creating new one.", configFile);
             config = createDefault();
-            config.setOrigin(new File(DEFAULT_CONFIG));
+            config.setOrigin(configFile);
             save = true;
         } else {
             logger.info("Loading configuration {}", configFile);
-            File origin = new File(configResource.getFile());
             try {
-                config = (Config) yaml.load(configResource.openStream());
+                config = (Config) yaml.load(new FileInputStream(configFile));
             } catch (Exception ex) {
                 logger.warn("Error reading configuration.", ex);
-                if (ex instanceof ParserException && origin.isFile()) {
+                if (ex instanceof ParserException) {
                     String name;
-                    if (origin.getParent() == null) {
-                        name = "~" + origin.getName();
+                    if (configFile.getParent() == null) {
+                        name = "~" + configFile.getName();
                     } else {
-                        name = origin.getParent() + File.separator + "~" + origin.getName();
+                        name = configFile.getParent() + File.separator + "~" + configFile.getName();
                     }
                     File backup = new File(name);
                     if (!backup.isFile()) {
                         try {
-                            Files.copy(origin.toPath(), backup.toPath());
+                            Files.copy(configFile.toPath(), backup.toPath());
                         } catch (IOException copyEx) {
                             logger.warn("Unable to backup invalid config.", copyEx);
                         }
@@ -98,7 +105,7 @@ public class ConfigLoader {
                 }
                 config = createDefault();
             }
-            config.setOrigin(origin);
+            config.setOrigin(configFile);
         }
         if (save) {
             save(config);
@@ -128,7 +135,6 @@ public class ConfigLoader {
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
         config.getConfirm().setTower_place(true);
         config.getConfirm().setRansom_payment(true);
-        config.getConfirm().setGame_close(true);
         config.getPlayers().setColors(Lists.newArrayList(
             new ColorConfig("RED"),
             new ColorConfig("#008ffe"),

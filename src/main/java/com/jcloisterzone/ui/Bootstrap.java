@@ -1,7 +1,11 @@
 package com.jcloisterzone.ui;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,10 +28,39 @@ import com.jcloisterzone.ui.plugin.Plugin;
 
 public class Bootstrap  {
 
+    private Path getDataDirectory(String basePath, String dirName) {
+        if (basePath == null || basePath.length() == 0) return null;
+        Path path = Paths.get(basePath);
+        if (!Files.isWritable(path)) return null;
+        path = path.resolve(dirName);
+        File dir = path.toFile();
+        if (dir.exists()) return path;
+        return dir.mkdir() ? path : null;
+    }
+
+    //dO not use logger in this method!
+    private Path getDataDirectory() {
+        Path workingDir = Paths.get(System.getProperty("user.dir")).normalize().toAbsolutePath();
+        Path path = workingDir;
+        if (Files.isWritable(path)) {
+            return path;
+        }
+        path = getDataDirectory(System.getenv("APPDATA"), "JCloisterZone");
+        if (path != null) return path;
+        path = getDataDirectory(System.getProperty("user.home"), ".jcloisterzone");
+        if (path != null) return path;
+        System.err.println(System.getProperty("user.home"));
+        System.err.println("Could not locate writeable working dir");
+        //returns user's working directory anyway //but configuration saving will not work
+        return workingDir;
+    }
+
+    private Path dataDirectory = getDataDirectory();
+
     {
         //run before first logger is initialized
         if (!"false".equals(System.getProperty("errorLog"))) {
-            System.setOut(new FileTeeStream(System.out, "error.log"));
+            System.setOut(new FileTeeStream(System.out, dataDirectory.resolve("error.log")));
         }
     }
 
@@ -79,19 +112,23 @@ public class Bootstrap  {
         }
     }
 
+
+
     public void run() {
         System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        ConfigLoader configLoader = new ConfigLoader();
+        logger.info("Date directory {}", dataDirectory.toString());
+
+        ConfigLoader configLoader = new ConfigLoader(dataDirectory);
         Config config = configLoader.load();
 
         I18nUtils.setLocale(config.getLocaleObject()); //must be set before Expansions enum is initialized
 
         List<Plugin> plugins = loadPlugins(config);
 
-        final Client client = new Client(configLoader, config, plugins);
+        final Client client = new Client(dataDirectory, configLoader, config, plugins);
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

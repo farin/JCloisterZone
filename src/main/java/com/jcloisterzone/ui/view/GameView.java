@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.view;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -29,23 +27,23 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
-import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
-import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
+import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
-import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
 
@@ -373,7 +371,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     public void handleSave() {
-        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
+        JFileChooser fc = new JFileChooser(client.getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Save game"));
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
