@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugins.classic" version="2">
+<plugin id="com.jcloisterzone.plugins.classic" version="3">
     <title>Classic art</title>
     <description>Graphics from original board game</description>
     <expansions>
@@ -28,5 +28,6 @@
         <expansion>GERMAN_MONASTERIES</expansion>
         <expansion>FLIER</expansion>
         <expansion>CORN_CIRCLES_II</expansion>
+        <expansion>MAGE_WITCH</expansion>
     </expansions>
 </plugin>
