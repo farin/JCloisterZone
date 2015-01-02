@@ -3,9 +3,12 @@ package com.jcloisterzone.ui.panel;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,12 +38,19 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ControlPanel;
 
 public class GameOverPanel extends JPanel {
 
+    public static final ImageIcon COLLAPSE_ICON = UiUtils.scaleImageIcon("sysimages/chevron-left-gray.png", 20, 20);
+    public static final ImageIcon EXPAND_ICON = UiUtils.scaleImageIcon("sysimages/chevron-right-gray.png", 20, 20);
+
     private final Client client;
     private final Game game;
+
+    private JLabel collapseIcon;
+    private boolean collapsed;
 
     public GameOverPanel(Client client, final GameController gc, boolean showPlayAgain) {
         this.client = client;
@@ -48,9 +58,9 @@ public class GameOverPanel extends JPanel {
 
         setOpaque(true);
         setBackground(ControlPanel.PANEL_DARK_BG_COLOR);
-        setLayout(new MigLayout("ins 20", "[][grow]", "[]5[]"));
+        setLayout(new MigLayout("ins 20", "[][grow]", "[]20[]"));
 
-        add(new PointStatsPanel(), "sx 2, wrap");
+        add(new PointStatsPanel(), "sx 2, wrap, hidemode 3");
         JButton btn;
         btn = new JButton(_("Leave game"));
         btn.addActionListener(new ActionListener() {
@@ -59,7 +69,7 @@ public class GameOverPanel extends JPanel {
                 gc.leaveGame();
             }
         });
-        add(btn, "");
+        add(btn, "hidemode 3");
 
         if (showPlayAgain) {
             btn = new JButton(_("Play again"));
@@ -69,8 +79,36 @@ public class GameOverPanel extends JPanel {
                     GameOverPanel.this.client.createGame(game);
                 }
             });
-            add(btn, "gapleft 5");
+            add(btn, "gapleft 5, hidemode 3");
         }
+
+        collapseIcon = new JLabel(COLLAPSE_ICON);
+        collapseIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    setCollapsed(!isCollapsed());
+                    repaint();
+                }
+            }
+        });
+        add(collapseIcon, "pos 4 4 20 20");
+    }
+
+
+
+    public boolean isCollapsed() {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
+        for (Component c : getComponents()) {
+            if (c != collapseIcon) {
+                c.setVisible(!collapsed);
+            }
+        }
+        collapseIcon.setIcon(collapsed ? EXPAND_ICON : COLLAPSE_ICON);
     }
 
     class PointStatsPanel extends JPanel {

@@ -8,6 +8,7 @@
 * show tunnel tokens supply in control panel
 * CornCicles ui - don't ask if there is not deployed any follower of that kind (if no player can perform any action)
 * click on tile in control panel triggers rotation
+* fix: if game folder is not writeable, system APPDATA dir (win) or ~/.jcloisterzone (unix) is used
 * fix: Cathars escape is not allowed for builder
 
 ## Roadmap

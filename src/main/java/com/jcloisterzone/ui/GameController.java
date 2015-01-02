@@ -66,7 +66,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     private GameView gameView;
 
     public GameController(Client client, Game game) {
-    	super(client, game);
+        super(client, game);
         this.game = game;
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
         getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
@@ -112,18 +112,18 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void gameStateChange(GameStateChangeEvent ev) {
-    	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
-    		boolean showPlayAgain = client.getLocalServer() != null;
-    		gameView.setGameRunning(false);
-    		if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
-    			gameView.getGridPanel().remove(gameView.getChatPanel());
-    		}
-    		client.closeGame(true);
-    		GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
-    		gameView.getGridPanel().add(panel, "pos 0 0 null 100%");
-    		gameView.getGridPanel().revalidate();
+        if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
+            boolean showPlayAgain = client.getLocalServer() != null;
+            gameView.setGameRunning(false);
+            if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
+                gameView.getGridPanel().remove(gameView.getChatPanel());
+            }
+            client.closeGame(true);
+            GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
+            gameView.getGridPanel().add(panel, "pos 0 0");
+            gameView.getGridPanel().revalidate();
 
-    	}
+        }
     }
 
 
@@ -235,14 +235,14 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     public BazaarPanel showBazaarPanel() {
-    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
-    	if (panel == null) {
-    		panel = new BazaarPanel(client, gameView.getGameController());
-    		gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
-    		gameView.getGridPanel().setBazaarPanel(panel);
+        BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+        if (panel == null) {
+            panel = new BazaarPanel(client, gameView.getGameController());
+            gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+            gameView.getGridPanel().setBazaarPanel(panel);
 
-    	}
-    	return panel;
+        }
+        return panel;
     }
 
     @Subscribe
@@ -298,20 +298,20 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
-    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
-    	if (panel != null) {
-    		gameView.getGridPanel().remove(panel);
-    		gameView.getGridPanel().setBazaarPanel(null);
-    	}
+        BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+        if (panel != null) {
+            gameView.getGridPanel().remove(panel);
+            gameView.getGridPanel().setBazaarPanel(null);
+        }
     }
 
     public void leaveGame() {
-    	if (getChannel() == null) {
-			client.closeGame();
-			client.mountView(new StartView(client));
-		} else {
-			getConnection().send(new LeaveGameMessage(game.getGameId()));
-		}
+        if (getChannel() == null) {
+            client.closeGame();
+            client.mountView(new StartView(client));
+        } else {
+            getConnection().send(new LeaveGameMessage(game.getGameId()));
+        }
     }
 
     public RmiProxy getRmiProxy() {
@@ -319,26 +319,26 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     public GameView getGameView() {
-		return gameView;
-	}
+        return gameView;
+    }
 
-	public void setGameView(GameView gameView) {
-		this.gameView = gameView;
-	}
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
 
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
 
     public void setReportingTool(ReportingTool reportingTool) {
-		this.reportingTool = reportingTool;
-	}
+        this.reportingTool = reportingTool;
+    }
 
     public String getChannel() {
-		return channel;
-	}
+        return channel;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }
