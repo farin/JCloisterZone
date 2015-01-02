@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.xml.transform.TransformerException;
 
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.game.CustomRule;
@@ -36,17 +36,17 @@ import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
@@ -75,8 +75,7 @@ public class SimpleServer extends WebSocketServer  {
     private boolean gameStarted;
 
     private final Map<WebSocket, RemoteClient> connections = new HashMap<>();
-    private String reservedClientId;  //HACK how to assign loaded game to owner //better use CREATE_GAME_MESSAGE to clientId already exists
-
+    private String hostClientId;  //HACK how to assign loaded game slots to owner
     private Random random = new Random();
 
     public SimpleServer(InetSocketAddress address, Client client) {
@@ -85,17 +84,11 @@ public class SimpleServer extends WebSocketServer  {
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
 
-    private String getRandomId() {
-        //truncate uuid
-        String[] s =  UUID.randomUUID().toString().split("-");
-        return s[s.length-1];
-    }
-
-
-    public void createGame(Snapshot snapshot, Game settings) {
-    	game = new GameSettings(getRandomId());
+    public void createGame(Snapshot snapshot, Game settings, String hostClientId) {
+        this.hostClientId = hostClientId;
+        game = new GameSettings(KeyUtils.createRandomId());
         if (snapshot != null) {
-        	this.snapshot =  snapshot;
+            this.snapshot =  snapshot;
             game.getExpansions().addAll(snapshot.getExpansions());
             game.getCustomRules().addAll(snapshot.getCustomRules());
             loadSlotsFromSnapshot();
@@ -104,7 +97,7 @@ public class SimpleServer extends WebSocketServer  {
             game.getCustomRules().addAll(settings.getCustomRules());
             loadSlotsFromGame(settings);
         } else {
-        	game.getExpansions().add(Expansion.BASIC);
+            game.getExpansions().add(Expansion.BASIC);
             for (CustomRule cr : CustomRule.defaultEnabled()) {
                 game.getCustomRules().add(cr);
             }
@@ -115,42 +108,40 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private void loadSlotsFromGame(Game settings) {
-    	//Game is game from client since, so we can use isLocalHuman
-    	int maxSerial = 0;
-    	reservedClientId = getRandomId();
-    	for (Player player : settings.getAllPlayers()) {
-    		int slotNumber = player.getSlot().getNumber();
-    		ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
-    		slots[slotNumber] = slot;
-    		boolean isAi = player.getSlot().isAi();
-    		if (player.isLocalHuman() || isAi) {
-    			slot.setNickname(player.getNick());
-    			slot.setOwner(reservedClientId);
-    			if (isAi) {
-    				slot.setAiClassName(player.getSlot().getAiClassName());
-    			}
-    			maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
-    			slot.setSerial(player.getSlot().getSerial());
-    		}
-    	}
-    	for (int i = 0; i < slots.length; i++) {
-    		if (slots[i] == null) {
-    			slots[i] = new ServerPlayerSlot(i);
-    		}
+        //Game is game from client since, so we can use isLocalHuman
+        int maxSerial = 0;
+        for (Player player : settings.getAllPlayers()) {
+            int slotNumber = player.getSlot().getNumber();
+            ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
+            slots[slotNumber] = slot;
+            boolean isAi = player.getSlot().isAi();
+            if (player.isLocalHuman() || isAi) {
+                slot.setNickname(player.getNick());
+                slot.setOwner(hostClientId);
+                if (isAi) {
+                    slot.setAiClassName(player.getSlot().getAiClassName());
+                }
+                maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
+                slot.setSerial(player.getSlot().getSerial());
+            }
         }
-    	slotSerial = maxSerial + 1;
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] == null) {
+                slots[i] = new ServerPlayerSlot(i);
+            }
+        }
+        slotSerial = maxSerial + 1;
     }
 
     private void loadSlotsFromSnapshot() {
         List<Player> players = snapshot.getPlayers();
-        reservedClientId = getRandomId();
         for (Player player : players) {
             int slotNumber = player.getSlot().getNumber();
             ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
             slot.setNickname(player.getNick());
             slot.setAiClassName(player.getSlot().getAiClassName());
             if (player.getSlot().getState() == SlotState.OWN || slot.getAiClassName() != null) {
-                slot.setOwner(reservedClientId);
+                slot.setOwner(hostClientId);
             }
             slots[slotNumber] = slot;
         }
@@ -238,23 +229,16 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
-//        //devel
-//        if (clientIds.size() == 1) msg.setProtocolVersion("3.1");
-//        //---
         if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
             send(ws, new ErrorMessage(ErrorMessage.BAD_VERSION, "Protocol version " + Application.PROTCOL_VERSION + " required."));
             ws.close();
             return;
         }
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        String clientId = reservedClientId != null ? reservedClientId : getRandomId();
-        String sessionKey = getRandomId();
         String nickname = msg.getNickname() + '@' + getWebsocketHost(ws);
-        RemoteClient client = new RemoteClient(clientId, nickname);
-        //Connection client = new Connection(clientId, msg.getNickname());
+        RemoteClient client = new RemoteClient(msg.getClientId(), nickname);
         connections.put(ws, client);
-        reservedClientId = null;
-        send(ws, new WelcomeMessage(clientId, sessionKey, nickname));
+        send(ws, new WelcomeMessage(msg.getClientId(), nickname));
         send(ws, newGameMessage());
         broadcast(newClientListMessage());
     }
@@ -294,11 +278,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private void leaveSlot(ServerPlayerSlot slot) {
-    	if (snapshot == null) {
-    		slot.setNickname(null);
-    		slot.setAiClassName(null);
+        if (snapshot == null) {
+            slot.setNickname(null);
+            slot.setAiClassName(null);
             slot.setSupportedExpansions(null);
-    	}
+        }
         slot.setSerial(null);
         slot.setOwner(null);
         broadcast(newSlotMessage(slot));
@@ -412,7 +396,7 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleGameOver(WebSocket ws, GameOverMessage msg) {
-    	//empty
+        //empty
     }
 
 

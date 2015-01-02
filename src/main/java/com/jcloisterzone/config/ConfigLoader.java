@@ -24,6 +24,7 @@ import com.floreysoft.jmte.Engine;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
+import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PlayersConfig;
@@ -107,6 +108,14 @@ public class ConfigLoader {
             }
             config.setOrigin(configFile);
         }
+        if (config.getClient_id() == null) {
+            config.setClient_id(KeyUtils.createRandomId());
+            save = true;
+        }
+        if (config.getSecret() == null) {
+            config.setSecret(KeyUtils.createRandomId());
+            save = true;
+        }
         if (save) {
             save(config);
         }
@@ -133,6 +142,8 @@ public class ConfigLoader {
         config.setAi_place_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
         config.setClient_name("");
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
+        config.setClient_id(KeyUtils.createRandomId());
+        config.setSecret(KeyUtils.createRandomId());
         config.getConfirm().setTower_place(true);
         config.getConfirm().setRansom_payment(true);
         config.getPlayers().setColors(Lists.newArrayList(
@@ -167,6 +178,8 @@ public class ConfigLoader {
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
         model.put("play_online_host", config.getPlay_online_host());
+        model.put("client_id", config.getClient_id());
+        model.put("secret", config.getSecret());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));

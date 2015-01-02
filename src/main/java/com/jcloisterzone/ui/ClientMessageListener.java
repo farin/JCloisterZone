@@ -84,19 +84,19 @@ public class ClientMessageListener implements MessageListener {
     }
 
     public Connection connect(String username, URI uri) {
-        conn = new Connection(username, uri, this);
+        conn = new Connection(username, client.getConfig(), uri, this);
         return conn;
     }
 
     public boolean isPlayOnline() {
-		return playOnline;
-	}
+        return playOnline;
+    }
 
-	public Connection getConnection() {
-		return conn;
-	}
+    public Connection getConnection() {
+        return conn;
+    }
 
-	@Override
+    @Override
     public void onWebsocketError(Exception ex) {
         client.onWebsocketError(ex);
     }
@@ -109,13 +109,13 @@ public class ClientMessageListener implements MessageListener {
     @Override
     public void onWebsocketMessage(WsMessage msg) {
         //TODO pass game as context to dispatch
-    	EventProxyUiController<?> controller = getController(msg);
+        EventProxyUiController<?> controller = getController(msg);
         if (controller instanceof GameController) {
-        	GameController gc = (GameController) controller;
-        	dispatcher.dispatch(msg, conn, this, gc.getGame().getPhase());
-        	gc.phaseLoop();
+            GameController gc = (GameController) controller;
+            dispatcher.dispatch(msg, conn, this, gc.getGame().getPhase());
+            gc.phaseLoop();
         } else {
-        	dispatcher.dispatch(msg, conn, this);
+            dispatcher.dispatch(msg, conn, this);
         }
     }
 
@@ -129,20 +129,20 @@ public class ClientMessageListener implements MessageListener {
     }
 
     private EventProxyUiController<?> getController(WsMessage msg) {
-    	if (msg instanceof WsInGameMessage) {
-    		GameController gc = gameControllers.get(((WsInGameMessage) msg).getGameId());
-    		if (gc != null) return gc;
-    	}
-    	if (msg instanceof WsInChannelMessage) {
-    		ChannelController cc = channelControllers.get(((WsInChannelMessage) msg).getChannel());
-    		if (cc != null) return cc;
-    	}
-    	return null;
+        if (msg instanceof WsInGameMessage) {
+            GameController gc = gameControllers.get(((WsInGameMessage) msg).getGameId());
+            if (gc != null) return gc;
+        }
+        if (msg instanceof WsInChannelMessage) {
+            ChannelController cc = channelControllers.get(((WsInChannelMessage) msg).getChannel());
+            if (cc != null) return cc;
+        }
+        return null;
     }
 
     private Game getGame(WsInGameMessage msg) {
-    	GameController gc = (GameController) getController(msg);
-    	return gc == null ? null : gc.getGame();
+        GameController gc = (GameController) getController(msg);
+        return gc == null ? null : gc.getGame();
     }
 
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
@@ -161,7 +161,7 @@ public class ClientMessageListener implements MessageListener {
 
 
     private GameController createGameController(GameMessage msg) {
-    	Snapshot snapshot = null;
+        Snapshot snapshot = null;
         if (msg.getSnapshot() != null) {
             try {
                 snapshot = new Snapshot(msg.getSnapshot());
@@ -196,20 +196,20 @@ public class ClientMessageListener implements MessageListener {
         phase.setSlots(slots);
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
-    	return gc;
+        return gc;
     }
 
     private void handleGameStarted(GameController gc) {
-    	conn.getReportingTool().setGame(gc.getGame());
+        conn.getReportingTool().setGame(gc.getGame());
         CreateGamePhase phase = (CreateGamePhase)gc.getGame().getPhase();
         phase.startGame();
     }
 
     private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {
-    	SwingUtilities.invokeAndWait(new Runnable() {
+        SwingUtilities.invokeAndWait(new Runnable() {
             @Override
-			public void run() {
-            	client.mountView(new GameSetupView(client, gc, msg.getSnapshot() == null));
+            public void run() {
+                client.mountView(new GameSetupView(client, gc, msg.getSnapshot() == null));
                 performAutostart(gc.getGame()); //must wait for panel is created
             }
         });
@@ -217,20 +217,20 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleGame(final GameMessage msg) throws InvocationTargetException, InterruptedException {
-    	handleGame(msg, false);
+        handleGame(msg, false);
     }
 
     public GameController handleGame(final GameMessage msg, boolean channelList) throws InvocationTargetException, InterruptedException {
-    	msg.getGameSetup().setGameId(msg.getGameId());  //fill omitted id
-    	for (SlotMessage slotMsg : msg.getSlots()) {
-    		slotMsg.setGameId(msg.getGameId()); //fill omitted id
-    	}
+        msg.getGameSetup().setGameId(msg.getGameId());  //fill omitted id
+        for (SlotMessage slotMsg : msg.getSlots()) {
+            slotMsg.setGameId(msg.getGameId()); //fill omitted id
+        }
 
         GameController gc = (GameController) getController(msg);
         if (gc == null) {
-        	gc = createGameController(msg);
-        	//TODO remove games on game over
-        	gameControllers.put(msg.getGameId(), gc);
+            gc = createGameController(msg);
+            //TODO remove games on game over
+            gameControllers.put(msg.getGameId(), gc);
         }
 
         handleGameSetup(msg.getGameSetup());
@@ -239,68 +239,68 @@ public class ClientMessageListener implements MessageListener {
         }
 
         if (!channelList) {
-	        switch (msg.getState()) {
-	        case OPEN:
-	        	openGameSetup(gc, msg);
-	        	break;
-	        case RUNNING:
-	        	handleGameStarted(gc);
-	        	break;
-	        }
+            switch (msg.getState()) {
+            case OPEN:
+                openGameSetup(gc, msg);
+                break;
+            case RUNNING:
+                handleGameStarted(gc);
+                break;
+            }
         }
         return gc;
     }
 
     @WsSubscribe
     public void handleChannel(final ChannelMessage msg) throws InvocationTargetException, InterruptedException {
-    	Channel channel = new Channel(msg.getName());
-    	final ChannelController channelController = new ChannelController(client, channel);
-    	channelControllers.clear();
-    	channelControllers.put(channel.getName(), channelController);
+        Channel channel = new Channel(msg.getName());
+        final ChannelController channelController = new ChannelController(client, channel);
+        channelControllers.clear();
+        channelControllers.put(channel.getName(), channelController);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
-			public void run() {
-            	client.mountView(new ChannelView(client, channelController));
+            public void run() {
+                client.mountView(new ChannelView(client, channelController));
             }
         });
     }
 
     @WsSubscribe
     public void handleClientList(ClientListMessage msg) {
-    	EventProxyUiController<?> controller = getController(msg);
-    	if (controller != null) {
-    		controller.setRemoteClients(msg.getClients());
-    		controller.getEventProxy().post(new ClientListChangedEvent(msg.getClients()));
+        EventProxyUiController<?> controller = getController(msg);
+        if (controller != null) {
+            controller.setRemoteClients(msg.getClients());
+            controller.getEventProxy().post(new ClientListChangedEvent(msg.getClients()));
         } else {
-        	logger.warn("No controller for message {}", msg);
+            logger.warn("No controller for message {}", msg);
         }
     }
 
     @WsSubscribe
     public void handleGameList(GameListMessage msg) throws InvocationTargetException, InterruptedException {
-    	ChannelController cc = (ChannelController) getController(msg);
-    	GameController[] gameControllers = new GameController[msg.getGames().length];
-    	int i = 0;
-    	for (GameMessage gameMsg : msg.getGames()) {
-    		gameControllers[i++] = handleGame(gameMsg, true);
-    	}
-  		cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
+        ChannelController cc = (ChannelController) getController(msg);
+        GameController[] gameControllers = new GameController[msg.getGames().length];
+        int i = 0;
+        for (GameMessage gameMsg : msg.getGames()) {
+            gameControllers[i++] = handleGame(gameMsg, true);
+        }
+          cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
     }
 
     @WsSubscribe
     public void handleChat(ChatMessage msg) {
-    	EventProxyUiController<?> controller = getController(msg);
-    	if (controller != null) {
-    		ChatEvent ev = new ChatEvent(getClientById(controller, msg.getClientId()), msg.getText());
-    		controller.getEventProxy().post(ev);
-    	} else {
-    		logger.warn("No controller for message {}", msg);
-    	}
+        EventProxyUiController<?> controller = getController(msg);
+        if (controller != null) {
+            ChatEvent ev = new ChatEvent(getClientById(controller, msg.getClientId()), msg.getText());
+            controller.getEventProxy().post(ev);
+        } else {
+            logger.warn("No controller for message {}", msg);
+        }
     }
 
     @WsSubscribe
     public void handleSlot(SlotMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         PlayerSlot[] slots = ((CreateGamePhase) game.getPhase()).getPlayerSlots();
         updateSlot(slots, msg);
         game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
@@ -308,7 +308,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleGameSetup(GameSetupMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
@@ -326,7 +326,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleSetExpansion(SetExpansionMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         Expansion expansion = msg.getExpansion();
         if (msg.isEnabled()) {
             game.getExpansions().add(expansion);
@@ -338,7 +338,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleSetRule(SetRuleMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         CustomRule rule = msg.getRule();
         if (msg.isEnabled()) {
             game.getCustomRules().add(rule);
@@ -350,7 +350,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleRmi(RmiMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         try {
             Phase phase = game.getPhase();
             Method[] methods = RmiProxy.class.getMethods();
@@ -369,7 +369,7 @@ public class ClientMessageListener implements MessageListener {
 
     @WsSubscribe
     public void handleUndo(UndoMessage msg) {
-    	Game game = getGame(msg);
+        Game game = getGame(msg);
         game.undo();
     }
 

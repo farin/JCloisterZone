@@ -15,6 +15,8 @@ confirm: ${confirm}
 
 # machine identification for remote games
 client_name: ${client_name}
+client_id: ${client_id}
+secret: ${secret}
 play_online_host: ${play_online_host}
 
 players:

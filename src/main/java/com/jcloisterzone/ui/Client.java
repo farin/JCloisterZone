@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.KeyEventDispatcher;
@@ -48,7 +46,6 @@ import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -67,6 +64,8 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -336,7 +335,7 @@ public class Client extends JFrame {
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
             SimpleServer server = new SimpleServer(new InetSocketAddress(port), this);
             localServer.set(server);
-            server.createGame(snapshot, settings);
+            server.createGame(snapshot, settings, config.getClient_id());
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server

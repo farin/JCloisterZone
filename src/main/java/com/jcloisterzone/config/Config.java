@@ -38,6 +38,8 @@ public class Config {
 
     private Boolean beep_alert;
     private String client_name;
+    private String client_id;
+    private String secret;
     private String play_online_host;
 
     private List<String> plugins;
@@ -379,6 +381,23 @@ public class Config {
 
     public void setClient_name(String client_name) {
         this.client_name = client_name;
+    }
+
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public String getPlay_online_host() {
