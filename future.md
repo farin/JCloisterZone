@@ -10,6 +10,7 @@
 * click on tile in control panel triggers rotation
 * fix: if game folder is not writeable, system APPDATA dir (win) or ~/.jcloisterzone (unix) is used
 * fix: Cathars escape is not allowed for builder
+* fix: beep sound playback in Linux
 
 ## Roadmap
 

@@ -42,7 +42,7 @@ public class GameChatPanel extends ChatPanel {
             Player selected = null, active = game.getActivePlayer();
             for (Player player : game.getAllPlayers()) {
                 boolean isAi = player.getSlot().getAiClassName() != null;
-                if (player.getSlot().getClientId().equals(ev.getRemoteClient().getClientId())) {
+                if (player.getSlot().getSessionId().equals(ev.getRemoteClient().getSessionId())) {
                     if (selected == null) {
                         selected = player;
                     } else {

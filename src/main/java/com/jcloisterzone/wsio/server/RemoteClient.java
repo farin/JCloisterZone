@@ -1,20 +1,20 @@
 package com.jcloisterzone.wsio.server;
 
 public class RemoteClient {
-    private String clientId, name;
+    private String sessionId, name;
 
-    public RemoteClient(String clientId, String name) {
+    public RemoteClient(String sessionId, String name) {
         super();
-        this.clientId = clientId;
+        this.sessionId = sessionId;
         this.name = name;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getName() {
