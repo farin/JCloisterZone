@@ -15,7 +15,7 @@ public class PlayerSlot implements Serializable {
     private final int number;
     private Integer serial; //server assign sequence number whgen type is occupied
 
-    private String clientId;
+    private String sessionId;
     private String nickname;
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
@@ -60,12 +60,12 @@ public class PlayerSlot implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public SlotState getState() {

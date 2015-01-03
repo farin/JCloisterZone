@@ -24,6 +24,7 @@ public class Connection {
     private WebSocketClient ws;
     private final MessageListener listener;
 
+    private String sessionId;
     private String clientId;
     private String secret; //TODO will be used for message signing
     private String nickname;
@@ -63,10 +64,7 @@ public class Connection {
 
                 if (msg instanceof WelcomeMessage) {
                     WelcomeMessage welcome = (WelcomeMessage) msg;
-                    if (!clientId.equals(welcome.getClientId())) {
-                        clientId = welcome.getClientId();
-                        logger.warn("ClientId changed by server!");
-                    }
+                    sessionId = welcome.getSessionId();
                     nickname = welcome.getNickname();
                 }
                 listener.onWebsocketMessage(msg);
@@ -93,8 +91,8 @@ public class Connection {
         ws.close();
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
     public String getNickname() {

@@ -360,7 +360,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 PlayerSlot slot = p.getSlot();
                 boolean match = false;
                 for (RemoteClient rc: clients) {
-                    if (rc.getClientId().equals(slot.getClientId())) {
+                    if (rc.getSessionId().equals(slot.getSessionId())) {
                         match = true;
                         break;
                     }

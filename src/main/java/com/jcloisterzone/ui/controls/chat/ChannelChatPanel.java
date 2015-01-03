@@ -19,7 +19,7 @@ public class ChannelChatPanel extends ChatPanel {
 
 	@Override
 	protected ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
-		boolean isMe = cc.getConnection().getClientId().equals(ev.getRemoteClient().getClientId());
+		boolean isMe = cc.getConnection().getSessionId().equals(ev.getRemoteClient().getSessionId());
 		return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ? Color.BLUE : Color.BLACK);
 	}
 
