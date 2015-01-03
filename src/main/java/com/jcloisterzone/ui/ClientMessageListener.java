@@ -119,9 +119,9 @@ public class ClientMessageListener implements MessageListener {
         }
     }
 
-    public RemoteClient getClientById(EventProxyUiController<?> controller, String clientId) {;
+    public RemoteClient getClientBySessionId(EventProxyUiController<?> controller, String sessionId) {;
         for (RemoteClient remote: controller.getRemoteClients()) {
-            if (remote.getClientId().equals(clientId)) {
+            if (remote.getSessionId().equals(sessionId)) {
                 return remote;
             }
         }
@@ -148,11 +148,11 @@ public class ClientMessageListener implements MessageListener {
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
-        slot.setClientId(slotMsg.getOwner());
+        slot.setSessionId(slotMsg.getOwner());
         if (slotMsg.getOwner() == null) {
             slot.setState(SlotState.OPEN);
         } else {
-            slot.setState(slotMsg.getOwner().equals(conn.getClientId()) ? SlotState.OWN : SlotState.REMOTE);
+            slot.setState(slotMsg.getOwner().equals(conn.getSessionId()) ? SlotState.OWN : SlotState.REMOTE);
         }
         slot.setSerial(slotMsg.getSerial());
         slot.setAiClassName(slotMsg.getAiClassName());
@@ -291,7 +291,7 @@ public class ClientMessageListener implements MessageListener {
     public void handleChat(ChatMessage msg) {
         EventProxyUiController<?> controller = getController(msg);
         if (controller != null) {
-            ChatEvent ev = new ChatEvent(getClientById(controller, msg.getClientId()), msg.getText());
+            ChatEvent ev = new ChatEvent(getClientBySessionId(controller, msg.getSessionId()), msg.getText());
             controller.getEventProxy().post(ev);
         } else {
             logger.warn("No controller for message {}", msg);
@@ -389,8 +389,8 @@ public class ClientMessageListener implements MessageListener {
         }
     }
 
-    public String getClientId() {
-        return conn.getClientId();
+    public String getSessionId() {
+        return conn.getSessionId();
     }
 
 

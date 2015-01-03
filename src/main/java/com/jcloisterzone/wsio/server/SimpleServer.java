@@ -155,7 +155,7 @@ public class SimpleServer extends WebSocketServer  {
         if (conn == null) return;
         if (!gameStarted) {
             for (ServerPlayerSlot slot : slots) {
-                if (slot != null && conn.getClientId().equals(slot.getOwner())) {
+                if (slot != null && conn.getSessionId().equals(slot.getOwner())) {
                     leaveSlot(slot);
                 }
             }
@@ -185,8 +185,8 @@ public class SimpleServer extends WebSocketServer  {
     public void onOpen(WebSocket ws, ClientHandshake hs) {
     }
 
-    private String getClientId(WebSocket ws) {
-        return connections.get(ws).getClientId();
+    private String getSessionId(WebSocket ws) {
+        return connections.get(ws).getSessionId();
     }
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
@@ -236,9 +236,10 @@ public class SimpleServer extends WebSocketServer  {
         }
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         String nickname = msg.getNickname() + '@' + getWebsocketHost(ws);
-        RemoteClient client = new RemoteClient(msg.getClientId(), nickname);
+        String sessionId = KeyUtils.createRandomId();
+        RemoteClient client = new RemoteClient(sessionId, nickname);
         connections.put(ws, client);
-        send(ws, new WelcomeMessage(msg.getClientId(), nickname));
+        send(ws, new WelcomeMessage(sessionId, nickname));
         send(ws, newGameMessage());
         broadcast(newClientListMessage());
     }
@@ -260,7 +261,7 @@ public class SimpleServer extends WebSocketServer  {
     public void handleTakeSlot(WebSocket ws, TakeSlotMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        String clientId = getClientId(ws);
+        String sessionId = getSessionId(ws);
         int number = msg.getNumber();
         if (number < 0 || number >= slots.length || slots[number] == null) {
             send(ws, new ErrorMessage("TAKE_SLOT", "Invalid slot number"));
@@ -272,7 +273,7 @@ public class SimpleServer extends WebSocketServer  {
         }
         slot.setNickname(msg.getNickname());
         slot.setAiClassName(msg.getAiClassName());
-        slot.setOwner(clientId);
+        slot.setOwner(sessionId);
         slot.setSupportedExpansions(msg.getSupportedExpansions());
         broadcast(newSlotMessage(slot));
     }
@@ -388,8 +389,8 @@ public class SimpleServer extends WebSocketServer  {
     @WsSubscribe
     public void handlePostChat(WebSocket ws, PostChatMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
-        String clientId = getClientId(ws);
-        ChatMessage reMsg = new ChatMessage(clientId, msg.getText());
+        String sessionId = getSessionId(ws);
+        ChatMessage reMsg = new ChatMessage(sessionId, msg.getText());
         reMsg.setGameId(msg.getGameId());
         broadcast(reMsg);
     }

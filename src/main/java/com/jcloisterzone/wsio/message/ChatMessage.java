@@ -7,11 +7,11 @@ public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
 
     private String gameId;
     private String channel;
-    private String clientId;
+    private String sessionId;
     private String text;
 
-    public ChatMessage(String clientId, String text) {
-        this.clientId = clientId;
+    public ChatMessage(String sessionId, String text) {
+        this.sessionId = sessionId;
         this.text = text;
     }
 
@@ -41,11 +41,11 @@ public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
         this.text = text;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
+	public String getSessionId() {
+		return sessionId;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 }
