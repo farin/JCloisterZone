@@ -51,7 +51,7 @@ public class StartPanel extends JPanel {
         createPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 client.createGame();
             }
         });
@@ -70,7 +70,7 @@ public class StartPanel extends JPanel {
         connectPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 client.mountView(new ConnectP2PView(client));
             }
         });
@@ -89,7 +89,7 @@ public class StartPanel extends JPanel {
         loadPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 client.handleLoad();
             }
         });
@@ -105,12 +105,12 @@ public class StartPanel extends JPanel {
         playOnlinePanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 client.mountView(new ConnectPlayOnlineView(client));
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
-        playOnlinePanel.add(new MultiLineLabel(_("Experimental!")), "wrap, grow");
+        playOnlinePanel.add(new MultiLineLabel("*** BETA! ***\n\n" + _("Can't host game? Play game using internet and public game server play.jcloisterzoe.com")), "wrap, grow");
     }
 
     public Client getClient() {
