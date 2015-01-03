@@ -110,7 +110,7 @@ public class StartPanel extends JPanel {
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
-        playOnlinePanel.add(new MultiLineLabel("*** BETA! ***\n\n" + _("Can't host game? Play game using internet and public game server play.jcloisterzoe.com")), "wrap, grow");
+        playOnlinePanel.add(new MultiLineLabel("*** BETA! ***\n\n" + _("Play with friends using internet connection and public game server play.jcloisterzone.com")), "wrap, grow");
     }
 
     public Client getClient() {

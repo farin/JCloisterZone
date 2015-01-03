@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JCloisterZone\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-03 13:58+0100\n"
-"PO-Revision-Date: 2014-09-17 23:22+0100\n"
+"POT-Creation-Date: 2015-01-03 14:09+0100\n"
+"PO-Revision-Date: 2015-01-03 14:10+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -274,7 +274,7 @@ msgstr "Ponechat kláštery základní hry."
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
 msgid "Leave game"
-msgstr ""
+msgstr "Opustit hru"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:240
 #: src/main/java/com/jcloisterzone/ui/Client.java:247
@@ -287,13 +287,14 @@ msgstr "Zrušít"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:242
 msgid ""
-"Game is in progress. Do you really want to quit game and also disconnect all "
+"The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
+"Hra není dohrána. Opravdu si přejete ji ukončit a odpojit ostatní hráče?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:249
-msgid "Game is in progress. Do you really want to leave it?"
-msgstr ""
+msgid "The game is not finished. Do you really want to leave it?"
+msgstr "Hra není dohrána. Opravdu si přejete ji opustit?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:359
 #: src/main/java/com/jcloisterzone/ui/Client.java:388
@@ -511,11 +512,11 @@ msgstr "Připojit"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:104
 msgid "Play online"
-msgstr ""
+msgstr "Hrát online"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
 msgid "Disconnect"
-msgstr ""
+msgstr "Odpojit"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:376
@@ -548,7 +549,7 @@ msgstr "Zobrazit louky"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
 msgid "Show projected points"
-msgstr ""
+msgstr "Zobrazit body za neuzavřené"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
 msgid "Show discarded tiles"
@@ -572,7 +573,7 @@ msgstr "O programu"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:81
 msgid "Session"
-msgstr ""
+msgstr "Sezení"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:126
 msgid "Game"
@@ -588,15 +589,15 @@ msgstr "Nápověda"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:86
 msgid "Game title"
-msgstr ""
+msgstr "Název hry"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:94
 msgid "Create game"
-msgstr ""
+msgstr "Vytvořit hru"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:155
 msgid "Join game"
-msgstr ""
+msgstr "Připojit se"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:168
@@ -610,7 +611,7 @@ msgstr "Rozšíření"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:37
 msgid "Connected clients"
-msgstr ""
+msgstr "Připojení klienti"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
@@ -628,7 +629,7 @@ msgstr "Port"
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
 msgid "Back"
-msgstr ""
+msgstr "Zpět"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:111
@@ -652,7 +653,7 @@ msgstr "Neplatné číslo portu"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
 msgid "Nickname"
-msgstr ""
+msgstr "Přezdívka"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:134
 msgid "Start game"
@@ -708,7 +709,7 @@ msgstr "Volná pozice"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:75
 msgid "Play again"
-msgstr ""
+msgstr "Hrát znovu"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:135
 msgid "Player"
@@ -831,9 +832,9 @@ msgstr "Nahrání dříve uložené hry ze souboru."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:113
 msgid ""
-"Can't host game? Play game using internet and public game server play."
-"jcloisterzoe.com"
-msgstr ""
+"Play with friends using internet connection and public game server play."
+"jcloisterzone.com"
+msgstr "Hrajte s přáteli přes internet a veřejný server play.jcloisterzone.com"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -842,6 +843,13 @@ msgstr "Uložené hry JCloisterZone"
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:52
 msgid "JCloisterZone "
 msgstr ""
+
+#~ msgid ""
+#~ "Can't host game? Play game using internet and public game server play."
+#~ "jcloisterzoe.com"
+#~ msgstr ""
+#~ "Nemůže založit hru přímo? Hrajte přes internet a veřejný server play."
+#~ "jcloisterzone.com"
 
 #~ msgid "Close game"
 #~ msgstr "Ukončit hru"

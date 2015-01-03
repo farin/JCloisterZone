@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-03 13:58+0100\n"
+"POT-Creation-Date: 2015-01-03 14:09+0100\n"
 "PO-Revision-Date: 2014-08-19 21:30+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,12 +284,12 @@ msgstr "Abbruch"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:242
 msgid ""
-"Game is in progress. Do you really want to quit game and also disconnect all "
+"The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:249
-msgid "Game is in progress. Do you really want to leave it?"
+msgid "The game is not finished. Do you really want to leave it?"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:359
@@ -829,8 +829,8 @@ msgstr "Ein gespeichertes Spiel laden."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:113
 msgid ""
-"Can't host game? Play game using internet and public game server play."
-"jcloisterzoe.com"
+"Play with friends using internet connection and public game server play."
+"jcloisterzone.com"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18

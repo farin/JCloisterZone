@@ -239,14 +239,14 @@ public class Client extends JFrame {
             if (localServer.get() != null) {
                 String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is in progress. Do you really want to quit game and also disconnect all other players?"),
+                        _("The game is not finished. Do you really want to stop game and disconnect all other players?"),
                         _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             } else {
                 String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is in progress. Do you really want to leave it?"),
+                        _("The game is not finished. Do you really want to leave it?"),
                         _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
