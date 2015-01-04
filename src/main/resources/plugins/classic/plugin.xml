@@ -28,6 +28,6 @@
         <expansion>GERMAN_MONASTERIES</expansion>
         <expansion>FLIER</expansion>
         <expansion>CORN_CIRCLES_II</expansion>
-        <expansion>MAGE_WITCH</expansion>
+        <expansion>MAGE_AND_WITCH</expansion>
     </expansions>
 </plugin>

@@ -20,7 +20,7 @@ import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
-import com.jcloisterzone.feature.visitor.IsOccupoedAndUncompleted;
+import com.jcloisterzone.feature.visitor.IsOccupiedAndUncompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Game;
 
@@ -275,7 +275,7 @@ public class Tile /*implements Cloneable*/ {
         Set<Location> locations = new HashSet<>();
         for (Feature f : features) {
             if (!featureClass.isInstance(f)) continue;
-            IsOccupied visitor = uncompletedOnly ? new IsOccupoedAndUncompleted() : new IsOccupied();
+            IsOccupied visitor = uncompletedOnly ? new IsOccupiedAndUncompleted() : new IsOccupied();
             if (f.walk(visitor.with(player).with(Follower.class))) {
                 locations.add(f.getLocation());
             }

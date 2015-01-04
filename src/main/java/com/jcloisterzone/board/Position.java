@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 
 
 /**
@@ -106,6 +107,7 @@ public class Position implements Serializable, Comparable<Position> {
         return y - o.y;
     }
 
-
-
+    public FeaturePointer asFeaturePointer() {
+        return new FeaturePointer(this, null);
+    }
 }

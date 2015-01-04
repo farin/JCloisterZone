@@ -62,6 +62,8 @@ public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private String HOST_SESSION_PLACEHOLDER = "!host";
+
     private final Client client;
 
     private MessageParser parser = new MessageParser();
@@ -75,7 +77,8 @@ public class SimpleServer extends WebSocketServer  {
     private boolean gameStarted;
 
     private final Map<WebSocket, RemoteClient> connections = new HashMap<>();
-    private String hostClientId;  //HACK how to assign loaded game slots to owner
+    private String hostClientId;
+
     private Random random = new Random();
 
     public SimpleServer(InetSocketAddress address, Client client) {
@@ -117,7 +120,7 @@ public class SimpleServer extends WebSocketServer  {
             boolean isAi = player.getSlot().isAi();
             if (player.isLocalHuman() || isAi) {
                 slot.setNickname(player.getNick());
-                slot.setOwner(hostClientId);
+                slot.setOwner(HOST_SESSION_PLACEHOLDER);
                 if (isAi) {
                     slot.setAiClassName(player.getSlot().getAiClassName());
                 }
@@ -141,7 +144,7 @@ public class SimpleServer extends WebSocketServer  {
             slot.setNickname(player.getNick());
             slot.setAiClassName(player.getSlot().getAiClassName());
             if (player.getSlot().getState() == SlotState.OWN || slot.getAiClassName() != null) {
-                slot.setOwner(hostClientId);
+                slot.setOwner(HOST_SESSION_PLACEHOLDER);
             }
             slots[slotNumber] = slot;
         }
@@ -239,6 +242,14 @@ public class SimpleServer extends WebSocketServer  {
         String sessionId = KeyUtils.createRandomId();
         RemoteClient client = new RemoteClient(sessionId, nickname);
         connections.put(ws, client);
+        if (msg.getClientId().equals(hostClientId)) {
+            for (int i = 0; i < slots.length; i++) {
+                if (slots[i] != null && HOST_SESSION_PLACEHOLDER.equals(slots[i].getOwner())) {
+                    slots[i].setOwner(sessionId);
+                }
+            }
+        }
+
         send(ws, new WelcomeMessage(sessionId, nickname));
         send(ws, newGameMessage());
         broadcast(newClientListMessage());

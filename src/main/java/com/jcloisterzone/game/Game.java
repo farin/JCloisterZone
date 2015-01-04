@@ -76,8 +76,8 @@ public class Game extends GameSettings implements EventProxy {
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
-    private List<Capability> capabilities = new ArrayList<>();
-    private FairyCapability fairyCapability; //shortcut
+    private List<Capability> capabilities = new ArrayList<>(); //TODO change to map?
+    private FairyCapability fairyCapability; //shortcut - TODO remove
 
     private Undoable lastUndoable;
     private Phase lastUndoablePhase;
@@ -89,16 +89,16 @@ public class Game extends GameSettings implements EventProxy {
     private int idSequenceCurrVal = 0;
 
     public Game(String gameId) {
-    	super(gameId);
+        super(gameId);
     }
 
     @Override
-	public EventBus getEventBus() {
+    public EventBus getEventBus() {
         return eventBus;
     }
 
     @Override
-	public void post(Event event) {
+    public void post(Event event) {
         eventQueue.add(event);
         for (Capability capability: capabilities) {
             capability.handleEvent(event);

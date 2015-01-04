@@ -31,6 +31,7 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
@@ -54,6 +55,7 @@ import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
+import com.jcloisterzone.ui.grid.layer.MageAndWitchLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
@@ -115,11 +117,11 @@ public class MainPanel extends JPanel {
     }
 
     public void setShowFarmHints(boolean showFarmHints) {
-    	if (showFarmHints) {
-    		getGridPanel().showLayer(farmHintLayer);
-    	} else {
-    		getGridPanel().hideLayer(farmHintLayer);
-    	}
+        if (showFarmHints) {
+            getGridPanel().showLayer(farmHintLayer);
+        } else {
+            getGridPanel().hideLayer(farmHintLayer);
+        }
     }
 
     public void started(Snapshot snapshot) {
@@ -150,12 +152,19 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(plagueLayer); //45
         }
 
+
         gridPanel.addLayer(meepleLayer); //zindex 50
         if (game.hasCapability(BridgeCapability.class)) {
             bridgeLayer = new BridgeLayer(gridPanel, gc);
             bridgeLayer.setMeepleLayer(meepleLayer);
             gridPanel.addLayer(bridgeLayer);
         }
+
+        //TODO use meeple layer instead and generalize neutral figures (extend from Figure ... )
+        if (game.hasCapability(MageAndWitchCapability.class)) {
+            gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
+        }
+
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
 
@@ -286,18 +295,25 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void dragonMoved(NeutralFigureMoveEvent ev) {
+    public void neutralMoved(NeutralFigureMoveEvent ev) {
         switch (ev.getType()) {
         case NeutralFigureMoveEvent.DRAGON:
-            dragonLayer.setPosition(ev.getTo());
+            dragonLayer.setPosition(ev.getTo().getPosition());
             dragonLayer.setMoves(0);
             gridPanel.hideLayer(DragonAvailableMove.class);
             gridPanel.repaint();
             break;
         case NeutralFigureMoveEvent.FAIRY:
-            fairyLayer.setPosition(ev.getTo());
+            fairyLayer.setPosition(ev.getTo().getPosition());
+            break;
+        case NeutralFigureMoveEvent.MAGE:
+            gridPanel.findLayer(MageAndWitchLayer.class).setMage(ev.getTo());
+            break;
+        case NeutralFigureMoveEvent.WITCH:
+            gridPanel.findLayer(MageAndWitchLayer.class).setWitch(ev.getTo());
             break;
         }
+
     }
 
     @Subscribe

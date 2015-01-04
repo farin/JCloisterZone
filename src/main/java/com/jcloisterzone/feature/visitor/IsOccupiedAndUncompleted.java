@@ -3,7 +3,7 @@ package com.jcloisterzone.feature.visitor;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 
-public class IsOccupoedAndUncompleted extends IsOccupied {
+public class IsOccupiedAndUncompleted extends IsOccupied {
 
     private boolean isCompleted = true;
 
