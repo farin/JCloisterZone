@@ -239,6 +239,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             if (message == null || message.length() == 0) {
                 message = ex.getClass().getSimpleName();
             }
+            logger.error(message, ex);
         }
         getGridPanel().setErrorMessage(message);
     }

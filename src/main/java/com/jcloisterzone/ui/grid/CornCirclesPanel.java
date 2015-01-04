@@ -19,7 +19,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 @InteractionPanel
 public class CornCirclesPanel extends JPanel {
 
-    private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
+    public static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
 
     private JButton deploymentOption, removalOption;
 

@@ -59,6 +59,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ControlPanel controlPanel;
     private final ChatPanel chatPanel;
     private BazaarPanel bazaarPanel;
+    private SelectMageWitchRemovalPanel mageWitchPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -112,37 +113,37 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         registerMouseListeners();
         add(controlPanel, "pos (100%-255) 0 100% 100%");
         if (chatPanel != null) {
-        	chatPanel.initHidingMode();
-        	add(chatPanel, "pos 0 0 250 100%");
+            chatPanel.initHidingMode();
+            add(chatPanel, "pos 0 0 250 100%");
         }
     }
 
 
     @Override
     public void forward() {
-    	if (bazaarPanel != null) {
-    		bazaarPanel.forward();
-    	}
+        if (bazaarPanel != null) {
+            bazaarPanel.forward();
+        }
         controlPanel.getActionPanel().forward();
     }
 
     @Override
     public void backward() {
         if (bazaarPanel != null) {
-    		bazaarPanel.backward();
-    	}
+            bazaarPanel.backward();
+        }
         controlPanel.getActionPanel().backward();
     }
 
     public void removeInteractionPanels() {
-    	int l = getComponents().length;
-    	for (int i = l-1; i > 0; i--) {
-    		Component child = getComponent(i);
-    		if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
-    			remove(i);
-    		}
-    	}
-    	bazaarPanel = null;
+        int l = getComponents().length;
+        for (int i = l-1; i > 0; i--) {
+            Component child = getComponent(i);
+            if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
+                remove(i);
+            }
+        }
+        bazaarPanel = null;
     }
 
     class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
@@ -232,10 +233,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public ChatPanel getChatPanel() {
-		return chatPanel;
-	}
+        return chatPanel;
+    }
 
-	public String getErrorMessage() {
+    public String getErrorMessage() {
         return errorMessage;
     }
 
@@ -255,16 +256,28 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
 
     public BazaarPanel getBazaarPanel() {
-		return bazaarPanel;
-	}
+        return bazaarPanel;
+    }
 
 
-	public void setBazaarPanel(BazaarPanel bazaarPanel) {
-		this.bazaarPanel = bazaarPanel;
-	}
+    public void setBazaarPanel(BazaarPanel bazaarPanel) {
+        this.bazaarPanel = bazaarPanel;
+    }
 
 
-	public void moveCenter(int xSteps, int ySteps) {
+
+
+    public SelectMageWitchRemovalPanel getMageWitchPanel() {
+        return mageWitchPanel;
+    }
+
+
+    public void setMageWitchPanel(SelectMageWitchRemovalPanel mageWitchPanel) {
+        this.mageWitchPanel = mageWitchPanel;
+    }
+
+
+    public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
         double dx = xSteps * 30.0f / getSquareSize();
         double dy = ySteps * 30.0f / getSquareSize();

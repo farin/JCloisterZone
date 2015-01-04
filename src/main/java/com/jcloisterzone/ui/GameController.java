@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.InvocationHandler;
@@ -26,6 +24,7 @@ import com.jcloisterzone.event.BazaarSelectTileEvent;
 import com.jcloisterzone.event.BazaarTileSelectedEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -44,6 +43,7 @@ import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GameOverPanel;
@@ -52,6 +52,8 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
 
@@ -232,6 +234,17 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         GridPanel gridPanel = gameView.getGridPanel();
         gridPanel.add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
         gridPanel.revalidate();
+    }
+
+    @Subscribe
+    public void selectMageAndWitchRemoval(MageWitchSelectRemoval ev) {
+        clearActions();
+        SelectMageWitchRemovalPanel panel = new SelectMageWitchRemovalPanel(this);
+        GridPanel gridPanel = gameView.getGridPanel();
+        gridPanel.setMageWitchPanel(panel);
+        gridPanel.add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+        gridPanel.revalidate();
+
     }
 
     public BazaarPanel showBazaarPanel() {

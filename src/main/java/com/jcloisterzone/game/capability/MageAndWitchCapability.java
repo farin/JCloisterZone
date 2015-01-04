@@ -1,7 +1,9 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
@@ -10,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.action.MageAndWitchAction;
+import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -40,30 +43,31 @@ public class MageAndWitchCapability extends Capability {
         }
     }
 
-    public MageAndWitchAction prepareMageAction() {
-        MageAndWitchAction action = new MageAndWitchAction(true);
-        prepareMageWitchLocations(action, magePlacement);
-        return action;
-    }
-
-    public MageAndWitchAction prepareWitchAction() {
-        MageAndWitchAction action = new MageAndWitchAction(false);
-        prepareMageWitchLocations(action, witchPlacement);
-        return action;
-    }
-
-    private void prepareMageWitchLocations(MageAndWitchAction action, FeaturePointer exclude) {
+    public List<PlayerAction<?>> prepareMageWitchActions() {
         Set<Feature> touchedFeatures = new HashSet<>();
-        if (exclude != null) {
-            touchedFeatures.add(getBoard().get(exclude));
+        if (magePlacement != null) {
+            touchedFeatures.add(getBoard().get(magePlacement));
         }
+        if (witchPlacement != null) {
+            touchedFeatures.add(getBoard().get(witchPlacement));
+        }
+        Set<FeaturePointer> placements = new HashSet<>();
         for (Tile tile: getBoard().getAllTiles()) {
             for (Feature f: tile.getFeatures()) {
                 if (f instanceof Road || f instanceof City) {
-                    action.addAll(f.walk(new IsUnfinished(touchedFeatures)));
+                    placements.addAll(f.walk(new IsUnfinished(touchedFeatures)));
                 }
             }
         }
+        if (placements.isEmpty()) return null;
+        List<PlayerAction<?>> actions = new ArrayList<>(2);
+        MageAndWitchAction action = new MageAndWitchAction(true);
+        action.addAll(placements);
+        actions.add(action);
+        action = new MageAndWitchAction(false);
+        action.addAll(placements);
+        actions.add(action);
+        return actions;
     }
 
     public boolean isMageAndWitchPlacedOnSameFeature() {

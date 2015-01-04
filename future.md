@@ -3,6 +3,7 @@
 ## Done in current dev
 
 * play online feature - play through public webserver
+* Mage and Witch (Mini #5) expansion
 * tile rotation behavior changed - tile is rotated to first valid position
 * added play again button
 * show tunnel tokens supply in control panel

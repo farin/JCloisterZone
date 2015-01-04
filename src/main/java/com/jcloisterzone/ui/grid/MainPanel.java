@@ -294,6 +294,13 @@ public class MainPanel extends JPanel {
         repaint();
     }
 
+    private void hideMageWitchPanel() {
+        if (gridPanel.getMageWitchPanel() != null) {
+            gridPanel.remove(gridPanel.getMageWitchPanel());
+            gridPanel.revalidate();
+        }
+    }
+
     @Subscribe
     public void neutralMoved(NeutralFigureMoveEvent ev) {
         switch (ev.getType()) {
@@ -308,9 +315,11 @@ public class MainPanel extends JPanel {
             break;
         case NeutralFigureMoveEvent.MAGE:
             gridPanel.findLayer(MageAndWitchLayer.class).setMage(ev.getTo());
+            hideMageWitchPanel();
             break;
         case NeutralFigureMoveEvent.WITCH:
             gridPanel.findLayer(MageAndWitchLayer.class).setWitch(ev.getTo());
+            hideMageWitchPanel();
             break;
         }
 

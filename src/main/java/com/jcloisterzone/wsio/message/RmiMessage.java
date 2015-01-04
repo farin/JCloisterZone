@@ -84,7 +84,7 @@ public class RmiMessage implements WsInGameMessage {
         if (oargs != null) {
             for (int i = 0; i < oargs.length; i++) {
                 if (i > 0) sb.append(", ");
-                sb.append(oargs[i].toString());
+                sb.append(oargs[i] == null ? null : oargs[i].toString());
             }
         }
         sb.append("]");
