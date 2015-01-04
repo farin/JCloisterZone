@@ -10,9 +10,11 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +67,7 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -333,7 +337,19 @@ public class Client extends JFrame {
     private void createGame(Snapshot snapshot, Game settings) {
         if (closeGame()) {
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
-            SimpleServer server = new SimpleServer(new InetSocketAddress(port), this);
+            SimpleServer server = new SimpleServer(new InetSocketAddress(port), new SimpleServerErrorHandler() {
+                @Override
+                public void onError(WebSocket ws, Exception ex) {
+                    if (ex instanceof ClosedByInterruptException) {
+                        logger.info(ex.toString()); //exception message is null
+                    } else if (ex instanceof BindException) {
+                        onServerStartError(ex);
+                    } else {
+                        logger.error(ex.getMessage(), ex);
+                    }
+
+                }
+            });
             localServer.set(server);
             server.createGame(snapshot, settings, config.getClient_id());
             server.start();

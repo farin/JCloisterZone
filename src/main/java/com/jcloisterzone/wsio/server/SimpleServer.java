@@ -1,9 +1,7 @@
 package com.jcloisterzone.wsio.server;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.InetSocketAddress;
-import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,13 +22,13 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSettings;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
@@ -64,7 +62,7 @@ public class SimpleServer extends WebSocketServer  {
 
     private String HOST_SESSION_PLACEHOLDER = "!host";
 
-    private final Client client;
+    private final SimpleServerErrorHandler errHandler;
 
     private MessageParser parser = new MessageParser();
     private MessageDispatcher dispatcher = new MessageDispatcher();
@@ -76,18 +74,25 @@ public class SimpleServer extends WebSocketServer  {
     private Snapshot snapshot;
     private boolean gameStarted;
 
-    private final Map<WebSocket, RemoteClient> connections = new HashMap<>();
+    protected final Map<WebSocket, RemoteClient> connections = new HashMap<>();
     private String hostClientId;
 
     private Random random = new Random();
 
-    public SimpleServer(InetSocketAddress address, Client client) {
+    public static interface SimpleServerErrorHandler {
+        public void onError(WebSocket ws, final Exception ex);
+    }
+
+    public SimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
         super(address);
-        this.client = client;
+        this.errHandler = errHandler;
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
 
     public void createGame(Snapshot snapshot, Game settings, String hostClientId) {
+        slotSerial = 0;
+        gameStarted = false;
+        this.snapshot = null;
         this.hostClientId = hostClientId;
         game = new GameSettings(KeyUtils.createRandomId());
         if (snapshot != null) {
@@ -168,13 +173,7 @@ public class SimpleServer extends WebSocketServer  {
 
     @Override
     public void onError(WebSocket ws, final Exception ex) {
-        if (ex instanceof ClosedByInterruptException) {
-            logger.info(ex.toString()); //exception message is null
-        } else if (ex instanceof BindException) {
-            client.onServerStartError(ex);
-        } else {
-            logger.error(ex.getMessage(), ex);
-        }
+        errHandler.onError(ws, ex);
     }
 
     @Override
@@ -406,12 +405,6 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(reMsg);
     }
 
-    @WsSubscribe
-    public void handleGameOver(WebSocket ws, GameOverMessage msg) {
-        //empty
-    }
-
-
     public void send(WebSocket ws, WsMessage message) {
         ws.send(parser.toJson(message));
     }
@@ -421,5 +414,40 @@ public class SimpleServer extends WebSocketServer  {
         for (WebSocket ws : connections.keySet()) {
             ws.send(payload);
         }
+    }
+
+    public static class StandaloneSimpleServer extends SimpleServer {
+
+        public StandaloneSimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
+            super(address, errHandler);
+        }
+
+        @WsSubscribe
+        public void handleStandaloneGameOver(WebSocket ws, GameOverMessage msg) {
+            for (WebSocket conn : connections.keySet()) {
+                conn.close();
+            }
+            connections.clear();
+            createGame(null, null, null);
+            logger.info("Game finished. Starting a new one.");
+        }
+    }
+
+    public static void main(String[] args) {
+        final Logger logger = LoggerFactory.getLogger(SimpleServer.class);
+        int port = ConfigLoader.DEFAULT_PORT;
+        String portStr = System.getProperty("port");
+        if (portStr != null && portStr.length() > 0) {
+            port = Integer.parseInt(portStr);
+        }
+        StandaloneSimpleServer server = new StandaloneSimpleServer(new InetSocketAddress(port), new SimpleServerErrorHandler() {
+            @Override
+            public void onError(WebSocket ws, Exception ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+        });
+        server.createGame(null, null, null);
+        server.start();
+        logger.info("Simple server started on port {}", port);
     }
 }
