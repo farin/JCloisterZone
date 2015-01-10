@@ -284,7 +284,7 @@ public class ClientMessageListener implements MessageListener {
         for (GameMessage gameMsg : msg.getGames()) {
             gameControllers[i++] = handleGame(gameMsg, true);
         }
-          cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
+        cc.getEventProxy().post(new GameListChangedEvent(gameControllers));
     }
 
     @WsSubscribe
