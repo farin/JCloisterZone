@@ -41,6 +41,8 @@ public class MenuBar extends JMenuBar {
         FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
         PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
         DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        GAME_SETUP(_("Show game setup"), null),
+        TAKE_SCREENSHOT(_("Take screenshot"), null),
         //Settings
         BEEP_ALERT(_("Beep alert at player turn")),
         CONFIRM_FARM(_("Confirm placement on a farm")),

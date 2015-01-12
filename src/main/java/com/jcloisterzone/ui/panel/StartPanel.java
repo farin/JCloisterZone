@@ -42,13 +42,26 @@ public class StartPanel extends JPanel {
         helpPanel = new HelpPanel();
         add(helpPanel, "span 2, wrap, grow, gap 30 30");
 
-        JPanel createPanel = new JPanel();
-        createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        add(createPanel, "grow, width :250:");
-        createPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        //JPanel createPanel = new JPanel();
+        //createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        JPanel playHostedPanel = new JPanel();
+        playHostedPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
+        add(playHostedPanel, "grow 2, width :500:");
+        playHostedPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+
+        playHostedPanel.add(new MultiLineLabel(
+          _("Create a new game or continue a previously saved one. A game will be hosted on your computer and other players may connect during game set up. " +
+            "You can also play only against any number of computer players.")),
+            "wrap, grow");
+
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new MigLayout("", "[]30[]30[]", "[]"));
+        playHostedPanel.add(btnPanel, "wrap");
 
         JButton btn = new JButton(_("New game"));
-        createPanel.add(btn, "wrap, alignx center,aligny top");
+        btnPanel.add(btn, "aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,37 +69,11 @@ public class StartPanel extends JPanel {
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
-        createPanel.add(new MultiLineLabel(
-            _("Create a new local or network game. You can play against any number of computer players.")),
-        "wrap, grow");
 
-
-        JPanel connectPanel = new JPanel();
-        connectPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        add(connectPanel, "grow, width :250:, wrap");
-        connectPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
-
-        btn = new JButton(_("Connect"));
-        connectPanel.add(btn, "wrap, alignx center,aligny top");
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                client.mountView(new ConnectP2PView(client));
-            }
-        });
-        btn.setFont(FONT_LARGE_BUTTON);
-        connectPanel.add(new MultiLineLabel(
-            _("Connect to a remote JCloisterZone application with settled new game.")),
-        "wrap, grow");
-
-
-        JPanel loadPanel = new JPanel();
-        loadPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        add(loadPanel, "grow, width :250:");
-        loadPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+        btnPanel.add(new JLabel(_("or")));
 
         btn = new JButton(_("Load game"));
-        loadPanel.add(btn, "wrap, alignx center,aligny top");
+        btnPanel.add(btn, "aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,15 +81,31 @@ public class StartPanel extends JPanel {
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
-        loadPanel.add(new MultiLineLabel(_("Load from a file previously saved game.")), "wrap, grow");
+
+        playHostedPanel.add(new MultiLineLabel(
+                _("You can also connect to remote JCloisterZone application hosting a game. Connect when game is created but not yet started.")),
+            "wrap, grow, gaptop 15");
+
+        btn = new JButton(_("Connect"));
+        playHostedPanel.add(btn, "wrap, alignx center,aligny top");
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.mountView(new ConnectP2PView(client));
+            }
+        });
+        btn.setFont(FONT_LARGE_BUTTON);
 
         JPanel playOnlinePanel = new JPanel();
         playOnlinePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         add(playOnlinePanel, "grow, width :250:, wrap");
         playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
+        playOnlinePanel.add(new MultiLineLabel("*** BETA! ***\n\n" +
+          _("Conenct to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
+
         btn = new JButton(_("Play online"));
-        playOnlinePanel.add(btn, "wrap, alignx center,aligny top");
+        playOnlinePanel.add(btn, "wrap, alignx center, aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,7 +113,7 @@ public class StartPanel extends JPanel {
             }
         });
         btn.setFont(FONT_LARGE_BUTTON);
-        playOnlinePanel.add(new MultiLineLabel("*** BETA! ***\n\n" + _("Play with friends using internet connection and public game server play.jcloisterzone.com")), "wrap, grow");
+
     }
 
     public Client getClient() {
