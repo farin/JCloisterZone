@@ -125,9 +125,9 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         messagesPane.setOpaque(false);
 
         setBackground(Color.WHITE);
-        setLayout(new MigLayout("", "[grow]", "[grow][]"));
-        add(messagesPane, "cell 0 0, align 0% 100%");
-        add(input, "cell 0 1, growx, h 25");
+        setLayout(new MigLayout(""));
+        add(messagesPane, "pos 10 n (100%-10) (100%-35)");
+        add(input, "pos 10 (100%-35) (100%-10) (100%-10)");
 
     }
 
