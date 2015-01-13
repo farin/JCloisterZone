@@ -20,7 +20,7 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "Report bug"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
 msgid ""
@@ -30,15 +30,15 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
-msgstr ""
+msgstr "Пожалуйста, опишите ошибку..."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
-msgstr ""
+msgstr "...затем скачайте архив отчёта и перешлите по электронной почте на farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
-msgstr ""
+msgstr "Не удалось создать отчёт об ошибке"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "Basic game"
@@ -91,7 +91,7 @@ msgstr "Мосты, Замки и Базары"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Hills and sheep"
-msgstr ""
+msgstr "Холмы и Овцы"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "King and Robber Baron"
@@ -107,11 +107,11 @@ msgstr "Река II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Cathars / Siege"
-msgstr "Катары"
+msgstr "Катары / Осада"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The Besiegers"
-msgstr ""
+msgstr "Осаждающие"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Count of Carcassonne"
@@ -155,7 +155,7 @@ msgstr "Роза Ветров"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The German Monasteries"
-msgstr ""
+msgstr "Монастыри Германии"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Flier"
@@ -235,7 +235,7 @@ msgstr "Принцесса ОБЯЗАНА убирать рыцаря из го�
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:15
 msgid "Dragon movement occurs after scoring."
-msgstr "Дракон ходит после подсчёта очков"
+msgstr "Дракон ходит после подсчёта очков."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:17
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -264,7 +264,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:27
 msgid "Keep basic cloisters in the game."
-msgstr ""
+msgstr "Оставить обычные монастыри в игре."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:247
@@ -274,7 +274,7 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
 msgid "Leave game"
-msgstr ""
+msgstr "Покинуть игру"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:251
@@ -312,7 +312,7 @@ msgstr "Загрузить игру"
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:352
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:236
 msgid "Connection lost"
-msgstr ""
+msgstr "Связь потеряна"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:382
 msgid ""
@@ -457,11 +457,11 @@ msgstr "на/из {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:68
 msgid "Place a follower"
-msgstr "Поставить подданного"
+msgstr "Разместить подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
 msgid "Do you really want to place a follower on farm?"
-msgstr "Вы хотите поставить подданного на этот фрагмент поля?"
+msgstr "Вы хотите разместить подданного на этот фрагмент поля?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:81
@@ -469,7 +469,7 @@ msgstr "Вы хотите поставить подданного на этот 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:91
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:96
 msgid "Confirm follower placement"
-msgstr "Подтвердите выставление подданного"
+msgstr "Подтвердите размещение подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:83
 msgid "Place a tower piece"
@@ -481,16 +481,16 @@ msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
 msgstr ""
-"Вы действительно хотите поставить подданного на башню?\n"
+"Вы действительно хотите разместить подданного на башню?\n"
 "(Это не позволит добавлять новые фишки на башню)"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:133
 msgid "Place as monk"
-msgstr ""
+msgstr "Разместить как монаха"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:133
 msgid "Place as abbot"
-msgstr ""
+msgstr "Разместить как аббата"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:135
 msgid "How do you want to place follower on monastery?"
@@ -498,7 +498,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:136
 msgid "Monastery"
-msgstr ""
+msgstr "Монастырь"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:28
 msgid "Mage and Witch"
