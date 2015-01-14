@@ -259,7 +259,7 @@ public class CreateGamePlayerPanel extends JPanel {
         if (slot.getAiClassName() != null) {
             try {
                 EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(slot.getAiClassName()).getMethod("supportedExpansions").invoke(null);
-                msg.setSupportedExpansions(supported.toArray(new Expansion[0]));
+                msg.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }

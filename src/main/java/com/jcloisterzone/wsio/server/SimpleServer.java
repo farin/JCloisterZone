@@ -220,7 +220,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private ClientListMessage newClientListMessage() {
-        RemoteClient[] clients = connections.values().toArray(new RemoteClient[0]);
+        RemoteClient[] clients = connections.values().toArray(new RemoteClient[connections.size()]);
         return new ClientListMessage(game.getGameId(), clients);
     }
 
