@@ -35,7 +35,7 @@ import com.jcloisterzone.wsio.message.SlotMessage;
 
 public class CreateGamePhase extends ServerAwarePhase {
 
-    private final class PlayerSlotComparator implements Comparator<PlayerSlot> {
+    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
         @Override
         public int compare(PlayerSlot o1, PlayerSlot o2) {
             if (o1.getSerial() == null) {

@@ -91,7 +91,7 @@ public class MageAndWitchCapability extends Capability {
         this.witchPlacement = witchPlacement;
     }
 
-    class ContainsFeature implements FeatureVisitor<Boolean> {
+    static class ContainsFeature implements FeatureVisitor<Boolean> {
 
         private FeaturePointer searchFor;
         private boolean result = false;
@@ -116,7 +116,7 @@ public class MageAndWitchCapability extends Capability {
 
     }
 
-    class IsUnfinished implements FeatureVisitor<Set<FeaturePointer>> {
+    static class IsUnfinished implements FeatureVisitor<Set<FeaturePointer>> {
 
         private final Set<Feature> touchedFeatures;
         private final Set<FeaturePointer> result = new HashSet<>();
