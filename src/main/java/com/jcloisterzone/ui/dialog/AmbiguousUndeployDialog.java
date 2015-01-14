@@ -24,7 +24,7 @@ public class AmbiguousUndeployDialog extends JDialog {
 
     //private final Client client;
 
-    private final int ICON_SIZE = 80;
+    private static final int ICON_SIZE = 80;
 
     public AmbiguousUndeployDialog(Client client, List<MeeplePointer> pointers, final AmbiguousUndeployDialogEvent handler) {
         super(client);
