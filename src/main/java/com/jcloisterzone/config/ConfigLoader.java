@@ -124,10 +124,8 @@ public class ConfigLoader {
 
     public void save(Config config) {
         File file = config.getOrigin();
-        try {
-            PrintWriter writer = new PrintWriter(file);
+        try (PrintWriter writer = new PrintWriter(file)) {
             writer.print(fillTemplate(config));
-            writer.close();
             logger.info("Configuration saved {}", file);
         } catch (IOException e) {
             logger.warn("Unable to create configuration file {}", file);
