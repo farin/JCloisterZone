@@ -224,7 +224,6 @@ public class ControlPanel extends JPanel {
         }
 
         for (PlayerPanel pp : playerPanels) {
-        	int h = pp.getHeight();
         	doRevalidate = doRevalidate || pp.repaintContent(w);
         }
         if (doRevalidate) {
