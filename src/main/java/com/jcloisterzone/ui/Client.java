@@ -10,9 +10,12 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.ClosedByInterruptException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +67,9 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.SimpleServer;
+import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -73,6 +80,7 @@ public class Client extends JFrame {
 
     public static final String BASE_TITLE = "JCloisterZone";
 
+    private final Path dataDirectory;
     private final Config config;
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
@@ -90,7 +98,8 @@ public class Client extends JFrame {
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
 
-    public Client(ConfigLoader configLoader, Config config, List<Plugin> plugins) {
+    public Client(Path dataDirectory, ConfigLoader configLoader, Config config, List<Plugin> plugins) {
+        this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
@@ -236,14 +245,14 @@ public class Client extends JFrame {
             if (localServer.get() != null) {
                 String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is in progress. Do you really want to quit game and also disconnect all other players?"),
+                        _("The game is not finished. Do you really want to stop game and disconnect all other players?"),
                         _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             } else {
                 String options[] = {_("Leave game"), _("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("Game is in progress. Do you really want to leave it?"),
+                        _("The game is not finished. Do you really want to leave it?"),
                         _("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
@@ -330,9 +339,21 @@ public class Client extends JFrame {
     private void createGame(Snapshot snapshot, Game settings) {
         if (closeGame()) {
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
-            SimpleServer server = new SimpleServer(new InetSocketAddress(port), this);
+            SimpleServer server = new SimpleServer(new InetSocketAddress(port), new SimpleServerErrorHandler() {
+                @Override
+                public void onError(WebSocket ws, Exception ex) {
+                    if (ex instanceof ClosedByInterruptException) {
+                        logger.info(ex.toString()); //exception message is null
+                    } else if (ex instanceof BindException) {
+                        onServerStartError(ex);
+                    } else {
+                        logger.error(ex.getMessage(), ex);
+                    }
+
+                }
+            });
             localServer.set(server);
-            server.createGame(snapshot, settings);
+            server.createGame(snapshot, settings, config.getClient_id());
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server
@@ -359,8 +380,16 @@ public class Client extends JFrame {
 
     }
 
+    public File getSavesDirectory() {
+        File savesDir = dataDirectory.resolve("saves").toFile();
+        if (!savesDir.exists()) {
+            savesDir.mkdir();
+        }
+        return savesDir;
+    }
+
     public void handleLoad() {
-        JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + System.getProperty("file.separator") + "saves");
+        JFileChooser fc = new JFileChooser(getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Load game"));
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -476,7 +505,6 @@ public class Client extends JFrame {
         }
     }
 
-    //TODO pass to view
     public void onWebsocketError(Exception ex) {
         view.onWebsocketError(ex);
     }

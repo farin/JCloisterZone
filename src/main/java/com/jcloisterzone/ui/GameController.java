@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.InvocationHandler;
@@ -26,6 +24,7 @@ import com.jcloisterzone.event.BazaarSelectTileEvent;
 import com.jcloisterzone.event.BazaarTileSelectedEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -44,6 +43,7 @@ import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GameOverPanel;
@@ -52,6 +52,8 @@ import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
 
@@ -66,7 +68,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     private GameView gameView;
 
     public GameController(Client client, Game game) {
-    	super(client, game);
+        super(client, game);
         this.game = game;
         rmiProxy = (RmiProxy) Proxy.newProxyInstance(RmiProxy.class.getClassLoader(), new Class[] { RmiProxy.class }, this);
         getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
@@ -112,18 +114,18 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void gameStateChange(GameStateChangeEvent ev) {
-    	if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
-    		boolean showPlayAgain = client.getLocalServer() != null;
-    		gameView.setGameRunning(false);
-    		if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
-    			gameView.getGridPanel().remove(gameView.getChatPanel());
-    		}
-    		client.closeGame(true);
-    		GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
-    		gameView.getGridPanel().add(panel, "pos 0 0 null 100%");
-    		gameView.getGridPanel().revalidate();
+        if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
+            boolean showPlayAgain = client.getLocalServer() != null;
+            gameView.setGameRunning(false);
+            if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
+                gameView.getGridPanel().remove(gameView.getChatPanel());
+            }
+            client.closeGame(true);
+            GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
+            gameView.getGridPanel().add(panel, "pos 0 0");
+            gameView.getGridPanel().revalidate();
 
-    	}
+        }
     }
 
 
@@ -234,15 +236,26 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         gridPanel.revalidate();
     }
 
-    public BazaarPanel showBazaarPanel() {
-    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
-    	if (panel == null) {
-    		panel = new BazaarPanel(client, gameView.getGameController());
-    		gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
-    		gameView.getGridPanel().setBazaarPanel(panel);
+    @Subscribe
+    public void selectMageAndWitchRemoval(MageWitchSelectRemoval ev) {
+        clearActions();
+        SelectMageWitchRemovalPanel panel = new SelectMageWitchRemovalPanel(this);
+        GridPanel gridPanel = gameView.getGridPanel();
+        gridPanel.setMageWitchPanel(panel);
+        gridPanel.add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+        gridPanel.revalidate();
 
-    	}
-    	return panel;
+    }
+
+    public BazaarPanel showBazaarPanel() {
+        BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+        if (panel == null) {
+            panel = new BazaarPanel(client, gameView.getGameController());
+            gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+            gameView.getGridPanel().setBazaarPanel(panel);
+
+        }
+        return panel;
     }
 
     @Subscribe
@@ -298,20 +311,20 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
-    	BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
-    	if (panel != null) {
-    		gameView.getGridPanel().remove(panel);
-    		gameView.getGridPanel().setBazaarPanel(null);
-    	}
+        BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
+        if (panel != null) {
+            gameView.getGridPanel().remove(panel);
+            gameView.getGridPanel().setBazaarPanel(null);
+        }
     }
 
     public void leaveGame() {
-    	if (getChannel() == null) {
-			client.closeGame();
-			client.mountView(new StartView(client));
-		} else {
-			getConnection().send(new LeaveGameMessage(game.getGameId()));
-		}
+        if (getChannel() == null) {
+            client.closeGame();
+            client.mountView(new StartView(client));
+        } else {
+            getConnection().send(new LeaveGameMessage(game.getGameId()));
+        }
     }
 
     public RmiProxy getRmiProxy() {
@@ -319,26 +332,26 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     public GameView getGameView() {
-		return gameView;
-	}
+        return gameView;
+    }
 
-	public void setGameView(GameView gameView) {
-		this.gameView = gameView;
-	}
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
 
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
 
     public void setReportingTool(ReportingTool reportingTool) {
-		this.reportingTool = reportingTool;
-	}
+        this.reportingTool = reportingTool;
+    }
 
     public String getChannel() {
-		return channel;
-	}
+        return channel;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }

@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -137,6 +138,16 @@ public abstract class Phase implements RmiProxy {
     @Override
     public void moveDragon(Position p) {
         logger.error(Application.ILLEGAL_STATE_MSG, "moveDragon");
+    }
+
+    @Override
+    public void moveMage(FeaturePointer fp) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveMage");
+    }
+
+    @Override
+    public void moveWitch(FeaturePointer fp) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveWitch");
     }
 
     @Override

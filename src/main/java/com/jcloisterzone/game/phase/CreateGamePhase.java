@@ -35,7 +35,7 @@ import com.jcloisterzone.wsio.message.SlotMessage;
 
 public class CreateGamePhase extends ServerAwarePhase {
 
-    private final class PlayerSlotComparator implements Comparator<PlayerSlot> {
+    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
         @Override
         public int compare(PlayerSlot o1, PlayerSlot o2) {
             if (o1.getSerial() == null) {
@@ -125,6 +125,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                addPhase(next, new TowerCapturePhase(game));
                addPhase(next, new FlierActionPhase(game));
         next = addPhase(next, new ActionPhase(game));
+        next = addPhase(next, new MageAndWitchPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
         next = addPhase(next, new DrawPhase(game, getGameController()));

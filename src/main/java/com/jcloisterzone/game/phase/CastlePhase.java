@@ -102,7 +102,7 @@ public class CastlePhase extends Phase {
         prepareCastleAction(); //it is possible to deploy castle by another player
     }
 
-    class FindCastleBaseVisitor implements FeatureVisitor<Player> {
+    static class FindCastleBaseVisitor implements FeatureVisitor<Player> {
 
         int size = 0;
         boolean castleBase = true;

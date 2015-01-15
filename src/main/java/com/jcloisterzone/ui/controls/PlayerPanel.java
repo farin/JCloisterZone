@@ -74,7 +74,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     private final PlayerPanelImageCache cache;
 
     //paint context variables
-    private int PANEL_WIDTH = 1; //TODO clean
+    private int PANEL_WIDTH = 1; //TODO clean, it's not constant now
     private BufferedImage bimg;
     private Graphics2D g2;
     private int realHeight = 1;
@@ -151,7 +151,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             w = count < 10 ? 47 : 60;
         }
         int h = 22;
-        if (bx+w > PANEL_WIDTH-PADDING_R) {
+        if (bx+w > PANEL_WIDTH-PADDING_R-PADDING_L) {
             bx = PADDING_L;
             by += LINE_HEIGHT;
         }

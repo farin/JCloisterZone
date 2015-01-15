@@ -19,7 +19,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 @InteractionPanel
 public class CornCirclesPanel extends JPanel {
 
-    private static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
+    public static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
 
     private JButton deploymentOption, removalOption;
 
@@ -38,9 +38,11 @@ public class CornCirclesPanel extends JPanel {
         label = new JLabel(_("Each player…"));
         add(label, "wrap, gapbottom 5");
 
+        boolean isActive = gc.getGame().getActivePlayer().isLocalHuman();
+
         deploymentOption = new JButton();
-        //deploymentOption.setFont(FONT_BUTTON);
         deploymentOption.setText(_("may deploy additional follower"));
+        deploymentOption.setEnabled(isActive);
         deploymentOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,6 +56,7 @@ public class CornCirclesPanel extends JPanel {
 
         removalOption = new JButton();
         removalOption.setText(_("must remove follower"));
+        removalOption.setEnabled(isActive);
         removalOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

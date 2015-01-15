@@ -24,14 +24,14 @@ import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 public class MenuBar extends JMenuBar {
 
     public static enum MenuItem {
-        //Play
+        //Session
         NEW_GAME(_("New game"), KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         PLAY_ONLINE(_("Play online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         DISCONNECT(_("Disconnect")),
         LEAVE_GAME(_("Leave game")),
-        SAVE(_("Save"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        LOAD(_("Load"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        SAVE(_("Save game"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        LOAD(_("Load game"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         QUIT(_("Quit"), KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         //Game
         UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
@@ -39,8 +39,9 @@ public class MenuBar extends JMenuBar {
         ZOOM_OUT(_("Zoom out"), KeyStroke.getKeyStroke('-')),
         LAST_PLACEMENTS(_("Show last placements"), KeyStroke.getKeyStroke('x')),
         FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
-        PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('r')),
+        PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
         DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        GAME_SETUP(_("Show game setup"), null),
         TAKE_SCREENSHOT(_("Take screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
         //Settings
         BEEP_ALERT(_("Beep alert at player turn")),
@@ -79,7 +80,7 @@ public class MenuBar extends JMenuBar {
         JMenu menu;
         JCheckBoxMenuItem chbox;
 
-        menu = new JMenu(_("Play"));
+        menu = new JMenu(_("Session"));
         menu.setMnemonic(KeyEvent.VK_P);
 
         menu.add(createMenuItem(MenuItem.NEW_GAME, new ActionListener() {
@@ -136,8 +137,6 @@ public class MenuBar extends JMenuBar {
         menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));
         menu.addSeparator();
         menu.add(createMenuItem(MenuItem.DISCARDED_TILES, false));
-        menu.addSeparator();
-        menu.add(createMenuItem(MenuItem.TAKE_SCREENSHOT, false));
         this.add(menu);
 
         menu = new JMenu(_("Settings"));

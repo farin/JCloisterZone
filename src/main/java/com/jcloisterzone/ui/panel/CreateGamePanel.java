@@ -138,20 +138,20 @@ public class CreateGamePanel extends JPanel {
         header.add(startGameButton, "width 240, h 40, east");
 
         if (gc.getChannel() != null) {
-        	leaveGameButton = new JButton(_("Leave game"));
-        	header.add(leaveGameButton, "h pref!, gapx 10px 10px, east");
+            leaveGameButton = new JButton(_("Leave game"));
+            header.add(leaveGameButton, "h pref!, gapx 10px 10px, east");
 
-        	leaveGameButton.addActionListener(new ActionListener() {
+            leaveGameButton.addActionListener(new ActionListener() {
                 @Override
-    			public void actionPerformed(ActionEvent e) {
-                	gc.leaveGame();
+                public void actionPerformed(ActionEvent e) {
+                    gc.leaveGame();
                 }
             });
         }
 
         startGameButton.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 client.getConnection().send(new StartGameMessage(game.getGameId()));
             }
         });
@@ -168,10 +168,17 @@ public class CreateGamePanel extends JPanel {
         playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
         playersPanel.setLayout(new MigLayout("", "[grow]", ""));
 
+        if (mutableSlots) {
+            JLabel hint = new JLabel(_("Click twice on a slot button to add a computer player."));
+            hint.setFont(new Font(null, Font.ITALIC, 11));
+            hint.setForeground(Color.DARK_GRAY);
+            playersPanel.add(hint, "aligny bottom, gapbottom 5, wrap");
+        }
+
         for (PlayerSlot slot : slots) {
             if (slot != null) {
-            	CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, game, gc.getChannel() != null, mutableSlots, slot, slots);
-            	panel.setNameProvider(nameProvider);
+                CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, game, gc.getChannel() != null, mutableSlots, slot, slots);
+                panel.setNameProvider(nameProvider);
                 playersPanel.add(panel, "wrap");
             }
         }
@@ -556,27 +563,27 @@ public class CreateGamePanel extends JPanel {
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
             if (ps.isOccupied()) {
-            	playersAssigned++;
+                playersAssigned++;
                 if (!ps.isAi()) {
-                	anyHumanPlayersAssigned = true;
+                    anyHumanPlayersAssigned = true;
                 }
             } else {
                 allPlayersAssigned = false;
             }
         }
         if (mutableSlots) {
-        	if (gc.getChannel() == null) {
-        		startGameButton.setEnabled(playersAssigned > 0);
-        	} else {
-        		boolean state;
-        		if ("true".equals(System.getProperty("allowAiOnlyOnlineGame"))) {
-        			state = playersAssigned > 1;
-        		} else {
-        			state = anyHumanPlayersAssigned;
-        		}
+            if (gc.getChannel() == null) {
+                startGameButton.setEnabled(playersAssigned > 0);
+            } else {
+                boolean state;
+                if ("true".equals(System.getProperty("allowAiOnlyOnlineGame"))) {
+                    state = playersAssigned > 1;
+                } else {
+                    state = anyHumanPlayersAssigned;
+                }
 
-        		startGameButton.setEnabled(state);
-        	}
+                startGameButton.setEnabled(state);
+            }
         } else {
             startGameButton.setEnabled(allPlayersAssigned);
         }

@@ -38,6 +38,8 @@ public class Config {
 
     private Boolean beep_alert;
     private String client_name;
+    private String client_id;
+    private String secret;
     private String play_online_host;
 
     private List<String> plugins;
@@ -70,7 +72,11 @@ public class Config {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
             for (String expName : expansions) {
-                expansionSet.add(Expansion.valueOf(expName));
+                try {
+                    expansionSet.add(Expansion.valueOf(expName));
+                } catch (IllegalArgumentException ex) {
+                    LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+                }
             }
 
             EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
@@ -129,13 +135,13 @@ public class Config {
         }
 
         public String getWindow_size() {
-			return window_size;
-		}
-		public void setWindow_size(String window_size) {
-			this.window_size = window_size;
-		}
+            return window_size;
+        }
+        public void setWindow_size(String window_size) {
+            this.window_size = window_size;
+        }
 
-		public String getAutosave() {
+        public String getAutosave() {
             return autosave;
         }
         public void setAutosave(String autosave) {
@@ -377,6 +383,23 @@ public class Config {
 
     public void setClient_name(String client_name) {
         this.client_name = client_name;
+    }
+
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public String getPlay_online_host() {

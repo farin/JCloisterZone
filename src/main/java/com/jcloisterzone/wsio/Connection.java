@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.bugreport.ReportingTool;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
@@ -23,11 +24,14 @@ public class Connection {
     private WebSocketClient ws;
     private final MessageListener listener;
 
+    private String sessionId;
     private String clientId;
-    private String sessionKey;
+    private String secret; //TODO will be used for message signing
     private String nickname;
 
-    public Connection(final String username, URI uri, MessageListener _listener) {
+    public Connection(final String username, Config config, URI uri, MessageListener _listener) {
+        clientId = config.getClient_id();
+        secret = config.getSecret();
         this.listener = _listener;
         ws = new WebSocketClient(uri) {
             @Override
@@ -60,8 +64,7 @@ public class Connection {
 
                 if (msg instanceof WelcomeMessage) {
                     WelcomeMessage welcome = (WelcomeMessage) msg;
-                    clientId = welcome.getClientId();
-                    sessionKey = welcome.getSessionKey();
+                    sessionId = welcome.getSessionId();
                     nickname = welcome.getNickname();
                 }
                 listener.onWebsocketMessage(msg);
@@ -69,18 +72,12 @@ public class Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-                Connection.this.send(new HelloMessage(username));
+                Connection.this.send(new HelloMessage(username, clientId, secret));
             }
         };
         ws.connect();
     }
 
-
-    @WsSubscribe
-    public void handleWelcome(Connection conn, WelcomeMessage msg) {
-        clientId = msg.getClientId();
-        sessionKey = msg.getSessionKey();
-    }
 
     public void send(WsMessage arg) {
         try {
@@ -94,27 +91,19 @@ public class Connection {
         ws.close();
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-
     public ReportingTool getReportingTool() {
         return reportingTool;
     }
 
-
     public void setReportingTool(ReportingTool reportingTool) {
         this.reportingTool = reportingTool;
     }
-
-
 }

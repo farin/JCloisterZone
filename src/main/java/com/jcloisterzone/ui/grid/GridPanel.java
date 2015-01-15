@@ -60,6 +60,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ControlPanel controlPanel;
     private final ChatPanel chatPanel;
     private BazaarPanel bazaarPanel;
+    private SelectMageWitchRemovalPanel mageWitchPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -262,6 +263,16 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public void setBazaarPanel(BazaarPanel bazaarPanel) {
         this.bazaarPanel = bazaarPanel;
+    }
+
+
+    public SelectMageWitchRemovalPanel getMageWitchPanel() {
+        return mageWitchPanel;
+    }
+
+
+    public void setMageWitchPanel(SelectMageWitchRemovalPanel mageWitchPanel) {
+        this.mageWitchPanel = mageWitchPanel;
     }
 
 

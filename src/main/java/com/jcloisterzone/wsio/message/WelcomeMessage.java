@@ -4,33 +4,23 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("WELCOME")
 public class WelcomeMessage implements WsMessage {
-    private String clientId;
-    private String sessionKey;
+    private String sessionId;
     private String nickname;
 
-    public WelcomeMessage(String clientId, String sessionKey, String nickname) {
-        this.clientId = clientId;
-        this.sessionKey = sessionKey;
+    public WelcomeMessage(String sessionId, String nickname) {
+        this.sessionId = sessionId;
         this.nickname = nickname;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
+    public String getSessionId() {
+		return sessionId;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    public String getNickname() {
+	public String getNickname() {
         return nickname;
     }
 

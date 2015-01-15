@@ -4,7 +4,7 @@ update: ${update}
 port: ${port}
 
 # keep empty for system language or fill to force locale
-# supported locales are cs, de, el, en, es, fr, hu, it, pl, ro, ru, sk
+# supported locales are cs, de, el, en, es, fr, hu, it, pl, ro, ru, sk, nl
 locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
@@ -15,6 +15,8 @@ confirm: ${confirm}
 
 # machine identification for remote games
 client_name: ${client_name}
+client_id: ${client_id}
+secret: ${secret}
 play_online_host: ${play_online_host}
 
 players:
@@ -33,8 +35,8 @@ plugins: ${plugins}
 #   WINTER, INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON,
 #   TOWER, ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS, CATAPULT,
 #   KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT,
-#   GQ11, CULT, TUNNEL, CORN_CIRCLES, PLAGUE, FESTIVAL, PHANTOM, WIND_ROSE,
-#   GERMAN_MONASTERIES, FLIER, CORN_CIRCLES_II
+#   GQ11, CULT, TUNNEL, CORN_CIRCLES, FESTIVAL, PHANTOM, WIND_ROSE,
+#   GERMAN_MONASTERIES, FLIER, MAGE_AND_WITCH, CORN_CIRCLES_II,
 #
 # possible rules:
 #   RANDOM_SEATING_ORDER,
