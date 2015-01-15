@@ -257,9 +257,9 @@ public class SelectActionTask implements Runnable {
         boolean hasSmallFollower = false;
         boolean hasPhantom = false;
         for (MeepleAction a : actions) {
-            if (a != null && a.getMeepleType().equals(SmallFollower.class))
+            if (a.getMeepleType().equals(SmallFollower.class))
                 hasSmallFollower = true;
-            if (a != null && a.getMeepleType().equals(Phantom.class))
+            if (a.getMeepleType().equals(Phantom.class))
                 hasPhantom = true;
         }
         if (hasSmallFollower && hasPhantom) {
