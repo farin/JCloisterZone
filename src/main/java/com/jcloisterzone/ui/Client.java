@@ -70,7 +70,6 @@ import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
 
 import static com.jcloisterzone.ui.I18nUtils._;
-
 import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
@@ -388,6 +387,20 @@ public class Client extends JFrame {
         return savesDir;
     }
 
+    public File getScreenshotDirectory() {
+        String screenFolderValue = getConfig().getScreenshots().getFolder();
+        File folder;
+        if (screenFolderValue == null || screenFolderValue.isEmpty()) {
+            folder = dataDirectory.resolve("screenshots").toFile();
+        } else {
+            folder = new File(screenFolderValue);
+        }
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return folder;
+    }
+
     public void handleLoad() {
         JFileChooser fc = new JFileChooser(getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -422,11 +435,7 @@ public class Client extends JFrame {
 
     void beep() {
         if (config.getBeep_alert()) {
-            try {
-                playResourceSound("beep.wav");
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            }
+            playSound("audio/beep.wav");
         }
     }
 
@@ -439,8 +448,7 @@ public class Client extends JFrame {
     /*
      * Load and play sound clip from resources by filename.
      */
-    private void playResourceSound(String resourceFilename) throws IOException,
-            UnsupportedAudioFileException, LineUnavailableException {
+    private void playResourceSound(String resourceFilename) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         // Load sound if necessary.
         if (!resourceSounds.containsKey(resourceFilename)) {
             BufferedInputStream resourceStream = loadResourceAsStream(resourceFilename);
@@ -456,6 +464,14 @@ public class Client extends JFrame {
         // Always start from the beginning
         clip.setFramePosition(0);
         clip.start();
+    }
+
+    public void playSound(String resourceFilename) {
+        try {
+            playResourceSound(resourceFilename);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     private BufferedInputStream loadResourceAsStream(String filename)

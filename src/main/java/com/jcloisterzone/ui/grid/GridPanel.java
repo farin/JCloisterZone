@@ -28,6 +28,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
@@ -501,10 +502,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public BufferedImage takeScreenshot() {
         //calculate size of play board
-        int screenshotScale = client.getConfig().getScreenshot_scale() == null ? 60 : client.getConfig().getScreenshot_scale();
+        Integer screenshotScaleValue = client.getConfig().getScreenshots().getScale();
+        int screenshotScale = screenshotScaleValue == null ? ConfigLoader.DEFAULT_SCREENSHOT_SCALE : screenshotScaleValue;
         int totalWidth = screenshotScale*(right-left+1);
         int totalHeight = screenshotScale*(bottom-top+1);
-        if(totalHeight < getHeight()) totalHeight = getHeight();
+        //if (totalHeight < getHeight()) totalHeight = getHeight();
 
         //centre the image
         int transX = -screenshotScale*(left);
@@ -530,7 +532,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         squareSize = screenshotScale;
         for (GridLayer layer : layers) {
             if (layer.isVisible()) {
-                //calling zoomChanged can broke something, don't do it
+                //TODO calling zoomChanged can broke something, don't do it
                 layer.zoomChanged(screenshotScale);
                 layer.paint(graphics);
                 layer.zoomChanged(orig);

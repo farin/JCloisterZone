@@ -414,37 +414,27 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
     public void takeScreenshot() {
         GridPanel container = getGridPanel();
-
-        String pngExt = ".png";
-        String screenFolderValue = client.getConfig().getScreenshot_folder();
-        File screenshotFolder;
-        if (screenFolderValue == null || screenFolderValue.isEmpty()) {
-            screenshotFolder = new File(System.getProperty("user.dir"));
-        } else {
-            screenshotFolder = new File(screenFolderValue);
-        }
+        File screenshotFolder = client.getScreenshotDirectory();
 
          //player names:
          StringBuilder players = new StringBuilder();
-         int aiCount = 0;
+         boolean hasAi = false;
          for (Player p : game.getAllPlayers()) {
-             players.append('_');
              if (p.getSlot().isAi()) {
-                 aiCount++;
+                 hasAi = true;
              } else {
                  players.append(p.getNick());
+                 players.append("_");
              }
          }
-         if (aiCount > 0) players.append("_ai_" + aiCount + "_");
-         //file name
+         if (hasAi) players.append("AI_");
          SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
-         File filename = new File(screenshotFolder, "JCloisterZone" + players.toString() + sdf.format(new Date()) + pngExt);
+         File filename = new File(screenshotFolder, players.toString() + sdf.format(new Date()) + ".png");
         //
-        try {
-            FileOutputStream fos = new FileOutputStream(filename);
+        try (FileOutputStream fos = new FileOutputStream(filename)) {
             BufferedImage im = container.takeScreenshot();
             ImageIO.write(im, "PNG", fos);
-            fos.close();
+            client.playSound("audio/shutter.wav");
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

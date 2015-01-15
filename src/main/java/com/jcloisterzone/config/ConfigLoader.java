@@ -40,6 +40,7 @@ public class ConfigLoader {
     public static final int DEFAULT_PORT = 37447;
     public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
     public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
+    public static final int DEFAULT_SCREENSHOT_SCALE = 120;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
 
     private final Path dataDirectory;
@@ -154,8 +155,7 @@ public class ConfigLoader {
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
-        config.setScreenshot_folder("");
-        config.setScreenshot_scale(60);
+        config.getScreenshots().setScale(DEFAULT_SCREENSHOT_SCALE);
         return config;
     }
 
@@ -180,7 +180,8 @@ public class ConfigLoader {
         model.put("play_online_host", config.getPlay_online_host());
         model.put("client_id", config.getClient_id());
         model.put("secret", config.getSecret());
-        model.put("screenshot_folder", config.getScreenshot_folder());
+        model.put("screenshot_folder", config.getScreenshots().getFolder());
+        model.put("screenshot_scale", config.getScreenshots().getScale());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));

@@ -45,11 +45,28 @@ public class Config {
     private List<String> plugins;
     private ConfirmConfig confirm;
     private PlayersConfig players;
+    private ScreenshotsConfig screenshots;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
-    private String screenshot_folder;
-    private Integer screenshot_scale;
+
+    public static class ScreenshotsConfig {
+        private String folder;
+        private Integer scale;
+
+        public String getFolder() {
+            return folder;
+        }
+        public void setFolder(String folder) {
+            this.folder = folder;
+        }
+        public Integer getScale() {
+            return scale;
+        }
+        public void setScale(Integer scale) {
+            this.scale = scale;
+        }
+    }
 
     public static class PresetConfig {
         private List<String> expansions;
@@ -429,20 +446,15 @@ public class Config {
     public void setOrigin(File origin) {
         this.origin = origin;
     }
-    
-    public String getScreenshot_folder() {
-        return screenshot_folder;
+
+    public ScreenshotsConfig getScreenshots() {
+        if (screenshots == null) {
+            screenshots = new ScreenshotsConfig();
+        }
+        return screenshots;
     }
 
-    public void setScreenshot_folder(String screenshot_folder) {
-        this.screenshot_folder = screenshot_folder;
+    public void setScreenshots(ScreenshotsConfig screenshots) {
+        this.screenshots = screenshots;
     }
-
-    public Integer getScreenshot_scale() {
-        return screenshot_scale;
-    }
-
-    public void setScreenshot_scale(Integer screenshot_scale) {
-        this.screenshot_scale = screenshot_scale;
-    }    
 }

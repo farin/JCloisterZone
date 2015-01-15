@@ -137,6 +137,8 @@ public class MenuBar extends JMenuBar {
         menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));
         menu.addSeparator();
         menu.add(createMenuItem(MenuItem.DISCARDED_TILES, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.TAKE_SCREENSHOT, false));
         this.add(menu);
 
         menu = new JMenu(_("Settings"));
