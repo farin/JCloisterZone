@@ -123,6 +123,7 @@
         <apply>C2.RRRr SW</apply>
         <apply>WR.Rr SW</apply>
         <apply>WR.RrC SW</apply>
+        <apply>MW.CCRr.2 SE</apply>
     </shape>
     <shape feature="ROAD" baseLocation="NW">
         <svg:polygon points="600,0 600,210 560,300 370,500 200,600 0,600 0,400 230,400 400,190 400,0"/>
@@ -174,8 +175,6 @@
         <apply>BA.CRRR S</apply>
         <apply>CA.RrR.1 W</apply>
         <apply>GQ.CRc S</apply>
-        <apply>GQ.CRcR.1 S</apply>
-        <apply>GQ.CRcR.1 N</apply>
         <apply>IC.LRFR E</apply>
         <apply>IC.RRR.i S</apply>
         <apply>KR.CcRR! S</apply>
@@ -470,6 +469,7 @@
         <apply>TB.CcCC.c S</apply>
         <apply>TB.CcRC.c S</apply>
         <apply>TB.CcRC.g S</apply>
+        <apply>MW.CCRr.2 N</apply>
     </shape>
     <shape feature="CITY" baseLocation="N"> <!-- tiny -->
         <svg:polygon points="0,0 110,100 360,210 400,220 450,210 660,160 870,110 910,90 999,0"/>
@@ -488,6 +488,7 @@
         <apply>CU.SC N</apply>
         <apply>CU.SRCR N</apply>
         <apply>C2.CFC N</apply>
+        <apply>MW.CCRr.2 W</apply>
     </shape>
     <shape feature="CITY" baseLocation="N"> <!-- mirrored tiny -->
         <svg:polygon points="999,0 890,100 640,210 600,220 550,210 340,160 130,110 90,90 0,0"/>
@@ -691,6 +692,7 @@
         <apply>C2.RRRr SR.WL</apply>
         <apply>WR.Rr SR.WL</apply>
         <apply>WR.RrC SR.WL</apply>
+        <apply>MW.CCRr.2 ER.SL</apply>
     </shape>
     <shape feature="FARM" baseLocation="NL.WR">
         <title>half-oblique-NL,WR</title>
@@ -932,6 +934,7 @@
         <apply>CO.9 NL.ER.WL.WR</apply>
         <apply>CO.11 ER.SL</apply>
         <apply>CO.12 NR.SL.SR.WL</apply>
+        <apply>MW.CCRr.2 EL.SR</apply>
     </complement-farm>
 
     <shape> <!-- center -->
