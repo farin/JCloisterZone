@@ -12,6 +12,9 @@
         <svg:polygon points="340,700 340,300 510,190 640,290 640,430 810,480 810,580 680,700"/>
         <apply>BA.LR CLOISTER</apply>
         <apply>AM.LRRRR CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
+        <svg:polygon points="377,562 380,442 390,415 385,302 360,285 502,185 507,185 545,160 655,265 642,275 647,382 827,422 810,437 815,535 727,635 682,632 640,652 627,645 635,625 595,610 562,627 545,625 552,602 542,597 515,610"/>
         <apply>FE.LRR CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
