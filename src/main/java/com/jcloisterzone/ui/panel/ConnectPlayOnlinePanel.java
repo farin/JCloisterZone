@@ -41,7 +41,7 @@ public class ConnectPlayOnlinePanel extends JPanel {
         this.client = client;
         ActionListener actionListener = new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
                 message.setText(_("Connecting") + "...");
@@ -73,11 +73,11 @@ public class ConnectPlayOnlinePanel extends JPanel {
 
         btnBack = new JButton(_("Back"));
         btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ConnectPlayOnlinePanel.this.client.mountView(new StartView(ConnectPlayOnlinePanel.this.client));
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ConnectPlayOnlinePanel.this.client.mountView(new StartView(ConnectPlayOnlinePanel.this.client));
+            }
+        });
         add(btnBack, "cell 2 2");
 
         message = new JLabel("");
@@ -86,9 +86,9 @@ public class ConnectPlayOnlinePanel extends JPanel {
     }
 
     private String getDefaultNick() {
-    	//for development is useful to change nick with system property
-    	if (System.getProperty("nick") != null) {
-        	return System.getProperty("nick");
+        //for development is useful to change nick with system property
+        if (System.getProperty("nick") != null) {
+            return System.getProperty("nick");
         }
         String name = client.getConfig().getClient_name();
         name = name == null ? "" : name.trim();
@@ -98,13 +98,15 @@ public class ConnectPlayOnlinePanel extends JPanel {
     }
 
     private void saveClientName() {
-        Config cfg = client.getConfig();
+        if (System.getProperty("nick") != null) return;
         String nick = nickField.getText().trim();
+        if (nick.equals(System.getProperty("user.name"))) return;
+        Config cfg = client.getConfig();
         cfg.setClient_name(nick);
         client.saveConfig();
     }
 
-	public void onWebsocketError(Exception ex) {
+    public void onWebsocketError(Exception ex) {
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
         if (ex instanceof UnresolvedAddressException) {

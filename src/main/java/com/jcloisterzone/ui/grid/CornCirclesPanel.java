@@ -47,9 +47,6 @@ public class CornCirclesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getRmiProxy().cornCiclesRemoveOrDeploy(false);
-                GridPanel gridPanel = gc.getGameView().getGridPanel();
-                gridPanel.remove(CornCirclesPanel.this);
-                gridPanel.revalidate();
             }
         });
         add(deploymentOption, "wrap, growx, h 40, gapbottom 5");
@@ -61,9 +58,6 @@ public class CornCirclesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
-                GridPanel gridPanel = gc.getGameView().getGridPanel();
-                gridPanel.remove(CornCirclesPanel.this);
-                gridPanel.revalidate();
             }
         });
         add(removalOption, "wrap, growx, h 40, gapbottom 5");

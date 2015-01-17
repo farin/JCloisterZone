@@ -8,8 +8,8 @@ public class CornCircleSelectOptionEvent extends PlayEvent {
 
     private final Position position;
 
-    public CornCircleSelectOptionEvent(Player targePlayer, Position position) {
-        super(null, targePlayer);
+    public CornCircleSelectOptionEvent(Player targetPlayer, Position position) {
+        super(null, targetPlayer);
         this.position = position;
     }
 

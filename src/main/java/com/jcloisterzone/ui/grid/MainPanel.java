@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.grid;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
@@ -349,5 +351,15 @@ public class MainPanel extends JPanel {
     public void towerIncreased(TowerIncreasedEvent ev) {
         towerLayer.setTowerHeight(ev.getPosition(), ev.getCaptureRange());
         gridPanel.repaint();
+    }
+
+    @Subscribe
+    public void cornOptionSelected(CornCirclesOptionEvent ev) {
+        for (Component comp : gridPanel.getComponents()) {
+            if (comp instanceof CornCirclesPanel) {
+                gridPanel.remove(comp);
+                gridPanel.revalidate();
+            }
+        }
     }
 }

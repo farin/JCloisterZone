@@ -14,6 +14,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -92,6 +93,7 @@ public class CornCirclePhase extends Phase {
         } else {
             cornCircleCap.setCornCircleOption(CornCicleOption.DEPLOYMENT);
         }
+        game.post(new CornCirclesOptionEvent(getActivePlayer(), cornCircleCap.getCornCircleOption()));
         Player cornPlayer = game.getNextPlayer(getActivePlayer());
         cornCircleCap.setCornCirclePlayer(cornPlayer);
         prepareCornAction();
