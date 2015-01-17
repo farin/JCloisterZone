@@ -12,19 +12,21 @@ import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientListMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.LeaveGameMessage;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.PingMessage;
+import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
@@ -72,6 +74,8 @@ public final class MessageParser {
         registerMsgType(ChannelMessage.class);
         registerMsgType(GameListMessage.class);
         registerMsgType(GameOverMessage.class);
+        registerMsgType(PingMessage.class);
+        registerMsgType(PongMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {

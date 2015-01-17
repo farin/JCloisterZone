@@ -44,6 +44,8 @@ import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.PingMessage;
+import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
@@ -230,6 +232,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
+    public void handlePing(WebSocket ws, PingMessage msg) {
+        send(ws, new PongMessage());
+    }
+
+    @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
         if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
             send(ws, new ErrorMessage(ErrorMessage.BAD_VERSION, "Protocol version " + Application.PROTCOL_VERSION + " required."));
@@ -249,7 +256,7 @@ public class SimpleServer extends WebSocketServer  {
             }
         }
 
-        send(ws, new WelcomeMessage(sessionId, nickname));
+        send(ws, new WelcomeMessage(sessionId, nickname, 120));
         send(ws, newGameMessage());
         broadcast(newClientListMessage());
     }
