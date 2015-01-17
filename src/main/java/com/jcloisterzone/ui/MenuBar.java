@@ -26,7 +26,7 @@ public class MenuBar extends JMenuBar {
     public static enum MenuItem {
         //Session
         NEW_GAME(_("New game"), KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         PLAY_ONLINE(_("Play online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         DISCONNECT(_("Disconnect")),
         LEAVE_GAME(_("Leave game")),

@@ -60,6 +60,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
     private final Client client;
 
+    private boolean hidingMode;
     private boolean forceFocus;
     private boolean messageReceivedWhileIconified;
     private JTextField input;
@@ -128,10 +129,10 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         setLayout(new MigLayout(""));
         add(messagesPane, "pos 10 n (100%-10) (100%-35)");
         add(input, "pos 10 (100%-35) (100%-10) (100%-10)");
-
     }
 
     public void initHidingMode() {
+        hidingMode = true;
         repaintTimer = new Timer(DISPLAY_MESSAGES_INTERVAL, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,11 +157,17 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
-        if (isFolded()) {
-            if (messagesPane.isVisible()) messagesPane.setVisible(false);
+        if (hidingMode && isFolded()) {
+            if (messagesPane.isVisible()) {
+                messagesPane.setVisible(false);
+                repaint();
+            }
             g2.fillRect(0, getHeight() - 40, getWidth(), 40);
         } else {
-            if (!messagesPane.isVisible()) messagesPane.setVisible(true);
+            if (!messagesPane.isVisible()) {
+                messagesPane.setVisible(true);
+                repaint();
+            }
             g2.fillRect(0, 0, getWidth(), getHeight());
         }
         super.paint(g);
