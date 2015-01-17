@@ -47,6 +47,10 @@
         <apply>AM.A CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
+        <svg:polygon points="282,547 387,475 507,497 517,487 517,420 602,302 702,407 702,470 717,490 712,740 625,780 610,775 577,792 490,760 292,687 297,565"/>
+        <apply>BB.LCFc CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
         <svg:polygon points="87,700 90,662 115,647 155,612 155,525 170,517 175,322 165,307 157,280 170,260 182,247 180,220 195,192 207,92 220,90 225,170 235,197 247,212 250,247 267,272 270,300 262,317 265,365 427,405 447,390 612,335 810,392 890,462 882,612 747,680 747,730 650,797 530,770 487,800"/>
         <apply>GM.Andechs CLOISTER</apply>
     </shape>
@@ -293,7 +297,6 @@
     <shape feature="ROAD">
         <svg:polygon points="0,390 100,410 200,510 380,670 480,700 680,700 780,650 830,460 880,410 999,360 999,550 970,570 930,720 830,820 770,850 450,880 340,850 260,790 100,620 40,580 0,580"/>
         <apply>SI.RCr WE</apply>
-        <apply>BB.LRFr WE</apply>
     </shape>
     <shape feature="ROAD" baseLocation="NW">
         <svg:polygon points="560,10 550,140 520,210 420,340 350,400 220,410 170,450 130,570 100,610 0,640 0,420 20,400 60,320 110,270 290,230 380,110 390,0"/>
@@ -369,6 +372,14 @@
         <apply>CO.11 S</apply>
     </shape>
     <shape feature="ROAD">
+        <svg:polygon points="410,999 445,855 455,800 452,742 417,640 402,465 427,382 480,277 557,227 655,212 760,202 760,282 730,325 682,335 667,370 627,385 597,407 580,450 577,597 582,642 625,777 625,822 590,999"/>
+        <apply>BB.CCCR S</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="0,415 47,415 85,427 147,452 205,500 252,557 295,652 430,740 465,760 512,757 570,727 685,615 755,587 755,552 830,480 890,452 965,422 999,417 999,587 930,607 860,670 765,785 675,887 640,912 537,952 465,962 412,955 290,870 277,860 195,800 147,752 125,670 45,607 0,592"/>
+        <apply>BB.LRFr WE</apply>
+    </shape>
+    <shape feature="ROAD">
         <svg:polygon points="415,999 572,999 575,945 572,917 550,865 507,830 335,757 177,722 180,775 200,815 240,857 380,935 405,952"/>
         <apply>GM.Andechs S</apply>
     </shape>
@@ -413,6 +424,7 @@
         <apply>R2.IFC E</apply>
         <apply>CC.RrC N</apply> <!-- override alias -->
         <apply>WR.RrC N</apply>
+        <apply>BB.CCCR E</apply>
     </shape>
     <shape feature="CITY" baseLocation="N">
         <svg:polygon points="970,0 830,180 770,210 690,250 670,310 640,350 450,360 390,340 200,200 0,0"/>
@@ -470,6 +482,7 @@
         <apply>TB.CcRC.c S</apply>
         <apply>TB.CcRC.g S</apply>
         <apply>MW.CCRr.2 N</apply>
+        <apply>BB.CCCR W</apply>
     </shape>
     <shape feature="CITY" baseLocation="N"> <!-- tiny -->
         <svg:polygon points="0,0 110,100 360,210 400,220 450,210 660,160 870,110 910,90 999,0"/>
@@ -489,6 +502,7 @@
         <apply>CU.SRCR N</apply>
         <apply>C2.CFC N</apply>
         <apply>MW.CCRr.2 W</apply>
+        <apply>BB.CCCR N</apply>
     </shape>
     <shape feature="CITY" baseLocation="N"> <!-- mirrored tiny -->
         <svg:polygon points="999,0 890,100 640,210 600,220 550,210 340,160 130,110 90,90 0,0"/>
@@ -797,6 +811,10 @@
         <svg:polygon points="452,999 0,999 0,600 600,600 517,807 422,885"/>
         <apply>CO.11 SR.WL</apply>
     </shape>
+    <shape feature="FARM">
+        <svg:polygon points="525,999 512,387 667,290 999,297 999,999"/>
+        <apply>BB.CCCR SL</apply>
+    </shape>
 
     <!-- Tower areas ? TODO what about define as translate -->
     <shape feature="TOWER">
@@ -919,6 +937,7 @@
         <apply>R1.RrII WR.NL.ER.SL</apply>
         <apply>SI.RCr WR.EL</apply>
         <apply>BB.LRFr WR.EL</apply>
+        <apply>BB.CCCR SR</apply>
         <apply>SI.CcRr EL.SR</apply>
         <apply>GQ.CRRr ER.SL.WR</apply>
         <apply>GQ.RCc SL.EL.ER</apply>

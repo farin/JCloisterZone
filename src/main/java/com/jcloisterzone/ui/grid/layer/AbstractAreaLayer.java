@@ -192,7 +192,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     /** standard highlight **/
     private void paintAreaHighlight(Graphics2D g2) {
         Player p = getGame().getActivePlayer();
-        if (p.equals(player)) { //sync issue
+        if (p != null && p.equals(player)) { //sync issue
             g2.setColor(p.getColors().getMeepleColor());
             g2.setComposite(AREA_ALPHA_COMPOSITE);
             g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
