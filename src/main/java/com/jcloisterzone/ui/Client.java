@@ -316,6 +316,7 @@ public class Client extends JFrame {
         clientMessageListener = new ClientMessageListener(this, playOnline);
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
+            logger.info("Connection to {}", uri);
             Connection conn = clientMessageListener.connect(username == null ? getUserName() : username, uri);
             conn.setReportingTool(new ReportingTool());
         } catch (URISyntaxException e) {

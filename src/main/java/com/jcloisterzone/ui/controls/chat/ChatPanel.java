@@ -43,6 +43,9 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
@@ -55,6 +58,7 @@ import com.jcloisterzone.wsio.message.PostChatMessage;
 
 public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
@@ -252,7 +256,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
                 offset += text.length() + 1;
             }
         } catch (BadLocationException e) {
-            e.printStackTrace(); //should never happen
+            logger.error(e.getMessage(), e); //should never happen
         }
         messagesPane.setDocument(doc);
         repaint();
