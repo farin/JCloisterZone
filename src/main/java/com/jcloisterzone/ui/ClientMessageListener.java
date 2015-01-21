@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,10 @@ public class ClientMessageListener implements MessageListener {
     public Connection getConnection() {
         return conn;
     }
+
+    public Map<String, ChannelController> getChannelControllers() {
+		return channelControllers;
+	}
 
     @Override
     public void onWebsocketError(Exception ex) {
@@ -255,12 +260,13 @@ public class ClientMessageListener implements MessageListener {
     public void handleChannel(final ChannelMessage msg) throws InvocationTargetException, InterruptedException {
         Channel channel = new Channel(msg.getName());
         final ChannelController channelController = new ChannelController(client, channel);
+        channelController.getRemoteClients().addAll(Arrays.asList(msg.getClients()));
         channelControllers.clear();
         channelControllers.put(channel.getName(), channelController);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                client.mountView(new ChannelView(client, channelController));
+				client.mountView(new ChannelView(client, channelController));
             }
         });
     }
@@ -270,11 +276,17 @@ public class ClientMessageListener implements MessageListener {
         EventProxyUiController<?> controller = getController(msg);
         if (controller != null) {
         	RemoteClient rc = new RemoteClient(msg.getSessionId(), msg.getName(), msg.getStatus());
+        	//TODO what about use Set?
         	List<RemoteClient> clients = controller.getRemoteClients();
         	if (ClientUpdateMessage.STATUS_OFFLINE.equals(msg.getStatus())) {
         		clients.remove(rc);
         	} else {
-        		clients.add(rc);
+        		int idx = clients.indexOf(rc);
+        		if (idx == -1) {
+        			clients.add(rc);
+        		} else {
+        			clients.set(idx, rc);
+        		}
         	}
         	ArrayList<RemoteClient> frozedList = new ArrayList<RemoteClient>(clients);
             controller.getEventProxy().post(new ClientListChangedEvent(frozedList));

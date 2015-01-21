@@ -224,6 +224,10 @@ public class Client extends JFrame {
         return clientMessageListener.getConnection();
     }
 
+    public ClientMessageListener getClientMessageListener() {
+		return clientMessageListener;
+	}
+
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
     }

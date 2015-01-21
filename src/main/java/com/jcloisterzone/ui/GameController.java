@@ -47,6 +47,7 @@ import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GameOverPanel;
+import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.RmiProxy;
@@ -324,6 +325,8 @@ public class GameController extends EventProxyUiController<Game> implements Invo
             client.mountView(new StartView(client));
         } else {
             getConnection().send(new LeaveGameMessage(game.getGameId()));
+            ChannelController ctrl = client.getClientMessageListener().getChannelControllers().get(channel);
+            client.mountView(new ChannelView(client, ctrl));
         }
     }
 
