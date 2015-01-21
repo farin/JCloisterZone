@@ -46,7 +46,7 @@ import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientListMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -266,11 +266,18 @@ public class ClientMessageListener implements MessageListener {
     }
 
     @WsSubscribe
-    public void handleClientList(ClientListMessage msg) {
+    public void handleClientUpdate(ClientUpdateMessage msg) {
         EventProxyUiController<?> controller = getController(msg);
         if (controller != null) {
-            controller.setRemoteClients(msg.getClients());
-            controller.getEventProxy().post(new ClientListChangedEvent(msg.getClients()));
+        	RemoteClient rc = new RemoteClient(msg.getSessionId(), msg.getName(), msg.getStatus());
+        	List<RemoteClient> clients = controller.getRemoteClients();
+        	if (ClientUpdateMessage.STATUS_OFFLINE.equals(msg.getStatus())) {
+        		clients.remove(rc);
+        	} else {
+        		clients.add(rc);
+        	}
+        	ArrayList<RemoteClient> frozedList = new ArrayList<RemoteClient>(clients);
+            controller.getEventProxy().post(new ClientListChangedEvent(frozedList));
         } else {
             logger.warn("No controller for message {}", msg);
         }
@@ -378,11 +385,13 @@ public class ClientMessageListener implements MessageListener {
         switch (err.getCode()) {
         case ErrorMessage.BAD_VERSION:
             logger.warn(err.getMessage());
-            JOptionPane.showMessageDialog(client,
-                    _("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version."),
-                    _("Incompatible versions"),
-                    JOptionPane.ERROR_MESSAGE
-            );
+            String msg;
+            if (playOnline) {
+            	msg = _("Online server version is not compatible with your application. Please upgrade JCloisterZone to the latest version.");
+            } else {
+            	msg = _("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version.");
+            }
+            JOptionPane.showMessageDialog(client, msg, _("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
             break;
         default:
             logger.error(err.getMessage());

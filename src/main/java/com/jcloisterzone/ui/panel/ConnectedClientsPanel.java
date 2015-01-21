@@ -21,6 +21,7 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class ConnectedClientsPanel extends JPanel {
@@ -46,7 +47,7 @@ public class ConnectedClientsPanel extends JPanel {
 		add(connectedClients, "wrap, align 0 0");
 	}
 
-	public void updateClients(RemoteClient[] clients) {
+	public void updateClients(List<RemoteClient> clients) {
 		DefaultStyledDocument doc = new DefaultStyledDocument();
 
 		List<RemoteClient> inGameClients = new ArrayList<>();
@@ -54,13 +55,13 @@ public class ConnectedClientsPanel extends JPanel {
 
 		try {
 			for (RemoteClient rc : clients) {
-				if (rc.getStatus() == null || "ACTIVE".equals(rc.getStatus())) {
+				if (ClientUpdateMessage.STATUS_ACTIVE.equals(rc.getStatus())) {
 					SimpleAttributeSet attrs = new SimpleAttributeSet();
 					String text = rc.getName();
 					doc.insertString(offs, text+"\n", attrs);
 					offs += text.length() + 1;
 				}
-				if ("IN_GAME".equals(rc.getStatus())) {
+				if (ClientUpdateMessage.STATUS_IN_GAME.equals(rc.getStatus())) {
 					inGameClients.add(rc);
 				}
 			}

@@ -368,11 +368,10 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     @Subscribe
     public void clientListChanged(ClientListChangedEvent ev) {
         if (!game.isOver()) {
-            RemoteClient[] clients = ev.getClients();
             for (Player p : game.getAllPlayers()) {
                 PlayerSlot slot = p.getSlot();
                 boolean match = false;
-                for (RemoteClient rc: clients) {
+                for (RemoteClient rc: ev.getClients()) {
                     if (rc.getSessionId().equals(slot.getSessionId())) {
                         match = true;
                         break;

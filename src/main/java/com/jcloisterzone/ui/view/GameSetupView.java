@@ -136,8 +136,7 @@ public class GameSetupView extends AbstractUiView {
 
 	@Subscribe
     public void clientListChanged(ClientListChangedEvent ev) {
-    	RemoteClient[] clients = ev.getClients();
-        connectedClientsPanel.updateClients(clients);
+        connectedClientsPanel.updateClients(ev.getClients());
     }
 
 }

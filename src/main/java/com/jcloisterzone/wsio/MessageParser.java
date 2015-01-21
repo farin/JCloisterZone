@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientListMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
@@ -68,7 +68,7 @@ public final class MessageParser {
         registerMsgType(FlierDiceMessage.class);
         registerMsgType(RmiMessage.class);
         registerMsgType(UndoMessage.class);
-        registerMsgType(ClientListMessage.class);
+        registerMsgType(ClientUpdateMessage.class);
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);
         registerMsgType(ChannelMessage.class);

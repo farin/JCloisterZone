@@ -106,8 +106,7 @@ public class ChannelPanel extends JPanel {
 
 	@Subscribe
 	public void clientListChanged(ClientListChangedEvent ev) {
-    	RemoteClient[] clients = ev.getClients();
-    	connectedClientsPanel.updateClients(clients);
+    	connectedClientsPanel.updateClients(ev.getClients());
     }
 
 	@Subscribe
@@ -170,11 +169,10 @@ public class ChannelPanel extends JPanel {
 			gc.register(this);
 		}
 
-		private void updateClientsLabel(RemoteClient[] clients) {
+		private void updateClientsLabel(List<RemoteClient> clients) {
 			if (clients == null) return;
 
-			List<RemoteClient> list = Arrays.asList(clients);
-			String label = joiner.join(Lists.transform(list, new Function<RemoteClient, String>() {
+			String label = joiner.join(Lists.transform(clients, new Function<RemoteClient, String>() {
 				@Override
 				public String apply(RemoteClient rc) {
 					return rc.getName();

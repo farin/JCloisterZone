@@ -33,7 +33,7 @@ import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientListMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
@@ -170,7 +170,7 @@ public class SimpleServer extends WebSocketServer  {
                 }
             }
         }
-        broadcast(newClientListMessage());
+        broadcast(new ClientUpdateMessage(game.getGameId(), conn.getSessionId(), null, ClientUpdateMessage.STATUS_OFFLINE));
     }
 
     @Override
@@ -221,11 +221,6 @@ public class SimpleServer extends WebSocketServer  {
         return gm;
     }
 
-    private ClientListMessage newClientListMessage() {
-        RemoteClient[] clients = connections.values().toArray(new RemoteClient[connections.size()]);
-        return new ClientListMessage(game.getGameId(), clients);
-    }
-
     private String getWebsocketHost(WebSocket ws) {
         if (ws.getRemoteSocketAddress().getAddress().isLoopbackAddress()) return "localhost";
         return ws.getRemoteSocketAddress().getHostName();
@@ -246,7 +241,7 @@ public class SimpleServer extends WebSocketServer  {
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         String nickname = msg.getNickname() + '@' + getWebsocketHost(ws);
         String sessionId = KeyUtils.createRandomId();
-        RemoteClient client = new RemoteClient(sessionId, nickname);
+        RemoteClient client = new RemoteClient(sessionId, nickname, ClientUpdateMessage.STATUS_ACTIVE);
         connections.put(ws, client);
         if (msg.getClientId().equals(hostClientId)) {
             for (int i = 0; i < slots.length; i++) {
@@ -258,7 +253,12 @@ public class SimpleServer extends WebSocketServer  {
 
         send(ws, new WelcomeMessage(sessionId, nickname, 120));
         send(ws, newGameMessage());
-        broadcast(newClientListMessage());
+        for (RemoteClient rc : connections.values()) {
+        	if (!rc.getSessionId().equals(sessionId)) {
+        		send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientUpdateMessage.STATUS_ACTIVE));
+        	}
+        }
+        broadcast(new ClientUpdateMessage(game.getGameId(), sessionId, nickname, ClientUpdateMessage.STATUS_ACTIVE));
     }
 
 

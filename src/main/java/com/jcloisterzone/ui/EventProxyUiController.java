@@ -1,5 +1,8 @@
 package com.jcloisterzone.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,7 @@ public class EventProxyUiController<T extends EventProxy> {
 
     private InvokeInSwingUiAdapter invokeInSwingUiAdapter;
 
-    private RemoteClient[] remoteClients;
+    private final List<RemoteClient> remoteClients = new ArrayList<RemoteClient>();
 
     public EventProxyUiController(Client client, T eventProxy) {
     	this.client = client;
@@ -56,17 +59,13 @@ public class EventProxyUiController<T extends EventProxy> {
 		return eventProxy;
 	}
 
-    public Connection getConnection() {
-        return client.getConnection();
-    }
-
-    public RemoteClient[] getRemoteClients() {
+    public List<RemoteClient> getRemoteClients() {
 		return remoteClients;
 	}
 
-	public void setRemoteClients(RemoteClient[] remoteClients) {
-		this.remoteClients = remoteClients;
-	}
+    public Connection getConnection() {
+        return client.getConnection();
+    }
 
 	protected InvokeInSwingUiAdapter getInvokeInSwingUiAdapter() {
 		return invokeInSwingUiAdapter;
