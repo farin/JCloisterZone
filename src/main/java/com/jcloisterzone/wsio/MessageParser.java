@@ -15,10 +15,10 @@ import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
-import com.jcloisterzone.wsio.message.GameListMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
+import com.jcloisterzone.wsio.message.GameUpdateMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
@@ -69,10 +69,10 @@ public final class MessageParser {
         registerMsgType(RmiMessage.class);
         registerMsgType(UndoMessage.class);
         registerMsgType(ClientUpdateMessage.class);
+        registerMsgType(GameUpdateMessage.class);
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);
         registerMsgType(ChannelMessage.class);
-        registerMsgType(GameListMessage.class);
         registerMsgType(GameOverMessage.class);
         registerMsgType(PingMessage.class);
         registerMsgType(PongMessage.class);
@@ -98,10 +98,4 @@ public final class MessageParser {
     public String toJson(WsMessage arg) {
         return getCmdName(arg.getClass()) + " " + gson.toJson(arg);
     }
-
-
-
-
-
-
 }

@@ -38,6 +38,7 @@ import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
@@ -170,7 +171,7 @@ public class SimpleServer extends WebSocketServer  {
                 }
             }
         }
-        broadcast(new ClientUpdateMessage(game.getGameId(), conn.getSessionId(), null, ClientUpdateMessage.STATUS_OFFLINE));
+        broadcast(new ClientUpdateMessage(game.getGameId(), conn.getSessionId(), null, ClientState.OFFLINE));
     }
 
     @Override
@@ -241,7 +242,7 @@ public class SimpleServer extends WebSocketServer  {
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         String nickname = msg.getNickname() + '@' + getWebsocketHost(ws);
         String sessionId = KeyUtils.createRandomId();
-        RemoteClient client = new RemoteClient(sessionId, nickname, ClientUpdateMessage.STATUS_ACTIVE);
+        RemoteClient client = new RemoteClient(sessionId, nickname, ClientState.ACTIVE);
         connections.put(ws, client);
         if (msg.getClientId().equals(hostClientId)) {
             for (int i = 0; i < slots.length; i++) {
@@ -255,10 +256,10 @@ public class SimpleServer extends WebSocketServer  {
         send(ws, newGameMessage());
         for (RemoteClient rc : connections.values()) {
         	if (!rc.getSessionId().equals(sessionId)) {
-        		send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientUpdateMessage.STATUS_ACTIVE));
+        		send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientState.ACTIVE));
         	}
         }
-        broadcast(new ClientUpdateMessage(game.getGameId(), sessionId, nickname, ClientUpdateMessage.STATUS_ACTIVE));
+        broadcast(new ClientUpdateMessage(game.getGameId(), sessionId, nickname, ClientState.ACTIVE));
     }
 
 
@@ -269,7 +270,7 @@ public class SimpleServer extends WebSocketServer  {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(msg.getCustomRules());
+        game.getCustomRules().addAll(msg.getRules());
         broadcast(msg);
     }
 

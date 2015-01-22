@@ -8,6 +8,7 @@ public class ChannelMessage implements WsMessage {
 
     private String name;
     private RemoteClient[] clients;
+    private ChannelMessageGame[] games;
 
     public String getName() {
         return name;
@@ -23,5 +24,27 @@ public class ChannelMessage implements WsMessage {
 
 	public void setClients(RemoteClient[] clients) {
 		this.clients = clients;
+	}
+
+	public ChannelMessageGame[] getGames() {
+		return games;
+	}
+
+	public void setGames(ChannelMessageGame[] games) {
+		this.games = games;
+	}
+
+
+
+	public static class ChannelMessageGame extends GameMessage {
+		private RemoteClient[] clients;
+
+		public RemoteClient[] getClients() {
+			return clients;
+		}
+
+		public void setClients(RemoteClient[] clients) {
+			this.clients = clients;
+		}
 	}
 }

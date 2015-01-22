@@ -1,13 +1,16 @@
 package com.jcloisterzone.wsio.server;
 
-public class RemoteClient {
-    private String sessionId, name, status;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 
-    public RemoteClient(String sessionId, String name, String status) {
+public class RemoteClient {
+    private String sessionId, name;
+    private ClientState state;
+
+    public RemoteClient(String sessionId, String name, ClientState state) {
         super();
         this.sessionId = sessionId;
         this.name = name;
-        this.status = status;
+        this.state = state;
     }
 
     public String getSessionId() {
@@ -26,17 +29,19 @@ public class RemoteClient {
         this.name = name;
     }
 
-	public String getStatus() {
-		return status;
+
+
+	public ClientState getState() {
+		return state;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(ClientState state) {
+		this.state = state;
 	}
 
 	@Override
 	public String toString() {
-		return "RemoteClient("+sessionId+", "+name+", "+status+")";
+		return "RemoteClient("+sessionId+", "+name+", "+state+")";
 	}
 
 	@Override

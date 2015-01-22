@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class ConnectedClientsPanel extends JPanel {
@@ -55,13 +56,13 @@ public class ConnectedClientsPanel extends JPanel {
 
 		try {
 			for (RemoteClient rc : clients) {
-				if (ClientUpdateMessage.STATUS_ACTIVE.equals(rc.getStatus())) {
+				if (ClientState.ACTIVE.equals(rc.getState())) {
 					SimpleAttributeSet attrs = new SimpleAttributeSet();
 					String text = rc.getName();
 					doc.insertString(offs, text+"\n", attrs);
 					offs += text.length() + 1;
 				}
-				if (ClientUpdateMessage.STATUS_IN_GAME.equals(rc.getStatus())) {
+				if (ClientState.IN_GAME.equals(rc.getState	())) {
 					inGameClients.add(rc);
 				}
 			}

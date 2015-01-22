@@ -23,6 +23,7 @@ import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
 import com.jcloisterzone.event.BazaarSelectTileEvent;
 import com.jcloisterzone.event.BazaarTileSelectedEvent;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.MeeplePrisonEvent;
@@ -324,9 +325,15 @@ public class GameController extends EventProxyUiController<Game> implements Invo
             client.closeGame();
             client.mountView(new StartView(client));
         } else {
+        	ClientMessageListener cml = client.getClientMessageListener();
             getConnection().send(new LeaveGameMessage(game.getGameId()));
-            ChannelController ctrl = client.getClientMessageListener().getChannelControllers().get(channel);
+            ChannelController ctrl = cml.getChannelControllers().get(channel);
             client.mountView(new ChannelView(client, ctrl));
+
+            List<GameController> gcs = cml.getGameControllers(channel);
+            ctrl.getEventProxy().post(
+        		new GameListChangedEvent(gcs.toArray(new GameController[gcs.size()]))
+        	);
         }
     }
 

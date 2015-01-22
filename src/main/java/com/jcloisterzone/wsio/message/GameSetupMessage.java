@@ -10,14 +10,14 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 @WsMessageCommand("GAME_SETUP")
 public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
-    private Set<CustomRule> customRules;
+    private Set<CustomRule> rules;
     private Set<Expansion> expansions;
     private Set<Class<? extends Capability>> capabilityClasses;
 
-    public GameSetupMessage(String gameId, Set<CustomRule> customRules, Set<Expansion> expansions,
+    public GameSetupMessage(String gameId, Set<CustomRule> rules, Set<Expansion> expansions,
             Set<Class<? extends Capability>> capabilityClasses) {
         this.gameId = gameId;
-        this.customRules = customRules;
+        this.rules = rules;
         this.expansions = expansions;
         this.capabilityClasses = capabilityClasses;
     }
@@ -31,15 +31,15 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
         this.gameId = gameId;
     }
 
-    public Set<CustomRule> getCustomRules() {
-        return customRules;
-    }
+    public Set<CustomRule> getRules() {
+		return rules;
+	}
 
-    public void setCustomRules(Set<CustomRule> customRules) {
-        this.customRules = customRules;
-    }
+	public void setRules(Set<CustomRule> rules) {
+		this.rules = rules;
+	}
 
-    public Set<Expansion> getExpansions() {
+	public Set<Expansion> getExpansions() {
         return expansions;
     }
 

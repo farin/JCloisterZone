@@ -2,24 +2,26 @@ package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.wsio.WsMessageCommand;
 
-@WsMessageCommand("GAME_LIST")
-public class GameListMessage implements WsInChannelMessage {
+@WsMessageCommand("GAME_UPDATE")
+public class GameUpdateMessage implements WsInChannelMessage {
 
 	private String channel;
-	private GameMessage[] games;
+	private GameMessage game;
 
 	@Override
 	public String getChannel() {
 		return channel;
 	}
+
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
-	public GameMessage[] getGames() {
-		return games;
-	}
-	public void setGames(GameMessage[] games) {
-		this.games = games;
+
+	public GameMessage getGame() {
+		return game;
 	}
 
+	public void setGame(GameMessage game) {
+		this.game = game;
+	}
 }

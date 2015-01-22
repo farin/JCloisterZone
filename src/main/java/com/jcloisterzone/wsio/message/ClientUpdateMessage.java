@@ -5,24 +5,24 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 @WsMessageCommand("CLIENT_UPDATE")
 public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage {
 
-	public static final String STATUS_ACTIVE = "ACTIVE";
-	public static final String STATUS_IN_GAME = "IN_GAME";
-	public static final String STATUS_OFFLINE = "OFFLINE";
+	public enum ClientState {
+		ACTIVE, IN_GAME, OFFLINE
+    }
 
 	private String gameId;
 	private String channel;
 	private String sessionId;
 	private String name;
-	private String status;
+	private ClientState state;
 
 	public ClientUpdateMessage() {
 	}
 
-	public ClientUpdateMessage(String gameId, String sessionId, String name, String status) {
+	public ClientUpdateMessage(String gameId, String sessionId, String name, ClientState state) {
 		this.gameId = gameId;
 		this.sessionId = sessionId;
 		this.name = name;
-		this.status = status;
+		this.state = state;
 	}
 
 	@Override
@@ -59,13 +59,11 @@ public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage 
 		this.name = name;
 	}
 
-	public String getStatus() {
-		return status;
+	public ClientState getState() {
+		return state;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(ClientState state) {
+		this.state = state;
 	}
-
-
 }
