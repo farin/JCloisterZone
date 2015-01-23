@@ -40,6 +40,7 @@ import com.jcloisterzone.ui.LengthRestrictedDocument;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -139,7 +140,6 @@ public class ChannelPanel extends JPanel {
 		public GameItemPanel(final GameController gc) {
 			final Game game = gc.getGame();
 			setLayout(new MigLayout());
-
 			expansions = new HashSet<Expansion>(game.getExpansions());
 			expansions.remove(Expansion.BASIC);
 
@@ -151,7 +151,7 @@ public class ChannelPanel extends JPanel {
 			connectedClients = new JLabel();
 			updateClientsLabel(gc.getRemoteClients());
 
-			joinButton = new JButton(_("Join game"));
+			joinButton = new JButton(gc.getGameState() == GameState.OPEN ? _("Join game") : _("Continue"));
 			joinButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

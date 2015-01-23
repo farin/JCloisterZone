@@ -6,7 +6,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class GameMessage implements WsMessage, WsInGameMessage {
 
     public enum GameState {
-        OPEN, RUNNING, REMOVED
+        OPEN, RUNNING, REMOVED, PAUSED
     }
 
     private String gameId;
@@ -16,6 +16,7 @@ public class GameMessage implements WsMessage, WsInGameMessage {
     private String snapshot;
     private SlotMessage[] slots;
     private GameSetupMessage gameSetup;
+    private String[] replay;
 
     public GameMessage() {
     }
@@ -83,4 +84,12 @@ public class GameMessage implements WsMessage, WsInGameMessage {
     public void setGameSetup(GameSetupMessage gameSetup) {
         this.gameSetup = gameSetup;
     }
+
+	public String[] getReplay() {
+		return replay;
+	}
+
+	public void setReplay(String[] replay) {
+		this.replay = replay;
+	}
 }

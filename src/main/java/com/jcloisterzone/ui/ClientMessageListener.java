@@ -221,7 +221,7 @@ public class ClientMessageListener implements MessageListener {
         return gc;
     }
 
-    private void handleGameStarted(GameController gc) {
+    private void handleGameStarted(GameController gc, String[] replay) {
         conn.getReportingTool().setGame(gc.getGame());
         CreateGamePhase phase = (CreateGamePhase)gc.getGame().getPhase();
         phase.startGame();
@@ -250,7 +250,7 @@ public class ClientMessageListener implements MessageListener {
 	        }
         }
 
-        GameController gc = (GameController) getController(msg);
+	    GameController gc = (GameController) getController(msg);
         if (gc == null) {
             gc = createGameController(msg);
             //TODO remove games on game over
@@ -265,13 +265,14 @@ public class ClientMessageListener implements MessageListener {
         	}
         }
 
+        gc.setGameState(msg.getState());
         if (!channelList) {
             switch (msg.getState()) {
             case OPEN:
                 openGameSetup(gc, msg);
                 break;
             case RUNNING:
-                handleGameStarted(gc);
+                handleGameStarted(gc, msg.getReplay());
                 break;
             }
         }
@@ -303,13 +304,23 @@ public class ClientMessageListener implements MessageListener {
     @WsSubscribe
     public void handleGameUpdate(GameUpdateMessage msg) throws InvocationTargetException, InterruptedException {
     	msg.getGame().setChannel(msg.getChannel()); //fill omitted channel
-    	if (GameState.OPEN.equals(msg.getGame().getState())) {
+    	GameState state = msg.getGame().getState();
+    	if (GameState.OPEN.equals(state) || GameState.PAUSED.equals(state)) {
     		GameController gc = (GameController) getController(msg.getGame());
     		if (gc != null) {
+    			gc.setGameState(msg.getGame().getState());
     			return; //can't happen now - but eq. rename etc is possible in future
     		}
     		handleGame(msg.getGame(), true);
     	} else {
+    		if (GameState.RUNNING.equals(state) &&
+    				client.getView() instanceof GameSetupView) {
+            	GameController gc = ((GameSetupView) client.getView()).getGameController();
+            	if (gc.getGame().getGameId().equals(msg.getGame().getGameId())) {
+            		gc.setGameState(msg.getGame().getState());
+            		return;
+            	}
+            }
     		gameControllers.remove(msg.getGame().getGameId());
     	}
     	List<GameController> gcs = getGameControllers(msg.getChannel());

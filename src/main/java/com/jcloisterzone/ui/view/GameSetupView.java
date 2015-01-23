@@ -45,6 +45,14 @@ public class GameSetupView extends AbstractUiView {
 		this.mutableSlots = mutableSlots;
 	}
 
+	public GameController getGameController() {
+		return gc;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
 	@Override
 	public void show(Container pane, Object ctx) {
 		Game game = gc.getGame();

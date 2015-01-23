@@ -52,6 +52,7 @@ import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 
@@ -62,6 +63,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Game game;
+    private GameState gameState;
     private String channel;
 
     private final RmiProxy rmiProxy;
@@ -80,7 +82,15 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         return game;
     }
 
-    @Override
+    public GameState getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+	@Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (getConnection() == null) {
             logger.info("Not connected. Message ignored");
