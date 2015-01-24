@@ -21,25 +21,25 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "Report bug"
-msgstr ""
+msgstr "Zgłoś bug"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
-msgstr ""
+msgstr "Narzędzie do raportowania bugów spakowało grę, zewnętrzny log z gry i informację systemową aby uprościć proces debugowania."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
-msgstr ""
+msgstr "Opisz bug..."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
-msgstr ""
+msgstr "...a następnie pobierz raport z archiwum i wyślij go e-mailem na adres farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
-msgstr ""
+msgstr "Raportowanie buga nie powiodło się"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "Basic game"
@@ -267,7 +267,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:27
 msgid "Keep basic cloisters in the game."
-msgstr ""
+msgstr "Pozostaw w grze klasztory z wersji podstawowej"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:247
@@ -277,7 +277,7 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
 msgid "Leave game"
-msgstr ""
+msgstr "Opuść grę"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:251
@@ -292,11 +292,11 @@ msgstr "Anuluj"
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
-msgstr ""
+msgstr "Gra nie jest zakończona. Czy naprawdę chcesz ją przerwać i rozłączyć pozostałych graczy?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:253
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr ""
+msgstr "Gra nie jest zakończona. Czy naprawdę chcesz ją opuścić?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:375
 #: src/main/java/com/jcloisterzone/ui/Client.java:404
@@ -315,7 +315,7 @@ msgstr "Wczytaj"
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:352
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:236
 msgid "Connection lost"
-msgstr ""
+msgstr "Połączenie przerwane"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:382
 msgid ""
@@ -504,7 +504,7 @@ msgstr "Monastyr"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:28
 msgid "Mage and Witch"
-msgstr ""
+msgstr "Mag i Wiedźma"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:33
 msgid ""
@@ -514,11 +514,11 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:39
 msgid "Remove the mage."
-msgstr ""
+msgstr "Usuń maga."
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:51
 msgid "Remove the witch."
-msgstr ""
+msgstr "Usuń wiedźmę."
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
@@ -535,11 +535,11 @@ msgstr "Połącz"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
 msgid "Play online"
-msgstr ""
+msgstr "Graj online"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
 msgid "Disconnect"
-msgstr ""
+msgstr "Rozłącz"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:377
@@ -580,11 +580,11 @@ msgstr "Pokaż odrzucne kafelki"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Show game setup"
-msgstr ""
+msgstr "Pokaż ustawienia gry"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
 msgid "Take screenshot"
-msgstr ""
+msgstr "Wykonaj zrzut ekranu"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
 msgid "Beep alert at player turn"
@@ -604,7 +604,7 @@ msgstr "O programie"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:83
 msgid "Session"
-msgstr ""
+msgstr "Sesja"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:128
 msgid "Game"
@@ -620,15 +620,15 @@ msgstr "Pomoc"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:86
 msgid "Game title"
-msgstr ""
+msgstr "Tytuł gry"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:94
 msgid "Create game"
-msgstr ""
+msgstr "Utwórz grę"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:155
 msgid "Join game"
-msgstr ""
+msgstr "Dołącz do gry"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:168
@@ -642,7 +642,7 @@ msgstr "Dodatki"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:37
 msgid "Connected clients"
-msgstr ""
+msgstr "Połączeni klienci"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
@@ -660,7 +660,7 @@ msgstr "Port"
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
 msgid "Back"
-msgstr ""
+msgstr "Powrót"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:111
@@ -684,7 +684,7 @@ msgstr "Nieprawidłowa numer portu."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
 msgid "Nickname"
-msgstr ""
+msgstr "Nick"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:134
 msgid "Start game"
@@ -692,7 +692,7 @@ msgstr "Rozpocznij grę"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:172
 msgid "Click twice on a slot button to add a computer player."
-msgstr ""
+msgstr "Kliknij dwukrotnie na przycisku slotu aby dodać gracza komputerowego"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
 msgid "Rules"
@@ -744,7 +744,7 @@ msgstr "Dodaj gracza"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:75
 msgid "Play again"
-msgstr ""
+msgstr "Zagraj ponownie"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:135
 msgid "Player"
@@ -854,23 +854,23 @@ msgid ""
 "Create a new game or continue a previously saved one. A game will be hosted "
 "on your computer and other players may connect during game set up. You can "
 "also play only against any number of computer players."
-msgstr ""
+msgstr "Stwórz nową grę lub kontynuuj poprzednio zapisaną. Gra będzie hostowana na twoim komputerze i inni gracze będą mogli się do niej przyłączyć w trakcie dobierania ustawień początkowych. Możesz również zagrać przeciwko dowolnej liczbie graczy komputerowych."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
 msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
-msgstr ""
+msgstr "Możesz także przyłączyć się do zdalnej aplikacji JCloisterZone, która hostuje grę. Połącz się, gdy gra jest tworzona, lecz jeszcze nie rozpoczęta."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
 "Conenct to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
-msgstr ""
+msgstr "Połącz się z innymi graczami i graj z nimi przez internet na publicznym serwerze play.jcloisterzone.com."
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -879,57 +879,3 @@ msgstr "Zapisane gry"
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:52
 msgid "JCloisterZone "
 msgstr "JCloisterZone"
-
-#~ msgid ""
-#~ "Create a new local or network game. You can play against any number of "
-#~ "computer players."
-#~ msgstr ""
-#~ "Tworzenie nowej gry (lokalnie lub w sieci). Możesz grać przeciwko "
-#~ "dowolnej liczbie graczy komputerowych."
-
-#~ msgid "Connect to a remote JCloisterZone application with settled new game."
-#~ msgstr "Połącz się ze zdalną nową grą."
-
-#~ msgid "Load from a file previously saved game."
-#~ msgstr "Załaduj wcześniej zapisany stan gry."
-
-#~ msgid "Close game"
-#~ msgstr "Zamknij"
-
-#~ msgid ""
-#~ "Game is running. Do you really want to quit game and also disconnect all "
-#~ "other players?"
-#~ msgstr ""
-#~ "Gra wciąż trwa. Czy na pewno chcesz wyjść i rozłączyć wyszystkich "
-#~ "pozostałych graczy?"
-
-#~ msgid "Game is running. Do you really want to leave it?"
-#~ msgstr "Gra wciąż trwa. Czy na pewno chcesz wyjść?"
-
-#~ msgid "Game overview"
-#~ msgstr "Przegląd gry"
-
-#~ msgid "Load"
-#~ msgstr "Wczytaj"
-
-#~ msgid "Window"
-#~ msgstr "Okno"
-
-#~ msgid "Confirm game close"
-#~ msgstr "Potwierdzenie zamknięcia gry"
-
-#~ msgid "Connected clients:"
-#~ msgstr "Podłączone klienty:"
-
-#~ msgid "La Porxada"
-#~ msgstr "La Porxada"
-
-#~ msgid "Load error"
-#~ msgstr "Błąd odczytu"
-
-#~ msgid ""
-#~ "Saved game is incompatible or file is corrupted. Game couldn't work "
-#~ "properly."
-#~ msgstr ""
-#~ "Zapisana gra jest niekompatybilna lub plik jest uszkodzony. Gra nie "
-#~ "zadziała poprawnie."
