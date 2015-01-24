@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-12 22:20+0100\n"
 "PO-Revision-Date: 2014-06-26 19:55+0100\n"
-"Last-Translator: Roman <farin@farin.cz>\n"
+"Last-Translator: Andrew <MrNumbers@inbox.lv>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,25 +20,26 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "Report bug"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
-msgstr ""
+msgstr "<html>Утилита сообщения об ошибке упакует сохранённую игру, внутренний лог игры и "
+"системную информацию для упрощения процесса отладки.</html>"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
-msgstr ""
+msgstr "Пожалуйста, опишите ошибку..."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
-msgstr ""
+msgstr "...затем скачайте архив отчёта и перешлите по электронной почте на farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
-msgstr ""
+msgstr "Не удалось создать отчёт об ошибке"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "Basic game"
@@ -91,7 +92,7 @@ msgstr "Мосты, Замки и Базары"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Hills and sheep"
-msgstr ""
+msgstr "Холмы и Овцы"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "King and Robber Baron"
@@ -107,11 +108,11 @@ msgstr "Река II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Cathars / Siege"
-msgstr "Катары"
+msgstr "Катары / Осада"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The Besiegers"
-msgstr ""
+msgstr "Осаждающие"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Count of Carcassonne"
@@ -155,7 +156,7 @@ msgstr "Роза Ветров"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The German Monasteries"
-msgstr ""
+msgstr "Монастыри Германии"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Flier"
@@ -235,7 +236,7 @@ msgstr "Принцесса ОБЯЗАНА убирать рыцаря из го�
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:15
 msgid "Dragon movement occurs after scoring."
-msgstr "Дракон ходит после подсчёта очков"
+msgstr "Дракон ходит после подсчёта очков."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:17
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -264,7 +265,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:27
 msgid "Keep basic cloisters in the game."
-msgstr ""
+msgstr "Оставить обычные монастыри в игре."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:247
@@ -274,7 +275,7 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
 msgid "Leave game"
-msgstr ""
+msgstr "Покинуть игру"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:244
 #: src/main/java/com/jcloisterzone/ui/Client.java:251
@@ -289,11 +290,12 @@ msgstr "Отмена"
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
-msgstr ""
+msgstr "Игра не закончена. Вы действительно хотите прервать игру и "
+"отсоединить всех игроков?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:253
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr ""
+msgstr "Игра не закончена. Вы действительно хотите покинуть игру?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:375
 #: src/main/java/com/jcloisterzone/ui/Client.java:404
@@ -312,7 +314,7 @@ msgstr "Загрузить игру"
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:352
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:236
 msgid "Connection lost"
-msgstr ""
+msgstr "Связь потеряна"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:382
 msgid ""
@@ -457,11 +459,11 @@ msgstr "на/из {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:68
 msgid "Place a follower"
-msgstr "Поставить подданного"
+msgstr "Разместить подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:70
 msgid "Do you really want to place a follower on farm?"
-msgstr "Вы хотите поставить подданного на этот фрагмент поля?"
+msgstr "Вы хотите разместить подданного на этот фрагмент поля?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:71
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:81
@@ -469,7 +471,7 @@ msgstr "Вы хотите поставить подданного на этот 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:91
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:96
 msgid "Confirm follower placement"
-msgstr "Подтвердите выставление подданного"
+msgstr "Подтвердите размещение подданного"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:83
 msgid "Place a tower piece"
@@ -481,42 +483,44 @@ msgid ""
 "Do you really want to place a follower on the tower?\n"
 "(To prevent tower from adding more pieces on the top)"
 msgstr ""
-"Вы действительно хотите поставить подданного на башню?\n"
+"Вы действительно хотите разместить подданного на башню?\n"
 "(Это не позволит добавлять новые фишки на башню)"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:133
 msgid "Place as monk"
-msgstr ""
+msgstr "Разместить как монаха"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:133
 msgid "Place as abbot"
-msgstr ""
+msgstr "Разместить как аббата"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:135
 msgid "How do you want to place follower on monastery?"
-msgstr ""
+msgstr "Каким образом вы хотите разместить подданого на монастыре?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:136
 msgid "Monastery"
-msgstr ""
+msgstr "Монастырь"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:28
 msgid "Mage and Witch"
-msgstr ""
+msgstr "Маг и Ведьма"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:33
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
 "feature. Select what figure do you want to remove from board?"
 msgstr ""
+"В данный момент размещение мага или ведьмы невозможно, так как на поле нет "
+"незаконченных объектов. Выберите, какую фигуру вы хотите убрать с поля?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:39
 msgid "Remove the mage."
-msgstr ""
+msgstr "Убрать мага."
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:51
 msgid "Remove the witch."
-msgstr ""
+msgstr "Убрать ведьму."
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
@@ -533,11 +537,11 @@ msgstr "Присоединиться"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
 msgid "Play online"
-msgstr ""
+msgstr "Играть онлайн"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
 msgid "Disconnect"
-msgstr ""
+msgstr "Отключиться"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:377
@@ -550,7 +554,7 @@ msgstr "Выход"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
 msgid "Zoom in"
@@ -570,7 +574,7 @@ msgstr "Показывать подсказки по полям"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
 msgid "Show projected points"
-msgstr ""
+msgstr "Показывать прогнозируемые очки"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
 msgid "Show discarded tiles"
@@ -578,11 +582,11 @@ msgstr "Показать изъятые карточки"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Show game setup"
-msgstr ""
+msgstr "Показать конфигурацию игры"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
 msgid "Take screenshot"
-msgstr ""
+msgstr "Сделать снимок экрана"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
 msgid "Beep alert at player turn"
@@ -602,7 +606,7 @@ msgstr "О программе"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:83
 msgid "Session"
-msgstr ""
+msgstr "Сессия"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:128
 msgid "Game"
@@ -618,15 +622,15 @@ msgstr "Помощь"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:86
 msgid "Game title"
-msgstr ""
+msgstr "Название игры"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:94
 msgid "Create game"
-msgstr ""
+msgstr "Создать игру"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:155
 msgid "Join game"
-msgstr ""
+msgstr "Присоединиться к игре"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:168
@@ -640,7 +644,7 @@ msgstr "Дополнения"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:37
 msgid "Connected clients"
-msgstr ""
+msgstr "Присоединившиеся клиенты"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
@@ -658,7 +662,7 @@ msgstr "Порт"
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:111
@@ -682,7 +686,7 @@ msgstr "Неверный номер порта."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
 msgid "Nickname"
-msgstr ""
+msgstr "Псевдоним"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:134
 msgid "Start game"
@@ -690,7 +694,7 @@ msgstr "Начать игру"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:172
 msgid "Click twice on a slot button to add a computer player."
-msgstr ""
+msgstr "Нажмите дважды на значок человечка, чтобы добавить компьютерного игрока."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
 msgid "Rules"
@@ -734,7 +738,7 @@ msgstr "Компьютерный игрок"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:159
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:187
 msgid "Remote computer player"
-msgstr ""
+msgstr "Сетевой компьютерный игрок"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:169
 msgid "Open player slot"
@@ -742,7 +746,7 @@ msgstr "Свободный слот"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:75
 msgid "Play again"
-msgstr ""
+msgstr "Играть ещё раз"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:135
 msgid "Player"
@@ -821,7 +825,7 @@ msgid ""
 "by <b>left</b> click.</html>"
 msgstr ""
 "<html>Вращать карточку можно клавишей <b>Tab</b> или <b>правой</b> кнопкой "
-"мыши. Поставить карточку на поле можно <b>левой</b> кнопкой мыши.</html>"
+"мыши. Разместить карточку на поле можно <b>левой</b> кнопкой мыши.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
 msgid ""
@@ -845,30 +849,34 @@ msgid ""
 "tiles.</html>"
 msgstr ""
 "<html>Нажмите <b>F</b>, чтобы включить подсказки по полям, или <b>X</b>, "
-"чтобы посмотреть последнюю размещённую карточку.</html>"
+"чтобы посмотреть последние размещённые карточки.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""
 "Create a new game or continue a previously saved one. A game will be hosted "
 "on your computer and other players may connect during game set up. You can "
 "also play only against any number of computer players."
-msgstr ""
+msgstr "Создать новую игру или продолжить ранее сохранённую игру. Игра будет создана "
+"на Вашем компьютере и другие игроки смогут присоединиться во время настройки игры. "
+"Вы также сможете играть только против любого количества компьютерных игроков."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
 msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
-msgstr ""
+msgstr "Вы также можете присоединиться к удалённому серверу JCloisterZone, "
+"на котором создана игра. Вы можете присоединиться, когда игра создана, но ещё не начата."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
 "Conenct to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
-msgstr ""
+msgstr "Присоединяйтесь к другим игрокам и играйте с ними используя Интернет-соединение и "
+"публичный сервер play.jcloisterzone.com."
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
@@ -876,7 +884,7 @@ msgstr "Сохранённые игры JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:52
 msgid "JCloisterZone "
-msgstr ""
+msgstr "JCloisterZone "
 
 #~ msgid ""
 #~ "Create a new local or network game. You can play against any number of "
