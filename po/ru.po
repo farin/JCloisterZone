@@ -26,7 +26,8 @@ msgstr "Сообщить об ошибке"
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
-msgstr ""
+msgstr "<html>Утилита сообщения об ошибке упакует сохранённую игру, внутренний лог игры и "
+"системную информацию для упрощения процесса отладки.</html>"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
@@ -289,11 +290,12 @@ msgstr "Отмена"
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
-msgstr ""
+msgstr "Игра не закончена. Вы действительно хотите прервать игру и "
+"отсоединить всех игроков?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:253
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr ""
+msgstr "Игра не закончена. Вы действительно хотите покинуть игру?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:375
 #: src/main/java/com/jcloisterzone/ui/Client.java:404
@@ -692,7 +694,7 @@ msgstr "Начать игру"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:172
 msgid "Click twice on a slot button to add a computer player."
-msgstr ""
+msgstr "Нажмите дважды на значок человечка, чтобы добавить компьютерного игрока."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
 msgid "Rules"
@@ -854,7 +856,9 @@ msgid ""
 "Create a new game or continue a previously saved one. A game will be hosted "
 "on your computer and other players may connect during game set up. You can "
 "also play only against any number of computer players."
-msgstr ""
+msgstr "Создать новую игру или продолжить ранее сохранённую игру. Игра будет создана "
+"на Вашем компьютере и другие игроки смогут присоединиться во время настройки игры. "
+"Вы также сможете играть только против любого количества компьютерных игроков."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
 msgid "or"
@@ -864,13 +868,15 @@ msgstr "или"
 msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
-msgstr ""
+msgstr "Вы также можете присоединиться к удалённому серверу JCloisterZone, "
+"на котором создана игра. Вы можете присоединиться, когда игра создана, но ещё не начата."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
 "Conenct to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
-msgstr ""
+msgstr "Присоединяйтесь к другим игрокам и играйте с ними используя Интернет-соединение и "
+"публичный сервер play.jcloisterzone.com."
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
