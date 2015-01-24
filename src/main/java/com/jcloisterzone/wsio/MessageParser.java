@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
@@ -54,6 +55,7 @@ public final class MessageParser {
         registerMsgType(CreateGameMessage.class);
         registerMsgType(JoinGameMessage.class);
         registerMsgType(LeaveGameMessage.class);
+        registerMsgType(AbandonGameMessage.class);
         registerMsgType(GameMessage.class);
         registerMsgType(GameSetupMessage.class);
         registerMsgType(TakeSlotMessage.class);

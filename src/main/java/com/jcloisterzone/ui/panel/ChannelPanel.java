@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -39,6 +40,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.LengthRestrictedDocument;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
@@ -132,7 +134,7 @@ public class ChannelPanel extends JPanel {
 		private JLabel name;
 		private JLabel expansionNames;
 		private JLabel connectedClients;
-		private JButton joinButton;
+		private JButton joinButton, abandonButton;
 
 		private Joiner joiner = Joiner.on(", ").skipNulls();
 		private Set<Expansion> expansions;
@@ -151,6 +153,9 @@ public class ChannelPanel extends JPanel {
 			connectedClients = new JLabel();
 			updateClientsLabel(gc.getRemoteClients());
 
+			JPanel buttons = new JPanel();
+			buttons.setLayout(new MigLayout("ins 0"));
+
 			joinButton = new JButton(gc.getGameState() == GameState.OPEN ? _("Join game") : _("Continue"));
 			joinButton.addActionListener(new ActionListener() {
 				@Override
@@ -159,11 +164,28 @@ public class ChannelPanel extends JPanel {
 					//client.openGameSetup(gc, true);
 				}
 			});
+			buttons.add(joinButton);
+
+			if (gc.getGameState() != GameState.OPEN) {
+				abandonButton = new JButton(_("Remove game"));
+				abandonButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+				        int result = JOptionPane.showConfirmDialog(client,
+				        	_("Do you want to remove game permanently?"), _("Remove game"),
+				        	JOptionPane.YES_NO_OPTION);
+				        if (result == JOptionPane.YES_OPTION) {
+				        	cc.getConnection().send(new AbandonGameMessage(gc.getGame().getGameId()));
+				        }
+					}
+				});
+				buttons.add(abandonButton);
+			}
 
 			add(name, "wrap");
 			add(expansionNames, "wrap");
 			add(connectedClients, "wrap");
-			add(joinButton, "wrap");
+			add(buttons, "wrap");
 
 			//TODO but what about unregister
 			gc.register(this);
