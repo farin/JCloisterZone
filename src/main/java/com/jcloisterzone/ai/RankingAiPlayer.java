@@ -88,7 +88,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        if (getPlayer().equals(ev.getTargetPlayer())) {
+    	if (isAiActive(ev)) {
             //logger.info("SA " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString() + " ?" + (getBestChain()==null?"null":"chain"));
             if (getBestChain() != null) {
                 popActionChain();
@@ -106,7 +106,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        if (getPlayer().equals(ev.getTargetPlayer())) {
+    	if (isAiActive(ev)) {
              new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }
@@ -120,7 +120,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);
-        phase.startGame();
+        phase.startGame(false);
         return copy;
     }
 }

@@ -16,6 +16,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -33,6 +34,7 @@ public abstract class AiPlayer {
 
     private RmiProxy rmiProxy;
     private Player player;
+    private boolean muted;
 
     public void setGame(Game game) {
         this.game = game;
@@ -60,9 +62,21 @@ public abstract class AiPlayer {
         return gc;
     }
 
+    protected boolean isAiActive(PlayEvent ev) {
+    	return player.equals(ev.getTargetPlayer()) && !muted;
+    }
+
+    public boolean isMuted() {
+		return muted;
+	}
+
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+	}
+
     // dummy implementations
 
-    protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
+	protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
         for (PlayerAction<?> action : actions) {
             if (action instanceof TilePlacementAction) {
                 if (selectDummyTilePlacement((TilePlacementAction) action)) return;

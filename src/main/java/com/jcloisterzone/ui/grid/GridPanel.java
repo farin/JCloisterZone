@@ -515,7 +515,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //create the image
         BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D) im.getGraphics();
-        if(null == System.getProperty("transparentScreenshots")){
+        if (!"true".equals(System.getProperty("transparentScreenshots"))){
             graphics.setBackground(new Color(240, 240, 240, 255));
             graphics.clearRect(0, 0, im.getWidth(), im.getHeight());
         }

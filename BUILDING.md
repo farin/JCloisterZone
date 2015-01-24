@@ -73,7 +73,7 @@ Helpers for more pleasant development and application debugging.
 
 ### VM arguments and system properties
 
-JCloisterZone supports various system properties to help developmen- 
+JCloisterZone supports various system properties to help development
 
 * `config=foo.yaml` - use custom yaml configuration file
 * `errorLog=false` - don't save error log to file 
@@ -81,7 +81,9 @@ JCloisterZone supports various system properties to help developmen-
 * `nick=Bob` - force default nickname for play online
 * `forceChat=true` - enable chat window for local games
 * `allowAiOnlyOnlineGame=true` - allows online game without human players (must be allowed also by server)
+* `allowHotSeatOnlineGame=true` - allows online game with multiple human players from one client
 * `org.slf4j.simpleLogger.defaultLogLevel=info` - set log level
+* `transparentScreenshots=true` - don't fill screenshot background
 
 Command line example:
 

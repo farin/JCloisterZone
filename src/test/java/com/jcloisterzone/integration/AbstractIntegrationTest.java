@@ -40,7 +40,7 @@ public class AbstractIntegrationTest {
             game.getPhases().put(phase.getClass(), phase);
             game.setPhase(phase);
             phase.setSlots(new PlayerSlot[0]);
-            phase.startGame();
+            phase.startGame(false);
             game.events.clear();
             return game;
         } catch (Exception e) {

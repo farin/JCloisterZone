@@ -38,12 +38,16 @@ import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.LoadGamePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.online.Channel;
+import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameSetupView;
+import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
+import com.jcloisterzone.wsio.MutedConnection;
 import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage.ChannelMessageGame;
@@ -72,7 +76,7 @@ public class ClientMessageListener implements MessageListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Connection conn;
+    private WebSocketConnection conn;
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
     private Map<String, GameController> gameControllers = new HashMap<>();
@@ -87,8 +91,8 @@ public class ClientMessageListener implements MessageListener {
         this.playOnline = playOnline;
     }
 
-    public Connection connect(String username, URI uri) {
-        conn = new Connection(username, client.getConfig(), uri, this);
+    public WebSocketConnection connect(String username, URI uri) {
+        conn = new WebSocketConnection(username, client.getConfig(), uri, this);
         return conn;
     }
 
@@ -221,10 +225,39 @@ public class ClientMessageListener implements MessageListener {
         return gc;
     }
 
-    private void handleGameStarted(GameController gc, String[] replay) {
+    private void handleGameStarted(final GameController gc, String[] replay) throws InvocationTargetException, InterruptedException {
         conn.getReportingTool().setGame(gc.getGame());
         CreateGamePhase phase = (CreateGamePhase)gc.getGame().getPhase();
-        phase.startGame();
+        phase.startGame(replay != null);
+
+        if (replay != null) {
+        	gc.setConnection(new MutedConnection(conn));
+
+        	SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+            		GameView view = new GameView(client, gc);
+            		view.setChatPanel(new GameChatPanel(client, gc.getGame()));
+            		client.mountView(view);
+                }
+            });
+
+        	gc.phaseLoop();
+        	for (int i = 0; i < replay.length; i++) {
+        		if (i == replay.length - 1) {
+        			for (PlayerSlot slot : phase.getPlayerSlots()) {
+                		if (slot.getAiPlayer() != null) {
+                			slot.getAiPlayer().setMuted(false);
+                		}
+                	}
+        		}
+
+        		WsMessage msg = conn.getParser().fromJson(replay[i]);
+        		dispatcher.dispatch(msg, conn, this, gc.getGame().getPhase());
+        		gc.phaseLoop();
+        	}
+        	gc.setConnection(conn);
+        }
     }
 
     private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {
@@ -251,7 +284,7 @@ public class ClientMessageListener implements MessageListener {
         }
 
 	    GameController gc = (GameController) getController(msg);
-        if (gc == null) {
+        if (gc == null || msg.getReplay() != null) { //if replay, reinit controller
             gc = createGameController(msg);
             //TODO remove games on game over
             gameControllers.put(msg.getGameId(), gc);

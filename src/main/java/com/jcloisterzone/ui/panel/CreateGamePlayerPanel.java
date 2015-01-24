@@ -204,7 +204,7 @@ public class CreateGamePlayerPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             String nick;
             boolean skipPlayer = false;
-            if (channel) {
+            if (channel && !"true".equals(System.getProperty("allowHotSeatOnlineGame"))) {
             	for (PlayerSlot other : slots) {
             		if (other == slot) continue;
             		if (other.isOwn() && !other.isAi()) skipPlayer = true;

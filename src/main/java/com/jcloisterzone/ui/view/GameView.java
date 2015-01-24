@@ -171,6 +171,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 new BugReportDialog(gc.getReportingTool());
             }
         });
+        menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gc.leaveGame();
+			}
+		});
 
         menu.setItemEnabled(MenuItem.FARM_HINTS, true);
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);

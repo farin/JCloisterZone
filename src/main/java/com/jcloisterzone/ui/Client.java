@@ -66,6 +66,7 @@ import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
 import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
 
@@ -321,7 +322,7 @@ public class Client extends JFrame {
         try {
             URI uri = new URI("ws", null, "".equals(hostname) ? "localhost" : hostname, port, playOnline ? "/ws" : "/", null, null);
             logger.info("Connection to {}", uri);
-            Connection conn = clientMessageListener.connect(username == null ? getUserName() : username, uri);
+            WebSocketConnection conn = clientMessageListener.connect(username == null ? getUserName() : username, uri);
             conn.setReportingTool(new ReportingTool());
         } catch (URISyntaxException e) {
             logger.error(e.getMessage(), e);

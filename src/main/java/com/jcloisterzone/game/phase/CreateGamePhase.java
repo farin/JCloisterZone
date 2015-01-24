@@ -189,11 +189,12 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    protected void prepareAiPlayers() {
+    protected void prepareAiPlayers(boolean muteAi) {
         for (PlayerSlot slot : slots) {
             if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    ai.setMuted(muteAi);
                     ai.setGame(game);
                     ai.setGameController(getGameController());
                     for (Player player : game.getAllPlayers()) {
@@ -202,6 +203,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                             break;
                         }
                     }
+                    slot.setAiPlayer(ai);
                     game.getEventBus().register(ai);
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
@@ -235,7 +237,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    public void startGame() {
+    public void startGame(boolean muteAi) {
         //temporary code should be configured by player as rules
         prepareCapabilities();
 
@@ -243,7 +245,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         preparePlayers();
         preparePhases();
         prepareTilePack();
-        prepareAiPlayers();
+        prepareAiPlayers(muteAi);
 
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_START, getSnapshot()));
         preplaceTiles();

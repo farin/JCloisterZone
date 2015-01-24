@@ -1,5 +1,7 @@
 package com.jcloisterzone.wsio.message;
 
+import java.util.Arrays;
+
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("DRAW")
@@ -16,7 +18,8 @@ public class DrawMessage implements WsInGameMessage {
         this.values = values;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 
@@ -38,5 +41,13 @@ public class DrawMessage implements WsInGameMessage {
 
     public void setValues(int[] values) {
         this.values = values;
+    }
+
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("DRAW {\"gameID\": \"").append(gameId).append("\", \"packSize\": \"")
+        .append(packSize).append(", \"values\": ").append(Arrays.toString(values)).append("\"}");
+        return sb.toString();
     }
 }

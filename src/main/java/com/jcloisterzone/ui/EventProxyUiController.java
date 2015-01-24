@@ -20,6 +20,7 @@ public class EventProxyUiController<T extends EventProxy> {
 	protected final Client client;
     private final EventBus eventBus;
     private final T eventProxy;
+    private Connection connection;
 
     private InvokeInSwingUiAdapter invokeInSwingUiAdapter;
 
@@ -63,11 +64,21 @@ public class EventProxyUiController<T extends EventProxy> {
 		return remoteClients;
 	}
 
-    public Connection getConnection() {
-        return client.getConnection();
-    }
-
 	protected InvokeInSwingUiAdapter getInvokeInSwingUiAdapter() {
 		return invokeInSwingUiAdapter;
 	}
+
+	public Connection getConnection() {
+		//TODO fix this hack
+		if (this.connection == null) {
+			return client.getConnection();
+		}
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+
 }
