@@ -482,7 +482,7 @@ public class ClientMessageListener implements MessageListener {
             logger.warn(err.getMessage());
             String msg;
             if (playOnline) {
-            	msg = _("Online server version is not compatible with your application. Please upgrade JCloisterZone to the latest version.");
+            	msg = _("Online play server is not compatible with your application. Please upgrade JCloisterZone to the latest version.");
             } else {
             	msg = _("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version.");
             }
