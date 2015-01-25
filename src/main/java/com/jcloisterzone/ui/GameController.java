@@ -332,7 +332,6 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     public void leaveGame() {
         if (getChannel() == null) {
-            client.closeGame();
             client.mountView(new StartView(client));
         } else {
         	ClientMessageListener cml = client.getClientMessageListener();

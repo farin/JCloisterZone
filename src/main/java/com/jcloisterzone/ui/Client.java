@@ -147,9 +147,7 @@ public class Client extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (closeGame()) {
-                    System.exit(0);
-                }
+                handleQuit();
             }
         });
         MenuBar menuBar = new MenuBar(this);
@@ -429,7 +427,7 @@ public class Client extends JFrame {
     }
 
     public void handleQuit() {
-        if (closeGame() == true) {
+        if (getView().requestHide(null, null)) {
             System.exit(0);
         }
     }
