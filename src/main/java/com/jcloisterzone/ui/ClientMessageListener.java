@@ -141,7 +141,8 @@ public class ClientMessageListener implements MessageListener {
         }
     }
 
-    public RemoteClient getClientBySessionId(EventProxyUiController<?> controller, String sessionId) {;
+    public RemoteClient getClientBySessionId(EventProxyUiController<?> controller, String sessionId) {
+    	if (sessionId == null) return null;
         for (RemoteClient remote: controller.getRemoteClients()) {
             if (remote.getSessionId().equals(sessionId)) {
                 return remote;

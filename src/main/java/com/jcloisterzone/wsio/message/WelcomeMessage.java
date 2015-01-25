@@ -7,6 +7,7 @@ public class WelcomeMessage implements WsMessage {
     private String sessionId;
     private String nickname;
     private Integer pingInterval;
+    private String maintenance;
 
     public WelcomeMessage(String sessionId, String nickname, Integer pingInterval) {
         this.sessionId = sessionId;
@@ -37,4 +38,12 @@ public class WelcomeMessage implements WsMessage {
     public Integer getPingInterval() {
         return pingInterval;
     }
+
+	public String getMaintenance() {
+		return maintenance;
+	}
+
+	public void setMaintenance(String maintenance) {
+		this.maintenance = maintenance;
+	}
 }

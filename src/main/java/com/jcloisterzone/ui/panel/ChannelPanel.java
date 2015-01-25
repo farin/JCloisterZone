@@ -40,6 +40,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.LengthRestrictedDocument;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
@@ -84,26 +85,33 @@ public class ChannelPanel extends JPanel {
     }
 
     private JPanel createCreateGamePanel() {
+    	String maintenance = ((WebSocketConnection) cc.getConnection()).getMaintenance();
     	JPanel createGamePanel = new JPanel(new MigLayout());
 
-    	createGamePanel.add(new JLabel(_("Game title")+":"));
+    	if (maintenance != null) {
+    		createGamePanel.add(new JLabel("Server is in maintenance mode."), "wrap");
+    		createGamePanel.add(new JLabel(maintenance), "wrap");
+    	} else {
+	    	createGamePanel.add(new JLabel(_("Game title")+":"));
 
-    	String defaultTitle = cc.getConnection().getNickname() + "'s game";
-    	final JTextField gameTitle = new JTextField();
-    	gameTitle.setDocument(new LengthRestrictedDocument(MAX_GAME_TITLE_LENGTH));
-    	gameTitle.setText(defaultTitle); //set after document
-    	createGamePanel.add(gameTitle, "wrap, width 250::");
+	    	String defaultTitle = cc.getConnection().getNickname() + "'s game";
+	    	final JTextField gameTitle = new JTextField();
+	    	gameTitle.setDocument(new LengthRestrictedDocument(MAX_GAME_TITLE_LENGTH));
+	    	gameTitle.setText(defaultTitle); //set after document
+	    	createGamePanel.add(gameTitle, "wrap, width 250::");
 
-        JButton createGameButton = new JButton(_("Create game"));
-        createGameButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String title = gameTitle.getText().trim();
-				cc.getConnection().send(new CreateGameMessage(title, cc.getChannel().getName()));
-			}
-		});
-        createGamePanel.add(createGameButton, "wrap, span 2");
-        return createGamePanel;
+	        JButton createGameButton = new JButton(_("Create game"));
+	        createGameButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String title = gameTitle.getText().trim();
+					cc.getConnection().send(new CreateGameMessage(title, cc.getChannel().getName()));
+				}
+			});
+	        createGamePanel.add(createGameButton, "wrap, span 2");
+
+    	}
+    	return createGamePanel;
     }
 
 

@@ -33,7 +33,9 @@ public class WebSocketConnection implements Connection {
     private String clientId;
     private String secret; //TODO will be used for message signing
     private String nickname;
+
     private int pingInterval = 0;
+    private String maintenance;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> pingFuture;
@@ -80,6 +82,7 @@ public class WebSocketConnection implements Connection {
                     sessionId = welcome.getSessionId();
                     nickname = welcome.getNickname();
                     pingInterval = welcome.getPingInterval();
+                    maintenance = welcome.getMaintenance();
                 }
                 schedulePing();
                 listener.onWebsocketMessage(msg);
@@ -139,5 +142,9 @@ public class WebSocketConnection implements Connection {
 
     public MessageParser getParser() {
 		return parser;
+	}
+
+    public String getMaintenance() {
+		return maintenance;
 	}
 }
