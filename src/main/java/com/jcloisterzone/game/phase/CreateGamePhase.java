@@ -28,14 +28,14 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
 
-    private final class PlayerSlotComparator implements Comparator<PlayerSlot> {
+    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
         @Override
         public int compare(PlayerSlot o1, PlayerSlot o2) {
             if (o1.getSerial() == null) {
@@ -51,8 +51,8 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected PlayerSlot[] slots;
     protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, Connection conn) {
-        super(game, conn);
+    public CreateGamePhase(Game game, GameController controller) {
+        super(game, controller);
     }
 
     public void setSlots(PlayerSlot[] slots) {
@@ -100,9 +100,9 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void preparePhases() {
         Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
-               addPhase(next, new GameOverPhase(game));
+               addPhase(next, new GameOverPhase(game, getGameController()));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getConnection()));
+        next = addPhase(next, new BazaarPhase(game, getGameController()));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
         next = addPhase(next, new CornCirclePhase(game));
         next = addPhase(next, new EscapePhase(game));
@@ -125,9 +125,10 @@ public class CreateGamePhase extends ServerAwarePhase {
                addPhase(next, new TowerCapturePhase(game));
                addPhase(next, new FlierActionPhase(game));
         next = addPhase(next, new ActionPhase(game));
+        next = addPhase(next, new MageAndWitchPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getConnection()));
+        next = addPhase(next, new DrawPhase(game, getGameController()));
         next = addPhase(next, new AbbeyPhase(game));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
@@ -171,7 +172,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void prepareTilePack() {
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setGame(game);
-        tilePackFactory.setConfig(game.getConfig());
+        tilePackFactory.setConfig(getGameController().getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
         getTilePack().setGroupState("default", TileGroupState.ACTIVE);
@@ -188,19 +189,21 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    protected void prepareAiPlayers() {
+    protected void prepareAiPlayers(boolean muteAi) {
         for (PlayerSlot slot : slots) {
             if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    ai.setMuted(muteAi);
                     ai.setGame(game);
-                    ai.setServer(getConnection(), getServer());
+                    ai.setGameController(getGameController());
                     for (Player player : game.getAllPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             ai.setPlayer(player);
                             break;
                         }
                     }
+                    slot.setAiPlayer(ai);
                     game.getEventBus().register(ai);
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
@@ -215,7 +218,7 @@ public class CreateGamePhase extends ServerAwarePhase {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
         }
 
-        DebugConfig debugConfig = game.getConfig().getDebug();
+        DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
             List<String> offNames =  debugConfig.getOff_capabilities();
             Set<Class<? extends Capability>> off = new HashSet<>();
@@ -234,7 +237,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    public void startGame() {
+    public void startGame(boolean muteAi) {
         //temporary code should be configured by player as rules
         prepareCapabilities();
 
@@ -242,7 +245,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         preparePlayers();
         preparePhases();
         prepareTilePack();
-        prepareAiPlayers();
+        prepareAiPlayers(muteAi);
 
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_START, getSnapshot()));
         preplaceTiles();

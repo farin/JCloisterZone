@@ -38,13 +38,35 @@ public class Config {
 
     private Boolean beep_alert;
     private String client_name;
+    private String client_id;
+    private String secret;
+    private String play_online_host;
 
     private List<String> plugins;
     private ConfirmConfig confirm;
     private PlayersConfig players;
+    private ScreenshotsConfig screenshots;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
+
+    public static class ScreenshotsConfig {
+        private String folder;
+        private Integer scale;
+
+        public String getFolder() {
+            return folder;
+        }
+        public void setFolder(String folder) {
+            this.folder = folder;
+        }
+        public Integer getScale() {
+            return scale;
+        }
+        public void setScale(Integer scale) {
+            this.scale = scale;
+        }
+    }
 
     public static class PresetConfig {
         private List<String> expansions;
@@ -67,7 +89,11 @@ public class Config {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
             for (String expName : expansions) {
-                expansionSet.add(Expansion.valueOf(expName));
+                try {
+                    expansionSet.add(Expansion.valueOf(expName));
+                } catch (IllegalArgumentException ex) {
+                    LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+                }
             }
 
             EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
@@ -82,6 +108,7 @@ public class Config {
 
         private String preset;
         private List<String> players;
+        private Boolean online;
 
         public String getPreset() {
             return preset;
@@ -95,10 +122,17 @@ public class Config {
         public void setPlayers(List<String> players) {
             this.players = players;
         }
+        public Boolean getOnline() {
+            return online;
+        }
+        public void setOnline(Boolean online) {
+            this.online = online;
+        }
     }
 
     public static class DebugConfig {
         private String save_format;
+        private String window_size;
         private String autosave;
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
@@ -107,7 +141,7 @@ public class Config {
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
-            return autostart != null && autostart.getPreset() != null;
+            return autostart != null && (autostart.getPreset() != null || Boolean.TRUE.equals(autostart.getOnline()));
         }
 
         public String getSave_format() {
@@ -116,6 +150,14 @@ public class Config {
         public void setSave_format(String save_format) {
             this.save_format = save_format;
         }
+
+        public String getWindow_size() {
+            return window_size;
+        }
+        public void setWindow_size(String window_size) {
+            this.window_size = window_size;
+        }
+
         public String getAutosave() {
             return autosave;
         }
@@ -157,7 +199,6 @@ public class Config {
     public static class ConfirmConfig {
         private Boolean farm_place;
         private Boolean tower_place;
-        private Boolean game_close;
         private Boolean ransom_payment;
 
         public Boolean getFarm_place() {
@@ -172,11 +213,9 @@ public class Config {
         public void setTower_place(Boolean tower_place) {
             this.tower_place = tower_place;
         }
-        public Boolean getGame_close() {
-            return game_close == null ? Boolean.FALSE : game_close;
-        }
+        @Deprecated
         public void setGame_close(Boolean game_close) {
-            this.game_close = game_close;
+            //ignore - keep for backward compatibility
         }
         public Boolean getRansom_payment() {
             return ransom_payment == null ? Boolean.FALSE : ransom_payment;
@@ -363,6 +402,31 @@ public class Config {
         this.client_name = client_name;
     }
 
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getPlay_online_host() {
+        return play_online_host;
+    }
+
+    public void setPlay_online_host(String play_online_host) {
+        this.play_online_host = play_online_host;
+    }
+
     public void setPresets(Map<String, PresetConfig> presets) {
         this.presets = presets;
     }
@@ -381,5 +445,16 @@ public class Config {
 
     public void setOrigin(File origin) {
         this.origin = origin;
+    }
+
+    public ScreenshotsConfig getScreenshots() {
+        if (screenshots == null) {
+            screenshots = new ScreenshotsConfig();
+        }
+        return screenshots;
+    }
+
+    public void setScreenshots(ScreenshotsConfig screenshots) {
+        this.screenshots = screenshots;
     }
 }

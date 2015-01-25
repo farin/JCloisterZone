@@ -4,7 +4,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SLOT")
-public class SlotMessage implements WsMessage {
+public class SlotMessage implements WsInGameMessage {
     private String gameId;
     private int number;
     private String owner;

@@ -4,9 +4,10 @@ import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class DelayedServer implements RmiProxy {
 
@@ -106,5 +107,18 @@ public class DelayedServer implements RmiProxy {
     @Override
     public void placeLittleBuilding(LittleBuilding lbType) {
         server.placeLittleBuilding(lbType);
+    }
+
+
+    @Override
+    public void moveMage(FeaturePointer fp) {
+        server.moveMage(fp);
+    }
+
+
+    @Override
+    public void moveWitch(FeaturePointer fp) {
+        server.moveWitch(fp);
+
     }
 }

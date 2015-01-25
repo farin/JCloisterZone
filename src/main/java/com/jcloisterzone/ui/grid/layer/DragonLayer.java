@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -16,8 +17,8 @@ public class DragonLayer extends AbstractTileLayer {
     private int moves;
     private Image dragonImage;
 
-    public DragonLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public DragonLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         dragonImage = getClient().getFigureTheme().getNeutralImage(DRAGON_IMAGE_NAME);
     }
 
@@ -41,6 +42,4 @@ public class DragonLayer extends AbstractTileLayer {
         this.moves = moves;
 
     }
-
-
 }

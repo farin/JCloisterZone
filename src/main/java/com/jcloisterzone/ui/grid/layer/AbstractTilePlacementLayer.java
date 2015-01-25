@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.Set;
 
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -24,8 +25,8 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     private Image previewIcon;
 
 
-    public AbstractTilePlacementLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public AbstractTilePlacementLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
 

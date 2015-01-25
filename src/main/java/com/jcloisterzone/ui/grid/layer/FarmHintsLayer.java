@@ -25,6 +25,7 @@ import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ResourceManager;
 
@@ -33,19 +34,13 @@ public class FarmHintsLayer extends AbstractGridLayer {
     private static final int FULL_SIZE = 300;
     private static final AlphaComposite HINT_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
-    private boolean visible;
     private boolean doRefreshHints;
     final Map<Tile, Map<Location, Area>> areas = new HashMap<>();
     private final List<FarmHint> hints = new ArrayList<>();
 
-    public FarmHintsLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public FarmHintsLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         refreshHints();
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-        gridPanel.repaint();
     }
 
     @Override

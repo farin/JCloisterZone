@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class BridgeLayer extends AbstractGridLayer {
@@ -25,8 +26,8 @@ public class BridgeLayer extends AbstractGridLayer {
 
     private MeepleLayer meepleLayer;
 
-    public BridgeLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public BridgeLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
 

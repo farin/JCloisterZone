@@ -1,7 +1,7 @@
 package com.jcloisterzone.ai.choice;
 
 import com.jcloisterzone.ai.SavePoint;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class PassChoice extends AiChoice {
 

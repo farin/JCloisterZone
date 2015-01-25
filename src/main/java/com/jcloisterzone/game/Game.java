@@ -18,6 +18,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
+import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
@@ -27,8 +28,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.bugreport.ReportingTool;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.PlayEvent;
@@ -39,6 +38,7 @@ import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
@@ -55,12 +55,9 @@ import com.jcloisterzone.game.phase.Phase;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game extends GameSettings {
+public class Game extends GameSettings implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private ReportingTool reportingTool;
-
-    private Config config;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -79,8 +76,8 @@ public class Game extends GameSettings {
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
-    private List<Capability> capabilities = new ArrayList<>();
-    private FairyCapability fairyCapability; //shortcut
+    private List<Capability> capabilities = new ArrayList<>(); //TODO change to map?
+    private FairyCapability fairyCapability; //shortcut - TODO remove
 
     private Undoable lastUndoable;
     private Phase lastUndoablePhase;
@@ -91,15 +88,16 @@ public class Game extends GameSettings {
 
     private int idSequenceCurrVal = 0;
 
-
     public Game(String gameId) {
         super(gameId);
     }
 
+    @Override
     public EventBus getEventBus() {
         return eventBus;
     }
 
+    @Override
     public void post(Event event) {
         eventQueue.add(event);
         for (Capability capability: capabilities) {
@@ -144,14 +142,6 @@ public class Game extends GameSettings {
             post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
             phase.enter();
         }
-    }
-
-    public Config getConfig() {
-        return config;
-    }
-
-    public void setConfig(Config config) {
-        this.config = config;
     }
 
     public Tile getCurrentTile() {
@@ -437,9 +427,9 @@ public class Game extends GameSettings {
         }
     }
 
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy strategy) {
         for (Capability cap: capabilities) {
-            cap.finalScoring();
+            cap.finalScoring(strategy);
         }
     }
 
@@ -465,13 +455,5 @@ public class Game extends GameSettings {
     @Override
     public String toString() {
         return "Game in " + phase.getClass().getSimpleName() + " phase.";
-    }
-
-    public void setReportingTool(ReportingTool reportingTool) {
-        this.reportingTool = reportingTool;
-    }
-
-    public ReportingTool getReportingTool() {
-        return reportingTool;
     }
 }

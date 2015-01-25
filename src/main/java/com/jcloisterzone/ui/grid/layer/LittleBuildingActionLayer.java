@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.LittleBuildingAction;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.theme.FigureTheme;
@@ -16,8 +17,8 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     private Map<LittleBuilding, Image> images = new HashMap<>();
     private LittleBuildingAction action;
 
-    public LittleBuildingActionLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
 
         FigureTheme theme = getClient().getFigureTheme();
         for (LittleBuilding lb : LittleBuilding.values()) {

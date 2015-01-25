@@ -1,6 +1,5 @@
 package com.jcloisterzone.ai;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Set;
 
@@ -17,39 +16,38 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.rmi.RmiProxy;
-import com.jcloisterzone.rmi.ClientStub;
-import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AiPlayer {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     protected Game game;
+    protected GameController gc;
 
-    private Connection conn;
-    private RmiProxy server;
-    private ClientStub clientStub;
+    private RmiProxy rmiProxy;
     private Player player;
+    private boolean muted;
 
     public void setGame(Game game) {
         this.game = game;
     }
 
-    public RmiProxy getServer() {
-        return server;
+    public RmiProxy getRmiProxy() {
+        return rmiProxy;
     }
 
-    public void setServer(Connection conn, RmiProxy server) {
-        Integer placeTileDelay = game.getConfig().getAi_place_tile_delay();
-        this.server = new DelayedServer(server, placeTileDelay == null ? 0 : placeTileDelay);
-        this.clientStub = (ClientStub) Proxy.getInvocationHandler(server);
-        this.conn = conn;
+    public void setGameController(GameController gc) {
+        this.gc = gc;
+        Integer placeTileDelay = gc.getConfig().getAi_place_tile_delay();
+        rmiProxy = new DelayedServer(gc.getRmiProxy(), placeTileDelay == null ? 0 : placeTileDelay);
     }
 
     public Player getPlayer() {
@@ -60,17 +58,25 @@ public abstract class AiPlayer {
         this.player = player;
     }
 
-    protected ClientStub getClientStub() {
-        return clientStub;
+    protected GameController getGameController() {
+        return gc;
     }
 
-    protected Connection getConnection() {
-        return conn;
+    protected boolean isAiActive(PlayEvent ev) {
+    	return player.equals(ev.getTargetPlayer()) && !muted;
     }
+
+    public boolean isMuted() {
+		return muted;
+	}
+
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+	}
 
     // dummy implementations
 
-    protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
+	protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
         for (PlayerAction<?> action : actions) {
             if (action instanceof TilePlacementAction) {
                 if (selectDummyTilePlacement((TilePlacementAction) action)) return;
@@ -85,11 +91,11 @@ public abstract class AiPlayer {
                 if (selectDummyTowerCapture((TakePrisonerAction) action)) return;
             }
         }
-        getServer().pass();
+        getRmiProxy().pass();
     }
 
     protected boolean selectDummyAbbeyPlacement(AbbeyPlacementAction action) {
-        getServer().pass();
+        getRmiProxy().pass();
         return true;
     }
 
@@ -104,7 +110,7 @@ public abstract class AiPlayer {
                 nearest = tp;
             }
         }
-        getServer().placeTile(nearest.getRotation(), nearest.getPosition());
+        getRmiProxy().placeTile(nearest.getRotation(), nearest.getPosition());
         return true;
     }
 
@@ -112,7 +118,7 @@ public abstract class AiPlayer {
         for (FeaturePointer fp : ma) {
             Feature f = game.getBoard().get(fp.getPosition()).getFeature(fp.getLocation());
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-                getServer().deployMeeple(fp.getPosition(), fp.getLocation(), ma.getMeepleType());
+                getRmiProxy().deployMeeple(fp.getPosition(), fp.getLocation(), ma.getMeepleType());
                 return true;
             }
         }
@@ -121,12 +127,12 @@ public abstract class AiPlayer {
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         MeeplePointer mp = action.iterator().next();
-        getServer().takePrisoner(mp.getPosition(), mp.getLocation(), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
+        getRmiProxy().takePrisoner(mp.getPosition(), mp.getLocation(), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
         return true;
     }
 
     protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
-        getServer().moveDragon(positions.iterator().next());
+        getRmiProxy().moveDragon(positions.iterator().next());
     }
 
     @Override

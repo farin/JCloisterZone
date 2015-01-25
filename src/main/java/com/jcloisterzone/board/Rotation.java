@@ -41,6 +41,10 @@ public enum Rotation {
         return values()[ordinal()-1];
     }
 
+    public Rotation add(Rotation r) {
+    	return Rotation.values()[(this.ordinal() + r.ordinal()) % Rotation.values().length];
+    }
+
     public Rotation inverse() {
         switch (this) {
             case R0: return R0;

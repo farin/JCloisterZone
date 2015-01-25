@@ -68,11 +68,11 @@ public abstract class RankingAiPlayer extends AiPlayer {
         }
         //logger.info("pop chain " + this.toString() + ": " + toExecute.toString());
         //execute after chain update is done
-        toExecute.perform(getServer());
+        toExecute.perform(getRmiProxy());
     }
 
     private void autosave() {
-        DebugConfig debugConfig = game.getConfig().getDebug();
+        DebugConfig debugConfig = gc.getConfig().getDebug();
         if (debugConfig != null && debugConfig.getAutosave() != null && debugConfig.getAutosave().length() > 0) {
             Snapshot snapshot = new Snapshot(game);
             if ("plain".equals(debugConfig.getSave_format())) {
@@ -88,7 +88,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        if (getPlayer().equals(ev.getTargetPlayer())) {
+    	if (isAiActive(ev)) {
             //logger.info("SA " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString() + " ?" + (getBestChain()==null?"null":"chain"));
             if (getBestChain() != null) {
                 popActionChain();
@@ -106,7 +106,7 @@ public abstract class RankingAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        if (getPlayer().equals(ev.getTargetPlayer())) {
+    	if (isAiActive(ev)) {
              new Thread(new SelectDragonMoveTask(this, ev), "AI-selectDragonMove").start();
         }
     }
@@ -115,13 +115,12 @@ public abstract class RankingAiPlayer extends AiPlayer {
     protected Game copyGame(Object gameListener) {
         Snapshot snapshot = new Snapshot(game);
         Game copy = snapshot.asGame(game.getGameId());
-        copy.setConfig(game.getConfig());
         copy.getEventBus().register(gameListener);
-        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getConnection());
+        LoadGamePhase phase = new LoadGamePhase(copy, snapshot, getGameController());
         phase.setSlots(new PlayerSlot[0]);
         copy.getPhases().put(phase.getClass(), phase);
         copy.setPhase(phase);
-        phase.startGame();
+        phase.startGame(false);
         return copy;
     }
 }

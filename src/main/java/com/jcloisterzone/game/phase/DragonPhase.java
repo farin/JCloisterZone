@@ -29,10 +29,4 @@ public class DragonPhase extends Phase {
         }
         next();
     }
-
-
-
-
-
-
 }

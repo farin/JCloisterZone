@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -20,8 +21,8 @@ public class PlacementHistory extends AbstractGridLayer {
     private final Map<Position, String> history = new HashMap<>();
     private final Collection<Tile> placedTilesView;
 
-    public PlacementHistory(GridPanel gridPanel, Collection<Tile> placedTilesView) {
-        super(gridPanel);
+    public PlacementHistory(GridPanel gridPanel, GameController gc, Collection<Tile> placedTilesView) {
+        super(gridPanel, gc);
         this.placedTilesView = placedTilesView;
     }
 

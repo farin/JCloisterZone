@@ -4,7 +4,7 @@ update: ${update}
 port: ${port}
 
 # keep empty for system language or fill to force locale
-# supported locales are cs, de, el, en, es, fr, hu, it, pl, ro, ru, sk
+# supported locales are cs, de, el, en, es, fr, hu, it, pl, ro, ru, sk, nl
 locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
@@ -15,6 +15,9 @@ confirm: ${confirm}
 
 # machine identification for remote games
 client_name: ${client_name}
+client_id: ${client_id}
+secret: ${secret}
+play_online_host: ${play_online_host}
 
 players:
   # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)
@@ -24,6 +27,12 @@ players:
   names: ${player_names}
   ai_names: ${ai_names}
 
+screenshots:
+    # Specifies a folder for screenshots to be saved into. If leaved empty the JCloisterZone $workdir/screenshots will be used.
+    folder: ${screenshot_folder}
+    # Specifies the size of the tiles when a screenshot is taken;
+    scale: ${screenshot_scale}
+
 # plugins/classic.jar - Graphics from original board game
 # plugins/rgg_siege.jar - RGG's Siege tiles instead of original The Cathars tiles
 plugins: ${plugins}
@@ -32,8 +41,8 @@ plugins: ${plugins}
 #   WINTER, INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON,
 #   TOWER, ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS, CATAPULT,
 #   KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT,
-#   GQ11, CULT, TUNNEL, CORN_CIRCLES, PLAGUE, FESTIVAL, PHANTOM, WIND_ROSE,
-#   GERMAN_MONASTERIES, FLIER, CORN_CIRCLES_II
+#   GQ11, CULT, TUNNEL, CORN_CIRCLES, FESTIVAL, PHANTOM, WIND_ROSE,
+#   GERMAN_MONASTERIES, FLIER, MAGE_AND_WITCH, CORN_CIRCLES_II,
 #
 # possible rules:
 #   RANDOM_SEATING_ORDER,
@@ -45,10 +54,13 @@ presets: ${presets}
 
 connection_history: ${connection_history}
 
+
+
 ${if hasDebug}
 debug:
   # plain or zip
   save_format: ${save_format}
+  window_size: ${window_size}
 
   autosave: ${autosave}
 

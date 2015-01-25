@@ -2,9 +2,7 @@ package com.jcloisterzone.ui.dialog;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -14,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.Application;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 
 
@@ -41,7 +40,7 @@ public class AboutDialog extends JDialog {
 	 */
 	public AboutDialog() {
 		setTitle(_("About application"));
-		centerDialog(450, 199);
+		UiUtils.centerDialog(this, 450, 199);
 		contentPanel.setBounds(0, 0, 434, 167);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel);
@@ -77,14 +76,5 @@ public class AboutDialog extends JDialog {
 
 		setResizable(false);
 		setVisible(true);
-	}
-
-	private void centerDialog(int width, int height) {
-		Toolkit tk = Toolkit.getDefaultToolkit();
-	    Dimension screenSize = tk.getScreenSize();
-	    int screenHeight = screenSize.height;
-	    int screenWidth = screenSize.width;
-	    setBounds(screenWidth / 2 - width / 2, screenHeight / 3 - height / 2, width, height);
-
 	}
 }

@@ -8,12 +8,16 @@ public class DummyAiPlayer extends AiPlayer {
 
     @Subscribe
     public void selectAction(SelectActionEvent ev) {
-        selectDummyAction(ev.getActions(), ev.isPassAllowed());
+    	if (isAiActive(ev)) {
+    		selectDummyAction(ev.getActions(), ev.isPassAllowed());
+    	}
     }
 
     @Subscribe
     public void selectDragonMove(SelectDragonMoveEvent ev) {
-        selectDummyDragonMove(ev.getPositions(), ev.getMovesLeft());
+    	if (isAiActive(ev)) {
+    		selectDummyDragonMove(ev.getPositions(), ev.getMovesLeft());
+    	}
     }
 
 }

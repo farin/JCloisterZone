@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.Set;
 
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -15,8 +16,8 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
     private Set<Position> positions;
     private Position selected;
 
-    public DragonAvailableMove(GridPanel gridPanel) {
-        super(gridPanel);
+    public DragonAvailableMove(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     public void setPositions(Set<Position> positions) {
@@ -47,7 +48,7 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (positions.contains(selected)) {
                 e.consume();
-                getClient().getServer().moveDragon(selected);
+                getRmiProxy().moveDragon(selected);
             }
         }
     }

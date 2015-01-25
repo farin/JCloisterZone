@@ -8,19 +8,26 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jcloisterzone.wsio.message.AbandonGameMessage;
+import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientListMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
+import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
+import com.jcloisterzone.wsio.message.GameUpdateMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
+import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.PingMessage;
+import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
@@ -47,6 +54,8 @@ public final class MessageParser {
         registerMsgType(WelcomeMessage.class);
         registerMsgType(CreateGameMessage.class);
         registerMsgType(JoinGameMessage.class);
+        registerMsgType(LeaveGameMessage.class);
+        registerMsgType(AbandonGameMessage.class);
         registerMsgType(GameMessage.class);
         registerMsgType(GameSetupMessage.class);
         registerMsgType(TakeSlotMessage.class);
@@ -55,15 +64,20 @@ public final class MessageParser {
         registerMsgType(SetExpansionMessage.class);
         registerMsgType(SetRuleMessage.class);
         registerMsgType(StartGameMessage.class);
-        registerMsgType(GetRandSampleMessage.class);
-        registerMsgType(RandSampleMessage.class);
+        registerMsgType(MakeDrawMessage.class);
+        registerMsgType(DrawMessage.class);
         registerMsgType(RollFlierDiceMessage.class);
         registerMsgType(FlierDiceMessage.class);
         registerMsgType(RmiMessage.class);
         registerMsgType(UndoMessage.class);
-        registerMsgType(ClientListMessage.class);
+        registerMsgType(ClientUpdateMessage.class);
+        registerMsgType(GameUpdateMessage.class);
         registerMsgType(PostChatMessage.class);
         registerMsgType(ChatMessage.class);
+        registerMsgType(ChannelMessage.class);
+        registerMsgType(GameOverMessage.class);
+        registerMsgType(PingMessage.class);
+        registerMsgType(PongMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {
@@ -80,16 +94,10 @@ public final class MessageParser {
         if (type == null) {
             throw new IllegalArgumentException("Mapping type is not declared for "+s[0]);
         }
-        return (WsMessage) gson.fromJson(s[1], type);
+        return gson.fromJson(s[1], type);
     }
 
     public String toJson(WsMessage arg) {
         return getCmdName(arg.getClass()) + " " + gson.toJson(arg);
     }
-
-
-
-
-
-
 }

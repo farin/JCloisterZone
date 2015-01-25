@@ -12,7 +12,9 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -24,6 +26,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
@@ -32,6 +35,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 
@@ -44,6 +48,7 @@ public class ScorePhase extends Phase {
     private final CastleCapability castleCap;
     private final TunnelCapability tunnelCap;
     private final WagonCapability wagonCap;
+    private final MageAndWitchCapability mageWitchCap;
 
     public ScorePhase(Game game) {
         super(game);
@@ -52,6 +57,7 @@ public class ScorePhase extends Phase {
         tunnelCap = game.getCapability(TunnelCapability.class);
         castleCap = game.getCapability(CastleCapability.class);
         wagonCap = game.getCapability(WagonCapability.class);
+        mageWitchCap = game.getCapability(MageAndWitchCapability.class);
     }
 
     private void scoreCompletedOnTile(Tile tile) {
@@ -143,6 +149,20 @@ public class ScorePhase extends Phase {
     protected void undeployMeeples(CompletableScoreContext ctx) {
         for (Meeple m : ctx.getMeeples()) {
             undeloyMeeple(m);
+            //TODO decouple this hack
+            if (ctx instanceof PositionCollectingScoreContext) {
+                PositionCollectingScoreContext pctx = (PositionCollectingScoreContext) ctx;
+                if (pctx.containsMage()) {
+                    FeaturePointer oldPlacement = mageWitchCap.getMagePlacement();
+                    mageWitchCap.setMagePlacement(null);
+                    game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.MAGE, getActivePlayer(), oldPlacement, null));
+                }
+                if (pctx.containsWitch()) {
+                    FeaturePointer oldPlacement = mageWitchCap.getWitchPlacement();
+                    mageWitchCap.setWitchPlacement(null);
+                    game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.WITCH, getActivePlayer(), oldPlacement, null));
+                }
+            }
         }
     }
 

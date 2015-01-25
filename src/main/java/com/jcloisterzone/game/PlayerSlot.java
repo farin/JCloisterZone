@@ -2,6 +2,7 @@ package com.jcloisterzone.game;
 
 import java.io.Serializable;
 
+import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ui.PlayerColor;
 
 public class PlayerSlot implements Serializable {
@@ -15,12 +16,14 @@ public class PlayerSlot implements Serializable {
     private final int number;
     private Integer serial; //server assign sequence number whgen type is occupied
 
-    private String clientId;
+    private String sessionId;
     private String nickname;
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
     private boolean disconnected;
+
     private transient PlayerColor colors;
+    private transient AiPlayer aiPlayer; //ai player instance, set only on onwner host
 
     public PlayerSlot(int number) {
         this.number = number;
@@ -60,12 +63,12 @@ public class PlayerSlot implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public SlotState getState() {
@@ -105,4 +108,11 @@ public class PlayerSlot implements Serializable {
         this.disconnected = disconnected;
     }
 
+	public AiPlayer getAiPlayer() {
+		return aiPlayer;
+	}
+
+	public void setAiPlayer(AiPlayer aiPlayer) {
+		this.aiPlayer = aiPlayer;
+	}
 }

@@ -1,10 +1,12 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.util.EnumMap;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -15,23 +17,60 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.ui.dialog.HelpDialog;
-import com.jcloisterzone.wsio.message.UndoMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
-
+import com.jcloisterzone.ui.view.ConnectP2PView;
+import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
+
+    public static enum MenuItem {
+        //Session
+        NEW_GAME(_("New game"), KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        PLAY_ONLINE(_("Play online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        DISCONNECT(_("Disconnect")),
+        LEAVE_GAME(_("Leave game")),
+        SAVE(_("Save game"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        LOAD(_("Load game"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        QUIT(_("Quit"), KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        //Game
+        UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        ZOOM_IN(_("Zoom in"), KeyStroke.getKeyStroke('+')),
+        ZOOM_OUT(_("Zoom out"), KeyStroke.getKeyStroke('-')),
+        LAST_PLACEMENTS(_("Show last placements"), KeyStroke.getKeyStroke('x')),
+        FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
+        PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
+        DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        GAME_SETUP(_("Show game setup"), null),
+        TAKE_SCREENSHOT(_("Take screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
+        //Settings
+        BEEP_ALERT(_("Beep alert at player turn")),
+        CONFIRM_FARM(_("Confirm placement on a farm")),
+        CONFIRM_TOWER(_("Confirm placement on a tower")),
+        CONFIRM_RANSOM(_("Confirm ransom payment")),
+        //Help
+        ABOUT(_("About")),
+        CONTROLS(_("Controls")),
+        REPORT_BUG(_("Report bug"));
+
+        String title;
+        KeyStroke accelerator;
+
+        MenuItem(String title) {
+            this(title, null);
+        };
+
+        MenuItem(String title, KeyStroke accelerator) {
+            this.title = title;
+            this.accelerator = accelerator;
+        }
+    }
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Client client;
-    private boolean isGameRunning = false;
 
-    private JMenuItem create, connect, close, showDiscard, undo, save, load, farmHints;
-    private JMenuItem zoomIn, zoomOut;
-    private JMenuItem history, reportBug;
+    private EnumMap<MenuItem, JMenuItem> items = new EnumMap<>(MenuItem.class);
 
     public MenuBar(Client _client) {
         this.client = _client;
@@ -39,290 +78,181 @@ public class MenuBar extends JMenuBar {
         boolean isMac = Bootstrap.isMac();
 
         JMenu menu;
-        JMenuItem menuItem;
+        JCheckBoxMenuItem chbox;
 
-        //menu.getAccessibleContext().setAccessibleDescription(
-        //"The only menu in this program that has menu items");
+        menu = new JMenu(_("Session"));
+        menu.setMnemonic(KeyEvent.VK_P);
 
-        menu = new JMenu(_("Game"));
-        menu.setMnemonic(KeyEvent.VK_G);
-        create = new JMenuItem(_("New game"));
-        create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        create.addActionListener(new ActionListener() {
+        menu.add(createMenuItem(MenuItem.NEW_GAME, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 client.createGame();
             }
-        });
-        menu.add(create);
-
-        connect = new JMenuItem(_("Connect"));
-        connect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        connect.addActionListener(new ActionListener() {
+        }));
+        menu.add(createMenuItem(MenuItem.CONNECT_P2P, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                client.showConnectGamePanel();
+                client.mountView(new ConnectP2PView(client));
             }
-        });
-        menu.add(connect);
-
-        close = new JMenuItem(_("Close game"));
-        close.setEnabled(false);
-        close.addActionListener(new ActionListener() {
+        }));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.PLAY_ONLINE, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                client.closeGame();
+                client.mountView(new ConnectPlayOnlineView(client));
             }
-        });
-        menu.add(close);
-
-
+        }));
+        menu.add(createMenuItem(MenuItem.DISCONNECT, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.LEAVE_GAME, false));
         menu.addSeparator();
 
-        undo = new JMenuItem(_("Undo"));
-        undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        undo.setEnabled(false);
-        undo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.getConnection().send(new UndoMessage(client.getGame().getGameId()));
-            }
-        });
-        menu.add(undo);
-
-        menu.addSeparator();
-
-        save = new JMenuItem(_("Save"));
-        save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        save.setEnabled(false);
-        save.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.handleSave();
-            }
-        });
-        menu.add(save);
-
-        load = new JMenuItem(_("Load"));
-        load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        load.addActionListener(new ActionListener() {
+        menu.add(createMenuItem(MenuItem.SAVE, false));
+        menu.add(createMenuItem(MenuItem.LOAD, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 client.handleLoad();
             }
-        });
-        menu.add(load);
+        }));
 
         if (!isMac) {
             menu.addSeparator();
-
-            menuItem = new JMenuItem(_("Quit"));
-            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-            menuItem.addActionListener(new ActionListener() {
+            menu.add(createMenuItem(MenuItem.QUIT, new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     client.handleQuit();
                 }
-            });
-            menu.add(menuItem);
+            }));
         }
-
         this.add(menu);
-
-
-        menu = new JMenu(_("Window"));
-        zoomIn = new JMenuItem(_("Zoom in"));
-        zoomIn.setAccelerator(KeyStroke.getKeyStroke('+')); //only show key code, handled by KeyController
-        zoomIn.setEnabled(false);
-        zoomIn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.getGridPanel().zoom(2.0);
-            }
-        });
-        menu.add(zoomIn);
-        zoomOut = new JMenuItem(_("Zoom out"));
-        zoomOut.setAccelerator(KeyStroke.getKeyStroke('-')); //only show key code, handled by KeyController
-        zoomOut.setEnabled(false);
-        zoomOut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.getGridPanel().zoom(-2.0);
-            }
-        });
-        menu.add(zoomOut);
-
-//		menuItem = new JMenuItem(_("FullScreen"));
-//		menuItem.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				//fullScreen();
-//				throw new UnsupportedOperationException();
-//			}
-//		});
-//		/*if (!GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported()) {
-//			menuItem.setEnabled(false);
-//		}*/
-//		menuItem.setEnabled(false);
-//		menu.add(menuItem);
-
+        menu = new JMenu(_("Game"));
+        menu.setMnemonic(KeyEvent.VK_G);
+        menu.add(createMenuItem(MenuItem.UNDO, false));
         menu.addSeparator();
-        history = new JCheckBoxMenuItem(_("Show last placements"));
-        history.setAccelerator(KeyStroke.getKeyStroke('x'));
-        history.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.setShowHistory(ch.isSelected());
-
-            }
-        });
-        menu.add(history);
-
-        farmHints = new JCheckBoxMenuItem(_("Show farm hints"));
-        farmHints.setAccelerator(KeyStroke.getKeyStroke('f'));
-        farmHints.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getMainPanel().setShowFarmHints(ch.isSelected());
-            }
-        });
-        menu.add(farmHints);
-
-
-        showDiscard = new JMenuItem(_("Show discarded tiles"));
-        showDiscard.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        showDiscard.setEnabled(false);
-        showDiscard.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                client.getDiscardedTilesDialog().setVisible(true);
-            }
-        });
-        menu.add(showDiscard);
-
-
+        menu.add(createMenuItem(MenuItem.ZOOM_IN, false));
+        menu.add(createMenuItem(MenuItem.ZOOM_OUT, false));
+        menu.addSeparator();
+        menu.add(createCheckBoxMenuItem(MenuItem.LAST_PLACEMENTS, false));
+        menu.add(createCheckBoxMenuItem(MenuItem.FARM_HINTS, false));
+        menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.DISCARDED_TILES, false));
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.TAKE_SCREENSHOT, false));
         this.add(menu);
 
         menu = new JMenu(_("Settings"));
-        menuItem = new JCheckBoxMenuItem(_("Beep alert at player turn"));
-        menuItem.addActionListener(new ActionListener() {
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.BEEP_ALERT, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getConfig().setBeep_alert(state);
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getConfig().setBeep_alert(ch.isSelected());
                 client.saveConfig();
             }
-        });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getBeep_alert());
-        menu.add(menuItem);
-
+        }));
+        chbox.setSelected(client.getConfig().getBeep_alert());
         menu.addSeparator();
-
-        menuItem = new JCheckBoxMenuItem(_("Confirm placement on a farm"));
-        menuItem.addActionListener(new ActionListener() {
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_FARM, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getConfig().getConfirm().setFarm_place(state);
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getConfig().getConfirm().setFarm_place(ch.isSelected());
                 client.saveConfig();
             }
-        });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getFarm_place());
-        menu.add(menuItem);
-
-        menuItem = new JCheckBoxMenuItem(_("Confirm placement on a tower"));
-        menuItem.addActionListener(new ActionListener() {
+        }));
+        chbox.setSelected(client.getConfig().getConfirm().getFarm_place());
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_TOWER, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getConfig().getConfirm().setTower_place(state);
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getConfig().getConfirm().setTower_place(ch.isSelected());
                 client.saveConfig();
             }
-        });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getTower_place());
-        menu.add(menuItem);
-
-        menuItem = new JCheckBoxMenuItem(_("Confirm ransom payment"));
-        menuItem.addActionListener(new ActionListener() {
+        }));
+        chbox.setSelected(client.getConfig().getConfirm().getTower_place());
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_RANSOM, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getConfig().getConfirm().setRansom_payment(state);
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getConfig().getConfirm().setRansom_payment(ch.isSelected());
                 client.saveConfig();
             }
-        });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getRansom_payment());
-        menu.add(menuItem);
-
-        menu.addSeparator();
-
-        menuItem = new JCheckBoxMenuItem(_("Confirm game close"));
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                boolean state = ((JCheckBoxMenuItem) e.getSource()).getState();
-                client.getConfig().getConfirm().setGame_close(state);
-                client.saveConfig();
-            }
-        });
-        ((JCheckBoxMenuItem)menuItem).setSelected(client.getConfig().getConfirm().getGame_close());
-        menu.add(menuItem);
-
+        }));
+        chbox.setSelected(client.getConfig().getConfirm().getRansom_payment());
         this.add(menu);
 
         menu = new JMenu(_("Help"));
 
         if (!isMac) {
-
-            menuItem = new JMenuItem(_("About"));
-            menuItem.addActionListener(new ActionListener() {
+            menu.add(createMenuItem(MenuItem.ABOUT, new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     client.handleAbout();
                 }
-            });
-            menu.add(menuItem);
-
+            }));
         }
 
-        menuItem = new JMenuItem(_("Controls"));
-        menuItem.addActionListener(new ActionListener() {
+        menu.add(createMenuItem(MenuItem.CONTROLS, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 new HelpDialog();
             }
-        });
-        menu.add(menuItem);
-
-        reportBug = new JMenuItem(_("Report bug"));
-        reportBug.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new BugReportDialog(client.getReportingTool());
-            }
-        });
-        reportBug.setEnabled(false);
-        menu.add(reportBug);
-
+        }));
+        menu.add(createMenuItem(MenuItem.REPORT_BUG, false));
         this.add(menu);
-
     }
 
-    //legacy methods - TODO refactor
-
-    public void setZoomInEnabled(boolean state) {
-        zoomIn.setEnabled(state);
-    }
-    public void setZoomOutEnabled(boolean state) {
-        zoomOut.setEnabled(state);
+    private JMenuItem createMenuItem(MenuItem def, boolean enabled) {
+        return createMenuItem(def, null, enabled);
     }
 
-    public void setIsGameRunning(boolean isGameRunning) {
-        this.isGameRunning = isGameRunning;
-        create.setEnabled(!isGameRunning);
-        connect.setEnabled(!isGameRunning);
-        close.setEnabled(isGameRunning);
-        reportBug.setEnabled(isGameRunning);
-        if (!isGameRunning) {
-            showDiscard.setEnabled(false);
-            undo.setEnabled(false);
+    private JMenuItem createMenuItem(MenuItem def, ActionListener handler) {
+        return createMenuItem(def, handler, true);
+    }
+
+    private JMenuItem createMenuItem(MenuItem def, ActionListener handler, boolean enabled) {
+        JMenuItem instance = new JMenuItem(def.title);
+        initMenuItem(instance, def, handler);
+        instance.setEnabled(enabled);
+        return instance;
+    }
+
+    private JCheckBoxMenuItem createCheckBoxMenuItem(MenuItem def, boolean enabled) {
+        return createCheckBoxMenuItem(def, null, enabled);
+    }
+
+    private JCheckBoxMenuItem createCheckBoxMenuItem(MenuItem def, ActionListener handler) {
+        return createCheckBoxMenuItem(def, handler, true);
+    }
+
+    private JCheckBoxMenuItem createCheckBoxMenuItem(MenuItem def, ActionListener handler, boolean enabled) {
+        JCheckBoxMenuItem instance = new JCheckBoxMenuItem(def.title);
+        initMenuItem(instance, def, handler);
+        return instance;
+    }
+
+    private void initMenuItem(JMenuItem instance, MenuItem def, ActionListener handler) {
+        if (def.accelerator != null) {
+            instance.setAccelerator(def.accelerator);
         }
-        save.setEnabled(isGameRunning);
+        if (handler != null) {
+            instance.addActionListener(handler);
+        }
+        items.put(def, instance);
     }
 
-    public boolean isGameRunning() {
-        return isGameRunning;
+    public void setItemEnabled(MenuItem item, boolean state) {
+        items.get(item).setEnabled(state);
     }
 
-    public void setShowDiscardedEnabled(boolean enabled) {
-        showDiscard.setEnabled(enabled);
+    public void setItemActionListener(MenuItem item, ActionListener handler) {
+        JMenuItem instance = items.get(item);
+        ActionListener[] listeners = instance.getActionListeners();
+        for (ActionListener listener : listeners) {
+            instance.removeActionListener(listener);
+        }
+        if (handler != null) {
+            instance.addActionListener(handler);
+        }
     }
-
-    public JMenuItem getUndo() {
-        return undo;
-    }
-
-
-
 }

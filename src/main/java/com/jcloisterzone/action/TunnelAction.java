@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class TunnelAction extends SelectFeatureAction {
 

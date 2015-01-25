@@ -63,6 +63,6 @@ class SelectDragonMoveTask implements Runnable {
             }
         }
         logger.info("Selected dragon move: {}", result);
-        aiPlayer.getServer().moveDragon(result);
+        aiPlayer.getRmiProxy().moveDragon(result);
     }
 }

@@ -17,21 +17,25 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
     protected boolean visible;
     protected final GridPanel gridPanel;
+    protected final GameController gc;
     private MouseInputListener mouseListener;
 
-    public AbstractGridLayer(GridPanel gridPanel) {
+    public AbstractGridLayer(GridPanel gridPanel, GameController gc) {
         this.gridPanel = gridPanel;
+        this.gc = gc;
     }
 
     private void triggerFakeMouseEvent() {
@@ -126,7 +130,11 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     protected Game getGame() {
-        return getClient().getGame();
+        return gc.getGame();
+    }
+
+    protected RmiProxy getRmiProxy() {
+        return gc.getRmiProxy();
     }
 
     protected Area transformArea(Area area, Position pos) {

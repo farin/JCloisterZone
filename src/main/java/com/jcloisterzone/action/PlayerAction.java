@@ -9,24 +9,24 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.rmi.RmiProxy;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ActionLayer;
-import com.jcloisterzone.ui.grid.ForwardBackwardListener;
+import com.jcloisterzone.ui.grid.MainPanel;
+import com.jcloisterzone.ui.view.GameView;
+import com.jcloisterzone.wsio.RmiProxy;
 
-public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
-        ForwardBackwardListener, Iterable<T> {
+public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>, Iterable<T> {
 
     @Deprecated
     private final String name;
     protected final Set<T> options = new HashSet<T>();
 
     protected Client client;
+    protected MainPanel mainPanel;
 
     public PlayerAction(String name) {
         this.name = name;
     }
-
 
     public abstract void perform(RmiProxy server, T target);
 
@@ -63,7 +63,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
 
 
     protected final ActionLayer<?> getActionLayer(Class<? extends ActionLayer<?>> layerType) {
-        return client.getGamePanel().getGridPanel().findLayer(layerType);
+        return mainPanel.getGridPanel().findLayer(layerType);
     }
 
     abstract protected Class<? extends ActionLayer<?>> getActionLayerType();
@@ -74,7 +74,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
         @SuppressWarnings("unchecked")
         ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
         layer.setAction(active, this);
-        client.getGamePanel().getGridPanel().showLayer(layer);
+        mainPanel.getGridPanel().showLayer(layer);
     }
 
     /** Called when user deselect action in action panel */
@@ -82,16 +82,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
         @SuppressWarnings("unchecked")
         ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
         layer.setAction(false, null);
-        client.getGamePanel().getGridPanel().hideLayer(layer);
-    }
-
-    /** Called after right mouse click */
-    public void forward() {
-        client.getControlPanel().getActionPanel().rollAction(1);
-    }
-
-    public void backward() {
-        client.getControlPanel().getActionPanel().rollAction(-1);
+        mainPanel.getGridPanel().hideLayer(layer);
     }
 
     protected Image getImage(Color color) {
@@ -110,6 +101,10 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>,
 
     public void setClient(Client client) {
         this.client = client;
+        this.mainPanel = ((GameView) client.getView()).getMainPanel();
     }
 
+    public MainPanel getMainPanel() {
+        return mainPanel;
+    }
 }

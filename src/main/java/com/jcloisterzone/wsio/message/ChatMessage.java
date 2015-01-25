@@ -3,19 +3,20 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("CHAT")
-public class ChatMessage implements WsMessage {
+public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
 
     private String gameId;
-    private String clientId;
+    private String channel;
+    private String sessionId;
     private String text;
 
-    public ChatMessage(String gameId, String clientId, String text) {
-        this.gameId = gameId;
-        this.clientId = clientId;
+    public ChatMessage(String sessionId, String text) {
+        this.sessionId = sessionId;
         this.text = text;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 
@@ -23,7 +24,16 @@ public class ChatMessage implements WsMessage {
         this.gameId = gameId;
     }
 
-    public String getText() {
+    @Override
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getText() {
         return text;
     }
 
@@ -31,11 +41,11 @@ public class ChatMessage implements WsMessage {
         this.text = text;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
+	public String getSessionId() {
+		return sessionId;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 }

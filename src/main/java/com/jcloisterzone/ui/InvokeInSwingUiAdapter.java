@@ -29,10 +29,11 @@ public class InvokeInSwingUiAdapter {
         if (reportingTool != null) {
             reportingTool.report("event: " + event);
         }
-        final Object freezedEvent = freezeEvent(event);
+        final Object frozenEvent = freezeEvent(event);
         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                uiEventBus.post(freezedEvent);
+            @Override
+			public void run() {
+                uiEventBus.post(frozenEvent);
             }
         });
     }
