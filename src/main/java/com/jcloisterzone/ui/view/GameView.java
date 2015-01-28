@@ -172,11 +172,11 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gc.leaveGame();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gc.leaveGame();
+            }
+        });
 
         menu.setItemEnabled(MenuItem.FARM_HINTS, true);
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
@@ -251,7 +251,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     public void onWebsocketError(Exception ex) {
         String message = ex.getMessage();
         if (ex instanceof WebsocketNotConnectedException) {
-            message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+            if (gc.getChannel() == null) {
+                //show workaround hint for stanalone games only (channel has continue feature)
+                message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+            } else {
+                message = _("Connection lost");
+            }
         } else {
             message = ex.getMessage();
             if (message == null || message.length() == 0) {
