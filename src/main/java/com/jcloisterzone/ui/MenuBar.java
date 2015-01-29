@@ -41,7 +41,7 @@ public class MenuBar extends JMenuBar {
         FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
         PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
         DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        GAME_SETUP(_("Show game setup"), null),
+        GAME_SETUP(_("Show game setup")),
         TAKE_SCREENSHOT(_("Take screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
         //Settings
         BEEP_ALERT(_("Beep alert at player turn")),
@@ -137,6 +137,7 @@ public class MenuBar extends JMenuBar {
         menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));
         menu.addSeparator();
         menu.add(createMenuItem(MenuItem.DISCARDED_TILES, false));
+        menu.add(createMenuItem(MenuItem.GAME_SETUP, false));
         menu.addSeparator();
         menu.add(createMenuItem(MenuItem.TAKE_SCREENSHOT, false));
         this.add(menu);

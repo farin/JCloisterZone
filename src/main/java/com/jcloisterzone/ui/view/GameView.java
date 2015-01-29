@@ -41,6 +41,7 @@ import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.SavegameFileFilter;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.ui.dialog.GameSetupDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
@@ -159,6 +160,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 client.getDiscardedTilesDialog().setVisible(true);
             }
         });
+        menu.setItemActionListener(MenuItem.GAME_SETUP, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showGameSetupDialog();
+            }
+        });
         menu.setItemActionListener(MenuItem.TAKE_SCREENSHOT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -183,6 +190,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
 
         menu.setItemEnabled(MenuItem.REPORT_BUG, true);
+        menu.setItemEnabled(MenuItem.GAME_SETUP, true);
         menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, true);
         menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
         menu.setItemEnabled(MenuItem.ZOOM_IN, true);
@@ -216,6 +224,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
         menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
         menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, false);
+        menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
 
         client.removeWindowStateListener(this);
     }
@@ -420,6 +429,10 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 }
             }
         }
+    }
+
+    private void showGameSetupDialog() {
+        (new GameSetupDialog(client, gc.getGame())).setVisible(true);
     }
 
     public void takeScreenshot() {
