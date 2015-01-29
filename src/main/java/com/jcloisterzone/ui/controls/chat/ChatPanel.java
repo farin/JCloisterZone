@@ -58,7 +58,7 @@ import com.jcloisterzone.wsio.message.PostChatMessage;
 
 public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
@@ -107,12 +107,13 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         input.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
+                updateMessaagesVisibility();
                 repaint();
             }
 
             @Override
             public void focusGained(FocusEvent e) {
-                messagesPane.setVisible(true);
+                updateMessaagesVisibility();
                 repaint();
             }
         });
@@ -153,26 +154,23 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             }
         });
 
+        updateMessaagesVisibility();
         setBackground(new Color(0, 0, 0, 0));
         input.setBackground(Color.WHITE);
+    }
+
+    private void updateMessaagesVisibility() {
+        messagesPane.setVisible(!hidingMode || !isFolded());
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(ControlPanel.PANEL_BG_COLOR);
-        if (hidingMode && isFolded()) {
-            if (messagesPane.isVisible()) {
-                messagesPane.setVisible(false);
-                repaint();
-            }
-            g2.fillRect(0, getHeight() - 40, getWidth(), 40);
-        } else {
-            if (!messagesPane.isVisible()) {
-                messagesPane.setVisible(true);
-                repaint();
-            }
+        if (messagesPane.isVisible()) {
             g2.fillRect(0, 0, getWidth(), getHeight());
+        } else {
+            g2.fillRect(0, getHeight() - 40, getWidth(), 40);
         }
         super.paint(g);
     }
@@ -225,6 +223,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             repaintTimer.restart();
         } else {
             forceFocus = true;
+            updateMessaagesVisibility();
             repaint();
             repaintTimer.start();
         }

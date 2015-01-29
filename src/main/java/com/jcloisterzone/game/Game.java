@@ -152,6 +152,16 @@ public class Game extends GameSettings implements EventProxy {
         this.currentTile = currentTile;
     }
 
+    public PlayerSlot[] getPlayerSlots() {
+        // need to match subtypes, can't use getInstance on phases
+        for (Phase phase : phases.values()) {
+            if (phase instanceof CreateGamePhase) {
+                return ((CreateGamePhase)phase).getPlayerSlots();
+            }
+        }
+        return null;
+    }
+
     public Phase getPhase() {
         return phase;
     }
