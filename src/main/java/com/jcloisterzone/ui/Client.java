@@ -433,7 +433,7 @@ public class Client extends JFrame {
     }
 
     public void handleAbout() {
-        new AboutDialog();
+        new AboutDialog(config.getOrigin());
     }
 
 
