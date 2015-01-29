@@ -62,6 +62,13 @@ public class DrawPhase extends ServerAwarePhase {
 
     @Override
     public void enter() {
+        if (bazaarCap != null) {
+            Tile tile = bazaarCap.drawNextTile();
+            if (tile != null) {
+                nextTile(tile);
+                return;
+            }
+        }
         if (getTilePack().isEmpty()) {
             if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
@@ -73,14 +80,6 @@ public class DrawPhase extends ServerAwarePhase {
             next(GameOverPhase.class);
             return;
         }
-        if (bazaarCap != null) {
-            Tile tile = bazaarCap.drawNextTile();
-            if (tile != null) {
-                nextTile(tile);
-                return;
-            }
-        }
-
         if (makeDebugDraw()) {
             return;
         }

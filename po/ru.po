@@ -310,7 +310,8 @@ msgstr "Начните писать, чтобы начать чат"
 msgid ""
 "Online play server is not compatible with your application. Please upgrade "
 "JCloisterZone to the latest version."
-msgstr ""
+msgstr "Ваше приложение несовместимо с игровым сервером. Пожалуйста, обновите "
+"JCloisterZone до последней доступной версии."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:487
 msgid ""
@@ -835,16 +836,16 @@ msgstr "Присоединиться к игре"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:167
 msgid "Continue"
-msgstr ""
+msgstr "Продолжить"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:178
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 msgid "Remove game"
-msgstr ""
+msgstr "Удалить игру"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 msgid "Do you want to remove game permanently?"
-msgstr ""
+msgstr "Вы хотите безвозвратно удалить игру?"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""

@@ -5,16 +5,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-25 12:03+0100\n"
-"PO-Revision-Date: 2015-01-17 21:43+0100\n"
-"Last-Translator: Thomas Kolbe\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2015-01-28 23:08+0100\n"
+"Last-Translator: Roman <farin@farin.cz>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:28
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -307,6 +308,8 @@ msgid ""
 "Online play server is not compatible with your application. Please upgrade "
 "JCloisterZone to the latest version."
 msgstr ""
+"Die Spielversion ist nicht mit dem Online-Server kompatibel. Bitte "
+"JCloisterZone auf die letzte Version aktualisieren."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:487
 msgid ""
@@ -829,16 +832,16 @@ msgstr "Spiel beitreten"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:167
 msgid "Continue"
-msgstr ""
+msgstr "Fortfahren"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:178
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 msgid "Remove game"
-msgstr ""
+msgstr "Spiel entfernen"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:183
 msgid "Do you want to remove game permanently?"
-msgstr ""
+msgstr "Soll das Spiel dauerhaft entfernt werden?"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
 msgid ""

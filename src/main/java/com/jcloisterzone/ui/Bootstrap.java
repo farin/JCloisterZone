@@ -40,7 +40,13 @@ public class Bootstrap  {
 
     //dO not use logger in this method!
     private Path getDataDirectory() {
-        Path workingDir = Paths.get(System.getProperty("user.dir")).normalize().toAbsolutePath();
+        //jar file directory (better then user.dir which can point to user home and is quite useless
+        String jarPath = ClassLoader.getSystemClassLoader().getResource(".").getPath();
+        if (jarPath.matches("/.:/.*")) {
+            //remove leading / for Windows paths - otherways Paths.get fails
+            jarPath = jarPath.substring(1);
+        }
+        Path workingDir = Paths.get(jarPath).normalize().toAbsolutePath();
         Path path = workingDir;
         if (Files.isWritable(path)) {
             return path;
@@ -60,7 +66,9 @@ public class Bootstrap  {
     {
         //run before first logger is initialized
         if (!"false".equals(System.getProperty("errorLog"))) {
-            System.setOut(new FileTeeStream(System.out, dataDirectory.resolve("error.log")));
+            FileTeeStream teeStream = new FileTeeStream(System.out, dataDirectory.resolve("error.log"));
+            System.setOut(teeStream);
+            System.setErr(teeStream);
         }
     }
 
@@ -93,12 +101,14 @@ public class Bootstrap  {
         final String updateUrlStr = config.getUpdate();
         if (updateUrlStr != null && !com.jcloisterzone.Application.VERSION.contains("dev")) {
             (new Thread() {
+                @Override
                 public void run() {
                     try {
                         URL url = new URL(updateUrlStr);
                         final AppUpdate update = AppUpdate.fetch(url);
                         if (update != null && (new VersionComparator()).compare(com.jcloisterzone.Application.VERSION, update.getVersion()) < 0) {
                             SwingUtilities.invokeLater(new Runnable() {
+                                @Override
                                 public void run() {
                                     client.showUpdateIsAvailable(update);
                                 };
@@ -131,6 +141,7 @@ public class Bootstrap  {
         final Client client = new Client(dataDirectory, configLoader, config, plugins);
 
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 client.init();
 

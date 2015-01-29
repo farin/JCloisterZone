@@ -12,7 +12,6 @@ public class MutedConnection implements Connection {
 
 	@Override
 	public void send(WsMessage arg) {
-		System.out.println("outgoing " + arg);
 	}
 
 	@Override

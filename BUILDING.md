@@ -76,7 +76,7 @@ Helpers for more pleasant development and application debugging.
 JCloisterZone supports various system properties to help development
 
 * `config=foo.yaml` - use custom yaml configuration file
-* `errorLog=false` - don't save error log to file 
+* `errorLog=false` - don't save error log to file
 * `closeGameConfirm=false` - close game withiu showing confirmation dialog
 * `nick=Bob` - force default nickname for play online
 * `forceChat=true` - enable chat window for local games
@@ -180,6 +180,7 @@ msgmerge -N -U po/es.po po/keys.pot
 msgmerge -N -U po/fi.po po/keys.pot
 msgmerge -N -U po/fr.po po/keys.pot
 msgmerge -N -U po/hu.po po/keys.pot
+msgmerge -N -U po/nl.po po/keys.pot
 msgmerge -N -U po/it.po po/keys.pot
 msgmerge -N -U po/pl.po po/keys.pot
 msgmerge -N -U po/ro.po po/keys.pot
