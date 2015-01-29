@@ -3,6 +3,7 @@ package com.jcloisterzone;
 import java.net.URL;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class AppUpdate {
 
@@ -14,7 +15,17 @@ public class AppUpdate {
         Element el = XmlUtils.parseDocument(url).getDocumentElement();
         String version = XmlUtils.childValue(el, "number");
         String description = XmlUtils.childValue(el, "description");
-        String downloadUrl = XmlUtils.childValue(el, "url");
+
+        boolean isWin = System.getProperty("os.name").startsWith("Win");
+        String downloadUrl = null;
+        NodeList nl = el.getElementsByTagName("url");
+        for (int i = 0; i < nl.getLength(); i++) {
+            String value = nl.item(i).getTextContent().trim();
+            boolean isZip = value.endsWith(".zip");
+            if (downloadUrl == null || (isWin == isZip)) {
+                downloadUrl = value;
+            }
+        }
         return new AppUpdate(version, description, downloadUrl);
     }
 

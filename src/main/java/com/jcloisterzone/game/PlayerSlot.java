@@ -108,11 +108,11 @@ public class PlayerSlot implements Serializable {
         this.disconnected = disconnected;
     }
 
-	public AiPlayer getAiPlayer() {
-		return aiPlayer;
-	}
+    public AiPlayer getAiPlayer() {
+        return aiPlayer;
+    }
 
-	public void setAiPlayer(AiPlayer aiPlayer) {
-		this.aiPlayer = aiPlayer;
-	}
+    public void setAiPlayer(AiPlayer aiPlayer) {
+        this.aiPlayer = aiPlayer;
+    }
 }

@@ -1,12 +1,6 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
-
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,6 +39,10 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.view.GameView;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
+
 public class PlayerPanel extends MouseTrackingComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
@@ -57,6 +55,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_KING_ROBBER_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
+    private static Font FONT_OFFLINE = new Font(null, Font.BOLD, 20);
 
     private static final int PADDING_L = 9;
     private static final int PADDING_R = 11;
@@ -195,8 +194,14 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         if (!game.isOver() && gc.getGameView().getControlPanel().isShowPotentialPoints()) {
             drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
         } else {
-            g2.setFont(FONT_NICKNAME);
-            drawTextShadow(player.getNick(), 78, 27);
+            if (player.getSlot().isDisconnected()) {
+                g2.setFont(FONT_OFFLINE);
+                g2.setColor(POTENTIAL_POINTS_COLOR);
+                g2.drawString("OFFLINE " + (player.getNick()), 65, 27);
+            } else {
+                g2.setFont(FONT_NICKNAME);
+                drawTextShadow(player.getNick(), 78, 27);
+            }
         }
 
 
@@ -334,23 +339,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     @Override
     public void paint(Graphics g) {
         Graphics2D parentGraphics = (Graphics2D) g;
-
-
         parentGraphics.setColor(PLAYER_BG_COLOR);
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
-
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-
-        if (player.getSlot().isDisconnected()) {
-            Composite origComposite = parentGraphics.getComposite();
-            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f));
-            parentGraphics.setColor(Color.BLACK);
-            parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
-            parentGraphics.setComposite(origComposite);
-            parentGraphics.setFont(FONT_NICKNAME);
-            parentGraphics.setColor(Color.WHITE);
-            parentGraphics.drawString(_("Connection lost").toUpperCase(), 10, 27);
-        }
         super.paintComponent(g);
     }
 
