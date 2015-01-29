@@ -399,6 +399,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 }
                 slot.setDisconnected(!match);
             }
+            getMainPanel().repaint();
         }
     }
 
