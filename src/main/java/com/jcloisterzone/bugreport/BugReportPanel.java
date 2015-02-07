@@ -92,7 +92,7 @@ public class BugReportPanel extends JPanel {
         this.parent = parent;
     }
 
-    public class ReportFileFilter extends FileFilter {
+    public static class ReportFileFilter extends FileFilter {
 
         @Override
         public boolean accept(File f) {

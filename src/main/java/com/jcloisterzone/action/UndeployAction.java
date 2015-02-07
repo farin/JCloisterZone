@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.rmi.RmiProxy;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class UndeployAction extends SelectFollowerAction {
 

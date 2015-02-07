@@ -3,18 +3,23 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME")
-public class GameMessage implements WsMessage {
+public class GameMessage implements WsMessage, WsInGameMessage {
 
     public enum GameState {
-        OPEN, RUNNING
+        OPEN, RUNNING, REMOVED, PAUSED
     }
 
     private String gameId;
+    private String channel;
     private String name;
     private GameState state;
     private String snapshot;
     private SlotMessage[] slots;
     private GameSetupMessage gameSetup;
+    private String[] replay;
+
+    public GameMessage() {
+    }
 
     public GameMessage(String id, String name, GameState state, GameSetupMessage gameSetup) {
         this.gameId = id;
@@ -23,7 +28,8 @@ public class GameMessage implements WsMessage {
         this.gameSetup = gameSetup;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 
@@ -31,8 +37,15 @@ public class GameMessage implements WsMessage {
         this.gameId = gameId;
     }
 
+    public String getChannel() {
+		return channel;
+	}
 
-    public String getName() {
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -71,4 +84,12 @@ public class GameMessage implements WsMessage {
     public void setGameSetup(GameSetupMessage gameSetup) {
         this.gameSetup = gameSetup;
     }
+
+	public String[] getReplay() {
+		return replay;
+	}
+
+	public void setReplay(String[] replay) {
+		this.replay = replay;
+	}
 }

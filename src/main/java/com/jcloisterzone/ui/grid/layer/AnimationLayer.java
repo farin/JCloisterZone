@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Graphics2D;
 
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.animation.Animation;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.ScoreAnimation;
@@ -11,8 +12,8 @@ public class AnimationLayer extends AbstractGridLayer {
 
     private final AnimationService service;
 
-    public AnimationLayer(GridPanel gridPanel, AnimationService service) {
-        super(gridPanel);
+    public AnimationLayer(GridPanel gridPanel, GameController gc, AnimationService service) {
+        super(gridPanel, gc);
         this.service = service;
     }
 

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
+import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
@@ -43,10 +44,13 @@ public class CreateGamePlayerPanel extends JPanel {
     static Font FONT_SERIAL = new Font(null, Font.BOLD, 32);
 
     private final PlayerSlot slot;
+    private final PlayerSlot[] slots;
     private boolean ownSlot = false;
 
     private final Client client;
+    private final Game game;
     private boolean mutableSlots;
+    private boolean channel;
 
     private JButton icon;
     private JLabel status;
@@ -61,11 +65,13 @@ public class CreateGamePlayerPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public CreateGamePlayerPanel(final Client client, boolean mutableSlots, PlayerSlot slot, NameProvider nameProvider) {
+    public CreateGamePlayerPanel(final Client client, final Game game, boolean channel, boolean mutableSlots, PlayerSlot slot, PlayerSlot[] slots) {
         this.slot = slot;
+        this.slots = slots;
         this.client = client;
+        this.game = game;
         this.mutableSlots = mutableSlots;
-        this.nameProvider = nameProvider;
+        this.channel = channel;
 
         setLayout(new MigLayout("", "[][][10px][grow]", "[][]"));
 
@@ -80,6 +86,7 @@ public class CreateGamePlayerPanel extends JPanel {
         add(icon, "cell 1 0 1 2,width 60!,height 60!");
 
         nickname = new JTextField();
+        nickname.setDisabledTextColor(Color.BLACK);
         updateNickname(false);
         add(nickname, "cell 3 0,growx,width :200:,gapy 10");
 
@@ -89,7 +96,7 @@ public class CreateGamePlayerPanel extends JPanel {
 
         updateSlot();
 
-        if (mutableSlots) {
+        if (mutableSlots && !channel) {
             nicknameUpdater = new NicknameUpdater();
             nicknameUpdater.setName("NickUpdater"+slot.getNumber());
             nicknameUpdater.start();
@@ -121,8 +128,7 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void updateNickname(boolean editable) {
-        //nickname.setEditable(false);
-        nickname.setEnabled(editable);
+        nickname.setEnabled(editable && !channel);
     }
 
     private void updateIcon(String iconType, Color color, boolean state) {
@@ -182,7 +188,6 @@ public class CreateGamePlayerPanel extends JPanel {
                 updateIcon("remote_ai", color, false);
             }
             updateNickname(false);
-
         }
 
         if (!ownSlot || !nickname.isEnabled()) { //probably change by me
@@ -198,8 +203,20 @@ public class CreateGamePlayerPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             String nick;
-            if (!slot.isOccupied()) {  // open --> player
-                nick = nameProvider.reserveName(false, slot.getNumber());
+            boolean skipPlayer = false;
+            if (channel && !"true".equals(System.getProperty("allowHotSeatOnlineGame"))) {
+            	for (PlayerSlot other : slots) {
+            		if (other == slot) continue;
+            		if (other.isOwn() && !other.isAi()) skipPlayer = true;
+            	}
+            }
+
+            if (!slot.isOccupied() && !skipPlayer) {  // open --> player
+            	if (channel) {
+            		nick = client.getConnection().getNickname();
+            	} else {
+            		nick = nameProvider.reserveName(false, slot.getNumber());
+            	}
                 slot.setNickname(nick);
                 nickname.setText(nick);
                 slot.setState(SlotState.OWN);
@@ -237,12 +254,12 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void sendTakeSlotMessage(PlayerSlot slot) {
-        TakeSlotMessage msg = new TakeSlotMessage(client.getGame().getGameId(), slot.getNumber(), slot.getNickname());
+        TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {
             try {
                 EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(slot.getAiClassName()).getMethod("supportedExpansions").invoke(null);
-                msg.setSupportedExpansions(supported.toArray(new Expansion[0]));
+                msg.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
@@ -251,12 +268,20 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void sendLeaveSlotMessage(PlayerSlot slot) {
-        LeaveSlotMessage msg = new LeaveSlotMessage(client.getGame().getGameId(), slot.getNumber());
+        LeaveSlotMessage msg = new LeaveSlotMessage(game.getGameId(), slot.getNumber());
         client.getConnection().send(msg);
     }
 
 
-    class NicknameUpdater extends Thread implements CaretListener, FocusListener {
+    public NameProvider getNameProvider() {
+		return nameProvider;
+	}
+
+	public void setNameProvider(NameProvider nameProvider) {
+		this.nameProvider = nameProvider;
+	}
+
+	class NicknameUpdater extends Thread implements CaretListener, FocusListener {
 
         private boolean stopped;
         private String update;
@@ -304,8 +329,5 @@ public class CreateGamePlayerPanel extends JPanel {
                 }
             }
         }
-
-
     }
-
 }

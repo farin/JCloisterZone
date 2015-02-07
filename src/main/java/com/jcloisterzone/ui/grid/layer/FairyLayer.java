@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 
@@ -12,8 +13,8 @@ public class FairyLayer extends AbstractTileLayer {
 
     private Image fairyImage;
 
-    public FairyLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public FairyLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         fairyImage = getClient().getFigureTheme().getNeutralImage(FAIRY_IMAGE_NAME);
     }
 

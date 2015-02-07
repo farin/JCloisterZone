@@ -1,36 +1,38 @@
 package com.jcloisterzone;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 
 public class FileTeeStream extends PrintStream {
 
-    PrintStream fileOut;
-    String fileName;
+    PrintStream outStream;
+    File file;
 
-    public FileTeeStream(PrintStream err, String fileName) {
+    public FileTeeStream(PrintStream err, Path fileName) {
         super(err);
-        this.fileName = fileName;
+        this.file = fileName.toFile();
     }
 
     @Override
     public void write(byte buf[], int off, int len) {
-        if (fileOut == null && fileName != null) {
+        if (outStream == null && file != null) {
             try {
-                fileOut = new PrintStream(new FileOutputStream(fileName), true);
+                outStream = new PrintStream(new FileOutputStream(file), true);
             } catch (FileNotFoundException e) {
-                fileName = null;
+                file = null;
                 e.printStackTrace();
             }
         }
         super.write(buf, off, len);
-        if (fileOut != null) {
-            fileOut.write(buf, off, len);
-            if (fileOut.checkError()) {
+        if (outStream != null) {
+            outStream.write(buf, off, len);
+            if (outStream.checkError()) {
                 System.err.println("File stream write error.");
-                fileOut = null;
-                fileName = null;
+                outStream = null;
+                file = null;
             }
         }
     }
@@ -38,16 +40,16 @@ public class FileTeeStream extends PrintStream {
     @Override
     public void flush() {
         super.flush();
-        if (fileOut != null) {
-            fileOut.flush();
+        if (outStream != null) {
+            outStream.flush();
         }
     }
 
     @Override
     public void close() {
         super.close();
-        if (fileOut != null) {
-            fileOut.close();
+        if (outStream != null) {
+            outStream.close();
         }
     }
 }

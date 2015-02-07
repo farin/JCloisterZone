@@ -1,12 +1,11 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
-
 import java.awt.Cursor;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -17,13 +16,18 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
+import com.jcloisterzone.ui.view.GameView;
 
-public class ActionPanel extends FakeComponent implements RegionMouseListener, ForwardBackwardListener {
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+
+public class ActionPanel extends MouseTrackingComponent implements ForwardBackwardListener, RegionMouseListener {
 
     public static final int FAKE_ACTION_SIZE = 62;
     public static final int LINE_HEIGHT = 30;
+    public static final int LINE_Y = 46;
     public static final int PADDING = 3;
     public static final int LEFT_MARGIN = 10;
+
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
     private boolean active;
@@ -38,13 +42,16 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     private String fakeAction;
     private Image fakeActionImage;
 
-    public ActionPanel(Client client) {
-        super(client);
+    private final Client client;
+    private final GameView gameView;
+
+    public ActionPanel(GameView gameView) {
+        this.client = gameView.getClient();
+        this.gameView = gameView;
+
+        setOpaque(false);
     }
 
-    private void repaint() {
-        client.getGridPanel().repaint();
-    }
 
     public PlayerAction<?>[] getActions() {
         return actions;
@@ -89,12 +96,12 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
             maxIconSize = 40;
         }
 
-        int availableWidth = ControlPanel.PANEL_WIDTH - LEFT_MARGIN - (actions.length-1)*PADDING;
+        int availableWidth = getWidth() - LEFT_MARGIN - (actions.length-1)*PADDING;
         double units = actions.length + (ACTIVE_SIZE_RATIO-1.0);
         int baseSize = Math.min(maxIconSize, (int) Math.floor(availableWidth / units));
         int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
 
-        Player activePlayer = client.getGame().getActivePlayer();
+        Player activePlayer = gameView.getGame().getActivePlayer();
         for (int i = 0; i < actions.length; i++) {
             selected[i] = new ImageIcon(
                 actions[i].getImage(activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
@@ -116,14 +123,27 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
         repaint();
     }
 
-
-
+    @Override
     public void forward() {
-        if (active && selectedActionIndex != -1) getSelectedAction().forward();
+        if (active && selectedActionIndex != -1) {
+            if (getSelectedAction() instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) getSelectedAction()).forward();
+            } else {
+                rollAction(1);
+            }
+
+        }
     }
 
+    @Override
     public void backward() {
-        if (active && selectedActionIndex != -1) getSelectedAction().backward();
+        if (active && selectedActionIndex != -1) {
+            if (getSelectedAction() instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) getSelectedAction()).backward();
+            } else {
+                rollAction(-1);
+            }
+        }
     }
 
     public void rollAction(int change) {
@@ -154,16 +174,17 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     }
 
     @Override
-    public void paintComponent(Graphics2D g2) {
-        super.paintComponent(g2);
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(ControlPanel.PLAYER_BG_COLOR);
-        g2.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
+        g2.fillRoundRect(0, LINE_Y, getWidth()+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
+
 
         int x = LEFT_MARGIN;
 
         if (fakeActionImage != null) {
-            g2.drawImage(fakeActionImage, x, ((LINE_HEIGHT-FAKE_ACTION_SIZE) / 2)+imgOffset, FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, null);
+            g2.drawImage(fakeActionImage, x, LINE_Y+((LINE_HEIGHT-FAKE_ACTION_SIZE) / 2)+imgOffset, FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, null);
         }
 
         if (actions == null || actions.length == 0) return;
@@ -187,7 +208,7 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
 
             Image img = active ? selected[i] : deselected[i];
             int size = img.getWidth(null);
-            int iy = (LINE_HEIGHT-size) / 2;
+            int iy = LINE_Y + (LINE_HEIGHT-size) / 2;
 
             if (refreshMouseRegions && selectedActionIndex != -1) {
                 getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
@@ -195,13 +216,24 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
             g2.drawImage(img, x, iy+imgOffset, size, size, null);
             x += size + PADDING;
         }
+        super.paint(g2);
     }
 
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             Integer i = (Integer) origin.getData();
-            setSelectedActionIndex(i);
+            if (selectedActionIndex == i) {
+                if (getSelectedAction() instanceof ForwardBackwardListener) {
+                    if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+                        ((ForwardBackwardListener)getSelectedAction()).backward();
+                    } else {
+                        ((ForwardBackwardListener)getSelectedAction()).forward();
+                    }
+                }
+            } else {
+                setSelectedActionIndex(i);
+            }
         }
     }
 
@@ -209,13 +241,13 @@ public class ActionPanel extends FakeComponent implements RegionMouseListener, F
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
         Integer i = (Integer) origin.getData();
         if (i != selectedActionIndex) {
-            client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
-        client.getGridPanel().setCursor(Cursor.getDefaultCursor());
+        gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 
     public String getFakeAction() {

@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class TileLayer extends AbstractGridLayer {
@@ -15,9 +16,8 @@ public class TileLayer extends AbstractGridLayer {
     //keep own copy of tiles in Swing thread to prevent concurent modification ex. of tile list on game
     private List<Tile> placedTiles = new ArrayList<>();
 
-
-    public TileLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public TileLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override

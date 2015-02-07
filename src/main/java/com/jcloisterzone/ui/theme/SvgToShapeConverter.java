@@ -34,10 +34,10 @@ public class SvgToShapeConverter {
 //    }
 
     private Rectangle createRectangle(Element shapeSvgNode) {
-        int x = Integer.valueOf(shapeSvgNode.getAttribute("x"));
-        int y = Integer.valueOf(shapeSvgNode.getAttribute("y"));
-        int width = Integer.valueOf(shapeSvgNode.getAttribute("width"));
-        int heigh = Integer.valueOf(shapeSvgNode.getAttribute("height"));
+        int x = Integer.parseInt(shapeSvgNode.getAttribute("x"));
+        int y = Integer.parseInt(shapeSvgNode.getAttribute("y"));
+        int width = Integer.parseInt(shapeSvgNode.getAttribute("width"));
+        int heigh = Integer.parseInt(shapeSvgNode.getAttribute("height"));
         return new Rectangle(x, y, width, heigh);
     }
 
@@ -54,7 +54,7 @@ public class SvgToShapeConverter {
         String[] points = shapeSvgNode.getAttribute("points").split(" ");
         for (int i = 0; i < points.length; i++) {
             String[] xy = points[i].split(",");
-            p.addPoint(Integer.valueOf(xy[0]), Integer.valueOf(xy[1]));
+            p.addPoint(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
         }
         return p;
     }

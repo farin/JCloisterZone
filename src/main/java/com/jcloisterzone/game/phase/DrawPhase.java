@@ -11,10 +11,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.GetRandSampleMessage;
-import com.jcloisterzone.wsio.message.RandSampleMessage;
+import com.jcloisterzone.wsio.message.DrawMessage;
+import com.jcloisterzone.wsio.message.MakeDrawMessage;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -25,9 +25,9 @@ public class DrawPhase extends ServerAwarePhase {
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
 
-    public DrawPhase(Game game, Connection conn) {
-        super(game, conn);
-        DebugConfig debugConfig = game.getConfig().getDebug();
+    public DrawPhase(Game game, GameController controller) {
+        super(game, controller);
+        DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null) {
             debugTiles = debugConfig.getDraw();
         }
@@ -62,6 +62,13 @@ public class DrawPhase extends ServerAwarePhase {
 
     @Override
     public void enter() {
+        if (bazaarCap != null) {
+            Tile tile = bazaarCap.drawNextTile();
+            if (tile != null) {
+                nextTile(tile);
+                return;
+            }
+        }
         if (getTilePack().isEmpty()) {
             if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
@@ -73,26 +80,18 @@ public class DrawPhase extends ServerAwarePhase {
             next(GameOverPhase.class);
             return;
         }
-        if (bazaarCap != null) {
-            Tile tile = bazaarCap.drawNextTile();
-            if (tile != null) {
-                nextTile(tile);
-                return;
-            }
-        }
-
         if (makeDebugDraw()) {
             return;
         }
         if (isLocalPlayer(getActivePlayer())) {
             //call only from one client (from the active one)
-            getConnection().send(new GetRandSampleMessage(game.getGameId(), "draw", getTilePack().size(), 1));
+            getConnection().send(new MakeDrawMessage(game.getGameId(), getTilePack().size(), 1));
         }
     }
 
     @WsSubscribe
-    public void handleRandSample(RandSampleMessage msg) {
-        if (!msg.getName().equals("draw") || msg.getPopulation() != getTilePack().size()) {
+    public void handleDraw(DrawMessage msg) {
+        if (msg.getPackSize() != getTilePack().size()) {
             logger.error("Invalid message");
             return;
         }

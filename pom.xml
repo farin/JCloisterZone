@@ -187,6 +187,53 @@
                     <targetBundle>Messages</targetBundle>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/classic.jar -C src/main/resources/plugins/classic . -->
+                        <id>plugin-classic</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/classic.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/classic" />
+                                    <arg value="." />
+                                </exec>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/rgg_siege.jar -C src/main/resources/plugins/rgg_siege . -->
+                        <id>plugin-rgg_siege</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/rgg_siege.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/rgg_siege" />
+                                    <arg value="." />
+                                </exec>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

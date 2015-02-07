@@ -12,7 +12,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("RMI")
-public class RmiMessage implements WsMessage {
+public class RmiMessage implements WsInGameMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -84,7 +84,7 @@ public class RmiMessage implements WsMessage {
         if (oargs != null) {
             for (int i = 0; i < oargs.length; i++) {
                 if (i > 0) sb.append(", ");
-                sb.append(oargs[i].toString());
+                sb.append(oargs[i] == null ? null : oargs[i].toString());
             }
         }
         sb.append("]");

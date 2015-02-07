@@ -1,15 +1,10 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PANEL_WIDTH;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
-
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -31,7 +26,6 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -39,47 +33,80 @@ import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.view.GameView;
 
-public class PlayerPanel extends FakeComponent implements RegionMouseListener {
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
+
+public class PlayerPanel extends MouseTrackingComponent implements RegionMouseListener {
 
     private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
     private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
     private static final Color KING_ROBBER_OVERLAY = new Color(0f,0f,0f,0.4f);
+    private static final Color POTENTIAL_POINTS_COLOR = new Color(160, 160, 160);
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
     private static Font FONT_KING_ROBBER_OVERLAY = new Font("Georgia", Font.BOLD, 22);
     private static Font FONT_NICKNAME = new Font(null, Font.BOLD, 18);
+    private static Font FONT_OFFLINE = new Font(null, Font.BOLD, 20);
 
     private static final int PADDING_L = 9;
     private static final int PADDING_R = 11;
     private static final int LINE_HEIGHT = 32;
     private static final int DELIMITER_Y = 34;
 
-    private final Game game;
+    private final Client client;
+    private final GameView gameView;
+    private final GameController gc;
     private final Player player;
-    private Color color, fontColor;
+    private Color fontColor;
+
+    private int potentialPoints = 0;
 
     private final PlayerPanelImageCache cache;
 
-    private int centerY;
-
     //paint context variables
+    private int PANEL_WIDTH = 1; //TODO clean, it's not constant now
+    private BufferedImage bimg;
     private Graphics2D g2;
+    private int realHeight = 1;
     private int bx, by;
 
     private String mouseOverKey = null;
 
-    public PlayerPanel(Client client, Game game, Player player, PlayerPanelImageCache cache) {
-        super(client);
+    private final AbbeyCapability abbeyCap;
+    private final TowerCapability towerCap;
+    private final BridgeCapability bridgeCap;
+    private final CastleCapability castleCap;
+    private final KingAndRobberBaronCapability kingRobberCap;
+    private final ClothWineGrainCapability cwgCap;
+    private final LittleBuildingsCapability lbCap;
+    private final TunnelCapability tunnelCap;
+
+    public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
+        this.client = client;
         this.player = player;
-        this.game = game;
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
         this.cache = cache;
-        this.color = player.getColors().getMeepleColor();
         this.fontColor = player.getColors().getFontColor();
+
+        Game game = gc.getGame();
+        abbeyCap = game.getCapability(AbbeyCapability.class);
+        towerCap = game.getCapability(TowerCapability.class);
+        bridgeCap = game.getCapability(BridgeCapability.class);
+        castleCap = game.getCapability(CastleCapability.class);
+        kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
+        cwgCap = game.getCapability(ClothWineGrainCapability.class);
+        lbCap = game.getCapability(LittleBuildingsCapability.class);
+        tunnelCap = game.getCapability(TunnelCapability.class);
     }
 
     private void drawDelimiter(int y) {
@@ -90,13 +117,21 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     }
 
     private void drawTextShadow(String text, int x, int y) {
+        drawTextShadow(text, x, y, fontColor);
+    }
+
+    private void drawTextShadow(String text, int x, int y, Color color) {
         //TODO shadow color based on color ??
         /*g2.setColor(Color.DARK_GRAY);
         g2.drawString(text, x+0.8f, y+0.7f);*/
         g2.setColor(ControlPanel.FONT_SHADOW_COLOR);
         g2.drawString(text, x+0.6f, y+0.5f);
-        g2.setColor(fontColor);
+        g2.setColor(color);
         g2.drawString(text, x, y);
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     private Rectangle drawMeepleBox(Player playerKey, String imgKey, int count, boolean showOne) {
@@ -115,7 +150,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
             w = count < 10 ? 47 : 60;
         }
         int h = 22;
-        if (bx+w > PANEL_WIDTH-PADDING_R) {
+        if (bx+w > PANEL_WIDTH-PADDING_R-PADDING_L) {
             bx = PADDING_L;
             by += LINE_HEIGHT;
         }
@@ -137,28 +172,12 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         return rect;
     }
 
-    /*
-     * translates parentGraphics, which is not much clean!
-     */
-    @Override
-    public void paintComponent(Graphics2D parentGraphics) {
-        super.paintComponent(parentGraphics);
 
-        Game game = client.getGame();
+    public boolean repaintContent(int width) {
+        Game game = gc.getGame();
+        PANEL_WIDTH = width;
 
-        //TODO better display
-//        if (player.getSlot().getState() == SlotState.CLOSED) {
-//            this.color = Color.GRAY;
-//        }
-
-//		GridPanel gp = client.getGridPanel();
-
-//        boolean isActive = game.getActivePlayer() == player;
-//        boolean playerTurn = game.getTurnPlayer() == player;
-
-//		gp.profile(" > get flags");
-
-        BufferedImage bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
+        bimg = UiUtils.newTransparentImage(PANEL_WIDTH, 200);
         g2 = bimg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -170,8 +189,21 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         g2.setFont(FONT_POINTS);
         drawTextShadow(""+player.getPoints(), PADDING_L, 27);
 
-        g2.setFont(FONT_NICKNAME);
-        drawTextShadow(player.getNick(), 78, 27);
+
+        //TODO cache ref (also would be fine to cache capabilities above)
+        if (!game.isOver() && gc.getGameView().getControlPanel().isShowPotentialPoints()) {
+            drawTextShadow("/ "+potentialPoints, 78, 27, POTENTIAL_POINTS_COLOR);
+        } else {
+            if (player.getSlot().isDisconnected()) {
+                g2.setFont(FONT_OFFLINE);
+                g2.setColor(POTENTIAL_POINTS_COLOR);
+                g2.drawString("OFFLINE " + (player.getNick()), 65, 27);
+            } else {
+                g2.setFont(FONT_NICKNAME);
+                drawTextShadow(player.getNick(), 78, 27);
+            }
+        }
+
 
 //		gp.profile(" > nick & score");
 
@@ -201,13 +233,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
 
 //		gp.profile(" > special");
 
-        AbbeyCapability abbeyCap = game.getCapability(AbbeyCapability.class);
-        TowerCapability towerCap = game.getCapability(TowerCapability.class);
-        BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
-        CastleCapability castleCap = game.getCapability(CastleCapability.class);
-        KingAndRobberBaronCapability kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
-        ClothWineGrainCapability cwgCap = game.getCapability(ClothWineGrainCapability.class);
-        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
+
 
         if (abbeyCap != null) {
             drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
@@ -224,6 +250,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         if (castleCap != null) {
             drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
         }
+        if (tunnelCap != null) {
+            drawMeepleBox(player, "tunnelA", tunnelCap.getTunnelTokens(player, false), true);
+            drawMeepleBox(player, "tunnelB", tunnelCap.getTunnelTokens(player, true), true);
+        }
+
         if (lbCap != null) {
             drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
             drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
@@ -287,42 +318,47 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
         }
 
 //		gp.profile(" > expansions");
+        int oldValue = realHeight;
 
+        realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
 
-        int realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);
-
-//        if (isActive) {
-//            //TODO
-//            //parentGraphics.setColor(Color.BLACK);
-//            //parentGraphics.fillRoundRect(0, -5, PANEL_WIDTH+CORNER_DIAMETER, realHeight+10, CORNER_DIAMETER, CORNER_DIAMETER);
-//        }
-
-        parentGraphics.setColor(PLAYER_BG_COLOR);
-        parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
-
-        centerY = (int) parentGraphics.getTransform().getTranslateY() + realHeight/2;
-
-        parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
-
-        if (player.getSlot().isDisconnected()) {
-            Composite origComposite = parentGraphics.getComposite();
-            parentGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f));
-            parentGraphics.setColor(Color.BLACK);
-            parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
-            parentGraphics.setComposite(origComposite);
-            parentGraphics.setFont(FONT_NICKNAME);
-            parentGraphics.setColor(Color.WHITE);
-            parentGraphics.drawString(_("Connection lost").toUpperCase(), 10, 27);
-        }
-
-        parentGraphics.translate(0, realHeight); //add also padding
+        g2.dispose();
         g2 = null;
 
-//		gp.profile(" > complete");
+        return realHeight != oldValue;
     }
 
-    public int getCenterY() {
-        return centerY;
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(PANEL_WIDTH, realHeight);
+    }
+
+    /*
+     * translates parentGraphics, which is not much clean!
+     */
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D parentGraphics = (Graphics2D) g;
+        parentGraphics.setColor(PLAYER_BG_COLOR);
+        parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
+        parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
+        super.paintComponent(g);
+    }
+
+    public int getRealHeight() {
+        return realHeight;
+    }
+
+    public int getPotentialPoints() {
+        return potentialPoints;
+    }
+
+    public void setPotentialPoints(int potentialPoints) {
+        this.potentialPoints = potentialPoints;
+    }
+
+    public void addPotentialPoints(int potentialPoints) {
+        this.potentialPoints += potentialPoints;
     }
 
     @SuppressWarnings("unchecked")
@@ -330,7 +366,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         if (!(origin.getData() instanceof Class)) return;
         Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
-        TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
+        TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
         if (!tg.isRansomPaidThisTurn()) {
             if (client.getConfig().getConfirm().getRansom_payment()) {
                 String options[] = {_("Pay ransom"), _("Cancel") };
@@ -340,7 +376,7 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.YES_OPTION != result) return;
             }
-            client.getServer().payRansom(player.getIndex(), followerClass);
+            gc.getRmiProxy().payRansom(player.getIndex(), followerClass);
         }
     }
 
@@ -348,11 +384,11 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
         if (origin.getData() instanceof String) {
             mouseOverKey = (String) origin.getData();
-            client.getGridPanel().repaint();
+            gameView.getGridPanel().repaint();
         } else {
-            TowerCapability tg = client.getGame().getCapability(TowerCapability.class);
+            TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
             if (!tg.isRansomPaidThisTurn()) {
-                client.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         }
     }
@@ -361,10 +397,9 @@ public class PlayerPanel extends FakeComponent implements RegionMouseListener {
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
         if (mouseOverKey != null) {
             mouseOverKey = null;
-            client.getGridPanel().repaint();
+            gameView.getGridPanel().repaint();
         } else {
-            client.getGridPanel().setCursor(Cursor.getDefaultCursor());
+            gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
         }
     }
-
 }

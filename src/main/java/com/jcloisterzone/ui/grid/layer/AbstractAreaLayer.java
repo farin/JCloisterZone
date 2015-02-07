@@ -17,6 +17,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
@@ -39,8 +40,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
      */
     private boolean figureHighlight = false;
 
-    public AbstractAreaLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public AbstractAreaLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         DebugConfig debugConfig = getClient().getConfig().getDebug();
         if (debugConfig != null && "figure".equals(debugConfig.getArea_highlight())) {
             figureHighlight = true;
@@ -191,7 +192,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     /** standard highlight **/
     private void paintAreaHighlight(Graphics2D g2) {
         Player p = getGame().getActivePlayer();
-        if (p.equals(player)) { //sync issue
+        if (p != null && p.equals(player)) { //sync issue
             g2.setColor(p.getColors().getMeepleColor());
             g2.setComposite(AREA_ALPHA_COMPOSITE);
             g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));

@@ -26,9 +26,9 @@ public class ScoreAnimation extends AbstractAnimation {
         this.offset = point;
         this.color = color;
         if (duration == null) {
-            nextFrame = Long.MAX_VALUE >> 20; //divisior greater then 1000000
+            nextFrame = Long.MAX_VALUE >> 20; //divisor greater then 1000000
         } else {
-            nextFrame = System.currentTimeMillis() + duration * 1000;
+            nextFrame = System.currentTimeMillis() + duration * 1000L;
         }
     }
 

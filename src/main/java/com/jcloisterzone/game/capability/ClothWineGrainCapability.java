@@ -17,6 +17,7 @@ import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -87,7 +88,7 @@ public class ClothWineGrainCapability extends Capability {
 
 
     @Override
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy strategy) {
         for (TradeResource tr : TradeResource.values()) {
             int hiVal = 1;
             for (Player player: game.getAllPlayers()) {
@@ -99,7 +100,7 @@ public class ClothWineGrainCapability extends Capability {
             for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
-                    player.addPoints(10, PointCategory.TRADE_GOODS);
+                	strategy.addPoints(player, 10, PointCategory.TRADE_GOODS);
                 }
             }
 

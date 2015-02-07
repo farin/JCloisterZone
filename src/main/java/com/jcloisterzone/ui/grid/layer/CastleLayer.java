@@ -8,6 +8,7 @@ import java.util.List;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class CastleLayer extends AbstractGridLayer {
@@ -25,8 +26,8 @@ public class CastleLayer extends AbstractGridLayer {
     private List<DeployedCastle> castles = new ArrayList<>();
     private Image castleImage;
 
-    public CastleLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public CastleLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
         castleImage = getClient().getFigureTheme().getNeutralImage("castle");
     }
 

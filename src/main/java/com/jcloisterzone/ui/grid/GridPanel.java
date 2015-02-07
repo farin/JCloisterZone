@@ -1,24 +1,25 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -27,19 +28,21 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
-import com.jcloisterzone.ui.controls.ChatPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
-import com.jcloisterzone.ui.controls.FakeComponent;
+import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
+import com.jcloisterzone.ui.view.GameView;
 
 public class GridPanel extends JPanel implements ForwardBackwardListener {
 
@@ -51,12 +54,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
     private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
 
-
     final Client client;
-    final ControlPanel controlPanel;
-    final ChatPanel chatPanel;
+    final GameView gameView;
+    final GameController gc;
 
-    private FakeComponent secondPanel;
+    private final ControlPanel controlPanel;
+    private final ChatPanel chatPanel;
+    private BazaarPanel bazaarPanel;
+    private SelectMageWitchRemovalPanel mageWitchPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -71,16 +76,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private String errorMessage;
     //private String hintMessage;
 
-    public GridPanel(Client client, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
+    public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
-        setLayout(null);
+        setLayout(new MigLayout());
 
         this.client = client;
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
         this.controlPanel = controlPanel;
 
         boolean networkGame = "true".equals(System.getProperty("forceChat"));
-        for (Player p : client.getGame().getAllPlayers()) {
+        for (Player p : gc.getGame().getAllPlayers()) {
             if (!p.getSlot().isOwn()) {
                 networkGame = true;
                 break;
@@ -106,40 +113,39 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             }
         }
         registerMouseListeners();
-        controlPanel.registerSwingComponents(this);
+        add(controlPanel, "pos (100%-255) 0 100% 100%");
         if (chatPanel != null) {
-            this.add(chatPanel.getInput());
-            this.add(chatPanel.getMessagesPane());
-            chatPanel.setParent(this);
-            chatPanel.layoutSwingComponents(this);
+            chatPanel.initHidingMode();
+            add(chatPanel, "pos 0 0 250 100%");
         }
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                GridPanel.this.controlPanel.layoutSwingComponents(GridPanel.this);
-                if (GridPanel.this.chatPanel != null) {
-                    GridPanel.this.chatPanel.layoutSwingComponents(GridPanel.this);
-                }
-            }
-        });
     }
 
 
     @Override
     public void forward() {
-        if (secondPanel instanceof ForwardBackwardListener) {
-            ((ForwardBackwardListener) secondPanel).forward();
+        if (bazaarPanel != null) {
+            bazaarPanel.forward();
         }
         controlPanel.getActionPanel().forward();
     }
 
     @Override
     public void backward() {
-        if (secondPanel instanceof ForwardBackwardListener) {
-            ((ForwardBackwardListener) secondPanel).backward();
+        if (bazaarPanel != null) {
+            bazaarPanel.backward();
         }
         controlPanel.getActionPanel().backward();
+    }
+
+    public void removeInteractionPanels() {
+        int l = getComponents().length;
+        for (int i = l-1; i > 0; i--) {
+            Component child = getComponent(i);
+            if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
+                remove(i);
+            }
+        }
+        bazaarPanel = null;
     }
 
     class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
@@ -201,71 +207,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
                 zoom(-e.getWheelRotation());
             }
         });
-
-        MouseAdapter childDelegation = new MouseAdapter() {
-            private void dispatch(MouseEvent e) {
-                if (secondPanel != null) {
-                    secondPanel.dispatchMouseEvent(e);
-                    if (e.isConsumed()) return;
-                }
-                controlPanel.dispatchMouseEvent(e);
-            }
-            public void mouseClicked(MouseEvent e) {
-                dispatch(e);
-            }
-            public void mouseMoved(MouseEvent e) {
-                dispatch(e);
-            }
-        };
-        addMouseListener(childDelegation);
-        addMouseMotionListener(childDelegation);
-
-        addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                controlPanel.componentResized(e);
-                if (secondPanel != null) secondPanel.componentResized(e);
-            }
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                controlPanel.componentMoved(e);
-                if (secondPanel != null) secondPanel.componentMoved(e);
-            }
-            @Override
-            public void componentShown(ComponentEvent e) {
-                controlPanel.componentShown(e);
-                if (secondPanel != null) secondPanel.componentShown(e);
-            }
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                controlPanel.componentHidden(e);
-                if (secondPanel != null) secondPanel.componentHidden(e);
-            }
-        });
     }
 
     public Tile getTile(Position p) {
-        return client.getGame().getBoard().get(p);
+        return gc.getGame().getBoard().get(p);
     }
 
     public Client getClient() {
         return client;
     }
 
-    public FakeComponent getSecondPanel() {
-        return secondPanel;
-    }
-
-    public void setSecondPanel(FakeComponent secondPanel) {
-        if (this.secondPanel != null && this.secondPanel != secondPanel) {
-            //destroy previoud panel
-            this.secondPanel.destroySwingComponents(this);
-        }
-        this.secondPanel = secondPanel;
-    }
-
     public AnimationService getAnimationService() {
-        return client.getMainPanel().getAnimationService();
+        return gc.getGameView().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {
@@ -281,11 +234,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return offsetY;
     }
 
+    public ChatPanel getChatPanel() {
+        return chatPanel;
+    }
 
     public String getErrorMessage() {
         return errorMessage;
     }
-
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -300,6 +255,26 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //    public void setHintMessage(String hintMessage) {
 //        this.hintMessage = hintMessage;
 //    }
+
+
+    public BazaarPanel getBazaarPanel() {
+        return bazaarPanel;
+    }
+
+
+    public void setBazaarPanel(BazaarPanel bazaarPanel) {
+        this.bazaarPanel = bazaarPanel;
+    }
+
+
+    public SelectMageWitchRemovalPanel getMageWitchPanel() {
+        return mageWitchPanel;
+    }
+
+
+    public void setMageWitchPanel(SelectMageWitchRemovalPanel mageWitchPanel) {
+        this.mageWitchPanel = mageWitchPanel;
+    }
 
 
     public void moveCenter(int xSteps, int ySteps) {
@@ -430,7 +405,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
             boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
             if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
-                (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
+                (initialPlacement && tile.equals(gameView.getGame().getCurrentTile()))) {
                 getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
             }
         } else if (ev.getType() == TileEvent.REMOVE) {
@@ -510,24 +485,69 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         g2.setTransform(origTransform);
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
-        controlPanel.paintComponent(g2);
 
         int innerWidth;
-        if (secondPanel != null) {
-            g2.translate(-secondPanel.getWidth()-60, 0);
-            secondPanel.paintComponent(g2);
-            innerWidth = (int) g2.getTransform().getTranslateX();
-        } else {
+//        if (secondPanel != null) {
+//            g2.translate(-secondPanel.getWidth()-60, 0);
+//            secondPanel.paintComponent(g2);
+//            innerWidth = (int) g2.getTransform().getTranslateX();
+//        } else {
             innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
-        }
+       // }
         g2.setTransform(origTransform);
-
-        if (chatPanel != null) {
-            chatPanel.paintComponent(g2);
-        }
 
         paintMessages(g2, innerWidth);
         super.paintChildren(g);
+    }
+
+    public BufferedImage takeScreenshot() {
+        //calculate size of play board
+        Integer screenshotScaleValue = client.getConfig().getScreenshots().getScale();
+        int screenshotScale = screenshotScaleValue == null ? ConfigLoader.DEFAULT_SCREENSHOT_SCALE : screenshotScaleValue;
+        int totalWidth = screenshotScale*(right-left+1);
+        int totalHeight = screenshotScale*(bottom-top+1);
+        //if (totalHeight < getHeight()) totalHeight = getHeight();
+
+        //centre the image
+        int transX = -screenshotScale*(left);
+        int transY = -screenshotScale*(top);
+
+        //create the image
+        BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = (Graphics2D) im.getGraphics();
+        if (!"true".equals(System.getProperty("transparentScreenshots"))){
+            graphics.setBackground(new Color(240, 240, 240, 255));
+            graphics.clearRect(0, 0, im.getWidth(), im.getHeight());
+        }
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //centre the image
+        graphics.translate(transX, transY);
+
+        //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
+        //TODO is this dangerous if GridPanel is rendered while print screening?
+
+        int orig = squareSize;
+        squareSize = screenshotScale;
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
+                //TODO calling zoomChanged can broke something, don't do it
+                layer.zoomChanged(screenshotScale);
+                layer.paint(graphics);
+                layer.zoomChanged(orig);
+            }
+        }
+        //set it back
+        squareSize = orig;
+
+        //reset translation
+        graphics.translate(-transX, -transY);
+
+        //render the control panel on the far right
+        graphics.translate(totalWidth+30, 0);
+        controlPanel.paint(graphics);
+        return im;
     }
 
     private void paintMessages(Graphics2D g2, int innerWidth) {

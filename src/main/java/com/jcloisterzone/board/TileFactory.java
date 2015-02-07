@@ -155,7 +155,7 @@ public class TileFactory {
         }
         if (attributeBoolValue(e, "pig")) {
             //for river is pig herd always present
-            if (game.hasRule(CustomRule.PIG_HERD_ON_GQ_FARM) || tile.getId() != "GQ.F") {
+            if (game.hasRule(CustomRule.PIG_HERD_ON_GQ_FARM) || ! "GQ.F".equals(tile.getId())) {
                 farm.setPigHerd(true);
             }
         }

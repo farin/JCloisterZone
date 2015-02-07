@@ -14,6 +14,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -53,7 +54,19 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void enter() {
-        if (getTile().getCornCircle() == null) {
+        Class<? extends Feature> cornType = getTile().getCornCircle();
+        if (cornType == null) {
+            next();
+            return;
+        }
+        boolean deployedFollowerExists = false;
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (m instanceof Follower && cornType.isInstance(m.getFeature())) {
+                deployedFollowerExists = true;
+                break;
+            }
+        }
+        if (!deployedFollowerExists) {
             next();
             return;
         }
@@ -80,6 +93,7 @@ public class CornCirclePhase extends Phase {
         } else {
             cornCircleCap.setCornCircleOption(CornCicleOption.DEPLOYMENT);
         }
+        game.post(new CornCirclesOptionEvent(getActivePlayer(), cornCircleCap.getCornCircleOption()));
         Player cornPlayer = game.getNextPlayer(getActivePlayer());
         cornCircleCap.setCornCirclePlayer(cornPlayer);
         prepareCornAction();
@@ -132,7 +146,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private List<PlayerAction<?>> prepareRemovalAction(Class<? extends Feature> cornType) {
-    	UndeployAction action = null;
+        UndeployAction action = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;

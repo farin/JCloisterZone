@@ -4,30 +4,23 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("WELCOME")
 public class WelcomeMessage implements WsMessage {
-    private String clientId;
-    private String sessionKey;
+    private String sessionId;
     private String nickname;
+    private Integer pingInterval;
+    private String maintenance;
 
-    public WelcomeMessage(String clientId, String sessionKey, String nickname) {
-        this.clientId = clientId;
-        this.sessionKey = sessionKey;
+    public WelcomeMessage(String sessionId, String nickname, Integer pingInterval) {
+        this.sessionId = sessionId;
         this.nickname = nickname;
+        this.pingInterval = pingInterval;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getNickname() {
@@ -37,4 +30,20 @@ public class WelcomeMessage implements WsMessage {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void setPingInterval(Integer pingInterval) {
+        this.pingInterval = pingInterval;
+    }
+
+    public Integer getPingInterval() {
+        return pingInterval;
+    }
+
+	public String getMaintenance() {
+		return maintenance;
+	}
+
+	public void setMaintenance(String maintenance) {
+		this.maintenance = maintenance;
+	}
 }

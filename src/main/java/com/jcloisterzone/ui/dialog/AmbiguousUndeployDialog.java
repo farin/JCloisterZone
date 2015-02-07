@@ -4,9 +4,7 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -20,12 +18,13 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.UiUtils;
 
 public class AmbiguousUndeployDialog extends JDialog {
 
     //private final Client client;
 
-    private final int ICON_SIZE = 80;
+    private static final int ICON_SIZE = 80;
 
     public AmbiguousUndeployDialog(Client client, List<MeeplePointer> pointers, final AmbiguousUndeployDialogEvent handler) {
         super(client);
@@ -57,22 +56,11 @@ public class AmbiguousUndeployDialog extends JDialog {
         }
 
         pack();
-        centerDialog(getWidth(), getHeight());
+        UiUtils.centerDialog(this, getWidth(), getHeight());
         setVisible(true);
     }
 
     public static abstract class AmbiguousUndeployDialogEvent {
         public abstract void meepleTypeSelected(MeeplePointer meeple);
     }
-
-    //TODO copy&paste from About dialog
-    private void centerDialog(int width, int height) {
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Dimension screenSize = tk.getScreenSize();
-        int screenHeight = screenSize.height;
-        int screenWidth = screenSize.width;
-        setBounds(screenWidth / 2 - width / 2, screenHeight / 3 - height / 2, width, height);
-
-    }
-
 }

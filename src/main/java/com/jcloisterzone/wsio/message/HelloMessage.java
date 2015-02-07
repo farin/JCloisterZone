@@ -9,9 +9,13 @@ public class HelloMessage implements WsMessage {
     private String appVersion = Application.VERSION;
     private String protocolVersion = "" + Application.PROTCOL_VERSION;
     private String nickname;
+    private String clientId;
+    private String secret;
 
-    public HelloMessage(String nickname) {
+    public HelloMessage(String nickname, String clientId, String secret) {
         this.nickname = nickname;
+        this.clientId = clientId;
+        this.secret = secret;
     }
 
     public String getAppVersion() {
@@ -38,4 +42,19 @@ public class HelloMessage implements WsMessage {
         this.nickname = nickname;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 }

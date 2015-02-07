@@ -3,13 +3,18 @@ package com.jcloisterzone.ui;
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Transparency;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.Timer;
+
+import com.jcloisterzone.ui.panel.BackgroundPanel;
 
 public final class UiUtils {
 
@@ -30,8 +35,10 @@ public final class UiUtils {
 
     public static void highlightComponent(final JComponent c) {
         if (c.getBackground() == HIGHLIGHT) return; //prevent two timers
+        c.setOpaque(true); //needed to background works under Linux Look&Feel
         c.setBackground(HIGHLIGHT);
         Timer t = new Timer(800, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 c.setBackground(null);
             }
@@ -59,6 +66,20 @@ public final class UiUtils {
                 throw new IllegalArgumentException("Unknow Color constant: " + colorName);
             }
         }
+    }
+
+    public static void centerDialog(Window dialog, int width, int height) {
+        dialog.setSize(width, height);
+        dialog.setLocationRelativeTo(null);
+    }
+
+    public static ImageIcon scaleImageIcon(ImageIcon icon, int width, int height) {
+        return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+    }
+
+    public static ImageIcon scaleImageIcon(String imgFile, int width, int height) {
+        ImageIcon icon = new ImageIcon(UiUtils.class.getClassLoader().getResource(imgFile));
+        return UiUtils.scaleImageIcon(icon, width, height);
     }
 
 }

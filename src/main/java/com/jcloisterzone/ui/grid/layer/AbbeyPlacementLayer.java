@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -14,8 +15,8 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
 
     private AbbeyPlacementAction action;
 
-    public AbbeyPlacementLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    public AbbeyPlacementLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null && isActive()) {
                 e.consume();
-                action.perform(getClient().getServer(), p);
+                action.perform(getRmiProxy(), p);
             }
         }
     }

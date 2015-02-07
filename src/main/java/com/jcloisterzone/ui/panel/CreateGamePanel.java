@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -13,12 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -31,22 +35,26 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TilePackFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
+import com.jcloisterzone.event.setup.ExpansionChangedEvent;
+import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
+import com.jcloisterzone.event.setup.RuleChangeEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePanel extends JPanel {
 
@@ -56,18 +64,18 @@ public class CreateGamePanel extends JPanel {
 
     private final Client client;
     private final Game game;
+    private final GameController gc;
     private boolean mutableSlots;
 
     private JPanel playersPanel;
 
-    // private JLabel helpText;
     private JComboBox<Object> presets;
     private JButton presetSave, presetDelete;
 
-    private JButton startGameButton;
+    private JButton leaveGameButton, startGameButton;
     private JPanel expansionPanel;
     private JPanel rulesPanel;
-    private JPanel panel;
+    private JPanel header;
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
@@ -110,46 +118,67 @@ public class CreateGamePanel extends JPanel {
     /**
      * Create the panel.
      */
-    public CreateGamePanel(final Client client, final Game game, boolean mutableSlots, PlayerSlot[] slots) {
+    public CreateGamePanel(final Client client, final GameController gc, boolean mutableSlots, PlayerSlot[] slots) {
         this.client = client;
-        this.game = game;
+        this.gc = gc;
+        this.game = gc.getGame();
         this.mutableSlots = mutableSlots;
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
-        setLayout(new MigLayout("", "[][grow][grow]", "[][grow]"));
+        setLayout(new MigLayout("", "[grow]", "[][grow]"));
+        add(header = new JPanel(), "cell 0 0, growx");
 
-        panel = new JPanel();
-        add(panel, "cell 0 0 3 1,grow");
-        panel.setLayout(new MigLayout("", "[grow][]", "[]"));
-
-        // helpText = new JLabel("[TODO HELP TEXT]");
-        // panel.add(helpText, "growx");
-        // helpText.setText(_("The game has been created. Remote clients can connect now."));
+        header.setLayout(new MigLayout("", "[grow]"));
 
         startGameButton = new JButton(_("Start game"));
         startGameButton.setFont(new Font(null, Font.PLAIN, 25));
 //        startGameButton.setIcon(new ImageIcon(CreateGamePanel.class
 //                .getResource("/sysimages/endTurn.png")));
-        panel.add(startGameButton, "width 240, h 40, east");
+        header.add(startGameButton, "width 240, h 40, east");
+
+        if (gc.getChannel() != null) {
+            leaveGameButton = new JButton(_("Leave game"));
+            header.add(leaveGameButton, "h pref!, gapx 10px 10px, east");
+
+            leaveGameButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gc.leaveGame();
+                }
+            });
+        }
 
         startGameButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 client.getConnection().send(new StartGameMessage(game.getGameId()));
             }
         });
 
         if (mutableSlots) {
-            panel.add(createPresetPanel(), "west");
+            header.add(createPresetPanel(), "west");
         }
+
+        JPanel scrolled = new JPanel();
+        scrolled.setLayout(new MigLayout("", "[][grow][grow]", "[grow]"));
 
 
         playersPanel = new JPanel();
         playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
         playersPanel.setLayout(new MigLayout("", "[grow]", ""));
 
+        if (mutableSlots) {
+            JLabel hint = new JLabel(_("Click twice on a slot button to add a computer player."));
+            hint.setFont(new Font(null, Font.ITALIC, 11));
+            hint.setForeground(Color.DARK_GRAY);
+            playersPanel.add(hint, "aligny bottom, gapbottom 5, wrap");
+        }
+
         for (PlayerSlot slot : slots) {
             if (slot != null) {
-                playersPanel.add(new CreateGamePlayerPanel(client, mutableSlots, slot, nameProvider), "wrap");
+                CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, game, gc.getChannel() != null, mutableSlots, slot, slots);
+                panel.setNameProvider(nameProvider);
+                playersPanel.add(panel, "wrap");
             }
         }
         if (mutableSlots) {
@@ -158,7 +187,7 @@ public class CreateGamePanel extends JPanel {
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
 
-        add(playersPanel, "cell 0 1, grow");
+        scrolled.add(playersPanel, "cell 0 0, grow");
 
         expansionPanel = new JPanel();
         expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
@@ -172,13 +201,13 @@ public class CreateGamePanel extends JPanel {
             if (!exp.isImplemented()) continue;
             createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
         }
-        add(expansionPanel, "cell 1 1,grow");
+        scrolled.add(expansionPanel, "cell 1 0,grow");
 
         rulesPanel = new JPanel();
         rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
-        add(rulesPanel, "cell 2 1,grow");
+        scrolled.add(rulesPanel, "cell 2 0,grow");
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
@@ -193,6 +222,11 @@ public class CreateGamePanel extends JPanel {
             rulesPanel.add(chbox, "wrap");
             ruleCheckboxes.put(rule, chbox);
         }
+
+        JScrollPane scroll = new JScrollPane(scrolled);
+        scroll.setViewportBorder(null);  //ubuntu jdk
+        scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
+        add(scroll, "cell 0 1, grow");
 
         onSlotStateChange();
         startGameButton.requestFocus();
@@ -397,7 +431,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createRuleCheckbox(final CustomRule rule,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(rule.getLabel());
+        JCheckBox chbox = new JCheckBox(rule.getLabel(), game.hasRule(rule));
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
@@ -414,7 +448,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(exp.toString());
+        JCheckBox chbox = new JCheckBox(exp.toString(), game.hasExpansion(exp));
         if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
@@ -518,26 +552,62 @@ public class CreateGamePanel extends JPanel {
     }
 
     private void onSlotStateChange() {
-        boolean anyPlayerAssigned = false;
+        int playersAssigned = 0;
+        boolean anyHumanPlayersAssigned = false;
         boolean allPlayersAssigned = true;
+
 
         for (Component c : playersPanel.getComponents()) {
             if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
             if (ps.isOccupied()) {
-                anyPlayerAssigned = true;
+                playersAssigned++;
+                if (!ps.isAi()) {
+                    anyHumanPlayersAssigned = true;
+                }
             } else {
                 allPlayersAssigned = false;
             }
         }
         if (mutableSlots) {
-            startGameButton.setEnabled(anyPlayerAssigned);
+            if (gc.getChannel() == null) {
+                startGameButton.setEnabled(playersAssigned > 0);
+            } else {
+                boolean state;
+                if ("true".equals(System.getProperty("allowAiOnlyOnlineGame"))) {
+                    state = playersAssigned > 1;
+                } else {
+                    state = anyHumanPlayersAssigned;
+                }
+
+                startGameButton.setEnabled(state);
+            }
         } else {
             startGameButton.setEnabled(allPlayersAssigned);
         }
 
         updateSerialLabels();
+    }
+
+    @Subscribe
+    public void updateCustomRule(RuleChangeEvent ev) {
+        updateCustomRule(ev.getRule(), ev.isEnabled());
+    }
+
+    @Subscribe
+    public void updateExpansion(ExpansionChangedEvent ev) {
+        updateExpansion(ev.getExpansion(), ev.isEnabled());
+    }
+
+    @Subscribe
+    public void updateSlot(PlayerSlotChangeEvent ev) {
+        updateSlot(ev.getSlot().getNumber());
+    }
+
+    @Subscribe
+    public void updateSupportedExpansions(SupportedExpansionsChangeEvent ev) {
+        updateSupportedExpansions(ev.getExpansions());
     }
 
 }

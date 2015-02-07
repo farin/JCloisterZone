@@ -19,6 +19,7 @@ import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PigCapability;
@@ -85,7 +86,7 @@ public enum Expansion {
     MESSAGES("ME", "#2 - " + _("The Messages"), false),
     FERRIES("FR", "#3 - " + _("The Ferries"), false),
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),
-    MAGE_WITCH("MW", "#5 - " + _("Mage & Witch"), false),
+    MAGE_AND_WITCH("MW", "#5 - " + _("Mage & Witch"), new Class[] { MageAndWitchCapability.class }),
     ROBBER("RO", "#6 - " + _("The Robber"), false),
     CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class }),
 
