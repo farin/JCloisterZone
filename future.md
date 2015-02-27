@@ -2,6 +2,10 @@
 
 ## Done in current dev
 
+* tile color adjustment (Jozsef T)
+* updated es translation (outdated in 3.1.0)
+* error message bar can be dismissed
+
 
 ## Roadmap
 
