@@ -101,7 +101,7 @@ public class FlierCapability extends Capability {
     }
 
     @Override
-    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+    public void postPrepareActions(List<PlayerAction<?>> actions) {
         prepareFlier(actions, true);
     }
 

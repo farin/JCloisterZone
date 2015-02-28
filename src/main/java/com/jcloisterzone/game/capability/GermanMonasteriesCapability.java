@@ -43,8 +43,8 @@ public class GermanMonasteriesCapability extends Capability {
     }
 
     @Override
-    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        for (MeepleAction ma : findAndFillFollowerActions(actions)) {
+    public void postPrepareActions(List<PlayerAction<?>> actions) {
+        for (MeepleAction ma : findFollowerActions(actions)) {
             List<FeaturePointer> abbots = new ArrayList<>();
             for (FeaturePointer fp : ma.getOptions()) {
                 if (fp.getLocation() == Location.CLOISTER && ((Cloister) getBoard().get(fp)).isMonastery()) {

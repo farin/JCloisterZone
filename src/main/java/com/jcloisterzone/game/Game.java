@@ -402,8 +402,8 @@ public class Game extends GameSettings implements EventProxy {
         for (Capability cap: capabilities) {
             cap.prepareActions(actions, followerOptions);
         }
-        for (Capability cap: capabilities) { //TODO hack for flier
-            cap.postPrepareActions(actions, followerOptions);
+        for (Capability cap: capabilities) {
+            cap.postPrepareActions(actions);
         }
 
         //to simplify capability iterations, allow returning empty actions (eg tower can add empty meeple action when no open tower exists etc)
