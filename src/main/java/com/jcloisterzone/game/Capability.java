@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -86,15 +87,25 @@ public abstract class Capability {
     public void begin() {
     }
 
-    /** convenient method to find follower action in all actions */
-    protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
+    /** convenient method to find follower action in all actions, or create new if player has follower and action doesn't exists*/
+    protected List<MeepleAction> findAndFillFollowerActions(List<PlayerAction<?>> actions) {
         List<MeepleAction> followerActions = new ArrayList<>();
+        Set<Class<? extends Meeple>> hasAction = new HashSet<>();
         for (PlayerAction<?> a : actions) {
             if (a instanceof MeepleAction) {
                 MeepleAction ma = (MeepleAction) a;
                 if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
                     followerActions.add(ma);
+                    hasAction.add(ma.getMeepleType());
                 }
+            }
+        }
+        for (Follower f : game.getActivePlayer().getFollowers()) {
+            if (f.isInSupply() && !hasAction.contains(f.getClass())) {
+                MeepleAction ma = new MeepleAction(f.getClass());
+                actions.add(ma);
+                followerActions.add(ma);
+                hasAction.add(f.getClass());
             }
         }
         return followerActions;

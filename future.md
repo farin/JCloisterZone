@@ -6,6 +6,7 @@
 * updated es translation (outdated in 3.1.0)
 * error message bar can be dismissed
 * fix: "2-tiles bug" - if playing with GQ11 & King and Scount - at game and counter still shows 2 tiles
+* fix: can't place on tower if there isn't normal placement possibility
 
 
 ## Roadmap

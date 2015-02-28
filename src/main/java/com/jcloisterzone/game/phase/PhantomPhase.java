@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;

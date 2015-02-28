@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -404,13 +405,18 @@ public class Game extends GameSettings implements EventProxy {
         for (Capability cap: capabilities) { //TODO hack for flier
             cap.postPrepareActions(actions, followerOptions);
         }
+
+        //to simplify capability iterations, allow returning empty actions (eg tower can add empty meeple action when no open tower exists etc)
+        //and then filter them out at end
+        Iterator<PlayerAction<?>> iter = actions.iterator();
+        while (iter.hasNext()) {
+            PlayerAction<?> action = iter.next();
+            if (action.isEmpty()) {
+                iter.remove();
+            }
+        }
     }
 
-//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
-//        for (Capability cap: capabilities) {
-//            cap.prepareAnyTimeActions(actions);
-//        }
-//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         for (Capability cap: capabilities) {
