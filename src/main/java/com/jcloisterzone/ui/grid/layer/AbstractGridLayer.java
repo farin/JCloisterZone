@@ -54,9 +54,12 @@ public abstract class AbstractGridLayer implements GridLayer {
         }
     }
 
-//	@Override
-//	public void gridChanged(int left, int right, int top, int bottom) {
-//	}
+    @Override
+    public void boardRotated(Rotation boardRotation) {
+        if (mouseListener != null) {
+            triggerFakeMouseEvent();
+        }
+    }
 
     protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
         return new GridMouseAdapter(gridPanel, listener);
@@ -115,10 +118,24 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     public int getOffsetX(Position pos) {
         return getSquareSize() * pos.x;
+       /* //TODO experimental
+        //AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(getSquareSize()*gridPanel.getSquareWidth(), getSquareSize()*gridPanel.getSquareHeight());
+        AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(gridPanel.getSquareWidth(), gridPanel.getSquareHeight());
+        //System.err.println(getSquareSize() * gridPanel.getSquareWidth() + " : " + getSquareSize()*gridPanel.getSquareHeight());
+        //System.err.println("x "  + (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getX());
+        return (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getX();
+    */
     }
 
     public int getOffsetY(Position pos) {
         return getSquareSize() * pos.y;
+      /*  //TODO experimental
+        //AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(getSquareSize()*gridPanel.getSquareWidth(), getSquareSize()*gridPanel.getSquareHeight());
+        AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(gridPanel.getSquareWidth(), gridPanel.getSquareHeight());
+        //System.err.println(getSquareSize() * gridPanel.getSquareWidth() + " : " + getSquareSize()*gridPanel.getSquareHeight());
+        //System.err.println("y " + (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getY());
+        return (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getY();
+        */
     }
 
     public int getSquareSize() {

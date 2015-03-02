@@ -37,6 +37,7 @@ public class MenuBar extends JMenuBar {
         UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         ZOOM_IN(_("Zoom in"), KeyStroke.getKeyStroke('+')),
         ZOOM_OUT(_("Zoom out"), KeyStroke.getKeyStroke('-')),
+        ROTATE_BOARD(_("Rotate board"), KeyStroke.getKeyStroke('/')),
         LAST_PLACEMENTS(_("Show last placements"), KeyStroke.getKeyStroke('x')),
         FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
         PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
@@ -131,6 +132,7 @@ public class MenuBar extends JMenuBar {
         menu.addSeparator();
         menu.add(createMenuItem(MenuItem.ZOOM_IN, false));
         menu.add(createMenuItem(MenuItem.ZOOM_OUT, false));
+        menu.add(createMenuItem(MenuItem.ROTATE_BOARD, false));
         menu.addSeparator();
         menu.add(createCheckBoxMenuItem(MenuItem.LAST_PLACEMENTS, false));
         menu.add(createCheckBoxMenuItem(MenuItem.FARM_HINTS, false));
