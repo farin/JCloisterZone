@@ -161,15 +161,23 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         private MouseEvent dragSource;
         double sourceCx, sourceCy;
 
+        private void moveTo(MouseEvent e) {
+            int clickX = e.getX()-offsetX;
+            int clickY = e.getY()-offsetY;
+            moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+        }
+
         @Override
         public void mouseClicked(MouseEvent e) {
             switch (e.getButton()) {
             case MouseEvent.BUTTON2:
-                int clickX = e.getX()-offsetX;
-                int clickY = e.getY()-offsetY;
-                moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+                moveTo(e);
                 break;
             case MouseEvent.BUTTON3:
+                if (e.isShiftDown()) {
+                    moveTo(e);
+                    break;
+                } //else forward
             case 5:
                 forward();
                 break;
