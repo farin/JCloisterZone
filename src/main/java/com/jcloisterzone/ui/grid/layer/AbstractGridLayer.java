@@ -118,24 +118,10 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     public int getOffsetX(Position pos) {
         return getSquareSize() * pos.x;
-       /* //TODO experimental
-        //AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(getSquareSize()*gridPanel.getSquareWidth(), getSquareSize()*gridPanel.getSquareHeight());
-        AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(gridPanel.getSquareWidth(), gridPanel.getSquareHeight());
-        //System.err.println(getSquareSize() * gridPanel.getSquareWidth() + " : " + getSquareSize()*gridPanel.getSquareHeight());
-        //System.err.println("x "  + (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getX());
-        return (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getX();
-    */
     }
 
     public int getOffsetY(Position pos) {
         return getSquareSize() * pos.y;
-      /*  //TODO experimental
-        //AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(getSquareSize()*gridPanel.getSquareWidth(), getSquareSize()*gridPanel.getSquareHeight());
-        AffineTransform at = gridPanel.getBoardRotation().getAffineTransform(gridPanel.getSquareWidth(), gridPanel.getSquareHeight());
-        //System.err.println(getSquareSize() * gridPanel.getSquareWidth() + " : " + getSquareSize()*gridPanel.getSquareHeight());
-        //System.err.println("y " + (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getY());
-        return (int) at.transform(new Point(getSquareSize() * pos.x, getSquareSize() * pos.y), null).getY();
-        */
     }
 
     public int getSquareSize() {
@@ -177,6 +163,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
+        //gridPanel.getBoardRotation().
         ImmutablePoint center = centerNoScaled.scale(getSquareSize());
         drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
     }
@@ -189,16 +176,24 @@ public abstract class AbstractGridLayer implements GridLayer {
         TextLayout tl = new TextLayout(text, getFont(fontSize),frc);
         Rectangle2D bounds = tl.getBounds();
 
-        center = center.translate( (int) (bounds.getWidth() / -2), (int) (bounds.getHeight() / -2));
+        int w = (int) bounds.getWidth();
+        int h = (int) bounds.getHeight();
+        center = center.translate(-w/2, -h/2);
+        int x = getOffsetX(pos) + center.getX();
+        int y = getOffsetY(pos) + center.getY();
 
+
+        g2.rotate(-gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
         if (bgColor != null) {
             g2.setColor(bgColor);
-            g2.fillRect(getOffsetX(pos) + center.getX() - 6, getOffsetY(pos) + center.getY() - 5, 12 + (int)bounds.getWidth(),10 +(int) bounds.getHeight());
+            g2.fillRect(x-6, y-5, w+12, h+10);
         }
 
         g2.setColor(fgColor);
-        tl.draw(g2, getOffsetX(pos) + center.getX(),  getOffsetY(pos) + center.getY() + (int) bounds.getHeight());
+        tl.draw(g2, x,  y+h);
         g2.setColor(original);
+        g2.rotate(gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
+
     }
 
 }

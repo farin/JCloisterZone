@@ -45,6 +45,10 @@ public enum Rotation {
         return values()[ordinal()-1];
     }
 
+    public double getTheta() {
+        return ordinal()*Math.PI/2.0;
+    }
+
     public Rotation add(Rotation r) {
         return Rotation.values()[(this.ordinal() + r.ordinal()) % Rotation.values().length];
     }

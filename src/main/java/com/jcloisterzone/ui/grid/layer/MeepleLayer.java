@@ -49,7 +49,11 @@ public class MeepleLayer extends AbstractGridLayer {
             Image img = mi.sourceImage.getScaledInstance(size, size, Image.SCALE_SMOOTH);
             mi.scaledImage = new ImageIcon(img).getImage();
         }
-        g.drawImage(mi.scaledImage, getOffsetX(mi.position) + scaledOffset.getX(), getOffsetY(mi.position) + scaledOffset.getY(), gridPanel);
+        int x = getOffsetX(mi.position) + scaledOffset.getX();
+        int y = getOffsetY(mi.position) + scaledOffset.getY();
+        g.rotate(-gridPanel.getBoardRotation().getTheta(), x+boxSize/2, y+boxSize/2);
+        g.drawImage(mi.scaledImage, x, y, gridPanel);
+        g.rotate(gridPanel.getBoardRotation().getTheta(), x+boxSize/2, y+boxSize/2);
     }
 
     @Override
@@ -61,7 +65,7 @@ public class MeepleLayer extends AbstractGridLayer {
             }
         }
         for (PositionedImage mi : permanentImages) {
-            paintPositionedImage(g, mi, boxSize );
+            paintPositionedImage(g, mi, boxSize);
         }
 
     }
