@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,8 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.ui.Client;
 
 
 public final class TunnelCapability extends Capability {
@@ -36,6 +39,18 @@ public final class TunnelCapability extends Capability {
 
     public TunnelCapability(Game game) {
         super(game);
+        for (PlayerSlot slot : game.getPlayerSlots()) {
+        	if (!slot.isOccupied()) continue;
+    		int slotNumber = (slot.getNumber() + 2) % PlayerSlot.COUNT;
+    		if (game.getPlayerSlots()[slotNumber].isOccupied()) {
+    			slotNumber = (slotNumber + 1) % PlayerSlot.COUNT;
+    		}
+            PlayerSlot fakeSlot = new PlayerSlot(slotNumber);
+            //HACK to get second color - TODO fix it!
+            Color tunnelBColor = Client.getInstance().getConfig().getPlayerColor(fakeSlot).getMeepleColor();
+            slot.getColors().setTunnelBColor(tunnelBColor);
+
+        }
     }
 
     @Override
