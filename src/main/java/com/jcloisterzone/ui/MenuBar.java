@@ -231,6 +231,7 @@ public class MenuBar extends JMenuBar {
     private JCheckBoxMenuItem createCheckBoxMenuItem(MenuItem def, ActionListener handler, boolean enabled) {
         JCheckBoxMenuItem instance = new JCheckBoxMenuItem(def.title);
         initMenuItem(instance, def, handler);
+        instance.setEnabled(enabled);
         return instance;
     }
 
@@ -257,5 +258,10 @@ public class MenuBar extends JMenuBar {
         if (handler != null) {
             instance.addActionListener(handler);
         }
+    }
+
+    public boolean isSelected(MenuItem item) {
+    	JCheckBoxMenuItem instance = (JCheckBoxMenuItem) items.get(item);
+    	return instance.isSelected();
     }
 }

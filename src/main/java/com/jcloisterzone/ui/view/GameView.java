@@ -146,6 +146,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 mainPanel.toggleRecentHistory(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
+        	mainPanel.toggleRecentHistory(true);
+        }
         menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -153,6 +156,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 mainPanel.setShowFarmHints(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.FARM_HINTS)) {
+        	mainPanel.setShowFarmHints(true);
+        }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,6 +166,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 getControlPanel().setShowProjectedPoints(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
+        	getControlPanel().setShowProjectedPoints(true);
+        }
         menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
