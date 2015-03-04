@@ -98,11 +98,18 @@ public class Client extends JFrame {
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
 
+    private static Client instance;
+
     public Client(Path dataDirectory, ConfigLoader configLoader, Config config, List<Plugin> plugins) {
+    	instance = this;
         this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+    }
+
+    public static Client getInstance() {
+    	return instance;
     }
 
     public boolean mountView(UiView view) {
@@ -566,13 +573,5 @@ public class Client extends JFrame {
             return ((GameView)view).getMainPanel();
         }
         return null;
-    }
-
-    @Deprecated
-    public Color getPlayerSecondTunelColor(Player player) {
-        //TODO more effective implementation, move it to tunnel capability
-        int slotNumber = player.getSlot().getNumber();
-        PlayerSlot fakeSlot = new PlayerSlot((slotNumber + 2) % PlayerSlot.COUNT);
-        return getConfig().getPlayerColor(fakeSlot).getMeepleColor();
     }
 }

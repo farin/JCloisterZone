@@ -133,6 +133,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 zoom(-2.0);
             }
         });
+        menu.setItemActionListener(MenuItem.ROTATE_BOARD, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rotateBoard();
+            }
+        });
         menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,6 +146,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 mainPanel.toggleRecentHistory(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
+        	mainPanel.toggleRecentHistory(true);
+        }
         menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,6 +156,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 mainPanel.setShowFarmHints(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.FARM_HINTS)) {
+        	mainPanel.setShowFarmHints(true);
+        }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,6 +166,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 getControlPanel().setShowProjectedPoints(ch.isSelected());
             }
         });
+        if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
+        	getControlPanel().setShowProjectedPoints(true);
+        }
         menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -195,6 +210,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
         menu.setItemEnabled(MenuItem.ZOOM_IN, true);
         menu.setItemEnabled(MenuItem.ZOOM_OUT, true);
+        menu.setItemEnabled(MenuItem.ROTATE_BOARD, true);
         menu.setItemEnabled(MenuItem.SAVE, true);
         menu.setItemEnabled(MenuItem.LOAD, false);
         menu.setItemEnabled(MenuItem.NEW_GAME, false);
@@ -222,6 +238,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
         menu.setItemEnabled(MenuItem.ZOOM_IN, false);
         menu.setItemEnabled(MenuItem.ZOOM_OUT, false);
+        menu.setItemEnabled(MenuItem.ROTATE_BOARD, false);
         menu.setItemEnabled(MenuItem.LEAVE_GAME, false);
         menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, false);
         menu.setItemEnabled(MenuItem.DISCARDED_TILES, false);
@@ -273,7 +290,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
             logger.error(message, ex);
         }
-        getGridPanel().setErrorMessage(message);
+        getGridPanel().showErrorMessage(message);
     }
 
     @Override
@@ -383,6 +400,11 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     public void zoom(double steps) {
         GridPanel gp = getGridPanel();
         if (gp != null) gp.zoom(steps);
+    }
+
+    public void rotateBoard() {
+        GridPanel gp = getGridPanel();
+        if (gp != null) gp.rotateBoard();
     }
 
     @Subscribe

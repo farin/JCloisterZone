@@ -218,6 +218,7 @@ public class ClientMessageListener implements MessageListener {
         }
         gc.setReportingTool(conn.getReportingTool());
         gc.setChannel(msg.getChannel());
+        gc.setPasswordProtected(msg.isPasswordProtected());
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
         if (msg.getSlots() != null) {
@@ -495,8 +496,10 @@ public class ClientMessageListener implements MessageListener {
             }
             JOptionPane.showMessageDialog(client, msg, _("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
             break;
+        case ErrorMessage.INVALID_PASSWORD:
+        	JOptionPane.showMessageDialog(client, _("Invalid password"), _("Invalid password"), JOptionPane.WARNING_MESSAGE);
         default:
-            logger.error(err.getMessage());
+            JOptionPane.showMessageDialog(client, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

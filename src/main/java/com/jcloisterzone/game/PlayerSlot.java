@@ -53,8 +53,6 @@ public class PlayerSlot implements Serializable {
         this.serial = serial;
     }
 
-
-
     public String getNickname() {
         return nickname;
     }

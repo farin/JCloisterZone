@@ -189,3 +189,12 @@ msgmerge -N -U po/sk.po po/keys.pot
 rm po/*~
 rm po/keys.pot
 ```
+
+### package
+
+mkdir builds/JCloisterZone
+
+chmod a+x JCloisterZone.jar
+
+zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
+tar cvzf JCloisterZone-3.1.0.tgz JCloisterZone

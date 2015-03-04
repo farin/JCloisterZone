@@ -62,7 +62,7 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getSpecialMeeples());
             if (game.hasCapability(TunnelCapability.class)) {
                 scaledImages.put(player.getIndex()+"tunnelA", scaleImage(theme.getTunnelImage(player.getColors().getMeepleColor())));
-                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(client.getPlayerSecondTunelColor(player))));
+                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(player.getColors().getTunnelBColor())));
             }
         }
         if (game.hasCapability(TowerCapability.class)) {

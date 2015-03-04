@@ -140,7 +140,7 @@ public final class TowerCapability extends Capability {
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareTowerFollowerDeploy(findFollowerActions(actions));
+            prepareTowerFollowerDeploy(findAndFillFollowerActions(actions));
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);

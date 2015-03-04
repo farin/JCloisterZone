@@ -332,7 +332,7 @@ public class MainPanel extends JPanel {
         Player player = ev.getTriggeringPlayer();
         Color c;
         if (ev.isSecondPiece()) {
-            c = client.getPlayerSecondTunelColor(player);
+            c = player.getColors().getTunnelBColor();
         } else {
             c = player.getColors().getMeepleColor();
         }

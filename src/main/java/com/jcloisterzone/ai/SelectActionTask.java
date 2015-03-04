@@ -111,7 +111,7 @@ public class SelectActionTask implements Runnable {
     @Override
     public void run() {
         //logger.info("Select action task started " + aiPlayer.getClientStub().getGame().getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString());
-        boolean dbgPrint = false;
+        boolean dbgPrint = !false;
         try {
             this.game = aiPlayer.copyGame(this);
             if (dbgPrint) dbgPringHeader();

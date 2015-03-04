@@ -4,8 +4,10 @@ import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -82,8 +84,9 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             super.mouseMoved(e);
             if (areas == null) return;
             int size = getSquareSize();
-            int x = e.getX() - gridPanel.getOffsetX();
-            int y = e.getY() - gridPanel.getOffsetY();
+            Point2D point = gridPanel.getRelativePoint(e.getPoint());
+            int x = (int) point.getX();
+            int y = (int) point.getY();
             if (x < 0) x += 1000 * size; //prevent mod from negative number
             if (y < 0) y += 1000 * size; //prevent mod from negative number
             x = x % size;

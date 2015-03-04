@@ -7,10 +7,12 @@ public class CreateGameMessage implements WsMessage, WsInChannelMessage {
 
 	private String name;
 	private String channel;
+	private String password;
 
-	public CreateGameMessage(String name, String channel) {
+	public CreateGameMessage(String name, String channel, String password) {
 		this.name = name;
 		this.channel = channel;
+		this.password = password;
 	}
 
 	@Override
@@ -28,5 +30,13 @@ public class CreateGameMessage implements WsMessage, WsInChannelMessage {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

@@ -6,9 +6,11 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class ErrorMessage implements WsMessage {
 
     public static final String BAD_VERSION = "badVersion";
+    public static final String INVALID_PASSWORD = "invalidPassword";
 
     private String code;
     private String message;
+    private String arg;
 
     public ErrorMessage(String code, String message) {
         this.code = code;
@@ -31,5 +33,17 @@ public class ErrorMessage implements WsMessage {
     public void setMessage(String message) {
         this.message = message;
     }
+
+
+	public String getArg() {
+		return arg;
+	}
+
+
+	public void setArg(String arg) {
+		this.arg = arg;
+	}
+
+
 
 }
