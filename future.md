@@ -2,6 +2,7 @@
 
 ## Done in current dev
 
+* online play - password protected games support
 * tile color adjustment (Jozsef T)
 * updated es translation (outdated in 3.1.0)
 * error message bar can be dismissed

@@ -17,6 +17,7 @@ public class GameMessage implements WsMessage, WsInGameMessage {
     private SlotMessage[] slots;
     private GameSetupMessage gameSetup;
     private String[] replay;
+    private boolean passwordProtected;
 
     public GameMessage() {
     }
@@ -92,4 +93,13 @@ public class GameMessage implements WsMessage, WsInGameMessage {
 	public void setReplay(String[] replay) {
 		this.replay = replay;
 	}
+
+	public boolean isPasswordProtected() {
+		return passwordProtected;
+	}
+
+	public void setPasswordProtected(boolean passwordProtected) {
+		this.passwordProtected = passwordProtected;
+	}
+
 }

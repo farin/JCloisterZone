@@ -65,6 +65,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     private final Game game;
     private GameState gameState;
     private String channel;
+    private boolean passwordProtected;
 
     private final RmiProxy rmiProxy;
     private ReportingTool reportingTool;
@@ -373,4 +374,12 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     public void setChannel(String channel) {
         this.channel = channel;
     }
+
+	public boolean isPasswordProtected() {
+		return passwordProtected;
+	}
+
+	public void setPasswordProtected(boolean passwordProtected) {
+		this.passwordProtected = passwordProtected;
+	}
 }

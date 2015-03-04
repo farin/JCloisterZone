@@ -2,12 +2,10 @@ package com.jcloisterzone.ui.panel;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,16 +15,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
@@ -100,15 +97,24 @@ public class ChannelPanel extends JPanel {
 	    	gameTitle.setText(defaultTitle); //set after document
 	    	createGamePanel.add(gameTitle, "wrap, width 250::");
 
+	    	createGamePanel.add(new JLabel(_("Password")+":"));
+	    	final JTextField password = new JPasswordField();
+	    	createGamePanel.add(password, "wrap, width 250::");
+
+	    	JLabel passwordHint = new JLabel(_("If you leave password empty, anybody can connect to your game."));
+	    	passwordHint.setFont(new Font(null, Font.ITALIC, 12));
+	    	createGamePanel.add(passwordHint, "wrap, span 2");
+
 	        JButton createGameButton = new JButton(_("Create game"));
 	        createGameButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					String title = gameTitle.getText().trim();
-					cc.getConnection().send(new CreateGameMessage(title, cc.getChannel().getName()));
+					String pwd = password.getText().toString();
+					cc.getConnection().send(new CreateGameMessage(title, cc.getChannel().getName(), pwd));
 				}
 			});
-	        createGamePanel.add(createGameButton, "wrap, span 2");
+	        createGamePanel.add(createGameButton,"wrap, gaptop 20, span 2");
 
     	}
     	return createGamePanel;
@@ -164,12 +170,21 @@ public class ChannelPanel extends JPanel {
 			JPanel buttons = new JPanel();
 			buttons.setLayout(new MigLayout("ins 0"));
 
+			final JPasswordField password = new JPasswordField();
+			if (gc.isPasswordProtected()) {
+				buttons.add(new JLabel(_("Password")+":"));
+				buttons.add(password, "width 160");
+			}
+
 			joinButton = new JButton(gc.getGameState() == GameState.OPEN ? _("Join game") : _("Continue"));
 			joinButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					cc.getConnection().send(new JoinGameMessage(game.getGameId()));
-					//client.openGameSetup(gc, true);
+					JoinGameMessage msg = new JoinGameMessage(game.getGameId());
+					if (gc.isPasswordProtected()) {
+						msg.setPassword(password.getText().toString());
+					}
+					cc.getConnection().send(msg);
 				}
 			});
 			buttons.add(joinButton);
