@@ -24,14 +24,14 @@ public class GameSettings {
     }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean hasExpansion(Expansion expansion) {
+    public boolean hasExpansion(Expansion expansion) {
         return expansions.contains(expansion);
     }
 

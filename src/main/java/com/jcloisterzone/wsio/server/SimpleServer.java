@@ -34,11 +34,12 @@ import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
+import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
+import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
-import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
@@ -55,6 +56,7 @@ import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
@@ -76,6 +78,10 @@ public class SimpleServer extends WebSocketServer  {
 
     private Snapshot snapshot;
     private boolean gameStarted;
+
+    private int[] clocks;
+    private int runningClock;
+    private long runningSince;
 
     protected final Map<WebSocket, RemoteClient> connections = new HashMap<>();
     private String hostClientId;
@@ -252,12 +258,12 @@ public class SimpleServer extends WebSocketServer  {
             }
         }
 
-        send(ws, new WelcomeMessage(sessionId, nickname, 120));
+        send(ws, new WelcomeMessage(sessionId, nickname, 120, System.currentTimeMillis()));
         send(ws, newGameMessage());
         for (RemoteClient rc : connections.values()) {
-        	if (!rc.getSessionId().equals(sessionId)) {
-        		send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientState.ACTIVE));
-        	}
+            if (!rc.getSessionId().equals(sessionId)) {
+                send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientState.ACTIVE));
+            }
         }
         broadcast(new ClientUpdateMessage(game.getGameId(), sessionId, nickname, ClientState.ACTIVE));
     }
@@ -356,19 +362,37 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         if (snapshot == null) {
+            int playerCount = 0;
             for (ServerPlayerSlot slot : slots) {
                 if (!slot.isOccupied()) continue;
+                playerCount++;
                 if (slot.getSupportedExpansions() != null) {
                     game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
                 }
-
                 if (game.hasRule(CustomRule.RANDOM_SEATING_ORDER)) {
                     slot.setSerial(random.nextInt());
                 }
             }
+            clocks = new int[playerCount];
+            runningClock = -1;
         }
         gameStarted = true;
         broadcast(newGameMessage());
+    }
+
+    @WsSubscribe
+    public void handleToggleClock(WebSocket ws, ToggleClockMessage msg) {
+        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
+        long ts = System.currentTimeMillis();
+        if (runningClock != -1) {
+           clocks[runningClock] += ts-runningSince;
+        }
+        runningSince = ts;
+        runningClock = msg.getRun() == null ? -1 : msg.getRun();
+        int[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
+        ClockMessage clockMsg = new ClockMessage(msg.getGameId(), msg.getRun(), clocksCopy, ts);
+        broadcast(clockMsg);
     }
 
     @WsSubscribe

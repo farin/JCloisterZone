@@ -25,7 +25,7 @@ public class FairyPhase extends Phase {
     @Override
     public void enter() {
         Position fairyPos = fairyCap.getFairyPosition();
-        if (fairyPos != null) {
+        if (fairyPos != null && !getTilePack().isEmpty())  { //do not add 1 point in last additional abbey only round
             for (Meeple m : game.getDeployedMeeples()) {
                 if (m.at(fairyPos) && m.getPlayer() == getActivePlayer()) {
                     m.getPlayer().addPoints(1, PointCategory.FAIRY);

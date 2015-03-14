@@ -98,26 +98,27 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void preparePhases() {
+        GameController gc = getGameController();
         Phase last, next = null;
         //if there isn't assignment - phase is out of standard flow
-               addPhase(next, new GameOverPhase(game, getGameController()));
+               addPhase(next, new GameOverPhase(game, gc));
         next = last = addPhase(next, new CleanUpTurnPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getGameController()));
+        next = addPhase(next, new BazaarPhase(game, gc));
         next = addPhase(next, new CleanUpTurnPartPhase(game));
-        next = addPhase(next, new CornCirclePhase(game));
+        next = addPhase(next, new CornCirclePhase(game, gc));
         next = addPhase(next, new EscapePhase(game));
 
         if (game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
-            addPhase(next, new DragonMovePhase(game));
+            addPhase(next, new DragonMovePhase(game, gc));
             next = addPhase(next, new DragonPhase(game));
         }
 
-        next = addPhase(next, new WagonPhase(game));
+        next = addPhase(next, new WagonPhase(game, gc));
         next = addPhase(next, new ScorePhase(game));
         next = addPhase(next, new CastlePhase(game));
 
         if (!game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
-               addPhase(next, new DragonMovePhase(game));
+               addPhase(next, new DragonMovePhase(game, gc));
                next = addPhase(next, new DragonPhase(game));
         }
 
@@ -128,8 +129,8 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new MageAndWitchPhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getGameController()));
-        next = addPhase(next, new AbbeyPhase(game));
+        next = addPhase(next, new DrawPhase(game, gc));
+        next = addPhase(next, new AbbeyPhase(game, gc));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
         last.setDefaultNext(next); //after last phase, the first is default
@@ -251,7 +252,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         preplaceTiles();
         game.post(new PlayerTurnEvent(game.getTurnPlayer()));
         //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-
+        toggleClock(game.getTurnPlayer());
         next();
     }
 
