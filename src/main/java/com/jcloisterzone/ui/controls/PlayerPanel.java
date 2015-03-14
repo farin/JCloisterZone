@@ -172,6 +172,20 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         return rect;
     }
 
+    private void drawTimeTextBox(String text, Color textColor) {
+        int w = 64;
+        int h = 22;
+        if (bx+w > PANEL_WIDTH-PADDING_R-PADDING_L) {
+            bx = PADDING_L;
+            by += LINE_HEIGHT;
+        }
+        g2.setColor(Color.WHITE);
+        g2.fillRoundRect(bx, by, w, h, 8, 8);
+        g2.setColor(textColor);
+        g2.drawString(text, bx+4, by+17);
+        bx += w + 8;
+    }
+
 
     public boolean repaintContent(int width) {
         Game game = gc.getGame();
@@ -210,6 +224,15 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         g2.setFont(FONT_MEEPLE);
         bx = PADDING_L;
         by = 43;
+
+        int remainingMs = 20*60*1000 - player.getClock().getTime();
+        //System.out.println(player.getIndex() + " >>> " + remainingMs);
+        if (remainingMs <= 0) {
+            drawTimeTextBox("00.00", Color.RED);
+        } else {
+            int remaining = remainingMs / 1000;
+            drawTimeTextBox(String.format("%02d.%02d", remaining / 60, remaining % 60), Color.DARK_GRAY);
+        }
 
         int small = 0;
         String smallImgKey = SmallFollower.class.getSimpleName();

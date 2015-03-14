@@ -17,16 +17,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.event.FeatureEvent;
 import com.jcloisterzone.event.MeepleEvent;
@@ -83,8 +86,10 @@ public class ControlPanel extends JPanel {
     private BazaarCapability bcb;
     private BazaarSupplyPanel bazaarSupplyPanel;
 
+    private final Timer timer;
+
     public ControlPanel(GameView gameView) {
-    	this.client = gameView.getClient();
+        this.client = gameView.getClient();
         this.gameView = gameView;
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
@@ -110,10 +115,9 @@ public class ControlPanel extends JPanel {
         add(actionPanel, "wrap, growx, gapleft 35, h 106");
 
         if (bcb != null) {
-        	bazaarSupplyPanel = new BazaarSupplyPanel();
-        	bazaarSupplyPanel.setVisible(false);
-        	add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
-
+            bazaarSupplyPanel = new BazaarSupplyPanel();
+            bazaarSupplyPanel.setVisible(false);
+            add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
         }
 
         Player[] players = game.getAllPlayers();
@@ -124,11 +128,21 @@ public class ControlPanel extends JPanel {
             playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
             add(playerPanels[i], "wrap, growx, gapleft 35, gapbottom 12, h pref");
         }
+
+        //better be accurate and repaint just every second - TODO
+        timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (PlayerPanel panel : playerPanels) {
+                    panel.repaint();
+                }
+            }
+        });
     }
 
 
     private void setCanPass(boolean canPass) {
-    	this.canPass = canPass;
+        this.canPass = canPass;
         passButton.setVisible(canPass);
     }
 
@@ -149,7 +163,7 @@ public class ControlPanel extends JPanel {
             g2.setColor(PANEL_BG_COLOR_SHADOW);
             g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
         } else {
-        	PlayerPanel pp = playerPanels[player.getIndex()];
+            PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
 
             g2.setColor(PANEL_BG_COLOR);
@@ -179,7 +193,7 @@ public class ControlPanel extends JPanel {
 
         player = game.getActivePlayer();
         if (player != null) {
-        	PlayerPanel pp = playerPanels[player.getIndex()];
+            PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
 
             g2.setColor(Color.BLACK);
@@ -199,7 +213,7 @@ public class ControlPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-    	Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g;
         AffineTransform origTransform = g2.getTransform();
         int w = getWidth();
 
@@ -216,18 +230,18 @@ public class ControlPanel extends JPanel {
         boolean doRevalidate = false;
 
         if (bazaarSupplyPanel != null) {
-        	boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
-        	if (showSupply ^ bazaarSupplyPanel.isVisible()) {
-        		doRevalidate = true;
-        		bazaarSupplyPanel.setVisible(showSupply);
-        	}
+            boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
+            if (showSupply ^ bazaarSupplyPanel.isVisible()) {
+                doRevalidate = true;
+                bazaarSupplyPanel.setVisible(showSupply);
+            }
         }
 
         for (PlayerPanel pp : playerPanels) {
-        	doRevalidate = doRevalidate || pp.repaintContent(w);
+            doRevalidate = doRevalidate || pp.repaintContent(w);
         }
         if (doRevalidate) {
-        	revalidate();
+            revalidate();
         }
 
         g2.setTransform(origTransform);
@@ -236,8 +250,8 @@ public class ControlPanel extends JPanel {
 
     @Override
     protected void paintChildren(Graphics g) {
-    	super.paintChildren(g);
-    	paintBackgroundShadow((Graphics2D) g);
+        super.paintChildren(g);
+        paintBackgroundShadow((Graphics2D) g);
     }
 
     public void pass() {
@@ -268,134 +282,144 @@ public class ControlPanel extends JPanel {
         setCanPass(false);
     }
 
-	public boolean isShowPotentialPoints() {
-		return showProjectedPoints;
-	}
+    public boolean isShowPotentialPoints() {
+        return showProjectedPoints;
+    }
 
-	public void setShowProjectedPoints(boolean showProjectedPoints) {
-		this.showProjectedPoints = showProjectedPoints;
-		if (showProjectedPoints) {
-			refreshPotentialPoints();
-		} else {
-			gameView.getGridPanel().repaint(); //repaint immediately
-		}
-	}
+    public void setShowProjectedPoints(boolean showProjectedPoints) {
+        this.showProjectedPoints = showProjectedPoints;
+        if (showProjectedPoints) {
+            refreshPotentialPoints();
+        } else {
+            gameView.getGridPanel().repaint(); //repaint immediately
+        }
+    }
 
-	private void refreshPotentialPoints() {
-		if (!showProjectedPoints) return;
-		projectedPointsValid = false;
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				//run only once in one time - refreshPotentialPoints can be triggered by more events
-				if (!projectedPointsValid) {
-					projectedPointsValid = true;
+    private void refreshPotentialPoints() {
+        if (!showProjectedPoints) return;
+        projectedPointsValid = false;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                //run only once in one time - refreshPotentialPoints can be triggered by more events
+                if (!projectedPointsValid) {
+                    projectedPointsValid = true;
 
-					for (PlayerPanel playerPanel : playerPanels) {
-						playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
-					}
+                    for (PlayerPanel playerPanel : playerPanels) {
+                        playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
+                    }
 
-					PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
-					ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
-			        scoreAll.scoreAll(game, strategy);
-			        game.finalScoring(strategy);
+                    PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
+                    ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
+                    scoreAll.scoreAll(game, strategy);
+                    game.finalScoring(strategy);
 
-					gameView.getGridPanel().repaint();
-				}
-			}
-		});
-	}
+                    gameView.getGridPanel().repaint();
+                }
+            }
+        });
+    }
 
-	@Subscribe
-	public void handleScoreEvent(ScoreEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleClockUpdateEvent(ClockUpdateEvent ev) {
+        timer.stop();
+        if (ev.isClockRunning()) {
+            PlayerClock runningClock = ev.getRunningClockPlayer().getClock();
+            timer.setInitialDelay(runningClock.getTime() % 1000); //this solution is not much accurate - TODO fix
+            timer.start();
+        }
+    }
 
-	@Subscribe
-	public void handleTileEvent(TileEvent ev) {
-		if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
-			refreshPotentialPoints();
-		}
-	}
+    @Subscribe
+    public void handleScoreEvent(ScoreEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleMeepleEvent(MeepleEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleTileEvent(TileEvent ev) {
+        if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
+            refreshPotentialPoints();
+        }
+    }
 
-	@Subscribe
-	public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleMeepleEvent(MeepleEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleFeatureEvent(FeatureEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleMeeplePrisonEvent(FeatureEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleFeatureEvent(FeatureEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
+    @Subscribe
+    public void handleMeeplePrisonEvent(FeatureEvent ev) {
+        refreshPotentialPoints();
+    }
 
-		@Override
-		public void addPoints(Player player, int points, PointCategory category) {
-			playerPanels[player.getIndex()].addPotentialPoints(points);
-		}
+    class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
 
-		@Override
-		public void scoreCompletableFeature(CompletableScoreContext ctx) {
-			int points = ctx.getPoints();
-	        for (Player p : ctx.getMajorOwners()) {
-	        	addPoints(p, points, null);
-	        }
-		}
+        @Override
+        public void addPoints(Player player, int points, PointCategory category) {
+            playerPanels[player.getIndex()].addPotentialPoints(points);
+        }
 
-		@Override
-		public void scoreFarm(FarmScoreContext ctx, Player player) {
-			addPoints(player, ctx.getPoints(player), null);
+        @Override
+        public void scoreCompletableFeature(CompletableScoreContext ctx) {
+            int points = ctx.getPoints();
+            for (Player p : ctx.getMajorOwners()) {
+                addPoints(p, points, null);
+            }
+        }
 
-		}
+        @Override
+        public void scoreFarm(FarmScoreContext ctx, Player player) {
+            addPoints(player, ctx.getPoints(player), null);
 
-		@Override
-		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-			addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
-		}
+        }
 
-		@Override
-		public void scoreCastle(Meeple meeple, Castle castle) {
-			//empty
-		}
+        @Override
+        public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
+            addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
+        }
 
-		@Override
-		public CompletableScoreContext getCompletableScoreContext(Completable completable) {
-			return completable.getScoreContext();
-		}
+        @Override
+        public void scoreCastle(Meeple meeple, Castle castle) {
+            //empty
+        }
 
-		@Override
-		public FarmScoreContext getFarmScoreContext(Farm farm) {
-			return farm.getScoreContext();
-		}
-	}
+        @Override
+        public CompletableScoreContext getCompletableScoreContext(Completable completable) {
+            return completable.getScoreContext();
+        }
 
-	class BazaarSupplyPanel extends JPanel {
+        @Override
+        public FarmScoreContext getFarmScoreContext(Farm farm) {
+            return farm.getScoreContext();
+        }
+    }
 
-		public BazaarSupplyPanel() {
-			setOpaque(false);
-		}
+    class BazaarSupplyPanel extends JPanel {
 
-		@Override
-		protected void paintComponent(Graphics g) {
-			Graphics2D g2 = (Graphics2D)g;
-			super.paintComponent(g);
-			List<Tile> queue = bcb.getDrawQueue();
+        public BazaarSupplyPanel() {
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D)g;
+            super.paintComponent(g);
+            List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {
                 int x = LEFT_MARGIN+LEFT_PADDING;
                 for (Tile tile : queue) {
@@ -404,6 +428,6 @@ public class ControlPanel extends JPanel {
                     x += 45;
                 }
             }
-		}
-	}
+        }
+    }
 }

@@ -20,11 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
@@ -54,6 +57,7 @@ import com.jcloisterzone.wsio.message.ChannelMessage.ChannelMessageGame;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
+import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
@@ -408,6 +412,19 @@ public class ClientMessageListener implements MessageListener {
     }
 
     @WsSubscribe
+    public void handleClockMessage(ClockMessage msg) {
+        Game game = getGame(msg);
+        Player[] players = game.getAllPlayers();
+        Player runningClockPlayer = msg.getRunning() == null ? null : players[msg.getRunning()];
+        for (int i = 0; i < players.length; i++) {
+            PlayerClock clock = players[i].getClock();
+            clock.setTime(msg.getClocks()[i]);
+            clock.setRunning(runningClockPlayer == players[i]);
+        }
+        game.post(new ClockUpdateEvent(runningClockPlayer));
+    }
+
+    @WsSubscribe
     public void handleSlot(SlotMessage msg) {
         Game game = getGame(msg);
         //slot's can be updated also for running game
@@ -497,7 +514,7 @@ public class ClientMessageListener implements MessageListener {
             JOptionPane.showMessageDialog(client, msg, _("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
             break;
         case ErrorMessage.INVALID_PASSWORD:
-        	JOptionPane.showMessageDialog(client, _("Invalid password"), _("Invalid password"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(client, _("Invalid password"), _("Invalid password"), JOptionPane.WARNING_MESSAGE);
         default:
             JOptionPane.showMessageDialog(client, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
