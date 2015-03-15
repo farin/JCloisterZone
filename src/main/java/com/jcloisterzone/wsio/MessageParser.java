@@ -14,6 +14,7 @@ import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
+import com.jcloisterzone.wsio.message.EndTurnMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -78,6 +79,7 @@ public final class MessageParser {
         registerMsgType(PongMessage.class);
         registerMsgType(ToggleClockMessage.class);
         registerMsgType(ClockMessage.class);
+        registerMsgType(EndTurnMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {

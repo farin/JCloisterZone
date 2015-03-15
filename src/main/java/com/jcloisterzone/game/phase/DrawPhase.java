@@ -80,11 +80,9 @@ public class DrawPhase extends ServerAwarePhase {
         if (makeDebugDraw()) {
             return;
         }
-        if (isLocalPlayer(getActivePlayer())) {
-            int rndIndex = game.getRandom().nextInt(getTilePack().size());
-            Tile tile = getTilePack().drawTile(rndIndex);
-            nextTile(tile);
-        }
+        int rndIndex = game.getRandom().nextInt(getTilePack().size());
+        Tile tile = getTilePack().drawTile(rndIndex);
+        nextTile(tile);
     }
 
     private void nextTile(Tile tile) {

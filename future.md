@@ -2,6 +2,8 @@
 
 ## Done in current dev
 
+* game clock
+
 
 ## Roadmap
 

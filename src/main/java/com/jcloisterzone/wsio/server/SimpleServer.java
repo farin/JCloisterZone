@@ -36,6 +36,7 @@ import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.ClockMessage;
+import com.jcloisterzone.wsio.message.EndTurnMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -399,6 +400,14 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
         broadcast(new FlierDiceMessage(msg.getGameId(),msg.getMeepleType(), 1+random.nextInt(3)));
+    }
+
+    @WsSubscribe
+    public void handleEndTurn(WebSocket ws, EndTurnMessage msg) {
+        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
+        msg.setCurrentTime(System.currentTimeMillis());
+        broadcast(msg);
     }
 
     @WsSubscribe

@@ -92,11 +92,13 @@ public class Game extends GameSettings implements EventProxy {
     private int idSequenceCurrVal = 0;
 
     private final Random random;
+    private long randomSeed;
 
     public Game(String gameId) {
         super(gameId);
         HashCode hash = HashCode.fromBytes(gameId.getBytes());
-        random = new Random(hash.asLong());
+        randomSeed = hash.asLong();
+        random = new Random(randomSeed);
     }
 
     @Override
@@ -254,6 +256,15 @@ public class Game extends GameSettings implements EventProxy {
 
     public Random getRandom() {
         return random;
+    }
+
+    public long getRandomSeed() {
+        return randomSeed;
+    }
+
+    public void updateRandomSeed(long update) {
+        randomSeed = randomSeed ^ update;
+        random.setSeed(randomSeed);
     }
 
     public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {

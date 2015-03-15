@@ -12,16 +12,6 @@ public class MessageDispatcher {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-//    private List<Object> subscribers = new ArrayList<>();
-//
-//    public void register(Object subscriber) {
-//        subscribers.add(subscriber);
-//    }
-//
-//    public void unregister(Object subscriber) {
-//        subscribers.remove(subscriber);
-//    }
-
     public void dispatch(WsMessage msg, Object context, Object... targets) {
         if (targets.length == 0) {
             throw new IllegalArgumentException("No targets");
@@ -30,7 +20,6 @@ public class MessageDispatcher {
             dispatchOn(msg, context, target);
         }
     }
-
 
     //TODO what about cache targets
     private boolean dispatchOn(WsMessage msg, Object context, Object target) {
