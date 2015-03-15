@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
+import com.google.common.hash.HashCode;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.Player;
@@ -89,8 +91,12 @@ public class Game extends GameSettings implements EventProxy {
 
     private int idSequenceCurrVal = 0;
 
+    private final Random random;
+
     public Game(String gameId) {
         super(gameId);
+        HashCode hash = HashCode.fromBytes(gameId.getBytes());
+        random = new Random(hash.asLong());
     }
 
     @Override
@@ -246,6 +252,9 @@ public class Game extends GameSettings implements EventProxy {
         return board;
     }
 
+    public Random getRandom() {
+        return random;
+    }
 
     public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
         for (Meeple m : getDeployedMeeples()) {

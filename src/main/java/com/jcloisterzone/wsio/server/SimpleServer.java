@@ -36,7 +36,6 @@ import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.ClockMessage;
-import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
@@ -45,7 +44,6 @@ import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 import com.jcloisterzone.wsio.message.PingMessage;
 import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
@@ -396,18 +394,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
-    public void handleMakeDraw(WebSocket ws, MakeDrawMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
-        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        int[] result = new int[msg.getK()];
-        int n = msg.getPackSize();
-        for (int i = 0; i < msg.getK(); i++) {
-            result[i] = random.nextInt(n--);
-        }
-        broadcast(new DrawMessage(msg.getGameId(), msg.getPackSize(), result));
-    }
-
-    @WsSubscribe
+    @Deprecated
     public void handleRollFlierDice(WebSocket ws, RollFlierDiceMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
