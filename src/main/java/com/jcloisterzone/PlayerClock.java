@@ -17,6 +17,14 @@ public class PlayerClock {
         }
     }
 
+    /**
+     * Returns time ignoring runningSince (which is reset to now)
+     */
+    public long resetRunning() {
+        runningSince = System.currentTimeMillis();
+        return time;
+    }
+
     public void setTime(long time) {
         this.time = time;
         if (running) runningSince = System.currentTimeMillis();

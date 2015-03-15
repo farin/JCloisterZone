@@ -21,6 +21,7 @@ import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.CustomRule;
@@ -98,6 +99,7 @@ public class SimpleServer extends WebSocketServer  {
 
     public void createGame(Snapshot snapshot, Game settings, String hostClientId) {
         slotSerial = 0;
+        runningClock = -1;
         gameStarted = false;
         this.snapshot = null;
         this.hostClientId = hostClientId;
@@ -359,6 +361,7 @@ public class SimpleServer extends WebSocketServer  {
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
+        runningClock = -1;
         if (snapshot == null) {
             int playerCount = 0;
             for (ServerPlayerSlot slot : slots) {
@@ -372,7 +375,17 @@ public class SimpleServer extends WebSocketServer  {
                 }
             }
             clocks = new long[playerCount];
-            runningClock = -1;
+        } else {
+            List<Player> players = snapshot.getPlayers();
+            clocks = new long[players.size()];
+            for (int i = 0; i < clocks.length; i++) {
+                PlayerClock clock = players.get(i).getClock();
+                clocks[i] = clock.resetRunning();
+                if (clock.isRunning()) {
+                    runningClock = i;
+                }
+            }
+            runningSince = System.currentTimeMillis();
         }
         gameStarted = true;
         broadcast(newGameMessage());

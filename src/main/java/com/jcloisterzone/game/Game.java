@@ -97,8 +97,14 @@ public class Game extends GameSettings implements EventProxy {
     public Game(String gameId) {
         super(gameId);
         HashCode hash = HashCode.fromBytes(gameId.getBytes());
-        randomSeed = hash.asLong();
-        random = new Random(randomSeed);
+        this.randomSeed = hash.asLong();
+        this.random = new Random(randomSeed);
+    }
+
+    public Game(String gameId, long randomSeed) {
+        super(gameId);
+        this.randomSeed = randomSeed;
+        this.random = new Random(randomSeed);
     }
 
     @Override

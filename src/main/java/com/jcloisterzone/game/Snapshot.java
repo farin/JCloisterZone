@@ -103,6 +103,7 @@ public class Snapshot implements Serializable {
         root = doc.createElement("game");
         root.setAttribute("app-version", Application.VERSION);
         root.setAttribute("phase", game.getPhase().getClass().getName());
+        root.setAttribute("seed", ""+game.getRandomSeed());
         doc.appendChild(root);
 
     }
@@ -158,6 +159,12 @@ public class Snapshot implements Serializable {
                     el.appendChild(catEl);
                 }
             }
+            Element clockEl = doc.createElement("clock");
+            clockEl.setAttribute("time", ""+p.getClock().getTime());
+            if (p.getClock().isRunning()) {
+                clockEl.setAttribute("running", "true");
+            }
+            el.appendChild(clockEl);
             parent.appendChild(el);
         }
     }
@@ -312,7 +319,7 @@ public class Snapshot implements Serializable {
                 String aiClassName = el.getAttribute("ai-class");
                 slot.setAiClassName(aiClassName);
             } else {
-                if (el.hasAttribute("local")) {
+                if (XmlUtils.attributeBoolValue(el, "local")) {
                     slot.setState(SlotState.OWN);
                 }
             }
@@ -322,6 +329,15 @@ public class Snapshot implements Serializable {
                 PointCategory cat = PointCategory.valueOf(catEl.getAttribute("name"));
                 p.setPointsInCategory(cat, Integer.parseInt(catEl.getAttribute("points")));
             }
+            NodeList clockNl = el.getElementsByTagName("clock");
+            if (clockNl.getLength() > 0) {
+                Element clockEl = (Element) clockNl.item(0);
+                p.getClock().setTime(Long.parseLong(clockEl.getAttribute("time")));
+                if (XmlUtils.attributeBoolValue(el, "running")) {
+                    p.getClock().setRunning(true);
+                }
+            }
+
             players.add(p);
         }
         return players;
@@ -394,8 +410,8 @@ public class Snapshot implements Serializable {
     }
 
     public Game asGame(String gameId) {
-        return asGame(new Game(gameId));
-
+        long seed = Long.parseLong(root.getAttribute("seed"));
+        return asGame(new Game(gameId, seed));
     }
 
     public Game asGame(Game game) {
