@@ -24,7 +24,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -126,7 +126,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
                 }
             }
             if (loc == Location.FLIER) {
-                getClient().getConnection().send(new RollFlierDiceMessage(getGame().getGameId(), ma.getMeepleType()));
+                getClient().getConnection().send(new DeployFlierMessage(getGame().getGameId(), ma.getMeepleType()));
                 return;
             }
             if (loc == Location.CLOISTER && abbotOption) {

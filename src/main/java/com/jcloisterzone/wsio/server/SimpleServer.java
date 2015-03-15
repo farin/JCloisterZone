@@ -36,9 +36,9 @@ import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.ClockMessage;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.EndTurnMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
-import com.jcloisterzone.wsio.message.FlierDiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.GameOverMessage;
@@ -49,7 +49,6 @@ import com.jcloisterzone.wsio.message.PingMessage;
 import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
-import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -395,11 +394,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
-    @Deprecated
-    public void handleRollFlierDice(WebSocket ws, RollFlierDiceMessage msg) {
+    public void handleDeployFlier(WebSocket ws, DeployFlierMessage msg) {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        broadcast(new FlierDiceMessage(msg.getGameId(),msg.getMeepleType(), 1+random.nextInt(3)));
+        msg.setCurrentTime(System.currentTimeMillis());
+        broadcast(msg);
     }
 
     @WsSubscribe
