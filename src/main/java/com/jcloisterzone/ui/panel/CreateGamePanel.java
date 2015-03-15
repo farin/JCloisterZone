@@ -211,7 +211,7 @@ public class CreateGamePanel extends JPanel {
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
-            if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
+            if (rule.getExpansion() == null) continue;
             if (prev != rule.getExpansion()) {
                 prev = rule.getExpansion();
                 JLabel label = new JLabel(prev.toString());

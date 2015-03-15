@@ -7,6 +7,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 
 public class ServerAwarePhase extends Phase {
 
@@ -30,15 +31,21 @@ public class ServerAwarePhase extends Phase {
     }
 
     public Config getConfig() {
-    	return gc == null ? null : gc.getConfig();
+        return gc == null ? null : gc.getConfig();
     }
 
     public DebugConfig getDebugConfig() {
-    	Config config = getConfig();
-    	return config == null ? null : config.getDebug();
+        Config config = getConfig();
+        return config == null ? null : config.getDebug();
     }
 
     public boolean isLocalPlayer(Player player) {
         return player.getSlot().isOwn();
+    }
+
+    public void toggleClock(Player player) {
+        if (isLocalPlayer(player)) {
+            getConnection().send(new ToggleClockMessage(game.getGameId(), player.getIndex()));
+        }
     }
 }

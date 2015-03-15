@@ -15,6 +15,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.MakeDrawMessage;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -108,6 +109,7 @@ public class DrawPhase extends ServerAwarePhase {
             next(DrawPhase.class);
             return;
         }
+        toggleClock(getActivePlayer());
         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }

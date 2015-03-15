@@ -30,13 +30,14 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
+import com.jcloisterzone.ui.GameController;
 
-public class CornCirclePhase extends Phase {
+public class CornCirclePhase extends ServerAwarePhase {
 
     private final CornCircleCapability cornCircleCap;
 
-    public CornCirclePhase(Game game) {
-        super(game);
+    public CornCirclePhase(Game game, GameController controller) {
+        super(game, controller);
         cornCircleCap = game.getCapability(CornCircleCapability.class);
     }
 
@@ -111,7 +112,9 @@ public class CornCirclePhase extends Phase {
             nextCornPlayer();
         } else {
             boolean passAllowed = cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT;
-            game.post(new SelectActionEvent(getActivePlayer(), actions, passAllowed));
+            Player activePlayer = getActivePlayer();
+            toggleClock(activePlayer);
+            game.post(new SelectActionEvent(activePlayer, actions, passAllowed));
         }
     }
 

@@ -36,10 +36,10 @@ public class Player implements Serializable {
     private final List<Special> specialMeeples = new ArrayList<Special>(3);
     private final Iterable<Meeple> meeples = Iterables.<Meeple>concat(followers, specialMeeples);
 
-
     final private String nick;
     final private int index;
     private PlayerSlot slot;
+    private final PlayerClock clock = new PlayerClock();
 
     public Player(String nick, int index, PlayerSlot slot) {
         this.nick = nick;
@@ -123,6 +123,10 @@ public class Player implements Serializable {
     }
     public void setSlot(PlayerSlot slot) {
         this.slot = slot;
+    }
+
+    public PlayerClock getClock() {
+        return clock;
     }
 
     @Override

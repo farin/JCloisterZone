@@ -12,6 +12,7 @@ import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
+import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.DrawMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
@@ -35,6 +36,7 @@ import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
@@ -78,6 +80,8 @@ public final class MessageParser {
         registerMsgType(GameOverMessage.class);
         registerMsgType(PingMessage.class);
         registerMsgType(PongMessage.class);
+        registerMsgType(ToggleClockMessage.class);
+        registerMsgType(ClockMessage.class);
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {
