@@ -79,7 +79,7 @@ public class SimpleServer extends WebSocketServer  {
     private Snapshot snapshot;
     private boolean gameStarted;
 
-    private int[] clocks;
+    private long[] clocks;
     private int runningClock;
     private long runningSince;
 
@@ -373,7 +373,7 @@ public class SimpleServer extends WebSocketServer  {
                     slot.setSerial(random.nextInt());
                 }
             }
-            clocks = new int[playerCount];
+            clocks = new long[playerCount];
             runningClock = -1;
         }
         gameStarted = true;
@@ -390,7 +390,7 @@ public class SimpleServer extends WebSocketServer  {
         }
         runningSince = ts;
         runningClock = msg.getRun() == null ? -1 : msg.getRun();
-        int[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
+        long[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
         ClockMessage clockMsg = new ClockMessage(msg.getGameId(), msg.getRun(), clocksCopy, ts);
         broadcast(clockMsg);
     }

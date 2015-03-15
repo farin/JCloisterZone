@@ -7,11 +7,11 @@ public class ClockMessage implements WsInGameMessage {
 
     private String gameId;
     private Integer running;
-    private int[] clocks;
+    private long[] clocks;
     private long currentTime;
 
 
-    public ClockMessage(String gameId, Integer running, int[] clocks, long currentTime) {
+    public ClockMessage(String gameId, Integer running, long[] clocks, long currentTime) {
         super();
         this.gameId = gameId;
         this.running = running;
@@ -35,11 +35,11 @@ public class ClockMessage implements WsInGameMessage {
         this.running = running;
     }
 
-    public int[] getClocks() {
+    public long[] getClocks() {
         return clocks;
     }
 
-    public void setClocks(int[] clocks) {
+    public void setClocks(long[] clocks) {
         this.clocks = clocks;
     }
 

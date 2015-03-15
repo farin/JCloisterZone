@@ -225,12 +225,12 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         bx = PADDING_L;
         by = 43;
 
-        int remainingMs = 20*60*1000 - player.getClock().getTime();
+        long remainingMs = 20*60*1000 - player.getClock().getTime();
         //System.out.println(player.getIndex() + " >>> " + remainingMs);
         if (remainingMs <= 0) {
             drawTimeTextBox("00.00", Color.RED);
         } else {
-            int remaining = remainingMs / 1000;
+            long remaining = remainingMs / 1000;
             drawTimeTextBox(String.format("%02d.%02d", remaining / 60, remaining % 60), Color.DARK_GRAY);
         }
 

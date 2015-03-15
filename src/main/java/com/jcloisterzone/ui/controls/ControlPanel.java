@@ -325,7 +325,7 @@ public class ControlPanel extends JPanel {
         timer.stop();
         if (ev.isClockRunning()) {
             PlayerClock runningClock = ev.getRunningClockPlayer().getClock();
-            timer.setInitialDelay(runningClock.getTime() % 1000); //this solution is not much accurate - TODO fix
+            timer.setInitialDelay((int) runningClock.getTime() % 1000); //this solution is not much accurate - TODO fix
             timer.start();
         }
     }

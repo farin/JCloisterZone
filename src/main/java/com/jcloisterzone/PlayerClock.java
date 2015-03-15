@@ -3,21 +3,21 @@ package com.jcloisterzone;
 
 public class PlayerClock {
 
-    private int time;
+    private long time;
     private boolean running;
 
     private long runningSince;
 
 
-    public int getTime() {
+    public long getTime() {
         if (running) {
-            return time + (int)(System.currentTimeMillis() - runningSince);
+            return time + System.currentTimeMillis() - runningSince;
         } else {
             return time;
         }
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
         if (running) runningSince = System.currentTimeMillis();
     }
