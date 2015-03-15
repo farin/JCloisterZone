@@ -1,9 +1,11 @@
 package com.jcloisterzone.wsio.server;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,11 +135,19 @@ public class SimpleServer extends WebSocketServer  {
             slots[slotNumber] = slot;
             boolean isAi = player.getSlot().isAi();
             if (player.isLocalHuman() || isAi) {
+                if (isAi) {
+                    String className = player.getSlot().getAiClassName();
+                    try {
+                        EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(className).getMethod("supportedExpansions").invoke(null);
+                        slot.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
+                        slot.setAiClassName(className);
+                    } catch (Exception e) {
+                        logger.warn("AI class is not present " + className);
+                        continue;
+                    }
+                }
                 slot.setNickname(player.getNick());
                 slot.setOwner(HOST_SESSION_PLACEHOLDER);
-                if (isAi) {
-                    slot.setAiClassName(player.getSlot().getAiClassName());
-                }
                 maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
                 slot.setSerial(player.getSlot().getSerial());
             }
