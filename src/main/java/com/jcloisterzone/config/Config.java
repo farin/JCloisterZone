@@ -70,7 +70,7 @@ public class Config {
 
     public static class PresetConfig {
         private List<String> expansions;
-        private List<String> rules;
+        private Map<CustomRule, Object> rules;
 
         public List<String> getExpansions() {
             return expansions == null ? Collections.<String>emptyList() : expansions;
@@ -78,10 +78,10 @@ public class Config {
         public void setExpansions(List<String> expansions) {
             this.expansions = expansions;
         }
-        public List<String> getRules() {
+        public Map<CustomRule, Object> getRules() {
             return rules;
         }
-        public void setRules(List<String> rules) {
+        public void setRules(Map<CustomRule, Object> rules) {
             this.rules = rules;
         }
 
@@ -95,12 +95,7 @@ public class Config {
                     LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
                 }
             }
-
-            EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
-            for (String ruleName : rules) {
-                ruleSet.add(CustomRule.valueOf(ruleName));
-            }
-            conn.send(new GameSetupMessage(gameId, ruleSet, expansionSet, null));
+            conn.send(new GameSetupMessage(gameId, rules, expansionSet, null));
         }
     }
 

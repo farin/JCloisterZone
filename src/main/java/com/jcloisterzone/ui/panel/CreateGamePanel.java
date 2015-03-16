@@ -301,8 +301,7 @@ public class CreateGamePanel extends JPanel {
                 Preset profile = null;
                 if (item instanceof String) { // not found matching profile,
                                                 // create new
-                    profile = new Preset(((String) item).trim(),
-                            createCurrentConfig());
+                    profile = new Preset(((String) item).trim(), createCurrentConfig());
                     presets.addItem(profile); // TODO insert at
                 } else { // profile already exists
                     profile = (Preset) item;
@@ -393,18 +392,13 @@ public class CreateGamePanel extends JPanel {
 
     private PresetConfig createCurrentConfig() {
         List<String> expansions = new ArrayList<>();
-        List<String> rules = new ArrayList<>();
         for (Expansion exp : game.getExpansions()) {
-            if (exp == Expansion.BASIC)
-                continue;
+            if (exp == Expansion.BASIC) continue;
             expansions.add(exp.name());
-        }
-        for (CustomRule rule : game.getCustomRules()) {
-            rules.add(rule.name());
         }
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
-        config.setRules(rules);
+        config.setRules(game.getCustomRules());
         return config;
     }
 
@@ -466,8 +460,9 @@ public class CreateGamePanel extends JPanel {
         return chbox;
     }
 
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
+    public void updateCustomRule(CustomRule rule, Object value) {
         JCheckBox chbox = ruleCheckboxes.get(rule);
+        boolean enabled = (Boolean) value;
         if (chbox != null && chbox.isSelected() != enabled) {
             chbox.setSelected(enabled);
             UiUtils.highlightComponent(chbox);
@@ -523,8 +518,7 @@ public class CreateGamePanel extends JPanel {
         ArrayList<Integer> serials = new ArrayList<Integer>();
 
         for (Component c : playersPanel.getComponents()) {
-            if (!(c instanceof CreateGamePlayerPanel))
-                continue;
+            if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
             if (ps != null && ps.getSerial() != null) {
@@ -535,11 +529,9 @@ public class CreateGamePanel extends JPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
-            boolean randomSeating = game.hasRule(
-                    CustomRule.RANDOM_SEATING_ORDER);
+            boolean randomSeating = game.hasRule(CustomRule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
-                if (!(c instanceof CreateGamePlayerPanel))
-                    continue;
+                if (!(c instanceof CreateGamePlayerPanel)) continue;
                 CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
                 PlayerSlot ps = playerPanel.getSlot();
                 if (ps != null && ps.getSerial() != null) {
@@ -592,7 +584,7 @@ public class CreateGamePanel extends JPanel {
 
     @Subscribe
     public void updateCustomRule(RuleChangeEvent ev) {
-        updateCustomRule(ev.getRule(), ev.isEnabled());
+        updateCustomRule(ev.getRule(), ev.getValue());
     }
 
     @Subscribe

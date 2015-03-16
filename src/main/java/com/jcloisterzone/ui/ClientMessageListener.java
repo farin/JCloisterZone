@@ -439,14 +439,15 @@ public class ClientMessageListener implements MessageListener {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(msg.getRules());
+        game.getCustomRules().putAll(msg.getRules());
 
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
             game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
         }
         for (CustomRule rule : CustomRule.values()) {
-            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
+            Object value = game.getCustomRules().get(rule);
+            game.post(new RuleChangeEvent(rule, value == null ? false : value));
         }
     }
 
@@ -467,12 +468,8 @@ public class ClientMessageListener implements MessageListener {
     public void handleSetRule(SetRuleMessage msg) {
         Game game = getGame(msg);
         CustomRule rule = msg.getRule();
-        if (msg.isEnabled()) {
-            game.getCustomRules().add(rule);
-        } else {
-            game.getCustomRules().remove(rule);
-        }
-        game.post(new RuleChangeEvent(rule, msg.isEnabled()));
+        game.getCustomRules().put(rule, msg.getValue());
+        game.post(new RuleChangeEvent(rule, msg.getValue()));
     }
 
     @WsSubscribe

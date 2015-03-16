@@ -43,12 +43,13 @@ public final class MessageParser {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-
-    private Map<String, Class<? extends WsMessage>> types = new HashMap<>();
+    private final Gson gson;
+    private final Map<String, Class<? extends WsMessage>> types = new HashMap<>();
 
 
     public MessageParser() {
+        gson = new GsonBuilder().disableHtmlEscaping().create();
+
         registerMsgType(ErrorMessage.class);
         registerMsgType(HelloMessage.class);
         registerMsgType(WelcomeMessage.class);

@@ -1,7 +1,6 @@
 package com.jcloisterzone.wsio.server;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,23 +108,22 @@ public class SimpleServer extends WebSocketServer  {
         if (snapshot != null) {
             this.snapshot =  snapshot;
             game.getExpansions().addAll(snapshot.getExpansions());
-            game.getCustomRules().addAll(snapshot.getCustomRules());
+            game.getCustomRules().putAll(snapshot.getCustomRules());
             loadSlotsFromSnapshot();
         } else if (settings != null) {
             game.getExpansions().addAll(settings.getExpansions());
-            game.getCustomRules().addAll(settings.getCustomRules());
+            game.getCustomRules().putAll(settings.getCustomRules());
             loadSlotsFromGame(settings);
         } else {
             game.getExpansions().add(Expansion.BASIC);
-            for (CustomRule cr : CustomRule.defaultEnabled()) {
-                game.getCustomRules().add(cr);
-            }
+            game.getCustomRules().putAll(CustomRule.getDefaultRules());
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new ServerPlayerSlot(i);
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void loadSlotsFromGame(Game settings) {
         //Game is game from client since, so we can use isLocalHuman
         int maxSerial = 0;
@@ -286,7 +284,7 @@ public class SimpleServer extends WebSocketServer  {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(msg.getRules());
+        game.getCustomRules().putAll(msg.getRules());
         broadcast(msg);
     }
 
@@ -359,11 +357,7 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         CustomRule rule = msg.getRule();
-        if (msg.isEnabled()) {
-            game.getCustomRules().add(rule);
-        } else {
-            game.getCustomRules().remove(rule);
-        }
+        game.getCustomRules().put(rule, msg.getValue());
         broadcast(msg);
     }
 

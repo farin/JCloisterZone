@@ -1,5 +1,6 @@
 package com.jcloisterzone.game;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,7 @@ public class GameSettings {
 
     private final String gameId;
     private String name;
-    private final Set<CustomRule> customRules = EnumSet.noneOf(CustomRule.class);
+    private final EnumMap<CustomRule, Object> customRules = new EnumMap<>(CustomRule.class);
     private final Set<Expansion> expansions = EnumSet.noneOf(Expansion.class);
     private final Set<Class<? extends Capability>> capabilityClasses = new HashSet<>();
 
@@ -36,7 +37,9 @@ public class GameSettings {
     }
 
     public boolean hasRule(CustomRule rule) {
-        return customRules.contains(rule);
+        assert rule.getType().equals(Boolean.class);
+        if (!customRules.containsKey(rule)) return false;
+        return (Boolean) customRules.get(rule);
     }
 
     public boolean hasCapability(Class<? extends Capability> c) {
@@ -47,7 +50,7 @@ public class GameSettings {
         return expansions;
     }
 
-    public Set<CustomRule> getCustomRules() {
+    public EnumMap<CustomRule, Object> getCustomRules() {
         return customRules;
     }
 

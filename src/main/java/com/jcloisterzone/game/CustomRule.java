@@ -2,6 +2,8 @@ package com.jcloisterzone.game;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import java.util.EnumMap;
+
 import com.jcloisterzone.Expansion;
 
 
@@ -51,13 +53,23 @@ public enum CustomRule {
         return type;
     }
 
-    @Override
-    public String toString() {
-        return label;
+    public Object unpackValue(String value) {
+        if (type.equals(Boolean.class)) {
+            return Boolean.valueOf(value);
+        } else if (type.equals(Integer.class)) {
+            return Integer.valueOf(value);
+        } else if (type.equals(String.class)) {
+            return value;
+        } else {
+            throw new IllegalArgumentException("Unsupported type");
+        }
     }
 
-    public static CustomRule[] defaultEnabled() {
-        return new CustomRule[] { PIG_HERD_ON_GQ_FARM, TUNNELIZE_ALL_EXPANSIONS };
+    public static EnumMap<CustomRule, Object> getDefaultRules() {
+        EnumMap<CustomRule, Object> defaultRules = new EnumMap<>(CustomRule.class);
+        defaultRules.put(PIG_HERD_ON_GQ_FARM, true);
+        defaultRules.put(TUNNELIZE_ALL_EXPANSIONS, true);
+        return defaultRules;
     }
 
 }

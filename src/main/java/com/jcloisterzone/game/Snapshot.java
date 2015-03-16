@@ -9,10 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -109,10 +111,12 @@ public class Snapshot implements Serializable {
     }
 
     private void createRuleElements(Game game) {
-        for (CustomRule cr : game.getCustomRules()) {
+        for (Entry<CustomRule, Object> entry : game.getCustomRules().entrySet()) {
+            CustomRule cr = entry.getKey();
             if (cr.equals(CustomRule.RANDOM_SEATING_ORDER)) continue;
             Element el = doc.createElement("rule");
             el.setAttribute("name", cr.name());
+            el.setAttribute("value", entry.getValue().toString());
             root.appendChild(el);
         }
     }
@@ -296,13 +300,19 @@ public class Snapshot implements Serializable {
         }
     }
 
-    public Set<CustomRule> getCustomRules() {
-        Set<CustomRule> result = new HashSet<>();
+    public EnumMap<CustomRule, Object> getCustomRules() {
+        EnumMap<CustomRule, Object> result = new EnumMap<>(CustomRule.class);
         NodeList nl = root.getElementsByTagName("rule");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             CustomRule rule = CustomRule.valueOf(el.getAttribute("name"));
-            result.add(rule);
+            String value = el.getAttribute("name");
+            if (value == null) {
+                //backward compatibility 3.1.x
+                result.put(rule, Boolean.TRUE);
+            } else {
+                result.put(rule, rule.unpackValue(value));
+            }
         }
         return result;
     }
@@ -418,7 +428,7 @@ public class Snapshot implements Serializable {
         game.getExpansions().clear();
         game.getExpansions().addAll(getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(getCustomRules());
+        game.getCustomRules().putAll(getCustomRules());
         game.setPlayers(getPlayers(), getTurnPlayer());
         return game;
     }
