@@ -447,7 +447,7 @@ public class ClientMessageListener implements MessageListener {
         }
         for (CustomRule rule : CustomRule.values()) {
             Object value = game.getCustomRules().get(rule);
-            game.post(new RuleChangeEvent(rule, value == null ? false : value));
+            game.post(new RuleChangeEvent(rule, value));
         }
     }
 
@@ -468,7 +468,11 @@ public class ClientMessageListener implements MessageListener {
     public void handleSetRule(SetRuleMessage msg) {
         Game game = getGame(msg);
         CustomRule rule = msg.getRule();
-        game.getCustomRules().put(rule, msg.getValue());
+        if (msg.getValue() == null) {
+            game.getCustomRules().remove(rule);
+        } else {
+            game.getCustomRules().put(rule, msg.getValue());
+        }
         game.post(new RuleChangeEvent(rule, msg.getValue()));
     }
 

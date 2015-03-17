@@ -35,7 +35,7 @@ public class GermanMonasteriesCapability extends Capability {
 
     @Override
     public void initTile(Tile tile, Element xml) {
-        if (!game.hasRule(CustomRule.KEEP_CLOISTERS)) {
+        if (!game.getBooleanValue(CustomRule.KEEP_CLOISTERS)) {
             if (tile.getId().equals("BA.L") || tile.getId().equals("BA.LR")) {
                 throw new RemoveTileException();
             }

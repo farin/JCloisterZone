@@ -105,7 +105,7 @@ public class BazaarPhase extends ServerAwarePhase {
             bi = bazaarCap.getBazaarSupply().get(supplyIndex);
             bazaarCap.setCurrentBazaarAuction(bi);
 
-            if (game.hasRule(CustomRule.BAZAAR_NO_AUCTION)) {
+            if (game.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION)) {
                 bi.setOwner(getActivePlayer());
                 nextSelectingPlayer();
                 return;

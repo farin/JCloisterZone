@@ -374,7 +374,7 @@ public class SimpleServer extends WebSocketServer  {
                 if (slot.getSupportedExpansions() != null) {
                     game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
                 }
-                if (game.hasRule(CustomRule.RANDOM_SEATING_ORDER)) {
+                if (game.getBooleanValue(CustomRule.RANDOM_SEATING_ORDER)) {
                     slot.setSerial(random.nextInt());
                 }
             }

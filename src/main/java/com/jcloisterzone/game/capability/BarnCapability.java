@@ -67,7 +67,7 @@ public final class BarnCapability extends Capability {
             positionChange = positionChange.next();
         }
 
-        if (!game.hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+        if (!game.getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
             return !farm.walk(new IsOccupied().with(Barn.class));
         }
 

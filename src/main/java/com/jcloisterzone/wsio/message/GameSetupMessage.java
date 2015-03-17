@@ -3,14 +3,17 @@ package com.jcloisterzone.wsio.message;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.wsio.MessageParser.CustomRulesMapAdapter;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_SETUP")
 public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
+    @JsonAdapter(CustomRulesMapAdapter.class)
     private Map<CustomRule, Object> rules;
     private Set<Expansion> expansions;
     private Set<Class<? extends Capability>> capabilityClasses;

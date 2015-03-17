@@ -25,6 +25,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -90,6 +91,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     private final LittleBuildingsCapability lbCap;
     private final TunnelCapability tunnelCap;
 
+    private Integer timeLimit;
+
     public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
         this.client = client;
         this.player = player;
@@ -107,6 +110,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         cwgCap = game.getCapability(ClothWineGrainCapability.class);
         lbCap = game.getCapability(LittleBuildingsCapability.class);
         tunnelCap = game.getCapability(TunnelCapability.class);
+
+        timeLimit = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
     }
 
     private void drawDelimiter(int y) {
@@ -225,13 +230,14 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         bx = PADDING_L;
         by = 43;
 
-        long remainingMs = 20*60*1000 - player.getClock().getTime();
-        //System.out.println(player.getIndex() + " >>> " + remainingMs);
-        if (remainingMs <= 0) {
-            drawTimeTextBox("00.00", Color.RED);
-        } else {
-            long remaining = remainingMs / 1000;
-            drawTimeTextBox(String.format("%02d.%02d", remaining / 60, remaining % 60), Color.DARK_GRAY);
+        if (timeLimit != null) {
+            long remainingMs = timeLimit*1000 - player.getClock().getTime();
+            if (remainingMs <= 0) {
+                drawTimeTextBox("00.00", Color.RED);
+            } else {
+                long remaining = remainingMs / 1000;
+                drawTimeTextBox(String.format("%02d.%02d", remaining / 60, remaining % 60), Color.DARK_GRAY);
+            }
         }
 
         int small = 0;

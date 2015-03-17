@@ -60,7 +60,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
        this.client = client;
        this.gc = gc;
 
-       noAuction = gc.getGame().hasRule(CustomRule.BAZAAR_NO_AUCTION);
+       noAuction = gc.getGame().getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
        bcb = gc.getGame().getCapability(BazaarCapability.class);
 
 

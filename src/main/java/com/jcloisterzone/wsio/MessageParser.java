@@ -1,13 +1,25 @@
 package com.jcloisterzone.wsio;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
@@ -46,9 +58,46 @@ public final class MessageParser {
     private final Gson gson;
     private final Map<String, Class<? extends WsMessage>> types = new HashMap<>();
 
+    public static class CustomRulesMapAdapter extends TypeAdapter<Map<CustomRule, Object>> {
+
+        @Override
+        public void write(JsonWriter out, Map<CustomRule, Object> value) throws IOException {
+            out.beginObject();
+            for (Entry<CustomRule, Object> entry : value.entrySet()) {
+                out.name(entry.getKey().name());
+                out.value(entry.getValue().toString());
+            }
+            out.endObject();
+        }
+
+        @Override
+        public Map<CustomRule, Object> read(JsonReader in) throws IOException {
+            Map<CustomRule, Object> result = new HashMap<>();
+            in.beginObject();
+            while (in.hasNext()) {
+                CustomRule rule = CustomRule.valueOf(in.nextName());
+                result.put(rule, rule.unpackValue(in.nextString()));
+            }
+            in.endObject();
+            return result;
+        }
+    }
 
     public MessageParser() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
+        GsonBuilder builder = new GsonBuilder().disableHtmlEscaping();
+
+        builder.registerTypeAdapter(SetRuleMessage.class, new JsonDeserializer<SetRuleMessage>() {
+            @Override
+            public SetRuleMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                JsonObject obj = json.getAsJsonObject();
+                CustomRule rule = CustomRule.valueOf(obj.get("rule").getAsString());
+                return new SetRuleMessage(
+                        obj.get("gameId").getAsString(), rule,
+                        obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
+                );
+            }
+        });
+        gson = builder.create();
 
         registerMsgType(ErrorMessage.class);
         registerMsgType(HelloMessage.class);

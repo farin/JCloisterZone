@@ -28,7 +28,7 @@ public enum CustomRule {
 
     KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, _("Keep basic cloisters in the game.")),
 
-    CLOCK_PLAYER_TIME(null, Integer.class, "");
+    CLOCK_PLAYER_TIME(null, Integer.class, null);
 
 
     String label;

@@ -342,7 +342,7 @@ public class Game extends GameSettings implements EventProxy {
         for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
             //exclude finished == false -> just placed tile - it means do not check princess for magic portal
             //TODO very cryptic, refactor
-            if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+            if (!excludeFinished && hasCapability(PrincessCapability.class) && getBooleanValue(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
                 City princessCity = tile.getCityWithPrincess();
                 if (princessCity != null) {
                     continue;

@@ -45,6 +45,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
@@ -323,9 +324,11 @@ public class ControlPanel extends JPanel {
     @Subscribe
     public void handleClockUpdateEvent(ClockUpdateEvent ev) {
         timer.stop();
-        if (ev.isClockRunning()) {
+        if (ev.isClockRunning() && game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME) != null) {
             PlayerClock runningClock = ev.getRunningClockPlayer().getClock();
-            timer.setInitialDelay((int) runningClock.getTime() % 1000); //this solution is not much accurate - TODO fix
+            //this solution is not much accurate - TODO fix
+            //+clean time from roundtrip!!!
+            timer.setInitialDelay((int) runningClock.getTime() % 1000);
             timer.start();
         }
     }

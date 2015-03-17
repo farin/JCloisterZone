@@ -118,7 +118,7 @@ public class TilePackFactory {
 
     protected boolean isTunnelActive(Expansion expansion) {
         return expansion == Expansion.TUNNEL ||
-            (game.hasCapability(TunnelCapability.class) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
+            (game.hasCapability(TunnelCapability.class) && game.getBooleanValue(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
     }
 
     protected int getTileCount(Element card, String tileId) {

@@ -56,7 +56,7 @@ public class CityScoreContext extends PositionCollectingScoreContext {
     @Override
     public int getPoints(boolean completed) {
         int size = getPositions().size();
-        if (size <= 2 && getGame().hasRule(CustomRule.TINY_CITY_2_POINTS)) {
+        if (size <= 2 && getGame().getBooleanValue(CustomRule.TINY_CITY_2_POINTS)) {
             //small city can has pennant! (Abbey and Mayor)
             return size + pennants;
         }

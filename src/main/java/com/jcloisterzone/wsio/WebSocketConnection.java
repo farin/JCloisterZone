@@ -90,7 +90,7 @@ public class WebSocketConnection implements Connection {
 
             @Override
             public void onOpen(ServerHandshake arg0) {
-            	WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
+                WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             }
         };
         ws.connect();
@@ -102,13 +102,13 @@ public class WebSocketConnection implements Connection {
         pingFuture = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-            	WebSocketConnection.this.send(new PingMessage());
+                WebSocketConnection.this.send(new PingMessage());
             }
         }, pingInterval, pingInterval, TimeUnit.SECONDS);
     }
 
     @Override
-	public void send(WsMessage arg) {
+    public void send(WsMessage arg) {
         schedulePing();
         try {
             ws.send(parser.toJson(arg));
@@ -118,17 +118,17 @@ public class WebSocketConnection implements Connection {
     }
 
     @Override
-	public void close() {
+    public void close() {
         ws.close();
     }
 
     @Override
-	public String getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 
     @Override
-	public String getNickname() {
+    public String getNickname() {
         return nickname;
     }
 
@@ -141,10 +141,10 @@ public class WebSocketConnection implements Connection {
     }
 
     public MessageParser getParser() {
-		return parser;
-	}
+        return parser;
+    }
 
     public String getMaintenance() {
-		return maintenance;
-	}
+        return maintenance;
+    }
 }

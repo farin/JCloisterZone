@@ -108,7 +108,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new CornCirclePhase(game, gc));
         next = addPhase(next, new EscapePhase(game));
 
-        if (game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+        if (game.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
             addPhase(next, new DragonMovePhase(game, gc));
             next = addPhase(next, new DragonPhase(game));
         }
@@ -117,7 +117,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         next = addPhase(next, new ScorePhase(game));
         next = addPhase(next, new CastlePhase(game));
 
-        if (!game.hasRule(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+        if (!game.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
                addPhase(next, new DragonMovePhase(game, gc));
                next = addPhase(next, new DragonPhase(game));
         }
