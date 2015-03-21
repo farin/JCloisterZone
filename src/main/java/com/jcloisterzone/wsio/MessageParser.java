@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
@@ -65,7 +66,13 @@ public final class MessageParser {
             out.beginObject();
             for (Entry<CustomRule, Object> entry : value.entrySet()) {
                 out.name(entry.getKey().name());
-                out.value(entry.getValue().toString());
+                if (entry.getValue() instanceof Boolean) {
+                	out.value((Boolean)entry.getValue());
+                } else if (entry.getValue() instanceof Integer) {
+                	out.value((Integer)entry.getValue());
+                } else {
+                	out.value(entry.getValue().toString());
+                }
             }
             out.endObject();
         }
@@ -76,7 +83,14 @@ public final class MessageParser {
             in.beginObject();
             while (in.hasNext()) {
                 CustomRule rule = CustomRule.valueOf(in.nextName());
-                result.put(rule, rule.unpackValue(in.nextString()));
+                JsonToken p = in.peek();
+                if (p == JsonToken.BOOLEAN) {
+                	result.put(rule, in.nextBoolean());
+                } else if (p == JsonToken.NUMBER) {
+                	result.put(rule, in.nextInt());
+                } else {
+                	result.put(rule, rule.unpackValue(in.nextString()));
+                }
             }
             in.endObject();
             return result;

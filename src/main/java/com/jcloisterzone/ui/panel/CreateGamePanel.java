@@ -250,7 +250,7 @@ public class CreateGamePanel extends JPanel {
         Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
         timeLimitChbox = new JCheckBox(_("player time limit"), value != null);
         timeLimitSpinner = new JSpinner();
-        timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value, 0, 300, 1);
+        timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value / 60, 0, 300, 1);
         timeLimitSpinner.setModel(timeLimitModel);
         if (value == null) {
             timeLimitSpinner.setEnabled(false);
