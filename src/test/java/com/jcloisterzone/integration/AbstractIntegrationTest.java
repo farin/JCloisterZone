@@ -6,8 +6,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.util.concurrent.FakeTimeLimiter;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
