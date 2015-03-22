@@ -101,5 +101,4 @@ public class GameMessage implements WsMessage, WsInGameMessage {
 	public void setPasswordProtected(boolean passwordProtected) {
 		this.passwordProtected = passwordProtected;
 	}
-
 }

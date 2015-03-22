@@ -223,6 +223,12 @@ public class ClientMessageListener implements MessageListener {
         gc.setReportingTool(conn.getReportingTool());
         gc.setChannel(msg.getChannel());
         gc.setPasswordProtected(msg.isPasswordProtected());
+        if (msg instanceof ChannelMessageGame) {
+	        for (RemoteClient client : ((ChannelMessageGame)msg).getClients()) {
+	        	if (client.getState() == null) client.setState(ClientState.ACTIVE);
+	        	gc.getRemoteClients().add(client);
+	        }
+        }
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
         if (msg.getSlots() != null) {

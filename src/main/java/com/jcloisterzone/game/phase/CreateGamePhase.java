@@ -250,8 +250,7 @@ public class CreateGamePhase extends ServerAwarePhase {
 
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_START, getSnapshot()));
         preplaceTiles();
-        game.post(new PlayerTurnEvent(game.getTurnPlayer()));
-        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        game.post(new PlayerTurnEvent(game.getTurnPlayer()));;
         toggleClock(game.getTurnPlayer());
         next();
     }
