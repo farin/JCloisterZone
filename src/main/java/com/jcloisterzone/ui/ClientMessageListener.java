@@ -129,7 +129,7 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
-        //empty for now
+    	client.onWebsocketClose(code, reason, remote);
     }
 
     @Override

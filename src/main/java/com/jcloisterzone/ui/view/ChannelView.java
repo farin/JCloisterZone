@@ -37,7 +37,6 @@ public class ChannelView extends AbstractUiView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cc.getConnection().close();
-				client.getJMenuBar().setItemEnabled(MenuItem.DISCONNECT, false);
 				client.mountView(new StartView(client));
 			}
 		});
@@ -52,6 +51,7 @@ public class ChannelView extends AbstractUiView {
 	public void hide(UiView nextView, Object nextCtx) {
 		MenuBar menu = client.getJMenuBar();
 		if (!(nextView instanceof GameSetupView)) {
+			menu.setItemEnabled(MenuItem.DISCONNECT, false);
 			menu.setItemEnabled(MenuItem.LOAD, true);
 			menu.setItemEnabled(MenuItem.NEW_GAME, true);
 			menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
@@ -70,6 +70,11 @@ public class ChannelView extends AbstractUiView {
             }
 		}
 		return false;
+	}
+
+	@Override
+	public void onWebsocketClose(int code, String reason, boolean remote) {
+		client.mountView(new StartView(client));
 	}
 
 }

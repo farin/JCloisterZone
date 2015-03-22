@@ -274,22 +274,24 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     @Override
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+    	String message;
+    	if (gc.getChannel() == null) {
+            //show workaround hint for standalone games only (channel has continue feature)
+            message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
+        } else {
+            message = _("Connection lost");
+        }
+    	getGridPanel().showErrorMessage(message);
+    }
+
+    @Override
     public void onWebsocketError(Exception ex) {
         String message = ex.getMessage();
-        if (ex instanceof WebsocketNotConnectedException) {
-            if (gc.getChannel() == null) {
-                //show workaround hint for stanalone games only (channel has continue feature)
-                message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
-            } else {
-                message = _("Connection lost");
-            }
-        } else {
-            message = ex.getMessage();
-            if (message == null || message.length() == 0) {
-                message = ex.getClass().getSimpleName();
-            }
-            logger.error(message, ex);
+        if (message == null || message.length() == 0) {
+            message = ex.getClass().getSimpleName();
         }
+        logger.error(message, ex);
         getGridPanel().showErrorMessage(message);
     }
 

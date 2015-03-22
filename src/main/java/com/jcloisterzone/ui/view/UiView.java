@@ -12,4 +12,5 @@ public interface UiView {
 	boolean dispatchKeyEvent(KeyEvent e);
 
 	void onWebsocketError(Exception ex);
+	void onWebsocketClose(int code, String reason, boolean remote);
 }

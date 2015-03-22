@@ -4,7 +4,8 @@
 
 * game clock
 * fix #58: wrong nickname in pre-game chat 
-* fix: chat panel now auto hides again 
+* fix: chat panel now auto hides again
+* online play: fixed "continue" and wrong player order and names when game created with RANDOM_SEATING_ORDER
 
 
 ## Roadmap

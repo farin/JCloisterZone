@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui;
 
-import java.awt.Color;
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -44,12 +45,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
@@ -69,9 +68,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
-
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -534,6 +530,10 @@ public class Client extends JFrame {
 
     public void onWebsocketError(Exception ex) {
         view.onWebsocketError(ex);
+    }
+
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+    	view.onWebsocketClose(code, reason, remote);
     }
 
     public void onUnhandledWebsocketError(Exception ex) {

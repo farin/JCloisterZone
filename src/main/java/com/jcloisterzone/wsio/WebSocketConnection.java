@@ -47,16 +47,18 @@ public class WebSocketConnection implements Connection {
         ws = new WebSocketClient(uri) {
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                if (pingFuture != null) {
-                    pingFuture.cancel(false);
-                    pingFuture = null;
-                }
+            	cancelPing();
                 listener.onWebsocketClose(code, reason, remote);
             }
 
             @Override
             public void onError(Exception ex) {
-                listener.onWebsocketError(ex);
+            	if (ex instanceof WebsocketNotConnectedException) {
+            		cancelPing();
+                    listener.onWebsocketClose(0, ex.getMessage(), true);
+            	} else {
+            		listener.onWebsocketError(ex);
+            	}
             }
 
             @Override
@@ -96,6 +98,13 @@ public class WebSocketConnection implements Connection {
         ws.connect();
     }
 
+    private void cancelPing() {
+    	if (pingFuture != null) {
+            pingFuture.cancel(false);
+            pingFuture = null;
+        }
+    }
+
     private void schedulePing() {
         if (pingInterval == 0) return;
         if (pingFuture != null) pingFuture.cancel(false);
@@ -113,7 +122,7 @@ public class WebSocketConnection implements Connection {
         try {
             ws.send(parser.toJson(arg));
         } catch (WebsocketNotConnectedException ex) {
-            listener.onWebsocketError(ex);
+            listener.onWebsocketClose(0, ex.getMessage(), true);
         }
     }
 
