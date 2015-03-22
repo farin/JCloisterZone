@@ -24,7 +24,8 @@ public class InvokeInSwingUiAdapter {
         this.uiEventBus = eventBus;
     }
 
-    @Subscribe public void handleAllEvents(Event event) {
+    @Subscribe
+    public void handleAllEvents(Event event) {
         logger.info("event: {}", event);
         if (reportingTool != null) {
             reportingTool.report("event: " + event);

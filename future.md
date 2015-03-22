@@ -4,6 +4,7 @@
 
 * game clock
 * fix #58: wrong nickname in pre-game chat 
+* fix: chat panel now auto hides again 
 
 
 ## Roadmap

@@ -127,11 +127,6 @@ public class MainPanel extends JPanel {
     }
 
     public void started(Snapshot snapshot) {
-        animationService.clearAll();
-        animationService.setGridPanel(null);
-        removeAll();
-        setVisible(false);
-
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel, gc);
@@ -206,7 +201,6 @@ public class MainPanel extends JPanel {
         gridPanel.addLayer(placementHistoryLayer, false);
 
         add(gridPanel);
-        setVisible(true);
     }
 
     public void toggleRecentHistory(boolean show) {
