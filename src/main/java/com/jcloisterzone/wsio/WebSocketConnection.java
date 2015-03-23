@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.wsio.message.HelloMessage;
+import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.message.PingMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
@@ -26,7 +27,8 @@ public class WebSocketConnection implements Connection {
     private ReportingTool reportingTool;
 
     private MessageParser parser = new MessageParser();
-    private WebSocketClient ws;
+    private WebSocketClientImpl ws;
+    private URI uri;
     private final MessageListener listener;
 
     private String sessionId;
@@ -39,63 +41,106 @@ public class WebSocketConnection implements Connection {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> pingFuture;
+    private ScheduledFuture<?> reconnectFuture;
 
-    public WebSocketConnection(final String username, Config config, URI uri, MessageListener _listener) {
+    class WebSocketClientImpl extends WebSocketClient {
+    	private String username;
+    	private String reconnectGameId;
+
+		public WebSocketClientImpl(URI serverURI, String username, String reconnectGameId) {
+			super(serverURI);
+			this.username = username;
+			this.reconnectGameId = reconnectGameId;
+		}
+
+		@Override
+        public void onClose(int code, String reason, boolean remote) {
+        	cancelPing();
+            listener.onWebsocketClose(code, reason, remote);
+        }
+
+        @Override
+        public void onError(Exception ex) {
+        	if (reconnectFuture != null) return; //don't handle connection refuse while trying to reconnect
+        	if (ex instanceof WebsocketNotConnectedException) {
+        		cancelPing();
+                listener.onWebsocketClose(0, ex.getMessage(), true);
+        	} else {
+        		listener.onWebsocketError(ex);
+        	}
+        }
+
+        @Override
+        public void onMessage(String payload) {
+            WsMessage msg = parser.fromJson(payload);
+            if (logger.isInfoEnabled()) {
+                if (msg instanceof RmiMessage) {
+                    logger.info(((RmiMessage)msg).toString());
+                } else {
+                    logger.info(payload);
+                }
+            }
+            if (reportingTool != null) {
+                if (msg instanceof RmiMessage) {
+                    reportingTool.report(((RmiMessage)msg).toString());
+                } else {
+                    reportingTool.report(payload);
+                }
+            }
+
+            if (msg instanceof WelcomeMessage) {
+                WelcomeMessage welcome = (WelcomeMessage) msg;
+                sessionId = welcome.getSessionId();
+                nickname = welcome.getNickname();
+                pingInterval = welcome.getPingInterval();
+                maintenance = welcome.getMaintenance();
+            }
+            schedulePing();
+            listener.onWebsocketMessage(msg);
+        }
+
+        @Override
+        public void onOpen(ServerHandshake arg0) {
+            WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
+            if (reconnectGameId != null) {
+            	//TODO test and uncomment
+            	//WebSocketConnection.this.send(new JoinGameMessage(reconnectGameId));
+            }
+        }
+    }
+
+    public WebSocketConnection(final String username, Config config, URI uri, MessageListener listener) {
         clientId = config.getClient_id();
         secret = config.getSecret();
-        this.listener = _listener;
-        ws = new WebSocketClient(uri) {
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-            	cancelPing();
-                listener.onWebsocketClose(code, reason, remote);
-            }
-
-            @Override
-            public void onError(Exception ex) {
-            	if (ex instanceof WebsocketNotConnectedException) {
-            		cancelPing();
-                    listener.onWebsocketClose(0, ex.getMessage(), true);
-            	} else {
-            		listener.onWebsocketError(ex);
-            	}
-            }
-
-            @Override
-            public void onMessage(String payload) {
-                WsMessage msg = parser.fromJson(payload);
-                if (logger.isInfoEnabled()) {
-                    if (msg instanceof RmiMessage) {
-                        logger.info(((RmiMessage)msg).toString());
-                    } else {
-                        logger.info(payload);
-                    }
-                }
-                if (reportingTool != null) {
-                    if (msg instanceof RmiMessage) {
-                        reportingTool.report(((RmiMessage)msg).toString());
-                    } else {
-                        reportingTool.report(payload);
-                    }
-                }
-
-                if (msg instanceof WelcomeMessage) {
-                    WelcomeMessage welcome = (WelcomeMessage) msg;
-                    sessionId = welcome.getSessionId();
-                    nickname = welcome.getNickname();
-                    pingInterval = welcome.getPingInterval();
-                    maintenance = welcome.getMaintenance();
-                }
-                schedulePing();
-                listener.onWebsocketMessage(msg);
-            }
-
-            @Override
-            public void onOpen(ServerHandshake arg0) {
-                WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
-            }
-        };
+        this.listener = listener;
+        this.uri = uri;
+        ws = new WebSocketClientImpl(uri, username, null);
         ws.connect();
+    }
+
+    @Override
+    public void reconnect(final String gameId) {
+    	reconnectFuture = scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+            	System.err.println("Reconnectiong...");
+            	ws = new WebSocketClientImpl(uri, nickname, gameId);
+                try {
+					if (ws.connectBlocking()) {
+						stopReconnecting();
+					}
+				} catch (InterruptedException e) {
+				}
+            }
+        }, 1, 5, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void stopReconnecting() {
+    	if (reconnectFuture != null) {
+    		reconnectFuture.cancel(false);
+    		reconnectFuture = null;
+    	}
     }
 
     private void cancelPing() {
@@ -129,6 +174,11 @@ public class WebSocketConnection implements Connection {
     @Override
     public void close() {
         ws.close();
+    }
+
+    @Override
+    public boolean isClosed() {
+    	return ws.isClosed() || ws.isClosing();
     }
 
     @Override

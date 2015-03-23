@@ -231,6 +231,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer.cancel();
         gc.unregister(chatPanel);
         gc.unregister(this);
+        gc.getConnection().stopReconnecting();
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemEnabled(MenuItem.FARM_HINTS, false);
@@ -281,6 +282,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
         } else {
             message = _("Connection lost");
+            if (remote) {
+            	gc.getConnection().reconnect(game.getGameId());
+            }
         }
     	getGridPanel().showErrorMessage(message);
     }

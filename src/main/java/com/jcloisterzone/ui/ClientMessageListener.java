@@ -129,6 +129,8 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
+    	channelControllers.clear();
+    	gameControllers.clear();
     	client.onWebsocketClose(code, reason, remote);
     }
 
@@ -360,6 +362,7 @@ public class ClientMessageListener implements MessageListener {
             GameController gc = (GameController) getController(msg.getGame());
             if (gc != null) {
                 gc.setGameState(msg.getGame().getState());
+                logger.warn("Unexpected state - should never happen");
                 return; //can't happen now - but eq. rename etc is possible in future
             }
             handleGame(msg.getGame(), true);

@@ -32,4 +32,19 @@ public class MutedConnection implements Connection {
 		return conn;
 	}
 
+	@Override
+	public void reconnect(String gameId) {
+		conn.reconnect(gameId);
+	}
+
+	@Override
+	public void stopReconnecting() {
+		conn.stopReconnecting();
+	}
+
+	@Override
+	public boolean isClosed() {
+		return conn.isClosed();
+	}
+
 }

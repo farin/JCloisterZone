@@ -335,15 +335,20 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         if (getChannel() == null) {
             client.mountView(new StartView(client));
         } else {
-        	ClientMessageListener cml = client.getClientMessageListener();
-            getConnection().send(new LeaveGameMessage(game.getGameId()));
-            ChannelController ctrl = cml.getChannelControllers().get(channel);
-            client.mountView(new ChannelView(client, ctrl));
+        	if (getConnection().isClosed()) {
+        		//TODO stop reconnecting
+        		client.mountView(new StartView(client));
+        	} else {
+	        	ClientMessageListener cml = client.getClientMessageListener();
+	            getConnection().send(new LeaveGameMessage(game.getGameId()));
+	            ChannelController ctrl = cml.getChannelControllers().get(channel);
+	            client.mountView(new ChannelView(client, ctrl));
 
-            List<GameController> gcs = cml.getGameControllers(channel);
-            ctrl.getEventProxy().post(
-        		new GameListChangedEvent(gcs.toArray(new GameController[gcs.size()]))
-        	);
+	            List<GameController> gcs = cml.getGameControllers(channel);
+	            ctrl.getEventProxy().post(
+	        		new GameListChangedEvent(gcs.toArray(new GameController[gcs.size()]))
+	        	);
+        	}
         }
     }
 
