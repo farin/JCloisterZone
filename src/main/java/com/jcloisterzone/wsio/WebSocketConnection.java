@@ -36,6 +36,7 @@ public class WebSocketConnection implements Connection {
     private String secret; //TODO will be used for message signing
     private String nickname;
 
+    private boolean closedByUser;
     private int pingInterval = 0;
     private String maintenance;
 
@@ -56,7 +57,7 @@ public class WebSocketConnection implements Connection {
 		@Override
         public void onClose(int code, String reason, boolean remote) {
         	cancelPing();
-            listener.onWebsocketClose(code, reason, remote);
+            listener.onWebsocketClose(code, reason, remote && !closedByUser);
         }
 
         @Override
@@ -103,8 +104,7 @@ public class WebSocketConnection implements Connection {
         public void onOpen(ServerHandshake arg0) {
             WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             if (reconnectGameId != null) {
-            	//TODO test and uncomment
-            	//WebSocketConnection.this.send(new JoinGameMessage(reconnectGameId));
+            	WebSocketConnection.this.send(new JoinGameMessage(reconnectGameId));
             }
         }
     }
@@ -123,7 +123,6 @@ public class WebSocketConnection implements Connection {
     	reconnectFuture = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-            	System.err.println("Reconnectiong...");
             	ws = new WebSocketClientImpl(uri, nickname, gameId);
                 try {
 					if (ws.connectBlocking()) {
@@ -132,7 +131,7 @@ public class WebSocketConnection implements Connection {
 				} catch (InterruptedException e) {
 				}
             }
-        }, 1, 5, TimeUnit.SECONDS);
+        }, 1, 4, TimeUnit.SECONDS);
     }
 
     @Override
@@ -173,6 +172,7 @@ public class WebSocketConnection implements Connection {
 
     @Override
     public void close() {
+    	closedByUser = true;
         ws.close();
     }
 

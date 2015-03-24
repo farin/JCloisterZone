@@ -130,7 +130,8 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
             boolean showPlayAgain = client.getLocalServer() != null;
             gameView.setGameRunning(false);
-            if (gameView.getChatPanel() != null) { //TODO allow chat after game is over
+            //TODO allow chat after game also for standalone server
+            if (getChannel() == null && gameView.getChatPanel() != null) {
                 gameView.getGridPanel().remove(gameView.getChatPanel());
             }
             client.closeGame(true);

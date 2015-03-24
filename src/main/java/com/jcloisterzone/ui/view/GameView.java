@@ -281,9 +281,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             //show workaround hint for standalone games only (channel has continue feature)
             message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
         } else {
-            message = _("Connection lost");
+            message = _("Connection lost") + ". " + _("Reconnecting...");
             if (remote) {
-            	gc.getConnection().reconnect(game.getGameId());
+            	gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
             }
         }
     	getGridPanel().showErrorMessage(message);

@@ -50,7 +50,7 @@ public class ChannelView extends AbstractUiView {
 	@Override
 	public void hide(UiView nextView, Object nextCtx) {
 		MenuBar menu = client.getJMenuBar();
-		if (!(nextView instanceof GameSetupView)) {
+		if (nextView instanceof StartView) {
 			menu.setItemEnabled(MenuItem.DISCONNECT, false);
 			menu.setItemEnabled(MenuItem.LOAD, true);
 			menu.setItemEnabled(MenuItem.NEW_GAME, true);

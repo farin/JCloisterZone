@@ -3,9 +3,12 @@
 ## Done in current dev
 
 * game clock
+* better broken connection indicator
 * fix #58: wrong nickname in pre-game chat 
 * fix: chat panel now auto hides again
 * online play: fixed "continue" and wrong player order and names when game created with RANDOM_SEATING_ORDER
+* online play: auto reconnect and join game when connection is lost 
+* online play: chat is available after game ends
 
 
 ## Roadmap
