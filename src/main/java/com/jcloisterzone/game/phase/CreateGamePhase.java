@@ -138,9 +138,11 @@ public class CreateGamePhase extends ServerAwarePhase {
 
     private void createPlayers() {
         List<Player> players = new ArrayList<>();
-        Arrays.sort(slots, new PlayerSlotComparator());
-        for (int i = 0; i < slots.length; i++) {
-            PlayerSlot slot = slots[i];
+        PlayerSlot[] sorted = new PlayerSlot[slots.length];
+        System.arraycopy(slots, 0, sorted, 0, slots.length);
+        Arrays.sort(sorted, new PlayerSlotComparator());
+        for (int i = 0; i < sorted.length; i++) {
+            PlayerSlot slot = sorted[i];
             if (slot.isOccupied()) {
                 Player player = new Player(slot.getNickname(), i, slot);
                 players.add(player);

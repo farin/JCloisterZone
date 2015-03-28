@@ -402,8 +402,8 @@ public class ClientMessageListener implements MessageListener {
                     clients.set(idx, rc);
                 }
             }
-            ArrayList<RemoteClient> frozedList = new ArrayList<RemoteClient>(clients);
-            controller.getEventProxy().post(new ClientListChangedEvent(frozedList));
+            ArrayList<RemoteClient> frozenList = new ArrayList<RemoteClient>(clients);
+            controller.getEventProxy().post(new ClientListChangedEvent(frozenList));
         } else {
             logger.warn("No controller for message {}", msg);
         }

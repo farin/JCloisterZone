@@ -3,6 +3,8 @@ package com.jcloisterzone.ui;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Container;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -132,6 +134,27 @@ public class Client extends JFrame {
         return view;
     }
 
+    private void initWindowSize() {
+    	String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
+        if (windowSize == null || "fullscreen".equals(windowSize)) {
+            this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        } else if ("L".equals(windowSize) || "R".equals(windowSize)) {
+        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        	int dw = gd.getDisplayMode().getWidth();
+        	int dh = gd.getDisplayMode().getHeight();
+        	setSize(dw/2, dh);
+        	setLocation("L".equals(windowSize) ? 0 : dw/2, 0);
+        } else {
+            String[] sizes = windowSize.split("x");
+            if (sizes.length == 2) {
+                UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+            } else {
+                logger.warn("Invalid configuration value for windows_size");
+                this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            }
+        }
+    }
+
     public void init() {
         setLocale(config.getLocaleObject());
         figureTheme = new FigureTheme(this);
@@ -160,19 +183,7 @@ public class Client extends JFrame {
 
         mountView(new StartView(this));
         this.pack();
-
-        String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
-        if (windowSize == null || "fullscreen".equals(windowSize)) {
-            this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        } else {
-            String[] sizes = windowSize.split("x");
-            if (sizes.length == 2) {
-                UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
-            } else {
-                logger.warn("Invalid configuration value for windows_size");
-                this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-            }
-        }
+        initWindowSize();
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
