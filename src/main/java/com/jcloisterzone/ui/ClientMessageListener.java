@@ -313,8 +313,15 @@ public class ClientMessageListener implements MessageListener {
         handleGameSetup(msg.getGameSetup());
         if (msg.getSlots() != null) {
             createGameSlots(gc, msg);
+            CreateGamePhase phase = null;
+            if (!gc.getGame().isStarted()) {
+            	phase = (CreateGamePhase)gc.getGame().getPhase();
+            }
             for (SlotMessage slotMsg : msg.getSlots()) {
                 handleSlot(slotMsg);
+                if (phase != null) {
+                	phase.handleSlotMessage(slotMsg);
+                }
             }
         }
 
