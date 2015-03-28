@@ -20,7 +20,6 @@ public class PlayerSlot implements Serializable {
     private String nickname;
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
-    private boolean disconnected;
 
     private transient PlayerColor colors;
     private transient AiPlayer aiPlayer; //ai player instance, set only on onwner host
@@ -99,12 +98,9 @@ public class PlayerSlot implements Serializable {
     }
 
     public boolean isDisconnected() {
-        return disconnected;
+        return sessionId == null;
     }
 
-    public void setDisconnected(boolean disconnected) {
-        this.disconnected = disconnected;
-    }
 
     public AiPlayer getAiPlayer() {
         return aiPlayer;

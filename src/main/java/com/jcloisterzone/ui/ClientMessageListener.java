@@ -178,10 +178,10 @@ public class ClientMessageListener implements MessageListener {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
         slot.setSessionId(slotMsg.getOwner());
-        if (slotMsg.getOwner() == null) {
+        if (slotMsg.getSerial() == null) {
             slot.setState(SlotState.OPEN);
         } else {
-            slot.setState(slotMsg.getOwner().equals(conn.getSessionId()) ? SlotState.OWN : SlotState.REMOTE);
+            slot.setState(conn.getSessionId().equals(slotMsg.getOwner()) ? SlotState.OWN : SlotState.REMOTE);
         }
         slot.setSerial(slotMsg.getSerial());
         slot.setAiClassName(slotMsg.getAiClassName());

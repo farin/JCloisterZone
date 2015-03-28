@@ -7,6 +7,7 @@ public class ErrorMessage implements WsMessage {
 
     public static final String BAD_VERSION = "badVersion";
     public static final String INVALID_PASSWORD = "invalidPassword";
+    public static final String NOT_ALLOWED = "notAllowed";
 
     private String code;
     private String message;

@@ -136,6 +136,9 @@ public class Client extends JFrame {
 
     private void initWindowSize() {
     	String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
+    	if (System.getProperty("windowSize") != null) {
+    		windowSize = System.getProperty("windowSize");
+    	}
         if (windowSize == null || "fullscreen".equals(windowSize)) {
             this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         } else if ("L".equals(windowSize) || "R".equals(windowSize)) {
