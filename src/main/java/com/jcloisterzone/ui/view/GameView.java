@@ -45,6 +45,7 @@ import com.jcloisterzone.ui.dialog.GameSetupDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
@@ -228,7 +229,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer.cancel();
         gc.unregister(chatPanel);
         gc.unregister(this);
-        gc.getConnection().stopReconnecting();
+        Connection conn = gc.getConnection();
+        if (conn != null) conn.stopReconnecting();
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemEnabled(MenuItem.FARM_HINTS, false);

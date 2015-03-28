@@ -237,7 +237,7 @@ public class Client extends JFrame {
 
     //TODO should be referenced from Controller
     public Connection getConnection() {
-        return clientMessageListener.getConnection();
+        return clientMessageListener == null ? null : clientMessageListener.getConnection();
     }
 
     public ClientMessageListener getClientMessageListener() {
