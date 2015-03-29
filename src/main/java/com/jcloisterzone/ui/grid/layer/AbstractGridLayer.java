@@ -65,7 +65,8 @@ public abstract class AbstractGridLayer implements GridLayer {
         return new GridMouseAdapter(gridPanel, listener);
     }
 
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         return visible;
     }
 

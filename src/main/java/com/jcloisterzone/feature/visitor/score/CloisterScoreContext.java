@@ -13,23 +13,22 @@ import com.google.common.primitives.Ints;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 
-public class CloisterScoreContext extends SelfReturningVisitor implements CompletableScoreContext {
+public class CloisterScoreContext extends AbstractScoreContext implements CompletableScoreContext {
 
-    private int neigbouringTiles;
+    private int neigbouringTilesCount;
     protected Cloister cloister;
-    protected Game game;
 
 
     public CloisterScoreContext(Game game) {
-        this.game = game;
+        super(game);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
 
     @Override
     public int getPoints() {
-        return neigbouringTiles + 1;
+        return neigbouringTilesCount + 1 + getLittleBuildingPoints();
     }
 
     @Override
@@ -66,7 +65,14 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
     public boolean visit(Feature feature) {
         cloister = (Cloister) feature;
         Position pos = cloister.getTile().getPosition();
-        neigbouringTiles = game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
+        List<Tile> neigbouringTiles = game.getBoard().getAdjacentAndDiagonalTiles(pos);
+        neigbouringTilesCount = neigbouringTiles.size();
+        if (lbCap != null) {
+        	collectLittleBuildings(cloister.getTile().getPosition());
+        	for (Tile tile : neigbouringTiles) {
+        		collectLittleBuildings(tile.getPosition());
+        	}
+        }
         return true;
     }
 
@@ -100,7 +106,8 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
         return owners;
     }
 
-    public Map<Player, Integer> getPowers() {
+    @Override
+	public Map<Player, Integer> getPowers() {
         Collection<Follower> followers = getFollowers();
         int size = followers.size();
         if (size == 0) return Collections.emptyMap();
@@ -130,7 +137,9 @@ public class CloisterScoreContext extends SelfReturningVisitor implements Comple
 
     @Override
     public boolean isCompleted() {
-        return neigbouringTiles == 8;
+        return neigbouringTilesCount == 8;
     }
+
+
 
 }

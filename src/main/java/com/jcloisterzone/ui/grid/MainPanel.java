@@ -8,6 +8,7 @@ import java.awt.Image;
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -15,6 +16,7 @@ import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.LittleBuildingEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.ScoreEvent;
@@ -334,6 +336,19 @@ public class MainPanel extends JPanel {
         Tile tile = gridPanel.getTile(ev.getPosition());
         ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
         meepleLayer.addPermanentImage(ev.getPosition(), offset, tunnelPiece);
+    }
+
+    @Subscribe
+    public void littleBuildingPlaced(LittleBuildingEvent ev) {
+    	Image img = client.getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
+    	ImmutablePoint offset = new ImmutablePoint(65, 35);
+    	double xScale = 1.15, yScale = 1.15;
+    	//TODO tightly coupled with current theme, todo change image size in theme
+    	if (ev.getBuilding() == LittleBuilding.TOWER) {
+    		xScale = 1.0;
+    		yScale = 0.7;
+    	}
+    	meepleLayer.addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
     }
 
     @Subscribe

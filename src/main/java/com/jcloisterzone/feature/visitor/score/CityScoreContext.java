@@ -71,7 +71,7 @@ public class CityScoreContext extends PositionCollectingScoreContext {
                 pointsPerUnit--;
             }
         }
-        return getMageAndWitchPoints(pointsPerUnit * (size + pennants));
+        return getMageAndWitchPoints(pointsPerUnit * (size + pennants)) + getLittleBuildingPoints();
     }
 
     public int[] getCityTradeResources() {

@@ -5,6 +5,7 @@
 * game clock
 * better broken connection indicator
 * auto reconnect and join game when connection is lost
+* little buildings expansion
 * fix #58: wrong nickname in pre-game chat 
 * fix: chat panel now auto hides again
 * fix #123: after selecting "play again", game dialog don't hide ai unsupported expansion

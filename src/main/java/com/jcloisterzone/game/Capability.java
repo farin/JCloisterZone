@@ -49,7 +49,7 @@ public abstract class Capability {
     protected Board getBoard() {
         return game.getBoard();
     }
-    protected Tile getTile() {
+    protected Tile getCurrentTile() {
         return game.getCurrentTile();
     }
 

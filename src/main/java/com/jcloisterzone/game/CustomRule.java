@@ -28,6 +28,8 @@ public enum CustomRule {
 
     KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, _("Keep basic cloisters in the game.")),
 
+    BULDINGS_DIFFERENT_VALUE(Expansion.LITTLE_BUILDINGS, Boolean.class, _("Add 3/2/1 points for tower/house/shed.")),
+
     CLOCK_PLAYER_TIME(null, Integer.class, null);
 
 
