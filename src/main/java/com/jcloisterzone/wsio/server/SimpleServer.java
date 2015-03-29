@@ -147,7 +147,7 @@ public class SimpleServer extends WebSocketServer  {
                     }
                 }
                 slot.setNickname(player.getNick());
-                slot.setOwner(HOST_SESSION_PLACEHOLDER);
+                slot.setAutoAssignClientId(player.getSlot().getClientId());
                 maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
                 slot.setSerial(player.getSlot().getSerial());
             }
@@ -167,9 +167,7 @@ public class SimpleServer extends WebSocketServer  {
             ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
             slot.setNickname(player.getNick());
             slot.setAiClassName(player.getSlot().getAiClassName());
-            if (player.getSlot().getState() == SlotState.OWN || slot.getAiClassName() != null) {
-                slot.setOwner(HOST_SESSION_PLACEHOLDER);
-            }
+            slot.setAutoAssignClientId(player.getSlot().getClientId());
             slots[slotNumber] = slot;
         }
     }
@@ -182,11 +180,11 @@ public class SimpleServer extends WebSocketServer  {
         if (conn == null) return;
 
         for (ServerPlayerSlot slot : slots) {
-            if (slot != null && conn.getSessionId().equals(slot.getOwner())) {
+            if (slot != null && conn.getSessionId().equals(slot.getSessionId())) {
             	if (!gameStarted) {
             		leaveSlot(slot);
             	} else {
-            		slot.setOwner(null);
+            		slot.setSessionId(null);
             		broadcast(newSlotMessage(slot), false);
             	}
             }
@@ -215,7 +213,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
-        SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getOwner(), slot.getNickname());
+        SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         msg.setSupportedExpansions(slot.getSupportedExpansions());
         return msg;
@@ -264,6 +262,16 @@ public class SimpleServer extends WebSocketServer  {
     	return false;
     }
 
+    private boolean shouldAutoAssign(HelloMessage msg, String sessionId, ServerPlayerSlot slot) {
+    	if (slot == null || slot.getSessionId() != null) return false;
+    	if (gameStarted) {
+    		return msg.getClientId().equals(slot.getClientId()) && msg.getSecret().equals(slot.getSecret());
+    	} else {
+    		boolean isHostClient = msg.getClientId().equals(hostClientId);
+    		return msg.getClientId().equals(slot.getAutoAssignClientId()) || (isHostClient && slot.getAiClassName() != null);
+    	}
+    }
+
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
         if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
@@ -283,21 +291,13 @@ public class SimpleServer extends WebSocketServer  {
         ServerRemoteClient client = new ServerRemoteClient(sessionId, nickname, ClientState.ACTIVE);
         client.setClientId(msg.getClientId());
         client.setSecret(msg.getSecret());
-        if (!gameStarted && msg.getClientId().equals(hostClientId)) {
-        	for (ServerPlayerSlot slot : slots) {
-                if (slot != null && HOST_SESSION_PLACEHOLDER.equals(slot.getOwner())) {
-                    slot.setOwner(sessionId);
-                }
-            }
-        }
-        if (gameStarted) {
-        	for (ServerPlayerSlot slot : slots) {
-        		if (slot != null && slot.getOwner() == null && msg.getClientId().equals(slot.getClientId()) &&
-        				msg.getSecret().equals(slot.getSecret())) {
-        			slot.setOwner(sessionId);
-        			broadcast(newSlotMessage(slot), false);
-        		}
-        	}
+
+    	for (ServerPlayerSlot slot : slots) {
+    		if (shouldAutoAssign(msg, sessionId, slot)) {
+    			slot.setClientId(msg.getClientId());
+        		slot.setSessionId(sessionId);
+        		broadcast(newSlotMessage(slot), false);
+    		}
         }
 
         //add after broadcasting slot update
@@ -352,7 +352,7 @@ public class SimpleServer extends WebSocketServer  {
         }
         slot.setNickname(msg.getNickname());
         slot.setAiClassName(msg.getAiClassName());
-        slot.setOwner(sessionId);
+        slot.setSessionId(sessionId);
         slot.setSupportedExpansions(msg.getSupportedExpansions());
         slot.setClientId(client.getClientId());
         slot.setSecret(client.getSecret());
@@ -366,7 +366,7 @@ public class SimpleServer extends WebSocketServer  {
             slot.setSupportedExpansions(null);
         }
         slot.setSerial(null);
-        slot.setOwner(null);
+        slot.setSessionId(null);
         slot.setClientId(null);
         slot.setSecret(null);
         broadcast(newSlotMessage(slot), false);

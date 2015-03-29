@@ -249,34 +249,37 @@ public class CreateGamePanel extends JPanel {
 
         Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
         timeLimitChbox = new JCheckBox(_("player time limit"), value != null);
+        timeLimitChbox.setEnabled(mutableSlots);
         timeLimitSpinner = new JSpinner();
         timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value / 60, 0, 300, 1);
         timeLimitSpinner.setModel(timeLimitModel);
+        timeLimitSpinner.setEnabled(mutableSlots);
         if (value == null) {
             timeLimitSpinner.setEnabled(false);
         }
         clockPanel.add(timeLimitChbox);
         clockPanel.add(timeLimitSpinner, "w 40");
         clockPanel.add(new JLabel("minutes"), "gapleft 4");
-        timeLimitChbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
-                client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, timeLimitChbox.isSelected() ? 60 * timeLimitModel.getNumber().intValue() : null));
-            }
-        });
-        timeLimitSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (timeLimitChbox.isSelected()) {
-                    Integer value = timeLimitModel.getNumber().intValue() * 60;
-                    if (value != game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME)) {
-                        client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, value));
-                    }
-                }
-            }
-        });
-
+        if (mutableSlots) {
+	        timeLimitChbox.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
+	                client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, timeLimitChbox.isSelected() ? 60 * timeLimitModel.getNumber().intValue() : null));
+	            }
+	        });
+	        timeLimitSpinner.addChangeListener(new ChangeListener() {
+	            @Override
+	            public void stateChanged(ChangeEvent e) {
+	                if (timeLimitChbox.isSelected()) {
+	                    Integer value = timeLimitModel.getNumber().intValue() * 60;
+	                    if (value != game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME)) {
+	                        client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, value));
+	                    }
+	                }
+	            }
+	        });
+        }
         return clockPanel;
     }
 

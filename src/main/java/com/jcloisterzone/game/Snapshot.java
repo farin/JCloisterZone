@@ -148,9 +148,7 @@ public class Snapshot implements Serializable {
             el.setAttribute("name", p.getNick());
             el.setAttribute("points", "" + p.getPoints());
             el.setAttribute("slot", "" + p.getSlot().getNumber());
-            if (p.getSlot().isOwn()) {
-                el.setAttribute("local", "true");
-            }
+            el.setAttribute("clientId", p.getSlot().getClientId());
             if (p.getSlot().isAi()) {
                 el.setAttribute("ai-class", p.getSlot().getAiClassName());
             }
@@ -306,7 +304,7 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             CustomRule rule = CustomRule.valueOf(el.getAttribute("name"));
-            String value = el.getAttribute("name");
+            String value = el.getAttribute("value");
             if (value == null) {
                 //backward compatibility 3.1.x
                 result.put(rule, Boolean.TRUE);
@@ -329,9 +327,9 @@ public class Snapshot implements Serializable {
                 String aiClassName = el.getAttribute("ai-class");
                 slot.setAiClassName(aiClassName);
             } else {
-                if (XmlUtils.attributeBoolValue(el, "local")) {
-                    slot.setState(SlotState.OWN);
-                }
+            	if (el.hasAttribute("clientId")) {
+            		slot.setClientId(el.getAttribute("clientId"));
+            	}
             }
             NodeList categories = el.getElementsByTagName("point-category");
             for (int j = 0; j < categories.getLength(); j++) {

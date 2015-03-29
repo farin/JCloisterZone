@@ -177,11 +177,12 @@ public class ClientMessageListener implements MessageListener {
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
-        slot.setSessionId(slotMsg.getOwner());
-        if (slotMsg.getSerial() == null) {
+        slot.setSessionId(slotMsg.getSessionId());
+        slot.setClientId(slotMsg.getClientId());
+        if (slotMsg.getClientId() == null) {
             slot.setState(SlotState.OPEN);
         } else {
-            slot.setState(conn.getSessionId().equals(slotMsg.getOwner()) ? SlotState.OWN : SlotState.REMOTE);
+            slot.setState(conn.getSessionId().equals(slotMsg.getSessionId()) ? SlotState.OWN : SlotState.REMOTE);
         }
         slot.setSerial(slotMsg.getSerial());
         slot.setAiClassName(slotMsg.getAiClassName());
@@ -260,7 +261,7 @@ public class ClientMessageListener implements MessageListener {
             for (int i = 0; i < replay.length; i++) {
                 if (i == replay.length - 1) {
                     for (PlayerSlot slot : phase.getPlayerSlots()) {
-                        if (slot.getAiPlayer() != null) {
+                        if (slot != null && slot.getAiPlayer() != null) {
                             slot.getAiPlayer().setMuted(false);
                         }
                     }
