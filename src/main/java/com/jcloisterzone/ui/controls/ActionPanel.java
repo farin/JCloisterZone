@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -10,14 +11,18 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.view.GameView;
 
+import static com.jcloisterzone.ui.I18nUtils._;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 
 public class ActionPanel extends MouseTrackingComponent implements ForwardBackwardListener, RegionMouseListener {
@@ -33,6 +38,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private boolean active;
     private PlayerAction<?>[] actions;
     private int selectedActionIndex = -1;
+    private boolean showConfirmRequest;
+    private MultiLineLabel confirmationHint;
 
     //cached scaled smooth images
     private Image[] selected, deselected;
@@ -48,6 +55,12 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     public ActionPanel(GameView gameView) {
         this.client = gameView.getClient();
         this.gameView = gameView;
+
+        setLayout(new MigLayout());
+        confirmationHint = new MultiLineLabel(_("Confirm or undo meeple placement."));
+        confirmationHint.setFont(new Font(null, Font.ITALIC, 12));
+        confirmationHint.setVisible(false);
+        add(confirmationHint, "pos 0 50 220 100");
 
         setOpaque(false);
     }
@@ -177,50 +190,49 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
+        if (showConfirmRequest) {
+            super.paint(g2);
+            return;
+        }
+
         g2.setColor(ControlPanel.PLAYER_BG_COLOR);
         g2.fillRoundRect(0, LINE_Y, getWidth()+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 
-
         int x = LEFT_MARGIN;
-
         if (fakeActionImage != null) {
             g2.drawImage(fakeActionImage, x, LINE_Y+((LINE_HEIGHT-FAKE_ACTION_SIZE) / 2)+imgOffset, FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, null);
         }
 
-        if (actions == null || actions.length == 0) return;
+        if (actions != null && actions.length > 0) {
+            //possible race condition - (but AtomBoolean cannot be used, too slow for painting)
+            boolean refreshImages = this.refreshImages;
+            this.refreshImages = false;
+            boolean refreshMouseRegions = this.refreshMouseRegions;
+            this.refreshMouseRegions = false;
 
-        //possible race condition - (but AtomBoolean cannot be used, too slow for painting)
-        boolean refreshImages = this.refreshImages;
-        this.refreshImages = false;
-        boolean refreshMouseRegions = this.refreshMouseRegions;
-        this.refreshMouseRegions = false;
+            if (refreshImages) doRefreshImageCache();
+            if (refreshMouseRegions) getMouseRegions().clear();
 
-        if (refreshImages) {
-            doRefreshImageCache();
-        }
+            for (int i = 0; i < actions.length; i++) {
+                boolean active = (i == selectedActionIndex);
 
-        if (refreshMouseRegions) {
-            getMouseRegions().clear();
-        }
+                Image img = active ? selected[i] : deselected[i];
+                int size = img.getWidth(null);
+                int iy = LINE_Y + (LINE_HEIGHT-size) / 2;
 
-        for (int i = 0; i < actions.length; i++) {
-            boolean active = (i == selectedActionIndex);
-
-            Image img = active ? selected[i] : deselected[i];
-            int size = img.getWidth(null);
-            int iy = LINE_Y + (LINE_HEIGHT-size) / 2;
-
-            if (refreshMouseRegions && selectedActionIndex != -1) {
-                getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
+                if (refreshMouseRegions && selectedActionIndex != -1) {
+                    getMouseRegions().add(new MouseListeningRegion(new Rectangle(x, iy+imgOffset, size, size), this, i));
+                }
+                g2.drawImage(img, x, iy+imgOffset, size, size, null);
+                x += size + PADDING;
             }
-            g2.drawImage(img, x, iy+imgOffset, size, size, null);
-            x += size + PADDING;
         }
         super.paint(g2);
     }
 
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
+        if (showConfirmRequest) return;
         if (e.getButton() == MouseEvent.BUTTON1) {
             Integer i = (Integer) origin.getData();
             if (selectedActionIndex == i) {
@@ -239,6 +251,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void mouseEntered(MouseEvent e, MouseListeningRegion origin) {
+        if (showConfirmRequest) return;
         Integer i = (Integer) origin.getData();
         if (i != selectedActionIndex) {
             gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -247,6 +260,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void mouseExited(MouseEvent e, MouseListeningRegion origin) {
+        if (showConfirmRequest) return;
         gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 
@@ -264,5 +278,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         repaint();
     }
 
-
+    public void setShowConfirmRequest(boolean showConfirmRequest) {
+        this.showConfirmRequest = showConfirmRequest;
+        confirmationHint.setVisible(showConfirmRequest);
+    }
 }

@@ -46,8 +46,9 @@ public class MenuBar extends JMenuBar {
         TAKE_SCREENSHOT(_("Take screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
         //Settings
         BEEP_ALERT(_("Beep alert at player turn")),
-        CONFIRM_FARM(_("Confirm placement on a farm")),
-        CONFIRM_TOWER(_("Confirm placement on a tower")),
+        CONFIRM_ANY_DEPLOYMENT(_("Confirm every meeple deployment")),
+        CONFIRM_FARM_DEPLOYMENT(_("Confirm meeple deployment on a farm")),
+        CONFIRM_TOWER_DEPLOYMENT(_("Confirm meeple deployment on a tower")),
         CONFIRM_RANSOM(_("Confirm ransom payment")),
         //Help
         ABOUT(_("About")),
@@ -155,24 +156,34 @@ public class MenuBar extends JMenuBar {
         }));
         chbox.setSelected(client.getConfig().getBeep_alert());
         menu.addSeparator();
-        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_FARM, new ActionListener() {
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_ANY_DEPLOYMENT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getConfig().getConfirm().setFarm_place(ch.isSelected());
+                client.getConfig().getConfirm().setAny_deployment(ch.isSelected());
                 client.saveConfig();
             }
         }));
-        chbox.setSelected(client.getConfig().getConfirm().getFarm_place());
-        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_TOWER, new ActionListener() {
+        chbox.setSelected(client.getConfig().getConfirm().getAny_deployment());
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_FARM_DEPLOYMENT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                client.getConfig().getConfirm().setTower_place(ch.isSelected());
+                client.getConfig().getConfirm().setFarm_deployment(ch.isSelected());
                 client.saveConfig();
             }
         }));
-        chbox.setSelected(client.getConfig().getConfirm().getTower_place());
+        chbox.setSelected(client.getConfig().getConfirm().getFarm_deployment());
+        menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_TOWER_DEPLOYMENT, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+                client.getConfig().getConfirm().setOn_tower_deployment(ch.isSelected());
+                client.saveConfig();
+            }
+        }));
+        chbox.setSelected(client.getConfig().getConfirm().getOn_tower_deployment());
+        menu.addSeparator();
         menu.add(chbox = createCheckBoxMenuItem(MenuItem.CONFIRM_RANSOM, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -261,7 +272,7 @@ public class MenuBar extends JMenuBar {
     }
 
     public boolean isSelected(MenuItem item) {
-    	JCheckBoxMenuItem instance = (JCheckBoxMenuItem) items.get(item);
-    	return instance.isSelected();
+        JCheckBoxMenuItem instance = (JCheckBoxMenuItem) items.get(item);
+        return instance.isSelected();
     }
 }

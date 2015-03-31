@@ -33,6 +33,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
@@ -112,6 +113,16 @@ public class Game extends GameSettings implements EventProxy {
         return eventBus;
     }
 
+    public Undoable getLastUndoable() {
+        return lastUndoable;
+    }
+
+    private boolean isUiSupportedUndo(Event event) {
+        if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
+        if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
+        return false;
+    }
+
     @Override
     public void post(Event event) {
         eventQueue.add(event);
@@ -119,7 +130,7 @@ public class Game extends GameSettings implements EventProxy {
             capability.handleEvent(event);
         }
         if (event instanceof PlayEvent) {
-            if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+            if (isUiSupportedUndo(event)) {
                 lastUndoable = (Undoable) event;
                 lastUndoablePhase = phase;
             } else {
@@ -144,17 +155,15 @@ public class Game extends GameSettings implements EventProxy {
 
     public void undo() {
         //proof of concept
-        if (lastUndoable instanceof TileEvent) {
-            Tile tile = ((TileEvent)lastUndoable).getTile();
-            Position pos = tile.getPosition();
+        if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
+            Event inverse = lastUndoable.getInverseEvent();
 
             lastUndoable.undo(this);
             phase = lastUndoablePhase;
             lastUndoable = null;
             lastUndoablePhase = null;
 
-            //post should be in event undo. silent vs firing undo ?
-            post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
+            post(inverse); //should be post inside undo? silent vs. firing undo?
             phase.enter();
         }
     }

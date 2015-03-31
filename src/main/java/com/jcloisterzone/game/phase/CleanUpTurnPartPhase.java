@@ -1,5 +1,10 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.config.Config.ConfirmConfig;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.RequestConfirmEvent;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
@@ -22,7 +27,23 @@ public class CleanUpTurnPartPhase extends ServerAwarePhase {
     @Override
     public void enter() {
         if (isLocalPlayer(getActivePlayer())) {
-            getConnection().send(new EndTurnMessage(game.getGameId()));
+            boolean needsConfirm = false;
+            if (game.getLastUndoable() instanceof MeepleEvent) {
+                ConfirmConfig cfg =  getConfig().getConfirm();
+                MeepleEvent ev = (MeepleEvent) game.getLastUndoable();
+                if (cfg.getAny_deployment()) {
+                    needsConfirm = true;
+                } else if (cfg.getFarm_deployment() && ev.getTo().getLocation().isFarmLocation()) {
+                    needsConfirm = true;
+                } else if (cfg.getOn_tower_deployment() && ev.getTo().getLocation() == Location.TOWER) {
+                    needsConfirm = true;
+                }
+            }
+            if (needsConfirm) {
+                game.post(new RequestConfirmEvent(getActivePlayer()));
+            } else {
+                getConnection().send(new EndTurnMessage(game.getGameId()));
+            }
         }
     }
 

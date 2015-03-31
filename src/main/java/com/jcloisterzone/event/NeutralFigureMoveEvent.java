@@ -37,4 +37,9 @@ public class NeutralFigureMoveEvent extends MoveEvent<FeaturePointer> implements
             throw new UnsupportedOperationException();
         }
     }
+
+    @Override
+    public Event getInverseEvent() {
+        return new NeutralFigureMoveEvent(getType(), getTriggeringPlayer(), to, from);
+    }
 }

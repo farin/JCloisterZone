@@ -143,7 +143,8 @@ public class ConfigLoader {
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
         config.setClient_id(KeyUtils.createRandomId());
         config.setSecret(KeyUtils.createRandomId());
-        config.getConfirm().setTower_place(true);
+        config.getConfirm().setFarm_deployment(true);
+        config.getConfirm().setOn_tower_deployment(true);
         config.getConfirm().setRansom_payment(true);
         config.getPlayers().setColors(Lists.newArrayList(
             new ColorConfig("RED"),

@@ -33,6 +33,7 @@ import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.event.FeatureEvent;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
@@ -51,6 +52,7 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
+import com.jcloisterzone.wsio.message.EndTurnMessage;
 
 public class ControlPanel extends JPanel {
 
@@ -72,12 +74,16 @@ public class ControlPanel extends JPanel {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private static final String PASS_LABEL = _("Skip");
+    private static final String CONFIRMATION_LABEL = _("Continue");
+
     private final Client client;
     private final GameView gameView;
     private final GameController gc;
     private final Game game;
 
     private JButton passButton;
+    private boolean showConfirmRequest;
     private boolean canPass;
     private boolean showProjectedPoints, projectedPointsValid = true;
 
@@ -101,7 +107,7 @@ public class ControlPanel extends JPanel {
         setOpaque(false);
         setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));
 
-        passButton = new JButton(_("Skip"));
+        passButton = new JButton(PASS_LABEL);
         passButton.setBorder(BorderFactory.createEmptyBorder(1, 30, 1, 30));
         passButton.setVisible(false);
         passButton.addActionListener(new ActionListener() {
@@ -256,14 +262,21 @@ public class ControlPanel extends JPanel {
     }
 
     public void pass() {
-        if (canPass) {
-            gc.getRmiProxy().pass();
+        if (showConfirmRequest) {
+            setShowConfirmRequest(false);
+            gc.getConnection().send(new EndTurnMessage(game.getGameId()));
+            repaint();
+        } else {
+            if (canPass) {
+                gc.getRmiProxy().pass();
+            }
         }
     }
 
     public ActionPanel getActionPanel() {
         return actionPanel;
     }
+
 
     public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
         // direct collection sort can be unsupported - so copy to array first!
@@ -280,6 +293,7 @@ public class ControlPanel extends JPanel {
 
     public void clearActions() {
         actionPanel.clearActions();
+        actionPanel.setFakeAction(null);
         setCanPass(false);
     }
 
@@ -315,10 +329,24 @@ public class ControlPanel extends JPanel {
                     scoreAll.scoreAll(game, strategy);
                     game.finalScoring(strategy);
 
-                    gameView.getGridPanel().repaint();
+                    repaint();
                 }
             }
         });
+    }
+
+    public void setShowConfirmRequest(boolean showConfirmRequest) {
+        passButton.setText(showConfirmRequest ? CONFIRMATION_LABEL : PASS_LABEL);
+        passButton.setVisible(showConfirmRequest);
+        this.showConfirmRequest = showConfirmRequest;
+        actionPanel.setShowConfirmRequest(showConfirmRequest);
+        repaint();
+    }
+
+    @Subscribe
+    public void handleRequestConfirm(RequestConfirmEvent ev) {
+        clearActions();
+        setShowConfirmRequest(true);
     }
 
     @Subscribe

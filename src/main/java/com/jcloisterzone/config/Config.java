@@ -192,21 +192,36 @@ public class Config {
     }
 
     public static class ConfirmConfig {
-        private Boolean farm_place;
-        private Boolean tower_place;
+        private Boolean any_deployment;
+        private Boolean farm_deployment;
+        private Boolean on_tower_deployment;
         private Boolean ransom_payment;
 
-        public Boolean getFarm_place() {
-            return farm_place == null ? Boolean.FALSE : farm_place;
+        public Boolean getAny_deployment() {
+            return any_deployment == null ? Boolean.FALSE : any_deployment;
         }
+        public void setAny_deployment(Boolean any_deployment) {
+            this.any_deployment = any_deployment;
+        }
+        public Boolean getFarm_deployment() {
+            return farm_deployment == null ? Boolean.FALSE : farm_deployment;
+        }
+        public void setFarm_deployment(Boolean farm_deployment) {
+            this.farm_deployment = farm_deployment;
+        }
+        public Boolean getOn_tower_deployment() {
+            return on_tower_deployment == null ? Boolean.FALSE : on_tower_deployment;
+        }
+        public void setOn_tower_deployment(Boolean on_tower_deployment) {
+            this.on_tower_deployment = on_tower_deployment;
+        }
+        @Deprecated
         public void setFarm_place(Boolean farm_place) {
-            this.farm_place = farm_place;
+            this.farm_deployment = farm_place;
         }
-        public Boolean getTower_place() {
-            return tower_place == null ? Boolean.FALSE : tower_place;
-        }
+        @Deprecated
         public void setTower_place(Boolean tower_place) {
-            this.tower_place = tower_place;
+            this.on_tower_deployment = tower_place;
         }
         @Deprecated
         public void setGame_close(Boolean game_close) {

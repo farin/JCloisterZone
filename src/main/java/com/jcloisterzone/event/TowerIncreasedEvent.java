@@ -35,4 +35,9 @@ public class TowerIncreasedEvent extends PlayEvent implements Undoable {
         cap.setLastIncreasedTower(null);
         cap.setTowerPieces(getTriggeringPlayer(), cap.getTowerPieces(getTriggeringPlayer()) + 1);
     }
+
+    @Override
+    public Event getInverseEvent() {
+        throw new UnsupportedOperationException();
+    }
 }

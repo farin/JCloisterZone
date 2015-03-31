@@ -28,6 +28,7 @@ import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.event.TileEvent;
@@ -37,7 +38,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
-import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
@@ -84,14 +84,14 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     public GameState getGameState() {
-		return gameState;
-	}
+        return gameState;
+    }
 
-	public void setGameState(GameState gameState) {
-		this.gameState = gameState;
-	}
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
 
-	@Override
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (getConnection() == null) {
             logger.info("Not connected. Message ignored");
@@ -116,17 +116,14 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     void clearActions() {
         ControlPanel controlPanel = gameView.getControlPanel();
-        ActionPanel ap = controlPanel.getActionPanel();
-        if (ap.getActions() != null) {
-            controlPanel.clearActions();
-        }
-        ap.setFakeAction(null);
+        controlPanel.clearActions();
+        controlPanel.setShowConfirmRequest(false);
         client.getJMenuBar().setItemEnabled(MenuItem.UNDO, false);
     }
 
 
     @Subscribe
-    public void gameStateChange(GameStateChangeEvent ev) {
+    public void handleGameStateChange(GameStateChangeEvent ev) {
         if (ev.getType() == GameStateChangeEvent.GAME_OVER) {
             boolean showPlayAgain = client.getLocalServer() != null;
             gameView.setGameRunning(false);
@@ -144,7 +141,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
 
     @Subscribe
-    public void turnChanged(PlayerTurnEvent ev) {
+    public void handleTurnChanged(PlayerTurnEvent ev) {
         gameView.getGridPanel().repaint();
 
         if (ev.getTargetPlayer().isLocalHuman()) {
@@ -171,7 +168,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void tileEvent(TileEvent ev) {
+    public void handleTileEvent(TileEvent ev) {
         switch (ev.getType()) {
         case TileEvent.DRAW:
             clearActions();
@@ -195,12 +192,12 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void towerIncreased(TowerIncreasedEvent ev) {
+    public void handleTowerIncreased(TowerIncreasedEvent ev) {
         clearActions();
     }
 
     @Subscribe
-    public void meeplePrisonEvent(MeeplePrisonEvent ev) {
+    public void handleMeeplePrisonEvent(MeeplePrisonEvent ev) {
         gameView.getGridPanel().repaint();
     }
 
@@ -213,7 +210,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectDragonMove(SelectDragonMoveEvent ev) {
+    public void handleSelectDragonMove(SelectDragonMoveEvent ev) {
         Set<Position> positions = ev.getPositions();
         int movesLeft = ev.getMovesLeft();
         clearActions();
@@ -231,7 +228,13 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectAction(SelectActionEvent ev) {
+    public void handleRequestConfirm(RequestConfirmEvent ev) {
+        assert game.isUndoAllowed();
+        client.getJMenuBar().setItemEnabled(MenuItem.UNDO, true);
+    }
+
+    @Subscribe
+    public void handleSelectAction(SelectActionEvent ev) {
         clearActions();
         gameView.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
         gameView.getGridPanel().repaint();
@@ -242,7 +245,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectCornCircleOption(CornCircleSelectOptionEvent ev) {
+    public void handleSelectCornCircleOption(CornCircleSelectOptionEvent ev) {
         clearActions();
         CornCirclesPanel panel = new CornCirclesPanel(this);
         GridPanel gridPanel = gameView.getGridPanel();
@@ -251,7 +254,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectMageAndWitchRemoval(MageWitchSelectRemoval ev) {
+    public void handleSelectMageAndWitchRemoval(MageWitchSelectRemoval ev) {
         clearActions();
         SelectMageWitchRemovalPanel panel = new SelectMageWitchRemovalPanel(this);
         GridPanel gridPanel = gameView.getGridPanel();
@@ -273,7 +276,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectBazaarTile(BazaarSelectTileEvent ev) {
+    public void handleSelectBazaarTile(BazaarSelectTileEvent ev) {
         clearActions();
         BazaarPanel bazaarPanel = showBazaarPanel();
         if (ev.getTargetPlayer().isLocalHuman()) {
@@ -293,14 +296,14 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void bazaarTileSelected(BazaarTileSelectedEvent ev) {
+    public void handleBazaarTileSelected(BazaarTileSelectedEvent ev) {
         BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setState(BazaarPanelState.INACTIVE);
         gameView.getGridPanel().repaint();
     }
 
     @Subscribe
-    public void makeBazaarBid(BazaarMakeBidEvent ev) {
+    public void handleMakeBazaarBid(BazaarMakeBidEvent ev) {
         BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (ev.getTargetPlayer().isLocalHuman()) {
@@ -313,7 +316,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void selectBuyOrSellBazaarOffer(BazaarSelectBuyOrSellEvent ev) {
+    public void handleSelectBuyOrSellBazaarOffer(BazaarSelectBuyOrSellEvent ev) {
         BazaarPanel bazaarPanel = showBazaarPanel();
         bazaarPanel.setSelectedItem(ev.getSupplyIndex());
         if (ev.getTargetPlayer().isLocalHuman()) {
@@ -324,7 +327,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     }
 
     @Subscribe
-    public void bazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
+    public void handleBazaarAuctionsEnded(BazaarAuctionEndEvent ev) {
         BazaarPanel panel = gameView.getGridPanel().getBazaarPanel();
         if (panel != null) {
             gameView.getGridPanel().remove(panel);
@@ -336,20 +339,20 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         if (getChannel() == null) {
             client.mountView(new StartView(client));
         } else {
-        	if (getConnection().isClosed()) {
-        		//TODO stop reconnecting
-        		client.mountView(new StartView(client));
-        	} else {
-	        	ClientMessageListener cml = client.getClientMessageListener();
-	            getConnection().send(new LeaveGameMessage(game.getGameId()));
-	            ChannelController ctrl = cml.getChannelControllers().get(channel);
-	            client.mountView(new ChannelView(client, ctrl));
+            if (getConnection().isClosed()) {
+                //TODO stop reconnecting
+                client.mountView(new StartView(client));
+            } else {
+                ClientMessageListener cml = client.getClientMessageListener();
+                getConnection().send(new LeaveGameMessage(game.getGameId()));
+                ChannelController ctrl = cml.getChannelControllers().get(channel);
+                client.mountView(new ChannelView(client, ctrl));
 
-	            List<GameController> gcs = cml.getGameControllers(channel);
-	            ctrl.getEventProxy().post(
-	        		new GameListChangedEvent(gcs.toArray(new GameController[gcs.size()]))
-	        	);
-        	}
+                List<GameController> gcs = cml.getGameControllers(channel);
+                ctrl.getEventProxy().post(
+                    new GameListChangedEvent(gcs.toArray(new GameController[gcs.size()]))
+                );
+            }
         }
     }
 
@@ -381,11 +384,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         this.channel = channel;
     }
 
-	public boolean isPasswordProtected() {
-		return passwordProtected;
-	}
+    public boolean isPasswordProtected() {
+        return passwordProtected;
+    }
 
-	public void setPasswordProtected(boolean passwordProtected) {
-		this.passwordProtected = passwordProtected;
-	}
+    public void setPasswordProtected(boolean passwordProtected) {
+        this.passwordProtected = passwordProtected;
+    }
 }

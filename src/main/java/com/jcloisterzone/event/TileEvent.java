@@ -53,6 +53,16 @@ public class TileEvent extends PlayEvent implements Undoable {
     }
 
     @Override
+    public Event getInverseEvent() {
+        switch (getType()) {
+        case PLACEMENT:
+            return new TileEvent(TileEvent.REMOVE, getTriggeringPlayer(), tile, getPosition());
+        default:
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " tile:" + tile.getId() + " position:" + position;
     }
