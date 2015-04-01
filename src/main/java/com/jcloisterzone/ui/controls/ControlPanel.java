@@ -52,7 +52,7 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
-import com.jcloisterzone.wsio.message.EndTurnMessage;
+import com.jcloisterzone.wsio.message.CommitMessage;
 
 public class ControlPanel extends JPanel {
 
@@ -264,7 +264,7 @@ public class ControlPanel extends JPanel {
     public void pass() {
         if (showConfirmRequest) {
             setShowConfirmRequest(false);
-            gc.getConnection().send(new EndTurnMessage(game.getGameId()));
+            gc.getConnection().send(new CommitMessage(game.getGameId()));
             repaint();
         } else {
             if (canPass) {

@@ -39,7 +39,9 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private PlayerAction<?>[] actions;
     private int selectedActionIndex = -1;
     private boolean showConfirmRequest;
+
     private MultiLineLabel confirmationHint;
+    private MultiLineLabel noActionHint;
 
     //cached scaled smooth images
     private Image[] selected, deselected;
@@ -56,11 +58,18 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         this.client = gameView.getClient();
         this.gameView = gameView;
 
+        Font hintFont = new Font(null, Font.ITALIC, 12);
         setLayout(new MigLayout());
-        confirmationHint = new MultiLineLabel(_("Confirm or undo meeple placement."));
-        confirmationHint.setFont(new Font(null, Font.ITALIC, 12));
+        confirmationHint = new MultiLineLabel(_("Confirm or undo a meeple placement."));
+        confirmationHint.setFont(hintFont);
         confirmationHint.setVisible(false);
-        add(confirmationHint, "pos 0 50 220 100");
+        add(confirmationHint, "pos 0 50 200 100");
+
+        //only flaw is with just loaded game, undo is not possible - may check gameView.getGame().isUndoAlloerd() - and update label
+        noActionHint = new MultiLineLabel(_("No action available. Pass or undo a tile placement."));
+        noActionHint.setFont(hintFont);
+        noActionHint.setVisible(false);
+        add(noActionHint, "pos 0 50 200 100");
 
         setOpaque(false);
     }
@@ -77,8 +86,12 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         refreshImages = true;
         refreshMouseRegions = true;
         this.actions = actions;
-        if (actions.length > 0 && active) {
-            setSelectedActionIndex(0);
+        if (active) {
+            if (actions.length > 0) {
+                setSelectedActionIndex(0);
+            } else {
+                noActionHint.setVisible(true);
+            }
         }
         repaint();
     }
@@ -127,6 +140,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     public void clearActions() {
         deselectAction();
+        noActionHint.setVisible(false);
         this.actions = null;
         this.selectedActionIndex = -1;
         refreshImages = true;
@@ -183,14 +197,14 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     }
 
     public PlayerAction<?> getSelectedAction() {
-        return actions[selectedActionIndex];
+        return selectedActionIndex == -1 ? null : actions[selectedActionIndex];
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        if (showConfirmRequest) {
+        if (showConfirmRequest || noActionHint.isVisible()) {
             super.paint(g2);
             return;
         }

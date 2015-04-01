@@ -13,8 +13,11 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config.ConfirmConfig;
 import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -38,8 +41,11 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.CommitMessage;
 
-public class ScorePhase extends Phase {
+public class ScorePhase extends ServerAwarePhase {
 
     private Set<Completable> alredyScored = new HashSet<>();
 
@@ -50,8 +56,8 @@ public class ScorePhase extends Phase {
     private final WagonCapability wagonCap;
     private final MageAndWitchCapability mageWitchCap;
 
-    public ScorePhase(Game game) {
-        super(game);
+    public ScorePhase(Game game, GameController gc) {
+        super(game, gc);
         barnCap = game.getCapability(BarnCapability.class);
         builderCap = game.getCapability(BuilderCapability.class);
         tunnelCap = game.getCapability(TunnelCapability.class);
@@ -105,8 +111,35 @@ public class ScorePhase extends Phase {
 
     @Override
     public void enter() {
-        Position pos = getTile().getPosition();
+        if (isLocalPlayer(getActivePlayer())) {
+            boolean needsConfirm = false;
+            if (game.getLastUndoable() instanceof MeepleEvent) {
+                ConfirmConfig cfg =  getConfig().getConfirm();
+                MeepleEvent ev = (MeepleEvent) game.getLastUndoable();
+                if (cfg.getAny_deployment()) {
+                    needsConfirm = true;
+                } else if (cfg.getFarm_deployment() && ev.getTo().getLocation().isFarmLocation()) {
+                    needsConfirm = true;
+                } else if (cfg.getOn_tower_deployment() && ev.getTo().getLocation() == Location.TOWER) {
+                    needsConfirm = true;
+                }
+            }
+            if (needsConfirm) {
+                game.post(new RequestConfirmEvent(getActivePlayer()));
+            } else {
+                getConnection().send(new CommitMessage(game.getGameId()));
+            }
+        } else {
+            //if player is not active, always trigger event and wait for remote CommitMessage
+            game.post(new RequestConfirmEvent(getActivePlayer()));
+        }
+    }
 
+    @WsSubscribe
+    public void handleCommit(CommitMessage msg) {
+        game.updateRandomSeed(msg.getCurrentTime());
+
+        Position pos = getTile().getPosition();
         //TODO separate event here ??? and move this code to abbey and mayor game
         if (barnCap != null) {
             Map<City, CityScoreContext> cityCache = new HashMap<>();

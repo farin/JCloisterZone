@@ -58,25 +58,12 @@ public class ActionPhase extends Phase {
             actions.add(new MeepleAction(SmallFollower.class).addAll(followerLocations));
         }
         game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
-        if (isAutoTurnEnd(actions)) {
-            next();
-        } else {
-            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
-        }
+        game.post(new SelectActionEvent(getActivePlayer(), actions, true));
     }
 
     @Override
     public void notifyRansomPaid() {
         enter(); //recompute available actions
-    }
-
-    private boolean isAutoTurnEnd(List<? extends PlayerAction<?>> actions) {
-        if (!actions.isEmpty()) return false;
-        if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer())) {
-            //player can return figure immediately
-            return false;
-        }
-        return true;
     }
 
     @Override

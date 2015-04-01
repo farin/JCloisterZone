@@ -2,14 +2,14 @@ package com.jcloisterzone.wsio.message;
 
 import com.jcloisterzone.wsio.WsMessageCommand;
 
-@WsMessageCommand("END_TURN")
-public class EndTurnMessage implements WsInGameMessage {
+@WsMessageCommand("COMMIT")
+public class CommitMessage implements WsInGameMessage {
 
     private String gameId;
     private long currentTime;
 
 
-    public EndTurnMessage(String gameId) {
+    public CommitMessage(String gameId) {
         this.gameId = gameId;
         this.currentTime = System.currentTimeMillis();
     }
