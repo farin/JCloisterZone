@@ -99,7 +99,7 @@ public class Client extends JFrame {
     private static Client instance;
 
     public Client(Path dataDirectory, ConfigLoader configLoader, Config config, List<Plugin> plugins) {
-    	instance = this;
+        instance = this;
         this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
@@ -107,7 +107,7 @@ public class Client extends JFrame {
     }
 
     public static Client getInstance() {
-    	return instance;
+        return instance;
     }
 
     public boolean mountView(UiView view) {
@@ -135,18 +135,18 @@ public class Client extends JFrame {
     }
 
     private void initWindowSize() {
-    	String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
-    	if (System.getProperty("windowSize") != null) {
-    		windowSize = System.getProperty("windowSize");
-    	}
+        String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
+        if (System.getProperty("windowSize") != null) {
+            windowSize = System.getProperty("windowSize");
+        }
         if (windowSize == null || "fullscreen".equals(windowSize)) {
             this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         } else if ("L".equals(windowSize) || "R".equals(windowSize)) {
-        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        	int dw = gd.getDisplayMode().getWidth();
-        	int dh = gd.getDisplayMode().getHeight();
-        	setSize(dw/2, dh);
-        	setLocation("L".equals(windowSize) ? 0 : dw/2, 0);
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            int dw = gd.getDisplayMode().getWidth();
+            int dh = gd.getDisplayMode().getHeight();
+            setSize(dw/2, dh-40);
+            setLocation("L".equals(windowSize) ? 0 : dw/2, 0);
         } else {
             String[] sizes = windowSize.split("x");
             if (sizes.length == 2) {
@@ -241,8 +241,8 @@ public class Client extends JFrame {
     }
 
     public ClientMessageListener getClientMessageListener() {
-		return clientMessageListener;
-	}
+        return clientMessageListener;
+    }
 
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
@@ -547,7 +547,7 @@ public class Client extends JFrame {
     }
 
     public void onWebsocketClose(int code, String reason, boolean remote) {
-    	view.onWebsocketClose(code, reason, remote);
+        view.onWebsocketClose(code, reason, remote);
     }
 
     public void onUnhandledWebsocketError(Exception ex) {

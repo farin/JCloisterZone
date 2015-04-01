@@ -229,8 +229,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void handleRequestConfirm(RequestConfirmEvent ev) {
-        assert game.isUndoAllowed();
-        client.getJMenuBar().setItemEnabled(MenuItem.UNDO, true);
+        clearActions();
+        if (ev.getTargetPlayer().isLocalHuman()) {
+            assert game.isUndoAllowed();
+            client.getJMenuBar().setItemEnabled(MenuItem.UNDO, true);
+        }
     }
 
     @Subscribe

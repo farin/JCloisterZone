@@ -345,8 +345,9 @@ public class ControlPanel extends JPanel {
 
     @Subscribe
     public void handleRequestConfirm(RequestConfirmEvent ev) {
-        clearActions();
-        setShowConfirmRequest(true);
+        if (ev.getTargetPlayer().isLocalHuman()) {
+            setShowConfirmRequest(true);
+        }
     }
 
     @Subscribe
