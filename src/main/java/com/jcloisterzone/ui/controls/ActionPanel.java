@@ -40,8 +40,12 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private int selectedActionIndex = -1;
     private boolean showConfirmRequest;
 
-    private MultiLineLabel confirmationHint;
-    private MultiLineLabel noActionHint;
+    //it has one flaw -  if game was just loaded, undo is not possible - may check gameView.getGame().isUndoAlloerd() - and update label
+    private static final String CONFIRMATION_HINT = _("Confirm or undo a meeple placement.");
+    private static final String REMOTE_CONFIRMATION_HINT = _("Waiting for a confirmation by remote player.");
+    private static final String NO_ACTION_HINT = _("No action available. Pass or undo a tile placement.");
+
+    private MultiLineLabel hintMessage;
 
     //cached scaled smooth images
     private Image[] selected, deselected;
@@ -60,17 +64,10 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
         Font hintFont = new Font(null, Font.ITALIC, 12);
         setLayout(new MigLayout());
-        confirmationHint = new MultiLineLabel(_("Confirm or undo a meeple placement."));
-        confirmationHint.setFont(hintFont);
-        confirmationHint.setVisible(false);
-        add(confirmationHint, "pos 0 50 200 100");
-
-        //only flaw is with just loaded game, undo is not possible - may check gameView.getGame().isUndoAlloerd() - and update label
-        noActionHint = new MultiLineLabel(_("No action available. Pass or undo a tile placement."));
-        noActionHint.setFont(hintFont);
-        noActionHint.setVisible(false);
-        add(noActionHint, "pos 0 50 200 100");
-
+        hintMessage = new MultiLineLabel();
+        hintMessage.setFont(hintFont);
+        hintMessage.setVisible(false);
+        add(hintMessage, "pos 0 50 200 100");
         setOpaque(false);
     }
 
@@ -90,7 +87,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             if (actions.length > 0) {
                 setSelectedActionIndex(0);
             } else {
-                noActionHint.setVisible(true);
+            	hintMessage.setText(NO_ACTION_HINT);
+                hintMessage.setVisible(true);
             }
         }
         repaint();
@@ -140,7 +138,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     public void clearActions() {
         deselectAction();
-        noActionHint.setVisible(false);
+        hintMessage.setVisible(false);
         this.actions = null;
         this.selectedActionIndex = -1;
         refreshImages = true;
@@ -204,7 +202,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        if (showConfirmRequest || noActionHint.isVisible()) {
+        if (showConfirmRequest || hintMessage.isVisible()) {
             super.paint(g2);
             return;
         }
@@ -292,8 +290,11 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         repaint();
     }
 
-    public void setShowConfirmRequest(boolean showConfirmRequest) {
+    public void setShowConfirmRequest(boolean showConfirmRequest, boolean remote) {
         this.showConfirmRequest = showConfirmRequest;
-        confirmationHint.setVisible(showConfirmRequest);
+        if (showConfirmRequest) {
+        	hintMessage.setText(remote ? REMOTE_CONFIRMATION_HINT : CONFIRMATION_HINT);
+        }
+        hintMessage.setVisible(showConfirmRequest);
     }
 }

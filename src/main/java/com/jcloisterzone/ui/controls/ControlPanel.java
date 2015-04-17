@@ -339,14 +339,18 @@ public class ControlPanel extends JPanel {
         passButton.setText(showConfirmRequest ? CONFIRMATION_LABEL : PASS_LABEL);
         passButton.setVisible(showConfirmRequest);
         this.showConfirmRequest = showConfirmRequest;
-        actionPanel.setShowConfirmRequest(showConfirmRequest);
+        actionPanel.setShowConfirmRequest(showConfirmRequest, false);
         repaint();
     }
 
     @Subscribe
     public void handleRequestConfirm(RequestConfirmEvent ev) {
+    	clearActions();
         if (ev.getTargetPlayer().isLocalHuman()) {
             setShowConfirmRequest(true);
+        } else {
+        	actionPanel.setShowConfirmRequest(true, true);
+        	repaint();
         }
     }
 
