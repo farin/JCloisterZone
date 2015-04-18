@@ -44,7 +44,7 @@ public class EventProxyUiController<T extends EventProxy> {
     	try {
     		eventBus.unregister(subscriber);
     	} catch (IllegalArgumentException ex) {
-    		logger.warn("Subscriber not registered.", ex);
+    		logger.warn("Subscriber not registered.");
     	}
     }
 

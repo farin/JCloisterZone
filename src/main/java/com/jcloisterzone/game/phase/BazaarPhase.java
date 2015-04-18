@@ -46,18 +46,15 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         Player p = game.getNextPlayer();
         bazaarCap.setBazaarTileSelectingPlayer(p);
-        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-        if (isLocalPlayer(p)) {
-            int size = game.getAllPlayers().length;
-            ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
-            for (int i = 0; i < size; i++) {
-                Tile t = getTilePack().drawTile(game.getRandom().nextInt(getTilePack().size()));
-                supply.add(new BazaarItem(t));
-            }
-            bazaarCap.setBazaarSupply(supply);
-            toggleClock(getActivePlayer());
-            game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
+        int size = game.getAllPlayers().length;
+        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
+        for (int i = 0; i < size; i++) {
+            Tile t = getTilePack().drawTile(game.getRandom().nextInt(getTilePack().size()));
+            supply.add(new BazaarItem(t));
         }
+        bazaarCap.setBazaarSupply(supply);
+        toggleClock(getActivePlayer());
+        game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
     }
 
 

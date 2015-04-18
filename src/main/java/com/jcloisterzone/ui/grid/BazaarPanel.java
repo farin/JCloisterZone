@@ -104,7 +104,13 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    setSelectedItem(BazaarItemPanel.this.idx);
+                	if (state == BazaarPanelState.SELECT_TILE) {
+                		ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
+                		int idx = BazaarItemPanel.this.idx;
+                		if (supply.get(idx).getOwner() == null) {
+                			setSelectedItem(idx);
+                		}
+                	}
                 }
             });
         }

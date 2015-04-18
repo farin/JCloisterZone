@@ -295,6 +295,7 @@ public class SimpleServer extends WebSocketServer  {
             if (shouldAutoAssign(msg, sessionId, slot)) {
                 slot.setClientId(msg.getClientId());
                 slot.setSessionId(sessionId);
+                slot.setSecret(msg.getSecret());
                 broadcast(newSlotMessage(slot), false);
             }
         }
@@ -509,7 +510,9 @@ public class SimpleServer extends WebSocketServer  {
             replay.add(payload);
         }
         for (WebSocket ws : connections.keySet()) {
-            ws.send(payload);
+        	if (ws.isOpen()) { //prevent exception when server is closing
+        		ws.send(payload);
+        	}
         }
     }
 
