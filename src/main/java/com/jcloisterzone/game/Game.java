@@ -117,6 +117,10 @@ public class Game extends GameSettings implements EventProxy {
         return lastUndoable;
     }
 
+    public void clearLastUndoable() {
+    	lastUndoable = null;
+    }
+
     private boolean isUiSupportedUndo(Event event) {
         if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
         if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;

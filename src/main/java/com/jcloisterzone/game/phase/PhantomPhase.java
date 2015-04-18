@@ -88,6 +88,7 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void pass() {
+    	game.clearLastUndoable();
         next();
     }
 
