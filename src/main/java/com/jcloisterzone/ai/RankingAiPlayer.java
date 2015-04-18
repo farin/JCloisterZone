@@ -11,12 +11,14 @@ import javax.xml.transform.TransformerException;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.ai.choice.AiChoice;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.LoadGamePhase;
+import com.jcloisterzone.wsio.message.CommitMessage;
 
 public abstract class RankingAiPlayer extends AiPlayer {
 
@@ -84,6 +86,13 @@ public abstract class RankingAiPlayer extends AiPlayer {
                 logger.error("Auto save before ranking failed.", e);
             }
         }
+    }
+
+    @Subscribe
+    public void requestConfirm(RequestConfirmEvent ev) {
+    	if (isAiActive(ev)) {
+    		getGameController().getConnection().send(new CommitMessage(game.getGameId()));
+    	}
     }
 
     @Subscribe
