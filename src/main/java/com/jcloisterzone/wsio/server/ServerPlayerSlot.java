@@ -8,16 +8,20 @@ public class ServerPlayerSlot {
     private final int number;
     private Integer serial; // server assign sequence number when type is occupied
     private String nickname;
-    private String owner;
+    private String sessionId;
     private String aiClassName;
     private Expansion[] supportedExpansions;
+
+    private String clientId;
+    private String autoAssignClientId;
+    private String secret;
 
     public ServerPlayerSlot(int number) {
         this.number = number;
     }
 
     public boolean isOccupied() {
-        return owner != null;
+        return sessionId != null;
     }
 
     public Integer getSerial() {
@@ -36,12 +40,12 @@ public class ServerPlayerSlot {
         this.nickname = nickname;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getAiClassName() {
@@ -64,4 +68,27 @@ public class ServerPlayerSlot {
         this.supportedExpansions = supportedExpansions;
     }
 
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public String getAutoAssignClientId() {
+		return autoAssignClientId;
+	}
+
+	public void setAutoAssignClientId(String autoAssignClientId) {
+		this.autoAssignClientId = autoAssignClientId;
+	}
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="CRRR" count="3">
+        <ferry/>
+        <city castle-base="true">N</city>
+        <road>W</road>
+        <road>S</road>
+        <road>E</road>
+        <farm city="N">WR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="RRR" count="4">
+        <ferry/>
+        <road>W</road>
+        <road>S</road>
+        <road>E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="RRRR">
+        <ferry/>
+        <road>N</road>
+        <road>W</road>
+        <road>S</road>
+        <road>E</road>
+        <farm>WR NL</farm>
+        <farm>NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+</pack>

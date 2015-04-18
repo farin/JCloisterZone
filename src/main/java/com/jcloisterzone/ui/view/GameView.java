@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.view;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -22,7 +24,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.xml.transform.TransformerException;
 
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,6 @@ import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
@@ -45,10 +45,8 @@ import com.jcloisterzone.ui.dialog.GameSetupDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
-import com.jcloisterzone.wsio.server.RemoteClient;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
 
@@ -231,6 +229,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer.cancel();
         gc.unregister(chatPanel);
         gc.unregister(this);
+        Connection conn = gc.getConnection();
+        if (conn != null) conn.stopReconnecting();
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemEnabled(MenuItem.FARM_HINTS, false);
@@ -274,22 +274,29 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     @Override
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+    	String message = _("Connection lost") + ". " + _("Reconnecting...");
+        if (remote) {
+        	if (gc.getChannel() == null) {
+        		if (!game.isOver()) {
+        			//simple server sends game message automatically, send game id for online server only
+        			gc.getConnection().reconnect(null);
+        			getGridPanel().showErrorMessage(message);
+        		}
+        	} else {
+        		gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
+        		getGridPanel().showErrorMessage(message);
+        	}
+        }
+    }
+
+    @Override
     public void onWebsocketError(Exception ex) {
         String message = ex.getMessage();
-        if (ex instanceof WebsocketNotConnectedException) {
-            if (gc.getChannel() == null) {
-                //show workaround hint for stanalone games only (channel has continue feature)
-                message = _("Connection lost") + " - save game and load on server side and then connect with client as workaround" ;
-            } else {
-                message = _("Connection lost");
-            }
-        } else {
-            message = ex.getMessage();
-            if (message == null || message.length() == 0) {
-                message = ex.getClass().getSimpleName();
-            }
-            logger.error(message, ex);
+        if (message == null || message.length() == 0) {
+            message = ex.getClass().getSimpleName();
         }
+        logger.error(message, ex);
         getGridPanel().showErrorMessage(message);
     }
 
@@ -410,17 +417,6 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     @Subscribe
     public void clientListChanged(ClientListChangedEvent ev) {
         if (!game.isOver()) {
-            for (Player p : game.getAllPlayers()) {
-                PlayerSlot slot = p.getSlot();
-                boolean match = false;
-                for (RemoteClient rc: ev.getClients()) {
-                    if (rc.getSessionId().equals(slot.getSessionId())) {
-                        match = true;
-                        break;
-                    }
-                }
-                slot.setDisconnected(!match);
-            }
             getMainPanel().repaint();
         }
     }

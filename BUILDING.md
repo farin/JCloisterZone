@@ -84,6 +84,7 @@ JCloisterZone supports various system properties to help development
 * `allowHotSeatOnlineGame=true` - allows online game with multiple human players from one client
 * `org.slf4j.simpleLogger.defaultLogLevel=info` - set log level
 * `transparentScreenshots=true` - don't fill screenshot background
+* `windowSize=L` - overrides config valus (eg 1024x768, or special values L or R)
 
 Command line example:
 

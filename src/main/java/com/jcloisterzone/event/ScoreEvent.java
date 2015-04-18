@@ -88,6 +88,11 @@ public class ScoreEvent extends PlayEvent implements Undoable {
     }
 
     @Override
+    public Event getInverseEvent() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String toString() {
         // TODO Auto-generated method stub
         return super.toString() + " feature:"+feature + " position:"+position;

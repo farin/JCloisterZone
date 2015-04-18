@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.sound.sampled.ReverbType;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -85,8 +86,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private MoveCenterAnimation moveAnimation;
 
     private List<GridLayer> layers = new ArrayList<GridLayer>();
-    //private String errorMessage;
-    //private String hintMessage;
+    private ErrorMessagePanel errorMsg;
 
     public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
@@ -428,9 +428,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void showErrorMessage(String errorMessage) {
-        ErrorMessagePanel msgPanel = new ErrorMessagePanel(errorMessage);
-        msgPanel.setOpaque(true);
-        add(msgPanel, "pos 0 0 (100%-242) 30");
+    	if (errorMsg != null) {
+    		remove(errorMsg);
+    	}
+    	errorMsg = new ErrorMessagePanel(errorMessage);
+    	errorMsg.setOpaque(true);
+        add(errorMsg, "pos 0 0 (100%-242) 30");
+        revalidate();
         repaint();
     }
 

@@ -16,7 +16,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.Connection;
 
 public class LoadGamePhase extends CreateGamePhase {
 
@@ -101,6 +100,9 @@ public class LoadGamePhase extends CreateGamePhase {
 
     @Override
     public void next() {
+        for (Player player : game.getAllPlayers()) {
+            player.getClock().resetRunning(); //start running clock from now
+        }
         super.next();
         getDefaultNext().loadGame(snapshot); //call after super.next() to be able fake entered flag
     }

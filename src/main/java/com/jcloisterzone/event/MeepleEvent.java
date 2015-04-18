@@ -35,6 +35,11 @@ public class MeepleEvent extends MoveEvent<FeaturePointer> implements Undoable {
     }
 
     @Override
+    public Event getInverseEvent() {
+        return new MeepleEvent(getTriggeringPlayer(), meeple, to, from);
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " meeple:" + meeple + " player:" + meeple.getPlayer().getNick();
     }

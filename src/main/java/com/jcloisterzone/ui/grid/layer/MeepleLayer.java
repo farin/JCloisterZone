@@ -45,8 +45,9 @@ public class MeepleLayer extends AbstractGridLayer {
         ImmutablePoint scaledOffset = mi.getScaledOffset(boxSize);
         //TODO optimize also for scrolling
         if (mi.scaledImage == null) {
-            int size = (int) (getSquareSize() * FIGURE_SIZE_RATIO);
-            Image img = mi.sourceImage.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            int width = (int) (getSquareSize() * FIGURE_SIZE_RATIO * mi.xScaleFactor);
+            int height = (int) (mi.heightWidthRatio * width * mi.yScaleFactor);
+            Image img = mi.sourceImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             mi.scaledImage = new ImageIcon(img).getImage();
         }
         int x = getOffsetX(mi.position) + scaledOffset.getX();
@@ -139,9 +140,18 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
-        permanentImages.add(new PositionedImage(position, offset, image));
+    	addPermanentImage(position, offset, image, 1.0, 1.0);
     }
 
+
+    //TODO hack with xScale, yScale - clean and do better
+    public void addPermanentImage(Position position, ImmutablePoint offset, Image image, double xScale, double yScale) {
+    	PositionedImage pi = new PositionedImage(position, offset, image);
+    	pi.heightWidthRatio = image.getHeight(null) / image.getWidth(null);
+    	pi.xScaleFactor = xScale;
+    	pi.yScaleFactor = yScale;
+        permanentImages.add(pi);
+    }
 
     //TODO path from Theme
     public String getExtraDecoration(Class<? extends Meeple> type, FeaturePointer fp) {
@@ -163,6 +173,9 @@ public class MeepleLayer extends AbstractGridLayer {
         public final ImmutablePoint offset;
         public final Image sourceImage;
         public Image scaledImage;
+        public double heightWidthRatio = 1.0;
+        public double xScaleFactor = 1.0;
+        public double yScaleFactor = 1.0;
 
         public PositionedImage(Position position, ImmutablePoint offset, Image sourceImage) {
             this.position = position;
@@ -188,7 +201,8 @@ public class MeepleLayer extends AbstractGridLayer {
              this.bridgePlacement = bridgePlacement;
          }
 
-         public ImmutablePoint getScaledOffset(int boxSize) {
+         @Override
+		public ImmutablePoint getScaledOffset(int boxSize) {
              ImmutablePoint point = offset;
              if (order > 0) {
                  point = point.translate(10*order, 0);

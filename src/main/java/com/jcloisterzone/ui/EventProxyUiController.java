@@ -44,7 +44,7 @@ public class EventProxyUiController<T extends EventProxy> {
     	try {
     		eventBus.unregister(subscriber);
     	} catch (IllegalArgumentException ex) {
-    		logger.warn("Subscriber not registered.", ex);
+    		logger.warn("Subscriber not registered.");
     	}
     }
 
@@ -53,7 +53,7 @@ public class EventProxyUiController<T extends EventProxy> {
 	}
 
     public Config getConfig() {
-    	return client.getConfig();
+    	return client == null ? null : client.getConfig();
     }
 
     public T getEventProxy() {

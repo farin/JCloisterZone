@@ -146,4 +146,8 @@ public class GameSetupView extends AbstractUiView {
         connectedClientsPanel.updateClients(ev.getClients());
     }
 
+    @Override
+	public void onWebsocketClose(int code, String reason, boolean remote) {
+		client.mountView(new StartView(client));
+	}
 }

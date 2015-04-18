@@ -33,7 +33,7 @@ public class CityScoring extends AbstractScoringTest {
 
     @Test
     public void tinyCustomRule() {
-        game.getCustomRules().add(CustomRule.TINY_CITY_2_POINTS);
+        game.getCustomRules().put(CustomRule.TINY_CITY_2_POINTS, true);
 
         Tile t;
         t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");

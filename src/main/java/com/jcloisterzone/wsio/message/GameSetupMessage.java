@@ -1,20 +1,24 @@
 package com.jcloisterzone.wsio.message;
 
+import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.wsio.MessageParser.CustomRulesMapAdapter;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_SETUP")
 public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
-    private Set<CustomRule> rules;
+    @JsonAdapter(CustomRulesMapAdapter.class)
+    private Map<CustomRule, Object> rules;
     private Set<Expansion> expansions;
     private Set<Class<? extends Capability>> capabilityClasses;
 
-    public GameSetupMessage(String gameId, Set<CustomRule> rules, Set<Expansion> expansions,
+    public GameSetupMessage(String gameId, Map<CustomRule, Object> rules, Set<Expansion> expansions,
             Set<Class<? extends Capability>> capabilityClasses) {
         this.gameId = gameId;
         this.rules = rules;
@@ -23,7 +27,7 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
@@ -31,15 +35,15 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
         this.gameId = gameId;
     }
 
-    public Set<CustomRule> getRules() {
-		return rules;
-	}
+    public Map<CustomRule, Object> getRules() {
+        return rules;
+    }
 
-	public void setRules(Set<CustomRule> rules) {
-		this.rules = rules;
-	}
+    public void setRules(Map<CustomRule, Object> rules) {
+        this.rules = rules;
+    }
 
-	public Set<Expansion> getExpansions() {
+    public Set<Expansion> getExpansions() {
         return expansions;
     }
 

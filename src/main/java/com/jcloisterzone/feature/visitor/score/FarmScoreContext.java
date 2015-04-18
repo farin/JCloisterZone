@@ -15,7 +15,7 @@ import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.SiegeCapability;
 
-public class FarmScoreContext extends AbstractScoreContext {
+public class FarmScoreContext extends MultiTileScoreContext {
 
     private Map<City, CityScoreContext> adjoiningCompletedCities = new HashMap<>();
     private Set<Castle> adjoiningCastles = new HashSet<>();
@@ -83,11 +83,11 @@ public class FarmScoreContext extends AbstractScoreContext {
     }
 
     public int getPoints(Player player) {
-        return getPlayerPoints(player, getPointsPerCity(player, 3));
+        return getPlayerPoints(player, getPointsPerCity(player, 3)) + getLittleBuildingPoints();
     }
 
     public int getPointsWhenBarnIsConnected(Player player) {
-        return getPlayerPoints(player, getPointsPerCity(player, 1));
+        return getPlayerPoints(player, getPointsPerCity(player, 1)) + getLittleBuildingPoints();
     }
 
     private int getPlayerPoints(Player player, int pointsPerCity) {

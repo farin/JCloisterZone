@@ -20,15 +20,16 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.ui.GameController;
 
 
-public class WagonPhase extends Phase {
+public class WagonPhase extends ServerAwarePhase {
 
     final WagonCapability wagonCap;
 
 
-    public WagonPhase(Game game) {
-        super(game);
+    public WagonPhase(Game game, GameController controller) {
+        super(game, controller);
         wagonCap = game.getCapability(WagonCapability.class);
     }
 
@@ -76,7 +77,9 @@ public class WagonPhase extends Phase {
             Feature f = rw.get(wagonPlayer);
             List<FeaturePointer> wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
-                game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class).addAll(wagonMoves), true));
+                Player activePlayer = getActivePlayer();
+                toggleClock(activePlayer);
+                game.post(new SelectActionEvent(activePlayer, new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
             } else {
                 rw.remove(wagonPlayer);

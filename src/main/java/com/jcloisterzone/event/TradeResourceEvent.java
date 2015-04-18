@@ -29,4 +29,9 @@ public class TradeResourceEvent extends PlayEvent implements Undoable {
         ClothWineGrainCapability cap = game.getCapability(ClothWineGrainCapability.class);
         cap.addTradeResources(getTargetPlayer(), resource, -count);
     }
+
+    @Override
+    public Event getInverseEvent() {
+        throw new UnsupportedOperationException();
+    }
 }

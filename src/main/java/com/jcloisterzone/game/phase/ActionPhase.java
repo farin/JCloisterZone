@@ -31,7 +31,7 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 
 public class ActionPhase extends Phase {
@@ -58,25 +58,12 @@ public class ActionPhase extends Phase {
             actions.add(new MeepleAction(SmallFollower.class).addAll(followerLocations));
         }
         game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
-        if (isAutoTurnEnd(actions)) {
-            next();
-        } else {
-            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
-        }
+        game.post(new SelectActionEvent(getActivePlayer(), actions, true));
     }
 
     @Override
     public void notifyRansomPaid() {
         enter(); //recompute available actions
-    }
-
-    private boolean isAutoTurnEnd(List<? extends PlayerAction<?>> actions) {
-        if (!actions.isEmpty()) return false;
-        if (towerCap != null && !towerCap.isRansomPaidThisTurn() && towerCap.hasImprisonedFollower(getActivePlayer())) {
-            //player can return figure immediately
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -176,10 +163,12 @@ public class ActionPhase extends Phase {
     }
 
     @WsSubscribe
-    public void handleFlierDice(FlierDiceMessage msg) {
+    public void handleDeployFlier(DeployFlierMessage msg) {
+        game.updateRandomSeed(msg.getCurrentTime());
+        int distance = game.getRandom().nextInt(3) + 1;
         flierCap.setFlierUsed(true);
-        flierCap.setFlierDistance(msg.getMeepleTypeClass(), msg.getDistance());
-        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), msg.getDistance()));
+        flierCap.setFlierDistance(msg.getMeepleTypeClass(), distance);
+        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
         next(FlierActionPhase.class);
     }
 }

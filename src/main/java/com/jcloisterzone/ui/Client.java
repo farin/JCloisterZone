@@ -1,7 +1,10 @@
 package com.jcloisterzone.ui;
 
-import java.awt.Color;
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -44,12 +47,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.AppUpdate;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
@@ -69,9 +70,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
-
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -101,7 +99,7 @@ public class Client extends JFrame {
     private static Client instance;
 
     public Client(Path dataDirectory, ConfigLoader configLoader, Config config, List<Plugin> plugins) {
-    	instance = this;
+        instance = this;
         this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
@@ -109,7 +107,7 @@ public class Client extends JFrame {
     }
 
     public static Client getInstance() {
-    	return instance;
+        return instance;
     }
 
     public boolean mountView(UiView view) {
@@ -134,6 +132,30 @@ public class Client extends JFrame {
 
     public UiView getView() {
         return view;
+    }
+
+    private void initWindowSize() {
+        String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
+        if (System.getProperty("windowSize") != null) {
+            windowSize = System.getProperty("windowSize");
+        }
+        if (windowSize == null || "fullscreen".equals(windowSize)) {
+            this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        } else if ("L".equals(windowSize) || "R".equals(windowSize)) {
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            int dw = gd.getDisplayMode().getWidth();
+            int dh = gd.getDisplayMode().getHeight();
+            setSize(dw/2, dh-40);
+            setLocation("L".equals(windowSize) ? 0 : dw/2, 0);
+        } else {
+            String[] sizes = windowSize.split("x");
+            if (sizes.length == 2) {
+                UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+            } else {
+                logger.warn("Invalid configuration value for windows_size");
+                this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            }
+        }
     }
 
     public void init() {
@@ -164,19 +186,7 @@ public class Client extends JFrame {
 
         mountView(new StartView(this));
         this.pack();
-
-        String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
-        if (windowSize == null || "fullscreen".equals(windowSize)) {
-            this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        } else {
-            String[] sizes = windowSize.split("x");
-            if (sizes.length == 2) {
-                UiUtils.centerDialog(this, Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
-            } else {
-                logger.warn("Invalid configuration value for windows_size");
-                this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-            }
-        }
+        initWindowSize();
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
@@ -227,12 +237,12 @@ public class Client extends JFrame {
 
     //TODO should be referenced from Controller
     public Connection getConnection() {
-        return clientMessageListener.getConnection();
+        return clientMessageListener == null ? null : clientMessageListener.getConnection();
     }
 
     public ClientMessageListener getClientMessageListener() {
-		return clientMessageListener;
-	}
+        return clientMessageListener;
+    }
 
     public void setDiscardedTilesDialog(DiscardedTilesDialog discardedTilesDialog) {
         this.discardedTilesDialog = discardedTilesDialog;
@@ -534,6 +544,10 @@ public class Client extends JFrame {
 
     public void onWebsocketError(Exception ex) {
         view.onWebsocketError(ex);
+    }
+
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+        view.onWebsocketClose(code, reason, remote);
     }
 
     public void onUnhandledWebsocketError(Exception ex) {

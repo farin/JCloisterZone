@@ -11,7 +11,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
@@ -19,7 +18,7 @@ import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.FlierDiceMessage;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 public class PhantomPhase extends Phase {
 
@@ -89,12 +88,13 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void pass() {
+    	game.clearLastUndoable();
         next();
     }
 
     @WsSubscribe
-    public void handleFlierDice(FlierDiceMessage msg) {
-        game.getPhases().getInstance(ActionPhase.class).handleFlierDice(msg);
+    public void handleDeployFlier(DeployFlierMessage msg) {
+        game.getPhases().getInstance(ActionPhase.class).handleDeployFlier(msg);
     }
 
 }

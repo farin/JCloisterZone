@@ -76,8 +76,8 @@ public class FlierCapability extends Capability {
 
     private List<Feature> getReachableFeatures() {
         List<Feature> result = new ArrayList<>();
-        Location direction = getTile().getFlier().rotateCW(getTile().getRotation());
-        Position pos = getTile().getPosition();
+        Location direction = getCurrentTile().getFlier().rotateCW(getCurrentTile().getRotation());
+        Position pos = getCurrentTile().getPosition();
         for (int i = 0; i < 3; i++) {
             pos = pos.add(direction);
             Tile target = getBoard().get(pos);
@@ -132,7 +132,7 @@ public class FlierCapability extends Capability {
 
             if (allowAdd && landingExists) {
                 MeepleAction action = new MeepleAction(f.getClass());
-                action.add(new FeaturePointer(getTile().getPosition(), Location.FLIER));
+                action.add(new FeaturePointer(getCurrentTile().getPosition(), Location.FLIER));
                 actions.add(action);
             }
         }

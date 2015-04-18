@@ -74,7 +74,7 @@ public class RiverCapability extends Capability {
 
     @Override
     public void turnPartCleanUp() {
-        if (getTile().getRiver() == null) return;
+        if (getCurrentTile().getRiver() == null) return;
         if (getTilePack().isEmpty()) {
             if (getTilePack().getGroupState("river") == TileGroupState.ACTIVE) {
                 activateNonRiverTiles();

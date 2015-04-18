@@ -41,7 +41,7 @@ public class PortalCapability extends Capability {
 
     @Override
     public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
-        if (getTile().hasTrigger(TileTrigger.PORTAL)) {
+        if (getCurrentTile().hasTrigger(TileTrigger.PORTAL)) {
             if (game.getActivePlayer().hasFollower()) {
                 prepareMagicPortal(followerOptions);
             }
@@ -51,7 +51,7 @@ public class PortalCapability extends Capability {
     public void prepareMagicPortal(Set<FeaturePointer> followerOptions) {
         if (portalUsed) return;
         for (Tile tile : getBoard().getAllTiles()) {
-            if (tile == getTile()) continue; //already contained in original followerOptions
+            if (tile == getCurrentTile()) continue; //already contained in original followerOptions
             Set<FeaturePointer> locations = game.prepareFollowerLocations(tile, true);
             followerOptions.addAll(locations);
         }

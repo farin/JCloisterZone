@@ -24,7 +24,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.wsio.message.RollFlierDiceMessage;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -64,51 +64,51 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
     }
 
 
-    private boolean confirmFarmPlacement() {
-        String options[] = {_("Place a follower"), _("Cancel") };
-        int result = JOptionPane.showOptionDialog(getClient(),
-                _("Do you really want to place a follower on farm?"),
-                _("Confirm follower placement"),
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        return JOptionPane.YES_OPTION == result;
-    }
-
-    private boolean confirmTowerPlacement(Position pos) {
-        int result;
-        Player activePlayer = getGame().getActivePlayer();
-        if (getGame().getCapability(TowerCapability.class).getTowerPieces(activePlayer) > 0) {
-            String options[] = {
-                _("Confirm follower placement"),
-                _("Cancel"),
-                _("Place a tower piece")
-            };
-            result = JOptionPane.showOptionDialog(getClient(),
-                _("Do you really want to place a follower on the tower?\n(To prevent tower from adding more pieces on the top)"),
-                _("Confirm follower placement"),
-                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        } else {
-            String options[] = {
-                _("Confirm follower placement"),
-                _("Cancel")
-            };
-            result = JOptionPane.showOptionDialog(getClient(),
-                _("Do you really want to place a follower on the tower?\n(To prevent tower from adding more pieces on the top)"),
-                _("Confirm follower placement"),
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        }
-        if (result == JOptionPane.CANCEL_OPTION) {
-            //place tower piece instead
-            for (PlayerAction<?> action : getClient().getControlPanel().getActionPanel().getActions()) {
-                if (action instanceof TowerPieceAction) {
-                    ((TowerPieceAction) action).perform(getRmiProxy(), pos);
-                    gridPanel.hideLayer(this);
-                    return false;
-                }
-            }
-            return false;
-        }
-        return result == JOptionPane.YES_OPTION;
-    }
+//    private boolean confirmFarmPlacement() {
+//        String options[] = {_("Place a follower"), _("Cancel") };
+//        int result = JOptionPane.showOptionDialog(getClient(),
+//                _("Do you really want to place a follower on farm?"),
+//                _("Confirm follower placement"),
+//                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//        return JOptionPane.YES_OPTION == result;
+//    }
+//
+//    private boolean confirmTowerPlacement(Position pos) {
+//        int result;
+//        Player activePlayer = getGame().getActivePlayer();
+//        if (getGame().getCapability(TowerCapability.class).getTowerPieces(activePlayer) > 0) {
+//            String options[] = {
+//                _("Confirm follower placement"),
+//                _("Cancel"),
+//                _("Place a tower piece")
+//            };
+//            result = JOptionPane.showOptionDialog(getClient(),
+//                _("Do you really want to place a follower on the tower?\n(To prevent tower from adding more pieces on the top)"),
+//                _("Confirm follower placement"),
+//                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//        } else {
+//            String options[] = {
+//                _("Confirm follower placement"),
+//                _("Cancel")
+//            };
+//            result = JOptionPane.showOptionDialog(getClient(),
+//                _("Do you really want to place a follower on the tower?\n(To prevent tower from adding more pieces on the top)"),
+//                _("Confirm follower placement"),
+//                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//        }
+//        if (result == JOptionPane.CANCEL_OPTION) {
+//            //place tower piece instead
+//            for (PlayerAction<?> action : getClient().getControlPanel().getActionPanel().getActions()) {
+//                if (action instanceof TowerPieceAction) {
+//                    ((TowerPieceAction) action).perform(getRmiProxy(), pos);
+//                    gridPanel.hideLayer(this);
+//                    return false;
+//                }
+//            }
+//            return false;
+//        }
+//        return result == JOptionPane.YES_OPTION;
+//    }
 
 
     @Override
@@ -116,17 +116,17 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
             Feature piece = gridPanel.getTile(pos).getFeature(loc);
-            if (piece instanceof Farm) {
-                if (Follower.class.isAssignableFrom(ma.getMeepleType()) && getClient().getConfig().getConfirm().getFarm_place()) {
-                    if (!confirmFarmPlacement()) return;
-                }
-            } else if (piece instanceof Tower) {
-                if (getClient().getConfig().getConfirm().getTower_place()) {
-                    if (!confirmTowerPlacement(pos)) return;
-                }
-            }
+//            if (piece instanceof Farm) {
+//                if (Follower.class.isAssignableFrom(ma.getMeepleType()) && getClient().getConfig().getConfirm().getFarm_place()) {
+//                    if (!confirmFarmPlacement()) return;
+//                }
+//            } else if (piece instanceof Tower) {
+//                if (getClient().getConfig().getConfirm().getTower_place()) {
+//                    if (!confirmTowerPlacement(pos)) return;
+//                }
+//            }
             if (loc == Location.FLIER) {
-                getClient().getConnection().send(new RollFlierDiceMessage(getGame().getGameId(), ma.getMeepleType()));
+                getClient().getConnection().send(new DeployFlierMessage(getGame().getGameId(), ma.getMeepleType()));
                 return;
             }
             if (loc == Location.CLOISTER && abbotOption) {

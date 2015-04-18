@@ -17,10 +17,10 @@ public class PlayerSlot implements Serializable {
     private Integer serial; //server assign sequence number whgen type is occupied
 
     private String sessionId;
+    private String clientId;
     private String nickname;
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
-    private boolean disconnected;
 
     private transient PlayerColor colors;
     private transient AiPlayer aiPlayer; //ai player instance, set only on onwner host
@@ -99,12 +99,9 @@ public class PlayerSlot implements Serializable {
     }
 
     public boolean isDisconnected() {
-        return disconnected;
+        return sessionId == null;
     }
 
-    public void setDisconnected(boolean disconnected) {
-        this.disconnected = disconnected;
-    }
 
     public AiPlayer getAiPlayer() {
         return aiPlayer;
@@ -113,4 +110,12 @@ public class PlayerSlot implements Serializable {
     public void setAiPlayer(AiPlayer aiPlayer) {
         this.aiPlayer = aiPlayer;
     }
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 }

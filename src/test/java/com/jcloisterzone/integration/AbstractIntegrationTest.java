@@ -6,12 +6,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.LoadGamePhase;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.MutedConnection;
 
 
 public class AbstractIntegrationTest {
@@ -19,7 +20,7 @@ public class AbstractIntegrationTest {
     public static class EventCatchingGame extends Game {
 
         public EventCatchingGame() {
-            super("1");
+            super("12345678");
         }
 
         public List<Event> events = new ArrayList<>();
@@ -36,7 +37,9 @@ public class AbstractIntegrationTest {
             URI uri = getClass().getResource(save).toURI();
             Snapshot snapshot = new Snapshot(new File(uri));
             EventCatchingGame game = (EventCatchingGame) snapshot.asGame(new EventCatchingGame());
-            LoadGamePhase phase = new LoadGamePhase(game, snapshot, null);
+            GameController gc = new GameController(null, game);
+            gc.setConnection(new MutedConnection(null));
+            LoadGamePhase phase = new LoadGamePhase(game, snapshot, gc);
             game.getPhases().put(phase.getClass(), phase);
             game.setPhase(phase);
             phase.setSlots(new PlayerSlot[0]);

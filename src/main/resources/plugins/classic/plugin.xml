@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugins.classic" version="3">
+<plugin id="com.jcloisterzone.plugins.classic" version="3.2">
     <title>Classic art</title>
     <description>Graphics from original board game</description>
     <expansions>
@@ -29,5 +29,7 @@
         <expansion>FLIER</expansion>
         <expansion>CORN_CIRCLES_II</expansion>
         <expansion>MAGE_AND_WITCH</expansion>
+        <expansion>GOLDMINES</expansion>
+        <expansion>FERRIES</expansion>
     </expansions>
 </plugin>

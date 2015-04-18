@@ -35,7 +35,7 @@ public class FestivalCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        if (!getTile().hasTrigger(TileTrigger.FESTIVAL)) return;
+        if (!getCurrentTile().hasTrigger(TileTrigger.FESTIVAL)) return;
 
         Player activePlayer = game.getActivePlayer();
         UndeployAction action = new UndeployAction(UNDEPLOY_FESTIVAL);

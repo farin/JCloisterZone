@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <tile count="1" id="RCr">
+    <tile count="2" id="RCr">
         <road>W E</road>
         <city>N</city>
         <farm city="N">EL WR</farm>

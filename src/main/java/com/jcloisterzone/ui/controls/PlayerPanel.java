@@ -25,6 +25,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -90,6 +91,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     private final LittleBuildingsCapability lbCap;
     private final TunnelCapability tunnelCap;
 
+    private Integer timeLimit;
+
     public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
         this.client = client;
         this.player = player;
@@ -107,6 +110,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         cwgCap = game.getCapability(ClothWineGrainCapability.class);
         lbCap = game.getCapability(LittleBuildingsCapability.class);
         tunnelCap = game.getCapability(TunnelCapability.class);
+
+        timeLimit = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
     }
 
     private void drawDelimiter(int y) {
@@ -172,6 +177,20 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         return rect;
     }
 
+    private void drawTimeTextBox(String text, Color textColor) {
+        int w = 64;
+        int h = 22;
+        if (bx+w > PANEL_WIDTH-PADDING_R-PADDING_L) {
+            bx = PADDING_L;
+            by += LINE_HEIGHT;
+        }
+        g2.setColor(Color.WHITE);
+        g2.fillRoundRect(bx, by, w, h, 8, 8);
+        g2.setColor(textColor);
+        g2.drawString(text, bx+4, by+17);
+        bx += w + 8;
+    }
+
 
     public boolean repaintContent(int width) {
         Game game = gc.getGame();
@@ -210,6 +229,16 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         g2.setFont(FONT_MEEPLE);
         bx = PADDING_L;
         by = 43;
+
+        if (timeLimit != null) {
+            long remainingMs = timeLimit*1000 - player.getClock().getTime();
+            if (remainingMs <= 0) {
+                drawTimeTextBox("00.00", Color.RED);
+            } else {
+                long remaining = remainingMs / 1000;
+                drawTimeTextBox(String.format("%02d.%02d", remaining / 60, remaining % 60), Color.DARK_GRAY);
+            }
+        }
 
         int small = 0;
         String smallImgKey = SmallFollower.class.getSimpleName();
@@ -256,9 +285,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
 
         if (lbCap != null) {
+        	drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
+        	drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
             drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
-            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
-            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
         }
 
         if (kingRobberCap != null) {

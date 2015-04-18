@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 
 import javax.swing.ImageIcon;
@@ -205,18 +204,18 @@ public class CreateGamePlayerPanel extends JPanel {
             String nick;
             boolean skipPlayer = false;
             if (channel && !"true".equals(System.getProperty("allowHotSeatOnlineGame"))) {
-            	for (PlayerSlot other : slots) {
-            		if (other == slot) continue;
-            		if (other.isOwn() && !other.isAi()) skipPlayer = true;
-            	}
+                for (PlayerSlot other : slots) {
+                    if (other == slot) continue;
+                    if (other.isOwn() && !other.isAi()) skipPlayer = true;
+                }
             }
 
             if (!slot.isOccupied() && !skipPlayer) {  // open --> player
-            	if (channel) {
-            		nick = client.getConnection().getNickname();
-            	} else {
-            		nick = nameProvider.reserveName(false, slot.getNumber());
-            	}
+                if (channel) {
+                    nick = client.getConnection().getNickname();
+                } else {
+                    nick = nameProvider.reserveName(false, slot.getNumber());
+                }
                 slot.setNickname(nick);
                 nickname.setText(nick);
                 slot.setState(SlotState.OWN);
@@ -274,14 +273,14 @@ public class CreateGamePlayerPanel extends JPanel {
 
 
     public NameProvider getNameProvider() {
-		return nameProvider;
-	}
+        return nameProvider;
+    }
 
-	public void setNameProvider(NameProvider nameProvider) {
-		this.nameProvider = nameProvider;
-	}
+    public void setNameProvider(NameProvider nameProvider) {
+        this.nameProvider = nameProvider;
+    }
 
-	class NicknameUpdater extends Thread implements CaretListener, FocusListener {
+    class NicknameUpdater extends Thread implements CaretListener, FocusListener {
 
         private boolean stopped;
         private String update;

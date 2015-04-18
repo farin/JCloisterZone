@@ -1,6 +1,9 @@
 package com.jcloisterzone.ui.dialog;
 
 import java.awt.Container;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -8,6 +11,7 @@ import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Joiner;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -35,7 +39,19 @@ public class GameSetupDialog extends JDialog {
 
         joiner = Joiner.on("\n").skipNulls();
         pane.add(new JLabel(_("Rules")), "wrap, w 600, gaptop 10");
-        MultiLineLabel lRules = new MultiLineLabel(joiner.join(game.getCustomRules()));
+        List<String> rules = new ArrayList<>();
+        for (Entry<CustomRule, Object> entry : game.getCustomRules().entrySet()) {
+            CustomRule rule = entry.getKey();
+            if (rule.getType().equals(Boolean.class)) {
+                if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
+                if (entry.getValue().equals(Boolean.FALSE)) continue;
+                rules.add(rule.getLabel());
+            } else {
+                rules.add(rule.getLabel() + " = " + entry.getValue());
+            }
+        }
+
+        MultiLineLabel lRules = new MultiLineLabel(joiner.join(rules));
         pane.add(lRules, "wrap, w 600");
     }
 

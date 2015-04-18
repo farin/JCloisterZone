@@ -17,19 +17,23 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.event.FeatureEvent;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Castle;
@@ -42,11 +46,13 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
+import com.jcloisterzone.wsio.message.CommitMessage;
 
 public class ControlPanel extends JPanel {
 
@@ -68,12 +74,16 @@ public class ControlPanel extends JPanel {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
+    private static final String PASS_LABEL = _("Skip");
+    private static final String CONFIRMATION_LABEL = _("Continue");
+
     private final Client client;
     private final GameView gameView;
     private final GameController gc;
     private final Game game;
 
     private JButton passButton;
+    private boolean showConfirmRequest;
     private boolean canPass;
     private boolean showProjectedPoints, projectedPointsValid = true;
 
@@ -83,8 +93,10 @@ public class ControlPanel extends JPanel {
     private BazaarCapability bcb;
     private BazaarSupplyPanel bazaarSupplyPanel;
 
+    private final Timer timer;
+
     public ControlPanel(GameView gameView) {
-    	this.client = gameView.getClient();
+        this.client = gameView.getClient();
         this.gameView = gameView;
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
@@ -95,7 +107,7 @@ public class ControlPanel extends JPanel {
         setOpaque(false);
         setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));
 
-        passButton = new JButton(_("Skip"));
+        passButton = new JButton(PASS_LABEL);
         passButton.setBorder(BorderFactory.createEmptyBorder(1, 30, 1, 30));
         passButton.setVisible(false);
         passButton.addActionListener(new ActionListener() {
@@ -110,10 +122,9 @@ public class ControlPanel extends JPanel {
         add(actionPanel, "wrap, growx, gapleft 35, h 106");
 
         if (bcb != null) {
-        	bazaarSupplyPanel = new BazaarSupplyPanel();
-        	bazaarSupplyPanel.setVisible(false);
-        	add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
-
+            bazaarSupplyPanel = new BazaarSupplyPanel();
+            bazaarSupplyPanel.setVisible(false);
+            add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
         }
 
         Player[] players = game.getAllPlayers();
@@ -124,11 +135,21 @@ public class ControlPanel extends JPanel {
             playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
             add(playerPanels[i], "wrap, growx, gapleft 35, gapbottom 12, h pref");
         }
+
+        //better be accurate and repaint just every second - TODO
+        timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (PlayerPanel panel : playerPanels) {
+                    panel.repaint();
+                }
+            }
+        });
     }
 
 
     private void setCanPass(boolean canPass) {
-    	this.canPass = canPass;
+        this.canPass = canPass;
         passButton.setVisible(canPass);
     }
 
@@ -149,7 +170,7 @@ public class ControlPanel extends JPanel {
             g2.setColor(PANEL_BG_COLOR_SHADOW);
             g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
         } else {
-        	PlayerPanel pp = playerPanels[player.getIndex()];
+            PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
 
             g2.setColor(PANEL_BG_COLOR);
@@ -179,7 +200,7 @@ public class ControlPanel extends JPanel {
 
         player = game.getActivePlayer();
         if (player != null) {
-        	PlayerPanel pp = playerPanels[player.getIndex()];
+            PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
 
             g2.setColor(Color.BLACK);
@@ -199,7 +220,7 @@ public class ControlPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-    	Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g;
         AffineTransform origTransform = g2.getTransform();
         int w = getWidth();
 
@@ -216,18 +237,18 @@ public class ControlPanel extends JPanel {
         boolean doRevalidate = false;
 
         if (bazaarSupplyPanel != null) {
-        	boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
-        	if (showSupply ^ bazaarSupplyPanel.isVisible()) {
-        		doRevalidate = true;
-        		bazaarSupplyPanel.setVisible(showSupply);
-        	}
+            boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
+            if (showSupply ^ bazaarSupplyPanel.isVisible()) {
+                doRevalidate = true;
+                bazaarSupplyPanel.setVisible(showSupply);
+            }
         }
 
         for (PlayerPanel pp : playerPanels) {
-        	doRevalidate = doRevalidate || pp.repaintContent(w);
+            doRevalidate = doRevalidate || pp.repaintContent(w);
         }
         if (doRevalidate) {
-        	revalidate();
+            revalidate();
         }
 
         g2.setTransform(origTransform);
@@ -236,19 +257,26 @@ public class ControlPanel extends JPanel {
 
     @Override
     protected void paintChildren(Graphics g) {
-    	super.paintChildren(g);
-    	paintBackgroundShadow((Graphics2D) g);
+        super.paintChildren(g);
+        paintBackgroundShadow((Graphics2D) g);
     }
 
     public void pass() {
-        if (canPass) {
-            gc.getRmiProxy().pass();
+        if (showConfirmRequest) {
+            setShowConfirmRequest(false);
+            gc.getConnection().send(new CommitMessage(game.getGameId()));
+            repaint();
+        } else {
+            if (canPass) {
+                gc.getRmiProxy().pass();
+            }
         }
     }
 
     public ActionPanel getActionPanel() {
         return actionPanel;
     }
+
 
     public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
         // direct collection sort can be unsupported - so copy to array first!
@@ -265,137 +293,169 @@ public class ControlPanel extends JPanel {
 
     public void clearActions() {
         actionPanel.clearActions();
+        actionPanel.setFakeAction(null);
         setCanPass(false);
     }
 
-	public boolean isShowPotentialPoints() {
-		return showProjectedPoints;
-	}
+    public boolean isShowPotentialPoints() {
+        return showProjectedPoints;
+    }
 
-	public void setShowProjectedPoints(boolean showProjectedPoints) {
-		this.showProjectedPoints = showProjectedPoints;
-		if (showProjectedPoints) {
-			refreshPotentialPoints();
-		} else {
-			gameView.getGridPanel().repaint(); //repaint immediately
-		}
-	}
+    public void setShowProjectedPoints(boolean showProjectedPoints) {
+        this.showProjectedPoints = showProjectedPoints;
+        if (showProjectedPoints) {
+            refreshPotentialPoints();
+        } else {
+            gameView.getGridPanel().repaint(); //repaint immediately
+        }
+    }
 
-	private void refreshPotentialPoints() {
-		if (!showProjectedPoints) return;
-		projectedPointsValid = false;
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				//run only once in one time - refreshPotentialPoints can be triggered by more events
-				if (!projectedPointsValid) {
-					projectedPointsValid = true;
+    private void refreshPotentialPoints() {
+        if (!showProjectedPoints) return;
+        projectedPointsValid = false;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                //run only once in one time - refreshPotentialPoints can be triggered by more events
+                if (!projectedPointsValid) {
+                    projectedPointsValid = true;
 
-					for (PlayerPanel playerPanel : playerPanels) {
-						playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
-					}
+                    for (PlayerPanel playerPanel : playerPanels) {
+                        playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
+                    }
 
-					PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
-					ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
-			        scoreAll.scoreAll(game, strategy);
-			        game.finalScoring(strategy);
+                    PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
+                    ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
+                    scoreAll.scoreAll(game, strategy);
+                    game.finalScoring(strategy);
 
-					gameView.getGridPanel().repaint();
-				}
-			}
-		});
-	}
+                    repaint();
+                }
+            }
+        });
+    }
 
-	@Subscribe
-	public void handleScoreEvent(ScoreEvent ev) {
-		refreshPotentialPoints();
-	}
+    public void setShowConfirmRequest(boolean showConfirmRequest) {
+        passButton.setText(showConfirmRequest ? CONFIRMATION_LABEL : PASS_LABEL);
+        passButton.setVisible(showConfirmRequest);
+        this.showConfirmRequest = showConfirmRequest;
+        actionPanel.setShowConfirmRequest(showConfirmRequest, false);
+        repaint();
+    }
 
-	@Subscribe
-	public void handleTileEvent(TileEvent ev) {
-		if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
-			refreshPotentialPoints();
-		}
-	}
+    @Subscribe
+    public void handleRequestConfirm(RequestConfirmEvent ev) {
+    	clearActions();
+        if (ev.getTargetPlayer().isLocalHuman()) {
+            setShowConfirmRequest(true);
+        } else {
+        	actionPanel.setShowConfirmRequest(true, true);
+        	repaint();
+        }
+    }
 
-	@Subscribe
-	public void handleMeepleEvent(MeepleEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleClockUpdateEvent(ClockUpdateEvent ev) {
+        timer.stop();
+        if (ev.isClockRunning() && game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME) != null) {
+            PlayerClock runningClock = ev.getRunningClockPlayer().getClock();
+            //this solution is not much accurate - TODO fix
+            //+clean time from roundtrip!!!
+            timer.setInitialDelay((int) runningClock.getTime() % 1000);
+            timer.start();
+        }
+    }
 
-	@Subscribe
-	public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleScoreEvent(ScoreEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleTileEvent(TileEvent ev) {
+        if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
+            refreshPotentialPoints();
+        }
+    }
 
-	@Subscribe
-	public void handleFeatureEvent(FeatureEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleMeepleEvent(MeepleEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	@Subscribe
-	public void handleMeeplePrisonEvent(FeatureEvent ev) {
-		refreshPotentialPoints();
-	}
+    @Subscribe
+    public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
+        refreshPotentialPoints();
+    }
 
-	class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
+    @Subscribe
+    public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
+        refreshPotentialPoints();
+    }
 
-		@Override
-		public void addPoints(Player player, int points, PointCategory category) {
-			playerPanels[player.getIndex()].addPotentialPoints(points);
-		}
+    @Subscribe
+    public void handleFeatureEvent(FeatureEvent ev) {
+        refreshPotentialPoints();
+    }
 
-		@Override
-		public void scoreCompletableFeature(CompletableScoreContext ctx) {
-			int points = ctx.getPoints();
-	        for (Player p : ctx.getMajorOwners()) {
-	        	addPoints(p, points, null);
-	        }
-		}
+    @Subscribe
+    public void handleMeeplePrisonEvent(FeatureEvent ev) {
+        refreshPotentialPoints();
+    }
 
-		@Override
-		public void scoreFarm(FarmScoreContext ctx, Player player) {
-			addPoints(player, ctx.getPoints(player), null);
+    class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
 
-		}
+        @Override
+        public void addPoints(Player player, int points, PointCategory category) {
+            playerPanels[player.getIndex()].addPotentialPoints(points);
+        }
 
-		@Override
-		public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-			addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
-		}
+        @Override
+        public void scoreCompletableFeature(CompletableScoreContext ctx) {
+            int points = ctx.getPoints();
+            for (Player p : ctx.getMajorOwners()) {
+                addPoints(p, points, null);
+            }
+        }
 
-		@Override
-		public void scoreCastle(Meeple meeple, Castle castle) {
-			//empty
-		}
+        @Override
+        public void scoreFarm(FarmScoreContext ctx, Player player) {
+            addPoints(player, ctx.getPoints(player), null);
 
-		@Override
-		public CompletableScoreContext getCompletableScoreContext(Completable completable) {
-			return completable.getScoreContext();
-		}
+        }
 
-		@Override
-		public FarmScoreContext getFarmScoreContext(Farm farm) {
-			return farm.getScoreContext();
-		}
-	}
+        @Override
+        public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
+            addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
+        }
 
-	class BazaarSupplyPanel extends JPanel {
+        @Override
+        public void scoreCastle(Meeple meeple, Castle castle) {
+            //empty
+        }
 
-		public BazaarSupplyPanel() {
-			setOpaque(false);
-		}
+        @Override
+        public CompletableScoreContext getCompletableScoreContext(Completable completable) {
+            return completable.getScoreContext();
+        }
 
-		@Override
-		protected void paintComponent(Graphics g) {
-			Graphics2D g2 = (Graphics2D)g;
-			super.paintComponent(g);
-			List<Tile> queue = bcb.getDrawQueue();
+        @Override
+        public FarmScoreContext getFarmScoreContext(Farm farm) {
+            return farm.getScoreContext();
+        }
+    }
+
+    class BazaarSupplyPanel extends JPanel {
+
+        public BazaarSupplyPanel() {
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D)g;
+            super.paintComponent(g);
+            List<Tile> queue = bcb.getDrawQueue();
             if (!queue.isEmpty()) {
                 int x = LEFT_MARGIN+LEFT_PADDING;
                 for (Tile tile : queue) {
@@ -404,6 +464,6 @@ public class ControlPanel extends JPanel {
                     x += 45;
                 }
             }
-		}
-	}
+        }
+    }
 }

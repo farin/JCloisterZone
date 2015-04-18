@@ -9,10 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -103,15 +105,18 @@ public class Snapshot implements Serializable {
         root = doc.createElement("game");
         root.setAttribute("app-version", Application.VERSION);
         root.setAttribute("phase", game.getPhase().getClass().getName());
+        root.setAttribute("seed", ""+game.getRandomSeed());
         doc.appendChild(root);
 
     }
 
     private void createRuleElements(Game game) {
-        for (CustomRule cr : game.getCustomRules()) {
+        for (Entry<CustomRule, Object> entry : game.getCustomRules().entrySet()) {
+            CustomRule cr = entry.getKey();
             if (cr.equals(CustomRule.RANDOM_SEATING_ORDER)) continue;
             Element el = doc.createElement("rule");
             el.setAttribute("name", cr.name());
+            el.setAttribute("value", entry.getValue().toString());
             root.appendChild(el);
         }
     }
@@ -143,9 +148,7 @@ public class Snapshot implements Serializable {
             el.setAttribute("name", p.getNick());
             el.setAttribute("points", "" + p.getPoints());
             el.setAttribute("slot", "" + p.getSlot().getNumber());
-            if (p.getSlot().isOwn()) {
-                el.setAttribute("local", "true");
-            }
+            el.setAttribute("clientId", p.getSlot().getClientId());
             if (p.getSlot().isAi()) {
                 el.setAttribute("ai-class", p.getSlot().getAiClassName());
             }
@@ -158,6 +161,12 @@ public class Snapshot implements Serializable {
                     el.appendChild(catEl);
                 }
             }
+            Element clockEl = doc.createElement("clock");
+            clockEl.setAttribute("time", ""+p.getClock().getTime());
+            if (p.getClock().isRunning()) {
+                clockEl.setAttribute("running", "true");
+            }
+            el.appendChild(clockEl);
             parent.appendChild(el);
         }
     }
@@ -289,13 +298,19 @@ public class Snapshot implements Serializable {
         }
     }
 
-    public Set<CustomRule> getCustomRules() {
-        Set<CustomRule> result = new HashSet<>();
+    public EnumMap<CustomRule, Object> getCustomRules() {
+        EnumMap<CustomRule, Object> result = new EnumMap<>(CustomRule.class);
         NodeList nl = root.getElementsByTagName("rule");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             CustomRule rule = CustomRule.valueOf(el.getAttribute("name"));
-            result.add(rule);
+            String value = el.getAttribute("value");
+            if (value == null) {
+                //backward compatibility 3.1.x
+                result.put(rule, Boolean.TRUE);
+            } else {
+                result.put(rule, rule.unpackValue(value));
+            }
         }
         return result;
     }
@@ -312,9 +327,9 @@ public class Snapshot implements Serializable {
                 String aiClassName = el.getAttribute("ai-class");
                 slot.setAiClassName(aiClassName);
             } else {
-                if (el.hasAttribute("local")) {
-                    slot.setState(SlotState.OWN);
-                }
+            	if (el.hasAttribute("clientId")) {
+            		slot.setClientId(el.getAttribute("clientId"));
+            	}
             }
             NodeList categories = el.getElementsByTagName("point-category");
             for (int j = 0; j < categories.getLength(); j++) {
@@ -322,6 +337,15 @@ public class Snapshot implements Serializable {
                 PointCategory cat = PointCategory.valueOf(catEl.getAttribute("name"));
                 p.setPointsInCategory(cat, Integer.parseInt(catEl.getAttribute("points")));
             }
+            NodeList clockNl = el.getElementsByTagName("clock");
+            if (clockNl.getLength() > 0) {
+                Element clockEl = (Element) clockNl.item(0);
+                p.getClock().setTime(Long.parseLong(clockEl.getAttribute("time")));
+                if (XmlUtils.attributeBoolValue(el, "running")) {
+                    p.getClock().setRunning(true);
+                }
+            }
+
             players.add(p);
         }
         return players;
@@ -394,15 +418,15 @@ public class Snapshot implements Serializable {
     }
 
     public Game asGame(String gameId) {
-        return asGame(new Game(gameId));
-
+        long seed = Long.parseLong(root.getAttribute("seed"));
+        return asGame(new Game(gameId, seed));
     }
 
     public Game asGame(Game game) {
         game.getExpansions().clear();
         game.getExpansions().addAll(getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(getCustomRules());
+        game.getCustomRules().putAll(getCustomRules());
         game.setPlayers(getPlayers(), getTurnPlayer());
         return game;
     }

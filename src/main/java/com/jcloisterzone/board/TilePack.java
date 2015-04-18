@@ -11,7 +11,6 @@ public interface TilePack {
     int size();
 
     Tile drawTile(int index);
-    Tile[] drawTiles(int[] indexes);
     Tile drawTile(String groupId, String tileId);
     Tile drawTile(String tileId);
 

@@ -8,11 +8,13 @@ public class WelcomeMessage implements WsMessage {
     private String nickname;
     private Integer pingInterval;
     private String maintenance;
+    private Long currentTime;
 
-    public WelcomeMessage(String sessionId, String nickname, Integer pingInterval) {
+    public WelcomeMessage(String sessionId, String nickname, Integer pingInterval, Long currentTime) {
         this.sessionId = sessionId;
         this.nickname = nickname;
         this.pingInterval = pingInterval;
+        this.currentTime = currentTime;
     }
 
     public String getSessionId() {
@@ -39,11 +41,19 @@ public class WelcomeMessage implements WsMessage {
         return pingInterval;
     }
 
-	public String getMaintenance() {
-		return maintenance;
-	}
+    public String getMaintenance() {
+        return maintenance;
+    }
 
-	public void setMaintenance(String maintenance) {
-		this.maintenance = maintenance;
-	}
+    public void setMaintenance(String maintenance) {
+        this.maintenance = maintenance;
+    }
+
+    public Long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(Long currentTime) {
+        this.currentTime = currentTime;
+    }
 }

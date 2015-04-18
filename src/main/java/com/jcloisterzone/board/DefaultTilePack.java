@@ -74,15 +74,6 @@ public class DefaultTilePack implements TilePack {
         throw new ArrayIndexOutOfBoundsException();
     }
 
-    @Override
-    public Tile[] drawTiles(int[] indexes) {
-        Tile[] result = new Tile[indexes.length];
-        for (int i = 0; i < indexes.length; i++) {
-            result[i] = drawTile(indexes[i]);
-        }
-        return result;
-    }
-
     private void increaseSideMaskCounter(Tile tile, String groupId) {
         if (!INACTIVE_GROUP.equals(groupId) && tile.getPosition() == null) {
             Integer countForSideMask = edgePatterns.get(tile.getEdgePattern());
