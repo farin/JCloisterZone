@@ -27,8 +27,8 @@ msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
 msgstr ""
-"<html>La herramienta de informe de errores contiene el juego guardado, log "
-"interno del juego e información de sistema para simplificar el proceso de "
+"<html>La herramienta de informe de errores contiene la partida guardada, log "
+"interno de la partida e información de sistema para simplificar el proceso de "
 "depurado.</html>"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
@@ -148,7 +148,7 @@ msgstr "El Fantasma"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Festival (10th an.)"
-msgstr "El Festiva (10mo aniv.)"
+msgstr "El Festival (10º aniv.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "Little Buildings"
@@ -200,7 +200,7 @@ msgstr "La porxada"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:8
 msgid "Bridge"
-msgstr "Punte"
+msgstr "Puente"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:51
 msgid "Cloister"
@@ -273,19 +273,19 @@ msgstr "Mantener los claustros básicos en el juego."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:31
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr ""
+msgstr "Añadir 3/2/1 puntos para torre/casa/cobertizo"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr ""
+msgstr "Confirmar o deshacer la colocación del meeple."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr ""
+msgstr "Esperando la confirmación del jugador remoto."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
-msgstr ""
+msgstr "No hay acción disponible. Pasa o deshaz la colocación de una casilla."
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
 msgid "Pay ransom"
@@ -308,7 +308,7 @@ msgstr "Confirmar el pago del rescate"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
 msgid "Skip"
-msgstr "Saltear"
+msgstr "Saltar"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
@@ -341,12 +341,12 @@ msgstr "Versiones incompatibles"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
 msgid "Invalid password"
-msgstr ""
+msgstr "Contraseña incorrecta"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
 msgid "New game"
-msgstr "Nuevo juego"
+msgstr "Nueva partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:70
@@ -377,13 +377,13 @@ msgstr "Dejar partida"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
 msgid "Save game"
-msgstr "Guardar el juego"
+msgstr "Guardar partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
 #: src/main/java/com/jcloisterzone/ui/Client.java:428
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
 msgid "Load game"
-msgstr "Cargar una partida"
+msgstr "Cargar partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:35
 msgid "Quit"
@@ -403,7 +403,7 @@ msgstr "Alejar"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Rotate board"
-msgstr ""
+msgstr "Rotar tablero"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
@@ -423,7 +423,7 @@ msgstr "Mostrar fichas descartadas"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
 msgid "Show game setup"
-msgstr "Mostrar configuración del juego"
+msgstr "Mostrar configuración de la partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
 msgid "Take screenshot"
@@ -435,15 +435,15 @@ msgstr "Alerta auditiva cuando sea el turno del jugador"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
-msgstr ""
+msgstr "Confirmar cada colocación de meeple"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr ""
+msgstr "Confirmar la colocación de un meeple en una granja"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr ""
+msgstr "Confirmar la colocación de un meeple en una torre"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "About"
@@ -472,7 +472,7 @@ msgstr "Ayuda"
 
 #: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
 msgid "JCloisterZone saved games"
-msgstr "Juegos guardados de JCloisterZone"
+msgstr "Partidas guardadas de JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:28
 msgid "Mage and Witch"
@@ -483,7 +483,7 @@ msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
 "feature. Select what figure do you want to remove from board?"
 msgstr ""
-"No es posible colocar el mago o la bruga porque no hay ninguna "
+"No es posible colocar el mago o la bruja porque no hay ninguna "
 "característica sin acabar. Elige qué figura quieres eliminar del tablero."
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:39
@@ -583,7 +583,7 @@ msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
-"La partida no ha acabado. ¿Seguro que deseas parar el juego y desconectar al "
+"La partida no ha acabado. ¿Seguro que deseas parar la partida y desconectar al "
 "resto de jugadores?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:274
@@ -601,7 +601,7 @@ msgstr "Error"
 #: src/main/java/com/jcloisterzone/ui/Client.java:556
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Connection lost"
-msgstr "Coxexión perdida"
+msgstr "Conexión perdida"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
@@ -778,7 +778,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
 msgid "Start game"
-msgstr "Iniciar el juego"
+msgstr "Iniciar partida"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:175
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:226
@@ -804,11 +804,11 @@ msgstr "Reglas"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
-msgstr ""
+msgstr "Reloj"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr ""
+msgstr "tiempo límite para el jugador"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -841,11 +841,11 @@ msgstr "Título de la partida"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr ""
+msgstr "Si dejas la contraseña vacía, cualquiera puede conectarse a tu partida."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -870,7 +870,7 @@ msgid ""
 "on your computer and other players may connect during game set up. You can "
 "also play only against any number of computer players."
 msgstr ""
-"Crea una nueva partida o continua una guardada. Tu computadora gestionará "
+"Crea una nueva partida o continúa una guardada. Tu computadora gestionará "
 "una partida y otros jugadores se pueden conectar durante su configuración. "
 "También puedes jugar solo contra cualquier número de jugadores computadora."
 
@@ -884,7 +884,7 @@ msgid ""
 "Connect when game is created but not yet started."
 msgstr ""
 "También te puedes conectar a la aplicación remota JCloisterZone hospedando "
-"un juego. Conéctate cuando la partida se haya creado pero todavía no haya "
+"una partida. Conéctate cuando la partida se haya creado pero todavía no haya "
 "comenzado."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
@@ -901,7 +901,7 @@ msgstr "JCloisterZone "
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
-msgstr ""
+msgstr "Reconectando..."
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:165
 msgid "%d tiles left"
@@ -917,7 +917,7 @@ msgstr "Selecciona meeple para recoger"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
 msgid "About application"
-msgstr "Sobre la aplicación"
+msgstr "Acerca de la aplicación"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:65
 msgid "Version"
@@ -935,11 +935,11 @@ msgstr "Piezas descartadas"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
 msgid "These tiles have been discarded during the game"
-msgstr "Estas piezas han sido descartadas durante el juego"
+msgstr "Estas piezas han sido descartadas durante la partida"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
-msgstr ""
+msgstr "Configuración de la partida"
 
 #~ msgid "Confirm placement on a farm"
 #~ msgstr "Confirmar la colocación en una granja"
@@ -970,31 +970,31 @@ msgstr ""
 #~ "Create a new local or network game. You can play against any number of "
 #~ "computer players."
 #~ msgstr ""
-#~ "Crear un nuevo juego, local o en red. Puedes jugar contra cualquier "
+#~ "Crear una nueva partida, local o en red. Puedes jugar contra cualquier "
 #~ "número de jugadores computadora."
 
 #~ msgid "Connect to a remote JCloisterZone application with settled new game."
 #~ msgstr ""
-#~ "Conectar a una aplicación de JCloisterZone con un nuevo juego establecido."
+#~ "Conectar a una aplicación de JCloisterZone con una nueva partida establecida."
 
 #~ msgid "Load from a file previously saved game."
-#~ msgstr "Cargar de un juego guardado anteriormente"
+#~ msgstr "Cargar una partida guardada anteriormente"
 
 #~ msgid "Close game"
-#~ msgstr "Cerrar el juego"
+#~ msgstr "Cerrar partida"
 
 #~ msgid ""
 #~ "Game is running. Do you really want to quit game and also disconnect all "
 #~ "other players?"
 #~ msgstr ""
-#~ "El juego se está ejecutando. ¿Estás seguro de salir del juego y "
+#~ "La partida se está ejecutando. ¿Estás seguro de salir de la partida y "
 #~ "desconectar también a los otros jugadores?"
 
 #~ msgid "Game is running. Do you really want to leave it?"
-#~ msgstr "El juego se está ejecutando. ¿Realmente quieres salir?"
+#~ msgstr "La partida se está ejecutando. ¿Realmente quieres salir?"
 
 #~ msgid "Game overview"
-#~ msgstr "Descripción del juego"
+#~ msgstr "Descripción de la partida"
 
 #~ msgid "Load"
 #~ msgstr "Cargar"
@@ -1003,7 +1003,7 @@ msgstr ""
 #~ msgstr "Ventana"
 
 #~ msgid "Confirm game close"
-#~ msgstr "Confirmar al cerrar el juego"
+#~ msgstr "Confirmar al cerrar la partida"
 
 #~ msgid "Load error"
 #~ msgstr "Error al cargar"
@@ -1012,5 +1012,5 @@ msgstr ""
 #~ "Saved game is incompatible or file is corrupted. Game couldn't work "
 #~ "properly."
 #~ msgstr ""
-#~ "El juego guardado es incompatible o el archivo está corrupto. El juego no "
+#~ "La partida guardada es incompatible o el archivo está corrupto. La partida no "
 #~ "puede funcionar correctamente."
