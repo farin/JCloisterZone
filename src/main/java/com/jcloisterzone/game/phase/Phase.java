@@ -1,32 +1,27 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Application;
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ClientIF;
+import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.wsio.RmiProxy;
 
 
-public abstract class Phase implements ClientIF {
+public abstract class Phase implements RmiProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -56,11 +51,15 @@ public abstract class Phase implements ClientIF {
     }
 
     public void next() {
-        game.setPhase(defaultNext);
+        next(defaultNext);
     }
 
     public void next(Class<? extends Phase> phaseClass) {
-        game.setPhase(game.getPhases().get(phaseClass));
+        next(game.getPhases().get(phaseClass));
+    }
+
+    public void next(Phase phase) {
+        game.setPhase(phase);
     }
 
     public void enter() { }
@@ -68,6 +67,7 @@ public abstract class Phase implements ClientIF {
     /**
      * Method is invoked on active phase when user buy back inprisoned follower
      */
+    @Deprecated //generic approach to refresh actions
     public void notifyRansomPaid() {
         //do nothing by default
     }
@@ -93,26 +93,12 @@ public abstract class Phase implements ClientIF {
         return game.getTurnPlayer();
     }
 
-
-    protected void notifyUI(List<PlayerAction> actions, boolean canPass) {
-        game.getUserInterface().selectAction(actions, canPass);
-    }
-
-    protected void notifyUI(PlayerAction action, boolean canPass) {
-        game.getUserInterface().selectAction(Collections.singletonList(action), canPass);
-    }
-
     /** handler called after game is load if this phase is active */
     public void loadGame(Snapshot snapshot) {
         //do nothing by default
     }
 
     //adapter methods
-
-    @Override
-    public void startGame() {
-        logger.error(Application.ILLEGAL_STATE_MSG, "startGame");
-    }
 
     @Override
     public void pass() {
@@ -125,13 +111,13 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void deployMeeple(Position p,  Location d, Class<? extends Meeple> meepleType) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "placeFigure");
+    public void deployMeeple(Position p,  Location loc, Class<? extends Meeple> meepleType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "deployMeeple");
     }
 
     @Override
     public void moveFairy(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "placeFairy");
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveFairy");
     }
 
     @Override
@@ -140,12 +126,12 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void placeTunnelPiece(Position p, Location d, boolean isSecondPiece) {
+    public void placeTunnelPiece(Position p, Location loc, boolean isSecondPiece) {
         logger.error(Application.ILLEGAL_STATE_MSG, "placeTunnelPiece");
     }
 
     @Override
-    public void undeployMeeple(Position p, Location d) {
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         logger.error(Application.ILLEGAL_STATE_MSG, "undeployMeeple");
     }
 
@@ -155,39 +141,29 @@ public abstract class Phase implements ClientIF {
     }
 
     @Override
-    public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
-        //pay ransom is valid anytime
-        game.getTowerGame().payRansom(playerIndexToPay, meepleType);
+    public void moveMage(FeaturePointer fp) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveMage");
     }
 
     @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateCustomRule");
-    }
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateExpansion");
-
-    }
-    @Override
-    public void updateSlot(PlayerSlot slot) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateSlot");
+    public void moveWitch(FeaturePointer fp) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveWitch");
     }
 
     @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "updateSupportedExpansions");
+    public final void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
+        //pay ransom is valid any time
+        TowerCapability towerCap = game.getCapability(TowerCapability.class);
+        if (towerCap == null) {
+            logger.error(Application.ILLEGAL_STATE_MSG, "payRansom");
+            return;
+        }
+        towerCap.payRansom(playerIndexToPay, meepleType);
     }
-
 
     @Override
-    public void drawTiles(int[] tileIndex) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "drawTiles");
-    }
-
-     @Override
-    public void takePrisoner(Position p, Location d) {
-         logger.error(Application.ILLEGAL_STATE_MSG, "captureFigure");
+    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+         logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
 
     @Override
@@ -209,6 +185,21 @@ public abstract class Phase implements ClientIF {
     @Override
     public void bazaarBuyOrSell(boolean buy) {
         logger.error(Application.ILLEGAL_STATE_MSG, "bazaarBuyOrSell");
+    }
+
+    @Override
+    public void cornCiclesRemoveOrDeploy(boolean remove) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "cornCiclesRemoveOrDeploy");
+    }
+
+    @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "placeLittleBuilding");
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 
 }

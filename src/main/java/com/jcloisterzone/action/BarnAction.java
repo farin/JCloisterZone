@@ -1,31 +1,35 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.rmi.Client2ClientIF;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
+//TODO do not extends select feature, use special type for corner based on position
+public class BarnAction extends SelectFeatureAction {
 
-public class BarnAction extends SelectFeatureAction {	
+    public BarnAction() {
+        super("barn");
+    }
 
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.deployMeeple(p, d, Barn.class);
-	}
+    @Override
+    public void perform(RmiProxy server, FeaturePointer bp) {
+        server.deployMeeple(bp.getPosition(), bp.getLocation(), Barn.class);
+    }
 
-	@Override
-	public String getName() {
-		return "barn";
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new BarnAreaLayer(client.getGridPanel(), this);
-	}
+    @Override
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return BarnAreaLayer.class;
+    }
 
-	@Override
-	protected int getSortOrder() {
-		return 9;
-	}
+    @Override
+    protected int getSortOrder() {
+        return 11;
+    }
+
+    @Override
+    public String toString() {
+        return "place barn";
+    }
 }

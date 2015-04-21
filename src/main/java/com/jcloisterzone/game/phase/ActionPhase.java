@@ -1,47 +1,64 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.action.TakePrisonerAction;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
-import com.jcloisterzone.game.expansion.TowerGame;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 
 public class ActionPhase extends Phase {
 
+    private final TowerCapability towerCap;
+    private final FlierCapability flierCap;
+    private final PortalCapability portalCap;
+    private final PrincessCapability princessCapability;
 
     public ActionPhase(Game game) {
         super(game);
+        towerCap = game.getCapability(TowerCapability.class);
+        flierCap = game.getCapability(FlierCapability.class);
+        portalCap = game.getCapability(PortalCapability.class);
+        princessCapability = game.getCapability(PrincessCapability.class);
     }
 
     @Override
     public void enter() {
-        List<PlayerAction> actions = Lists.newArrayList();
+        List<PlayerAction<?>> actions = new ArrayList<>();
 
-        Sites commonSites = game.prepareCommonSites();
-        if (getActivePlayer().hasFollower(SmallFollower.class)  && ! commonSites.isEmpty()) {
-            actions.add(new MeepleAction(SmallFollower.class, commonSites));
+        Set<FeaturePointer> followerLocations = game.prepareFollowerLocations();
+        if (getActivePlayer().hasFollower(SmallFollower.class)  && !followerLocations.isEmpty()) {
+            actions.add(new MeepleAction(SmallFollower.class).addAll(followerLocations));
         }
-        game.expansionDelegate().prepareActions(actions, commonSites);
-        if (isAutoTurnEnd(actions)) {
-            next();
-        } else {
-            notifyUI(actions, true);
-        }
+        game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
+        game.post(new SelectActionEvent(getActivePlayer(), actions, true));
     }
 
     @Override
@@ -49,86 +66,72 @@ public class ActionPhase extends Phase {
         enter(); //recompute available actions
     }
 
-    private boolean isAutoTurnEnd(List<PlayerAction> actions) {
-        if (! actions.isEmpty()) return false;
-        if (game.hasExpansion(Expansion.TOWER)) {
-            TowerGame tg = game.getTowerGame();
-            if (!tg.isRansomPaidThisTurn() && tg.hasImprisonedFollower(getActivePlayer())) {
-                //player can return figure immediately
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public void pass() {
-        next();
+        if (getDefaultNext() instanceof PhantomPhase) {
+            //skip PhantomPhase if user pass turn
+            getDefaultNext().next();
+        } else {
+            next();
+        }
     }
 
-    private int doPlaceTowerPiece(Position p) {
-        Tower tower = getBoard().get(p).getTower();
-        if (tower  == null) {
-            throw new IllegalArgumentException("No tower on tile.");
-        }
-        if (tower.getMeeple() != null) {
-            throw new IllegalArgumentException("The tower is sealed");
-        }
-        game.getTowerGame().decreaseTowerPieces(getActivePlayer());
-        return tower.increaseHeight();
-    }
 
-    public TakePrisonerAction prepareCapture(Position p, int range) {
-        TakePrisonerAction captureAction = new TakePrisonerAction();
-        for(Meeple pf : game.getDeployedMeeples()) {
-            if (! (pf instanceof Follower)) continue;
-            if (pf.getPosition().x != p.x && pf.getPosition().y != p.y) continue; //check if is in same row or column
-            if (pf.getPosition().squareDistance(p) > range) continue;
-            captureAction.getOrCreate(pf.getPosition()).add(pf.getLocation());
-        }
-        return captureAction;
-    }
 
     @Override
     public void placeTowerPiece(Position p) {
-        int captureRange = doPlaceTowerPiece(p);
-        game.fireGameEvent().towerIncreased(p, captureRange);
-        TakePrisonerAction captureAction = prepareCapture(p, captureRange);
-        if (captureAction.getSites().isEmpty()) {
-            next();
-            return;
-        }
+        towerCap.placeTowerPiece(getActivePlayer(), p);
         next(TowerCapturePhase.class);
-        notifyUI(captureAction, false);
+    }
+
+    @Override
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        LittleBuildingsCapability lbCap = game.getCapability(LittleBuildingsCapability.class);
+        lbCap.placeLittleBuilding(getActivePlayer(), lbType);
+        next();
     }
 
     @Override
     public void moveFairy(Position p) {
-        for(Follower f : getActivePlayer().getFollowers()) {
-            if (p.equals(f.getPosition())) {
-                game.getPrincessAndDragonGame().setFairyPosition(p);
-                game.fireGameEvent().fairyMoved(p);
-                next();
-                return;
-            }
+        if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(p))) {
+            throw new IllegalArgumentException("The tile has deployed not own follower.");
         }
-        throw new IllegalArgumentException("No own follower on the tile");
+
+        FairyCapability cap = game.getCapability(FairyCapability.class);
+        Position fromPosition = cap.getFairyPosition();
+        cap.setFairyPosition(p);
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), fromPosition, p));
+        next();
     }
 
     private boolean isFestivalUndeploy(Meeple m) {
-        return getTile().getTrigger() == TileTrigger.FESTIVAL &&  m.getPlayer() == getActivePlayer();
+        return getTile().hasTrigger(TileTrigger.FESTIVAL) && m.getPlayer() == getActivePlayer();
     }
 
     private boolean isPrincessUndeploy(Meeple m) {
-        //TODO proper validation
-        return m.getFeature() instanceof City;
+        boolean tileHasPrincess = false;
+        for (Feature f : getTile().getFeatures()) {
+            if (f instanceof City) {
+                City c = (City) f;
+                if (c.isPricenss()) {
+                    tileHasPrincess = true;
+                    break;
+                }
+            }
+        }
+        //check if it is same city should be here to be make exact check
+        return tileHasPrincess && m.getFeature() instanceof City;
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc) {
-        Meeple m = game.getMeeple(p, loc);
-        if (isFestivalUndeploy(m) || isPrincessUndeploy(m)) {
+    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+        boolean princess = isPrincessUndeploy(m);
+        if (isFestivalUndeploy(m) || princess) {
             m.undeploy();
+            if (princess) {
+                princessCapability.setPrincessUsed(true);
+            }
             next();
         } else {
             throw new IllegalArgumentException();
@@ -137,24 +140,37 @@ public class ActionPhase extends Phase {
 
     @Override
     public void placeTunnelPiece(Position p, Location loc, boolean isB) {
-        game.getTunnelGame().placeTunnelPiece(p, loc, isB);
+        game.getCapability(TunnelCapability.class).placeTunnelPiece(p, loc, isB);
         next(ActionPhase.class);
     }
 
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-        Meeple m = getActivePlayer().getUndeployedMeeple(meepleType);
-        m.deploy(getBoard().get(p), loc);
+        Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
+        m.deployUnoccupied(getBoard().get(p), loc);
+        if (portalCap != null && loc != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !p.equals(getTile().getPosition())) {
+            //magic gate usage
+            portalCap.setPortalUsed(true);
+        }
         next();
     }
 
     @Override
     public void deployBridge(Position pos, Location loc) {
-        BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-        bcb.decreaseBridges(getActivePlayer());
-        bcb.deployBridge(pos, loc);
+        BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
+        bridgeCap.decreaseBridges(getActivePlayer());
+        bridgeCap.deployBridge(pos, loc);
         next(ActionPhase.class);
     }
 
+    @WsSubscribe
+    public void handleDeployFlier(DeployFlierMessage msg) {
+        game.updateRandomSeed(msg.getCurrentTime());
+        int distance = game.getRandom().nextInt(3) + 1;
+        flierCap.setFlierUsed(true);
+        flierCap.setFlierDistance(msg.getMeepleTypeClass(), distance);
+        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
+        next(FlierActionPhase.class);
+    }
 }

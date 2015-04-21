@@ -1,146 +1,130 @@
 package com.jcloisterzone.feature.visitor.score;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.SiegeCapability;
 
-public class FarmScoreContext extends AbstractScoreContext {
+public class FarmScoreContext extends MultiTileScoreContext {
 
-	private Map<City, CityScoreContext> adjoiningCompletedCities = Maps.newHashMap();
-	private Set<Castle> adjoiningCastles = Sets.newHashSet();
-	private Set<Player> pigs = Sets.newHashSet();
-	private int pigHerds = 0;
+    private Map<City, CityScoreContext> adjoiningCompletedCities = new HashMap<>();
+    private Set<Castle> adjoiningCastles = new HashSet<>();
+    private boolean adjoiningCityOfCarcassonne;
+    private Set<Player> pigs = new HashSet<>();
+    private boolean pigHerd;
 
-	private Map<City, CityScoreContext> cityCache;
-	private Map<Player, Set<City>> scoredCities;
+    private Map<City, CityScoreContext> cityCache;
 
-	public FarmScoreContext(Game game) {
-		super(game);
-	}
+    public FarmScoreContext(Game game) {
+        super(game);
+    }
 
-	public Map<City, CityScoreContext> getCityCache() {
-		return cityCache;
-	}
+    public Map<City, CityScoreContext> getCityCache() {
+        return cityCache;
+    }
 
-	public void setCityCache(Map<City, CityScoreContext> cityCache) {
-		this.cityCache = cityCache;
-	}
+    public void setCityCache(Map<City, CityScoreContext> cityCache) {
+        this.cityCache = cityCache;
+    }
 
-	public Map<Player, Set<City>> getScoredCities() {
-		return scoredCities;
-	}
+    private void addAdjoiningCompletedCities(Feature[] adjoiningCities) {
+        for (Feature feature : adjoiningCities) {
+            if (feature instanceof City) {
+                City c = (City) feature;
+                CityScoreContext ctx = cityCache.get(c);
+                if (ctx == null) {
+                    ctx = c.getScoreContext();
+                    ctx.setCityCache(cityCache);
+                    c.walk(ctx);
+                }
+                if (ctx.isCompleted()) {
+                    adjoiningCompletedCities.put((City) ctx.getMasterFeature(), ctx);
+                }
+            } else if (feature instanceof Castle) {
+                adjoiningCastles.add((Castle) feature.getMaster());
+            }
+        }
+    }
 
-	public void setScoredCities(Map<Player, Set<City>> scoredCities) {
-		this.scoredCities = scoredCities;
-	}
+    @Override
+    public boolean visit(Feature feature) {
+        Farm farm = (Farm) feature;
+        if (farm.isAdjoiningCityOfCarcassonne()) {
+            adjoiningCityOfCarcassonne = true;
+        }
+        if (farm.getAdjoiningCities() != null) {
+            addAdjoiningCompletedCities(farm.getAdjoiningCities());
+        }
+        for (Meeple m : farm.getMeeples()) {
+            if (m instanceof Pig) {
+                pigs.add(m.getPlayer());
+            }
+        }
+        if (farm.isPigHerd()) {
+            pigHerd = true;
+        }
+        return super.visit(feature);
+    }
 
-	private void addAdjoiningCompletedCities(Feature[] adjoiningCities) {
-		for(Feature feature : adjoiningCities) {
-			if (feature instanceof City) {
-				City c = (City) feature;
-				CityScoreContext ctx = cityCache.get(c);
-				if (ctx == null) {
-					ctx = c.getScoreContext();
-					ctx.setCityCache(cityCache);
-					c.walk(ctx);
-				}
-				if (ctx.isCompleted()) {
-					adjoiningCompletedCities.put((City) ctx.getMasterFeature(), ctx);
-				}
-			} else if (feature instanceof Castle) {
-				adjoiningCastles.add((Castle) feature.getMaster());
-			}
-			
-		}
-	}
+    private int getPointsPerCity(Player player, int basePoints) {
+        int pointsPerCity = basePoints + (pigHerd ? 1 : 0);
+        if (pigs.contains(player)) pointsPerCity += 1;
+        return pointsPerCity;
+    }
 
+    public int getPoints(Player player) {
+        return getPlayerPoints(player, getPointsPerCity(player, 3)) + getLittleBuildingPoints();
+    }
 
-	@Override
-	public boolean visit(Feature feature) {
-		Farm farm = (Farm) feature;
-		if (farm.getAdjoiningCities() != null) {
-			addAdjoiningCompletedCities(farm.getAdjoiningCities());
-		}
-		if (farm.getMeeple() instanceof Pig) {
-			pigs.add(farm.getMeeple().getPlayer());
-		}
-		if (farm.isPigHerd()) {
-			pigHerds += 1;
-		}
-		return super.visit(feature);
-	}
-	
-//	public int getNumberOfCities() {
-//		return adjoiningCompletedCities.keySet().size();
-//	}
+    public int getPointsWhenBarnIsConnected(Player player) {
+        return getPlayerPoints(player, getPointsPerCity(player, 1)) + getLittleBuildingPoints();
+    }
 
-	private int getPointsPerCity(Player player, int basePoints) {
-		int pointsPerCity = basePoints + pigHerds;
-		if (pigs.contains(player)) pointsPerCity += 1;
-		return pointsPerCity;
-	}
+    private int getPlayerPoints(Player player, int pointsPerCity) {
 
-	public int getPointsPerCity(Player player) {
-		return getPointsPerCity(player, 3);
-	}
+        int points = adjoiningCityOfCarcassonne ? pointsPerCity : 0;
+        points += (pointsPerCity + 1) * adjoiningCastles.size();
 
-	public int getPoints(Player player) {
-		return getPlayerPoints(player, getPointsPerCity(player));
-	}
+        //optimalization
+        if (!getGame().hasCapability(SiegeCapability.class)) {
+            points += pointsPerCity * adjoiningCompletedCities.size();
+            return points;
+        }
 
-	public int getPointsWhenBarnIsConnected(Player player) {
-		return getPlayerPoints(player, getPointsPerCity(player, 1));
-	}
+        for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
+            points += pointsPerCity;
+            if (ctx.isBesieged()) { //count city twice
+                points += pointsPerCity;
+            }
+        }
+        return points;
+    }
 
-	private int getPlayerPoints(Player player, int pointsPerCity) {
-		//optimalization
-		if (scoredCities == null && ! getGame().hasExpansion(Expansion.CATHARS)) {
-			return pointsPerCity * adjoiningCompletedCities.size() +
-				   (pointsPerCity + 1) * adjoiningCastles.size();
-		}
-
-		int points = 0;
-		for(CityScoreContext ctx : adjoiningCompletedCities.values()) {
-			if (scoredCities != null) {
-				if (scoredCities.get(player).contains(ctx.getMasterFeature())) {
-					continue;
-				}
-				scoredCities.get(player).add((City) ctx.getMasterFeature());
-			}
-			points += pointsPerCity;
-			if (ctx.isBesieged()) { //count city twice
-				points += pointsPerCity;
-			}
-		}
-		points += (pointsPerCity + 1) * adjoiningCastles.size();
-		return points;
-	}
-
-	public int getBarnPoints() {
-		if (getGame().hasExpansion(Expansion.CATHARS)) {
-			int points = 0;
-			for(CityScoreContext ctx : adjoiningCompletedCities.values()) {
-				points += 4;
-				if (ctx.isBesieged()) { //count city twice
-					points += 4;
-				}
-			}
-			points += 5 * adjoiningCastles.size();
-			return points;
-		} else {
-			return adjoiningCompletedCities.size() * 4 + 
-				   adjoiningCastles.size() * 5;
-		}
-	}
+    public int getBarnPoints() {
+        //note: pigHerd has no influence on barn points
+        int points = adjoiningCityOfCarcassonne ? 4 : 0;
+        points += 5 * adjoiningCastles.size();
+        if (getGame().hasCapability(SiegeCapability.class)) {
+            for (CityScoreContext ctx : adjoiningCompletedCities.values()) {
+                points += 4;
+                if (ctx.isBesieged()) { //count city twice
+                    points += 4;
+                }
+            }
+        } else {
+            points += adjoiningCompletedCities.size() * 4;
+        }
+        return points;
+    }
 
 }

@@ -1,207 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card id="F.v">
-		<volcano/>
-		<farm>NL NR EL ER SL SR WL WR</farm>
-	</card>
-	<card id="RrRr.g">
-		<portal/>
-		<road>N W</road>
-		<road>S E</road>
-		<farm>NL WR</farm>
-		<farm>SL ER</farm>
-		<farm>NR EL SR WL</farm>
-	</card>
+    <tile id="F.v">
+        <volcano/>
+        <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
+    <tile id="RrRr.g">
+        <portal/>
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
+    </tile>
 
-	<card id="R.v">
-		<volcano/>
-		<road>S</road>
-		<farm>NL NR EL ER SL SR WL WR</farm>
-	</card>
+    <tile id="R.v">
+        <volcano/>
+        <road>S</road>
+        <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
 
-	<card id="C.d" group="dragon">
-		<dragon/>
-		<city castle-base="true">N</city>
-		<farm city="N">EL ER SL SR WL WR</farm>
-	</card>
+    <tile id="C.d">
+        <dragon/>
+        <city castle-base="true">N</city>
+        <farm city="N">EL ER SL SR WL WR</farm>
+    </tile>
 
-	<card id="C.v">
-		<volcano/>
-		<city castle-base="true">N</city>
-		<farm city="N">EL ER SL SR WL WR</farm>
-	</card>
+    <tile id="C.v">
+        <volcano/>
+        <city castle-base="true">N</city>
+        <farm city="N">EL ER SL SR WL WR</farm>
+    </tile>
 
-	<card id="LRRR.d" group="dragon">
-		<dragon/>
-		<cloister/>
-		<road>E</road>
-		<road>S</road>
-		<road>W</road>
-		<farm>WR NL NR EL</farm>
-		<farm>ER SL</farm>
-		<farm>WL SR</farm>
-		<wagon-move>
-			<neighbouring>CLOISTER W</neighbouring>
-			<neighbouring>CLOISTER S</neighbouring>
-			<neighbouring>CLOISTER E</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="RRR.d" group="dragon">
-		<dragon/>
-		<road>E</road>
-		<road>S</road>
-		<road>W</road>
-		<farm>WR NL NR EL</farm>
-		<farm>ER SL</farm>
-		<farm>SR WL</farm>
-		<wagon-move>
-			<neighbouring>E S W</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="RRR.g" >
-		<portal/>
-		<road>E</road>
-		<road>S</road>
-		<road>W</road>
-		<farm>WR NL NR EL</farm>
-		<farm>ER SL</farm>
-		<farm>SR WL</farm>
-		<wagon-move>
-			<neighbouring>E S W</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="CRRR.p" >
-		<road>E</road>
-		<road>S</road>
-		<road>W</road>
-		<city princess="yes" castle-base="true">N</city>
-		<farm city="N">WR EL</farm>
-		<farm>WL SR</farm>
-		<farm>ER SL</farm>
-		<wagon-move>
-			<neighbouring>E S W</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="CCc+.p">
-		<city princess="yes">N</city>
-		<city pennant="yes">E S</city>
-		<farm city="N">WL WR</farm>
-		<farm city="N S">INNER_FARM</farm>
-	</card>
-	<card id="Ccc.p" >
-		<city princess="yes">N E W</city>
-		<farm city="N">SL SR</farm>
-	</card>
-	<card id="Ccc+.g">
-		<portal/>
-		<city pennant="yes">N E W</city>
-		<farm city="N">SL SR</farm>
-	</card>
-	<card id="LCcc.d" group="dragon">
-		<dragon/>
-		<cloister/>
-		<city>N E W</city>
-		<farm city="N">SL SR</farm>
-		<wagon-move>
-			<neighbouring>CLOISTER N</neighbouring>
-		</wagon-move>
-	</card>
-	<card count="2" id="Rr.d" group="dragon">
-		<dragon/>
-		<road >W S</road>
-		<farm>WR NL NR EL ER SL</farm>
-		<farm>SR WL</farm>
-	</card>
-	<card id="Rr.v">
-		<volcano/>
-		<road>W S</road>
-		<farm>WR NL NR EL ER SL</farm>
-		<farm>SR WL</farm>
-	</card>
-	<card id="RFr.d" group="dragon">
-		<dragon/>
-		<road>W E</road>
-		<farm>WR NL NR EL</farm>
-		<farm>WL SL SR ER</farm>
-	</card>
-	<card id="RFr.v">
-		<volcano/>
-		<road>W E</road>
-		<farm>WR NL NR EL</farm>
-		<farm>WL SL SR ER</farm>
-	</card>
-	<card id="Cc!.p">
-		<city princess="yes">N W</city>
-		<farm city="N">EL ER</farm>
-		<farm city="N">SL SR</farm>
-	</card>
-	<card id="Cc.d" group="dragon">
-		<dragon/>
-		<city>N W</city>
-		<farm city="N">SL SR EL ER</farm>
-	</card>
-	<card id="Cc.p">
-		<city princess="yes">N W</city>
-		<farm city="N">SL SR EL ER</farm>
-	</card>
-	<card id="CC.v">
-		<volcano/>
-		<city castle-base="true">E</city>
-		<city castle-base="true">N</city>
-		<farm city="N E">WL WR SL SR</farm>
-	</card>
-	<card id="CFc+.d" group="dragon">
-		<dragon/>
-		<city pennant="yes">W E</city>
-		<farm city="W">NL NR</farm>
-		<farm city="W">SL SR</farm>
-	</card>
-	<card id="CcRr.p">
-		<road>E S</road>
-		<city princess="yes">N W</city>
-		<farm city="N">EL SR</farm>
-		<farm>ER SL</farm>
-	</card>
-	<card id="CcRr.g">
-		<portal/>
-		<road>E S</road>
-		<city>N W</city>
-		<farm city="N">EL SR</farm>
-		<farm>ER SL</farm>
-	</card>
-	<card id="CRcr.d" group="dragon">
-		<dragon/>
-		<city>E W</city>
-		<road tunnel="yes">N S</road>
-		<farm city="W">NL NR</farm>
-		<farm city="W">SL SR</farm>
-	</card>
-	<card id="RrC.d" group="dragon">
-		<dragon/>
-		<road>S W</road>
-		<city castle-base="true">N</city>
-		<farm city="N">WR EL ER SL</farm>
-		<farm>WL SR</farm>
-	</card>
-	<card id="RrC.g">
-		<portal/>
-		<road>S W</road>
-		<city castle-base="true">N</city>
-		<farm city="N">WR EL ER SL</farm>
-		<farm>WL SR</farm>
-	</card>
-	<card id="CRr.d" group="dragon">
-		<dragon/>
-		<road>E S</road>
-		<city castle-base="true">N</city>
-		<farm city="N">EL WL WR SR</farm>
-		<farm>ER SL</farm>
-	</card>
-	<card id="CRr.g">
-		<portal/>
-		<road>E S</road>
-		<city castle-base="true">N</city>
-		<farm city="N">EL WL WR SR</farm>
-		<farm>ER SL</farm>
-	</card>
+    <tile id="LRRR.d">
+        <dragon/>
+        <cloister/>
+        <road>E</road>
+        <road>S</road>
+        <road>W</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>WL SR</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER W</neighbouring>
+            <neighbouring>CLOISTER S</neighbouring>
+            <neighbouring>CLOISTER E</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RRR.d">
+        <dragon/>
+        <road>E</road>
+        <road>S</road>
+        <road>W</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+        <wagon-move>
+            <neighbouring>E S W</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RRR.g" >
+        <portal/>
+        <road>E</road>
+        <road>S</road>
+        <road>W</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+        <wagon-move>
+            <neighbouring>E S W</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CRRR.p" >
+        <road>E</road>
+        <road>S</road>
+        <road>W</road>
+        <city princess="yes" castle-base="true">N</city>
+        <farm city="N">WR EL</farm>
+        <farm>WL SR</farm>
+        <farm>ER SL</farm>
+        <wagon-move>
+            <neighbouring>E S W</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CCc+.p">
+        <city princess="yes">N</city>
+        <city pennant="yes">E S</city>
+        <farm city="N">WL WR</farm>
+        <farm city="N S">INNER_FARM</farm>
+    </tile>
+    <tile id="Ccc.p" >
+        <city princess="yes">N E W</city>
+        <farm city="N">SL SR</farm>
+    </tile>
+    <tile id="Ccc+.g">
+        <portal/>
+        <city pennant="yes">N E W</city>
+        <farm city="N">SL SR</farm>
+    </tile>
+    <tile id="LCcc.d">
+        <dragon/>
+        <cloister/>
+        <city>N E W</city>
+        <farm city="N">SL SR</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER N</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile count="2" id="Rr.d">
+        <dragon/>
+        <road >W S</road>
+        <farm>WR NL NR EL ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="Rr.v">
+        <volcano/>
+        <road>W S</road>
+        <farm>WR NL NR EL ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="RFr.d">
+        <dragon/>
+        <road>W E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>WL SL SR ER</farm>
+    </tile>
+    <tile id="RFr.v">
+        <volcano/>
+        <road>W E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>WL SL SR ER</farm>
+    </tile>
+    <tile id="Cc!.p">
+        <city princess="yes">N W</city>
+        <farm city="N">EL ER</farm>
+        <farm city="N">SL SR</farm>
+    </tile>
+    <tile id="Cc.d">
+        <dragon/>
+        <city>N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="Cc.p">
+        <city princess="yes">N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="CC.v">
+        <volcano/>
+        <city castle-base="true">E</city>
+        <city castle-base="true">N</city>
+        <farm city="N E">WL WR SL SR</farm>
+    </tile>
+    <tile id="CFc+.d">
+        <dragon/>
+        <city pennant="yes">W E</city>
+        <farm city="W">NL NR</farm>
+        <farm city="W">SL SR</farm>
+    </tile>
+    <tile id="CcRr.p">
+        <road>E S</road>
+        <city princess="yes">N W</city>
+        <farm city="N">EL SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="CcRr.g">
+        <portal/>
+        <road>E S</road>
+        <city>N W</city>
+        <farm city="N">EL SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="CRcr.d">
+        <dragon/>
+        <city>E W</city>
+        <road tunnel="yes">N S</road>
+        <farm city="W">NL NR</farm>
+        <farm city="W">SL SR</farm>
+    </tile>
+    <tile id="RrC.d">
+        <dragon/>
+        <road>S W</road>
+        <city castle-base="true">N</city>
+        <farm city="N">WR EL ER SL</farm>
+        <farm>WL SR</farm>
+    </tile>
+    <tile id="RrC.g">
+        <portal/>
+        <road>S W</road>
+        <city castle-base="true">N</city>
+        <farm city="N">WR EL ER SL</farm>
+        <farm>WL SR</farm>
+    </tile>
+    <tile id="CRr.d">
+        <dragon/>
+        <road>E S</road>
+        <city castle-base="true">N</city>
+        <farm city="N">EL WL WR SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="CRr.g">
+        <portal/>
+        <road>E S</road>
+        <city castle-base="true">N</city>
+        <farm city="N">EL WL WR SR</farm>
+        <farm>ER SL</farm>
+    </tile>
 </pack>

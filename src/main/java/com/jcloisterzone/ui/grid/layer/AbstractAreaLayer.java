@@ -3,14 +3,23 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
+
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -19,13 +28,48 @@ import com.jcloisterzone.ui.grid.GridPanel;
 public abstract class AbstractAreaLayer extends AbstractGridLayer implements GridMouseListener {
 
     private static final AlphaComposite AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
+    private static final AlphaComposite FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .75f);
 
+    private Player player;
+    private boolean active;
     private Map<Location, Area> areas;
     private Location selectedLocation;
     private Position selectedPosition;
 
-    public AbstractAreaLayer(GridPanel gridPanel) {
-        super(gridPanel);
+    /*if true, area is displayed as placed meeple
+     this method is intended for tile placement debugging and is not optimized for performace
+     */
+    private boolean figureHighlight = false;
+
+    public AbstractAreaLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
+        DebugConfig debugConfig = getClient().getConfig().getDebug();
+        if (debugConfig != null && "figure".equals(debugConfig.getArea_highlight())) {
+            figureHighlight = true;
+        }
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public void onShow() {
+        super.onShow();
+        //TODO should ne based on event player
+        player = getGame().getActivePlayer();
+    }
+
+    @Override
+    public void onHide() {
+        super.onHide();
+        player = null;
+        cleanAreas();
     }
 
     private class MoveTrackingGridMouseAdapter extends GridMouseAdapter {
@@ -39,8 +83,9 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             super.mouseMoved(e);
             if (areas == null) return;
             int size = getSquareSize();
-            int x = e.getX() - gridPanel.getOffsetX();
-            int y = e.getY() - gridPanel.getOffsetY();
+            Point2D point = gridPanel.getRelativePoint(e.getPoint());
+            int x = (int) point.getX();
+            int y = (int) point.getY();
             if (x < 0) x += 1000 * size; //prevent mod from negative number
             if (y < 0) y += 1000 * size; //prevent mod from negative number
             x = x % size;
@@ -113,25 +158,46 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selectedLocation != null) {
                 performAction(pos, selectedLocation);
+                e.consume();
             }
         }
     }
 
-
     @Override
     public void paint(Graphics2D g2) {
         if (selectedLocation != null && areas != null) {
-            g2.setColor(getClient().getPlayerColor());
             Composite old = g2.getComposite();
-            g2.setComposite(AREA_ALPHA_COMPOSITE);
-            g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
+            if (figureHighlight) {
+                paintFigureHighlight(g2);
+            } else {
+                paintAreaHighlight(g2);
+            }
             g2.setComposite(old);
         }
     }
 
-    @Override
-    public int getZIndex() {
-        return 100;
+    /** debug purposes highlight - it always shows basic follower (doesn't important for dbg */
+    private void paintFigureHighlight(Graphics2D g2) {
+        //ugly copy pasted code from Meeple but uncached here
+        g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
+        Tile tile = getGame().getBoard().get(selectedPosition);
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
+        Player p = getGame().getActivePlayer();
+        Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
+        int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
+        Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        scaled = new ImageIcon(scaled).getImage();
+        ImmutablePoint scaledOffset = point.scale(getSquareSize(), (int)(getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO));
+        g2.drawImage(scaled, getOffsetX(selectedPosition) + scaledOffset.getX(), getOffsetY(selectedPosition) + scaledOffset.getY(), gridPanel);
     }
 
+    /** standard highlight **/
+    private void paintAreaHighlight(Graphics2D g2) {
+        Player p = getGame().getActivePlayer();
+        if (p != null && p.equals(player)) { //sync issue
+            g2.setColor(p.getColors().getMeepleColor());
+            g2.setComposite(AREA_ALPHA_COMPOSITE);
+            g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
+        }
+    }
 }

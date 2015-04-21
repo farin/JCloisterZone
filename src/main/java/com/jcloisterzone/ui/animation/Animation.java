@@ -8,9 +8,9 @@ import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 
 public interface Animation extends Delayed {
 
-	long getNextFrameTs();
-	boolean switchFrame();
+    long getNextFrameTs();
+    boolean switchFrame();
 
-	void paint(AnimationLayer service, Graphics2D g2);
+    void paint(AnimationLayer l, Graphics2D g2);
 
 }

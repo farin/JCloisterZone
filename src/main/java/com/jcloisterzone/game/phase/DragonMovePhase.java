@@ -2,62 +2,68 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Set;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.ui.GameController;
 
 
-public class DragonMovePhase extends Phase {
+public class DragonMovePhase extends ServerAwarePhase {
 
-	public DragonMovePhase(Game game) {
-		super(game);
-	}
+    private final DragonCapability dragonCap;
 
-	@Override
-	public boolean isActive() {
-		return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON);
-	}
+    public DragonMovePhase(Game game, GameController controller) {
+        super(game, controller);
+        dragonCap = game.getCapability(DragonCapability.class);
+    }
 
-	@Override
-	public Player getActivePlayer() {
-		PrincessAndDragonGame pdGame = game.getPrincessAndDragonGame();
-		return game.getPlayer(pdGame.getDragonPlayer());
-	}
+    @Override
+    public boolean isActive() {
+        return game.hasCapability(DragonCapability.class);
+    }
 
-	@Override
-	public void enter() {
-		PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-		if (pd.getDragonMovesLeft() > 0) {
-			Set<Position> moves = pd.getAvailDragonMoves();
-			if (! moves.isEmpty()) {
-				game.getUserInterface().selectDragonMove(moves, pd.getDragonMovesLeft());
-				return;
-			}
-		}
-		pd.endDragonMove();
-		next();
-	}
+    @Override
+    public Player getActivePlayer() {
+        return dragonCap.getDragonPlayer();
+    }
 
-	@Override
-	public void moveDragon(Position p) {
-		PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-		if (! pd.getAvailDragonMoves().contains(p)) {
-			throw new IllegalArgumentException("Invalid dragon move.");
-		}
-		pd.getDragonVisitedTiles().add(p);
-		pd.setDragonPosition(p);
-		pd.nextDragonPlayer();
-		for(Meeple m : game.getDeployedMeeples()) {
-			if (m.getPosition().equals(p) && m.canBeEatenByDragon()) {
-				m.undeploy();
-			}
-		}
-		game.fireGameEvent().dragonMoved(p);
-		game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-		next(DragonMovePhase.class);
-	}
+    @Override
+    public void enter() {
+        selectDragonMove();
+    }
+
+    private void selectDragonMove() {
+        if (dragonCap.getDragonMovesLeft() > 0) {
+            Set<Position> moves = dragonCap.getAvailDragonMoves();
+            if (!moves.isEmpty()) {
+                toggleClock(getActivePlayer());
+                game.post(new SelectDragonMoveEvent(getActivePlayer(), moves, dragonCap.getDragonMovesLeft()));
+                return;
+            }
+        }
+        dragonCap.endDragonMove();
+        next();
+    }
+
+    @Override
+    public void moveDragon(Position p) {
+        if (!dragonCap.getAvailDragonMoves().contains(p)) {
+            throw new IllegalArgumentException("Invalid dragon move.");
+        }
+        Player player = getActivePlayer();
+        Position fromPosition = dragonCap.getDragonPosition();
+        dragonCap.moveDragon(p);
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (m.at(p) && m.canBeEatenByDragon()) {
+                m.undeploy();
+            }
+        }
+        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, fromPosition, p));
+        selectDragonMove();
+    }
 
 }

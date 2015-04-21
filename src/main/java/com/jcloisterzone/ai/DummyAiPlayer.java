@@ -1,36 +1,23 @@
 package com.jcloisterzone.ai;
 
-import java.util.List;
-import java.util.Set;
-
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Position;
+import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.SelectDragonMoveEvent;
 
 public class DummyAiPlayer extends AiPlayer {
 
-    @Override
-    public void selectAction(List<PlayerAction> actions, boolean canPass) {
-        selectDummyAction(actions, canPass);
+    @Subscribe
+    public void selectAction(SelectActionEvent ev) {
+    	if (isAiActive(ev)) {
+    		selectDummyAction(ev.getActions(), ev.isPassAllowed());
+    	}
     }
 
-    @Override
-    public void selectDragonMove(Set<Position> positions, int movesLeft) {
-        selectDummyDragonMove(positions, movesLeft);
-    }
-
-    @Override
-    public void selectBazaarTile() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void makeBazaarBid(int supplyIndex) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void selectBuyOrSellBazaarOffer(int supplyIndex) {
-        throw new UnsupportedOperationException();
+    @Subscribe
+    public void selectDragonMove(SelectDragonMoveEvent ev) {
+    	if (isAiActive(ev)) {
+    		selectDummyDragonMove(ev.getPositions(), ev.getMovesLeft());
+    	}
     }
 
 }

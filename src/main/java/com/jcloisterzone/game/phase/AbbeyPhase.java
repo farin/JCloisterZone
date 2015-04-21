@@ -1,32 +1,44 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
+import com.jcloisterzone.ui.GameController;
 
-public class AbbeyPhase extends Phase {
+public class AbbeyPhase extends ServerAwarePhase {
 
-    public AbbeyPhase(Game game) {
-        super(game);
+    private AbbeyCapability abbeyCap;
+    private BazaarCapability bazaarCap;
+    private BuilderCapability builderCap;
+
+    public AbbeyPhase(Game game, GameController controller) {
+        super(game, controller);
+        abbeyCap = game.getCapability(AbbeyCapability.class);
+        bazaarCap = game.getCapability(BazaarCapability.class);
+        builderCap = game.getCapability(BuilderCapability.class);
     }
 
     @Override
     public boolean isActive() {
-        return game.hasExpansion(Expansion.ABBEY_AND_MAYOR);
+        return game.hasCapability(AbbeyCapability.class);
     }
 
     @Override
     public void enter() {
-        AbbeyAndMayorGame amGame = game.getAbbeyAndMayorGame();
-        BridgesCastlesBazaarsGame bcbGame = game.getBridgesCastlesBazaarsGame();
-        if (bcbGame == null || bcbGame.getBazaarSupply() == null) {
-            if (amGame.hasUnusedAbbey(getActivePlayer()) && ! getBoard().getHoles().isEmpty()) {
-                notifyUI(new AbbeyPlacementAction(getBoard().getHoles()), true);
+        boolean baazaarInProgress = bazaarCap != null && bazaarCap.getBazaarSupply() != null;
+        boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
+        if (builderSecondTurnPart || !baazaarInProgress) {
+            if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && !getBoard().getHoles().isEmpty()) {
+                toggleClock(getActivePlayer());
+                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
                 return;
             }
         }
@@ -40,8 +52,7 @@ public class AbbeyPhase extends Phase {
 
     @Override
     public void placeTile(Rotation rotation, Position position) {
-        AbbeyAndMayorGame amGame = game.getAbbeyAndMayorGame();
-        amGame.useAbbey(getActivePlayer());
+        abbeyCap.useAbbey(getActivePlayer());
 
         Tile nextTile = game.getTilePack().drawTile("inactive", Tile.ABBEY_TILE_ID);
         game.setCurrentTile(nextTile);
@@ -49,7 +60,7 @@ public class AbbeyPhase extends Phase {
         getBoard().add(nextTile, position);
         getBoard().mergeFeatures(nextTile);
 
-        game.fireGameEvent().tilePlaced(nextTile);
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile, position));
         next(ActionPhase.class);
     }
 }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <card id="CCc">
+    <tile id="CCc">
         <festival/>
         <city>W E</city>
         <city castle-base="true">S</city>
         <farm city="W">NL NR</farm>
         <farm city="W S">INNER_FARM</farm>
-    </card>
-    <card id="CcCc">
+    </tile>
+    <tile id="CcCc">
         <festival/>
-        <city>N E</city>
-        <city>S W</city>
+        <city>N W</city>
+        <city>S E</city>
         <farm city="N S">INNER_FARM</farm>
-    </card>
-    <card id="CFR">
+    </tile>
+    <tile id="CFR">
         <festival/>
         <city castle-base="true">N</city>
         <road>S</road>
@@ -22,8 +22,8 @@
         <wagon-move>
             <neighbouring>N S</neighbouring>
         </wagon-move>
-    </card>
-    <card id="CR">
+    </tile>
+    <tile id="CR">
         <festival/>
         <city castle-base="true">N</city>
         <road>E</road>
@@ -32,8 +32,8 @@
         <wagon-move>
             <neighbouring>N E</neighbouring>
         </wagon-move>
-    </card>
-    <card id="CRCR">
+    </tile>
+    <tile id="CRCR">
         <festival/>
         <city castle-base="true">N</city>
         <city castle-base="true">S</city>
@@ -46,15 +46,15 @@
         <wagon-move>
             <neighbouring>N S W E</neighbouring>
         </wagon-move>
-    </card>
-    <card id="CRr">
+    </tile>
+    <tile id="CRr">
         <festival/>
         <road>E S</road>
         <city castle-base="true">N</city>
         <farm city="N">EL WL WR SR</farm>
         <farm>ER SL</farm>
-    </card>
-    <card id="LRR">
+    </tile>
+    <tile id="LRR">
         <festival/>
         <cloister/>
         <road>S</road>
@@ -65,8 +65,8 @@
             <neighbouring>CLOISTER W</neighbouring>
             <neighbouring>CLOISTER S</neighbouring>
         </wagon-move>
-    </card>
-    <card id="RC">
+    </tile>
+    <tile id="RC">
         <festival/>
         <city castle-base="true">N</city>
         <road>W</road>
@@ -75,19 +75,20 @@
         <wagon-move>
             <neighbouring>N W</neighbouring>
         </wagon-move>
-    </card>
-    <card id="RrC">
+    </tile>
+    <tile id="RrC">
         <festival/>
         <road>S W</road>
         <city castle-base="true">N</city>
         <farm city="N">WR EL ER SL</farm>
         <farm>WL SR</farm>
-    </card>
-    <card id="RrRr">
-        <road>W S</road>
-        <road>N E</road>
-        <farm>SR WL</farm>
-        <farm>NR EL</farm>
-        <farm>NL WR SL ER</farm>
-    </card>
+    </tile>
+    <tile id="RrRr">
+        <festival/>
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
+    </tile>
 </pack>

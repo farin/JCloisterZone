@@ -1,43 +1,56 @@
 package com.jcloisterzone.game;
 
-import java.util.Collection;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
-import org.ini4j.Ini;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import com.google.common.base.Predicate;
+import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
+import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.common.eventbus.EventBus;
+import com.google.common.hash.HashCode;
+import com.jcloisterzone.EventBusExceptionHandler;
+import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.UserInterface;
+import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.event.EventMulticaster;
-import com.jcloisterzone.event.GameEventListener;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.Idempotent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.PlayEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.Undoable;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.expansion.AbbeyAndMayorGame;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
-import com.jcloisterzone.game.expansion.CatharsGame;
-import com.jcloisterzone.game.expansion.KingAndScoutGame;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
-import com.jcloisterzone.game.expansion.TowerGame;
-import com.jcloisterzone.game.expansion.TradersAndBuildersGame;
-import com.jcloisterzone.game.expansion.TunnelGame;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 
@@ -46,10 +59,9 @@ import com.jcloisterzone.game.phase.Phase;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-public class Game extends GameSettings {
+public class Game extends GameSettings implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private Ini config;
 
     /** pack of remaining tiles */
     private TilePack tilePack;
@@ -65,24 +77,99 @@ public class Game extends GameSettings {
     /** player in turn */
     private Player turnPlayer;
 
-    private final Map<Class<? extends Phase>, Phase> phases = Maps.newHashMap();
+    private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private Phase phase;
 
-    private GameEventListener eventListener;
-    private UserInterface userInterface;
+    private List<Capability> capabilities = new ArrayList<>(); //TODO change to map?
+    private FairyCapability fairyCapability; //shortcut - TODO remove
 
-    private Map<Expansion, ExpandedGame> expandedGames = Maps.newHashMap();
-    private final GameDelegation expandedGamesDelegate = new ExpandedGameDelegate(this);
+    private Undoable lastUndoable;
+    private Phase lastUndoablePhase;
+
+    private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
+    //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before swithc is done
+    private final Deque<Event> eventQueue = new ArrayDeque<>();
 
     private int idSequenceCurrVal = 0;
 
+    private final Random random;
+    private long randomSeed;
 
-    public Ini getConfig() {
-        return config;
+    public Game(String gameId) {
+        super(gameId);
+        HashCode hash = HashCode.fromBytes(gameId.getBytes());
+        this.randomSeed = hash.asLong();
+        this.random = new Random(randomSeed);
     }
 
-    public void setConfig(Ini config) {
-        this.config = config;
+    public Game(String gameId, long randomSeed) {
+        super(gameId);
+        this.randomSeed = randomSeed;
+        this.random = new Random(randomSeed);
+    }
+
+    @Override
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
+    public Undoable getLastUndoable() {
+        return lastUndoable;
+    }
+
+    public void clearLastUndoable() {
+    	lastUndoable = null;
+    }
+
+    private boolean isUiSupportedUndo(Event event) {
+        if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
+        if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
+        return false;
+    }
+
+    @Override
+    public void post(Event event) {
+        eventQueue.add(event);
+        for (Capability capability: capabilities) {
+            capability.handleEvent(event);
+        }
+        if (event instanceof PlayEvent) {
+            if (isUiSupportedUndo(event)) {
+                lastUndoable = (Undoable) event;
+                lastUndoablePhase = phase;
+            } else {
+                if (event.getClass().getAnnotation(Idempotent.class) == null) {
+                    lastUndoable = null;
+                    lastUndoablePhase = null;
+                }
+            }
+        }
+    }
+
+    public void flushEventQueue() {
+        Event event;
+        while ((event = eventQueue.poll()) != null) {
+            eventBus.post(event);
+        }
+    }
+
+    public boolean isUndoAllowed() {
+        return lastUndoable != null;
+    }
+
+    public void undo() {
+        //proof of concept
+        if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
+            Event inverse = lastUndoable.getInverseEvent();
+
+            lastUndoable.undo(this);
+            phase = lastUndoablePhase;
+            lastUndoable = null;
+            lastUndoablePhase = null;
+
+            post(inverse); //should be post inside undo? silent vs. firing undo?
+            phase.enter();
+        }
     }
 
     public Tile getCurrentTile() {
@@ -91,6 +178,16 @@ public class Game extends GameSettings {
 
     public void setCurrentTile(Tile currentTile) {
         this.currentTile = currentTile;
+    }
+
+    public PlayerSlot[] getPlayerSlots() {
+        // need to match subtypes, can't use getInstance on phases
+        for (Phase phase : phases.values()) {
+            if (phase instanceof CreateGamePhase) {
+                return ((CreateGamePhase)phase).getPlayerSlots();
+            }
+        }
+        return null;
     }
 
     public Phase getPhase() {
@@ -102,73 +199,17 @@ public class Game extends GameSettings {
         this.phase = phase;
     }
 
-    public Map<Class<? extends Phase>, Phase> getPhases() {
+    public ClassToInstanceMap<Phase> getPhases() {
         return phases;
     }
 
-    public GameEventListener fireGameEvent() {
-        return eventListener;
-    }
-    public void addGameListener(GameEventListener listener) {
-        eventListener = (GameEventListener) EventMulticaster.addListener(eventListener, listener);
-    }
-    public void removeGameListener(GameEventListener listener) {
-        eventListener = (GameEventListener) EventMulticaster.removeListener(eventListener, listener);
-    }
-    public UserInterface getUserInterface() {
-        return userInterface;
-    }
-    public void addUserInterface(UserInterface ui) {
-        userInterface = (UserInterface) EventMulticaster.addListener(userInterface, ui);
-    }
-
     public Iterable<Meeple> getDeployedMeeples() {
-        Iterable<Meeple> iter = null;
-        for(Player player : plist) {
-            if (iter == null) {
-                iter = Iterables.concat(player.getFollowers(), player.getSpecialMeeples());
-            } else {
-                iter = Iterables.concat(iter, player.getFollowers(), player.getSpecialMeeples());
-            }
+        Iterable<Meeple> iter = Collections.emptyList();
+        for (Player player : plist) {
+            iter = Iterables.concat(iter, player.getFollowers(), player.getSpecialMeeples());
         }
-        return Iterables.filter(iter, new Predicate<Meeple>() {
-            @Override
-            public boolean apply(Meeple m) {
-                return m.getPosition() != null;
-            }
-        });
+        return Iterables.filter(iter, MeeplePredicates.deployed());
     }
-
-//	public Set<Scoreable> getOccupiedScoreables() {
-//		return getOccupiedScoreables(Predicates.alwaysTrue());
-//	}
-//
-//	public Set<Scoreable> getOccupiedScoreables(Predicate<Object> predicate) {
-//		Set<Scoreable> owned = Sets.newHashSet();
-//		for (Meeple m : deployedMeeples) {
-//			Feature feature = m.getPiece().getFeature();
-//			if (feature instanceof Scoreable) {
-//				Scoreable sc = (Scoreable) feature;
-//				if (predicate.apply(sc)) {
-//					owned.add(sc);
-//				}
-//			}
-//		}
-//		return owned;
-//	}
-
-//	/**
-//	 * Unlike simple get() this method returns player on which server waiting for action.
-//	 * For example during dragon move each player take action but simple method get still return the player who placed last tile
-//	 * and this method the player who performing dragon move
-//	 */
-//	public Player getPlayerWithToken() {
-//		if (hasExpansion(Expansion.PRINCESS_AND_DRAGON) && dragon.dragonMoveInProgress()) {
-//			return getPlayer(dragon.activePlayer);
-//		}
-//		return get();
-//	}
-
 
     public Player getTurnPlayer() {
         return turnPlayer;
@@ -176,7 +217,7 @@ public class Game extends GameSettings {
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
-        fireGameEvent().playerActivated(turnPlayer, turnPlayer);
+        post(new PlayerTurnEvent(turnPlayer));
     }
 
     /**
@@ -232,11 +273,25 @@ public class Game extends GameSettings {
         return board;
     }
 
+    public Random getRandom() {
+        return random;
+    }
 
-    public Meeple getMeeple(final Position p, final Location loc) {
-        for(Meeple m : getDeployedMeeples()) {
-            if (m.getPosition().equals(p) && m.getLocation().equals(loc)) {
-                return m;
+    public long getRandomSeed() {
+        return randomSeed;
+    }
+
+    public void updateRandomSeed(long update) {
+        randomSeed = randomSeed ^ update;
+        random.setSeed(randomSeed);
+    }
+
+    public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
+        for (Meeple m : getDeployedMeeples()) {
+            if (m.at(p) && m.getLocation().equals(loc)) {
+                if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
+                    return m;
+                }
             }
         }
         return null;
@@ -248,88 +303,93 @@ public class Game extends GameSettings {
         this.turnPlayer = getPlayer(turnPlayer);
     }
 
+    private void createCapabilityInstance(Class<? extends Capability> clazz) {
+        if (clazz == null) return;
+        try {
+            Capability capability = clazz.getConstructor(Game.class).newInstance(this);
+            capabilities.add(capability);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e); //should never happen
+        }
+    }
+
+    public List<Capability> getCapabilities() {
+        return capabilities;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Capability> T getCapability(Class<T> clazz) {
+        for (Capability c : capabilities) {
+            if (c.getClass().equals(clazz)) return (T) c;
+        }
+        return null;
+    }
+
     public void start() {
-        for(Expansion expansion: getExpansions()) {
-            if (expansion.getExpandedBy() != null) {
-                try {
-                    ExpandedGame eg = expansion.getExpandedBy().newInstance();
-                    eg.setGame(this);
-                    expandedGames.put(expansion, eg);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e); //should never happen
-                }
-            }
+        for (Class<? extends Capability> capability: getCapabilityClasses()) {
+            createCapabilityInstance(capability);
         }
         board = new Board(this);
     }
 
-    //TODO refactor and clear
-
-    public Collection<ExpandedGame> getExpandedGames() {
-        return expandedGames.values();
+    public boolean isStarted() {
+        return !(phase instanceof CreateGamePhase);
     }
 
-    public Map<Expansion, ExpandedGame> getExpandedGamesMap() {
-        return expandedGames;
+    public boolean isOver() {
+        return phase instanceof GameOverPhase;
     }
 
-    public ExpandedGame getExpandedGameFor(Expansion expansion) {
-        return expandedGames.get(expansion);
-    }
 
-    public GameDelegation expansionDelegate() {
-        return expandedGamesDelegate;
-    }
-
-    public Sites prepareCommonSites() {
-        Sites sites = new Sites();
-        //on Volcano tile common figure cannot be placed when it comes into play
-        if (getCurrentTile().getTrigger() != TileTrigger.VOLCANO) {
-             //make shared sites
-            Set<Location> tileSites = prepareCommonForTile(getCurrentTile(), false);
-            if (! tileSites.isEmpty()) {
-                sites.put(getCurrentTile().getPosition(), tileSites);
-                return sites;
-            }
+    public Set<FeaturePointer> prepareFollowerLocations() {
+        Set<FeaturePointer> followerOptions = prepareFollowerLocations(currentTile, false);
+        for (Capability cap: capabilities) {
+            cap.extendFollowOptions(followerOptions);
         }
-        return sites;
+        return followerOptions;
     }
 
-    public Set<Location> prepareCommonForTile(Tile tile, boolean excludeFinished) {
-        Set<Location> locations = tile.getUnoccupiedScoreables(excludeFinished);
-        Tile nextTile = getCurrentTile(); //can be tile != nextTile
-        //v pripade custom pravidla zakazeme pokladat na princeznu obyc figurku
-        if (nextTile != null) { //nextTile muze byt null v pripade volani z AI, kde se muze predpripravovat figure rating pred polozenim
-            City princessLoc = nextTile.getPrincessCityPiece();
-            if (princessLoc != null && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-                locations.remove(princessLoc.getLocation());
+    public Set<FeaturePointer> prepareFollowerLocations(Tile tile, boolean excludeFinished) {
+        if (!isDeployAllowed(tile, Follower.class)) return Collections.emptySet();
+        Set<FeaturePointer> pointers = new HashSet<>();
+        for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
+            //exclude finished == false -> just placed tile - it means do not check princess for magic portal
+            //TODO very cryptic, refactor
+            if (!excludeFinished && hasCapability(PrincessCapability.class) && getBooleanValue(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+                City princessCity = tile.getCityWithPrincess();
+                if (princessCity != null) {
+                    continue;
+                }
             }
+            pointers.add(new FeaturePointer(tile.getPosition(), loc));
         }
-        return locations;
+        return pointers;
     }
 
     //scoring helpers
 
     public void scoreFeature(int points, ScoreContext ctx, Player p) {
-        p.addPoints(points, ctx.getMasterFeature().getPointCategory());
+        PointCategory pointCategory = ctx.getMasterFeature().getPointCategory();
+        p.addPoints(points, pointCategory);
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
-        PrincessAndDragonGame princessAndDragonGame = getPrincessAndDragonGame();
-        if (princessAndDragonGame != null && follower.getPosition().equals(princessAndDragonGame.getFairyPosition())) {
-            p.addPoints(PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
-            fireGameEvent().scored(follower.getFeature(), points+PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT,
-                    points+" + "+PrincessAndDragonGame.FAIRY_POINTS_FINISHED_OBJECT, follower,
-                    isFinalScoring);
+        ScoreEvent scoreEvent;
+        if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
+            p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, pointCategory, follower);
+            scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);
         } else {
-            fireGameEvent().scored(follower.getFeature(), points, points+"", follower, isFinalScoring);
+            scoreEvent = new ScoreEvent(follower.getFeature(), points, pointCategory, follower);
         }
+        scoreEvent.setFinal(isFinalScoring);
+        post(scoreEvent);
     }
 
     public void scoreCompletableFeature(CompletableScoreContext ctx) {
         Set<Player> players = ctx.getMajorOwners();
         if (players.isEmpty()) return;
         int points = ctx.getPoints();
-        for(Player p : players) {
+        for (Player p : players) {
             scoreFeature(points, ctx, p);
         }
     }
@@ -338,30 +398,117 @@ public class Game extends GameSettings {
         return ++idSequenceCurrVal;
     }
 
-    //shortcut methods
-    public PrincessAndDragonGame getPrincessAndDragonGame() {
-        return (PrincessAndDragonGame) expandedGames.get(Expansion.PRINCESS_AND_DRAGON);
-    }
-    public TowerGame getTowerGame() {
-        return (TowerGame) expandedGames.get(Expansion.TOWER);
-    }
-    public AbbeyAndMayorGame getAbbeyAndMayorGame() {
-        return (AbbeyAndMayorGame) expandedGames.get(Expansion.ABBEY_AND_MAYOR);
-    }
-    public TradersAndBuildersGame getTradersAndBuildersGame() {
-        return (TradersAndBuildersGame) expandedGames.get(Expansion.TRADERS_AND_BUILDERS);
-    }
-    public KingAndScoutGame getKingAndScoutGame() {
-        return (KingAndScoutGame) expandedGames.get(Expansion.KING_AND_SCOUT);
-    }
-    public CatharsGame getCatharsGame() {
-        return (CatharsGame) expandedGames.get(Expansion.CATHARS);
-    }
-    public TunnelGame getTunnelGame() {
-        return (TunnelGame) expandedGames.get(Expansion.TUNNEL);
-    }
-    public BridgesCastlesBazaarsGame getBridgesCastlesBazaarsGame() {
-        return (BridgesCastlesBazaarsGame) expandedGames.get(Expansion.BRIDGES_CASTLES_AND_BAZAARS);
+    // delegation to capabilities
+
+    public void initTile(Tile tile, Element xml) {
+        for (Capability cap: capabilities) {
+            cap.initTile(tile, xml);
+        }
     }
 
+    public void initFeature(Tile tile, Feature feature, Element xml) {
+        if (feature instanceof Farm && tile.getId().startsWith("CO.")) {
+            //this is not part of Count capability because it is integral behaviour valid also when capability is off
+            ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
+        }
+        for (Capability cap: capabilities) {
+            cap.initFeature(tile, feature, xml);
+        }
+    }
+
+    public void initPlayer(Player player) {
+        for (Capability cap: capabilities) {
+            cap.initPlayer(player);
+        }
+    }
+
+    public String getTileGroup(Tile tile) {
+        for (Capability cap: capabilities) {
+            String group = cap.getTileGroup(tile);
+            if (group != null) return group;
+        }
+        return null;
+    }
+
+    public void begin() {
+        fairyCapability = getCapability(FairyCapability.class);
+        for (Capability cap: capabilities) {
+            cap.begin();
+        }
+    }
+
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+        for (Capability cap: capabilities) {
+            cap.prepareActions(actions, followerOptions);
+        }
+        for (Capability cap: capabilities) {
+            cap.postPrepareActions(actions);
+        }
+
+        //to simplify capability iterations, allow returning empty actions (eg tower can add empty meeple action when no open tower exists etc)
+        //and then filter them out at end
+        Iterator<PlayerAction<?>> iter = actions.iterator();
+        while (iter.hasNext()) {
+            PlayerAction<?> action = iter.next();
+            if (action.isEmpty()) {
+                iter.remove();
+            }
+        }
+    }
+
+
+    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+        for (Capability cap: capabilities) {
+            if (!cap.isDeployAllowed(tile, meepleType)) return false;
+        }
+        return true;
+    }
+
+    public void scoreCompleted(CompletableScoreContext ctx) {
+        for (Capability cap: capabilities) {
+            cap.scoreCompleted(ctx);
+        }
+    }
+
+    public void turnPartCleanUp() {
+        for (Capability cap: capabilities) {
+            cap.turnPartCleanUp();
+        }
+    }
+
+    public void turnCleanUp() {
+        for (Capability cap: capabilities) {
+            cap.turnCleanUp();
+        }
+    }
+
+    public void finalScoring(ScoringStrategy strategy) {
+        for (Capability cap: capabilities) {
+            cap.finalScoring(strategy);
+        }
+    }
+
+    public boolean isTilePlacementAllowed(Tile tile, Position p) {
+        for (Capability cap: capabilities) {
+            if (!cap.isTilePlacementAllowed(tile, p)) return false;
+        }
+        return true;
+    }
+
+    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+        for (Capability cap: capabilities) {
+            cap.saveTileToSnapshot(tile, doc, tileNode);
+        }
+    }
+
+    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
+        for (Capability cap: capabilities) {
+            cap.loadTileFromSnapshot(tile, tileNode);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Game in " + phase.getClass().getSimpleName() + " phase.";
+    }
 }

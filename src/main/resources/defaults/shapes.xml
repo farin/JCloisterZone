@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shapes xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+    <shape feature="ROAD">
+        <svg:rect x="400" y="0" width="200" height="400"/>
+        <apply allRotations="1">* N</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:rect x="0" y="400" width="1000" height="200"/>
+        <apply>* WE</apply>
+        <apply svg:transform="rotate(90 500 500)">* NS</apply>
+    </shape>
+
+    <shape feature="CITY">
+        <svg:rect x="0" y="0" width="1000" height="1000"/>
+        <apply>* NWSE</apply>
+    </shape>
+
+    <shape feature="FARM">
+        <title>upper-left quarter</title>
+        <svg:rect x="0" y="0" width="500" height="500"/>
+        <apply allRotations="1">* NL.WR</apply>
+        <apply allRotations="1">* WR</apply>
+        <apply allRotations="1">* NL</apply>
+    </shape>
+    <shape feature="FARM">
+        <title>upper-half</title>
+        <svg:rect x="0" y="0" width="1000" height="500"/>
+        <apply allRotations="1">* NL.NR.EL.WR</apply>
+        <apply allRotations="1">* NL.NR.WR</apply>
+        <apply allRotations="1">* NL.NR.EL</apply>
+        <apply allRotations="1">* NL.NR</apply>
+        <apply allRotations="1">* EL.WR</apply>
+    </shape>
+
+    <shape feature="@">
+        <svg:circle cx="500" cy="500" r="200"/>
+        <apply>* FLIER</apply>
+    </shape>
+
+     <complement-farm>
+        <apply>* NL.NR.WL.WR.SL.SR.EL.ER</apply>
+        <apply>* INNER_FARM</apply>
+        <apply>* WL.WR.EL.ER</apply>
+        <apply>* NL.NR.SL.SR</apply>
+        <apply>* WL.WR.SL.SR.EL.ER</apply>
+        <apply>* NL.NR.SL.SR.EL.ER</apply>
+        <apply>* NL.NR.WL.WR.EL.ER</apply>
+        <apply>* NL.NR.WL.WR.SL.SR</apply>
+        <apply>* NL.NR.WL.WR</apply>
+        <apply>* NL.NR.EL.ER</apply>
+        <apply>* SL.SR.EL.ER</apply>
+        <apply>* SL.SR.WL.WR</apply>
+        <apply>* WR.NL.NR.EL.ER.SL</apply>
+        <apply>* NR.EL.ER.SL.SR.WL</apply>
+        <apply>* ER.SL.SR.WL.WR.NL</apply>
+        <apply>* SR.WL.WR.NL.NR.EL</apply>
+     </complement-farm>
+</shapes>

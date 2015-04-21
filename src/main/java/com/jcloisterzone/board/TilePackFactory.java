@@ -1,20 +1,19 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.board.XmlUtils.attributeIntValue;
-import static com.jcloisterzone.board.XmlUtils.attributeStringValue;
-import static com.jcloisterzone.board.XmlUtils.getTileId;
+import static com.jcloisterzone.XmlUtils.attributeIntValue;
+import static com.jcloisterzone.XmlUtils.attributeStringValue;
+import static com.jcloisterzone.XmlUtils.getTileId;
 
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +21,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.capability.RiverCapability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 
 
 public class TilePackFactory {
@@ -35,13 +38,13 @@ public class TilePackFactory {
 
     public static final String DEFAULT_TILE_GROUP = "default";
 
-    private final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     private final TileFactory tileFactory = new TileFactory();
 
     protected Game game;
+    protected Config config;
     protected Map<Expansion, Element> defs;
 
-    private Set<String> usedIds = Sets.newHashSet(); //for assertion only
+    private Set<String> usedIds = new HashSet<>(); //for assertion only
 
 
     public void setGame(Game game) {
@@ -49,37 +52,58 @@ public class TilePackFactory {
         tileFactory.setGame(game);
     }
 
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
     public void setExpansions(Set<Expansion> expansions) {
         defs = Maps.newLinkedHashMap();
-        for(Expansion expansion : expansions) {
+        for (Expansion expansion : expansions) {
             defs.put(expansion, getExpansionDefinition(expansion));
         }
     }
 
-    private InputStream getCardsConfig(Expansion expansion) {
-        String fileName = game.getConfig().get("debug", "cards_"+expansion.name());
-        if (fileName == null) {
-            fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+    public int getExpansionSize(Expansion expansion) {
+        Element el = getExpansionDefinition(expansion);
+        NodeList nl = el.getElementsByTagName("tile");
+        int size = 0;
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element tileElement = (Element) nl.item(i);
+            String tileId = getTileId(expansion, tileElement);
+            if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
+                size += getTileCount(tileElement, tileId);
+            }
         }
-        return TilePackFactory.class.getClassLoader().getResourceAsStream(fileName);
+        return size;
+    }
+
+    protected  URL getStandardCardsConfig(Expansion expansion) {
+        String fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+        return TilePackFactory.class.getClassLoader().getResource(fileName);
+    }
+
+    protected URL getCardsConfig(Expansion expansion) {
+        DebugConfig debugConfig = config.getDebug();
+        String fileName = null;
+        if (debugConfig != null && debugConfig.getTile_definitions() != null) {
+            fileName = debugConfig.getTile_definitions().get(expansion.name());
+        }
+        if (fileName == null) {
+            return getStandardCardsConfig(expansion);
+        } else {
+            return TilePackFactory.class.getClassLoader().getResource(fileName);
+        }
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
-        try {
-            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            return docBuilder.parse(getCardsConfig(expansion)).getDocumentElement();
-        } catch (Exception ex) {
-            logger.error("Cannot load card definitions for expansion " + expansion, ex);
-            System.exit(1);
-            return null;
-        }
+        return XmlUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
     }
 
     protected Map<String, Integer> getDiscardTiles() {
-        Map<String, Integer> discard = Maps.newHashMap();
-        for(Element expansionDef: defs.values()) {
+        Map<String, Integer> discard = new HashMap<>();
+        for (Element expansionDef: defs.values()) {
             NodeList nl = expansionDef.getElementsByTagName("discard");
-            for(int i = 0; i < nl.getLength(); i++) {
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
                 String tileId = el.getAttribute("tile");
                 if (discard.containsKey(tileId)) {
@@ -93,7 +117,8 @@ public class TilePackFactory {
     }
 
     protected boolean isTunnelActive(Expansion expansion) {
-        return expansion == Expansion.TUNNEL || (game.hasExpansion(Expansion.TUNNEL) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
+        return expansion == Expansion.TUNNEL ||
+            (game.hasCapability(TunnelCapability.class) && game.getBooleanValue(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
     }
 
     protected int getTileCount(Element card, String tileId) {
@@ -105,6 +130,8 @@ public class TilePackFactory {
     }
 
     protected String getTileGroup(Tile tile, Element card) {
+        String group = game.getTileGroup(tile);
+        if (group != null) return group;
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
 
@@ -125,10 +152,18 @@ public class TilePackFactory {
         }
 
         List<Tile> tiles = new ArrayList<Tile>(count);
-        for(int j = 0; j < count; j++) {
-            Tile tile = tileFactory.createTile(tileId, card, isTunnelActive(expansion));
-            game.expansionDelegate().initTile(tile, card); //must be called before rotation!
-            tiles.add(tile);
+        for (int j = 0; j < count; j++) {
+            Tile tile = tileFactory.createTile(expansion, tileId, card, isTunnelActive(expansion));
+            try {
+                game.initTile(tile, card); //must be called before rotation!
+
+                //set after full inicialization
+                tile.setSymmetry(TileSymmetry.forTile(tile));
+                tile.setEdgePattern(EdgePattern.forTile(tile));
+                tiles.add(tile);
+            } catch (RemoveTileException ex) {
+                //empty
+            }
         }
         return tiles;
     }
@@ -138,7 +173,7 @@ public class TilePackFactory {
         if (nl.getLength() == 0) return null;
 
         LinkedList<Position> result = new LinkedList<Position>();
-        for(int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element posEl = (Element) nl.item(i);
             result.add(new Position(attributeIntValue(posEl, "x"), attributeIntValue(posEl, "y")));
         }
@@ -150,16 +185,22 @@ public class TilePackFactory {
 
         Map<String, Integer> discardList = getDiscardTiles();
 
-        for(Entry<Expansion, Element> entry: defs.entrySet()) {
+        for (Entry<Expansion, Element> entry: defs.entrySet()) {
             Expansion expansion = entry.getKey();
-            NodeList nl = entry.getValue().getElementsByTagName("card");
-            for(int i = 0; i < nl.getLength(); i++) {
+            NodeList nl = entry.getValue().getElementsByTagName("tile");
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element tileElement = (Element) nl.item(i);
+                if (!game.hasCapability(RiverCapability.class)) {
+                    //if not playing river skip rivet tiles to prevent wrong tile count in pack (GQ11 rivers)
+                    if (tileElement.getElementsByTagName("river").getLength() > 0) {
+                        continue;
+                    }
+                }
                 String tileId = getTileId(expansion, tileElement);
                 LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
-                for(Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
+                for (Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {
                     tilePack.addTile(tile, getTileGroup(tile, tileElement));
-                    if (positions != null && ! positions.isEmpty()) {
+                    if (positions != null && !positions.isEmpty()) {
                         Position pos = positions.removeFirst();
                         //hard coded exceptions - should be declared in pack def
                         if (game.hasExpansion(Expansion.COUNT)) {
@@ -168,6 +209,16 @@ public class TilePackFactory {
                                 tile.getId().equals("R2.I.s") ||
                                 tile.getId().equals("GQ.RFI")) {
                                 pos = new Position(1, 2);
+                            }
+                            if (tile.getId().equals("WR.CFR")) {
+                                pos = new Position(-2, -2);
+                            }
+                        } else if (game.hasExpansion(Expansion.WIND_ROSE)) {
+                            if (tile.getId().equals("BA.RCr")) continue;
+                            if (game.hasCapability(RiverCapability.class)) {
+                                if (tile.getId().equals("WR.CFR")) {
+                                    pos = new Position(0, 1);
+                                }
                             }
                         }
                         logger.info("Setting initial placement {} for {}", pos, tile);

@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,22 +14,23 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.controls.ActionPanel;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
-public class TilePlacementAction extends PlayerAction {
+public class TilePlacementAction extends PlayerAction<TilePlacement> implements ForwardBackwardListener {
 
     private final Tile tile;
-    private final Map<Position, Set<Rotation>> placements;
+    private ForwardBackwardListener forwardBackwardDelegate;
 
     private Rotation tileRotation = Rotation.R0;
 
-    public TilePlacementAction(Tile tile, Map<Position, Set<Rotation>> placements) {
+    public TilePlacementAction(Tile tile) {
+        super("tileplacement");
         this.tile = tile;
-        this.placements = placements;
     }
 
     public Tile getTile() {
@@ -38,13 +41,46 @@ public class TilePlacementAction extends PlayerAction {
         return tileRotation;
     }
 
-    public Map<Position, Set<Rotation>> getAvailablePlacements() {
-        return placements;
+    public void setTileRotation(Rotation tileRotation) {
+        this.tileRotation = tileRotation;
+    }
+
+    @Override
+    public void forward() {
+        forwardBackwardDelegate.forward();
+    }
+
+    @Override
+    public void backward() {
+        forwardBackwardDelegate.backward();
+    }
+
+    public Map<Position, Set<Rotation>> groupByPosition() {
+        Map<Position, Set<Rotation>> map = new HashMap<>();
+        for (TilePlacement tp: options) {
+            Set<Rotation> rotations = map.get(tp.getPosition());
+            if (rotations == null) {
+                rotations = new HashSet<>();
+                map.put(tp.getPosition(), rotations);
+            }
+            rotations.add(tp.getRotation());
+        }
+        return map;
+    }
+
+    public Set<Rotation> getRotations(Position p) {
+        Set<Rotation> rotations = new HashSet<>();
+        for (TilePlacement tp: options) {
+            if (tp.getPosition().equals(p)) {
+                rotations.add(tp.getRotation());
+            }
+        }
+        return rotations;
     }
 
     @Override
     public Image getImage(Player player, boolean active) {
-        Image img =  client.getTileTheme().getTileImage(tile.getId());
+        Image img =  client.getResourceManager().getTileImage(tile);
         int w = img.getWidth(null), h = img.getHeight(null);
         BufferedImage bi = UiUtils.newTransparentImage(w, h);
         AffineTransform at = tileRotation.getAffineTransform(w);
@@ -55,27 +91,27 @@ public class TilePlacementAction extends PlayerAction {
         return bi;
     }
 
-    public void perform(Client2ClientIF server, Rotation rotation, Position p) {
-        server.placeTile(rotation, p);
+    @Override
+    public void perform(RmiProxy server, TilePlacement tp) {
+        server.placeTile(tp.getRotation(), tp.getPosition());
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        return new TilePlacementLayer(client.getGridPanel(), this);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TilePlacementLayer.class;
     }
 
     @Override
-    public void forward() {
-        tileRotation = tileRotation.next();
-        ActionPanel panel = client.getControlPanel().getActionPanel();
-        panel.refreshImageCache();
+    public String toString() {
+        return "place tile " + tile.getId();
     }
 
-    @Override
-    public void backward() {
-        tileRotation = tileRotation.prev();
-        ActionPanel panel = client.getControlPanel().getActionPanel();
-        panel.refreshImageCache();
+    public ForwardBackwardListener getForwardBackwardDelegate() {
+        return forwardBackwardDelegate;
     }
 
+    public void setForwardBackwardDelegate(
+            ForwardBackwardListener forwardBackwardDelegate) {
+        this.forwardBackwardDelegate = forwardBackwardDelegate;
+    }
 }

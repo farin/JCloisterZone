@@ -27,7 +27,7 @@ public class ElementDataDebugDecorator /*implements SquareDecoration*/ {
 //			/*Tile tile = Server.instance.getBoard().get(sq.x, sq.y);
 //			g.setFont(font);
 //
-//			for(Direction d : Direction.sides()) {
+//			for (Direction d : Direction.sides()) {
 //				MultiTileFeature mte = tile.getSideElement(d);
 //				ImmutablePoint tp = textPosition.get(d);
 //				if (mte == null) {

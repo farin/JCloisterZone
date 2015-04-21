@@ -10,40 +10,34 @@ import com.jcloisterzone.figure.Special;
 
 public class RemoveLonelyBuilderAndPig implements FeatureVisitor<Special> {
 
-	Player player;
-	Special toRemove = null;
+    Player player;
+    Special toRemove = null;
 
-	public RemoveLonelyBuilderAndPig(Player player) {
-		this.player = player;
-	}
+    public RemoveLonelyBuilderAndPig(Player player) {
+        this.player = player;
+    }
 
-	@Override
-	public boolean visit(Feature feature) {
-		Meeple m = feature.getMeeple();
-		if (m == null || m.getPlayer() != player) {
-			return true;
-		}
-		if (m instanceof Builder || m instanceof Pig) {
-			toRemove = (Special) m;
-			return true;
-		}
-		if (m instanceof Follower) {
-			//another follower exists
-			toRemove = null;
-			return false;
-		}
-		return true; //some special case like Barn
-	}
+    @Override
+    public boolean visit(Feature feature) {
+        for (Meeple m : feature.getMeeples()) {
+            if (m.getPlayer() != player) continue;
+            if (m instanceof Builder || m instanceof Pig) {
+                toRemove = (Special) m;
+                continue;
+            }
+            if (m instanceof Follower) {
+                //another follower exists
+                toRemove = null;
+                return false; //can stop immediately
+            }
+        }
+        return true;
+    }
 
-	@Deprecated
-	public Meeple getMeepleToRemove() {
-		return toRemove;
-	}
-	
-	@Override
-	public Special getResult() {	
-		return toRemove;
-	}
+    @Override
+    public Special getResult() {
+        return toRemove;
+    }
 
 
 }

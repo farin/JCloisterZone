@@ -1,105 +1,106 @@
 package com.jcloisterzone.ai;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Map.Entry;
+
+import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.Player;
-import com.jcloisterzone.ai.operation.MeepleDeployedOperation;
-import com.jcloisterzone.ai.operation.MeepleUndeployedOperation;
-import com.jcloisterzone.ai.operation.Operation;
-import com.jcloisterzone.ai.operation.ScoreOperation;
-import com.jcloisterzone.ai.operation.TilePlacedOperation;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.GameEventAdapter;
-import com.jcloisterzone.event.GameEventListener;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.ExpandedGame;
+import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.event.Undoable;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.Phase;
 
 public class SavePointManager {
 
-	private final Game game;
-	protected Deque<Operation> operations = new ArrayDeque<Operation>();
-	private GameEventListener operationRecorder = new OperationRecorder();
-	
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	public SavePointManager(Game game) {
-		this.game = game;
-	}
+    private final Game game;
+    protected Deque<Undoable> operations = new ArrayDeque<Undoable>();
+    private OperationRecorder operationRecorder = new OperationRecorder();
 
-	public Game getGame() {
-		return game;
-	}
+    private static final boolean DEBUG_VERIFY_SAVE_POINT = false;
 
-	public void startRecording() {
-		game.addGameListener(operationRecorder);
-	}
 
-	public void stopRecording() {
-		game.removeGameListener(operationRecorder);
-		operations.clear();
-	}
+    public SavePointManager(Game game) {
+        this.game = game;
+        if (DEBUG_VERIFY_SAVE_POINT) {
+            logger.warn("Save point verification is enabled!");
+        }
+    }
 
-	public SavePoint save() {
-		Operation op = operations.isEmpty() ? null : operations.peekLast();
-		return new SavePoint(op, game);
-	}
+    public Game getGame() {
+        return game;
+    }
 
-	public void restore(SavePoint sp) {
-		game.removeGameListener(operationRecorder);
-		Operation spOp = sp == null ? null : sp.getOperation();
-		assert spOp == null || operations.contains(spOp);
-		Operation item;
-		while((item = operations.peekLast()) != null) {
-			if (item == spOp) {
-				break;
-			}
-			//logger.info("      < undo {}", item);
-			operations.pollLast().undo(game);
-		}
-		for(Entry<Expansion, ExpandedGame> entry : sp.getFrozenExpandedGames().entrySet()) {
-			game.getExpandedGamesMap().put(entry.getKey(), entry.getValue().copy());
-		}
-		Phase phase = sp.getPhase();
-		game.setPhase(phase);
-		phase.setEntered(true);
-		game.addGameListener(operationRecorder);
-	}
+    public void startRecording() {
+        game.flushEventQueue();
+        game.getEventBus().register(operationRecorder);
+    }
 
-	class OperationRecorder extends GameEventAdapter {
-		@Override
-		public void tilePlaced(Tile tile) {
-			operations.addLast(new TilePlacedOperation(tile));
-		}
-		@Override
-		public void deployed(Meeple meeple) {
-			operations.addLast(new MeepleDeployedOperation(meeple));
-		}
-		@Override
-		public void undeployed(Meeple meeple) {
-			operations.addLast(new MeepleUndeployedOperation(meeple));
-		}
-//		@Override
-//		public void playerActivated(Player turnPlayer, Player activePlayer) {
-//			// TODO Auto-generated method stub
-//			super.playerActivated(turnPlayer, activePlayer);
-//		}
-		@Override
-		public void scored(Feature feature, int points, String label, Meeple meeple, boolean isFinal) {
-			operations.addLast(new ScoreOperation(meeple.getPlayer(), points));
-		}
-		@Override
-		public void scored(Position position, Player player, int points, String label, boolean isFinal) {
-			operations.addLast(new ScoreOperation(player, points));
-		}
-	}
+    public void stopRecording() {
+        game.flushEventQueue();
+        game.getEventBus().unregister(operationRecorder);
+        operations.clear();
+    }
+
+    public SavePoint save() {
+        Object[] backups = new Object[game.getCapabilities().size()];
+        int i = 0;
+        for (Capability cap : game.getCapabilities()) {
+            backups[i++] = cap.backup();
+        }
+        SavePoint sp = new SavePoint(operations.peekLast(), game.getPhase(), backups);
+        if (DEBUG_VERIFY_SAVE_POINT) {
+            sp.setSnapshot(new Snapshot(game));
+        }
+        return sp;
+    }
+
+    public void restore(SavePoint sp) {
+        game.flushEventQueue();
+        game.getEventBus().unregister(operationRecorder);
+        Undoable target = sp.getOperation();
+        //assert target == null || operations.contains(target);
+        while (operations.peekLast() != target) {
+            operations.pollLast().undo(game);
+        }
+        int i = 0;
+        for (Capability cap : game.getCapabilities()) {
+            cap.restore(sp.getCapabilitiesBackups()[i++]);
+        }
+
+        Phase phase = sp.getPhase();
+        game.setPhase(phase);
+        phase.setEntered(true);
+        game.getEventBus().register(operationRecorder);
+
+        if (DEBUG_VERIFY_SAVE_POINT) {
+            try {
+                String sRestore = new Snapshot(game).saveToString();
+                String sSave = sp.getSnapshot().saveToString();
+                if (!sSave.equals(sRestore)) {
+                    System.err.println("--- saved save point---");
+                    System.err.println(sSave);
+                    System.err.println("--- doesn't match restored saved point ---");
+                    System.err.println(sRestore);
+                    System.err.println("-------");
+                }
+            } catch (IOException | TransformerException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    class OperationRecorder  {
+        @Subscribe
+        public void record(Undoable u) {
+            operations.addLast(u);
+        }
+    }
 }

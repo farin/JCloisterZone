@@ -1,88 +1,59 @@
 package com.jcloisterzone.ui;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.jcloisterzone.figure.Figure;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.bugreport.ReportingTool;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.figure.Meeple;
 
 
-public class InvokeInSwingUiAdapter implements InvocationHandler {
+public class InvokeInSwingUiAdapter {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private ReportingTool reportingTool;
 
-	private final ClientController controller;
+    private final EventBus uiEventBus;
 
-	public InvokeInSwingUiAdapter(ClientController client) {
-		this.controller = client;
-	}
+    public InvokeInSwingUiAdapter(EventBus eventBus) {
+        this.uiEventBus = eventBus;
+    }
 
-	@Override
-	public Object invoke(Object proxy, final Method method, final Object[] args) {
-		freezeArgs(method, args);
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
+    @Subscribe
+    public void handleAllEvents(Event event) {
+        logger.info("event: {}", event);
+        if (reportingTool != null) {
+            reportingTool.report("event: " + event);
+        }
+        final Object frozenEvent = freezeEvent(event);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
 			public void run() {
-				try {
-					method.invoke(controller, args);
-				} catch (InvocationTargetException ie) {
-					logger.error("Cannot invoke method " + method.toString() + " (probably bug in freezeArgs())", ie.getCause());
-				} catch (Exception e) {
-					logger.error("Method " + method.toString() + " (probably bug in freezeArgs())", e);
-				}
-			}
-		});
-		return null;
-	}
+                uiEventBus.post(frozenEvent);
+            }
+        });
+    }
 
-	@SuppressWarnings("rawtypes")
-	private void freezeArgs(Method method, Object[] args) {
-		if (args == null) return;
-		for(int i = 0; i < args.length; i++) {
-			if (args[i] instanceof Figure) {
-				args[i] = ((Figure) args[i]).clone();
-			}
-			if (args[i] instanceof Collection<?>) {
-				if (args[i] instanceof EnumSet) continue; //do not modify Enum set
-				//Class paramType = method.getParameterTypes()[i];
-				FigureCloningFunction func = new FigureCloningFunction();
-				if (args[i] instanceof List) {
-					List<Object> list = new ArrayList<Object>(((List) args[i]).size());
-					for(Object obj : (List) args[i]) {
-						list.add(func.apply(obj));
-					}
-					args[i] = list;
-				} else if (args[i] instanceof Set) {
-					Set<Object> set = new HashSet<Object>(((Set) args[i]).size());
-					for(Object obj : (Set) args[i]) {
-						set.add(func.apply(obj));
-					}
-					args[i] = set;
-				}
-				//for map do nothing
-			}
-		}
-	}
+    private Event freezeEvent(Event ev) {
+        if (ev instanceof MeepleEvent) {
+            //TODO is it really needed with new meeple events?
+            MeepleEvent mev = (MeepleEvent) ev;
+            Meeple m = mev.getMeeple();
+            return new MeepleEvent(((MeepleEvent) ev).getTriggeringPlayer(), (Meeple) m.clone(), mev.getFrom(), mev.getTo());
+        }
+        return ev;
+    }
 
-	private class FigureCloningFunction implements Function<Object, Object> {
-		@Override
-		public Object apply(Object from) {
-			if (from instanceof Figure) {
-				return ((Figure) from).clone();
-			}
-			return from;
-		}
-	}
+    public void setReportingTool(ReportingTool reportingTool) {
+        this.reportingTool = reportingTool;
+    }
+
+    public ReportingTool getReportingTool() {
+        return reportingTool;
+    }
 }

@@ -1,5 +1,10 @@
 package com.jcloisterzone.feature;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.common.collect.ObjectArrays;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
@@ -9,83 +14,121 @@ import com.jcloisterzone.game.Game;
 
 public abstract class TileFeature implements Feature {
 
-	private int id; //unique feature identifier
-	private Tile tile;
-	private Location location;
-	private Feature[] neighbouring;
+    private int id; //unique feature identifier
+    private Tile tile;
+    private Location location;
+    private Feature[] neighbouring;
 
-	private Meeple meeple;
+    private List<Meeple> meeples = Collections.emptyList();
 
-	protected Game getGame() {
-		return tile.getGame();
-	}
-	
-	@Override
-	public <T> T walk(FeatureVisitor<T> visitor) {
-		visitor.visit(this);
-		return visitor.getResult();
-	}
-	
-	@Override
-	public Feature getMaster() {
-		return this;
-	}
+    protected Game getGame() {
+        return tile.getGame();
+    }
 
-	public void setMeeple(Meeple meeple) {
-		this.meeple = meeple;
-	}
+    @Override
+    public <T> T walk(FeatureVisitor<T> visitor) {
+        visitor.visit(this);
+        return visitor.getResult();
+    }
 
-	public Meeple getMeeple() {
-		return meeple;
-	}
+    @Override
+    public Feature getMaster() {
+        return this;
+    }
 
-	public Feature[] getNeighbouring() {
-		return neighbouring;
-	}
-	
-	public void addNeighbouring(Feature[] neighbouring) {
-		if (this.neighbouring == null) {
-			this.neighbouring = neighbouring;
-		} else {
-			this.neighbouring = ObjectArrays.concat(this.neighbouring, neighbouring, Feature.class);
-		}
-	}
+    @Override
+    public void addMeeple(Meeple meeple) {
+        if (meeples.isEmpty()) {
+            meeples = Collections.singletonList(meeple);
+            meeple.setIndex(0);
+        } else {
+            //rare case (eg. Crop circles allows this) when more then one follower stay on same feature
+            int index = -1;
+            for (Meeple m : meeples) {
+                if (m.getIndex() > index) index = m.getIndex();
+            }
+            meeples = new LinkedList<>(meeples);
+            meeples.add(meeple);
+            meeple.setIndex(index+1);
+        }
+    }
 
-	public Tile getTile() {
-		return tile;
-	}
-	
-	public void setTile(Tile tile) {
-		assert this.tile == null;
-		this.tile = tile;
-	}
+    @Override
+    public void removeMeeple(Meeple meeple) {
+        if (meeples.size() == 1) {
+            assert meeples.get(0) == meeple;
+            meeples = Collections.emptyList();
+        } else {
+            meeples.remove(meeple);
+        }
+        meeple.setIndex(null);
+    }
 
-	public Location getLocation() {
-		return location.rotateCW(tile.getRotation());
-	}
-	
-	public void setLocation(Location location) {
-		assert this.location == null;
-		this.location = location;
-	}
+    @Override
+    public final List<Meeple> getMeeples() {
+        return meeples;
+    }
 
-	@Override
-	public int getId() {
-		return id;
-	}
+    public Feature[] getNeighbouring() {
+        return neighbouring;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void addNeighbouring(Feature[] neighbouring) {
+        if (this.neighbouring == null) {
+            this.neighbouring = neighbouring;
+        } else {
+            this.neighbouring = ObjectArrays.concat(this.neighbouring, neighbouring, Feature.class);
+        }
+    }
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
+    public Tile getTile() {
+        return tile;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+"@"+getId();
-	}
+    public void setTile(Tile tile) {
+        assert this.tile == null;
+        this.tile = tile;
+    }
+
+    public Location getLocation() {
+        return location.rotateCW(tile.getRotation());
+    }
+
+    public Location getRawLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        assert this.location == null;
+        this.location = location;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"@"+getId();
+    }
+
+    public static String getLocalizedNamefor (Class<? extends Feature> feature) {
+        try {
+            Method m = feature.getMethod("name");
+            return (String) m.invoke(null);
+        } catch (Exception e) {
+            return feature.getSimpleName();
+        }
+    }
 
 }

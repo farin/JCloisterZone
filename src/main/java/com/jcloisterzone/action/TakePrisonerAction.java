@@ -1,14 +1,23 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.wsio.RmiProxy;
 
-public class TakePrisonerAction extends SelectFeatureAction {
+public class TakePrisonerAction extends SelectFollowerAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.takePrisoner(p, d);
-	}
+    public TakePrisonerAction() {
+        super("takeprisoner");
+    }
+
+    @Override
+    public void perform(RmiProxy server, MeeplePointer bp) {
+        server.takePrisoner(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
+    }
+
+    @Override
+    public String toString() {
+        return "take prisoner";
+    }
+
 
 }

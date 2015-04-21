@@ -1,39 +1,41 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
+import com.jcloisterzone.game.capability.FairyCapability;
 
 
 public class FairyPhase extends Phase {
 
-	public FairyPhase(Game game) {
-		super(game);
-	}
+    private final FairyCapability fairyCap;
 
-	@Override
-	public boolean isActive() {
-		return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON);
-	}
+    public FairyPhase(Game game) {
+        super(game);
+        fairyCap = game.getCapability(FairyCapability.class);
+    }
 
-	@Override
-	public void enter() {
-		PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-		Position fairyPos = pd.getFairyPosition();
-		if (fairyPos != null) {
-			for(Meeple m : game.getDeployedMeeples()) {
-				if (m.getPosition().equals(fairyPos) && m.getPlayer() == getActivePlayer()) {
-					m.getPlayer().addPoints(1, PointCategory.FAIRY);
-					game.fireGameEvent().scored(m.getPosition(), m.getPlayer(), 1, "1", false);
-					break;
-				}
-			}
-		}
-		next();
-	}
+    @Override
+    public boolean isActive() {
+        return game.hasCapability(FairyCapability.class);
+    }
+
+    @Override
+    public void enter() {
+        Position fairyPos = fairyCap.getFairyPosition();
+        if (fairyPos != null && !getTilePack().isEmpty())  { //do not add 1 point in last additional abbey only round
+            for (Meeple m : game.getDeployedMeeples()) {
+                if (m.at(fairyPos) && m.getPlayer() == getActivePlayer()) {
+                    m.getPlayer().addPoints(1, PointCategory.FAIRY);
+                    game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), 1, PointCategory.FAIRY));
+                    break;
+                }
+            }
+        }
+        next();
+    }
 
 
 }

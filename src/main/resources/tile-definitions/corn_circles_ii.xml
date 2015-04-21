@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="RRr">
+        <corn-circle type="Road"/>
+        <road>W S</road>
+        <road>E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="RRRr">
+        <corn-circle type="Road"/>
+        <road>W S</road>
+        <road>N</road>
+        <road>E</road>
+        <farm>WR NL ER SL</farm>
+        <farm>NR EL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="CFR">
+        <corn-circle type="Farm"/>
+        <city castle-base="true">N</city>
+        <road>S</road>
+        <farm>WR WL SL SR EL ER</farm>
+    </tile>
+    <tile id="RCR">
+        <corn-circle type="Farm"/>
+        <city castle-base="true">N</city>
+        <road>W</road>
+        <road>E</road>
+        <farm>WR EL</farm>
+        <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="CFC">
+        <corn-circle type="City"/>
+        <city castle-base="true">N</city>
+        <city castle-base="true">S</city>
+        <farm>WL WR</farm>
+        <farm>EL ER</farm>
+    </tile>
+    <tile id="CcCc">
+        <corn-circle type="City"/>
+        <city>W N</city>
+        <city>E S</city>
+    </tile>
+</pack>

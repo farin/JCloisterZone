@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.jcloisterzone.plugins.classic" version="3.2">
+    <title>Classic art</title>
+    <description>Graphics from original board game</description>
+    <expansions>
+        <expansion>BASIC</expansion>
+        <expansion>WINTER</expansion>
+        <expansion>INNS_AND_CATHEDRALS</expansion>
+        <expansion>TRADERS_AND_BUILDERS</expansion>
+        <expansion>PRINCESS_AND_DRAGON</expansion>
+        <expansion>TOWER</expansion>
+        <expansion>ABBEY_AND_MAYOR</expansion>
+        <expansion>CATAPULT</expansion>
+        <expansion>BRIDGES_CASTLES_AND_BAZAARS</expansion>
+        <expansion>KING_AND_ROBBER_BARON</expansion>
+        <expansion>RIVER</expansion>
+        <expansion>RIVER_II</expansion>
+        <expansion>CATHARS</expansion>
+        <expansion>BESIEGERS</expansion>
+        <expansion>COUNT</expansion>
+        <expansion>GQ11</expansion>
+        <expansion>CULT</expansion>
+        <expansion>TUNNEL</expansion>
+        <expansion>CORN_CIRCLES</expansion>
+        <expansion>PLAGUE</expansion>
+        <expansion>FESTIVAL</expansion>
+        <expansion>WIND_ROSE</expansion>
+        <expansion>GERMAN_MONASTERIES</expansion>
+        <expansion>FLIER</expansion>
+        <expansion>CORN_CIRCLES_II</expansion>
+        <expansion>MAGE_AND_WITCH</expansion>
+        <expansion>GOLDMINES</expansion>
+        <expansion>FERRIES</expansion>
+    </expansions>
+</plugin>

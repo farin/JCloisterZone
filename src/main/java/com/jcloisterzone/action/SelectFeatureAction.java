@@ -1,55 +1,50 @@
 package com.jcloisterzone.action;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.collection.Sites;
-import com.jcloisterzone.rmi.Client2ClientIF;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 
-public abstract class SelectFeatureAction extends PlayerAction {
+public abstract class SelectFeatureAction extends PlayerAction<FeaturePointer> {
 
-	private final Sites sites;
 
-	public SelectFeatureAction() {
-		this(new Sites());
-	}
-	
-	public SelectFeatureAction(Position p, Set<Location> locations) {
-		this();
-		sites.put(p, locations);
-	}
+    public SelectFeatureAction(String name) {
+        super(name);
+    }
 
-	public SelectFeatureAction(Sites sites) {
-		this.sites = sites;
-	}
+    @Override
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return FeatureAreaLayer.class;
+    }
 
-	public Sites getSites() {
-		return sites;
-	}	
-	
-	public Set<Location> get(Position p) {
-		Set<Location> locs = sites.get(p);
-		return locs != null ? locs : Collections.<Location>emptySet();
-	}
 
-	public Set<Location> getOrCreate(Position p) {
-		return sites.getOrCreate(p);
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		return new FeatureAreaLayer(client.getGridPanel(), this);
-	}
+    public Map<Position, Set<Location>> groupByPosition() {
+        Map<Position, Set<Location>> map = new HashMap<>();
+        for (FeaturePointer fp: options) {
+            Set<Location> locations = map.get(fp.getPosition());
+            if (locations == null) {
+                locations = new HashSet<>();
+                map.put(fp.getPosition(), locations);
+            }
+            locations.add(fp.getLocation());
+        }
+        return map;
+    }
 
-	public abstract void perform(Client2ClientIF server, Position p, Location d);
+  //TODO direct implementation
+    public Set<Location> getLocations(Position p) {
+        return groupByPosition().get(p);
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + '=' + sites.toString();
-	}
+//    @Override
+//    public String toString() {
+//        return getClass().getSimpleName() + '=' + locMap.toString();
+//    }
 
 }

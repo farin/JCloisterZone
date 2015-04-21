@@ -1,28 +1,34 @@
 package com.jcloisterzone.action;
 
-import java.awt.Image;
-
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.Client2ClientIF;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class FairyAction extends SelectTileAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p) {
-		server.moveFairy(p);
-	}
+    public FairyAction() {
+        super("fairy");
+    }
 
-	@Override
-	protected int getSortOrder() {
-		return 30;
-	}
-	
-	@Override
-	protected GridLayer createGridLayer() {
-		Image gd = client.getControlsTheme().getActionDecoration("fairy");
-		return new TileActionLayer(client.getGridPanel(), this, gd);
-	}
+    @Override
+    public void perform(RmiProxy server, Position p) {
+        server.moveFairy(p);
+    }
+
+    @Override
+    protected int getSortOrder() {
+        return 30;
+    }
+
+    @Override
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TileActionLayer.class;
+    }
+
+    @Override
+    public String toString() {
+        return "move fairy";
+    }
 
 }

@@ -1,30 +1,40 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.collection.Sites;
+import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
+import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 public class TilePhase extends Phase {
 
+    private final BridgeCapability bridgeCap;
+
     public TilePhase(Game game) {
         super(game);
+        bridgeCap = game.getCapability(BridgeCapability.class);
     }
 
     @Override
     public void enter() {
-        Map<Position, Set<Rotation>> freezed = Maps.newHashMap(getBoard().getAvailablePlacements());
-        notifyUI(new TilePlacementAction(game.getCurrentTile(), freezed), false);
+    	TilePlacementAction action = new TilePlacementAction(game.getCurrentTile());
+    	for (Entry<Position, Set<Rotation>> entry: getBoard().getAvailablePlacements().entrySet()) {
+    		for (Rotation rotation : entry.getValue()) {
+    			action.add(new TilePlacement(entry.getKey(), rotation));
+    		}
+    	}
+        game.post(new SelectActionEvent(getActivePlayer(), action, false));
     }
 
     @Override
@@ -33,7 +43,7 @@ public class TilePhase extends Phase {
          Tile tile = game.getTilePack().drawTile(tileId);
          game.setCurrentTile(tile);
          game.getBoard().refreshAvailablePlacements(tile);
-         game.fireGameEvent().tileDrawn(tile);
+         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
     }
 
     @Override
@@ -41,27 +51,22 @@ public class TilePhase extends Phase {
         Tile tile = getTile();
         tile.setRotation(rotation);
 
-        boolean bridgeRequired = false;
-        if (game.hasExpansion(Expansion.BRIDGES_CASTLES_AND_BAZAARS)) {
-            bridgeRequired = !getBoard().isPlacementAllowed(tile, p);
-        }
+        boolean bridgeRequired = bridgeCap != null && !getBoard().isPlacementAllowed(tile, p);
 
         getBoard().add(tile, p);
         if (tile.getTower() != null) {
-            game.getTowerGame().registerTower(p);
+            game.getCapability(TowerCapability.class).registerTower(p);
         }
-        game.fireGameEvent().tilePlaced(tile);
+        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), tile, p));
 
         if (bridgeRequired) {
-            BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-            Sites sites = bcb.prepareMandatoryBridgeAction().getSites();
+            BridgeAction action = bridgeCap.prepareMandatoryBridgeAction();
 
-            assert sites.size() == 1;
-            Position pos = sites.keySet().iterator().next();
-            Location loc = sites.get(pos).iterator().next();
+            assert action.getOptions().size() == 1;
+            FeaturePointer bp = action.getOptions().iterator().next();
 
-            bcb.decreaseBridges(getActivePlayer());
-            bcb.deployBridge(pos, loc);
+            bridgeCap.decreaseBridges(getActivePlayer());
+            bridgeCap.deployBridge(bp.getPosition(), bp.getLocation());
         }
         getBoard().mergeFeatures(tile);
 

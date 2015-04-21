@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<points xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+    <!-- Shared points, defaults for all plugins which can be overridden -->
+
+    <point feature="CLOISTER" cx="500" cy="500">
+        <apply>* CLOISTER</apply>
+    </point>
+
+    <point feature="BRIDGE" cx="500" cy="200">
+        <apply>* NS</apply>
+        <apply svg:transform="rotate(270 500 500)">* WE</apply>
+    </point>
+
+    <point feature="ROAD" cx="500" cy="200">
+        <apply allRotations="1">* N</apply>
+    </point>
+    <point feature="ROAD" cx="370" cy="370">
+        <apply allRotations="1">* NW</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="200">
+        <apply>* NWSE</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="500">
+        <apply>* NS</apply>
+        <apply>* WE</apply>
+        <apply allRotations="1">* _N</apply>
+    </point>
+
+    <point feature="CASTLE" cx="500" cy="0">
+        <apply allRotations="1">* N</apply>
+    </point>
+
+    <point feature="CITY" cx="500" cy="160">
+        <apply allRotations="1">* N</apply>
+    </point>
+    <point feature="CITY" cx="350" cy="200">
+        <apply allRotations="1">* NW</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="700">
+        <apply allRotations="1">* _N</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="250">
+        <apply>* NWSE</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="500">
+        <apply>* NS</apply>
+        <apply>* WE</apply>
+    </point>
+    <point feature="FARM" cx="300" cy="120">
+        <apply allRotations="1">* NL</apply>
+    </point>
+    <point feature="FARM" cx="300" cy="150">
+        <apply allRotations="1">* NL.SR</apply>
+        <apply allRotations="1">* NL.ER</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="150">
+        <apply allRotations="1">* NL.NR</apply>
+    </point>
+     <point feature="FARM" cx="500" cy="800" baseLocation="NL.NR.SL.SR">
+        <apply>* NL.NR.SL.SR</apply>
+        <apply>* WL.WR.EL.ER</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="500">
+        <apply>* INNER_FARM</apply>
+        <apply>* NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply allRotations="1">* NL.NR.SL</apply>
+        <apply allRotations="1">* NL.NR.SR</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="250"> <!--  MAX-QUARTER, QUARTER -->
+        <apply allRotations="1">* NL.NR.EL</apply>
+        <apply allRotations="1">* NL.NR.EL.ER</apply>
+        <apply allRotations="1">* NL.NR.EL.ER.SL.WR</apply>
+        <apply allRotations="1">* NL.NR.EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="700" cy="120">
+        <apply allRotations="1">* NR</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="400">
+        <apply allRotations="1">* NR.EL.ER.WL</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="500">
+        <apply allRotations="1">* NL.NR.EL.ER.SL.SR</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="600">
+        <apply allRotations="1">* WR.EL.ER.SL</apply> <!-- mirror to NR.EL.ER.WL -->
+    </point>
+    <point feature="FARM" cx="750" cy="750">
+        <apply allRotations="1">* NR.EL.ER.SL.SR</apply>
+    </point>
+    <point feature="FARM" cx="770" cy="230">
+        <apply>* NR.EL.SR.WL</apply>
+        <g svg:transform="rotate(90 500 500)">
+            <apply>* ER.SL.WR.NL</apply>
+        </g>
+    </point>
+    <point feature="FARM" cx="800" cy="200">
+        <apply allRotations="1">* NR.EL</apply>
+        <apply allRotations="1">* NR.EL.SR</apply>
+        <apply allRotations="1">* NR.EL.WL</apply>
+    </point>
+    <point feature="FARM" cx="800" cy="300">
+        <apply allRotations="1">* NR.EL.ER</apply>
+    </point>
+    <point feature="FARM" cx="800" cy="500">
+        <apply allRotations="1">* NR.EL.ER.SL</apply>
+    </point>
+
+</points>

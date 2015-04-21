@@ -1,40 +1,42 @@
 package com.jcloisterzone.ai;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.google.common.collect.Maps;
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.ai.operation.Operation;
-import com.jcloisterzone.game.ExpandedGame;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.event.Undoable;
+import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.phase.Phase;
 
 public class SavePoint {
-	private final Operation operation;
-	private final Phase phase;
-	private final Map<Expansion, ExpandedGame> frozenExpandedGames = Maps.newHashMap();
+    private final Undoable operation;
+    private final Phase phase;
+    private final Object[] capabilitiesBackups;
 
-	public SavePoint(Operation operation, Game game) {
-		this.operation = operation;
-		this.phase = game.getPhase();
-		for(Entry<Expansion, ExpandedGame> entry : game.getExpandedGamesMap().entrySet()) {
-			ExpandedGame copy = entry.getValue().copy();
-			if (copy != null) {
-				frozenExpandedGames.put(entry.getKey(), copy);
-			}
-		}
-	}
+    //testing purposes only
+    private Snapshot snapshot;
 
-	public Operation getOperation() {
-		return operation;
-	}
+    public SavePoint(Undoable operation, Phase phase, Object[] capabilitiesBackups) {
+        this.operation = operation;
+        this.phase = phase;
+        this.capabilitiesBackups = capabilitiesBackups;
+    }
 
-	public Phase getPhase() {
-		return phase;
-	}
-	
-	public Map<Expansion, ExpandedGame> getFrozenExpandedGames() {
-		return frozenExpandedGames;
-	}
+    public Undoable getOperation() {
+        return operation;
+    }
+
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public Object[] getCapabilitiesBackups() {
+        return capabilitiesBackups;
+    }
+
+    public Snapshot getSnapshot() {
+        return snapshot;
+    }
+
+    public void setSnapshot(Snapshot snapshot) {
+        this.snapshot = snapshot;
+    }
+
+
 }

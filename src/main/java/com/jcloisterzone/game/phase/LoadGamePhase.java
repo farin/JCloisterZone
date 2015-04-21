@@ -6,20 +6,24 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.BridgeDeployedEvent;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.GameController;
 
 public class LoadGamePhase extends CreateGamePhase {
 
     private Snapshot snapshot;
     private LoadGameTilePackFactory tilePackFactory;
 
-    public LoadGamePhase(Game game, Snapshot snapshot, ServerIF server) {
-        super(game, server);
+    public LoadGamePhase(Game game, Snapshot snapshot, GameController controller) {
+        super(game, controller);
         this.snapshot = snapshot;
     }
 
@@ -31,8 +35,8 @@ public class LoadGamePhase extends CreateGamePhase {
     @Override
     protected void preparePlayers() {
         //update plain (created by snapshot) players's slot with real one from dialog
-        for(int i = 0; i < slots.length; i++) {
-            for(Player p: game.getAllPlayers()) {
+        for (int i = 0; i < slots.length; i++) {
+            for (Player p: game.getAllPlayers()) {
                 if (p.getSlot().getNumber() == i) {
                     p.setSlot(slots[i]);
                 }
@@ -52,16 +56,18 @@ public class LoadGamePhase extends CreateGamePhase {
     @Override
     protected void preplaceTiles() {
         //super.preplaceTiles();
-        for(Iterator<Tile> iter = ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles().iterator(); iter.hasNext();) {
+        for (Iterator<Tile> iter = ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles().iterator(); iter.hasNext();) {
             Tile preplaced = iter.next();
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.fireGameEvent().tilePlaced(preplaced);
+            game.post(new TileEvent(TileEvent.PLACEMENT, null, preplaced, preplaced.getPosition()));
             if (preplaced.getBridge() != null) {
-                game.fireGameEvent().bridgeDeployed(preplaced.getPosition(), preplaced.getBridge().getLocation());
+                game.post(new BridgeDeployedEvent(null, preplaced.getPosition(), preplaced.getBridge().getLocation()));
             }
         }
-        for(Meeple m : tilePackFactory.getPreplacedMeeples()) {
+        snapshot.loadCapabilities(game);
+        //meeples must be places after capabilites are loaded - when cities replaces castles
+        for (Meeple m : tilePackFactory.getPreplacedMeeples()) {
             Tile tile = game.getBoard().get(m.getPosition());
             Feature f;
             if (m instanceof Barn) {
@@ -71,27 +77,32 @@ public class LoadGamePhase extends CreateGamePhase {
                 f = tile.getFeature(m.getLocation());
             }
             m.setFeature(f);
-            f.setMeeple(m);
-            game.fireGameEvent().deployed(m);
+            f.addMeeple(m);
+            game.post(new MeepleEvent(null, m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
-        snapshot.loadExpansionData(game);
     }
 
     @Override
     protected void prepareTilePack() {
         tilePackFactory = new LoadGameTilePackFactory();
         tilePackFactory.setGame(game);
+        tilePackFactory.setConfig(getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         tilePackFactory.setSnapshot(snapshot);
-        game.setTilePack(tilePackFactory.createTilePack());
-        for(String tileId : snapshot.getDiscardedTiles()) {
-            game.getBoard().discardTile(tileId);
+        DefaultTilePack tilePack = tilePackFactory.createTilePack();
+        game.setTilePack(tilePack);
+        for (String tileId : snapshot.getDiscardedTiles()) {
+            Tile tile = tilePack.drawTile(tileId);
+            game.getBoard().discardTile(tile);
         }
     }
 
     @Override
     public void next() {
+        for (Player player : game.getAllPlayers()) {
+            player.getClock().resetRunning(); //start running clock from now
+        }
         super.next();
         getDefaultNext().loadGame(snapshot); //call after super.next() to be able fake entered flag
     }

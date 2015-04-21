@@ -1,32 +1,51 @@
 package com.jcloisterzone.game.phase;
 
-import java.lang.reflect.Proxy;
-
 import com.jcloisterzone.Player;
+import com.jcloisterzone.config.Config;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
-import com.jcloisterzone.rmi.mina.ClientStub;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 
 public class ServerAwarePhase extends Phase {
 
-	private final ServerIF server;
+    private final GameController gc;
 
-	public ServerAwarePhase(Game game, ServerIF server) {
-		super(game);
-		this.server = server;
-	}
+    public ServerAwarePhase(Game game, GameController gc) {
+        super(game);
+        this.gc = gc;
+    }
 
-	public ServerIF getServer() {
-		return server;
-	}
+    public RmiProxy getServer() {
+        return gc.getRmiProxy();
+    }
 
-	public boolean isLocalPlayer(Player player) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalPlayer(player);
-	}
+    public Connection getConnection() {
+        return gc.getConnection();
+    }
 
-	public boolean isLocalSlot(PlayerSlot slot) {
-		return ((ClientStub)Proxy.getInvocationHandler(server)).isLocalSlot(slot);
-	}
+    public GameController getGameController() {
+        return gc;
+    }
 
+    public Config getConfig() {
+        return gc == null ? null : gc.getConfig();
+    }
+
+    public DebugConfig getDebugConfig() {
+        Config config = getConfig();
+        return config == null ? null : config.getDebug();
+    }
+
+    public boolean isLocalPlayer(Player player) {
+        return player.getSlot().isOwn();
+    }
+
+    public void toggleClock(Player player) {
+        if (isLocalPlayer(player)) {
+            getConnection().send(new ToggleClockMessage(game.getGameId(), player.getIndex()));
+        }
+    }
 }

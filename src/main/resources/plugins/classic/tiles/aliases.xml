@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aliases xmlns="http://www.jcloisterzone.com/aliases">
+    <alias treat="R2.I.s" as="R1.I.s" />
+    <alias treat="R2.II" as="R1.II" />
+    <alias treat="R2.RIrI" as="R1.RIrI" />
+    <alias treat="R2.CcII+" as="R1.CcII" />
+    <alias treat="R2.CIRI" as="R1.CIRI" />
+    <alias treat="R2.RrII" as="R1.RrII" />
+
+    <alias treat="GQ.LRRRR" as="AM.LRRRR" />
+    <alias treat="GQ.CICI" as="R1.CICI" />
+    <alias treat="GQ.Cc!" as="DG.Cc!.p" />
+    <alias treat="GQ.CcRR" as="TB.CcRR.w" />
+    <alias treat="GQ.CRcR.1" as="IC.CRcR+" />
+
+    <alias treat="KR.CCcc" as="AM.CCcc+" />
+    <alias treat="KR.RC" as="AM.RC" />
+
+    <alias treat="PL.Cc+" as="BA.Cc+" />
+    <alias treat="PL.CC" as="BA.CC.2" />
+    <alias treat="PL.CCRR" as="AM.CCRR" />
+    <alias treat="PL.Rr" as="BA.Rr" />
+    <alias treat="PL.RRC" as="TB.RRC" />
+    <alias treat="PL.RRRR" as="BA.RRRR" />
+
+    <alias treat="CC.RrC" as="BA.RrC" />
+
+    <alias treat="WI.R" as="AM.R" />
+    <alias treat="WI.CRr" as="AM.CRr" />
+    <alias treat="WI.RC" as="AM.RC" />
+    <alias treat="WI.LR" as="BA.LR" />
+    <alias treat="WI.RRR" as="BA.RRR" />
+    <alias treat="WI.RrC.i" as="IC.RrC.i" />
+    <alias treat="WI.RCc.i" as="IC.RCc.i" />
+    <alias treat="WI.CFR" as="IC.CFR" />
+    <alias treat="WI.LRFR" as="IC.LRFR" />
+    <alias treat="WI.RrRr" as="IC.RrRr" />
+    <alias treat="WI.CcR" as="IC.CcR" />
+    <alias treat="WI.CR" as="TB.CR" />
+
+    <alias treat="FE.CR" as="TB.CR" />
+    <alias treat="FE.CRCR" as="IC.CRCR" />
+    <alias treat="FE.RC" as="AM.RC" />
+    <alias treat="FE.RrC" as="BA.RrC" />
+    <alias treat="FE.CCc" as="TB.CCc.c" />
+    <alias treat="FE.CFR" as="IC.CFR" />
+    <alias treat="FE.CcCc" as="TB.CcCc.w" />
+    <alias treat="FE.CRr" as="BA.CRr" />
+    <alias treat="FE.RrRr" as="IC.RrRr" />
+
+    <alias treat="WR.Cc.1" as="BA.Cc.1" />
+    <alias treat="WR.CC.2" as="BA.CC.2" />
+
+    <alias treat="BE.RrC" as="BA.RrC" />
+    <alias treat="BE.CRr" as="BA.CRr" />
+    <alias treat="BE.RCc" as="TB.RCc.g" />
+    <alias treat="BE.CcR" as="IC.CcR" />
+
+    <alias treat="MW.CccR.1" as="BA.CccR" />
+    <alias treat="MW.CcRr.1" as="DG.CcRr.g" />
+    <alias treat="MW.CRRr.2" as="GQ.CRRr" />
+    <alias treat="MW.CCCR.3" as="BB.CCCR" />
+    <alias treat="MW.CRRR.3" as="BA.CRRR" />
+    <alias treat="MW.CFC" as="BA.CFC.2" />
+    <alias treat="MW.CRcR" as="IC.CRcR+" />
+
+</aliases>

@@ -8,21 +8,20 @@ import com.jcloisterzone.game.Game;
 
 public class Wagon extends Follower {
 
-	private static final long serialVersionUID = 2585914429763599776L;
+    private static final long serialVersionUID = 2585914429763599776L;
 
-	public Wagon(Game game, Player player) {
-		super(game, player);
-	}
+    public Wagon(Game game, Player player) {
+        super(game, player);
+    }
 
-	@Override
-	protected void checkDeployment(Feature f) {
-		if (f instanceof Tower) {
-			throw new IllegalArgumentException("Cannot place wagon on the tower.");
-		}
-		if (f instanceof Farm) {
-			throw new IllegalArgumentException("Cannot place wagon on the farm.");
-		}
-		super.checkDeployment(f);
-	}
-
+    @Override
+    public DeploymentCheckResult isDeploymentAllowed(Feature f) {
+        if (f instanceof Tower) {
+            return new DeploymentCheckResult("Cannot place wagon on the tower.");
+        }
+        if (f instanceof Farm) {
+            return new DeploymentCheckResult("Cannot place wagon on the farm.");
+        }
+        return super.isDeploymentAllowed(f);
+    }
 }

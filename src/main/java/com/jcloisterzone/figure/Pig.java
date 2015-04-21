@@ -8,20 +8,20 @@ import com.jcloisterzone.game.Game;
 
 public class Pig extends Special {
 
-	private static final long serialVersionUID = -6315956811639409025L;
+    private static final long serialVersionUID = -6315956811639409025L;
 
-	public Pig(Game game, Player player) {
-		super(game, player);
-	}
+    public Pig(Game game, Player player) {
+        super(game, player);
+    }
 
-	@Override
-	protected void checkDeployment(Feature farm) {
-		if (! (farm instanceof Farm)) {
-			throw new IllegalArgumentException("Pig must be placed on a farm only.");
-		}
-		if (! farm.walk(new IsOccupied().with(Follower.class))) {
-			throw new IllegalArgumentException("Feature is not occupied by follower.");
-		}
-		super.checkDeployment(farm);
-	}
+    @Override
+    public DeploymentCheckResult isDeploymentAllowed(Feature farm) {
+        if (!(farm instanceof Farm)) {
+            return new DeploymentCheckResult("Pig must be placed on a farm only.");
+        }
+        if (!farm.walk(new IsOccupied().with(Follower.class))) {
+            return new DeploymentCheckResult("Feature is not occupied by follower.");
+        }
+        return super.isDeploymentAllowed(farm);
+    }
 }

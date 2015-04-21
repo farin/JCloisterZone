@@ -1,31 +1,41 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ClassToInstanceMap;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.AiPlayer;
-import com.jcloisterzone.ai.AiUserInterfaceAdapter;
 import com.jcloisterzone.board.DefaultTilePack;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.PlayerSlot.SlotType;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.SlotMessage;
 
 
 public class CreateGamePhase extends ServerAwarePhase {
 
-    private final class PlayerSlotComparator implements Comparator<PlayerSlot> {
+    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
         @Override
         public int compare(PlayerSlot o1, PlayerSlot o2) {
             if (o1.getSerial() == null) {
@@ -39,9 +49,10 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected PlayerSlot[] slots;
+    protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    public CreateGamePhase(Game game, ServerIF server) {
-        super(game, server);
+    public CreateGamePhase(Game game, GameController controller) {
+        super(game, controller);
     }
 
     public void setSlots(PlayerSlot[] slots) {
@@ -52,42 +63,33 @@ public class CreateGamePhase extends ServerAwarePhase {
         return slots;
     }
 
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        if (enabled) {
-            game.getCustomRules().add(rule);
-        } else {
-            game.getCustomRules().remove(rule);
+
+    @WsSubscribe
+    public void handleSlotMessage(SlotMessage msg) {
+        slotSupportedExpansions[msg.getNumber()] = msg.getSupportedExpansions();
+        game.post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));
+    }
+
+    private EnumSet<Expansion> mergeSupportedExpansions() {
+        EnumSet<Expansion> merged = null;
+        for (int i = 0; i < slotSupportedExpansions.length; i++) {
+            Expansion[] supported = slotSupportedExpansions[i];
+            if (supported == null) continue;
+            if (merged == null) {
+                merged = EnumSet.allOf(Expansion.class);
+            }
+            EnumSet<Expansion> supp = EnumSet.noneOf(Expansion.class);
+            Collections.addAll(supp, supported);
+            merged.retainAll(supp);
         }
-        game.fireGameEvent().updateCustomRule(rule, enabled);
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        if (enabled) {
-            game.getExpansions().add(expansion);
-        } else {
-            game.getExpansions().remove(expansion);
-        }
-        game.fireGameEvent().updateExpansion(expansion, enabled);
-    }
-
-    @Override
-    public void updateSlot(PlayerSlot slot) {
-        slots[slot.getNumber()] = slot;
-        game.fireGameEvent().updateSlot(slot);
-    }
-
-    @Override
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        game.fireGameEvent().updateSupportedExpansions(expansions);
+        return merged;
     }
 
 
     private Phase addPhase(Phase next, Phase phase) {
-        if (! phase.isActive()) return next;
+        if (!phase.isActive()) return next;
 
-        Map<Class<? extends Phase>, Phase> phases = game.getPhases();
+        ClassToInstanceMap<Phase> phases = game.getPhases();
         phases.put(phase.getClass(), phase);
         if (next != null) {
             phase.setDefaultNext(next);
@@ -96,35 +98,53 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void preparePhases() {
-        Phase next = null;
-        //no assignment - phase is out of standard flow
-               addPhase(next, new GameOverPhase(game));
-        next = addPhase(next, new CleanUpPhase(game));
-        next = addPhase(next, new BazaarPhase(game, getServer()));
+        GameController gc = getGameController();
+        Phase last, next = null;
+        //if there isn't assignment - phase is out of standard flow
+               addPhase(next, new GameOverPhase(game, gc));
+        next = last = addPhase(next, new CleanUpTurnPhase(game));
+        next = addPhase(next, new BazaarPhase(game, gc));
         next = addPhase(next, new EscapePhase(game));
-        next = addPhase(next, new WagonPhase(game));
-        next = addPhase(next, new ScorePhase(game));
+        next = addPhase(next, new CleanUpTurnPartPhase(game));
+        next = addPhase(next, new CornCirclePhase(game, gc));
+
+        if (game.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+            addPhase(next, new DragonMovePhase(game, gc));
+            next = addPhase(next, new DragonPhase(game));
+        }
+
+        next = addPhase(next, new WagonPhase(game, gc));
+        next = addPhase(next, new ScorePhase(game, gc));
         next = addPhase(next, new CastlePhase(game));
-               addPhase(next, new DragonMovePhase(game));
-        next = addPhase(next, new DragonPhase(game));
+
+        if (!game.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+               addPhase(next, new DragonMovePhase(game, gc));
+               next = addPhase(next, new DragonPhase(game));
+        }
+
         next = addPhase(next, new PhantomPhase(game));
                addPhase(next, new TowerCapturePhase(game));
+               addPhase(next, new FlierActionPhase(game));
         next = addPhase(next, new ActionPhase(game));
+        next = addPhase(next, new MageAndWitchPhase(game));
+        next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
-        next = addPhase(next, new DrawPhase(game, getServer()));
-        next = addPhase(next, new AbbeyPhase(game));
+        next = addPhase(next, new DrawPhase(game, gc));
+        next = addPhase(next, new AbbeyPhase(game, gc));
         next = addPhase(next, new FairyPhase(game));
         setDefaultNext(next); //set next phase for this (CreateGamePhase) instance
-        game.getPhases().get(CleanUpPhase.class).setDefaultNext(next); //after last first is default
+        last.setDefaultNext(next); //after last phase, the first is default
     }
 
     private void createPlayers() {
-        List<Player> players = Lists.newArrayList();
-        Arrays.sort(slots, new PlayerSlotComparator());
-        for(int i = 0; i < slots.length; i++) {
-            PlayerSlot slot = slots[i];
+        List<Player> players = new ArrayList<>();
+        PlayerSlot[] sorted = new PlayerSlot[slots.length];
+        System.arraycopy(slots, 0, sorted, 0, slots.length);
+        Arrays.sort(sorted, new PlayerSlotComparator());
+        for (int i = 0; i < sorted.length; i++) {
+            PlayerSlot slot = sorted[i];
             if (slot.isOccupied()) {
-                Player player = new Player(slot.getNick(), i, slot);
+                Player player = new Player(slot.getNickname(), i, slot);
                 players.add(player);
             }
         }
@@ -139,11 +159,11 @@ public class CreateGamePhase extends ServerAwarePhase {
     }
 
     protected void initializePlayersMeeples() {
-        for(Player player : game.getAllPlayers()) {
-            for(int i = 0; i < SmallFollower.QUANTITY; i++) {
+        for (Player player : game.getAllPlayers()) {
+            for (int i = 0; i < SmallFollower.QUANTITY; i++) {
                 player.addMeeple(new SmallFollower(game, player));
             }
-            game.expansionDelegate().initPlayer(player);
+            game.initPlayer(player);
         }
     }
 
@@ -155,34 +175,39 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void prepareTilePack() {
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setGame(game);
+        tilePackFactory.setConfig(getGameController().getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         game.setTilePack(tilePackFactory.createTilePack());
-        getTilePack().activateGroup("default");
-        game.expansionDelegate().begin();
+        getTilePack().setGroupState("default", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("count", TileGroupState.ACTIVE);
+        getTilePack().setGroupState("wind-rose-initial", TileGroupState.ACTIVE);
+        game.begin();
     }
 
     protected void preplaceTiles() {
-        for(Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
+        for (Tile preplaced : ((DefaultTilePack)getTilePack()).drawPrePlacedActiveTiles()) {
             game.getBoard().add(preplaced, preplaced.getPosition(), true);
             game.getBoard().mergeFeatures(preplaced);
-            game.fireGameEvent().tilePlaced(preplaced);
+            game.post(new TileEvent(TileEvent.PLACEMENT, null, preplaced, preplaced.getPosition()));
         }
     }
 
-    protected void prepareAiPlayers() {
+    protected void prepareAiPlayers(boolean muteAi) {
         for (PlayerSlot slot : slots) {
-            if (slot != null && slot.getType() == SlotType.AI && isLocalSlot(slot)) {
+            if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
                     AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    ai.setMuted(muteAi);
                     ai.setGame(game);
-                    ai.setServer(getServer());
-                    for(Player player : game.getAllPlayers()) {
+                    ai.setGameController(getGameController());
+                    for (Player player : game.getAllPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             ai.setPlayer(player);
                             break;
                         }
                     }
-                    game.addUserInterface(new AiUserInterfaceAdapter(ai));
+                    slot.setAiPlayer(ai);
+                    game.getEventBus().register(ai);
                     logger.info("AI player created - " + slot.getAiClassName());
                 } catch (Exception e) {
                     logger.error("Unable to create AI player", e);
@@ -191,18 +216,44 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
     }
 
-    @Override
-    public void startGame() {
+    protected void prepareCapabilities() {
+        for (Expansion exp : game.getExpansions()) {
+            game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
+        }
+
+        DebugConfig debugConfig = getDebugConfig();
+        if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
+            List<String> offNames =  debugConfig.getOff_capabilities();
+            Set<Class<? extends Capability>> off = new HashSet<>();
+            for (String tok : offNames) {
+                tok = tok.trim();
+                try {
+                    String className = "com.jcloisterzone.game.capability."+tok+"Capability";
+                    @SuppressWarnings("unchecked")
+                    Class<? extends Capability> clazz = (Class<? extends Capability>) Class.forName(className);
+                    off.add(clazz);
+                } catch (Exception e) {
+                    logger.warn("Invalid capability name: " + tok, e);
+                }
+            }
+            game.getCapabilityClasses().removeAll(off);
+        }
+    }
+
+    public void startGame(boolean muteAi) {
+        //temporary code should be configured by player as rules
+        prepareCapabilities();
+
         game.start();
         preparePlayers();
         preparePhases();
         prepareTilePack();
-        prepareAiPlayers();
+        prepareAiPlayers(muteAi);
 
-        game.fireGameEvent().started(getSnapshot());
+        game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_START, getSnapshot()));
         preplaceTiles();
-        game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-
+        game.post(new PlayerTurnEvent(game.getTurnPlayer()));;
+        toggleClock(game.getTurnPlayer());
         next();
     }
 

@@ -2,35 +2,40 @@ package com.jcloisterzone.game.phase;
 
 import java.util.List;
 
-import org.ini4j.Profile.Section;
-
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.BridgesCastlesBazaarsGame;
-import com.jcloisterzone.game.expansion.RiverGame;
-import com.jcloisterzone.game.expansion.RiverIIGame;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.RiverCapability;
+import com.jcloisterzone.ui.GameController;
 
 
 public class DrawPhase extends ServerAwarePhase {
 
+    private static final String DEBUG_END_OF_PACK = ".";
 
     private List<String> debugTiles;
+    private final BazaarCapability bazaarCap;
+    private final AbbeyCapability abbeyCap;
 
-    public DrawPhase(Game game, ServerIF server) {
-        super(game, server);
-        Section debugSection = game.getConfig().get("debug");
-        if (debugSection != null) {
-            debugTiles = debugSection.getAll("draw");
+    public DrawPhase(Game game, GameController controller) {
+        super(game, controller);
+        DebugConfig debugConfig = getDebugConfig();
+        if (debugConfig != null) {
+            debugTiles = debugConfig.getDraw();
         }
+        bazaarCap = game.getCapability(BazaarCapability.class);
+        abbeyCap = game.getCapability(AbbeyCapability.class);
     }
 
     private boolean makeDebugDraw() {
         if (debugTiles != null && debugTiles.size() > 0) { //for debug purposes only
             String tileId = debugTiles.remove(0);
-            if (tileId.equals("!")) {
+            if (tileId.equals(DEBUG_END_OF_PACK)) {
                 next(GameOverPhase.class);
                 return true;
             }
@@ -39,15 +44,10 @@ public class DrawPhase extends ServerAwarePhase {
             if (tile == null) {
                 logger.warn("Invalid debug draw id: " + tileId);
             } else {
-                if (tile.getRiver() == null && (tilePack.isGroupActive("river-start") || tilePack.isGroupActive("river"))) {
-                    //helper code for better behavior when debug draw is "river-invalid"
-                    //river II must be checke first!
-                    if (game.hasExpansion(Expansion.RIVER_II)) {
-                        ((RiverIIGame)game.getExpandedGameFor(Expansion.RIVER_II)).activateNonRiverTiles();
-                    } else if (game.hasExpansion(Expansion.RIVER)) {
-                        ((RiverGame)game.getExpandedGameFor(Expansion.RIVER)).activateNonRiverTiles();
-                    }
-                    tilePack.deactivateGroup("river-start");
+                boolean riverActive = tilePack.getGroupState("river-start") == TileGroupState.ACTIVE || tilePack.getGroupState("river") == TileGroupState.ACTIVE;
+                if (game.hasCapability(RiverCapability.class) && tile.getRiver() == null && riverActive) {
+                    game.getCapability(RiverCapability.class).activateNonRiverTiles();
+                    tilePack.setGroupState("river-start", TileGroupState.RETIRED);
                     game.setCurrentTile(tile); //recovery from lake placement
                 }
                 nextTile(tile);
@@ -59,34 +59,29 @@ public class DrawPhase extends ServerAwarePhase {
 
     @Override
     public void enter() {
-        if (getTilePack().isEmpty()) {
-            next(GameOverPhase.class);
-            return;
-        }
-        BridgesCastlesBazaarsGame bcb = game.getBridgesCastlesBazaarsGame();
-        if (bcb != null) {
-            Tile tile = bcb.drawNextTile();
+        if (bazaarCap != null) {
+            Tile tile = bazaarCap.drawNextTile();
             if (tile != null) {
                 nextTile(tile);
                 return;
             }
         }
-
+        if (getTilePack().isEmpty()) {
+            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
+                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
+                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
+                }
+                next(CleanUpTurnPartPhase.class);
+                return;
+            }
+            next(GameOverPhase.class);
+            return;
+        }
         if (makeDebugDraw()) {
             return;
         }
-        if (isLocalPlayer(getActivePlayer())) {
-            //call only from one client (from the active one)
-            getServer().selectTiles(getTilePack().size(), 1);
-        }
-    }
-
-
-
-    @Override
-    public void drawTiles(int[] tileIndex) {
-        assert tileIndex.length == 1;
-        Tile tile = getTilePack().drawTile(tileIndex[0]);
+        int rndIndex = game.getRandom().nextInt(getTilePack().size());
+        Tile tile = getTilePack().drawTile(rndIndex);
         nextTile(tile);
     }
 
@@ -94,12 +89,12 @@ public class DrawPhase extends ServerAwarePhase {
         game.setCurrentTile(tile);
         getBoard().refreshAvailablePlacements(tile);
         if (getBoard().getAvailablePlacementPositions().isEmpty()) {
-            getBoard().discardTile(tile.getId());
+            getBoard().discardTile(tile);
             next(DrawPhase.class);
             return;
         }
-        game.fireGameEvent().tileDrawn(tile);
+        toggleClock(getActivePlayer());
+        game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }
-
 }

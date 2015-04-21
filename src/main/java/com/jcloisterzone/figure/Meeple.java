@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
 
@@ -13,7 +15,25 @@ public abstract class Meeple extends Figure {
 
     private transient final Player player;
     private transient Feature feature;
+    private transient Integer index; //index distinguish meeples on same feature
     private Location location;
+
+    public static class DeploymentCheckResult {
+        public final boolean result;
+        public final String error;
+
+        private DeploymentCheckResult() {
+            this.result = true;
+            this.error = null;
+        }
+
+        public DeploymentCheckResult(String error) {
+            this.result = false;
+            this.error = error;
+        }
+
+        public static final DeploymentCheckResult OK = new DeploymentCheckResult();
+    }
 
     public Meeple(Game game, Player player) {
         super(game);
@@ -24,9 +44,13 @@ public abstract class Meeple extends Figure {
         return true;
     }
 
+    /** true if meeple is deploayed on board */
     public boolean isDeployed() {
-        //must check only location  because prisoner has everything except location also null
-        return location != null;
+        return location != null && location != Location.PRISON ;
+    }
+
+    public boolean isInSupply() {
+        return location == null;
     }
 
     public void clearDeployment() {
@@ -35,30 +59,35 @@ public abstract class Meeple extends Figure {
         setFeature(null);
     }
 
-    protected void checkDeployment(Feature piece) {
-        //empty
+    public DeploymentCheckResult isDeploymentAllowed(Feature feature) {
+        return DeploymentCheckResult.OK;
     }
 
-    public Feature getPieceForDeploy(Tile tile, Location loc) {
-        Feature piece = tile.getFeature(loc);
-        if (piece == null) {
-            throw new IllegalArgumentException("No such feature");
+    public Feature getDeploymentFeature(Tile tile, Location loc) {
+        return tile.getFeature(loc);
+    }
+
+    public void deployUnoccupied(Tile tile, Location loc) {
+        //perorm unoccupied check for followers only!!!
+        Feature feature = getDeploymentFeature(tile, loc);
+        deploy(tile, loc, feature);
+    }
+
+    public final void deploy(Tile tile, Location loc) {
+        Feature feature = getDeploymentFeature(tile, loc);
+        deploy(tile, loc, feature);
+    }
+
+    protected void deploy(Tile tile, Location loc, Feature feature) {
+        DeploymentCheckResult check = isDeploymentAllowed(feature);
+        if (!check.result) {
+            throw new IllegalArgumentException(check.error);
         }
-        return piece;
-    }
-
-    public void deploy(Tile tile, Location loc) {
-        Feature feature = getPieceForDeploy(tile, loc);
-        checkDeployment(feature);
-        doDeployment(tile, loc, feature);
-        game.fireGameEvent().deployed(this);
-    }
-
-    protected void doDeployment(Tile tile, Location loc, Feature feature) {
-        feature.setMeeple(this);
+        feature.addMeeple(this);
         setPosition(tile.getPosition());
         setLocation(loc);
         setFeature(feature);
+        game.post(new MeepleEvent(game.getActivePlayer(), this, null, new FeaturePointer(tile.getPosition(), loc)));
     }
 
     public final void undeploy() {
@@ -66,9 +95,11 @@ public abstract class Meeple extends Figure {
     }
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
-        game.fireGameEvent().undeployed(this);
-        feature.setMeeple(null);
+        assert location != null && location != Location.PRISON;
+        FeaturePointer source = new FeaturePointer(getPosition(), location);
+        feature.removeMeeple(this);
         clearDeployment();
+        game.post(new MeepleEvent(game.getActivePlayer(), this, source, null));
     }
 
 
@@ -92,20 +123,38 @@ public abstract class Meeple extends Figure {
         this.location = location;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public int hashCode() {
-        return 47 * getPlayer().getIndex() + (location == null ? 1 : location.hashCode());
+        return java.util.Objects.hash(index, location);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (! (obj instanceof Meeple)) return false;
-        if (! super.equals(obj)) return false;
+        if (!super.equals(obj)) return false; //compares exact types
         Meeple o = (Meeple) obj;
-        if (! Objects.equal(location, o.location)) return false;
+        if (!Objects.equal(player, o.player)) return false;
+        if (!Objects.equal(index, o.index)) return false;
+        if (!Objects.equal(location, o.location)) return false;
         //do not compare feature - location is enough - feature is changing during time
         return true;
+    }
+
+    @Override
+    public String toString() {
+        if (location == Location.PRISON) {
+            return getClass().getSimpleName() + "(" + player.getIndex() + "," + location.toString() + ")";
+        } else {
+            return super.toString() + "(" + player.getIndex() + ")";
+        }
     }
 
 }

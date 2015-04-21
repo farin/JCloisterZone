@@ -1,8 +1,10 @@
 package com.jcloisterzone.feature.visitor.score;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -13,15 +15,14 @@ import com.jcloisterzone.figure.Special;
 
 public interface ScoreContext extends FeatureVisitor<SelfReturningVisitor> {
 
-	Scoreable getMasterFeature();
+    Scoreable getMasterFeature();
 
-	Follower getSampleFollower(Player player);
-	Set<Player> getMajorOwners();
+    Follower getSampleFollower(Player player);
+    Set<Player> getMajorOwners();
 
-	List<Follower> getFollowers();
-	List<Special> getSpecialMeeples();
-	Iterable<Meeple> getMeeples();
-
-
-
+    List<Follower> getFollowers();
+    List<Special> getSpecialMeeples();
+    Iterable<? extends Meeple> getMeeples();
+    Map<Player, Integer> getPowers();
+    Map<LittleBuilding, Integer> getLittleBuildings();
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card id="CRRR">
+	<tile id="CRRR">
 		<city castle-base="true">N</city>
 		<road tunnel="yes">W</road>
 		<road tunnel="yes">E</road>
@@ -8,21 +8,21 @@
 		<farm city="N">WR EL</farm>
 		<farm>ER SL</farm>
 		<farm>SR WL</farm>
-	</card>
-	<card id="RCR">
+	</tile>
+	<tile id="RCR">
 		<city castle-base="true">N</city>
 		<road tunnel="yes">W</road>
 		<road tunnel="yes">E</road>
 		<farm city="N">WR EL</farm>
 		<farm>ER SL SR WL</farm>
-	</card>
-	<card id="RR">
+	</tile>
+	<tile id="RR">
 		<road tunnel="yes">E</road>
 		<road tunnel="yes">S</road>
 		<farm>SR WL WR NL NR EL</farm>
 		<farm>ER SL</farm>
-	</card>
-	<card id="RRRR">
+	</tile>
+	<tile id="RRRR">
 		<road>N</road>
 		<road tunnel="yes">W</road>
 		<road tunnel="yes">E</road>
@@ -30,5 +30,5 @@
 		<farm>WR NL NR EL</farm>
 		<farm>ER SL</farm>
 		<farm>SR WL</farm>
-	</card>
+	</tile>
 </pack>

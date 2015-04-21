@@ -1,84 +1,117 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
+import javax.sound.sampled.ReverbType;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.event.MouseInputListener;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Player;
+import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.XmlUtils;
+import com.jcloisterzone.config.ConfigLoader;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.animation.AnimationService;
 import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
-import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
-import com.jcloisterzone.ui.theme.TileTheme;
+import com.jcloisterzone.ui.view.GameView;
 
-public class GridPanel extends JPanel {
+public class GridPanel extends JPanel implements ForwardBackwardListener {
 
-	private static final long serialVersionUID = -7013723613801929324L;
+    private static final long serialVersionUID = -7013723613801929324L;
 
-	public static int INITIAL_SQUARE_SIZE = 120;
-    private static final int STARTING_GRID_SIZE = 3;
+    public static int INITIAL_SQUARE_SIZE = 120;
+
+    private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
+    private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
 
     final Client client;
-    final ControlPanel controlPanel;
+    final GameView gameView;
+    final GameController gc;
+
+    private final ControlPanel controlPanel;
+    private final ChatPanel chatPanel;
     private BazaarPanel bazaarPanel;
+    private SelectMageWitchRemovalPanel mageWitchPanel;
 
     /** current board size */
     private int left, right, top, bottom;
     private int squareSize;
+    private Rotation boardRotation = Rotation.R0;
 
     //focus
     private int offsetX, offsetY;
     private double cx = 0.0, cy = 0.0;
     private MoveCenterAnimation moveAnimation;
 
-    private List<GridLayer> layers = Collections.synchronizedList(new LinkedList<GridLayer>());
+    private List<GridLayer> layers = new ArrayList<GridLayer>();
+    private ErrorMessagePanel errorMsg;
 
-    public GridPanel(Client client, Snapshot snapshot) {
+    public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel, Snapshot snapshot) {
         setDoubleBuffered(true);
         setOpaque(false);
-        setLayout(null);
+        setLayout(new MigLayout());
 
         this.client = client;
-        this.controlPanel = client.getControlPanel();
+        this.gameView = gameView;
+        this.gc = gameView.getGameController();
+        this.controlPanel = controlPanel;
+
+        boolean networkGame = "true".equals(System.getProperty("forceChat"));
+        for (Player p : gc.getGame().getAllPlayers()) {
+            if (!p.getSlot().isOwn()) {
+                networkGame = true;
+                break;
+            }
+        }
+        this.chatPanel = networkGame ? chatPanel : null;
 
         squareSize = INITIAL_SQUARE_SIZE;
-        left = 0 - STARTING_GRID_SIZE / 2;
-        right = 0 + STARTING_GRID_SIZE / 2;
-        top = 0 - STARTING_GRID_SIZE / 2;
-        bottom = 0 + STARTING_GRID_SIZE / 2;
 
         if (snapshot != null) {
             NodeList nl = snapshot.getTileElements();
-            for(int i = 0; i < nl.getLength(); i++) {
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
                 Position pos = XmlUtils.extractPosition(el);
                 if (pos.x <= left) left = pos.x - 1;
@@ -88,130 +121,126 @@ public class GridPanel extends JPanel {
             }
         }
         registerMouseListeners();
-        controlPanel.registerSwingComponents(this);
-    }
-
-
-    public void forward() {
-        if (client.isClientActive()) {
-            if (bazaarPanel != null) bazaarPanel.forward();
-            client.getControlPanel().getActionPanel().forward();
+        add(controlPanel, "pos (100%-255) 0 100% 100%");
+        if (chatPanel != null) {
+            chatPanel.initHidingMode();
+            add(chatPanel, "pos 0 0 250 100%");
         }
     }
 
+
+    @Override
+    public void forward() {
+        if (bazaarPanel != null) {
+            bazaarPanel.forward();
+        }
+        controlPanel.getActionPanel().forward();
+    }
+
+    @Override
     public void backward() {
-        if (client.isClientActive()) {
-            if (bazaarPanel != null) bazaarPanel.backward();
-            client.getControlPanel().getActionPanel().backward();
+        if (bazaarPanel != null) {
+            bazaarPanel.backward();
+        }
+        controlPanel.getActionPanel().backward();
+    }
+
+    public void removeInteractionPanels() {
+        int l = getComponents().length;
+        for (int i = l-1; i > 0; i--) {
+            Component child = getComponent(i);
+            if (child.getClass().isAnnotationPresent(InteractionPanel.class)) {
+                remove(i);
+            }
+        }
+        bazaarPanel = null;
+    }
+
+    class GridPanelMouseListener extends MouseAdapter implements MouseInputListener {
+
+        private MouseEvent dragSource;
+        double sourceCx, sourceCy;
+
+        private void moveTo(MouseEvent e) {
+            int clickX = e.getX()-offsetX;
+            int clickY = e.getY()-offsetY;
+            moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            switch (e.getButton()) {
+            case MouseEvent.BUTTON2:
+                moveTo(e);
+                break;
+            case MouseEvent.BUTTON3:
+                if (e.isShiftDown()) {
+                    moveTo(e);
+                    break;
+                } //else forward
+            case 5:
+                forward();
+                break;
+            case 4:
+                backward();
+                break;
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            dragSource = e;
+            sourceCx = cx;
+            sourceCy = cy;
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            dragSource = null;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (dragSource == null) return; //threading issues
+            //px values
+            int dx = e.getX() - dragSource.getX();
+            int dy = e.getY() - dragSource.getY();
+            //relative values
+            double rdx = dx/(double)squareSize;
+            double rdy = dy/(double)squareSize;
+
+            moveCenterTo(sourceCx-rdx, sourceCy-rdy);
         }
     }
 
     private void registerMouseListeners() {
-        addMouseListener(
-            new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    switch (e.getButton()) {
-                    case MouseEvent.BUTTON2:
-                        int clickX = e.getX()-offsetX;
-                        int clickY = e.getY()-offsetY;
-                        moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
-                        break;
-                    case MouseEvent.BUTTON3:
-                    case 5:
-                        forward();
-                        break;
-                    case 4:
-                        backward();
-                        break;
-                    }
-                }
-            }
-        );
+        DragInsensitiveMouseClickListener listener = new DragInsensitiveMouseClickListener(new GridPanelMouseListener());
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 zoom(-e.getWheelRotation());
             }
         });
-
-        addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (bazaarPanel != null) {
-                    bazaarPanel.dispatchMouseEvent(e);
-                    if (e.isConsumed()) return;
-                }
-                controlPanel.dispatchMouseEvent(e);
-            }
-        });
-
-        addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                controlPanel.componentResized(e);
-                if (bazaarPanel != null) bazaarPanel.componentResized(e);
-            }
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                controlPanel.componentMoved(e);
-                if (bazaarPanel != null) bazaarPanel.componentMoved(e);
-            }
-            @Override
-            public void componentShown(ComponentEvent e) {
-                controlPanel.componentShown(e);
-                if (bazaarPanel != null) bazaarPanel.componentShown(e);
-            }
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                controlPanel.componentHidden(e);
-                if (bazaarPanel != null) bazaarPanel.componentHidden(e);
-            }
-        });
     }
 
     public Tile getTile(Position p) {
-        return client.getGame().getBoard().get(p);
-    }
-
-    public TileTheme getTileTheme() {
-        return client.getTileTheme();
+        return gc.getGame().getBoard().get(p);
     }
 
     public Client getClient() {
         return client;
     }
 
-    public BazaarPanel getBazaarPanel() {
-        return bazaarPanel;
-    }
-
-    public void setBazaarPanel(BazaarPanel bazaarPanel) {
-        this.bazaarPanel = bazaarPanel;
-    }
-
     public AnimationService getAnimationService() {
-        return client.getMainPanel().getAnimationService();
+        return gc.getGameView().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {
         return squareSize;
     }
 
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
-    public int getTop() {
-        return top;
-    }
-
-    public int getBottom() {
-        return bottom;
-    }
 
     public int getOffsetX() {
         return offsetX;
@@ -220,6 +249,57 @@ public class GridPanel extends JPanel {
     public int getOffsetY() {
         return offsetY;
     }
+
+    public int getSquareWidth() {
+        return right - left + 1;
+    }
+
+    public int getSquareHeight() {
+        return bottom - top + 1;
+    }
+
+    public ChatPanel getChatPanel() {
+        return chatPanel;
+    }
+
+//    public String getErrorMessage() {
+//        return errorMessage;
+//    }
+//
+//    public void setErrorMessage(String errorMessage) {
+//        this.errorMessage = errorMessage;
+//    }
+
+
+//    public String getHintMessage() {
+//        return hintMessage;
+//    }
+//
+//
+//    public void setHintMessage(String hintMessage) {
+//        this.hintMessage = hintMessage;
+//    }
+
+
+    public BazaarPanel getBazaarPanel() {
+        return bazaarPanel;
+    }
+
+
+    public void setBazaarPanel(BazaarPanel bazaarPanel) {
+        this.bazaarPanel = bazaarPanel;
+    }
+
+
+    public SelectMageWitchRemovalPanel getMageWitchPanel() {
+        return mageWitchPanel;
+    }
+
+
+    public void setMageWitchPanel(SelectMageWitchRemovalPanel mageWitchPanel) {
+        this.mageWitchPanel = mageWitchPanel;
+    }
+
 
     public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
@@ -259,94 +339,128 @@ public class GridPanel extends JPanel {
         squareSize = size;
 
         synchronized (layers) {
-            for(GridLayer layer : layers) {
+            for (GridLayer layer : layers) {
                 layer.zoomChanged(squareSize);
             }
         }
         moveCenterTo(cx, cy); //re-check center constraints
     }
 
-    public void showRecentHistory() {
-        Collection<Tile> tiles = client.getGame().getBoard().getAllTiles();
-        addLayer(new PlacementHistory(this, tiles));
-    }
+    public void rotateBoard() {
+        boardRotation = boardRotation.next();
+        //TODO rotate around current focus instead of (0,0) - need to compensate cx, cy
+        //TODO smooth rotation
 
-    public void addLayer(GridLayer layer) {
         synchronized (layers) {
-            ListIterator<GridLayer> iter = layers.listIterator();
-            while(iter.hasNext()) {
-                GridLayer sl = iter.next();
-                if (GridLayer.Z_INDEX_COMPARATOR.compare(layer, sl) <= 0) {
-                    iter.previous();
-                    break;
-                }
-            }
-            iter.add(layer);
-        }
-        layer.layerAdded();
-        repaint();
-    }
-
-    public void removeLayer(GridLayer layer) {
-        layers.remove(layer);
-        layer.layerRemoved();
-        repaint();
-    }
-
-    public void removeLayer(Class<? extends GridLayer> type) {
-        Iterator<GridLayer> iter = layers.iterator();
-        while(iter.hasNext()) {
-            GridLayer layer = iter.next();
-            if (type.isInstance(layer)) {
-                iter.remove();
-                layer.layerRemoved();
+            for (GridLayer layer : layers) {
+                layer.boardRotated(boardRotation);
             }
         }
         repaint();
     }
 
-    //TODO ok
+    public Rotation getBoardRotation() {
+        return boardRotation;
+    }
+
+    void addLayer(GridLayer layer) {
+       addLayer(layer, true);
+    }
+
+    void addLayer(GridLayer layer, boolean visible) {
+        layers.add(layer);
+        if (visible) {
+            layer.onShow();
+        }
+    }
+
+    public void showLayer(GridLayer layer) {
+        layer.onShow();
+        repaint();
+    }
+
+    public void showLayer(Class<? extends GridLayer> layerType) {
+        for (GridLayer layer : layers) {
+            if (layerType.isInstance(layer)) {
+                layer.onShow();
+            }
+        }
+        repaint();
+    }
+
+    public void hideLayer(GridLayer layer) {
+        layer.onHide();
+        repaint();
+    }
+
+    public void hideLayer(Class<? extends GridLayer> layerType) {
+        for (GridLayer layer : layers) {
+            if (layerType.isInstance(layer)) {
+                layer.onHide();
+            }
+        }
+        repaint();
+    }
+
     @SuppressWarnings("unchecked")
-    synchronized
-    public <T extends GridLayer> T findDecoration(Class<T> type) {
-        synchronized (layers) {
-            for(GridLayer layer : layers) {
-                if (type.isInstance(layer)) {
-                    return (T) layer;
-                }
+    public <T extends GridLayer> T findLayer(Class<T> type) {
+        for (GridLayer layer : layers) {
+            if (type.isInstance(layer)) {
+                return (T) layer;
             }
         }
-        return null;
+        throw new NoSuchElementException("Layer " + type.toString() + " doesn't exist.");
+    }
+
+    public boolean isLayerVisible(Class<? extends GridLayer> type) {
+        for (GridLayer layer : layers) {
+            if (layer.isVisible() && type.isInstance(layer)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clearActionDecorations() {
-        removeLayer(AbstractAreaLayer.class);
-        removeLayer(TileActionLayer.class);
-        removeLayer(AbbeyPlacementLayer.class);
+        hideLayer(AbstractAreaLayer.class);
+        hideLayer(TileActionLayer.class);
+        hideLayer(AbbeyPlacementLayer.class);
+    }
+
+    public void showErrorMessage(String errorMessage) {
+    	if (errorMsg != null) {
+    		remove(errorMsg);
+    	}
+    	errorMsg = new ErrorMessagePanel(errorMessage);
+    	errorMsg.setOpaque(true);
+        add(errorMsg, "pos 0 0 (100%-242) 30");
+        revalidate();
+        repaint();
     }
 
     // delegated UI methods
 
-    public void tilePlaced(Tile tile, TileLayer tileLayer) {
-        Position p = tile.getPosition();
+    public void tileEvent(TileEvent ev, TileLayer tileLayer) {
+        Tile tile = ev.getTile();
+        Position p = ev.getPosition();
 
-        removeLayer(AbstractTilePlacementLayer.class);
-        removeLayer(PlacementHistory.class);
+        hideLayer(AbstractTilePlacementLayer.class);
 
-        if (p.x == left) --left;
-        if (p.x == right) ++right;
-        if (p.y == top) --top;
-        if (p.y == bottom) ++bottom;
+        if (ev.getType() == TileEvent.PLACEMENT) {
+            if (p.x == left) --left;
+            if (p.x == right) ++right;
+            if (p.y == top) --top;
+            if (p.y == bottom) ++bottom;
 
-        tileLayer.tilePlaced(tile);
+            tileLayer.tilePlaced(tile);
 
-        if (client.getSettings().isShowHistory()) {
-            showRecentHistory();
-        }
-        boolean initialPlacement = client.getActivePlayer() == null;//if active player is null we are placing initial tiles
-        if ((!initialPlacement && !client.isClientActive()) ||
-            (initialPlacement && tile.equals(client.getGame().getCurrentTile()))) {
-            getAnimationService().registerAnimation(tile.getPosition(), new RecentPlacement(tile.getPosition()));
+            boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
+            if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
+                (initialPlacement && tile.equals(gameView.getGame().getCurrentTile()))) {
+                getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
+            }
+        } else if (ev.getType() == TileEvent.REMOVE) {
+            tileLayer.tileRemoved(tile);
         }
         repaint();
     }
@@ -367,20 +481,11 @@ public class GridPanel extends JPanel {
 //        last = now;
 //    }
 
-    private void paintGrid(Graphics2D g2) {
-        g2.setColor(UIManager.getColor("Panel.background"));
-        g2.fillRect(left*squareSize, top*squareSize, (right+2)*squareSize-1, (bottom+2)*squareSize-1);
-        g2.setColor(Color.LIGHT_GRAY);
-        for (int i = left; i <= right; i++) {
-            g2.drawLine(i*squareSize, top*squareSize, i*squareSize, (bottom+1)*squareSize);
-            g2.drawLine((i+1)*squareSize-1, top*squareSize, (i+1)*squareSize-1, (bottom+1)*squareSize);
-        }
-        for (int i = top; i <= bottom; i++) {
-            g2.drawLine(left*squareSize, i*squareSize, (right+1)*squareSize, i*squareSize);
-            g2.drawLine(left*squareSize, (i+1)*squareSize-1, (right+1)*squareSize, (i+1)*squareSize-1);
-        }
 
-//        profile("grid");
+    public Point2D getRelativePoint(Point2D point) {
+        AffineTransform af = boardRotation.inverse().getAffineTransform(getSquareSize());
+        af.translate(-offsetX, -offsetY);
+        return af.transform(point, null);
     }
 
     @Override
@@ -393,46 +498,95 @@ public class GridPanel extends JPanel {
 //        ts = last = System.currentTimeMillis();
 
         int w = getWidth(), h = getHeight();
-//        int w = getWidth(), h = getHeight();
-//        if (blurBuffer == null || blurBuffer.getWidth() != w || blurBuffer.getHeight() != h) {
-//            blurBuffer = UiUtils.newTransparentImage(w, h);
-//        }
-//        Graphics2D g2 = blurBuffer.createGraphics();
-//        g2.setBackground(TRANSPARENT_COLOR);
-//        g2.clearRect(0, 0, w, h);
 
         AffineTransform origTransform = g2.getTransform();
         offsetX = calculateCenterX() - (int)(cx * squareSize);
         offsetY = calculateCenterY() - (int)(cy * squareSize);
         g2.translate(offsetX, offsetY);
+        if (boardRotation != Rotation.R0) {
+            AffineTransform af = boardRotation.getAffineTransform(getSquareSize());
+            g2.transform(af);
+        }
+
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        paintGrid(g2);
 
         //paint layers
-        synchronized (layers) {
-            for(GridLayer layer : layers) {
+
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
                 layer.paint(g2);
-//                profile(layer.getClass().getSimpleName());
             }
+//          profile(layer.getClass().getSimpleName());
         }
+
 
         g2.setTransform(origTransform);
         g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
 
-        controlPanel.paintComponent(g2);
-//        profile("control panel");
 
-        if (bazaarPanel != null) {
-            g2.translate(-BazaarPanel.PANEL_WIDTH-60, 0);
-            //System.err.println("GP " + g2.getTransform());
-            bazaarPanel.paintComponent(g2);
-        }
-
-        //jb.paint(g2);
+        int innerWidth;
+//        if (secondPanel != null) {
+//            g2.translate(-secondPanel.getWidth()-60, 0);
+//            secondPanel.paintComponent(g2);
+//            innerWidth = (int) g2.getTransform().getTranslateX();
+//        } else {
+            innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
+       // }
         g2.setTransform(origTransform);
-        super.paintChildren(g);
 
+        //paintMessages(g2, innerWidth);
+        super.paintChildren(g);
+    }
+
+    public BufferedImage takeScreenshot() {
+        //calculate size of play board
+        Integer screenshotScaleValue = client.getConfig().getScreenshots().getScale();
+        int screenshotScale = screenshotScaleValue == null ? ConfigLoader.DEFAULT_SCREENSHOT_SCALE : screenshotScaleValue;
+        int totalWidth = screenshotScale*(right-left+1);
+        int totalHeight = screenshotScale*(bottom-top+1);
+        //if (totalHeight < getHeight()) totalHeight = getHeight();
+
+        //centre the image
+        int transX = -screenshotScale*(left);
+        int transY = -screenshotScale*(top);
+
+        //create the image
+        BufferedImage im = new BufferedImage(totalWidth + controlPanel.getWidth(), totalHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = (Graphics2D) im.getGraphics();
+        if (!"true".equals(System.getProperty("transparentScreenshots"))){
+            graphics.setBackground(new Color(240, 240, 240, 255));
+            graphics.clearRect(0, 0, im.getWidth(), im.getHeight());
+        }
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //centre the image
+        graphics.translate(transX, transY);
+
+        //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
+        //TODO is this dangerous if GridPanel is rendered while print screening?
+
+        int orig = squareSize;
+        squareSize = screenshotScale;
+        for (GridLayer layer : layers) {
+            if (layer.isVisible()) {
+                //TODO calling zoomChanged can broke something, don't do it
+                layer.zoomChanged(screenshotScale);
+                layer.paint(graphics);
+                layer.zoomChanged(orig);
+            }
+        }
+        //set it back
+        squareSize = orig;
+
+        //reset translation
+        graphics.translate(-transX, -transY);
+
+        //render the control panel on the far right
+        graphics.translate(totalWidth+30, 0);
+        controlPanel.paint(graphics);
+        return im;
     }
 
     class MoveCenterAnimation extends Thread {
@@ -474,6 +628,30 @@ public class GridPanel extends JPanel {
             if (!cancel) {
                 moveCenterTo(toCx, toCy);
             }
+        }
+    }
+
+    public static final ImageIcon CLOSE_ICON = UiUtils.scaleImageIcon("sysimages/close-white.png", 20, 20);
+
+    class ErrorMessagePanel extends JPanel {
+
+        public ErrorMessagePanel(String text) {
+            setBackground(MESSAGE_ERROR);
+            setLayout(new MigLayout("fill", "[]push[]"));
+            JLabel label = new JLabel(text);
+            label.setForeground(Color.WHITE);
+            label.setFont(new Font(null, Font.PLAIN, 16));
+            JLabel icon = new JLabel(CLOSE_ICON);
+            icon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            icon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    GridPanel.this.remove(ErrorMessagePanel.this);
+                    GridPanel.this.repaint();
+                }
+            });
+            add(label);
+            add(icon);
         }
 
     }

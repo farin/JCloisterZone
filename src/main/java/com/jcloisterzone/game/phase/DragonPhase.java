@@ -1,37 +1,32 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.expansion.PrincessAndDragonGame;
+import com.jcloisterzone.game.capability.DragonCapability;
 
 public class DragonPhase extends Phase {
 
-	public DragonPhase(Game game) {
-		super(game);
-	}
+    private final DragonCapability dragonCap;
 
-	@Override
-	public boolean isActive() {
-		return game.hasExpansion(Expansion.PRINCESS_AND_DRAGON);
-	}
+    public DragonPhase(Game game) {
+        super(game);
+        dragonCap = game.getCapability(DragonCapability.class);
+    }
 
-	@Override
-	public void enter() {
-		if (getTile().getTrigger() == TileTrigger.DRAGON) {
-			PrincessAndDragonGame pd = game.getPrincessAndDragonGame();
-			if (pd.getDragonPosition() != null) {
-				pd.triggerDragonMove();
-				next(DragonMovePhase.class);
-				return;
-			}
-		}
-		next();
-	}
+    @Override
+    public boolean isActive() {
+        return game.hasCapability(DragonCapability.class);
+    }
 
-
-
-
-
-
+    @Override
+    public void enter() {
+        if (getTile().hasTrigger(TileTrigger.DRAGON)) {
+            if (dragonCap.getDragonPosition() != null) {
+                dragonCap.triggerDragonMove();
+                next(DragonMovePhase.class);
+                return;
+            }
+        }
+        next();
+    }
 }

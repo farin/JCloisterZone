@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<tile id="LC">
+		<cloister/>
+		<city castle-base="true">N</city>
+		<farm city="N">EL ER SL SR WL WR</farm>
+	</tile>
+	<tile id="RC">
+		<road>W</road>
+		<city castle-base="true">N</city>
+		<farm city="N">WR</farm>
+		<farm city="N">EL ER SL SR WL</farm>
+		<wagon-move>
+			<neighbouring>N W</neighbouring>
+		</wagon-move>
+	</tile>
+	<tile id="CRrR">
+		<road>W</road>
+		<road>S E</road>
+		<city castle-base="true">N</city>
+		<farm city="N">WR</farm>
+		<farm city="N">EL SR WL</farm>
+		<farm>SL ER</farm>
+		<wagon-move>
+			<neighbouring>N W</neighbouring>
+		</wagon-move>
+	</tile>
+	<tile id="CcRR!">
+		<road>S</road>
+		<road>E</road>
+		<city>N W</city>
+		<farm city="N">SR</farm>
+		<farm city="N">SL</farm>
+		<farm city="N">ER</farm>
+		<farm city="N">EL</farm>
+		<wagon-move>
+			<neighbouring>N E</neighbouring>
+			<neighbouring>N S</neighbouring>
+		</wagon-move>
+	</tile>
+	<tile id="CCcc">
+		<city>W E</city>
+		<city>N S</city>
+	</tile>
+</pack>

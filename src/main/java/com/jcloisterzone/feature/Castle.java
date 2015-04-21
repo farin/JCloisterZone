@@ -1,5 +1,7 @@
 package com.jcloisterzone.feature;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -52,6 +54,8 @@ public class Castle extends MultiTileFeature {
         return vicinity;
     }
 
-
+    public static String name() {
+        return _("Castle");
+    }
 
 }

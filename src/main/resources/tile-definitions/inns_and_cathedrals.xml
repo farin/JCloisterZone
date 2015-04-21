@@ -1,133 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-	<card id="LRFR">
-		<cloister/>
-		<road>W</road>
-		<road>E</road>
-		<farm>ER SL SR WL</farm>
-		<farm>EL NL NR WR</farm>
-		<wagon-move>
-			<neighbouring>CLOISTER W</neighbouring>
-			<neighbouring>CLOISTER E</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="Cccc.c" count="2">
-		<city cathedral="yes">N W S E</city>
-	</card>
-	<card id="CCCC">
-		<city castle-base="true">N</city>
-		<city castle-base="true">W</city>
-		<city castle-base="true">E</city>
-		<city castle-base="true">S</city>
-		<farm city="N W E S">INNER_FARM</farm>
-	</card>
-	<card id="CCC">
-		<city castle-base="true">N</city>
-		<city castle-base="true">W</city>
-		<city castle-base="true">E</city>
-		<farm city="N W E">SL SR</farm>
-	</card>
-	<card id="CRCR">
-		<city castle-base="true">N</city>
-		<city castle-base="true">S</city>
-		<road>W</road>
-		<road>E</road>
-		<farm city="S">ER</farm>
-		<farm city="S">WL</farm>
-		<farm city="N">EL</farm>
-		<farm city="N">WR</farm>
-		<wagon-move>
-			<neighbouring>N S W E</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="CCc+">
-		<city pennant="yes">N W</city>
-		<city castle-base="true">S</city>
-		<farm city="N S">EL ER</farm>
-	</card>
-	<card id="C!">
-		<city>N</city>
-		<farm city="N">EL ER</farm>
-		<farm city="N">WL WR SL SR</farm>
-	</card>
-	<card id="CFR">
-		<city castle-base="true">N</city>
-		<road>S</road>
-		<farm city="N">WL WR SR</farm>
-		<farm city="N">EL ER SL</farm>
-		<wagon-move>
-			<neighbouring>N S</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="CcR">
-		<city>N W</city>
-		<road>E</road>
-		<farm city="W">EL</farm>
-		<farm city="W">ER SL SR </farm>
-		<wagon-move>
-			<neighbouring>N E</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="CRcR+">
-		<city pennant="yes">E W</city>
-		<road>N</road>
-		<road>S</road>
-		<farm city="W">NL</farm>
-		<farm city="W">NR</farm>
-		<farm city="W">SL</farm>
-		<farm city="W">SR</farm>
-		<wagon-move>
-			<neighbouring>N W</neighbouring>
-			<neighbouring>S W</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="RCc.i">
-		<city>N W</city>
-		<road inn="yes">S</road>
-		<farm city="W">SR</farm>
-		<farm city="W">SL EL ER</farm>
-		<wagon-move>
-			<neighbouring>N S</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="RrC.i">
-		<city castle-base="true">N</city>
-		<road inn="yes">W S</road>
-		<farm>SR WL</farm>
-		<farm city="N">WR EL ER SL</farm>
-	</card>
-	<card id="CcRr+.i">
-		<city pennant="yes">N W</city>
-		<road inn="yes">E S</road>
-		<farm>SL ER</farm>
-		<farm city="N">SR EL</farm>
-	</card>
-	<card id="RRR.i">
-		<road inn="yes">E</road>
-		<road>W</road>
-		<road>S</road>
-		<farm>WR NL NR EL</farm>
-		<farm>WL SR</farm>
-		<farm>ER SL</farm>
-		<wagon-move>
-			<neighbouring>E W S</neighbouring>
-		</wagon-move>
-	</card>
-	<card id="RFr.i">
-		<road inn="yes">W E</road>
-		<farm>WR NL NR EL</farm>
-		<farm>ER SL SR WL</farm>
-	</card>
-	<card id="Rr.i">
-		<road inn="yes">W S</road>
-		<farm>WR NL NR EL ER SL</farm>
-		<farm>SR WL</farm>
-	</card>
-	<card id="RrRr">
-		<road>W S</road>
-		<road>N E</road>
-		<farm>SR WL</farm>
-		<farm>NR EL</farm>
-		<farm>NL WR SL ER</farm>
-	</card>
+    <tile id="LRFR">
+        <cloister/>
+        <road>W</road>
+        <road>E</road>
+        <farm>ER SL SR WL</farm>
+        <farm>EL NL NR WR</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER W</neighbouring>
+            <neighbouring>CLOISTER E</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="Cccc.c" count="2">
+        <city cathedral="yes">N W S E</city>
+    </tile>
+    <tile id="CCCC">
+        <city castle-base="true">N</city>
+        <city castle-base="true">W</city>
+        <city castle-base="true">E</city>
+        <city castle-base="true">S</city>
+        <farm city="N W E S">INNER_FARM</farm>
+    </tile>
+    <tile id="CCC">
+        <city castle-base="true">N</city>
+        <city castle-base="true">W</city>
+        <city castle-base="true">E</city>
+        <farm city="N W E">SL SR</farm>
+    </tile>
+    <tile id="CRCR">
+        <city castle-base="true">N</city>
+        <city castle-base="true">S</city>
+        <road>W</road>
+        <road>E</road>
+        <farm city="S">ER</farm>
+        <farm city="S">WL</farm>
+        <farm city="N">EL</farm>
+        <farm city="N">WR</farm>
+        <wagon-move>
+            <neighbouring>W E</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CCc+">
+        <city pennant="yes">N W</city>
+        <city castle-base="true">S</city>
+        <farm city="N S">EL ER</farm>
+    </tile>
+    <tile id="C!">
+        <city>N</city>
+        <farm city="N">EL ER</farm>
+        <farm city="N">WL WR SL SR</farm>
+    </tile>
+    <tile id="CFR">
+        <city castle-base="true">N</city>
+        <road>S</road>
+        <farm city="N">WL WR SR</farm>
+        <farm city="N">EL ER SL</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CcR">
+        <city>N W</city>
+        <road>E</road>
+        <farm city="W">EL</farm>
+        <farm city="W">ER SL SR </farm>
+        <wagon-move>
+            <neighbouring>N E</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CRcR+">
+        <city pennant="yes">E W</city>
+        <road>N</road>
+        <road>S</road>
+        <farm city="W">NL</farm>
+        <farm city="W">NR</farm>
+        <farm city="W">SL</farm>
+        <farm city="W">SR</farm>
+        <wagon-move>
+            <neighbouring>N W</neighbouring>
+            <neighbouring>S W</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RCc.i">
+        <city>N W</city>
+        <road inn="yes">S</road>
+        <farm city="W">SR</farm>
+        <farm city="W">SL EL ER</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RrC.i">
+        <city castle-base="true">N</city>
+        <road inn="yes">W S</road>
+        <farm>SR WL</farm>
+        <farm city="N">WR EL ER SL</farm>
+    </tile>
+    <tile id="CcRr+.i">
+        <city pennant="yes">N W</city>
+        <road inn="yes">E S</road>
+        <farm>SL ER</farm>
+        <farm city="N">SR EL</farm>
+    </tile>
+    <tile id="RRR.i">
+        <road inn="yes">E</road>
+        <road>W</road>
+        <road>S</road>
+        <farm>WR NL NR EL</farm>
+        <farm>WL SR</farm>
+        <farm>ER SL</farm>
+        <wagon-move>
+            <neighbouring>E W S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RFr.i">
+        <road inn="yes">W E</road>
+        <farm>WR NL NR EL</farm>
+        <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="Rr.i">
+        <road inn="yes">W S</road>
+        <farm>WR NL NR EL ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+    <tile id="RrRr">
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
+    </tile>
 </pack>

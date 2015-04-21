@@ -29,13 +29,13 @@ public class EdgePattern {
 
 	public static EdgePattern forTile(Tile tile) {
 		EdgePattern pattern = new EdgePattern();
-		for(Location loc : Location.sides()) {
-			pattern.code[indexFor(loc)] = getTileEdgePattern(tile, loc);
+		for (Location loc : Location.sides()) {
+			pattern.code[indexfor (loc)] = getTileEdgePattern(tile, loc);
 		}
 		return pattern;
 	}
 
-	private static int indexFor(Location loc) {
+	private static int indexfor (Location loc) {
 		if (loc == Location.N) return 0;
 		if (loc == Location.W) return 1;
 		if (loc == Location.S) return 2;
@@ -45,9 +45,9 @@ public class EdgePattern {
 
 	public static EdgePattern forEmptyTile(Board board, Position pos) {
 		EdgePattern pattern = new EdgePattern();
-		for(Location loc : Location.sides()) {
+		for (Location loc : Location.sides()) {
 			Tile t = board.get(pos.add(loc));
-			int idx = indexFor(loc);
+			int idx = indexfor (loc);
 			if (t == null) {
 				pattern.code[idx] = '?';
 			} else {
@@ -58,7 +58,7 @@ public class EdgePattern {
 	}
 
 	public char at(Location loc) {
-		return code[indexFor(loc)];
+		return code[indexfor (loc)];
 	}
 
 	public char at(Location loc, Rotation rotation) {
@@ -67,7 +67,7 @@ public class EdgePattern {
 
 	public int wildcardSize() {
 		int size = 0;
-		for(int i = 0; i < code.length; i++) {
+		for (int i = 0; i < code.length; i++) {
 			if (code[i] == '?') size++;
 		}
 		return size;
@@ -97,7 +97,7 @@ public class EdgePattern {
 
 	private char[] shift(int shift) {
 		char[] result = new char[4];
-		for(int i = 0; i < code.length; i++) {
+		for (int i = 0; i < code.length; i++) {
 			result[i] = code[(i+shift)%code.length];
 		}
 		return result;
@@ -106,9 +106,9 @@ public class EdgePattern {
 	private char[] canonize() {
 		char[] result = code;
 		shiftLoop:
-		for(int shift = 1; shift < code.length; shift++) {
+		for (int shift = 1; shift < code.length; shift++) {
 			char[] c = shift(shift);
-			for(int i = 0; i < code.length; i++) {
+			for (int i = 0; i < code.length; i++) {
 				if (c[i] < result[i]) {
 					result = c;
 					continue shiftLoop;
@@ -147,7 +147,7 @@ public class EdgePattern {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
-		if (! (obj instanceof EdgePattern)) return false;
+		if (!(obj instanceof EdgePattern)) return false;
 		EdgePattern that = (EdgePattern) obj;
 		return Arrays.equals(that.canonize(), canonize());
 	}
@@ -156,7 +156,7 @@ public class EdgePattern {
 	public int hashCode() {
 		char[] c = canonize();
 		int hash = 0;
-		for(int i = 0; i < c.length; i++) {
+		for (int i = 0; i < c.length; i++) {
 			hash = hash * 91 + c[i];
 		}
 		return hash;
@@ -166,7 +166,7 @@ public class EdgePattern {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < code.length; i++) {
+		for (int i = 0; i < code.length; i++) {
 			sb.append(code[i]);
 		}
 		return sb.toString();

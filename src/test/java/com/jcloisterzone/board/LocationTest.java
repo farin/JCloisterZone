@@ -73,7 +73,9 @@ public class LocationTest {
 		assertEquals(Location.NL, Location.SR.rev());
 		assertEquals(Location.NW, Location.SE.rev());
 		assertEquals(Location._N, Location._S.rev());
-		assertEquals(Location.N.union(Location.EL), Location.S.union(Location.WR).rev());
+		Location l1 = Location.NL.union(Location.NR.union(Location.EL));
+		Location l2 = Location.SL.union(Location.SR.union(Location.WR));
+		assertEquals(l1, l2.rev());
 	}
 
 	@Test

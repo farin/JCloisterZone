@@ -62,7 +62,7 @@ public class ImmutablePoint {
     //TODO create only one instance
     public ImmutablePoint rotate(Rotation r) {
         ImmutablePoint ip = this;
-        for(int i = 0; i < r.ordinal(); i++) {
+        for (int i = 0; i < r.ordinal(); i++) {
             ip = ip.rotate();
         }
         return ip;

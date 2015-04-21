@@ -1,20 +1,20 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.Client2ClientIF;
 
-public class PrincessAction extends SelectFeatureAction {
+//TODO undeploy type
+public class PrincessAction extends UndeployAction {
 
-	@Override
-	public void perform(Client2ClientIF server, Position p, Location d) {
-		server.undeployMeeple(p, d);
-	}
+    public PrincessAction() {
+        super("princess");
+    }
 
-	@Override
-	protected int getSortOrder() {
-		return 1;
-	}
+    @Override
+    protected int getSortOrder() {
+        return 1;
+    }
 
-
+    @Override
+    public String toString() {
+        return "undeploy with princesss";
+    }
 }

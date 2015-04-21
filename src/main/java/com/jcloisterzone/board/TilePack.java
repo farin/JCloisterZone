@@ -17,9 +17,8 @@ public interface TilePack {
     /* special Abbey related methods - refactor je to jen kvuli klientovi */
     Tile getAbbeyTile();
 
-    void activateGroup(String group);
-    void deactivateGroup(String group);
-    boolean isGroupActive(String group);
+    void setGroupState(String groupId, TileGroupState state);
+    TileGroupState getGroupState(String groupId);
     Set<String> getGroups();
 
     int getSizeForEdgePattern(EdgePattern edgePattern);
