@@ -838,11 +838,11 @@ msgstr "Spel titel"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr "Paswoord"
+msgstr "Wachtwoord"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr "Als je het paswoord leeg laat, kan iedereen verbinden met je spel."
+msgstr "Als je het wachtwoord leeg laat, kan iedereen verbinden met je spel."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
