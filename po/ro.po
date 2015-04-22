@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-22 21:38+0200\n"
-"PO-Revision-Date: 2015-04-22 21:53+0100\n"
-"Last-Translator: Roman <farin@farin.cz>\n"
+"PO-Revision-Date: 2015-04-23 01:33+0200\n"
+"Last-Translator: Corneliu GIURGIU <corneliu.giurgiu@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ro\n"
 "Language-Team: \n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.6\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:28
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -166,7 +166,7 @@ msgstr "Mãnãstirile germane"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Flier"
-msgstr "Zburatorul"
+msgstr "Zburãtorul"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Messages"
@@ -174,7 +174,7 @@ msgstr "Mesajele"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "The Ferries"
-msgstr "Poduri"
+msgstr "Podurile"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "The Goldmines"
@@ -242,7 +242,7 @@ msgstr "Prințesa TREBUIE să înlăture un cavaler dintr-un oraș."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:17
 msgid "Dragon movement occurs after scoring."
-msgstr "Dragonul se mişcã dupa calcularea scorului."
+msgstr "Dragonul va fi mişcat dupa calcularea scorului."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -376,7 +376,7 @@ msgstr "Achitare răscumpărare"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:403
 msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr "Doriți să platiți rasumpărarea de 3 puncte pentru eliberarea prizonierului."
+msgstr "Doriți să platiți rascumpărarea de 3 puncte pentru eliberarea prizonierului?"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:404
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
@@ -405,11 +405,11 @@ msgstr "Selectare supus pentru retragere"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
-msgstr "Dale refuzate"
+msgstr "Dale anulate"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
 msgid "These tiles have been discarded during the game"
-msgstr "Aceste dale au fost refuzate de-a lungul jocului"
+msgstr "Aceste dale au fost anulate de-a lungul jocului"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
@@ -441,12 +441,12 @@ msgstr "Rezerva pieței"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:211
 msgid "Choose your tile."
-msgstr "Alegeți numele dumneavoastra."
+msgstr "Alegeți numele dumneavoastrã."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
-"<html>Alegeți dala pentru următoarea licitație<br>și faceți o ofertă inițiala.</"
+"<html>Alegeți dala pentru următoarea licitație<br>și faceți o ofertă inițialã.</"
 "html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:218
@@ -484,7 +484,7 @@ msgstr "Pas"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:33
 msgid "Corn circle"
-msgstr "Cercuri în lan"
+msgstr "Cerc în lan"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:38
 msgid "Each player…"
@@ -599,7 +599,7 @@ msgstr "Afişare pronostic scor"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Show discarded tiles"
-msgstr "Afișare dale refuzate"
+msgstr "Afișare dale anulate"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
 msgid "Show game setup"
@@ -837,7 +837,7 @@ msgstr "Cel mai lung drum"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
 msgid "Trade goods"
-msgstr "Schimbare de bunuri"
+msgstr "Schimb de bunuri"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
 msgid "Fairy"
@@ -887,8 +887,8 @@ msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play no "
 "action.</html>"
 msgstr ""
-"<html>Alternativ, puteți spune pas apasând tasta <b>Enter</b> sau <b>Space</b> "
-"pentru a nu a efectua o acțiune.</html>"
+"<html>Alternativ, puteți spune pas apãsând tasta <b>Enter</b> sau <b>Space</b> "
+"pentru a nu efectua o acțiune.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:31
 msgid ""
