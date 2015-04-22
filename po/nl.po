@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-18 12:27+0200\n"
-"PO-Revision-Date: 2015-01-28 23:35+0100\n"
+"PO-Revision-Date: 2015-04-22 20:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.6\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:28
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -270,19 +270,20 @@ msgstr "Hou basis kloosters in het spel."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:31
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr ""
+msgstr "Voeg 3/2/1 punten toe voor toren/huis/schuur."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr ""
+msgstr "Bevestig of annuleer plaatsing van horige"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr ""
+msgstr "Wachten op bevestiging door remote speler"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
 msgstr ""
+"Geen actie beschikbaar. Sla over of annuleer de plaatsing van de tegel."
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
 msgid "Pay ransom"
@@ -338,7 +339,7 @@ msgstr "Onverenigbare versies"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
 msgid "Invalid password"
-msgstr ""
+msgstr "Ongeldig wachtwoord"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
@@ -400,7 +401,7 @@ msgstr "Uitzomen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Rotate board"
-msgstr ""
+msgstr "Roteer spelbord"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
@@ -432,15 +433,15 @@ msgstr "Biep bij beurt einde"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
-msgstr ""
+msgstr "Bevestig plaatsing van elke horige"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr ""
+msgstr "Bevestig plaatsing van horige op weiland"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr ""
+msgstr "Bevestig plaatsing van horige op toren"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "About"
@@ -800,11 +801,11 @@ msgstr "Spelregels"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
-msgstr ""
+msgstr "Klok"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr ""
+msgstr "speler tijdslimiet"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -837,11 +838,11 @@ msgstr "Spel titel"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr ""
+msgstr "Als je het wachtwoord leeg laat, kan iedereen verbinden met je spel."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -897,7 +898,7 @@ msgstr "JCloisterzone "
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
-msgstr ""
+msgstr "Opnieuw verbinden..."
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:165
 msgid "%d tiles left"
@@ -936,7 +937,7 @@ msgstr "Deze tegels werden tijdens het spel uitgesloten"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
-msgstr ""
+msgstr "Spel instellingen"
 
 #~ msgid "Place a follower"
 #~ msgstr "Plaats een horige"
