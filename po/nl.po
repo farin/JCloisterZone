@@ -270,7 +270,7 @@ msgstr "Hou basis kloosters in het spel."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:31
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr "Voeg 3/2/1 punten voor toren/huis/schuur."
+msgstr "Voeg 3/2/1 punten toe voor toren/huis/schuur."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
