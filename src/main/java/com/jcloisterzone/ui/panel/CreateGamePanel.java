@@ -259,7 +259,7 @@ public class CreateGamePanel extends JPanel {
         }
         clockPanel.add(timeLimitChbox);
         clockPanel.add(timeLimitSpinner, "w 40");
-        clockPanel.add(new JLabel("minutes"), "gapleft 4");
+        clockPanel.add(new JLabel(_("minutes")), "gapleft 4");
         if (mutableSlots) {
             timeLimitChbox.addActionListener(new ActionListener() {
                 @Override
