@@ -805,7 +805,7 @@ msgstr "Klok"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr "tijdslimiet van speler"
+msgstr "speler tijdslimiet"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
