@@ -750,7 +750,7 @@ msgstr "лимит времени на одного игрока"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
-msgstr ""
+msgstr "минут"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
