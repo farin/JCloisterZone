@@ -2,7 +2,6 @@ package com.jcloisterzone.game.capability;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.w3c.dom.Element;
 

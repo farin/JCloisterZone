@@ -16,6 +16,7 @@ import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.event.LittleBuildingEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
@@ -34,6 +35,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
@@ -58,6 +60,7 @@ import com.jcloisterzone.ui.grid.layer.FairyLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
+import com.jcloisterzone.ui.grid.layer.GoldLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
 import com.jcloisterzone.ui.grid.layer.MageAndWitchLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
@@ -91,6 +94,7 @@ public class MainPanel extends JPanel {
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
+    private GoldLayer goldLayer;
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
@@ -163,7 +167,10 @@ public class MainPanel extends JPanel {
         if (game.hasCapability(MageAndWitchCapability.class)) {
             gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
         }
-
+        if (game.hasCapability(GoldminesCapability.class)) {
+            goldLayer = new GoldLayer(gridPanel, gc);
+            gridPanel.addLayer(goldLayer);
+        }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
 
@@ -340,15 +347,21 @@ public class MainPanel extends JPanel {
 
     @Subscribe
     public void littleBuildingPlaced(LittleBuildingEvent ev) {
-    	Image img = client.getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
-    	ImmutablePoint offset = new ImmutablePoint(65, 35);
-    	double xScale = 1.15, yScale = 1.15;
-    	//TODO tightly coupled with current theme, todo change image size in theme
-    	if (ev.getBuilding() == LittleBuilding.TOWER) {
-    		xScale = 1.0;
-    		yScale = 0.7;
-    	}
-    	meepleLayer.addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
+        Image img = client.getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
+        ImmutablePoint offset = new ImmutablePoint(65, 35);
+        double xScale = 1.15, yScale = 1.15;
+        //TODO tightly coupled with current theme, todo change image size in theme
+        if (ev.getBuilding() == LittleBuilding.TOWER) {
+            xScale = 1.0;
+            yScale = 0.7;
+        }
+        meepleLayer.addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
+    }
+
+    @Subscribe
+    public void onGoldChangeEvent(GoldChangeEvent ev) {
+        goldLayer.setGoldCount(ev.getPos(), ev.getCount());
+        gridPanel.repaint();
     }
 
     @Subscribe

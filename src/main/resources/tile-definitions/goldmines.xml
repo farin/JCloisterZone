@@ -7,15 +7,6 @@
         <farm>NL NR EL SR WL WR</farm>
         <farm>ER SL</farm>
     </tile>
-    <tile id="RrRr">
-        <goldmine/>
-        <cloister/>
-        <road>N E</road>
-        <road>S W</road>
-        <farm>NR EL</farm>
-        <farm>SR WL</farm>
-        <farm>WR NL ER SL</farm>
-    </tile>
     <tile id="LCc">
         <goldmine/>
         <cloister/>
@@ -29,6 +20,23 @@
         <city>N W</city>
         <farm city="N">EL SR</farm>
         <farm>ER SL</farm>
+    </tile>
+    <tile id="LRrRr">
+        <goldmine/>
+        <cloister/>
+        <road>N E</road>
+        <road>S W</road>
+        <farm>NR EL</farm>
+        <farm>SR WL</farm>
+        <farm>WR NL ER SL</farm>
+    </tile>
+    <tile id="RrRr">
+        <goldmine/>
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
     </tile>
     <tile id="CcRr">
         <goldmine/>
@@ -54,13 +62,5 @@
         <farm>NR EL</farm>
         <farm>ER SL</farm>
         <farm>SR WL</farm>
-    </tile>
-    <tile id="RrRr">
-        <goldmine/>
-        <road>N W</road>
-        <road>S E</road>
-        <farm>NL WR</farm>
-        <farm>SL ER</farm>
-        <farm>NR EL SR WL</farm>
     </tile>
 </pack>
