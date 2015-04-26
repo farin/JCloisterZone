@@ -38,6 +38,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
@@ -55,6 +56,7 @@ public class ScorePhase extends ServerAwarePhase {
     private final TunnelCapability tunnelCap;
     private final WagonCapability wagonCap;
     private final MageAndWitchCapability mageWitchCap;
+    private final GoldminesCapability gldCap;
 
     public ScorePhase(Game game, GameController gc) {
         super(game, gc);
@@ -64,6 +66,7 @@ public class ScorePhase extends ServerAwarePhase {
         castleCap = game.getCapability(CastleCapability.class);
         wagonCap = game.getCapability(WagonCapability.class);
         mageWitchCap = game.getCapability(MageAndWitchCapability.class);
+        gldCap = game.getCapability(GoldminesCapability.class);
     }
 
     private void scoreCompletedOnTile(Tile tile) {
@@ -175,6 +178,10 @@ public class ScorePhase extends ServerAwarePhase {
             }
         }
 
+        if (gldCap != null) {
+            gldCap.awardGoldPieces();
+        }
+
         alredyScored.clear();
         next();
     }
@@ -212,6 +219,9 @@ public class ScorePhase extends ServerAwarePhase {
         if (meeples.isEmpty()) meeples = castle.getSecondFeature().getMeeples();
         Meeple m = meeples.get(0); //all meeples must share same owner
         m.getPlayer().addPoints(points, PointCategory.CASTLE);
+        if (gldCap != null) {
+            gldCap.castleCompleted(castle, m.getPlayer());
+        }
         game.post(new ScoreEvent(m.getFeature(), points, PointCategory.CASTLE, m));
         undeloyMeeple(m);
     }

@@ -14,6 +14,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -88,6 +89,9 @@ public class PlayerPanelImageCache {
             scaledImages.put("lb-tower", scaleImage(theme.getNeutralImage("lb-tower")));
             scaledImages.put("lb-house", scaleImage(theme.getNeutralImage("lb-house")));
             scaledImages.put("lb-shed", scaleImage(theme.getNeutralImage("lb-shed")));
+        }
+        if (game.hasCapability(GoldminesCapability.class)) {
+            scaledImages.put("gold", scaleImage(theme.getNeutralImage("gold")));
         }
     }
 

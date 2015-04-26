@@ -31,6 +31,7 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -90,6 +91,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     private final ClothWineGrainCapability cwgCap;
     private final LittleBuildingsCapability lbCap;
     private final TunnelCapability tunnelCap;
+    private final GoldminesCapability gldCap;
 
     private Integer timeLimit;
 
@@ -110,6 +112,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         cwgCap = game.getCapability(ClothWineGrainCapability.class);
         lbCap = game.getCapability(LittleBuildingsCapability.class);
         tunnelCap = game.getCapability(TunnelCapability.class);
+        gldCap = game.getCapability(GoldminesCapability.class);
 
         timeLimit = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
     }
@@ -285,8 +288,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
 
         if (lbCap != null) {
-        	drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
-        	drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
+            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
+            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
             drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
         }
 
@@ -321,6 +324,10 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             drawMeepleBox(null, "grain", cwgCap.getTradeResources(player, TradeResource.GRAIN), true);
             drawMeepleBox(null, "wine", cwgCap.getTradeResources(player, TradeResource.WINE), true);
         }
+        if (gldCap != null) {
+            drawMeepleBox(null, "gold", gldCap.getPlayerGoldPieces(player), true);
+        }
+
         if (towerCap != null) {
             List<Follower> capturedFigures = towerCap.getPrisoners().get(player);
             Map<Class<? extends Follower>, Integer> groupedByType;

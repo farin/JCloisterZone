@@ -13,7 +13,6 @@ import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.FeatureCompletedEvent;
-import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
@@ -100,7 +99,7 @@ public class ClothWineGrainCapability extends Capability {
             for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
-                	strategy.addPoints(player, 10, PointCategory.TRADE_GOODS);
+                    strategy.addPoints(player, 10, PointCategory.TRADE_GOODS);
                 }
             }
 

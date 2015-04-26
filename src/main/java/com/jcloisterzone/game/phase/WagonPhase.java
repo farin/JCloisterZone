@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -136,6 +137,12 @@ public class WagonPhase extends ServerAwarePhase {
 
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
+                    if (nei instanceof Cloister) {
+                        Cloister cloister = (Cloister) nei;
+                        if (cloister.isMonastery() && cloister.getMeeples().isEmpty()) {
+                            wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), Location.ABBOT));
+                        }
+                    }
                     if (nei.walk(new IsOccupiedOrCompleted())) continue;
                     wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
                 }

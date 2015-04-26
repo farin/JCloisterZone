@@ -33,6 +33,7 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
@@ -123,6 +124,7 @@ public class GameOverPanel extends JPanel {
             rowSpec.append("20"); //gap
             if (game.hasCapability(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
             if (game.hasCapability(ClothWineGrainCapability.class)) rowSpec.append("[]");
+            if (game.hasCapability(GoldminesCapability.class)) rowSpec.append("[]");
             if (game.hasCapability(FairyCapability.class)) rowSpec.append("[]");
             if (game.hasCapability(TowerCapability.class)) rowSpec.append("[]");
             if (hasBazaars) rowSpec.append("[]");
@@ -151,6 +153,9 @@ public class GameOverPanel extends JPanel {
 
             if (game.hasCapability(ClothWineGrainCapability.class)) {
                 add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
+            }
+            if (game.hasCapability(GoldminesCapability.class)) {
+                add(new JLabel(_("Gold")), getLegendSpec(0, gridy++));
             }
             if (game.hasCapability(FairyCapability.class)) {
                 add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
@@ -192,6 +197,9 @@ public class GameOverPanel extends JPanel {
 
                 if (game.hasCapability(ClothWineGrainCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(PointCategory.TRADE_GOODS), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                }
+                if (game.hasCapability(GoldminesCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(PointCategory.GOLD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
                 if (game.hasCapability(FairyCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));

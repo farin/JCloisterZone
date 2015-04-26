@@ -109,6 +109,11 @@ public class DelayedServer implements RmiProxy {
         server.placeLittleBuilding(lbType);
     }
 
+    @Override
+    public void placeGoldPiece(Position pos) {
+        server.placeGoldPiece(pos);
+    }
+
 
     @Override
     public void moveMage(FeaturePointer fp) {
