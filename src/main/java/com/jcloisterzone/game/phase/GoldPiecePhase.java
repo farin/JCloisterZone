@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
@@ -12,11 +11,11 @@ import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 
-public class GoldPhase extends Phase {
+public class GoldPiecePhase extends Phase {
 
     private final GoldminesCapability gldCap;
 
-    public GoldPhase(Game game) {
+    public GoldPiecePhase(Game game) {
         super(game);
         gldCap = game.getCapability(GoldminesCapability.class);
     }
@@ -44,5 +43,13 @@ public class GoldPhase extends Phase {
         } else {
             next();
         }
+    }
+
+    @Override
+    public void placeGoldPiece(Position pos) {
+        //TODO nice to have validate position
+        int count = gldCap.addGold(pos);
+        game.post(new GoldChangeEvent(getActivePlayer(), pos, count));
+        next();
     }
 }

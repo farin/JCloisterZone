@@ -36,7 +36,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
         } else if (action instanceof TowerPieceAction) {
             gridDecoration = getClient().getControlsTheme().getActionDecoration("tower");
         } else if (action instanceof GoldPieceAction) {
-            gridDecoration = getClient().getControlsTheme().getActionDecoration("fairy"); //todo create yellow decoration
+            gridDecoration = getClient().getControlsTheme().getActionDecoration("gold");
         }
     }
 

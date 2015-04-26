@@ -127,7 +127,7 @@ public class CreateGamePhase extends ServerAwarePhase {
                addPhase(next, new FlierActionPhase(game));
         next = addPhase(next, new ActionPhase(game));
         next = addPhase(next, new MageAndWitchPhase(game));
-        next = addPhase(next, new GoldPhase(game));
+        next = addPhase(next, new GoldPiecePhase(game));
         next = addPhase(next, new PlaguePhase(game));
         next = addPhase(next, new TilePhase(game));
         next = addPhase(next, new DrawPhase(game, gc));

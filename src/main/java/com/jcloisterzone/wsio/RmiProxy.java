@@ -38,5 +38,5 @@ public interface RmiProxy {
 
     public void cornCiclesRemoveOrDeploy(boolean remove);
     public void placeLittleBuilding(LittleBuilding lbType);
-
+    public void placeGoldPiece(Position pos);
 }

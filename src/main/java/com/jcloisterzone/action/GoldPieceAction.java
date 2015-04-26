@@ -13,7 +13,7 @@ public class GoldPieceAction extends SelectTileAction {
 
     @Override
     public void perform(RmiProxy server, Position p) {
-        //server.xx(p);
+        server.placeGoldPiece(p);
     }
 
     @Override
