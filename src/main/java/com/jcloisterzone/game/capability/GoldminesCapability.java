@@ -17,12 +17,15 @@ import org.w3c.dom.NodeList;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.XmlUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CloisterScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Capability;
@@ -196,5 +199,19 @@ public class GoldminesCapability  extends Capability {
             game.post(new GoldChangeEvent(null, pos, 0));
         }
         claimedGold.clear();
+    }
+
+    @Override
+    public void finalScoring(ScoringStrategy strategy) {
+        for (Player player: game.getAllPlayers()) {
+            int pieces = getPlayerGoldPieces(player);
+            if (pieces == 0) continue;
+            int points = 0;
+            if (pieces < 4) points = 1 * pieces;
+            else if (pieces < 7) points = 2 * pieces;
+            else if (pieces < 10) points = 3 * pieces;
+            else points = 4 * pieces;
+            strategy.addPoints(player, points, PointCategory.GOLD);
+        }
     }
 }

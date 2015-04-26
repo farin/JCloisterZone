@@ -9,11 +9,11 @@ public enum PointCategory {
     CASTLE,
 
     TRADE_GOODS,
+    GOLD,
     FAIRY,
     TOWER_RANSOM,
     BIGGEST_CITY,
     LONGEST_ROAD,
     BAZAAR_AUCTION,
     WIND_ROSE
-
 }
