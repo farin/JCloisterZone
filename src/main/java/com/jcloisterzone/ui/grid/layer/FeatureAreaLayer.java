@@ -135,6 +135,9 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
                     _("How do you want to place follower on monastery?"),
                     _("Monastery"),
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result == -1) { //closed dialog
+                    return;
+                }
                 if (result == JOptionPane.NO_OPTION) {
                     loc = Location.ABBOT;
                 }

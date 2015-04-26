@@ -1,5 +1,21 @@
 # Version history
 
+## 3.2.0
+*2015-04-26*
+
+* game clock
+* meeple deployment undo - confirmations has been redesigned. Deploy is done immediately with possibility to undo it.
+* better broken connection indicator
+* auto reconnect and join game when connection is lost
+* expansion: The Goldmines
+* expansion: Little buildings
+* fix #58: wrong nickname in pre-game chat
+* fix: chat panel now auto hides again
+* fix #123: after selecting "play again", game dialog don't hide ai unsupported expansion
+* fix #124: non-bidding bidding bazaars and tile stealing
+* online play: fixed "continue" and wrong player order and names when game created with RANDOM_SEATING_ORDER
+* online play: chat is available after game ends
+
 ## 3.1.1
 *2015-03-04*
 
@@ -9,11 +25,11 @@
 * error message bar can be dismissed
 * rotate board (/ key)
 * right click on board with shift down behave as middle mouse click (center board to click point)
-* fix: too often AI placement on top of tower 
+* fix: too often AI placement on top of tower
 * fix: "2-tiles bug" - if playing with GQ11 & King and Scout - at game and counter still shows 2 tiles
 * fix: can't place on tower if there isn't normal placement possibility
 * fix: It is not possible to place the phantom as an abbot on a German monastery
-* fix: checking show farm hints option before game starts is broken 
+* fix: checking show farm hints option before game starts is broken
 
 
 ## 3.1.0
