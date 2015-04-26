@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-22 21:38+0200\n"
-"PO-Revision-Date: 2015-04-23 01:33+0200\n"
-"Last-Translator: Corneliu GIURGIU <corneliu.giurgiu@gmail.com>\n"
+"POT-Creation-Date: 2015-04-26 20:46+0200\n"
+"PO-Revision-Date: 2015-04-26 20:53+0100\n"
+"Last-Translator: Roman <farin@farin.cz>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ro\n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:28
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -47,156 +47,156 @@ msgstr ""
 msgid "Bug report failed"
 msgstr "Generare raport eşuatã"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Basic game"
 msgstr "Joc de bazã"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Wheel of Fortune"
 msgstr "Roata Norocului"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:46
+#: src/main/java/com/jcloisterzone/Expansion.java:47
 msgid "Winter Edition"
 msgstr "Ediţia de iarnã"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
 msgstr "Omul de turtã dulce"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
 msgstr "Hanuri şi Catedrale"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:52
+#: src/main/java/com/jcloisterzone/Expansion.java:53
 msgid "Traders & Builders"
 msgstr "Negustori şi Constructori"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:54
+#: src/main/java/com/jcloisterzone/Expansion.java:55
 msgid "The Princess & the Dragon"
 msgstr "Prinţesa şi Dragonul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:56
+#: src/main/java/com/jcloisterzone/Expansion.java:57
 msgid "The Tower"
 msgstr "Turnul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:58
+#: src/main/java/com/jcloisterzone/Expansion.java:59
 msgid "Abbey & Mayor"
 msgstr "Abaţie şi Primar"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:61
 msgid "The Catapult"
 msgstr "Catapulta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:61
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "tiles only"
 msgstr "doar dale"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:61
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Bridges, Castles and Bazaars"
 msgstr "Poduri, Castele şi Pieţe"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:64
 msgid "Hills and sheep"
 msgstr "Dealuri şi mioare"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:66
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "King and Robber Baron"
 msgstr "Regele şi Baronul jefuitor"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The River"
 msgstr "Râul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:68
+#: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The River II"
 msgstr "Râul II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Cathars / Siege"
 msgstr "Catharii / Asediul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Besiegers"
 msgstr "Asediatorii"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Count of Carcassonne"
 msgstr "Contele de Carcassonne"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Mini Expansion (GQ11)"
 msgstr "Mini-Extensia (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Cult"
 msgstr "Cultul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Tunnel"
 msgstr "Tunelul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Corn Circles"
 msgstr "Cercuri în lan"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Plague"
 msgstr "Molima"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Phantom"
 msgstr "Fantoma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:79
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Festival (10th an.)"
 msgstr "Festivalul (a 10-a aniversare)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "Little Buildings"
 msgstr "Micile clãdiri"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The Wind Rose"
 msgstr "Roza vânturilor"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:82
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The German Monasteries"
 msgstr "Mãnãstirile germane"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Flier"
 msgstr "Zburãtorul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "The Messages"
 msgstr "Mesajele"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "The Ferries"
 msgstr "Podurile"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The Goldmines"
 msgstr "Minele de aur"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "Mage & Witch"
 msgstr "Mag si vrãjitoare"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Robber"
 msgstr "Hoţul"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Corn circles II"
 msgstr "Cercuri în lan II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The school"
 msgstr "Şcoala"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "La porxada"
 msgstr "Pridvorul"
 
@@ -280,13 +280,13 @@ msgstr "Adăugare 3/2/1 puncte pentru turn/casã/şopron"
 #: src/main/java/com/jcloisterzone/ui/Client.java:275
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:148
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
 msgid "Leave game"
 msgstr "Pãrãsire joc"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:265
 #: src/main/java/com/jcloisterzone/ui/Client.java:272
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Cancel"
 msgstr "Anulare"
 
@@ -370,15 +370,15 @@ msgstr "Trecere peste"
 msgid "Continue"
 msgstr "Continuare"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
 msgstr "Achitare răscumpărare"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:403
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Doriți să platiți rascumpărarea de 3 puncte pentru eliberarea prizonierului?"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:404
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Confirm ransom payment"
 msgstr "Confirmare plată răscumpărare"
@@ -791,67 +791,71 @@ msgstr "Inteligență artificială la distanță"
 msgid "Open player slot"
 msgstr "Deschidere loc jucător"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:75
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
 msgid "Play again"
 msgstr "Joc nou"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:135
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:136
 msgid "Player"
 msgstr "Jucător"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:136
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:137
 msgid "Rank"
 msgstr "Poziție"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:137
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:138
 msgid "Total points"
 msgstr "Număr total de puncte"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
 msgid "Roads"
 msgstr "Drumuri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
 msgid "Cities"
 msgstr "Orașe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
 msgid "Cloisters"
 msgstr "Mănăstiri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
 msgid "Farms"
 msgstr "Ferme"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
 msgid "Castles"
 msgstr "Castele"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "The biggest city"
 msgstr "Cel mai mare oraș"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "The longest road"
 msgstr "Cel mai lung drum"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:154
 msgid "Trade goods"
 msgstr "Schimb de bunuri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+msgid "Gold"
+msgstr "Aur"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
 msgid "Fairy"
 msgstr "Zână"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
 msgid "Tower ransom"
 msgstr "Răscumpărare turn"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
 msgid "Bazaars"
 msgstr "Piețe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
 msgid "Wind rose"
 msgstr "Roza vânturilor"
 

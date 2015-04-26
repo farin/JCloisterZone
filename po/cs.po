@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JCloisterZone\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-22 21:38+0200\n"
-"PO-Revision-Date: 2015-04-22 21:38+0100\n"
+"POT-Creation-Date: 2015-04-26 20:46+0200\n"
+"PO-Revision-Date: 2015-04-26 20:46+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,156 +43,156 @@ msgstr "... a poté uložený report odešlete na mailovou adresu farin@farin.cz
 msgid "Bug report failed"
 msgstr "Vytváření reportu selhalo"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:42
+#: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Basic game"
 msgstr "Základní hra"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Wheel of Fortune"
 msgstr "Kolo štěstí"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:46
+#: src/main/java/com/jcloisterzone/Expansion.java:47
 msgid "Winter Edition"
 msgstr "Zimní edice"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
 msgstr "Perníček"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
 msgstr "Hostince a katedrály"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:52
+#: src/main/java/com/jcloisterzone/Expansion.java:53
 msgid "Traders & Builders"
 msgstr "Kupci a stavitelé"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:54
+#: src/main/java/com/jcloisterzone/Expansion.java:55
 msgid "The Princess & the Dragon"
 msgstr "Princezna a drak"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:56
+#: src/main/java/com/jcloisterzone/Expansion.java:57
 msgid "The Tower"
 msgstr "Věž"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:58
+#: src/main/java/com/jcloisterzone/Expansion.java:59
 msgid "Abbey & Mayor"
 msgstr "Opatství a starosta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:61
 msgid "The Catapult"
 msgstr "Katapult"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:61
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "tiles only"
 msgstr "jen karty"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:61
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Bridges, Castles and Bazaars"
 msgstr "Mosty, hrady a trhy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:64
 msgid "Hills and sheep"
 msgstr "Kopce a ovce"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:66
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "King and Robber Baron"
 msgstr "Král a loupeživý rytíř"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The River"
 msgstr "Řeka"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:68
+#: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The River II"
 msgstr "Řeka II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The Cathars / Siege"
 msgstr "Kataři / Obléhání"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Besiegers"
 msgstr "Oblehatelé"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Count of Carcassonne"
 msgstr "Hrabě z C."
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Mini Expansion (GQ11)"
 msgstr "Games Quarterly (Malé rozšíření)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Cult"
 msgstr "Kult"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Tunnel"
 msgstr "Tunel"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Corn Circles"
 msgstr "Kruhy v obilí"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Plague"
 msgstr "Mor"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Phantom"
 msgstr "Družina"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:79
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Festival (10th an.)"
 msgstr "Festival"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "Little Buildings"
 msgstr "Domky"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The Wind Rose"
 msgstr "Větrná růžice"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:82
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The German Monasteries"
 msgstr "Německé kláštery"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Flier"
 msgstr "Létající stroje"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "The Messages"
 msgstr "Dopisy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "The Ferries"
 msgstr "Přívozy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The Goldmines"
 msgstr "Zlaté doly"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "Mage & Witch"
 msgstr "Mág a čarodějnice"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Robber"
 msgstr "Zbojníci"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Corn circles II"
 msgstr "Kruhy v obilí II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The school"
 msgstr "Škola"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "La porxada"
 msgstr "La porxada"
 
@@ -276,13 +276,13 @@ msgstr "Věž/dům/chatrč za 3/2/1 bodů."
 #: src/main/java/com/jcloisterzone/ui/Client.java:275
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:148
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:65
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
 msgid "Leave game"
 msgstr "Opustit hru"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:265
 #: src/main/java/com/jcloisterzone/ui/Client.java:272
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Cancel"
 msgstr "Zrušít"
 
@@ -365,15 +365,15 @@ msgstr "Přeskočit"
 msgid "Continue"
 msgstr "Pokračovat"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:401
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
 msgstr "Zaplatit výkupně"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:403
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Opravdu chcete zaplatit 3 body za figurku?"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:404
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Confirm ransom payment"
 msgstr "Potvrzovat zaplacení výkupného"
@@ -784,67 +784,71 @@ msgstr "Vzdálený počítačový hráč"
 msgid "Open player slot"
 msgstr "Volná pozice"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:75
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
 msgid "Play again"
 msgstr "Hrát znovu"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:135
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:136
 msgid "Player"
 msgstr "Hráč"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:136
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:137
 msgid "Rank"
 msgstr "Pořadí"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:137
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:138
 msgid "Total points"
 msgstr "Celkem bodů"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
 msgid "Roads"
 msgstr "Cesty"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
 msgid "Cities"
 msgstr "Města"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
 msgid "Cloisters"
 msgstr "Kláštery"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
 msgid "Farms"
 msgstr "Louky"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
 msgid "Castles"
 msgstr "Hrady"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "The biggest city"
 msgstr "Největší město"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "The longest road"
 msgstr "Nejdelší cesta"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:154
 msgid "Trade goods"
 msgstr "Kupecké zboží"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+msgid "Gold"
+msgstr "Zlato"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
 msgid "Fairy"
 msgstr "Víla"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
 msgid "Tower ransom"
 msgstr "Výkupné za věž"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
 msgid "Bazaars"
 msgstr "Bazary"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
 msgid "Wind rose"
 msgstr "Větrná růžice"
 
