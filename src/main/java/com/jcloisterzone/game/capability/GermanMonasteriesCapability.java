@@ -1,16 +1,9 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
@@ -38,19 +31,6 @@ public class GermanMonasteriesCapability extends Capability {
             if (tile.getId().equals("BA.L") || tile.getId().equals("BA.LR")) {
                 throw new RemoveTileException();
             }
-        }
-    }
-
-    @Override
-    public void postPrepareActions(List<PlayerAction<?>> actions) {
-        for (MeepleAction ma : findFollowerActions(actions)) {
-            List<FeaturePointer> abbots = new ArrayList<>();
-            for (FeaturePointer fp : ma.getOptions()) {
-                if (fp.getLocation() == Location.CLOISTER && ((Cloister) getBoard().get(fp)).isMonastery()) {
-                    abbots.add(new FeaturePointer(fp.getPosition(), Location.ABBOT));
-                }
-            }
-            ma.addAll(abbots);
         }
     }
 }

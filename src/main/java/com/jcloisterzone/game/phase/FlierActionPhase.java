@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
@@ -46,6 +47,13 @@ public class FlierActionPhase extends Phase {
         MeepleAction action = new MeepleAction(meepleType);
         for (Feature f : target.getFeatures()) {
             if (!(f instanceof Completable)) continue;
+            if (f instanceof Cloister) {
+                Cloister cloister = (Cloister) f;
+                if (cloister.isMonastery()) {
+                    action.add(new FeaturePointer(pos, Location.ABBOT));
+                }
+            }
+
             if (f.walk(new IsCompleted())) continue;
             if (follower.isDeploymentAllowed(f).result) {
                 action.add(new FeaturePointer(pos, f.getLocation()));

@@ -124,6 +124,7 @@ public class GameOverPanel extends JPanel {
             rowSpec.append("20"); //gap
             if (game.hasCapability(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
             if (game.hasCapability(ClothWineGrainCapability.class)) rowSpec.append("[]");
+            if (game.hasCapability(GoldminesCapability.class)) rowSpec.append("[]");
             if (game.hasCapability(FairyCapability.class)) rowSpec.append("[]");
             if (game.hasCapability(TowerCapability.class)) rowSpec.append("[]");
             if (hasBazaars) rowSpec.append("[]");

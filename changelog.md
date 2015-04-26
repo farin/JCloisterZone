@@ -13,6 +13,7 @@
 * fix: chat panel now auto hides again
 * fix #123: after selecting "play again", game dialog don't hide ai unsupported expansion
 * fix #124: non-bidding bidding bazaars and tile stealing
+* fix #134: allow abbot placement on tile already surrounded by 8 tiles
 * online play: fixed "continue" and wrong player order and names when game created with RANDOM_SEATING_ORDER
 * online play: chat is available after game ends
 

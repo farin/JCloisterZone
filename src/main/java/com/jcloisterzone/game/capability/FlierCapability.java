@@ -17,6 +17,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
@@ -83,6 +84,13 @@ public class FlierCapability extends Capability {
             Tile target = getBoard().get(pos);
             if (target != null) {
                 for (Feature f : target.getFeatures()) {
+                    if (f instanceof Cloister) {
+                       Cloister cloister = (Cloister) f;
+                       if (cloister.isMonastery()) {
+                           result.add(f); //monastery is always valid target
+                           continue;
+                       }
+                    }
                     if (f instanceof Completable) {
                         if (f.walk(new IsCompleted())) continue;
                         result.add(f);
