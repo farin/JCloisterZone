@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.FairyAction;
+import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.action.SelectTileAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Position;
@@ -34,6 +35,8 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
             gridDecoration = getClient().getControlsTheme().getActionDecoration("fairy");
         } else if (action instanceof TowerPieceAction) {
             gridDecoration = getClient().getControlsTheme().getActionDecoration("tower");
+        } else if (action instanceof GoldPieceAction) {
+            gridDecoration = getClient().getControlsTheme().getActionDecoration("fairy"); //todo create yellow decoration
         }
     }
 

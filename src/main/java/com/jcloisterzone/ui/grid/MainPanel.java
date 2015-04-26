@@ -138,6 +138,7 @@ public class MainPanel extends JPanel {
         meepleLayer = new MeepleLayer(gridPanel, gc);
         tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
+
         gridPanel.addLayer(tileLayer);  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
             towerLayer = new TowerLayer(gridPanel, gc);
@@ -146,6 +147,7 @@ public class MainPanel extends JPanel {
 
         gridPanel.addLayer(farmHintLayer, false); //zindex 10
 
+
         if (game.hasCapability(CastleCapability.class)) {
             castleLayer = new CastleLayer(gridPanel, gc);
             gridPanel.addLayer(castleLayer); //45
@@ -153,6 +155,10 @@ public class MainPanel extends JPanel {
         if (game.hasCapability(PlagueCapability.class)) {
             plagueLayer = new PlagueLayer(gridPanel, gc);
             gridPanel.addLayer(plagueLayer); //45
+        }
+        if (game.hasCapability(GoldminesCapability.class)) {
+            goldLayer = new GoldLayer(gridPanel, gc);
+            gridPanel.addLayer(goldLayer);
         }
 
 
@@ -166,10 +172,6 @@ public class MainPanel extends JPanel {
         //TODO use meeple layer instead and generalize neutral figures (extend from Figure ... )
         if (game.hasCapability(MageAndWitchCapability.class)) {
             gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
-        }
-        if (game.hasCapability(GoldminesCapability.class)) {
-            goldLayer = new GoldLayer(gridPanel, gc);
-            gridPanel.addLayer(goldLayer);
         }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
@@ -190,7 +192,7 @@ public class MainPanel extends JPanel {
 
         gridPanel.addLayer(new TilePlacementLayer(gridPanel, gc), false);
         gridPanel.addLayer(new FeatureAreaLayer(gridPanel, gc), false);
-        if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class)) {
+        if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class) || game.hasCapability(GoldminesCapability.class)) {
             gridPanel.addLayer(new TileActionLayer(gridPanel, gc), false);
         }
         if (game.hasCapability(AbbeyCapability.class)) {
