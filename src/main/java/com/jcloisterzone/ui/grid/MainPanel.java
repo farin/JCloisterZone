@@ -156,11 +156,6 @@ public class MainPanel extends JPanel {
             plagueLayer = new PlagueLayer(gridPanel, gc);
             gridPanel.addLayer(plagueLayer); //45
         }
-        if (game.hasCapability(GoldminesCapability.class)) {
-            goldLayer = new GoldLayer(gridPanel, gc);
-            gridPanel.addLayer(goldLayer);
-        }
-
 
         gridPanel.addLayer(meepleLayer); //zindex 50
         if (game.hasCapability(BridgeCapability.class)) {
@@ -172,6 +167,11 @@ public class MainPanel extends JPanel {
         //TODO use meeple layer instead and generalize neutral figures (extend from Figure ... )
         if (game.hasCapability(MageAndWitchCapability.class)) {
             gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
+        }
+
+        if (game.hasCapability(GoldminesCapability.class)) {
+            goldLayer = new GoldLayer(gridPanel, gc);
+            gridPanel.addLayer(goldLayer);
         }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70

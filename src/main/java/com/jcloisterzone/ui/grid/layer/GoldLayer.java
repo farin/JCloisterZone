@@ -18,7 +18,7 @@ public class GoldLayer extends AbstractGridLayer {
     private final double widthHeightRatio;
     private final Map<Position, Integer> placedGold = new HashMap<>();
 
-    private final static Color FILL_COLOR = new Color(40,40,40,150);
+    private final static Color FILL_COLOR = new Color(40,40,40,120);
 
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
