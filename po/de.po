@@ -146,7 +146,7 @@ msgstr "Das Phantom"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Festival (10th an.)"
-msgstr "Die Festspiele (10tes Jub.)"
+msgstr "Das Fest (10tes Jub.)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "Little Buildings"
@@ -252,11 +252,11 @@ msgstr "Das Schwein "
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
-msgstr "Erlaube das Setzen einer Scheune auf bereits vorhandene Scheunen."
+msgstr "Erlaube das Setzen eines Gutshofes auf eine Wiese mit bereits vorhandenen Gutshöfen."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:25
 msgid "Apply tunnel rule on tunnels from other expansions."
-msgstr "Verwende die Tunnel-Regel auf Tunner aus anderen Erweiterungen."
+msgstr "Verwende die Tunnel-Regel auf Tunnel aus anderen Erweiterungen."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:27
 msgid "No bazaar bidding. Each players just choose one tile."
@@ -618,7 +618,7 @@ msgstr "Jedes Setzen einer Figur bestätigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr "Setzen einer Figur auf einen Bauernhof bestätigen"
+msgstr "Setzen einer Figur auf eine Wiese bestätigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
@@ -898,7 +898,7 @@ msgid ""
 "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
-"<html>Drücke <b>F</b>für die Wiesenmarkierung oder <b>X</b> um die zuletzt "
+"<html>Drücke <b>F</b> für die Wiesenmarkierung oder <b>X</b> um die zuletzt "
 "gelegte Karte zu sehen.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
