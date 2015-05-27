@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.common.eventbus.EventBus;
+import com.google.common.hash.HashCode;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.Player;
@@ -30,6 +33,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.event.ScoreEvent;
@@ -88,13 +92,39 @@ public class Game extends GameSettings implements EventProxy {
 
     private int idSequenceCurrVal = 0;
 
+    private final Random random;
+    private long randomSeed;
+
     public Game(String gameId) {
         super(gameId);
+        HashCode hash = HashCode.fromBytes(gameId.getBytes());
+        this.randomSeed = hash.asLong();
+        this.random = new Random(randomSeed);
+    }
+
+    public Game(String gameId, long randomSeed) {
+        super(gameId);
+        this.randomSeed = randomSeed;
+        this.random = new Random(randomSeed);
     }
 
     @Override
     public EventBus getEventBus() {
         return eventBus;
+    }
+
+    public Undoable getLastUndoable() {
+        return lastUndoable;
+    }
+
+    public void clearLastUndoable() {
+    	lastUndoable = null;
+    }
+
+    private boolean isUiSupportedUndo(Event event) {
+        if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
+        if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
+        return false;
     }
 
     @Override
@@ -104,7 +134,7 @@ public class Game extends GameSettings implements EventProxy {
             capability.handleEvent(event);
         }
         if (event instanceof PlayEvent) {
-            if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) {
+            if (isUiSupportedUndo(event)) {
                 lastUndoable = (Undoable) event;
                 lastUndoablePhase = phase;
             } else {
@@ -129,17 +159,15 @@ public class Game extends GameSettings implements EventProxy {
 
     public void undo() {
         //proof of concept
-        if (lastUndoable instanceof TileEvent) {
-            Tile tile = ((TileEvent)lastUndoable).getTile();
-            Position pos = tile.getPosition();
+        if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
+            Event inverse = lastUndoable.getInverseEvent();
 
             lastUndoable.undo(this);
             phase = lastUndoablePhase;
             lastUndoable = null;
             lastUndoablePhase = null;
 
-            //post should be in event undo. silent vs firing undo ?
-            post(new TileEvent(TileEvent.REMOVE, getActivePlayer(), tile, pos));
+            post(inverse); //should be post inside undo? silent vs. firing undo?
             phase.enter();
         }
     }
@@ -245,6 +273,18 @@ public class Game extends GameSettings implements EventProxy {
         return board;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
+    public long getRandomSeed() {
+        return randomSeed;
+    }
+
+    public void updateRandomSeed(long update) {
+        randomSeed = randomSeed ^ update;
+        random.setSeed(randomSeed);
+    }
 
     public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
         for (Meeple m : getDeployedMeeples()) {
@@ -315,7 +355,7 @@ public class Game extends GameSettings implements EventProxy {
         for (Location loc: tile.getUnoccupiedScoreables(excludeFinished)) {
             //exclude finished == false -> just placed tile - it means do not check princess for magic portal
             //TODO very cryptic, refactor
-            if (!excludeFinished && hasCapability(PrincessCapability.class) && hasRule(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+            if (!excludeFinished && hasCapability(PrincessCapability.class) && getBooleanValue(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
                 City princessCity = tile.getCityWithPrincess();
                 if (princessCity != null) {
                     continue;
@@ -401,16 +441,21 @@ public class Game extends GameSettings implements EventProxy {
         for (Capability cap: capabilities) {
             cap.prepareActions(actions, followerOptions);
         }
-        for (Capability cap: capabilities) { //TODO hack for flier
-            cap.postPrepareActions(actions, followerOptions);
+        for (Capability cap: capabilities) {
+            cap.postPrepareActions(actions);
+        }
+
+        //to simplify capability iterations, allow returning empty actions (eg tower can add empty meeple action when no open tower exists etc)
+        //and then filter them out at end
+        Iterator<PlayerAction<?>> iter = actions.iterator();
+        while (iter.hasNext()) {
+            PlayerAction<?> action = iter.next();
+            if (action.isEmpty()) {
+                iter.remove();
+            }
         }
     }
 
-//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
-//        for (Capability cap: capabilities) {
-//            cap.prepareAnyTimeActions(actions);
-//        }
-//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         for (Capability cap: capabilities) {

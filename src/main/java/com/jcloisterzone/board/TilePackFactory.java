@@ -118,7 +118,7 @@ public class TilePackFactory {
 
     protected boolean isTunnelActive(Expansion expansion) {
         return expansion == Expansion.TUNNEL ||
-            (game.hasCapability(TunnelCapability.class) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
+            (game.hasCapability(TunnelCapability.class) && game.getBooleanValue(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
     }
 
     protected int getTileCount(Element card, String tileId) {
@@ -190,6 +190,12 @@ public class TilePackFactory {
             NodeList nl = entry.getValue().getElementsByTagName("tile");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element tileElement = (Element) nl.item(i);
+                if (!game.hasCapability(RiverCapability.class)) {
+                    //if not playing river skip rivet tiles to prevent wrong tile count in pack (GQ11 rivers)
+                    if (tileElement.getElementsByTagName("river").getLength() > 0) {
+                        continue;
+                    }
+                }
                 String tileId = getTileId(expansion, tileElement);
                 LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
                 for (Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {

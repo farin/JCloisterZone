@@ -14,6 +14,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -62,7 +63,7 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getSpecialMeeples());
             if (game.hasCapability(TunnelCapability.class)) {
                 scaledImages.put(player.getIndex()+"tunnelA", scaleImage(theme.getTunnelImage(player.getColors().getMeepleColor())));
-                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(client.getPlayerSecondTunelColor(player))));
+                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(player.getColors().getTunnelBColor())));
             }
         }
         if (game.hasCapability(TowerCapability.class)) {
@@ -88,6 +89,9 @@ public class PlayerPanelImageCache {
             scaledImages.put("lb-tower", scaleImage(theme.getNeutralImage("lb-tower")));
             scaledImages.put("lb-house", scaleImage(theme.getNeutralImage("lb-house")));
             scaledImages.put("lb-shed", scaleImage(theme.getNeutralImage("lb-shed")));
+        }
+        if (game.hasCapability(GoldminesCapability.class)) {
+            scaledImages.put("gold", scaleImage(theme.getNeutralImage("gold")));
         }
     }
 

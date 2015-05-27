@@ -16,9 +16,6 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.DrawMessage;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 
 public class BazaarPhase extends ServerAwarePhase {
 
@@ -49,12 +46,17 @@ public class BazaarPhase extends ServerAwarePhase {
         }
         Player p = game.getNextPlayer();
         bazaarCap.setBazaarTileSelectingPlayer(p);
-        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
-        if (isLocalPlayer(p)) {
-            //call only from one client (from the active one)
-            getConnection().send(new MakeDrawMessage(game.getGameId(), getTilePack().size(), game.getAllPlayers().length));
+        int size = game.getAllPlayers().length;
+        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
+        for (int i = 0; i < size; i++) {
+            Tile t = getTilePack().drawTile(game.getRandom().nextInt(getTilePack().size()));
+            supply.add(new BazaarItem(t));
         }
+        bazaarCap.setBazaarSupply(supply);
+        toggleClock(getActivePlayer());
+        game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
     }
+
 
     @Override
     public void loadGame(Snapshot snapshot) {
@@ -64,13 +66,15 @@ public class BazaarPhase extends ServerAwarePhase {
             Player bidding = bazaarCap.getBazaarBiddingPlayer();
             BazaarItem currentItem = bazaarCap.getCurrentBazaarAuction();
             int supplyIdx = bazaarCap.getBazaarSupply().indexOf(currentItem);
-            //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
 
             if (bidding == null) {
+                toggleClock(getActivePlayer());
                 game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
             } else if (selecting == bidding) {
+                toggleClock(bidding);
                 game.post(new BazaarSelectBuyOrSellEvent(bidding, currentItem, supplyIdx));
             } else {
+                toggleClock(bidding);
                 game.post(new BazaarMakeBidEvent(bidding, currentItem, supplyIdx));
             }
         }
@@ -81,21 +85,6 @@ public class BazaarPhase extends ServerAwarePhase {
         if (getTilePack().size() < game.getAllPlayers().length) return false; //there isn't one tile for each player available
         if (bazaarCap.getBazaarSupply() != null) return false;
         return true;
-    }
-
-    @WsSubscribe
-    public void handleDraw(DrawMessage msg) {
-        int size = game.getAllPlayers().length;
-        if (msg.getPackSize() != getTilePack().size() || msg.getValues().length != size) {
-            logger.error("Invalid message");
-            return;
-        }
-        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
-        for (Tile t : getTilePack().drawTiles(msg.getValues())) {
-            supply.add(new BazaarItem(t));
-        }
-        bazaarCap.setBazaarSupply(supply);
-        game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
     }
 
     private boolean canPlayerBid(Player p) {
@@ -113,7 +102,7 @@ public class BazaarPhase extends ServerAwarePhase {
             bi = bazaarCap.getBazaarSupply().get(supplyIndex);
             bazaarCap.setCurrentBazaarAuction(bi);
 
-            if (game.hasRule(CustomRule.BAZAAR_NO_AUCTION)) {
+            if (game.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION)) {
                 bi.setOwner(getActivePlayer());
                 nextSelectingPlayer();
                 return;
@@ -123,6 +112,7 @@ public class BazaarPhase extends ServerAwarePhase {
         bi.setCurrentBidder(getActivePlayer());
 
         if (isTileSelection) {
+            toggleClock(getActivePlayer());
             game.post(new BazaarTileSelectedEvent(getActivePlayer(), bi, supplyIndex));
         }
         nextBidder();
@@ -141,7 +131,7 @@ public class BazaarPhase extends ServerAwarePhase {
                     bazaarBuyOrSell(true);
                 } else {
                     bazaarCap.setBazaarBiddingPlayer(bazaarCap.getBazaarTileSelectingPlayer()); //need for correct save&load
-                    //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                    toggleClock(getActivePlayer());
                     game.post(new BazaarSelectBuyOrSellEvent(getActivePlayer(), currentItem, supplyIdx));
                 }
                 return;
@@ -149,7 +139,7 @@ public class BazaarPhase extends ServerAwarePhase {
         } while (!canPlayerBid(nextBidder));
 
         bazaarCap.setBazaarBiddingPlayer(nextBidder);
-        //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+        toggleClock(getActivePlayer());
         game.post(new BazaarMakeBidEvent(getActivePlayer(), currentItem, supplyIdx));
     }
 
@@ -162,7 +152,7 @@ public class BazaarPhase extends ServerAwarePhase {
             player = game.getNextPlayer(player);
             if (!bazaarCap.hasTileAuctioned(player)) {
                 bazaarCap.setBazaarTileSelectingPlayer(player);
-                //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                toggleClock(getActivePlayer());
                 game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
                 return;
             }

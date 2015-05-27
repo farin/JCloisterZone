@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -20,15 +21,16 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.ui.GameController;
 
 
-public class WagonPhase extends Phase {
+public class WagonPhase extends ServerAwarePhase {
 
     final WagonCapability wagonCap;
 
 
-    public WagonPhase(Game game) {
-        super(game);
+    public WagonPhase(Game game, GameController controller) {
+        super(game, controller);
         wagonCap = game.getCapability(WagonCapability.class);
     }
 
@@ -76,7 +78,9 @@ public class WagonPhase extends Phase {
             Feature f = rw.get(wagonPlayer);
             List<FeaturePointer> wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
-                game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class).addAll(wagonMoves), true));
+                Player activePlayer = getActivePlayer();
+                toggleClock(activePlayer);
+                game.post(new SelectActionEvent(activePlayer, new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
             } else {
                 rw.remove(wagonPlayer);
@@ -133,6 +137,12 @@ public class WagonPhase extends Phase {
 
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
+                    if (nei instanceof Cloister) {
+                        Cloister cloister = (Cloister) nei;
+                        if (cloister.isMonastery() && cloister.getMeeples().isEmpty()) {
+                            wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), Location.ABBOT));
+                        }
+                    }
                     if (nei.walk(new IsOccupiedOrCompleted())) continue;
                     wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
                 }

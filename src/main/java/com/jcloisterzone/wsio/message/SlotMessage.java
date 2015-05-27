@@ -7,22 +7,25 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class SlotMessage implements WsInGameMessage {
     private String gameId;
     private int number;
-    private String owner;
+    private String sessionId;
+    private String clientId;
     private Integer serial;
     private String nickname;
     private String aiClassName;
     private Expansion[] supportedExpansions;
 
-    public SlotMessage(String gameId, int number, Integer serial, String owner, String nickname) {
+    public SlotMessage(String gameId, int number, Integer serial, String sessionId, String clientId, String nickname) {
         super();
         this.gameId = gameId;
         this.number = number;
         this.serial = serial;
-        this.owner = owner;
+        this.sessionId = sessionId;
+        this.clientId = clientId;
         this.nickname = nickname;
     }
 
-    public String getGameId() {
+    @Override
+	public String getGameId() {
         return gameId;
     }
 
@@ -70,11 +73,19 @@ public class SlotMessage implements WsInGameMessage {
         this.supportedExpansions = supportedExpansions;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 }

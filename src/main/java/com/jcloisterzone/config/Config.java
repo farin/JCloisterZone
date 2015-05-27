@@ -70,7 +70,7 @@ public class Config {
 
     public static class PresetConfig {
         private List<String> expansions;
-        private List<String> rules;
+        private Map<CustomRule, Object> rules;
 
         public List<String> getExpansions() {
             return expansions == null ? Collections.<String>emptyList() : expansions;
@@ -78,10 +78,10 @@ public class Config {
         public void setExpansions(List<String> expansions) {
             this.expansions = expansions;
         }
-        public List<String> getRules() {
+        public Map<CustomRule, Object> getRules() {
             return rules;
         }
-        public void setRules(List<String> rules) {
+        public void setRules(Map<CustomRule, Object> rules) {
             this.rules = rules;
         }
 
@@ -95,12 +95,7 @@ public class Config {
                     LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
                 }
             }
-
-            EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
-            for (String ruleName : rules) {
-                ruleSet.add(CustomRule.valueOf(ruleName));
-            }
-            conn.send(new GameSetupMessage(gameId, ruleSet, expansionSet, null));
+            conn.send(new GameSetupMessage(gameId, rules, expansionSet, null));
         }
     }
 
@@ -197,21 +192,36 @@ public class Config {
     }
 
     public static class ConfirmConfig {
-        private Boolean farm_place;
-        private Boolean tower_place;
+        private Boolean any_deployment;
+        private Boolean farm_deployment;
+        private Boolean on_tower_deployment;
         private Boolean ransom_payment;
 
-        public Boolean getFarm_place() {
-            return farm_place == null ? Boolean.FALSE : farm_place;
+        public Boolean getAny_deployment() {
+            return any_deployment == null ? Boolean.FALSE : any_deployment;
         }
+        public void setAny_deployment(Boolean any_deployment) {
+            this.any_deployment = any_deployment;
+        }
+        public Boolean getFarm_deployment() {
+            return farm_deployment == null ? Boolean.FALSE : farm_deployment;
+        }
+        public void setFarm_deployment(Boolean farm_deployment) {
+            this.farm_deployment = farm_deployment;
+        }
+        public Boolean getOn_tower_deployment() {
+            return on_tower_deployment == null ? Boolean.FALSE : on_tower_deployment;
+        }
+        public void setOn_tower_deployment(Boolean on_tower_deployment) {
+            this.on_tower_deployment = on_tower_deployment;
+        }
+        @Deprecated
         public void setFarm_place(Boolean farm_place) {
-            this.farm_place = farm_place;
+            this.farm_deployment = farm_place;
         }
-        public Boolean getTower_place() {
-            return tower_place == null ? Boolean.FALSE : tower_place;
-        }
+        @Deprecated
         public void setTower_place(Boolean tower_place) {
-            this.tower_place = tower_place;
+            this.on_tower_deployment = tower_place;
         }
         @Deprecated
         public void setGame_close(Boolean game_close) {

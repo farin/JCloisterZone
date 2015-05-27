@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.MenuBar;
+import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
@@ -35,6 +37,14 @@ public class StartView extends AbstractUiView {
 		pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         pane.add(envelope, BorderLayout.CENTER);
+
+        MenuBar menu = client.getJMenuBar();
+        menu.setItemEnabled(MenuItem.DISCONNECT, false);
+        menu.setItemEnabled(MenuItem.SAVE, false);
+        menu.setItemEnabled(MenuItem.LOAD, true);
+        menu.setItemEnabled(MenuItem.NEW_GAME, true);
+        menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
+        menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
 
         startPanel = new StartPanel();
         startPanel.setClient(client);

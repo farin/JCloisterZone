@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public abstract class Capability {
     protected Board getBoard() {
         return game.getBoard();
     }
-    protected Tile getTile() {
+    protected Tile getCurrentTile() {
         return game.getCurrentTile();
     }
 
@@ -100,13 +101,32 @@ public abstract class Capability {
         return followerActions;
     }
 
+    /** convenient method to find follower action in all actions, or create new if player has follower and action doesn't exists*/
+    protected List<MeepleAction> findAndFillFollowerActions(List<PlayerAction<?>> actions) {
+        List<MeepleAction> followerActions = findFollowerActions(actions);
+        Set<Class<? extends Meeple>> hasAction = new HashSet<>();
+        for (MeepleAction ma : followerActions) {
+            hasAction.add(ma.getMeepleType());
+        }
+
+        for (Follower f : game.getActivePlayer().getFollowers()) {
+            if (f.isInSupply() && !hasAction.contains(f.getClass())) {
+                MeepleAction ma = new MeepleAction(f.getClass());
+                actions.add(ma);
+                followerActions.add(ma);
+                hasAction.add(f.getClass());
+            }
+        }
+        return followerActions;
+    }
+
     public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
     }
 
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
 
-    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+    public void postPrepareActions(List<PlayerAction<?>> actions) {
     }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {

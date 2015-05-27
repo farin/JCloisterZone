@@ -17,13 +17,14 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.CompletableFeature;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
+import com.jcloisterzone.feature.visitor.score.AbstractScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 
-class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableScoreContext, AiScoreContext {
+class LegacyAiScoreContext extends AbstractScoreContext implements CompletableScoreContext, AiScoreContext {
 
     public static class OpenEdge {
         double chanceToClose;
@@ -32,8 +33,6 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
     }
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-
-    private final Game game;
 
     private final LegacyRanking aiPlayer;
     private final CompletableScoreContext ctx;
@@ -44,7 +43,7 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
     private double chanceToClose = 1.0;
 
     public LegacyAiScoreContext(Game game, LegacyRanking aiPlayer, CompletableScoreContext ctx/*, Map<Feature, AiScoreContext> scoreCache*/) {
-        this.game = game;
+        super(game);
         this.aiPlayer = aiPlayer;
         this.ctx = ctx;
         //this.scoreCache = scoreCache;
@@ -55,7 +54,8 @@ class LegacyAiScoreContext extends SelfReturningVisitor implements CompletableSc
         return valid;
     };
 
-    public void setValid(boolean valid) {
+    @Override
+	public void setValid(boolean valid) {
         this.valid = valid;
     }
 

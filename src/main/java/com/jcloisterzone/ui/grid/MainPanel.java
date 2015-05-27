@@ -8,6 +8,7 @@ import java.awt.Image;
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -15,6 +16,8 @@ import com.jcloisterzone.event.BridgeDeployedEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.GoldChangeEvent;
+import com.jcloisterzone.event.LittleBuildingEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.ScoreEvent;
@@ -32,6 +35,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
@@ -56,6 +60,7 @@ import com.jcloisterzone.ui.grid.layer.FairyLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
+import com.jcloisterzone.ui.grid.layer.GoldLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
 import com.jcloisterzone.ui.grid.layer.MageAndWitchLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
@@ -89,6 +94,7 @@ public class MainPanel extends JPanel {
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
+    private GoldLayer goldLayer;
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
@@ -127,16 +133,12 @@ public class MainPanel extends JPanel {
     }
 
     public void started(Snapshot snapshot) {
-        animationService.clearAll();
-        animationService.setGridPanel(null);
-        removeAll();
-        setVisible(false);
-
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);
         meepleLayer = new MeepleLayer(gridPanel, gc);
         tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
+
         gridPanel.addLayer(tileLayer);  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
             towerLayer = new TowerLayer(gridPanel, gc);
@@ -144,6 +146,7 @@ public class MainPanel extends JPanel {
         }
 
         gridPanel.addLayer(farmHintLayer, false); //zindex 10
+
 
         if (game.hasCapability(CastleCapability.class)) {
             castleLayer = new CastleLayer(gridPanel, gc);
@@ -153,7 +156,6 @@ public class MainPanel extends JPanel {
             plagueLayer = new PlagueLayer(gridPanel, gc);
             gridPanel.addLayer(plagueLayer); //45
         }
-
 
         gridPanel.addLayer(meepleLayer); //zindex 50
         if (game.hasCapability(BridgeCapability.class)) {
@@ -167,6 +169,10 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
         }
 
+        if (game.hasCapability(GoldminesCapability.class)) {
+            goldLayer = new GoldLayer(gridPanel, gc);
+            gridPanel.addLayer(goldLayer);
+        }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
 
@@ -186,7 +192,7 @@ public class MainPanel extends JPanel {
 
         gridPanel.addLayer(new TilePlacementLayer(gridPanel, gc), false);
         gridPanel.addLayer(new FeatureAreaLayer(gridPanel, gc), false);
-        if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class)) {
+        if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class) || game.hasCapability(GoldminesCapability.class)) {
             gridPanel.addLayer(new TileActionLayer(gridPanel, gc), false);
         }
         if (game.hasCapability(AbbeyCapability.class)) {
@@ -206,7 +212,6 @@ public class MainPanel extends JPanel {
         gridPanel.addLayer(placementHistoryLayer, false);
 
         add(gridPanel);
-        setVisible(true);
     }
 
     public void toggleRecentHistory(boolean show) {
@@ -332,7 +337,7 @@ public class MainPanel extends JPanel {
         Player player = ev.getTriggeringPlayer();
         Color c;
         if (ev.isSecondPiece()) {
-            c = client.getPlayerSecondTunelColor(player);
+            c = player.getColors().getTunnelBColor();
         } else {
             c = player.getColors().getMeepleColor();
         }
@@ -340,6 +345,25 @@ public class MainPanel extends JPanel {
         Tile tile = gridPanel.getTile(ev.getPosition());
         ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
         meepleLayer.addPermanentImage(ev.getPosition(), offset, tunnelPiece);
+    }
+
+    @Subscribe
+    public void littleBuildingPlaced(LittleBuildingEvent ev) {
+        Image img = client.getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
+        ImmutablePoint offset = new ImmutablePoint(65, 35);
+        double xScale = 1.15, yScale = 1.15;
+        //TODO tightly coupled with current theme, todo change image size in theme
+        if (ev.getBuilding() == LittleBuilding.TOWER) {
+            xScale = 1.0;
+            yScale = 0.7;
+        }
+        meepleLayer.addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
+    }
+
+    @Subscribe
+    public void onGoldChangeEvent(GoldChangeEvent ev) {
+        goldLayer.setGoldCount(ev.getPos(), ev.getCount());
+        gridPanel.repaint();
     }
 
     @Subscribe

@@ -18,6 +18,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.GameOverMessage;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 
 
 public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback, ScoringStrategy {
@@ -28,9 +29,10 @@ public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback,
 
     @Override
     public void enter() {
-    	if (isLocalPlayer(game.getTurnPlayer())) {
-            //invoke only by one client
-    		getConnection().send(new GameOverMessage(game.getGameId()));
+        if (isLocalPlayer(game.getTurnPlayer())) {
+            //invoke only by single client
+            getConnection().send(new ToggleClockMessage(game.getGameId(), null));
+            getConnection().send(new GameOverMessage(game.getGameId()));
         }
 
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
@@ -89,9 +91,9 @@ public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback,
         return null;
     }
 
-	@Override
-	public void addPoints(Player player, int points, PointCategory category) {
-		player.addPoints(points, category);
-	}
+    @Override
+    public void addPoints(Player player, int points, PointCategory category) {
+        player.addPoints(points, category);
+    }
 
 }

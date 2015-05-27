@@ -9,14 +9,15 @@ import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.ui.GameController;
 
 
-public class DragonMovePhase extends Phase {
+public class DragonMovePhase extends ServerAwarePhase {
 
     private final DragonCapability dragonCap;
 
-    public DragonMovePhase(Game game) {
-        super(game);
+    public DragonMovePhase(Game game, GameController controller) {
+        super(game, controller);
         dragonCap = game.getCapability(DragonCapability.class);
     }
 
@@ -39,7 +40,7 @@ public class DragonMovePhase extends Phase {
         if (dragonCap.getDragonMovesLeft() > 0) {
             Set<Position> moves = dragonCap.getAvailDragonMoves();
             if (!moves.isEmpty()) {
-                //game.fireGameEvent().playerActivated(game.getTurnPlayer(), getActivePlayer());
+                toggleClock(getActivePlayer());
                 game.post(new SelectDragonMoveEvent(getActivePlayer(), moves, dragonCap.getDragonMovesLeft()));
                 return;
             }

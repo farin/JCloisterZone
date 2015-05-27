@@ -108,13 +108,11 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             @Override
             public void focusLost(FocusEvent e) {
                 updateMessaagesVisibility();
-                repaint();
             }
 
             @Override
             public void focusGained(FocusEvent e) {
                 updateMessaagesVisibility();
-                repaint();
             }
         });
 
@@ -142,8 +140,8 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 forceFocus = false;
-                repaint();
                 repaintTimer.stop();
+                updateMessaagesVisibility();
             }
         });
 
@@ -154,13 +152,18 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             }
         });
 
-        updateMessaagesVisibility();
         setBackground(new Color(0, 0, 0, 0));
         input.setBackground(Color.WHITE);
+        updateMessaagesVisibility();
     }
 
     private void updateMessaagesVisibility() {
         messagesPane.setVisible(!hidingMode || !isFolded());
+        if (getParent() == null) {
+        	repaint();
+    	} else {
+    		getParent().repaint();
+    	}
     }
 
     @Override
@@ -224,7 +227,6 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         } else {
             forceFocus = true;
             updateMessaagesVisibility();
-            repaint();
             repaintTimer.start();
         }
     }

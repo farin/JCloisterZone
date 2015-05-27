@@ -10,6 +10,10 @@ public enum Rotation {
     R270;
 
     public AffineTransform getAffineTransform(int size) {
+        return getAffineTransform(size, size);
+    }
+
+    public AffineTransform getAffineTransform(int sizeX, int sizeY) {
         AffineTransform at;
         switch (this) {
         case R0:
@@ -17,15 +21,15 @@ public enum Rotation {
             return at;
         case R90:
             at = AffineTransform.getRotateInstance(Math.PI * 0.5);
-            at.translate(0, -size);
+            at.translate(0, -sizeX);
             return at;
         case R180:
             at = AffineTransform.getRotateInstance(Math.PI);
-            at.translate(-size, -size);
+            at.translate(-sizeX, -sizeY);
             return at;
         case R270:
             at = AffineTransform.getRotateInstance(Math.PI * 1.5);
-            at.translate(-size, 0);
+            at.translate(-sizeY, 0);
             return at;
         }
         return null;
@@ -41,8 +45,12 @@ public enum Rotation {
         return values()[ordinal()-1];
     }
 
+    public double getTheta() {
+        return ordinal()*Math.PI/2.0;
+    }
+
     public Rotation add(Rotation r) {
-    	return Rotation.values()[(this.ordinal() + r.ordinal()) % Rotation.values().length];
+        return Rotation.values()[(this.ordinal() + r.ordinal()) % Rotation.values().length];
     }
 
     public Rotation inverse() {

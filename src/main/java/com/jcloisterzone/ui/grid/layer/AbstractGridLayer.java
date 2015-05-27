@@ -54,15 +54,19 @@ public abstract class AbstractGridLayer implements GridLayer {
         }
     }
 
-//	@Override
-//	public void gridChanged(int left, int right, int top, int bottom) {
-//	}
+    @Override
+    public void boardRotated(Rotation boardRotation) {
+        if (mouseListener != null) {
+            triggerFakeMouseEvent();
+        }
+    }
 
     protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
         return new GridMouseAdapter(gridPanel, listener);
     }
 
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         return visible;
     }
 
@@ -160,6 +164,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
+        //gridPanel.getBoardRotation().
         ImmutablePoint center = centerNoScaled.scale(getSquareSize());
         drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
     }
@@ -172,16 +177,24 @@ public abstract class AbstractGridLayer implements GridLayer {
         TextLayout tl = new TextLayout(text, getFont(fontSize),frc);
         Rectangle2D bounds = tl.getBounds();
 
-        center = center.translate( (int) (bounds.getWidth() / -2), (int) (bounds.getHeight() / -2));
+        int w = (int) bounds.getWidth();
+        int h = (int) bounds.getHeight();
+        center = center.translate(-w/2, -h/2);
+        int x = getOffsetX(pos) + center.getX();
+        int y = getOffsetY(pos) + center.getY();
 
+
+        g2.rotate(-gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
         if (bgColor != null) {
             g2.setColor(bgColor);
-            g2.fillRect(getOffsetX(pos) + center.getX() - 6, getOffsetY(pos) + center.getY() - 5, 12 + (int)bounds.getWidth(),10 +(int) bounds.getHeight());
+            g2.fillRect(x-6, y-5, w+12, h+10);
         }
 
         g2.setColor(fgColor);
-        tl.draw(g2, getOffsetX(pos) + center.getX(),  getOffsetY(pos) + center.getY() + (int) bounds.getHeight());
+        tl.draw(g2, x,  y+h);
         g2.setColor(original);
+        g2.rotate(gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
+
     }
 
 }

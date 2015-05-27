@@ -12,9 +12,6 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.DrawMessage;
-import com.jcloisterzone.wsio.message.MakeDrawMessage;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -83,22 +80,10 @@ public class DrawPhase extends ServerAwarePhase {
         if (makeDebugDraw()) {
             return;
         }
-        if (isLocalPlayer(getActivePlayer())) {
-            //call only from one client (from the active one)
-            getConnection().send(new MakeDrawMessage(game.getGameId(), getTilePack().size(), 1));
-        }
-    }
-
-    @WsSubscribe
-    public void handleDraw(DrawMessage msg) {
-        if (msg.getPackSize() != getTilePack().size()) {
-            logger.error("Invalid message");
-            return;
-        }
-        Tile tile = getTilePack().drawTile(msg.getValues()[0]);
+        int rndIndex = game.getRandom().nextInt(getTilePack().size());
+        Tile tile = getTilePack().drawTile(rndIndex);
         nextTile(tile);
     }
-
 
     private void nextTile(Tile tile) {
         game.setCurrentTile(tile);
@@ -108,8 +93,8 @@ public class DrawPhase extends ServerAwarePhase {
             next(DrawPhase.class);
             return;
         }
+        toggleClock(getActivePlayer());
         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }
-
 }

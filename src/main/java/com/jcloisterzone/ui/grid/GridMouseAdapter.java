@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.grid;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 import javax.swing.event.MouseInputListener;
 
@@ -21,8 +22,9 @@ public class GridMouseAdapter extends MouseAdapter implements MouseInputListener
 
     private Position getGridPosition(MouseEvent e) {
         int sqSize = gridPanel.getSquareSize();
-        int clickX = e.getX() - gridPanel.getOffsetX();
-        int clickY = e.getY() - gridPanel.getOffsetY();
+        Point2D point = gridPanel.getRelativePoint(e.getPoint());
+        int clickX = (int) point.getX();
+        int clickY = (int) point.getY();
         int x = clickX / sqSize + ((clickX < 0) ? -1 : 0);
         int y = clickY / sqSize + ((clickY < 0) ? -1 : 0);
         return new Position(x, y);

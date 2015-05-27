@@ -247,8 +247,13 @@ public class Tile /*implements Cloneable*/ {
     public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
         Set<Location> locations = new HashSet<>();
         for (Feature f : features) {
-            //if (f instanceof Farm && !game.hasCapability(Capability.FARM_PLACEMENT)) continue;
             if (f instanceof Scoreable) {
+                if (f instanceof Cloister) {
+                    Cloister c = (Cloister) f;
+                    if (c.isMonastery() && c.getMeeples().isEmpty()) {
+                        locations.add(Location.ABBOT);
+                    }
+                }
                 IsOccupied visitor;
                 if (excludeCompleted && f instanceof Completable) {
                     visitor = new IsOccupiedOrCompleted();

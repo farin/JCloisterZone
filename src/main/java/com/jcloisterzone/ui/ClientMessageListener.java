@@ -20,11 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
@@ -54,6 +57,7 @@ import com.jcloisterzone.wsio.message.ChannelMessage.ChannelMessageGame;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
+import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
@@ -125,7 +129,9 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
-        //empty for now
+    	channelControllers.clear();
+    	gameControllers.clear();
+    	client.onWebsocketClose(code, reason, remote);
     }
 
     @Override
@@ -171,11 +177,12 @@ public class ClientMessageListener implements MessageListener {
     private void updateSlot(PlayerSlot[] slots, SlotMessage slotMsg) {
         PlayerSlot slot = slots[slotMsg.getNumber()];
         slot.setNickname(slotMsg.getNickname());
-        slot.setSessionId(slotMsg.getOwner());
-        if (slotMsg.getOwner() == null) {
+        slot.setSessionId(slotMsg.getSessionId());
+        slot.setClientId(slotMsg.getClientId());
+        if (slotMsg.getClientId() == null) {
             slot.setState(SlotState.OPEN);
         } else {
-            slot.setState(slotMsg.getOwner().equals(conn.getSessionId()) ? SlotState.OWN : SlotState.REMOTE);
+            slot.setState(conn.getSessionId().equals(slotMsg.getSessionId()) ? SlotState.OWN : SlotState.REMOTE);
         }
         slot.setSerial(slotMsg.getSerial());
         slot.setAiClassName(slotMsg.getAiClassName());
@@ -218,6 +225,13 @@ public class ClientMessageListener implements MessageListener {
         }
         gc.setReportingTool(conn.getReportingTool());
         gc.setChannel(msg.getChannel());
+        gc.setPasswordProtected(msg.isPasswordProtected());
+        if (msg instanceof ChannelMessageGame) {
+	        for (RemoteClient client : ((ChannelMessageGame)msg).getClients()) {
+	        	if (client.getState() == null) client.setState(ClientState.ACTIVE);
+	        	gc.getRemoteClients().add(client);
+	        }
+        }
         game.getPhases().put(phase.getClass(), phase);
         game.setPhase(phase);
         if (msg.getSlots() != null) {
@@ -247,7 +261,7 @@ public class ClientMessageListener implements MessageListener {
             for (int i = 0; i < replay.length; i++) {
                 if (i == replay.length - 1) {
                     for (PlayerSlot slot : phase.getPlayerSlots()) {
-                        if (slot.getAiPlayer() != null) {
+                        if (slot != null && slot.getAiPlayer() != null) {
                             slot.getAiPlayer().setMuted(false);
                         }
                     }
@@ -300,8 +314,15 @@ public class ClientMessageListener implements MessageListener {
         handleGameSetup(msg.getGameSetup());
         if (msg.getSlots() != null) {
             createGameSlots(gc, msg);
+            CreateGamePhase phase = null;
+            if (!gc.getGame().isStarted()) {
+            	phase = (CreateGamePhase)gc.getGame().getPhase();
+            }
             for (SlotMessage slotMsg : msg.getSlots()) {
                 handleSlot(slotMsg);
+                if (phase != null) {
+                	phase.handleSlotMessage(slotMsg);
+                }
             }
         }
 
@@ -349,6 +370,7 @@ public class ClientMessageListener implements MessageListener {
             GameController gc = (GameController) getController(msg.getGame());
             if (gc != null) {
                 gc.setGameState(msg.getGame().getState());
+                logger.warn("Unexpected state - should never happen");
                 return; //can't happen now - but eq. rename etc is possible in future
             }
             handleGame(msg.getGame(), true);
@@ -388,8 +410,8 @@ public class ClientMessageListener implements MessageListener {
                     clients.set(idx, rc);
                 }
             }
-            ArrayList<RemoteClient> frozedList = new ArrayList<RemoteClient>(clients);
-            controller.getEventProxy().post(new ClientListChangedEvent(frozedList));
+            ArrayList<RemoteClient> frozenList = new ArrayList<RemoteClient>(clients);
+            controller.getEventProxy().post(new ClientListChangedEvent(frozenList));
         } else {
             logger.warn("No controller for message {}", msg);
         }
@@ -407,6 +429,19 @@ public class ClientMessageListener implements MessageListener {
     }
 
     @WsSubscribe
+    public void handleClockMessage(ClockMessage msg) {
+        Game game = getGame(msg);
+        Player[] players = game.getAllPlayers();
+        Player runningClockPlayer = msg.getRunning() == null ? null : players[msg.getRunning()];
+        for (int i = 0; i < players.length; i++) {
+            PlayerClock clock = players[i].getClock();
+            clock.setTime(msg.getClocks()[i]);
+            clock.setRunning(runningClockPlayer == players[i]);
+        }
+        game.post(new ClockUpdateEvent(runningClockPlayer));
+    }
+
+    @WsSubscribe
     public void handleSlot(SlotMessage msg) {
         Game game = getGame(msg);
         //slot's can be updated also for running game
@@ -421,14 +456,15 @@ public class ClientMessageListener implements MessageListener {
         game.getExpansions().clear();
         game.getExpansions().addAll(msg.getExpansions());
         game.getCustomRules().clear();
-        game.getCustomRules().addAll(msg.getRules());
+        game.getCustomRules().putAll(msg.getRules());
 
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
             game.post(new ExpansionChangedEvent(exp, game.getExpansions().contains(exp)));
         }
         for (CustomRule rule : CustomRule.values()) {
-            game.post(new RuleChangeEvent(rule, game.getCustomRules().contains(rule)));
+            Object value = game.getCustomRules().get(rule);
+            game.post(new RuleChangeEvent(rule, value));
         }
     }
 
@@ -449,12 +485,12 @@ public class ClientMessageListener implements MessageListener {
     public void handleSetRule(SetRuleMessage msg) {
         Game game = getGame(msg);
         CustomRule rule = msg.getRule();
-        if (msg.isEnabled()) {
-            game.getCustomRules().add(rule);
-        } else {
+        if (msg.getValue() == null) {
             game.getCustomRules().remove(rule);
+        } else {
+            game.getCustomRules().put(rule, msg.getValue());
         }
-        game.post(new RuleChangeEvent(rule, msg.isEnabled()));
+        game.post(new RuleChangeEvent(rule, msg.getValue()));
     }
 
     @WsSubscribe
@@ -495,8 +531,10 @@ public class ClientMessageListener implements MessageListener {
             }
             JOptionPane.showMessageDialog(client, msg, _("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
             break;
+        case ErrorMessage.INVALID_PASSWORD:
+            JOptionPane.showMessageDialog(client, _("Invalid password"), _("Invalid password"), JOptionPane.WARNING_MESSAGE);
         default:
-            logger.error(err.getMessage());
+            JOptionPane.showMessageDialog(client, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

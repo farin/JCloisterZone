@@ -1,7 +1,6 @@
 package com.jcloisterzone.board;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,15 +72,6 @@ public class DefaultTilePack implements TilePack {
             }
         }
         throw new ArrayIndexOutOfBoundsException();
-    }
-
-    @Override
-    public Tile[] drawTiles(int[] indexes) {
-        Tile[] result = new Tile[indexes.length];
-        for (int i = 0; i < indexes.length; i++) {
-            result[i] = drawTile(indexes[i]);
-        }
-        return result;
     }
 
     private void increaseSideMaskCounter(Tile tile, String groupId) {

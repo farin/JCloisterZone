@@ -31,7 +31,7 @@ public class RoadScoreContext extends PositionCollectingScoreContext {
         } else {
             points = length;
         }
-        return getMageAndWitchPoints(points);
+        return getMageAndWitchPoints(points) + getLittleBuildingPoints();
     }
 
     public boolean isInn() {

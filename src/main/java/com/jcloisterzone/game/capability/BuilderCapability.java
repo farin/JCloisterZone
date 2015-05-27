@@ -64,7 +64,7 @@ public class BuilderCapability extends Capability {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Builder.class)) return;
 
-        Tile tile = getTile();
+        Tile tile = getCurrentTile();
         if (!game.isDeployAllowed(tile, Builder.class)) return;
 
         Set<Location> roads = tile.getPlayerUncompletedFeatures(player, Road.class);

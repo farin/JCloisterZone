@@ -23,7 +23,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -76,6 +80,10 @@ public class CreateGamePanel extends JPanel {
     private JPanel expansionPanel;
     private JPanel rulesPanel;
     private JPanel header;
+
+    private JCheckBox timeLimitChbox;
+    private JSpinner timeLimitSpinner;
+    private SpinnerNumberModel timeLimitModel;
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
     private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
@@ -187,6 +195,8 @@ public class CreateGamePanel extends JPanel {
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
 
+        playersPanel.add(createClockPanel(), "wrap, gaptop 10, grow");
+
         scrolled.add(playersPanel, "cell 0 0, grow");
 
         expansionPanel = new JPanel();
@@ -196,7 +206,7 @@ public class CreateGamePanel extends JPanel {
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setConfig(client.getConfig());
 
-        expansionPanel.setLayout(new MigLayout("", "[][right]", "[]"));
+        expansionPanel.setLayout(new MigLayout("gapy 1", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
             createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
@@ -211,7 +221,7 @@ public class CreateGamePanel extends JPanel {
 
         Expansion prev = Expansion.BASIC;
         for (CustomRule rule : CustomRule.values()) {
-            if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
+            if (rule.getExpansion() == null) continue;
             if (prev != rule.getExpansion()) {
                 prev = rule.getExpansion();
                 JLabel label = new JLabel(prev.toString());
@@ -230,6 +240,47 @@ public class CreateGamePanel extends JPanel {
 
         onSlotStateChange();
         startGameButton.requestFocus();
+    }
+
+    private JPanel createClockPanel() {
+        JPanel clockPanel = new JPanel();
+        clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        clockPanel.setLayout(new MigLayout("", "[][][]", ""));
+
+        Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
+        timeLimitChbox = new JCheckBox(_("player time limit"), value != null);
+        timeLimitChbox.setEnabled(mutableSlots);
+        timeLimitSpinner = new JSpinner();
+        timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value / 60, 0, 300, 1);
+        timeLimitSpinner.setModel(timeLimitModel);
+        timeLimitSpinner.setEnabled(mutableSlots);
+        if (value == null) {
+            timeLimitSpinner.setEnabled(false);
+        }
+        clockPanel.add(timeLimitChbox);
+        clockPanel.add(timeLimitSpinner, "w 40");
+        clockPanel.add(new JLabel(_("minutes")), "gapleft 4");
+        if (mutableSlots) {
+            timeLimitChbox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
+                    client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, timeLimitChbox.isSelected() ? 60 * timeLimitModel.getNumber().intValue() : null));
+                }
+            });
+            timeLimitSpinner.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    if (timeLimitChbox.isSelected()) {
+                        Integer value = timeLimitModel.getNumber().intValue() * 60;
+                        if (value != game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME)) {
+                            client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, value));
+                        }
+                    }
+                }
+            });
+        }
+        return clockPanel;
     }
 
     private JPanel createPresetPanel() {
@@ -301,8 +352,7 @@ public class CreateGamePanel extends JPanel {
                 Preset profile = null;
                 if (item instanceof String) { // not found matching profile,
                                                 // create new
-                    profile = new Preset(((String) item).trim(),
-                            createCurrentConfig());
+                    profile = new Preset(((String) item).trim(), createCurrentConfig());
                     presets.addItem(profile); // TODO insert at
                 } else { // profile already exists
                     profile = (Preset) item;
@@ -366,7 +416,7 @@ public class CreateGamePanel extends JPanel {
         if (exp == Expansion.KING_AND_ROBBER_BARON
                 || exp == Expansion.INNS_AND_CATHEDRALS
                 || exp == Expansion.FLIER) {
-            expansionPanel.add(chbox, "gaptop 10");
+            expansionPanel.add(chbox, "gaptop 5");
         } else {
             expansionPanel.add(chbox, "");
         }
@@ -393,18 +443,13 @@ public class CreateGamePanel extends JPanel {
 
     private PresetConfig createCurrentConfig() {
         List<String> expansions = new ArrayList<>();
-        List<String> rules = new ArrayList<>();
         for (Expansion exp : game.getExpansions()) {
-            if (exp == Expansion.BASIC)
-                continue;
+            if (exp == Expansion.BASIC) continue;
             expansions.add(exp.name());
-        }
-        for (CustomRule rule : game.getCustomRules()) {
-            rules.add(rule.name());
         }
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
-        config.setRules(rules);
+        config.setRules(game.getCustomRules());
         return config;
     }
 
@@ -431,7 +476,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createRuleCheckbox(final CustomRule rule,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(rule.getLabel(), game.hasRule(rule));
+        JCheckBox chbox = new JCheckBox(rule.getLabel(), game.getBooleanValue(rule));
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
@@ -466,14 +511,28 @@ public class CreateGamePanel extends JPanel {
         return chbox;
     }
 
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        JCheckBox chbox = ruleCheckboxes.get(rule);
-        if (chbox != null && chbox.isSelected() != enabled) {
-            chbox.setSelected(enabled);
-            UiUtils.highlightComponent(chbox);
-        }
-        if (rule == CustomRule.RANDOM_SEATING_ORDER) {
-            updateSerialLabels();
+    public void updateCustomRule(CustomRule rule, Object value) {
+        if (rule.getType().equals(Boolean.class)) {
+            JCheckBox chbox = ruleCheckboxes.get(rule);
+            boolean enabled = value == null ? false : (Boolean) value;
+            if (chbox != null && chbox.isSelected() != enabled) {
+                chbox.setSelected(enabled);
+                UiUtils.highlightComponent(chbox);
+            }
+            if (rule == CustomRule.RANDOM_SEATING_ORDER) {
+                updateSerialLabels();
+            }
+        } else {
+            if (rule == CustomRule.CLOCK_PLAYER_TIME) {
+                if (value == null) {
+                    timeLimitChbox.setSelected(false);
+                    timeLimitSpinner.setEnabled(false);
+                } else {
+                    timeLimitChbox.setSelected(true);
+                    timeLimitSpinner.setEnabled(true);
+                    timeLimitModel.setValue(((Integer) value) / 60);
+                }
+            }
         }
     }
 
@@ -523,8 +582,7 @@ public class CreateGamePanel extends JPanel {
         ArrayList<Integer> serials = new ArrayList<Integer>();
 
         for (Component c : playersPanel.getComponents()) {
-            if (!(c instanceof CreateGamePlayerPanel))
-                continue;
+            if (!(c instanceof CreateGamePlayerPanel)) continue;
             CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
             PlayerSlot ps = playerPanel.getSlot();
             if (ps != null && ps.getSerial() != null) {
@@ -535,11 +593,9 @@ public class CreateGamePanel extends JPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
-            boolean randomSeating = game.hasRule(
-                    CustomRule.RANDOM_SEATING_ORDER);
+            boolean randomSeating = game.getBooleanValue(CustomRule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
-                if (!(c instanceof CreateGamePlayerPanel))
-                    continue;
+                if (!(c instanceof CreateGamePlayerPanel)) continue;
                 CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
                 PlayerSlot ps = playerPanel.getSlot();
                 if (ps != null && ps.getSerial() != null) {
@@ -592,7 +648,7 @@ public class CreateGamePanel extends JPanel {
 
     @Subscribe
     public void updateCustomRule(RuleChangeEvent ev) {
-        updateCustomRule(ev.getRule(), ev.isEnabled());
+        updateCustomRule(ev.getRule(), ev.getValue());
     }
 
     @Subscribe

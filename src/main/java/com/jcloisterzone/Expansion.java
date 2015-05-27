@@ -17,8 +17,10 @@ import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
@@ -76,8 +78,7 @@ public enum Expansion {
     PLAGUE("PL", _("The Plague"), false),
     PHANTOM("PH", _("The Phantom"),  new Class[] { PhantomCapability.class }),
     FESTIVAL("FE", _("The Festival (10th an.)"), new Class[] { FestivalCapability.class }),
-    //LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
-    LITTLE_BUILDINGS("LB", _("Little Buildings"), false),
+    LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
     GERMAN_MONASTERIES("GM", _("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }),
 
@@ -85,7 +86,7 @@ public enum Expansion {
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),
     MESSAGES("ME", "#2 - " + _("The Messages"), false),
     FERRIES("FR", "#3 - " + _("The Ferries"), false),
-    GOLDMINES("GO", "#4 - " + _("The Goldmines"), false),
+    GOLDMINES("GO", "#4 - " + _("The Goldmines"), new Class[] { GoldminesCapability.class }),
     MAGE_AND_WITCH("MW", "#5 - " + _("Mage & Witch"), new Class[] { MageAndWitchCapability.class }),
     ROBBER("RO", "#6 - " + _("The Robber"), false),
     CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class }),

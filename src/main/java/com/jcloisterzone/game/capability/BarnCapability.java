@@ -34,7 +34,7 @@ public final class BarnCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        Position pos = getTile().getPosition();
+        Position pos = getCurrentTile().getPosition();
 
         if (game.getActivePlayer().hasSpecialMeeple(Barn.class)) {
             BarnAction barnAction = null;
@@ -56,7 +56,7 @@ public final class BarnCapability extends Capability {
 
     private boolean isBarnCorner(Location corner, Location positionChange) {
         Farm farm = null;
-        Position pos = getTile().getPosition();
+        Position pos = getCurrentTile().getPosition();
         for (int i = 0; i < 4; i++) {
             Tile tile = getBoard().get(pos);
             if (tile == null) return false;
@@ -67,7 +67,7 @@ public final class BarnCapability extends Capability {
             positionChange = positionChange.next();
         }
 
-        if (!game.hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+        if (!game.getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
             return !farm.walk(new IsOccupied().with(Barn.class));
         }
 

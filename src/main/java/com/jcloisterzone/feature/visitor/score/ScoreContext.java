@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
@@ -23,7 +24,5 @@ public interface ScoreContext extends FeatureVisitor<SelfReturningVisitor> {
     List<Special> getSpecialMeeples();
     Iterable<? extends Meeple> getMeeples();
     Map<Player, Integer> getPowers();
-
-
-
+    Map<LittleBuilding, Integer> getLittleBuildings();
 }

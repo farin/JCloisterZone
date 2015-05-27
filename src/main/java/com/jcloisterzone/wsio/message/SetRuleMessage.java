@@ -7,12 +7,12 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class SetRuleMessage implements WsInGameMessage {
     private String gameId;
     private CustomRule rule;
-    private boolean enabled;
+    private Object value;
 
-    public SetRuleMessage(String gameId, CustomRule rule, boolean enabled) {
+    public SetRuleMessage(String gameId, CustomRule rule, Object value) {
         this.gameId = gameId;
         this.rule = rule;
-        this.enabled = enabled;
+        this.value = value;
     }
 
     public String getGameId() {
@@ -31,11 +31,11 @@ public class SetRuleMessage implements WsInGameMessage {
         this.rule = rule;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public Object getValue() {
+        return value;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

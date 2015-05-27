@@ -50,7 +50,7 @@ public class PrincessCapability extends Capability {
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        City c = getTile().getCityWithPrincess();
+        City c = getCurrentTile().getCityWithPrincess();
         if (c == null || ! c.walk(new IsOccupied().with(Follower.class))) return;
         Feature cityRepresentative = c.getMaster();
 

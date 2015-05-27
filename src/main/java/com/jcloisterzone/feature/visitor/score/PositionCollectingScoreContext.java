@@ -9,7 +9,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 
-public abstract class PositionCollectingScoreContext extends AbstractScoreContext implements CompletableScoreContext {
+public abstract class PositionCollectingScoreContext extends MultiTileScoreContext implements CompletableScoreContext {
 
     private final MageAndWitchCapability mwCap;
 

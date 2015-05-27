@@ -64,4 +64,8 @@
     <alias treat="MW.CFC" as="BA.CFC.2" />
     <alias treat="MW.CRcR" as="IC.CRcR+" />
 
+    <alias treat="GO.RRrr.X" as="TB.RRrr" />
+    <alias treat="GO.CcRr" as="BA.CcRr" />
+    <alias treat="GO.RrRr" as="IC.RrRr" />
+
 </aliases>

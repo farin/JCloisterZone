@@ -198,6 +198,11 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
+    public void placeGoldPiece(Position pos) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "placeGoldPiece");
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName();
     }

@@ -31,7 +31,7 @@ public class PigCapability extends Capability {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Pig.class)) return;
 
-        Tile tile = getTile();
+        Tile tile = getCurrentTile();
         if (!game.isDeployAllowed(tile, Pig.class)) return;
 
         Position pos = tile.getPosition();
