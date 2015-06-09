@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: SK verzia\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-26 20:46+0200\n"
-"PO-Revision-Date: 2015-01-29 17:39+0100\n"
+"PO-Revision-Date: 2015-06-07 10:10+0100\n"
 "Last-Translator: pd <ditrich@pdsoftware.sk>\n"
 "Language-Team: pd <ditrich@pdosftware.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: sk_SK\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.1\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:28
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -269,7 +269,7 @@ msgstr "Zanechať kláštory základnej hry."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:31
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr ""
+msgstr "Veža/dom/chatrč za 3/2/1 bodov"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:265
 #: src/main/java/com/jcloisterzone/ui/Client.java:268
@@ -339,19 +339,20 @@ msgstr "Nekompaktibilné verzie"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
 msgid "Invalid password"
-msgstr ""
+msgstr "Nesprávne heslo"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr ""
+msgstr "Potvrďte alebo vráťte položenú figúrku."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr ""
+msgstr "Čakám na potvrdenie vzdialeného hráča."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
 msgstr ""
+"Nieje k dispozícii žiadna akcia. Potvrďte alebo vráťte položenú figúrku."
 
 #: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:121
 msgid "Type to chat"
@@ -410,7 +411,7 @@ msgstr "Tieto kartičky boli zahodené počas hry"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
-msgstr ""
+msgstr "Nastavenie hry"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:36
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
@@ -578,7 +579,7 @@ msgstr "Oddialenie"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Rotate board"
-msgstr ""
+msgstr "Otočiť hraciu plochu"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
@@ -610,15 +611,15 @@ msgstr "Upozorniť hráča na ťah pípnutím"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
-msgstr ""
+msgstr "Potvrdiť každé položenie figúrky"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr ""
+msgstr "Potvrdiť položenie figúrky na lúku"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr ""
+msgstr "Potvrdiť položenie figúrky na vežu"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
 msgid "About"
@@ -647,11 +648,11 @@ msgstr "Názov hry"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr ""
+msgstr "Keď nezadáž heslo, môže sa na tvoju hru pripojiť každý."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -731,15 +732,15 @@ msgstr "Kliknita dva krát na tlačítko pre pridanie počítačového hráča."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
-msgstr ""
+msgstr "Hodiny"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr ""
+msgstr "časový limit hráča"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
-msgstr ""
+msgstr "minút"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -835,7 +836,7 @@ msgstr "Zásoby obchodníkov"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "Gold"
-msgstr ""
+msgstr "Zlato"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
 msgid "Fairy"
@@ -932,7 +933,7 @@ msgstr "Uložené hry JCloisterZone"
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
-msgstr ""
+msgstr "Obnovujem spojenie..."
 
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
 msgid "JCloisterZone "
