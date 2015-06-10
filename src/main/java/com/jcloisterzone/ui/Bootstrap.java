@@ -179,13 +179,19 @@ public class Bootstrap  {
         @Override
         public void handleAbout(ApplicationEvent ev) {
             ev.setHandled(true);
-            client.handleAbout();
+            client.showAboutDialog();
         }
 
         @Override
         public void handleQuit(ApplicationEvent ev) {
             ev.setHandled(true);
             client.handleQuit();
+        }
+
+        @Override
+        public void handlePreferences(ApplicationEvent ev) {
+            ev.setHandled(true);
+            client.showPreferncesDialog();
         }
     }
 }

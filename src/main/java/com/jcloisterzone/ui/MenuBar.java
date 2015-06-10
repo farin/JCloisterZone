@@ -50,6 +50,7 @@ public class MenuBar extends JMenuBar {
         CONFIRM_FARM_DEPLOYMENT(_("Confirm meeple deployment on a farm")),
         CONFIRM_TOWER_DEPLOYMENT(_("Confirm meeple deployment on a tower")),
         CONFIRM_RANSOM(_("Confirm ransom payment")),
+        PREFERENCES(_("Preferences")),
         //Help
         ABOUT(_("About")),
         CONTROLS(_("Controls")),
@@ -193,6 +194,15 @@ public class MenuBar extends JMenuBar {
             }
         }));
         chbox.setSelected(client.getConfig().getConfirm().getRansom_payment());
+        menu.addSeparator();
+        menu.add(createMenuItem(MenuItem.PREFERENCES, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.showPreferncesDialog();
+            }
+        }));
+
+
         this.add(menu);
 
         menu = new JMenu(_("Help"));
@@ -201,7 +211,7 @@ public class MenuBar extends JMenuBar {
             menu.add(createMenuItem(MenuItem.ABOUT, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    client.handleAbout();
+                    client.showAboutDialog();
                 }
             }));
         }

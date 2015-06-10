@@ -55,6 +55,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
+import com.jcloisterzone.ui.dialog.PreferencesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
@@ -449,8 +450,12 @@ public class Client extends JFrame {
         }
     }
 
-    public void handleAbout() {
+    public void showAboutDialog() {
         new AboutDialog(config.getOrigin());
+    }
+
+    public void showPreferncesDialog() {
+        new PreferencesDialog(this);
     }
 
 
