@@ -191,6 +191,7 @@ public class GoldminesCapability  extends Capability {
                     } else {
                         boardGold.put(pos, piecesOnTile - 1);
                     }
+                    break;
                 }
             }
             player = game.getNextPlayer(player);
