@@ -69,7 +69,7 @@ public class DrawPhase extends ServerAwarePhase {
         if (getTilePack().isEmpty()) {
             if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
-                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
+                    abbeyCap.setAbbeyRoundLastPlayer(game.getPrevPlayer(getActivePlayer()));
                 }
                 next(CleanUpTurnPartPhase.class);
                 return;

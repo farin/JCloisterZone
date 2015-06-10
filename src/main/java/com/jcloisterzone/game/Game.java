@@ -118,7 +118,7 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public void clearLastUndoable() {
-    	lastUndoable = null;
+        lastUndoable = null;
     }
 
     private boolean isUiSupportedUndo(Event event) {
@@ -241,6 +241,12 @@ public class Game extends GameSettings implements EventProxy {
         int playerIndex = p.getIndex();
         int nextPlayerIndex = playerIndex == (plist.length - 1) ? 0 : playerIndex + 1;
         return getPlayer(nextPlayerIndex);
+    }
+
+    public Player getPrevPlayer(Player p) {
+        int playerIndex = p.getIndex();
+        int prevPlayerIndex = playerIndex == 0 ? plist.length - 1 : playerIndex - 1;
+        return getPlayer(prevPlayerIndex);
     }
 
 
