@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.dialog;
 
-import java.awt.Button;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,6 +32,9 @@ public class PreferencesDialog extends JDialog {
     private final Client client;
     private final Config config;
     private String initialLocale;
+
+    private JPanel[] tabs;
+    private JPanel visibleTab;
 
     private JLabel languageHint;
 
@@ -107,15 +113,10 @@ public class PreferencesDialog extends JDialog {
         client.saveConfig();
     }
 
-    public PreferencesDialog(Client client) {
-        this.client = client;
-        this.config = client.getConfig();
-        setTitle(_("Preferences"));
-        UiUtils.centerDialog(this, 600, 300);
+    private JPanel createInerfaceTab() {
+        JPanel panel = new JPanel(new MigLayout("", "[]10px[]", ""));
 
-        getContentPane().setLayout(new MigLayout("", "[]10px[]", "[][][]"));
-
-        getContentPane().add(new JLabel(_("Language")), "alignx trailing");
+        panel.add(new JLabel(_("Language")), "alignx trailing");
 
         langComboBox = new JComboBox<LocaleOption>();
         langComboBox.setEditable(false);
@@ -129,23 +130,66 @@ public class PreferencesDialog extends JDialog {
                 languageHint.setVisible(opt.getLocale() != initialLocale);
             }
         });
-        getContentPane().add(langComboBox, "wrap, growx");
+        panel.add(langComboBox, "wrap, growx");
 
         languageHint = new JLabel(_("To apply new language you must restart the application"));
         languageHint.setVisible(false);
         languageHint.setFont(hintFont);
-        getContentPane().add(languageHint, "skip 1, wrap");
+        panel.add(languageHint, "skip 1, wrap");
 
-        getContentPane().add(new JLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
+        panel.add(new JLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 
         aiPlaceTileDelay = new JTextField();
         aiPlaceTileDelay.setText(valueOf(config.getAi_place_tile_delay()));
-        getContentPane().add(aiPlaceTileDelay, "wrap, growx");
+        panel.add(aiPlaceTileDelay, "wrap, growx");
 
-        getContentPane().add(new JLabel(_("Score display duration (sec)")), "alignx trailing");
+        panel.add(new JLabel(_("Score display duration (sec)")), "alignx trailing");
         scoreDisplayDuration = new JTextField();
         scoreDisplayDuration.setText(valueOf(config.getScore_display_duration()));
-        getContentPane().add(scoreDisplayDuration, "wrap, growx");
+        panel.add(scoreDisplayDuration, "wrap, growx");
+
+        return panel;
+    }
+
+    private JPanel createPluginsTab() {
+        JPanel panel = new JPanel(new MigLayout());
+        return panel;
+    }
+
+    public PreferencesDialog(Client client) {
+        super(client);
+        this.client = client;
+        this.config = client.getConfig();
+        setTitle(_("Preferences"));
+        setModalityType(ModalityType.DOCUMENT_MODAL);
+        UiUtils.centerDialog(this, 600, 300);
+
+        getContentPane().setLayout(new MigLayout("ins 0", "[][grow]", "[grow][]"));
+
+        tabs = new JPanel[] {
+           createInerfaceTab(),
+           createPluginsTab()
+        };
+        visibleTab = tabs[0];
+
+        JList<String> tabList = new JList<String>(new String[] {_("Interface"), _("Plugins")});
+        tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabList.setLayoutOrientation(JList.VERTICAL);
+        tabList.setSelectedIndex(0);
+        tabList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+               JList tabList = (JList) e.getSource();
+               int idx = tabList.getSelectedIndex();
+               getContentPane().remove(visibleTab);
+               visibleTab = tabs[idx];
+               getContentPane().add(visibleTab, "cell 1 0, aligny top");
+               revalidate();
+               repaint();
+            }
+        });
+        getContentPane().add(tabList, "cell 0 0, growy, w 160");
+        getContentPane().add(visibleTab, "cell 1 0, aligny top");
 
         JPanel buttonBox = new JPanel(new MigLayout("fill", "[grow][][]", "[]"));
         JButton cancel = new JButton(_("Cancel"));
@@ -165,7 +209,7 @@ public class PreferencesDialog extends JDialog {
             }
         });
         buttonBox.add(ok, "");
-        getContentPane().add(buttonBox, "gaptop 5, spanx 2, growx");
+        getContentPane().add(buttonBox, "cell 0 1,gaptop 5, spanx 2, growx");
 
         //TODO move config location here from About Dialog
 
