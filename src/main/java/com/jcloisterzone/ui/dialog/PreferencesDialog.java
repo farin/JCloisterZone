@@ -3,12 +3,6 @@ package com.jcloisterzone.ui.dialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -25,10 +19,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.miginfocom.swing.MigLayout;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Objects;
 import com.jcloisterzone.config.Config;
@@ -43,7 +37,8 @@ public class PreferencesDialog extends JDialog {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Font hintFont = new Font(null, Font.ITALIC, 10);
+    private final Font HINT_FONT = new Font(null, Font.ITALIC, 10);
+    private final Font PLUGIN_DESCRIPTION_FONT = new Font(null, Font.ITALIC, 11);
 
     private final Client client;
     private final Config config;
@@ -159,8 +154,8 @@ public class PreferencesDialog extends JDialog {
 
         languageHint = new JLabel(_("To apply new language you must restart the application"));
         languageHint.setVisible(false);
-        languageHint.setFont(hintFont);
-        panel.add(languageHint, "skip 1, wrap");
+        languageHint.setFont(HINT_FONT);
+        panel.add(languageHint, "sx 2, wrap");
 
         panel.add(new JLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 
@@ -187,7 +182,7 @@ public class PreferencesDialog extends JDialog {
             JCheckBox chbox = new JCheckBox();
             chbox.setSelected(plugin.isEnabled());
             if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
-                plugin.setEnabled(false);
+                chbox.setEnabled(false);
             }
             chbox.addActionListener(new ActionListener() {
              @Override
@@ -196,10 +191,13 @@ public class PreferencesDialog extends JDialog {
                  plugin.setEnabled(chbox.isSelected());
              }
             });
-            panel.add(chbox, "");
+            panel.add(chbox, "sy 2, gapright 5, gapbottom 8");
 
             JLabel label = new JLabel(plugin.getTitle());
             panel.add(label, "wrap");
+            label = new JLabel(plugin.getDescription());
+            label.setFont(PLUGIN_DESCRIPTION_FONT);
+            panel.add(label, "wrap, gapbottom 8");
         }
     }
 
