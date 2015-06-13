@@ -55,8 +55,12 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
     }
 
-    public ResourcePlugin(URL url) throws Exception {
-        super(url);
+    public ResourcePlugin(URL url, String relativePath) throws Exception {
+        super(url, relativePath);
+    }
+
+    @Override
+    protected void doLoad() throws IOException, SAXException, ParserConfigurationException {
         pluginGeometry = new ThemeGeometry(getLoader(), "tiles");
     }
 
@@ -84,6 +88,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     protected boolean containsTile(String tileId) {
+        if (!isEnabled()) return false;
         String expCode = tileId.substring(0, 2);
         return supportedExpansions.contains(expCode);
     }
@@ -99,7 +104,6 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     private Image getTileImage(String tileId) {
-        //return null;
         if (!containsTile(tileId)) return null;
         String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
         Image img = getImageResource(fileName);

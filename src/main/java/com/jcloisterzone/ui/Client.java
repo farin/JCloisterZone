@@ -83,6 +83,7 @@ public class Client extends JFrame {
     private final Config config;
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
+    private final List<Plugin> plugins;
 
     @Deprecated
     private FigureTheme figureTheme;
@@ -104,12 +105,14 @@ public class Client extends JFrame {
         this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
+        this.plugins = plugins;
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
     public static Client getInstance() {
         return instance;
     }
+
 
     public boolean mountView(UiView view) {
         return mountView(view, null);
@@ -212,6 +215,10 @@ public class Client extends JFrame {
 
     public Config getConfig() {
         return config;
+    }
+
+    public List<Plugin> getPlugins() {
+        return plugins;
     }
 
     public void saveConfig() {

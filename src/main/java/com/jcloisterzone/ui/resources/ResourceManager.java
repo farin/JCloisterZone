@@ -22,11 +22,4 @@ public interface ResourceManager {
      //TODO change to 1000x1000
      /** returns meeple offset on tile, normalized to 100x100 tile size */
      ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc);
-
-
-
-
-
-
-
 }

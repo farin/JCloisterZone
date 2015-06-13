@@ -1,12 +1,17 @@
 package com.jcloisterzone.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -25,6 +30,7 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.plugin.PluginType;
 
 public class Bootstrap  {
 
@@ -78,20 +84,52 @@ public class Bootstrap  {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    public List<Plugin> loadPlugins(Config config) {
-        LinkedList<Plugin> plugins = new LinkedList<>();
-        List<String> pluginPaths = config.getPlugins();
+    private boolean isPluginEnabled(Config config, String relativePath) {
+        for (String path : config.getPlugins()) {
+            if (relativePath.equals(path)) return true;
+            //dev helper, match also unpacked plugins
+            if (!relativePath.endsWith(".jar")) {
+                if ((relativePath+".jar").equals(path)) return true;
+            }
+        }
+        return false;
+    }
 
-        if (pluginPaths != null) {
-            for (String pluginPath : pluginPaths) {
+    public List<Plugin> loadPlugins(Config config) {
+        ArrayList<Plugin> plugins = new ArrayList<>();
+
+        try {
+            Path pluginDir = Paths.get(getClass().getClassLoader().getResource("plugins").toURI());
+            DirectoryStream<Path> stream = Files.newDirectoryStream(pluginDir);
+
+            for (Path file: stream) {
                 try {
-                    Plugin plugin = Plugin.loadPlugin(pluginPath);
-                    plugins.addFirst(plugin);
-                    logger.info("plugin <{}> loaded", plugin);
+                   Plugin plugin = Plugin.readPlugin(file);
+                   if (plugin.getType() == PluginType.DEFAULT_GRF_SET || isPluginEnabled(config, plugin.getRelativePath())) {
+                       plugin.load();
+                       plugin.setEnabled(true);
+                   }
+                   plugins.add(plugin);
                 } catch (Exception e) {
-                    logger.error("Unable to load plugin " + pluginPath, e);
+                    logger.error("Unable to load plugin " + file, e);
                 }
             }
+        } catch (URISyntaxException | IOException e) {
+            logger.error("Cannot read plugin directory", e);
+        }
+
+        Collections.sort(plugins, new Comparator<Plugin>() {
+            @Override
+            public int compare(Plugin o1, Plugin o2) {
+                int o1ord = o1.getType() == null ? Integer.MAX_VALUE : o1.getType().ordinal();
+                int o2ord = o2.getType() == null ? Integer.MAX_VALUE : o2.getType().ordinal();
+                return o2ord - o1ord; //reverse order
+            }
+        });
+
+        //log after sort
+        for (Plugin plugin: plugins) {
+            logger.info("plugin <{}> loaded, enabled: {}", plugin.getRelativePath(), plugin.isEnabled());
         }
 
         return plugins;

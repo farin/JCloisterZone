@@ -3,9 +3,18 @@ package com.jcloisterzone.ui.dialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -16,16 +25,23 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Objects;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.plugin.PluginType;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
 public class PreferencesDialog extends JDialog {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private Font hintFont = new Font(null, Font.ITALIC, 10);
 
@@ -110,6 +126,15 @@ public class PreferencesDialog extends JDialog {
         //TODO error handling
         config.setAi_place_tile_delay(intValue(aiPlaceTileDelay.getText()));
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
+
+        List<String> enabledPlugins = new ArrayList<>();
+        for (Plugin plugin : client.getPlugins()) {
+            if (plugin.isEnabled() || plugin.getType() == PluginType.DEFAULT_GRF_SET) {
+                enabledPlugins.add(plugin.getRelativePath());
+            }
+        }
+        config.setPlugins(enabledPlugins);
+
         client.saveConfig();
     }
 
@@ -151,8 +176,44 @@ public class PreferencesDialog extends JDialog {
         return panel;
     }
 
+    private class PluginRow {
+        private final Plugin plugin;
+
+        public PluginRow(Plugin plugin) {
+           this.plugin = plugin;
+        }
+
+        public void render(JPanel panel) {
+            JCheckBox chbox = new JCheckBox();
+            chbox.setSelected(plugin.isEnabled());
+            if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
+                plugin.setEnabled(false);
+            }
+            chbox.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JCheckBox chbox = (JCheckBox) e.getSource();
+                 plugin.setEnabled(chbox.isSelected());
+             }
+            });
+            panel.add(chbox, "");
+
+            JLabel label = new JLabel(plugin.getTitle());
+            panel.add(label, "wrap");
+        }
+    }
+
     private JPanel createPluginsTab() {
         JPanel panel = new JPanel(new MigLayout());
+
+        ArrayList<Plugin> arr = new ArrayList<Plugin>(client.getPlugins());
+        ListIterator<Plugin> li = arr.listIterator(arr.size());
+
+        // Iterate in reverse.
+        while(li.hasPrevious()) {
+          (new PluginRow(li.previous())).render(panel);
+        }
+
         return panel;
     }
 
