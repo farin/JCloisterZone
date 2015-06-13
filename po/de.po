@@ -49,7 +49,7 @@ msgstr "Grundspiel"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Wheel of Fortune"
-msgstr "Glücksrad"
+msgstr "Das Schicksalsrad"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:47
 msgid "Winter Edition"
@@ -57,7 +57,7 @@ msgstr "Winter Edition"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
-msgstr "Der Pfefferkuchenmann"
+msgstr "Der Lebkuchenmann"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
@@ -122,7 +122,7 @@ msgstr "Der Graf von Carcassonne"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Mini Expansion (GQ11)"
-msgstr "Die Mini-Erweiterung"
+msgstr "Die Mini-Erweiterung (GQ Spielmagazin)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Cult"
@@ -142,7 +142,7 @@ msgstr "Die Pest"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Phantom"
-msgstr "Das Phantom"
+msgstr "Das Gefolge"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Festival (10th an.)"
@@ -210,7 +210,7 @@ msgstr "Die Stadt"
 
 #: src/main/java/com/jcloisterzone/feature/Cloister.java:51
 msgid "Cloister"
-msgstr "Das Klöster"
+msgstr "Das Kloster"
 
 #: src/main/java/com/jcloisterzone/feature/Farm.java:56
 msgid "Farm"
@@ -247,7 +247,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
 msgid "The Pig herd is present on the farm tile."
-msgstr "Das Schwein "
+msgstr "Die Schweineherde wird gewertet. (Entsprechend der Regel des Flussplättchen.)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:23
 msgid ""
@@ -348,7 +348,7 @@ msgstr "Setzen bestätigen oder zurücknehmen."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr "Warten auf Bestätigung der Gegenstelle"
+msgstr "Warten auf Bestätigung eines Spielpartners."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
@@ -405,11 +405,11 @@ msgstr "Figur wählen zum Zurücknehmen"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"
-msgstr "Weggeworfene Karten"
+msgstr "Verworfene Karten"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
 msgid "These tiles have been discarded during the game"
-msgstr "Diese Karten wurden während des Spiels weggeworfen"
+msgstr "Diese Karten wurden während des Spiels verworfen"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
@@ -450,7 +450,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:218
 msgid "Raise bid or pass."
-msgstr "Mitbieten oder"
+msgstr "Mitbieten oder passen."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Buy or sell tile from latest bidder."
@@ -483,7 +483,7 @@ msgstr "Überspringen"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:33
 msgid "Corn circle"
-msgstr "Der Kornkreise"
+msgstr "Der Kornkreis"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:38
 msgid "Each player…"
@@ -491,11 +491,11 @@ msgstr "Jeder Spieler ..."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:44
 msgid "may deploy additional follower"
-msgstr "kann eine weitere Figur setzen"
+msgstr "kann einen weiteren Gefolgsmann setzen"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:55
 msgid "must remove follower"
-msgstr "muss Figur entfernen"
+msgstr "muss einen Gefolgsmann entfernen"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:66
 #, java-format
@@ -520,15 +520,15 @@ msgstr "Kloster"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:28
 msgid "Mage and Witch"
-msgstr "Zauberer und Hese"
+msgstr "Zauberer & Hexe"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:33
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
 "feature. Select what figure do you want to remove from board?"
 msgstr ""
-"Es kann keine Hexe oder Zauberer gesetzt werden, weil kein nicht beendetes "
-"Bauwerk existiert. Welche Figur soll entfernt werden?"
+"Es kann keine Hexe oder Zauberer gesetzt werden, weil alle Bauwerke "
+"abgeschlossen sind. Welche Figur soll entfernt werden?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:39
 msgid "Remove the mage."
@@ -586,11 +586,11 @@ msgstr "Spielbrett drehen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
-msgstr "Letzte Züge zeigen"
+msgstr "Letzte Züge anzeigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
 msgid "Show farm hints"
-msgstr "Wiesenmarkierung an"
+msgstr "Wiesenmarkierung anzeigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
 msgid "Show projected points"
@@ -598,7 +598,7 @@ msgstr "Voraussichtliche Punkte anzeigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
 msgid "Show discarded tiles"
-msgstr "Abgelegte Karten an"
+msgstr "Abgelegte Karten anzeigen"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
 msgid "Show game setup"
@@ -745,7 +745,7 @@ msgstr "Spielzuglimit"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
-msgstr "minuten"
+msgstr "Minuten"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -780,12 +780,12 @@ msgstr "Entfernter Spieler"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:183
 msgid "Computer player"
-msgstr "Computer-Spieler"
+msgstr "Computerspieler"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:158
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:186
 msgid "Remote computer player"
-msgstr "Entfernter Computer-Spieler"
+msgstr "Entfernter Computerspieler"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:168
 msgid "Open player slot"
@@ -875,7 +875,7 @@ msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
 msgstr ""
-"<html>Karte mit <b>Tab</b> oder <b>rechten</b> Maustaste rotieren. "
+"<html>Karte mit <b>Tab</b> oder <b>rechter</b> Maustaste rotieren. "
 "Platzieren mit <b>linker</b> Maustaste.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:24
@@ -908,8 +908,8 @@ msgid ""
 "also play only against any number of computer players."
 msgstr ""
 "Ein neues Spiel beginnen oder ein gespeichertes Spiel fortsetzen. Du kannst "
-"der Gastgeber sein und andere Spieler können sich  dann verbinden, oder Du "
-"kannst gegen eine Anzahl von Computer-Spielern antreten."
+"der Gastgeber sein und andere Spieler können sich  mit dir verbinden, oder du "
+"kannst gegen eine Anzahl von Computerspielern antreten."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
 msgid "or"
@@ -920,8 +920,8 @@ msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
 msgstr ""
-"Du kannst Dich auch zu einem entfern stattfindenden Spiel verbinden. "
-"Verbinde Dich, wenn das Spiel angelegt ist, aber noch nicht begonnen wurde."
+"Du kannst dich auch zu einem entfern stattfindenden Spiel verbinden. "
+"Verbinde dich, wenn das Spiel angelegt ist, aber noch nicht begonnen wurde."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
@@ -953,20 +953,20 @@ msgstr "JCloisterZone "
 #~ msgstr "Eine Figur setzen"
 
 #~ msgid "Do you really want to place a follower on farm?"
-#~ msgstr "Willst Du wirklich eine Figur auf eine Wiese setzen?"
+#~ msgstr "Willst du wirklich eine Figur auf eine Wiese setzen?"
 
 #~ msgid "Confirm follower placement"
 #~ msgstr "Setzen von Figuren bestätigen"
 
 #~ msgid "Place a tower piece"
-#~ msgstr "Einen Turm setzen"
+#~ msgstr "Ein Turmteil setzen"
 
 #~ msgid ""
 #~ "Do you really want to place a follower on the tower?\n"
 #~ "(To prevent tower from adding more pieces on the top)"
 #~ msgstr ""
-#~ "Willst Du wirklich eine Figur auf den Turm setzn?\n"
-#~ "(um ein mehrfaches Setzen von Figuren auf den Turm zu verhindern)"
+#~ "Willst du wirklich eine Figur auf den Turm setzen?\n"
+#~ "(um das Setzen von weiteren Turmteilen zu verhindern)"
 
 #~ msgid ""
 #~ "Create a new local or network game. You can play against any number of "
@@ -1005,11 +1005,11 @@ msgstr "JCloisterZone "
 #~ msgstr "Beenden des Spiels bestätigen"
 
 #~ msgid "Load error"
-#~ msgstr "Fehler beim Laden"
+#~ msgstr "Ladefehler"
 
 #~ msgid ""
 #~ "Saved game is incompatible or file is corrupted. Game couldn't work "
 #~ "properly."
 #~ msgstr ""
-#~ "Das gespeicherte Spiel ist inkompatibel oder die Datei ist beschädigt. "
+#~ "Das gespeicherte Spiel ist inkompatibel oder die Datei beschädigt. "
 #~ "Das Spiel konnte nicht gestartet werden."
