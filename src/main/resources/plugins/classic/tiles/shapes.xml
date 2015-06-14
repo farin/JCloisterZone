@@ -31,7 +31,7 @@
         <apply>DG.LCcc.d CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
-        <svg:polygon points="150,780 150,410 260,300 370,440 370,530 510,490 620,580 620,720 410,810 410,880 320,900"/>
+        <svg:polygon points="137,827 137,572 135,547 145,535 145,457 195,417 250,335 297,412 345,470 350,540 360,555 487,527 600,605 590,612 597,757 385,842 385,880 300,907 260,872 222,880 212,865 172,842 155,840"/>
         <apply>TO.L CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
@@ -891,9 +891,12 @@
     </shape>
     <shape feature="TOWER">
         <svg:rect x="600" y="100" width="290" height="250"/>
-        <apply>TO.L TOWER</apply>
         <apply>TO.RrRr.2 TOWER</apply>
         <apply>TO.CccR TOWER</apply>
+    </shape>
+    <shape feature="TOWER">
+        <svg:rect x="600" y="120" width="290" height="250"/>
+        <apply>TO.L TOWER</apply>
     </shape>
     <shape feature="TOWER">
         <svg:rect x="650" y="80" width="290" height="250"/>
