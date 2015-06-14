@@ -499,6 +499,12 @@
     <point feature="FARM" cx="860" cy="80">
         <apply>GO.LRrRr NR.EL</apply>
     </point>
+    <point feature="FARM" cx="750" cy="750">
+        <apply>AM.CCcc+ INNER_FARM</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="220">
+        <apply>AM.CCc+ INNER_FARM</apply>
+    </point>
 
     <point feature="TOWER" cx="545" cy="455">
         <apply>* TOWER</apply>

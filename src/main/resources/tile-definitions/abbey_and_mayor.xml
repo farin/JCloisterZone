@@ -9,10 +9,12 @@
     <tile id="CCcc+">
         <city pennant="yes">N S</city>
         <city>W E</city>
+        <farm city="N W">INNER_FARM</farm>
     </tile>
     <tile id="CCc+">
         <city pennant="yes">N</city>
         <city>W E</city>
+        <farm city="N W">INNER_FARM</farm>
         <farm city="N W">SL SR</farm>
     </tile>
     <tile id="CCRR">
