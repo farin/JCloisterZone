@@ -126,7 +126,7 @@ msgstr "Die Mini-Erweiterung (GQ Spielmagazin)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Cult"
-msgstr "Der Kult"
+msgstr "Die Kultstätten"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Tunnel"
@@ -238,12 +238,12 @@ msgstr "Das Burgfräulein entfernt immer einen Ritter aus einer Stadt."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:17
 msgid "Dragon movement occurs after scoring."
-msgstr "Der Drachen wird nach der Punktvergabe gesetzt."
+msgstr "Der Drachen wird nach der Punktvergabe bewegt."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:19
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
-"Kloster kann an jedes angrenzende Feld einer belagerten Stadt gesetzt werden."
+"Kloster kann an jedes Feld einer belagerten Stadt angrenzen um die Flucht zu ermöglichen."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:21
 msgid "The Pig herd is present on the farm tile."
@@ -291,12 +291,12 @@ msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
-"Das Spiel läuft, es sind Spieler verbunden. Willst Du wirklich das Spiel "
+"Das Spiel läuft, es sind Spieler verbunden. Willst du wirklich das Spiel "
 "abbrechen?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:274
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr "Das Spiel läuft. Willst Du wirklich das Spiel abbrechen?"
+msgstr "Das Spiel läuft. Willst du wirklich das Spiel abbrechen?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:397
 #: src/main/java/com/jcloisterzone/ui/Client.java:440
@@ -323,7 +323,7 @@ msgid ""
 "JCloisterZone to the latest version."
 msgstr ""
 "Die Spielversion ist nicht mit dem Online-Server kompatibel. Bitte "
-"JCloisterZone auf die letzte Version aktualisieren."
+"JCloisterZone auf die neueste Version aktualisieren."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
 msgid ""
@@ -374,7 +374,7 @@ msgstr "Lösegeld zahlen"
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr ""
-"Möchtest Du wirklich 3 Punkte für die Freilassung des Gefangenen zahlen?"
+"Möchtest du wirklich 3 Punkte für die Freilassung des Gefangenen zahlen?"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
@@ -733,7 +733,7 @@ msgstr "Spiel starten"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:179
 msgid "Click twice on a slot button to add a computer player."
 msgstr ""
-"Zum Hinzufügen eines Computerspielers 2mal auf den Spielerplatz klicken."
+"Zum Hinzufügen eines Computergegners zweimal auf den Spielerplatz klicken."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
@@ -780,7 +780,7 @@ msgstr "Entfernter Spieler"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:183
 msgid "Computer player"
-msgstr "Computerspieler"
+msgstr "Computergegner"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:158
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:186
@@ -909,7 +909,7 @@ msgid ""
 msgstr ""
 "Ein neues Spiel beginnen oder ein gespeichertes Spiel fortsetzen. Du kannst "
 "der Gastgeber sein und andere Spieler können sich  mit dir verbinden, oder du "
-"kannst gegen eine Anzahl von Computerspielern antreten."
+"kannst gegen eine Anzahl von Computergegnern antreten."
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
 msgid "or"
@@ -986,11 +986,11 @@ msgstr "JCloisterZone "
 #~ "Game is running. Do you really want to quit game and also disconnect all "
 #~ "other players?"
 #~ msgstr ""
-#~ "Das Spiel läuft noch. Wollen Sie wirklich abbrechen? (Weitere Mitspieler "
+#~ "Das Spiel läuft noch. Willst du wirklich abbrechen? (Weitere Mitspieler "
 #~ "sind verbunden!)"
 
 #~ msgid "Game is running. Do you really want to leave it?"
-#~ msgstr "Das Spiel läuft noch. Wollen Sie wirklich abbrechen?"
+#~ msgstr "Das Spiel läuft noch. Willst du wirklich abbrechen?"
 
 #~ msgid "Game overview"
 #~ msgstr "Spielübersicht"
