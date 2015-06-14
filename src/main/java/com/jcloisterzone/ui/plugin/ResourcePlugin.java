@@ -229,6 +229,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     //TODO Move to default provider ???
     public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+        if (!isEnabled()) return null;
         Map<Location, Area> result = new HashMap<>();
         for (Location loc : locations) {
             result.put(loc, getBridgeArea(size, loc));
