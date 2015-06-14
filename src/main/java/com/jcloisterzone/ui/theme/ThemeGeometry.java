@@ -204,6 +204,6 @@ public class ThemeGeometry {
             if (point != null) break;
         }
         if (point == null) return null;
-        return point.rotate(tile.getRotation());
+        return point.rotate100(tile.getRotation());
     }
 }

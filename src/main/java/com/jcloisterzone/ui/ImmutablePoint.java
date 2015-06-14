@@ -59,12 +59,23 @@ public class ImmutablePoint {
      * @param d how roatate
      * @return rotated ImmutablePoint
      */
-    public ImmutablePoint rotate(Rotation r) {
+    public ImmutablePoint rotate100(Rotation r) {
         int x = this.x, y = this.y, _y;
         for (int i = 0; i < r.ordinal(); i++) {
             _y = y;
             y = x;
             x  = 100-_y;
+        }
+        return new ImmutablePoint(x, y);
+    }
+
+    /**Rotate around [0,0]*/
+    public ImmutablePoint rotate(Rotation r) {
+        int x = this.x, y = this.y, _y;
+        for (int i = 0; i < r.ordinal(); i++) {
+            _y = y;
+            y = x;
+            x  = -_y;
         }
         return new ImmutablePoint(x, y);
     }

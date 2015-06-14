@@ -52,7 +52,7 @@ public class GoldLayer extends AbstractGridLayer {
             g2.fill(at.createTransformedShape(rect));
 
             drawImageIgnoringRotation(g2, goldImage, pos, tx, 0, w, h);
-            ImmutablePoint point = new ImmutablePoint(90,10).rotate(gridPanel.getBoardRotation().inverse());
+            ImmutablePoint point = new ImmutablePoint(90,10).rotate100(gridPanel.getBoardRotation().inverse());
             drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), point, Color.WHITE, null);
         }
 

@@ -31,7 +31,7 @@ public class DragonLayer extends AbstractTileLayer {
             drawImageIgnoringRotation(g2, dragonImage, pos, 0, 0, getSquareSize(), getSquareSize());
             if (moves > 0) {
                 //tohle asi nebude uplne uprostred
-                drawAntialiasedTextCentered(g2, moves + "", 22, POINT.rotate(gridPanel.getBoardRotation().inverse()), Color.WHITE, null);
+                drawAntialiasedTextCentered(g2, moves + "", 22, POINT.rotate100(gridPanel.getBoardRotation().inverse()), Color.WHITE, null);
             }
 
         }
