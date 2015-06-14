@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -18,10 +19,10 @@ public class FairyLayer extends AbstractTileLayer {
         fairyImage = getClient().getFigureTheme().getNeutralImage(FAIRY_IMAGE_NAME);
     }
 
-
     public void paint(Graphics2D g2) {
-        if (getPosition() != null) {
-            g2.drawImage(fairyImage, getOffsetX(), getOffsetY(), getSquareSize(), getSquareSize(), null);
+        Position pos = getPosition();
+        if (pos != null) {
+            drawImageIgnoreRotation(g2, fairyImage, getOffsetX(pos), getOffsetY(pos), getSquareSize(), getSquareSize());
         }
     }
 }

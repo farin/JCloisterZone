@@ -59,13 +59,14 @@ public class ImmutablePoint {
      * @param d how roatate
      * @return rotated ImmutablePoint
      */
-    //TODO create only one instance
     public ImmutablePoint rotate(Rotation r) {
-        ImmutablePoint ip = this;
+        int x = this.x, y = this.y, _y;
         for (int i = 0; i < r.ordinal(); i++) {
-            ip = ip.rotate();
+            _y = y;
+            y = x;
+            x  = 100-_y;
         }
-        return ip;
+        return new ImmutablePoint(x, y);
     }
 
     public ImmutablePoint translate(int dx, int dy) {

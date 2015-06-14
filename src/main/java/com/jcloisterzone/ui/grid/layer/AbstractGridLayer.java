@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
@@ -66,7 +67,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     @Override
-	public boolean isVisible() {
+    public boolean isVisible() {
         return visible;
     }
 
@@ -117,6 +118,13 @@ public abstract class AbstractGridLayer implements GridLayer {
         return t;
     }
 
+    public void drawImageIgnoreRotation(Graphics2D g2, Image img, int x, int y, int width, int height) {
+        AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+        at.concatenate(gridPanel.getBoardRotation().inverse().getAffineTransform(getSquareSize()));
+        at.concatenate(AffineTransform.getScaleInstance(width / (double) img.getWidth(null), height / (double) img.getHeight(null)));
+        g2.drawImage(img, at, null);
+    }
+
     public int getOffsetX(Position pos) {
         return getSquareSize() * pos.x;
     }
@@ -155,12 +163,6 @@ public abstract class AbstractGridLayer implements GridLayer {
     private Font getFont(int relativeSize) {
         int realSize = scale(relativeSize);
         return new Font(null, Font.BOLD, realSize);
-//		Font font = Square.cachedFont;
-//		if (font == null || font.getSize() != realSize) {
-//			font = new Font(null, Font.BOLD, realSize);
-//			Square.cachedFont = font;
-//		}
-//		return font;
     }
 
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
