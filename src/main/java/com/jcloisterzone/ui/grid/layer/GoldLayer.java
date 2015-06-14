@@ -3,6 +3,8 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,6 +36,7 @@ public class GoldLayer extends AbstractGridLayer {
         }
     }
 
+
     @Override
     public void paint(Graphics2D g2) {
         int size = getSquareSize();
@@ -42,11 +45,15 @@ public class GoldLayer extends AbstractGridLayer {
         g2.setColor(FILL_COLOR);
         for (Entry<Position, Integer> entry : placedGold.entrySet()) {
             Position pos = entry.getKey();
-            int x = getOffsetX(pos) + (int)(size*0.45);
-            int y = getOffsetY(pos);
-            g2.fillRect(x, y, w + (int)(size*0.15), h);
-            g2.drawImage(goldImage, x, y, w, h, null);
-            drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), new ImmutablePoint(90,10), Color.WHITE, null);
+            int tx = (int)(size*0.45);
+
+            AffineTransform at = getAffineTransformIgnoringRotation(pos);
+            Rectangle rect = new Rectangle(tx, 0, w + (int)(size*0.15), h);
+            g2.fill(at.createTransformedShape(rect));
+
+            drawImageIgnoringRotation(g2, goldImage, pos, tx, 0, w, h);
+            ImmutablePoint point = new ImmutablePoint(90,10).rotate(gridPanel.getBoardRotation().inverse());
+            drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), point, Color.WHITE, null);
         }
 
     }

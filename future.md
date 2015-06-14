@@ -4,12 +4,11 @@
 
 - preferences dialog to change settings from app
 - improved TO, CC, GQ images quality
+- rotate board fixes - don't rotate fairy and dragon (#145) and gold counters
 - fix #135: Gold piece distribution is incorrect
 - fix #139: abbey at game end
-- fix #145: rotate board - fairy and dragon are rotated with board (let's stand them always upright)
 - fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)
 - fix #149: little building can be scored multiple times for one feature
-
 
 ## Roadmap
 

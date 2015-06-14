@@ -28,7 +28,7 @@ public class DragonLayer extends AbstractTileLayer {
     public void paint(Graphics2D g2) {
         Position pos = getPosition();
         if (pos != null) {
-            drawImageIgnoreRotation(g2, dragonImage,  getOffsetX(pos),  getOffsetY(pos), getSquareSize(), getSquareSize());
+            drawImageIgnoringRotation(g2, dragonImage, pos, 0, 0, getSquareSize(), getSquareSize());
             if (moves > 0) {
                 //tohle asi nebude uplne uprostred
                 drawAntialiasedTextCentered(g2, moves + "", 22, POINT.rotate(gridPanel.getBoardRotation().inverse()), Color.WHITE, null);

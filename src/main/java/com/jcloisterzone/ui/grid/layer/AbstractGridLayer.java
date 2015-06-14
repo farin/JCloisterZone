@@ -118,9 +118,17 @@ public abstract class AbstractGridLayer implements GridLayer {
         return t;
     }
 
-    public void drawImageIgnoreRotation(Graphics2D g2, Image img, int x, int y, int width, int height) {
+    protected AffineTransform getAffineTransformIgnoringRotation(Position pos) {
+        int x = getOffsetX(pos);
+        int y = getOffsetY(pos);
         AffineTransform at = AffineTransform.getTranslateInstance(x, y);
         at.concatenate(gridPanel.getBoardRotation().inverse().getAffineTransform(getSquareSize()));
+        return at;
+    }
+
+    protected void drawImageIgnoringRotation(Graphics2D g2, Image img, Position pos, int tx, int ty, int width, int height) {
+        AffineTransform at = getAffineTransformIgnoringRotation(pos);
+        at.concatenate(AffineTransform.getTranslateInstance(tx, ty));
         at.concatenate(AffineTransform.getScaleInstance(width / (double) img.getWidth(null), height / (double) img.getHeight(null)));
         g2.drawImage(img, at, null);
     }
@@ -185,7 +193,7 @@ public abstract class AbstractGridLayer implements GridLayer {
         int x = getOffsetX(pos) + center.getX();
         int y = getOffsetY(pos) + center.getY();
 
-
+        AffineTransform orig = g2.getTransform();
         g2.rotate(-gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
         if (bgColor != null) {
             g2.setColor(bgColor);
@@ -195,7 +203,7 @@ public abstract class AbstractGridLayer implements GridLayer {
         g2.setColor(fgColor);
         tl.draw(g2, x,  y+h);
         g2.setColor(original);
-        g2.rotate(gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
+        g2.setTransform(orig);
 
     }
 

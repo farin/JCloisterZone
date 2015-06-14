@@ -22,7 +22,7 @@ public class FairyLayer extends AbstractTileLayer {
     public void paint(Graphics2D g2) {
         Position pos = getPosition();
         if (pos != null) {
-            drawImageIgnoreRotation(g2, fairyImage, getOffsetX(pos), getOffsetY(pos), getSquareSize(), getSquareSize());
+            drawImageIgnoringRotation(g2, fairyImage, pos, 0, 0, getSquareSize(), getSquareSize());
         }
     }
 }
