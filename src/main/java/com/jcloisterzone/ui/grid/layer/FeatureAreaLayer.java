@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.geom.Area;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +16,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.ConvenientResourceManager;
+import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -42,7 +44,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         return action;
     }
 
-    protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
+    protected Map<Location, FeatureArea> prepareAreas(Tile tile, Position p) {
         abbotOption = false;
         abbotOnlyOption = false;
         Set<Location> locations = action.getLocations(p);
@@ -55,10 +57,12 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
             }
             locations.remove(Location.ABBOT);
         }
+
+        ConvenientResourceManager resMgr = getClient().getResourceManager();
         if (action instanceof BridgeAction) {
-            return getClient().getResourceManager().getBridgeAreas(tile, getSquareSize(), locations);
+            return resMgr.getBridgeAreas(tile, getSquareSize(), locations);
         } else {
-            return getClient().getResourceManager().getFeatureAreas(tile, getSquareSize(), locations);
+            return resMgr.getFeatureAreas(tile, getSquareSize(), locations);
         }
     }
 
@@ -67,7 +71,6 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
     protected void performAction(final Position pos, Location loc) {
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
-            Feature piece = gridPanel.getTile(pos).getFeature(loc);
 
             if (loc == Location.FLIER) {
                 getClient().getConnection().send(new DeployFlierMessage(getGame().getGameId(), ma.getMeepleType()));

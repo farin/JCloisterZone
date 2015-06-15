@@ -44,28 +44,27 @@ public class DefaultResourceManager implements ResourceManager {
         return null;
     }
 
-    public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
-        Map<Location, Area> result = new HashMap<>();
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+        Map<Location, FeatureArea> result = new HashMap<>();
         for (Location corner : corners) {
             int r = size/2;
             Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
             if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
             if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
             if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
-            result.put(corner, a);
+            result.put(corner, new FeatureArea(corner, a, FeatureArea.DEFAULT_FARM_ZINDEX));
         }
         return result;
     }
 
 
     @Override
-    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         return null;
     }
 
     @Override
-    public Map<Location, Area> getFeatureAreas(Tile tile, int size,
-            Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         return null;
     }
 

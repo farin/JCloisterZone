@@ -70,18 +70,18 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
         for (ResourceManager manager : managers) {
-            Map<Location, Area> result = manager.getBarnTileAreas(tile, size, corners);
+            Map<Location, FeatureArea> result = manager.getBarnTileAreas(tile, size, corners);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Map<Location, Area> result = manager.getBridgeAreas(tile, size, locations);
+            Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, size, locations);
             if (result != null) return result;
         }
         return null;
@@ -89,9 +89,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Map<Location, Area> result = manager.getFeatureAreas(tile, size, locations);
+            Map<Location, FeatureArea> result = manager.getFeatureAreas(tile, size, locations);
             if (result != null) return result;
         }
         return null;

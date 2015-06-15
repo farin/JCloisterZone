@@ -34,6 +34,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.theme.FeatureDescriptor;
 import com.jcloisterzone.ui.theme.ThemeGeometry;
@@ -161,10 +162,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         if (!containsTile(tile.getId())) return null;
 
-        Map<Location, Area> areas = new HashMap<>();
+        Map<Location, FeatureArea> areas = new HashMap<>();
         Area subsBridge = getBaseRoadAndCitySubstractions(tile);
         Area subsRoadCity = new Area(subsBridge);
         substractBridge(subsRoadCity, tile);
@@ -180,28 +181,38 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 continue;
             }
 
+            Area a;
             if (piece instanceof Farm) {
-                areas.put(loc, getFarmArea(loc, tile, subsFarm));
+                a = getFarmArea(loc, tile, subsFarm);
+                areas.put(loc, new FeatureArea(loc, a, FeatureArea.DEFAULT_FARM_ZINDEX));
                 continue;
             }
-            Area a = getArea(tile, piece.getClass(), loc);
+            a = getArea(tile, piece.getClass(), loc);
+            int zIndex;
             if (piece instanceof City || piece instanceof Road) {
                 Area subs = subsRoadCity;
                 if (piece instanceof Bridge) {
                     subs = subsBridge;
+                    zIndex = FeatureArea.DEFAULT_BRIDGE_ZINDEX;
+                } else {
+                    zIndex = piece instanceof City ? FeatureArea.DEFAULT_CITY_ZINDEX : FeatureArea.DEFAULT_ROAD_ZINDEX;
                 }
                 if (!subs.isEmpty()) {
                     a = new Area(a); //copy to preserve original
                     a.subtract(subs);
                 }
+            } else {
+                zIndex = FeatureArea.DEFAULT_STRUCTURE_ZINDEX;
             }
-            areas.put(aliasAbbot ? Location.ABBOT : loc, a);
+            loc =  aliasAbbot ? Location.ABBOT : loc;
+            areas.put(loc, new FeatureArea(loc, a, zIndex));
         }
         if (locations.contains(Location.FLIER)) {
-            areas.put(Location.FLIER, getArea(tile, null, Location.FLIER));
+            Area a = getArea(tile, null, Location.FLIER);
+            areas.put(Location.FLIER, new FeatureArea(Location.FLIER, a, FeatureArea.DEFAULT_STRUCTURE_ZINDEX));
         }
 
-        Map<Location, Area> transformed = new HashMap<>();
+        //Map<Location, FeatureArea> transformed = new HashMap<>();
 
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
@@ -213,24 +224,25 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
         AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
 
-        for (Entry<Location, Area> entry : areas.entrySet()) {
-            Area a = entry.getValue();
+        for(FeatureArea fa : areas.values()) {
+            Area a = fa.getArea();
             a = a.createTransformedArea(transform1);
             a = a.createTransformedArea(transform2);
-            transformed.put(entry.getKey(), a);
+            fa.setArea(a);
         }
-        return transformed;
+
+       return areas;
     }
 
     @Override
-    public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
         return null;
     }
 
     //TODO Move to default provider ???
-    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         if (!isEnabled()) return null;
-        Map<Location, Area> result = new HashMap<>();
+        Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
             result.put(loc, getBridgeArea(size, loc));
         }
@@ -238,7 +250,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     //TODO move to Area Provider ???
-    private Area getBridgeArea(int size, Location loc) {
+    private FeatureArea getBridgeArea(int size, Location loc) {
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
@@ -246,7 +258,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             double ratio = size/(double)NORMALIZED_SIZE;
             transform1 = AffineTransform.getScaleInstance(ratio,ratio);
         }
-        return pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
+        Area a = pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
+        return new FeatureArea(loc, a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
     }
 
     private void substractBridge(Area substractions, Tile tile) {

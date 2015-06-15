@@ -5,7 +5,6 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +22,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.FeatureArea;
 
 
 public abstract class AbstractAreaLayer extends AbstractGridLayer implements GridMouseListener {
@@ -32,8 +32,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     private Player player;
     private boolean active;
-    private Map<Location, Area> areas;
-    private Location selectedLocation;
+    private Map<Location, FeatureArea> areas;
+    private FeatureArea selectedArea;
     private Position selectedPosition;
 
     /*if true, area is displayed as placed meeple
@@ -90,21 +90,28 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             if (y < 0) y += 1000 * size; //prevent mod from negative number
             x = x % size;
             y = y % size;
-            Location swap = null;
-            for (Entry<Location, Area> enrty : areas.entrySet()) {
-                if (enrty.getValue().contains(x, y)) {
-                    if (swap != null) { // 2 areas at point - select no one
-                        swap = null;
-                        break;
+            FeatureArea swap = null;
+            for (Entry<Location, FeatureArea> entry : areas.entrySet()) {
+                FeatureArea fa = entry.getValue();
+                if (fa.getArea().contains(x, y)) {
+                    if (swap == null) {
+                        swap = fa;
+                    } else {
+                        if (swap.getzIndex() == fa.getzIndex()) {
+                            // two overlapping areas at same point with same zIndex - select no one
+                            swap = null;
+                            break;
+                        } else if (fa.getzIndex() > swap.getzIndex()) {
+                           swap = fa;
+                        } //else do nothing
                     }
-                    swap = enrty.getKey();
                 }
             }
-            if (swap != selectedLocation) {
-                selectedLocation = swap;
+            Location l1 = swap == null ? null : swap.getLoc();
+            Location l2 = selectedArea == null ? null : selectedArea.getLoc();
+            if (l1 != l2) {
+                selectedArea = swap;
                 gridPanel.repaint();
-                //RepaintManager.currentManager(gridPanel).addDirtyRegion(gridPanel, x * size, y * size, size, size);
-                //gridPanel.repaint(0, x * size, y * size, size, size);
             }
         }
 
@@ -118,7 +125,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     private void cleanAreas() {
         areas = null;
         selectedPosition = null;
-        selectedLocation = null;
+        selectedArea = null;
     }
 
     @Override
@@ -140,7 +147,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         }
     }
 
-    protected abstract Map<Location, Area> prepareAreas(Tile tile, Position p);
+    protected abstract Map<Location, FeatureArea> prepareAreas(Tile tile, Position p);
 
 
     @Override
@@ -156,8 +163,8 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     @Override
     public void mouseClicked(MouseEvent e, Position pos) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (selectedLocation != null) {
-                performAction(pos, selectedLocation);
+            if (selectedArea != null) {
+                performAction(pos, selectedArea.getLoc());
                 e.consume();
             }
         }
@@ -165,7 +172,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     @Override
     public void paint(Graphics2D g2) {
-        if (selectedLocation != null && areas != null) {
+        if (selectedArea != null && areas != null) {
             Composite old = g2.getComposite();
             if (figureHighlight) {
                 paintFigureHighlight(g2);
@@ -181,7 +188,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         //ugly copy pasted code from Meeple but uncached here
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(selectedPosition);
-        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedArea.getLoc());
         Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
@@ -197,7 +204,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         if (p != null && p.equals(player)) { //sync issue
             g2.setColor(p.getColors().getMeepleColor());
             g2.setComposite(AREA_ALPHA_COMPOSITE);
-            g2.fill(transformArea(areas.get(selectedLocation), selectedPosition));
+            g2.fill(transformArea(selectedArea.getArea(), selectedPosition));
         }
     }
 }

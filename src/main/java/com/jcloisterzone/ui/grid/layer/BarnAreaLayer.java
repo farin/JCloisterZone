@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.geom.Area;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +11,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.FeatureArea;
 
 public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<BarnAction> {
 
@@ -22,7 +22,7 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
     }
 
     @Override
-    protected Map<Location, Area> prepareAreas(Tile tile, Position p) {
+    protected Map<Location, FeatureArea> prepareAreas(Tile tile, Position p) {
         //quick fix
         if (getGame().getCurrentTile().getPosition().equals(p)) {
             Set<Location> locations = action.getLocations(p);

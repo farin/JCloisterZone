@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -28,7 +29,8 @@ public class TowerLayer extends AbstractGridLayer {
     public void paint(Graphics2D g2) {
         g2.setColor(FILL_COLOR);
         for (Entry<Position, Integer> entry : heights.entrySet()) {
-            Area ra = getClient().getResourceManager().getMeepleTileArea(gridPanel.getTile(entry.getKey()), getSquareSize(), Location.TOWER);
+            Tile tile = gridPanel.getTile(entry.getKey());
+            Area ra = getClient().getResourceManager().getMeepleTileArea(tile, getSquareSize(), Location.TOWER).getArea();
             g2.fill(transformArea(ra, entry.getKey()));
             drawAntialiasedTextCenteredNoScale(g2,"" + entry.getValue(), 22, entry.getKey(),
                     new ImmutablePoint((int)ra.getBounds2D().getCenterX(), (int)ra.getBounds2D().getCenterY()), Color.WHITE, null);

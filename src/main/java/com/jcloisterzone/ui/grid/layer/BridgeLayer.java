@@ -44,7 +44,7 @@ public class BridgeLayer extends AbstractGridLayer {
             Tile tile = entry.getKey();
             Location loc = entry.getValue();
             Position pos = tile.getPosition();
-            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc);
+            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc).getArea();
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
             g2.setColor(Color.BLACK);
             g2.setComposite(BRIDGE_FILL_COMPOSITE);
