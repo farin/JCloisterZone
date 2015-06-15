@@ -10,6 +10,7 @@
         <city pennant="yes">N S</city>
         <city>W E</city>
         <farm city="N W">INNER_FARM</farm>
+        <farm city="N W">INNER_FARM_B</farm>
     </tile>
     <tile id="CCc+">
         <city pennant="yes">N</city>

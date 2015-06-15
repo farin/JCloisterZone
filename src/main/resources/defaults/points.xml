@@ -86,6 +86,7 @@
     </point>
     <point feature="FARM" cx="750" cy="750">
         <apply allRotations="1">* NR.EL.ER.SL.SR</apply>
+        <apply>AM.CCcc+ INNER_FARM_B</apply>
     </point>
     <point feature="FARM" cx="770" cy="230">
         <apply>* NR.EL.SR.WL</apply>
