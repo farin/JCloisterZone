@@ -109,11 +109,11 @@ public class XmlUtils {
         return val.equals("yes") || val.equals("true") || val.equals("1");
     }
 
-    public static int attributeIntValue(Element e, String attr) {
+    public static Integer attributeIntValue(Element e, String attr) {
         return attributeIntValue(e, attr, null);
     }
 
-    public static int attributeIntValue(Element e, String attr, Integer defaultValue) {
+    public static Integer attributeIntValue(Element e, String attr, Integer defaultValue) {
         if (!e.hasAttribute(attr)) {
             return defaultValue;
         }

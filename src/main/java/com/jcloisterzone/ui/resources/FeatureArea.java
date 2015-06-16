@@ -22,6 +22,12 @@ public class FeatureArea {
         this.zIndex = zIndex;
     }
 
+    public FeatureArea(FeatureArea copy) {
+        this.loc = copy.loc;
+        this.area = new Area(copy.area);
+        this.zIndex = copy.zIndex;
+    }
+
     public Location getLoc() {
         return loc;
     }

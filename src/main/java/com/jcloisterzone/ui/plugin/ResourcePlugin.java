@@ -129,18 +129,18 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return point;
     }
 
-    private Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+    private FeatureArea getFeatureArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
         if (loc == Location.ABBOT) loc = Location.CLOISTER;
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
-        Area area = pluginGeometry.getArea(tile, featureClass, loc);
+        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
         if (area == null) {
             area  = defaultGeometry.getArea(tile, featureClass, loc);
         }
         if (area == null) {
             logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
-            area = new Area();
+            area = new FeatureArea(loc, new Area(), 0);
         }
         return area;
     }
@@ -181,38 +181,27 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 continue;
             }
 
-            Area a;
+            FeatureArea fa;
             if (piece instanceof Farm) {
-                a = getFarmArea(loc, tile, subsFarm);
-                areas.put(loc, new FeatureArea(loc, a, FeatureArea.DEFAULT_FARM_ZINDEX));
+                fa = getFarmArea(loc, tile, subsFarm);
+                areas.put(loc, fa);
                 continue;
             }
-            a = getArea(tile, piece.getClass(), loc);
-            int zIndex;
+
+            fa = new FeatureArea(getFeatureArea(tile, piece.getClass(), loc)); //copy to preserve original
             if (piece instanceof City || piece instanceof Road) {
-                Area subs = subsRoadCity;
-                if (piece instanceof Bridge) {
-                    subs = subsBridge;
-                    zIndex = FeatureArea.DEFAULT_BRIDGE_ZINDEX;
-                } else {
-                    zIndex = piece instanceof City ? FeatureArea.DEFAULT_CITY_ZINDEX : FeatureArea.DEFAULT_ROAD_ZINDEX;
-                }
+                Area subs = piece instanceof Bridge ? subsBridge : subsRoadCity;
                 if (!subs.isEmpty()) {
-                    a = new Area(a); //copy to preserve original
-                    a.subtract(subs);
+                    fa.getArea().subtract(subs);
                 }
-            } else {
-                zIndex = FeatureArea.DEFAULT_STRUCTURE_ZINDEX;
             }
             loc =  aliasAbbot ? Location.ABBOT : loc;
-            areas.put(loc, new FeatureArea(loc, a, zIndex));
+            areas.put(loc, fa);
         }
         if (locations.contains(Location.FLIER)) {
-            Area a = getArea(tile, null, Location.FLIER);
-            areas.put(Location.FLIER, new FeatureArea(Location.FLIER, a, FeatureArea.DEFAULT_STRUCTURE_ZINDEX));
+            FeatureArea fa = new FeatureArea(getFeatureArea(tile, null, Location.FLIER));
+            areas.put(Location.FLIER, fa);
         }
-
-        //Map<Location, FeatureArea> transformed = new HashMap<>();
 
         AffineTransform transform1;
         if (size == NORMALIZED_SIZE) {
@@ -224,7 +213,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
         AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
 
-        for(FeatureArea fa : areas.values()) {
+        for (FeatureArea fa : areas.values()) {
             Area a = fa.getArea();
             a = a.createTransformedArea(transform1);
             a = a.createTransformedArea(transform2);
@@ -266,7 +255,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Bridge bridge = tile.getBridge();
         if (bridge != null) {
             Area area;
-            area = getArea(tile, Bridge.class, bridge.getLocation());
+            area = getFeatureArea(tile, Bridge.class, bridge.getLocation()).getArea();
             substractions.add(area);
         }
     }
@@ -274,10 +263,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private Area getBaseRoadAndCitySubstractions(Tile tile) {
         Area sub = new Area();
         if (tile.getTower() != null) {
-            sub.add(getArea(tile, Tower.class, Location.TOWER));
+            sub.add(getFeatureArea(tile, Tower.class, Location.TOWER).getArea());
         }
         if (tile.getFlier() != null) {
-            sub.add(getArea(tile, null, Location.FLIER));
+            sub.add(getFeatureArea(tile, null, Location.FLIER).getArea());
         }
         sub.add(getSubstractionArea(tile, false));
         return sub;
@@ -287,36 +276,37 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Area sub = new Area();
         for (Feature piece : tile.getFeatures()) {
             if (!(piece instanceof Farm)) {
-                Area area = getArea(tile, piece.getClass(), piece.getLocation());
+                Area area = getFeatureArea(tile, piece.getClass(), piece.getLocation()).getArea();
                 sub.add(area);
             }
         }
         if (tile.getFlier() != null) {
-            sub.add(getArea(tile, null, Location.FLIER));
+            sub.add(getFeatureArea(tile, null, Location.FLIER).getArea());
         }
         sub.add(getSubstractionArea(tile, true));
         return sub;
     }
 
 
-    private Area getFarmArea(Location farm, Tile tile, Area sub) {
-        Area base;
+    private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
+        FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
+            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
-                    Area area = getArea(tile, Farm.class, piece.getLocation());
+                    Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getArea();
                     base.subtract(area);
                 }
             }
+            result = new FeatureArea(farm, base, FeatureArea.DEFAULT_FARM_ZINDEX);
         } else {
-            base = getArea(tile, Farm.class, farm);
-            base = new Area(base); //copy area to not substract from original
+            //copy area to not substract from original
+            result = new FeatureArea(getFeatureArea(tile, Farm.class, farm));
         }
         if (!sub.isEmpty()) {
-            base.subtract(sub);
+            result.getArea().subtract(sub);
         }
-        return base;
+        return result;
     }
 
 
