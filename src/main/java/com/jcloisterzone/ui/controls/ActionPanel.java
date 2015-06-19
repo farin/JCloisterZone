@@ -244,7 +244,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
-        if (showConfirmRequest) return;
+        if (showConfirmRequest || actions == null || actions.length == 0) return;
         if (e.getButton() == MouseEvent.BUTTON1) {
             Integer i = (Integer) origin.getData();
             if (selectedActionIndex == i) {
