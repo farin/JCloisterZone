@@ -51,7 +51,7 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         for (Meeple meeple : feature.getMeeples()) {
             if (meeple instanceof Follower) {
                 Follower follower = (Follower) meeple;
@@ -80,7 +80,7 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
         if (lbCap != null) {
         	collectLittleBuildings(feature.getTile().getPosition());
         }
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

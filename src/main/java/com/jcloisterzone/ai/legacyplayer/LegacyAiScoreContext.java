@@ -106,7 +106,7 @@ class LegacyAiScoreContext extends AbstractScoreContext implements CompletableSc
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         //scoreCache.put(feature, this);
 
         if (feature instanceof CompletableFeature) {

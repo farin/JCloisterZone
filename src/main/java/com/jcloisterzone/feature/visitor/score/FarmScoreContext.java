@@ -57,7 +57,7 @@ public class FarmScoreContext extends MultiTileScoreContext {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         Farm farm = (Farm) feature;
         if (farm.isAdjoiningCityOfCarcassonne()) {
             adjoiningCityOfCarcassonne = true;

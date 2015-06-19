@@ -52,18 +52,18 @@ public class EscapePhase extends Phase {
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City city = (City) feature;
             if (city.isBesieged()) { //cloister must border Cathar tile
                 Position p = city.getTile().getPosition();
                 for (Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
                     if (tile.hasCloister()) {
                         result = true;
-                        return false; //do not continue, besieged cloister exists
+                        return VisitResult.STOP; //do not continue, besieged cloister exists
                     }
                 }
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
     }
 
@@ -77,7 +77,7 @@ public class EscapePhase extends Phase {
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City city = (City) feature;
             if (city.isBesieged()) {
                 isBesieged = true;
@@ -90,7 +90,7 @@ public class EscapePhase extends Phase {
                     break;
                 }
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
     }
 

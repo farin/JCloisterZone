@@ -133,7 +133,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                     int[] power = new int[getGame().getAllPlayers().length];
 
                     @Override
-                    public boolean visit(Feature feature) {
+                    public VisitResult visit(Feature feature) {
                         Farm f = (Farm) feature;
                         processed.add(f);
                         size++;
@@ -161,7 +161,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                             featureArea.transform(AffineTransform.getTranslateInstance(FULL_SIZE * (pos.x-x), FULL_SIZE*(pos.y-y)));
                             result.area.add(featureArea);
                         }
-                        return true;
+                        return VisitResult.CONTINUE;
                     }
 
                     @Override

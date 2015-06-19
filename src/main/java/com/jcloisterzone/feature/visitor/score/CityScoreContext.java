@@ -30,7 +30,7 @@ public class CityScoreContext extends PositionCollectingScoreContext {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         City city = (City) feature;
         pennants += city.getPennants();
         cathedral = cathedral || city.isCathedral();

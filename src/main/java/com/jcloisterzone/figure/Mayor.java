@@ -18,10 +18,10 @@ public class Mayor extends Follower {
         int pennats = 0;
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City c = (City) feature;
             pennats += c.getPennants();
-            return true;
+            return VisitResult.CONTINUE;
         }
 
         @Override

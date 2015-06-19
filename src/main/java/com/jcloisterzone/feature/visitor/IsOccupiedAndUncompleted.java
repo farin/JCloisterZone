@@ -8,13 +8,13 @@ public class IsOccupiedAndUncompleted extends IsOccupied {
     private boolean isCompleted = true;
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         Completable completable = (Completable) feature;
         if (completable.isOpen()) {
             isCompleted = false;
         }
         super.visit(feature);
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

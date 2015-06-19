@@ -109,7 +109,7 @@ public class WagonPhase extends ServerAwarePhase {
         private List<FeaturePointer> wagonMoves = new ArrayList<>();
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             if (feature instanceof MultiTileFeature) {
                 MultiTileFeature f = (MultiTileFeature) feature;
                 MultiTileFeature[] edges = f.getEdges();
@@ -147,10 +147,11 @@ public class WagonPhase extends ServerAwarePhase {
                     wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
                 }
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
 
-        public List<FeaturePointer> getResult() {
+        @Override
+		public List<FeaturePointer> getResult() {
             return wagonMoves;
         }
     }

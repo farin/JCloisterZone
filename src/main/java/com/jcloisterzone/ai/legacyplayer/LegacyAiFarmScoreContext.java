@@ -26,7 +26,7 @@ public class LegacyAiFarmScoreContext extends FarmScoreContext implements AiScor
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         //scoreCache.put(feature, this);
         return super.visit(feature);
     }

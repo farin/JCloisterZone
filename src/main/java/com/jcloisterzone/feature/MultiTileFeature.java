@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.feature.visitor.FeatureVisitor.VisitResult;
 import com.jcloisterzone.feature.visitor.FindMaster;
 
 public abstract class MultiTileFeature extends TileFeature implements Scoreable {
@@ -75,7 +76,7 @@ public abstract class MultiTileFeature extends TileFeature implements Scoreable 
         visited.add(this);
         while (!stack.isEmpty()) {
             MultiTileFeature nextToVisit = stack.pop();
-            if (!visitor.visit(nextToVisit)) {
+            if (visitor.visit(nextToVisit) == VisitResult.STOP) {
                 break;
             }
             for (MultiTileFeature feature : nextToVisit.edges) {

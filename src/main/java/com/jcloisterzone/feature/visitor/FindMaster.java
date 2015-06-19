@@ -7,18 +7,18 @@ public class FindMaster implements FeatureVisitor<Feature> {
 	private Feature master;
 
 	@Override
-	public boolean visit(Feature feature) {
+	public VisitResult visit(Feature feature) {
 		if (master == null || master.getId() > feature.getId()) {
 			master = feature;
 		}
-		return true;
+		return VisitResult.CONTINUE;
 	}
 
 	@Deprecated //
 	public Feature getMasterFeature() {
 		return master;
 	}
-	
+
 	@Override
 	public Feature getResult() {
 		return master;

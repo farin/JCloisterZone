@@ -101,12 +101,12 @@ public class MageAndWitchCapability extends Capability {
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             if (searchFor.match(feature)) {
                 result = true;
-                return false;
+                return VisitResult.STOP;
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
 
         @Override
@@ -127,16 +127,16 @@ public class MageAndWitchCapability extends Capability {
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             if (touchedFeatures.contains(feature)) {
                 isCompleted = true; //force ignore
-                return false;
+                return VisitResult.STOP;
             }
             Completable f = (Completable) feature;
             if (f.isOpen()) isCompleted = false;
             touchedFeatures.add(feature);
             result.add(new FeaturePointer(f.getTile().getPosition(), f.getLocation()));
-            return true;
+            return VisitResult.CONTINUE;
         }
 
         @Override

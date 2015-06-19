@@ -110,11 +110,11 @@ public class CastlePhase extends Phase {
         //Player owner;
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City c = (City) feature;
             if (!c.isCastleBase()) {
                 castleBase = false;
-                return false;
+                return VisitResult.STOP;
             }
             for (Meeple m : c.getMeeples()) {
                 if (m instanceof Follower) {
@@ -122,11 +122,12 @@ public class CastlePhase extends Phase {
                 }
             }
             size++;
-            if (size > 2) return false;
-            return true;
+            if (size > 2) return VisitResult.STOP;
+            return VisitResult.CONTINUE;
         }
 
-        public Player getResult() {
+        @Override
+		public Player getResult() {
             if (!castleBase || size != 2) return null;
             //check single owner only - flier can cause that more followers of different players can be placed on city
             Player owner = null;
