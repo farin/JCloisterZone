@@ -5,6 +5,7 @@
 - preferences dialog to change settings from app
 - improved TO, CC, GQ, AM images quality
 - rotate board fixes - don't rotate fairy and dragon (#145), gold counters and little building selection.
+- rules update - Wagon can not choose which tile to move after completing a feature (#148)
 - fix #135: Gold piece distribution is incorrect
 - fix #139: abbey at game end
 - fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)
