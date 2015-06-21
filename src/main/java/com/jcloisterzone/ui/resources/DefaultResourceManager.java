@@ -44,7 +44,8 @@ public class DefaultResourceManager implements ResourceManager {
         return null;
     }
 
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    @Override
+	public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location corner : corners) {
             int r = size/2;
@@ -52,7 +53,7 @@ public class DefaultResourceManager implements ResourceManager {
             if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
             if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
             if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
-            result.put(corner, new FeatureArea(corner, a, FeatureArea.DEFAULT_FARM_ZINDEX));
+            result.put(corner, new FeatureArea(a, FeatureArea.DEFAULT_FARM_ZINDEX));
         }
         return result;
     }

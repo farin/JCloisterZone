@@ -2,8 +2,6 @@ package com.jcloisterzone.ui.resources;
 
 import java.awt.geom.Area;
 
-import com.jcloisterzone.board.Location;
-
 public class FeatureArea {
 
     public final static int DEFAULT_FARM_ZINDEX = 10;
@@ -12,24 +10,17 @@ public class FeatureArea {
     public final static int DEFAULT_STRUCTURE_ZINDEX = 40;
     public final static int DEFAULT_BRIDGE_ZINDEX = 50;
 
-    private Location loc;
     private Area area;
     private int zIndex;
 
-    public FeatureArea(Location loc, Area area, int zIndex) {
-        this.loc = loc;
+    public FeatureArea(Area area, int zIndex) {
         this.area = area;
         this.zIndex = zIndex;
     }
 
     public FeatureArea(FeatureArea copy) {
-        this.loc = copy.loc;
         this.area = new Area(copy.area);
         this.zIndex = copy.zIndex;
-    }
-
-    public Location getLoc() {
-        return loc;
     }
 
     public Area getArea() {
@@ -40,15 +31,16 @@ public class FeatureArea {
         return zIndex;
     }
 
-    public void setLoc(Location loc) {
-        this.loc = loc;
-    }
-
     public void setArea(Area area) {
         this.area = area;
     }
 
     public void setzIndex(int zIndex) {
         this.zIndex = zIndex;
+    }
+
+    @Override
+    public String toString() {
+    	return zIndex + "/" + area.toString();
     }
 }

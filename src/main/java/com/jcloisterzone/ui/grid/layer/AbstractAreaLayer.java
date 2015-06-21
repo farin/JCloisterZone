@@ -15,6 +15,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.GameController;
@@ -34,6 +35,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     private boolean active;
     private Map<Location, FeatureArea> areas;
     private FeatureArea selectedArea;
+    private Location selectedLocation;
     private Position selectedPosition;
 
     /*if true, area is displayed as placed meeple
@@ -91,26 +93,29 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             x = x % size;
             y = y % size;
             FeatureArea swap = null;
+            Location swapLocation = null;
             for (Entry<Location, FeatureArea> entry : areas.entrySet()) {
                 FeatureArea fa = entry.getValue();
                 if (fa.getArea().contains(x, y)) {
                     if (swap == null) {
                         swap = fa;
+                        swapLocation = entry.getKey();
                     } else {
                         if (swap.getzIndex() == fa.getzIndex()) {
                             // two overlapping areas at same point with same zIndex - select no one
                             swap = null;
+                            swapLocation = null;
                             break;
                         } else if (fa.getzIndex() > swap.getzIndex()) {
                            swap = fa;
+                           swapLocation = entry.getKey();
                         } //else do nothing
                     }
                 }
             }
-            Location l1 = swap == null ? null : swap.getLoc();
-            Location l2 = selectedArea == null ? null : selectedArea.getLoc();
-            if (l1 != l2) {
+            if (swapLocation != selectedLocation) {
                 selectedArea = swap;
+                selectedLocation = swapLocation;
                 gridPanel.repaint();
             }
         }
@@ -126,6 +131,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         areas = null;
         selectedPosition = null;
         selectedArea = null;
+        selectedLocation = null;
     }
 
     @Override
@@ -164,7 +170,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     public void mouseClicked(MouseEvent e, Position pos) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selectedArea != null) {
-                performAction(pos, selectedArea.getLoc());
+                performAction(pos, selectedLocation);
                 e.consume();
             }
         }
@@ -188,7 +194,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         //ugly copy pasted code from Meeple but uncached here
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(selectedPosition);
-        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedArea.getLoc());
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
         Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);

@@ -140,7 +140,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         if (area == null) {
             logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
-            area = new FeatureArea(loc, new Area(), 0);
+            area = new FeatureArea(new Area(), 0);
         }
         return area;
     }
@@ -229,7 +229,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     //TODO Move to default provider ???
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    @Override
+	public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         if (!isEnabled()) return null;
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
@@ -248,7 +249,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             transform1 = AffineTransform.getScaleInstance(ratio,ratio);
         }
         Area a = pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
-        return new FeatureArea(loc, a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
+        return new FeatureArea(a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
     }
 
     private void substractBridge(Area substractions, Tile tile) {
@@ -298,7 +299,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                     base.subtract(area);
                 }
             }
-            result = new FeatureArea(farm, base, FeatureArea.DEFAULT_FARM_ZINDEX);
+            result = new FeatureArea(base, FeatureArea.DEFAULT_FARM_ZINDEX);
         } else {
             //copy area to not substract from original
             result = new FeatureArea(getFeatureArea(tile, Farm.class, farm));

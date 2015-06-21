@@ -133,7 +133,7 @@ public class ThemeGeometry {
             @Override
             public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
                 assert !areas.containsKey(fd) : "Duplicate key " + fd;
-                areas.put(fd, new FeatureArea(fd.getLocation(), az.area.createTransformedArea(transform), getZIndex(az.zIndex, fd)));
+                areas.put(fd, new FeatureArea(az.area.createTransformedArea(transform), getZIndex(az.zIndex, fd)));
             }
 
             @Override
@@ -177,7 +177,7 @@ public class ThemeGeometry {
                 a = new Area(a);
                 a.transform(Rotation.R180.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
             }
-            return new FeatureArea(loc, a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
+            return new FeatureArea(a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
         }
         loc = loc.rotateCCW(tileRotation);
         FeatureDescriptor lookups[] = getLookups(tile, featureClass, loc);
