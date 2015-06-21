@@ -3,15 +3,12 @@ package com.jcloisterzone.bugreport;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.panel.HelpPanel;
 
 
 public class BugReportDialog extends JDialog {

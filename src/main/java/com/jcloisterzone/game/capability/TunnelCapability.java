@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.Location;
@@ -175,7 +175,7 @@ public final class TunnelCapability extends Capability {
     public void saveToSnapshot(Document doc, Element node) {
         if (placedTunnelCurrentTurn != null) {
             Element el = doc.createElement("placed-tunnel");
-            XmlUtils.injectPosition(el, placedTunnelCurrentTurn.getTile().getPosition());
+            XMLUtils.injectPosition(el, placedTunnelCurrentTurn.getTile().getPosition());
             el.setAttribute("location", placedTunnelCurrentTurn.getLocation().toString());
             node.appendChild(el);
         }
@@ -183,7 +183,7 @@ public final class TunnelCapability extends Capability {
             if (tunnel.getTile().getPosition() != null && tunnel.getTunnelEnd() != Road.OPEN_TUNNEL) {
                 Element el = doc.createElement("tunnel");
                 node.appendChild(el);
-                XmlUtils.injectPosition(el, tunnel.getTile().getPosition());
+                XMLUtils.injectPosition(el, tunnel.getTile().getPosition());
                 el.setAttribute("location", tunnel.getLocation().toString());
                 el.setAttribute("player", "" + (tunnel.getTunnelEnd() % 100));
                 el.setAttribute("b", tunnel.getTunnelEnd() > 100 ? "yes" : "no");
@@ -196,12 +196,12 @@ public final class TunnelCapability extends Capability {
         NodeList nl = node.getElementsByTagName("placed-tunnel");
         if (nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
-            placedTunnelCurrentTurn = (Road) getBoard().get(XmlUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
+            placedTunnelCurrentTurn = (Road) getBoard().get(XMLUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
         }
         nl = node.getElementsByTagName("tunnel");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            Position pos = XmlUtils.extractPosition(el);
+            Position pos = XMLUtils.extractPosition(el);
             Location loc = Location.valueOf(el.getAttribute("location"));
             Road road = (Road) getBoard().get(pos).getFeature(loc);
             if (!road.isTunnelEnd()) {

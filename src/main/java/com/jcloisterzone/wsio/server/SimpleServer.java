@@ -64,8 +64,6 @@ public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String HOST_SESSION_PLACEHOLDER = "!host";
-
     private final SimpleServerErrorHandler errHandler;
 
     private MessageParser parser = new MessageParser();

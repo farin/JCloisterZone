@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +18,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameSetupDialog extends JDialog {
 

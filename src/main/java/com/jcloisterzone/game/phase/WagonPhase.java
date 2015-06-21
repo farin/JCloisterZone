@@ -19,6 +19,7 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
@@ -61,9 +62,13 @@ public class WagonPhase extends ServerAwarePhase {
             logger.error("Illegal figure type.");
             return;
         }
+        FeaturePointer fp = new FeaturePointer(p, loc);
         Player player = wagonCap.getWagonPlayer();
         Meeple m = player.getMeepleFromSupply(Wagon.class);
-        m.deployUnoccupied(getBoard().get(p), loc);
+    	if (getBoard().get(fp).walk(new IsOccupied())) {
+    		throw new IllegalArgumentException("Feature is occupied.");
+    	}
+    	m.deploy(fp);
         wagonCap.removeScoredWagon(player);
         enter();
     }

@@ -10,8 +10,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.event.TowerIncreasedEvent;
-import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -79,7 +77,7 @@ public class TowerCapturePhase extends Phase {
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
                 boolean removeOk = prisoners.remove(exchanged);
                 assert removeOk;
-                exchanged.clearDeployment();
+                exchanged.setInPrison(false);
                 game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
             }
         }

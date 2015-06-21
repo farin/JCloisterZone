@@ -1,12 +1,10 @@
 package com.jcloisterzone.board;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class TilePlacementTest {
 

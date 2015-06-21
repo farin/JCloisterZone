@@ -506,48 +506,20 @@ public class LegacyRanking implements GameRanking {
     protected double rankFairy(Game game) {
         if (!game.hasCapability(FairyCapability.class)) return 0;
         FairyCapability fc = game.getCapability(FairyCapability.class);
-        Position fairyPos = fc.getFairyPosition();
-        if (fairyPos == null) return 0;
+        if (fc.getFairy().isInSupply()) return 0;
 
         double rating = 0;
 
 //		TODO more sophisticated rating
         for (Meeple meeple : game.getDeployedMeeples()) {
-            if (!meeple.at(fairyPos)) continue;
             if (!(meeple instanceof Follower)) continue;
+            if (!fc.isNextTo((Follower) meeple)) continue;
             if (meeple.getFeature() instanceof Castle) continue;
 
             rating += reducePoints(1.0, meeple.getPlayer());
         }
 
         return rating;
-
-// 		//OLD legacy impl
-//		Set<PlacedFigure> onTile = gc.getPlacedFiguresForTile(board.get(fairyPos.x,fairyPos.y));
-//		Set<Player> onePointPlayers = new HashSet<>();
-//		for (PlacedFigure pfi : onTile) {
-//			if (pfi != null && gi.get().equals(pfi.player)) {
-//				onePointPlayers.add(pfi.player);
-//			}
-//			if (pfi.et == FeatureType.TOWER) continue;
-//			LastPlaceInfo last = gc.getBoard().getLastPlacementInfo();
-//			if (gc.getBoard().get(last.pos).getTrigger() == TileTrigger.DRAGON) {
-//				int dist = last.pos.squareDistance(pfi.position);
-//				if (dist == 1) {
-//					//figurka hned vedle, heuristika
-//					/*Tile lastTile = gc.getBoard().get(pfi.position);
-//					if (pfi.et == ElementType.CLOISTER) {
-//						//lastTile.getCloister().get ...
-//					}*/
-//					rating += reducePoints(4, pfi.player); //zatim proste odhadnem cenu figurky na 4 body
-//				}
-//			}
-//		}
-//		//kvuli brane a vice figurkam na jednom poli, aby kazdy hrac max +1 za kolo
-//
-//		for (Player player : onePointPlayers) {
-//			rating += reducePoints(0.8, player);
-//		}
     }
 
     protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {

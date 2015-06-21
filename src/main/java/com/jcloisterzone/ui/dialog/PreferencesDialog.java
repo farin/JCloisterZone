@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +32,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.plugin.PluginType;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class PreferencesDialog extends JDialog {
 

@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -54,15 +53,12 @@ public class DragonMovePhase extends ServerAwarePhase {
         if (!dragonCap.getAvailDragonMoves().contains(p)) {
             throw new IllegalArgumentException("Invalid dragon move.");
         }
-        Player player = getActivePlayer();
-        Position fromPosition = dragonCap.getDragonPosition();
         dragonCap.moveDragon(p);
         for (Meeple m : game.getDeployedMeeples()) {
             if (m.at(p) && m.canBeEatenByDragon()) {
                 m.undeploy();
             }
         }
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, player, fromPosition, p));
         selectDragonMove();
     }
 

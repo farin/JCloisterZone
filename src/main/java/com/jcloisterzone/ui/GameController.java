@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.InvocationHandler;
@@ -55,8 +57,6 @@ import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
 

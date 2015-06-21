@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 import org.w3c.dom.Element;
 

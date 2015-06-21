@@ -23,19 +23,17 @@ import org.xml.sax.SAXException;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
 
-public class XmlUtils {
+public class XMLUtils {
 
-//    public static Document parseDocument(String fileName) {
-//        URL url = XmlUtils.class.getClassLoader().getResource(fileName);
-//        return XmlUtils.parseDocument(url);
-//    }
+	private XMLUtils() {}
 
     public static Document parseDocument(URL url) {
         try (InputStream is = url.openStream()){
-            return XmlUtils.parseDocument(is);
+            return XMLUtils.parseDocument(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -149,5 +147,21 @@ public class XmlUtils {
         int x = Integer.parseInt(el.getAttribute("x"));
         int y = Integer.parseInt(el.getAttribute("y"));
         return new Position(x, y);
+    }
+
+    public static void injectFeaturePoiner(Element el, FeaturePointer fp) {
+    	XMLUtils.injectPosition(el, fp.getPosition());
+        if (fp.getLocation() != null) {
+			el.setAttribute("location", fp.getLocation().toString());
+        }
+    }
+
+    public static FeaturePointer extractFeaturePointer(Element el) {
+    	Position pos = XMLUtils.extractPosition(el);
+    	Location loc = null;
+        if (el.hasAttribute("location")) {
+        	loc = Location.valueOf(el.getAttribute("location"));
+        }
+        return new FeaturePointer(pos, loc);
     }
 }

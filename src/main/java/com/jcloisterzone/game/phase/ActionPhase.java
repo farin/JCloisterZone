@@ -14,12 +14,14 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.FlierRollEvent;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -96,11 +98,8 @@ public class ActionPhase extends Phase {
         if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(p))) {
             throw new IllegalArgumentException("The tile has deployed not own follower.");
         }
-
-        FairyCapability cap = game.getCapability(FairyCapability.class);
-        Position fromPosition = cap.getFairyPosition();
-        cap.setFairyPosition(p);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, getActivePlayer(), fromPosition, p));
+        Fairy fairy = game.getCapability(FairyCapability.class).getFairy();
+        fairy.deploy(p.asFeaturePointer());
         next();
     }
 
@@ -147,8 +146,15 @@ public class ActionPhase extends Phase {
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    	FeaturePointer fp = new FeaturePointer(p, loc);
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deployUnoccupied(getBoard().get(p), loc);
+        //TODO nice to have validation in separate class (can be turned off eg for loadFromSnapshots or in AI (to speed it)
+        if (m instanceof Follower) {
+        	if (getBoard().get(fp).walk(new IsOccupied())) {
+        		throw new IllegalArgumentException("Feature is occupied.");
+        	}
+        }
+        m.deploy(fp);
         if (portalCap != null && loc != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !p.equals(getTile().getPosition())) {
             //magic gate usage
             portalCap.setPortalUsed(true);

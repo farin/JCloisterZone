@@ -89,8 +89,7 @@ public class FlierActionPhase extends Phase {
             throw new IllegalArgumentException("Invalid meeple type.");
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        Tile tile = getBoard().get(p);
-        m.deploy(tile, loc);
+        m.deploy(new FeaturePointer(p, loc));
         next();
     }
 

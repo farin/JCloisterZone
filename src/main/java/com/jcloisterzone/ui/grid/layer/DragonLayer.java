@@ -3,7 +3,6 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.GameController;

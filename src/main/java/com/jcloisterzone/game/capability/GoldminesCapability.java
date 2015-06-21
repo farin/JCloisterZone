@@ -18,8 +18,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.TradeResource;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
@@ -86,7 +85,7 @@ public class GoldminesCapability  extends Capability {
         for (Entry<Position, Integer> entry : boardGold.entrySet()) {
             Element el = doc.createElement("gold");
             node.appendChild(el);
-            XmlUtils.injectPosition(el, entry.getKey());
+            XMLUtils.injectPosition(el, entry.getKey());
             el.setAttribute("count", "" + entry.getValue());
         }
         for (Player player: game.getAllPlayers()) {
@@ -102,8 +101,8 @@ public class GoldminesCapability  extends Capability {
         NodeList nl = node.getElementsByTagName("gold");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            Position pos = XmlUtils.extractPosition(el);
-            int count = XmlUtils.attributeIntValue(el, "count");
+            Position pos = XMLUtils.extractPosition(el);
+            int count = XMLUtils.attributeIntValue(el, "count");
             boardGold.put(pos, count);
             game.post(new GoldChangeEvent(null, pos, count));
         }
@@ -111,7 +110,7 @@ public class GoldminesCapability  extends Capability {
         for (int i = 0; i < nl.getLength(); i++) {
             Element playerEl = (Element) nl.item(i);
             Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
-            int count = XmlUtils.attributeIntValue(playerEl, "goldPieces");
+            int count = XMLUtils.attributeIntValue(playerEl, "goldPieces");
             playerGold.put(player, count);
         }
     }

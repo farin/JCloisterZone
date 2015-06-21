@@ -1,5 +1,8 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -21,9 +24,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.view.GameView;
-
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 
 public class ActionPanel extends MouseTrackingComponent implements ForwardBackwardListener, RegionMouseListener {
 

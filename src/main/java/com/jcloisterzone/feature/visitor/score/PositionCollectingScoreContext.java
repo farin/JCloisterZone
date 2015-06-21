@@ -52,8 +52,8 @@ public abstract class PositionCollectingScoreContext extends MultiTileScoreConte
             isCompleted = false;
         }
         if (mwCap != null) {
-            containsMage = containsMage || (mwCap.getMagePlacement() != null && mwCap.getMagePlacement().match(feature));
-            containsWitch = containsWitch || (mwCap.getWitchPlacement() != null && mwCap.getWitchPlacement().match(feature));
+            containsMage = containsMage || (mwCap.getMage().at(feature));
+            containsWitch = containsWitch || (mwCap.getWitch().at(feature));
         }
         return super.visit(feature);
     }

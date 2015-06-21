@@ -87,15 +87,13 @@ public class Location implements Serializable {
     public static final Location _E = new Location("_E", 243 << 8);
 
     /** Cloister on tile */
-    public static final Location CLOISTER = new Location("CLOISTER", 1 << 18 );
+    public static final Location CLOISTER = new Location("CLOISTER", 1 << 18);
     /** on monastery as Abbot */
     public static final Location ABBOT = new Location("ABBOT", 1 << 19);
     /** Tower on tile */
     public static final Location TOWER = new Location("TOWER", 1 << 20);
-    /** Inprisoned follower */
-    public static final Location PRISON = new Location("PRISON", 1 << 21);
     /** Flier location - follower can be placed here just for moment, before dice roll  */
-    public static final Location FLIER = new Location("FLIER", 1 << 22);
+    public static final Location FLIER = new Location("FLIER", 1 << 21);
 
     // --- farm locations ---
 

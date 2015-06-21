@@ -7,7 +7,6 @@ import com.google.common.eventbus.EventBus;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.event.Event;
-import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class Channel implements EventProxy {
 

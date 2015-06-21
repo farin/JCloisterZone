@@ -15,7 +15,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.GameController;

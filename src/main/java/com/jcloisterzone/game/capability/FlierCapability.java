@@ -2,15 +2,12 @@ package com.jcloisterzone.game.capability;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javax.xml.crypto.NodeSetData;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -70,7 +67,7 @@ public class FlierCapability extends Capability {
         NodeList nl = xml.getElementsByTagName("flier");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            Location flier = XmlUtils.union(XmlUtils.asLocation((Element) nl.item(0)));
+            Location flier = XMLUtils.union(XMLUtils.asLocation((Element) nl.item(0)));
             tile.setFlier(flier);
         }
     }
@@ -173,12 +170,12 @@ public class FlierCapability extends Capability {
     @SuppressWarnings("unchecked")
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        if (XmlUtils.attributeBoolValue(node, "flierUsed")) {
+        if (XMLUtils.attributeBoolValue(node, "flierUsed")) {
             flierUsed = true;
         }
         if (node.hasAttribute("flierDistance")) {
              flierDistance = Integer.parseInt(node.getAttribute("flierDistance"));
-             meepleType = (Class<? extends Meeple>) XmlUtils.classForName(node.getAttribute("meepleType"));
+             meepleType = (Class<? extends Meeple>) XMLUtils.classForName(node.getAttribute("meepleType"));
         }
     }
 

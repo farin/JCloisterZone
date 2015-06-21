@@ -9,6 +9,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
@@ -81,8 +83,14 @@ public class PhantomPhase extends Phase {
         if (!meepleType.equals(Phantom.class)) {
             throw new IllegalArgumentException("Only phantom can be placed as second follower.");
         }
+        FeaturePointer fp = new FeaturePointer(p, loc);
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deployUnoccupied(getBoard().get(p), loc);
+        if (m instanceof Follower) {
+        	if (getBoard().get(fp).walk(new IsOccupied())) {
+        		throw new IllegalArgumentException("Feature is occupied.");
+        	}
+        }
+        m.deploy(fp);
         next();
     }
 

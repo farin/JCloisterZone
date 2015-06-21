@@ -16,7 +16,6 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.CompletableFeature;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.feature.visitor.score.AbstractScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;

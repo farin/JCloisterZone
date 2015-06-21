@@ -5,7 +5,7 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -79,7 +79,7 @@ public class PortalCapability extends Capability {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        if (XmlUtils.attributeBoolValue(node, "portalUsed")) {
+        if (XMLUtils.attributeBoolValue(node, "portalUsed")) {
             portalUsed = true;
         }
     }

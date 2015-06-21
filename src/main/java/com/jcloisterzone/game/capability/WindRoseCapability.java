@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -93,13 +93,13 @@ public class WindRoseCapability extends Capability {
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("rotation", roseRotation.name());
-        XmlUtils.injectPosition(node, rosePosition);
+        XMLUtils.injectPosition(node, rosePosition);
     }
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
         roseRotation = Rotation.valueOf(node.getAttribute("rotation"));
-        rosePosition = XmlUtils.extractPosition(node);
+        rosePosition = XMLUtils.extractPosition(node);
     }
 
 }

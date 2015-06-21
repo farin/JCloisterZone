@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 
 public abstract class Plugin {
 
@@ -44,7 +44,7 @@ public abstract class Plugin {
     }
 
     protected final void loadMetadata() throws Exception {
-        Element plugin = XmlUtils.parseDocument(loader.getResource("plugin.xml")).getDocumentElement();
+        Element plugin = XMLUtils.parseDocument(loader.getResource("plugin.xml")).getDocumentElement();
         parseMetadata(plugin);
     }
 

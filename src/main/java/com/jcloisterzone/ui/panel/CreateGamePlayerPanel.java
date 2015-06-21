@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,8 +32,6 @@ import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePlayerPanel extends JPanel {
 
@@ -252,7 +252,8 @@ public class CreateGamePlayerPanel extends JPanel {
         }
     }
 
-    private void sendTakeSlotMessage(PlayerSlot slot) {
+    @SuppressWarnings("unchecked")
+	private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {

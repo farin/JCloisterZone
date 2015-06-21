@@ -1,5 +1,7 @@
 package com.jcloisterzone;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -34,8 +36,6 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("unchecked")
 public enum Expansion {

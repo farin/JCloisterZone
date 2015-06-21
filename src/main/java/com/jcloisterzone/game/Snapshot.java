@@ -38,7 +38,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.VersionComparator;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.LoadGameTilePackFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -46,8 +46,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.phase.Phase;
 
 
@@ -101,7 +101,7 @@ public class Snapshot implements Serializable {
 
 
     private void createRootStructure(Game game) {
-        doc = XmlUtils.newDocument();
+        doc = XMLUtils.newDocument();
         root = doc.createElement("game");
         root.setAttribute("app-version", Application.VERSION);
         root.setAttribute("phase", game.getPhase().getClass().getName());
@@ -190,7 +190,7 @@ public class Snapshot implements Serializable {
             Element el = doc.createElement("tile");
             el.setAttribute("name", tile.getId());
             el.setAttribute("rotation", tile.getRotation().name());
-            XmlUtils.injectPosition(el, tile.getPosition());
+            XMLUtils.injectPosition(el, tile.getPosition());
             parent.appendChild(el);
             tileElemens.put(tile.getPosition(), el);
             game.saveTileToSnapshot(tile, doc, el);
@@ -250,7 +250,7 @@ public class Snapshot implements Serializable {
     }
 
     public void load(InputStream is) throws SnapshotCorruptedException {
-        doc = XmlUtils.parseDocument(is);
+        doc = XMLUtils.parseDocument(is);
         root = doc.getDocumentElement();
         String snapshotVersion = root.getAttribute("app-version");
         if (!snapshotVersion.equals(Application.VERSION) && !snapshotVersion.equals(Application.DEV_VERSION)) {
@@ -292,7 +292,7 @@ public class Snapshot implements Serializable {
             }
 
             //TODO instances should be created here, not in load phase
-            Class<? extends Capability> capabilityClass = (Class<? extends Capability>) XmlUtils.classForName(capabilityName);
+            Class<? extends Capability> capabilityClass = (Class<? extends Capability>) XMLUtils.classForName(capabilityName);
             Capability capability = game.getCapability(capabilityClass);
             capability.loadFromSnapshot(doc, el);
         }
@@ -341,7 +341,7 @@ public class Snapshot implements Serializable {
             if (clockNl.getLength() > 0) {
                 Element clockEl = (Element) clockNl.item(0);
                 p.getClock().setTime(Long.parseLong(clockEl.getAttribute("time")));
-                if (XmlUtils.attributeBoolValue(el, "running")) {
+                if (XMLUtils.attributeBoolValue(el, "running")) {
                     p.getClock().setRunning(true);
                 }
             }
@@ -392,11 +392,10 @@ public class Snapshot implements Serializable {
             if (!meepleType.startsWith("com.")) { // 2.X snapshot compatibility
                 meepleType = "com.jcloisterzone.figure." + meepleType;
             }
-            Class<? extends Meeple> mt = (Class<? extends Meeple>) XmlUtils.classForName(meepleType);
+            Class<? extends Meeple> mt = (Class<? extends Meeple>) XMLUtils.classForName(meepleType);
             int playerIndex = Integer.parseInt(el.getAttribute("player"));
             Meeple meeple = game.getPlayer(playerIndex).getMeepleFromSupply(mt);
-            meeple.setLocation(loc);
-            meeple.setPosition(pos);
+            meeple.setFeaturePointer(new FeaturePointer(pos, loc));
             //don't set feature here. Feature must be set after meeple deployment to correct replace ref during merge
             result.add(meeple);
         }
@@ -414,7 +413,7 @@ public class Snapshot implements Serializable {
 
     @SuppressWarnings("unchecked")
     public Class<? extends Phase> getActivePhase() throws SnapshotCorruptedException {
-        return (Class<? extends Phase>) XmlUtils.classForName(root.getAttribute("phase"));
+        return (Class<? extends Phase>) XMLUtils.classForName(root.getAttribute("phase"));
     }
 
     public Game asGame(String gameId) {

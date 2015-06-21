@@ -27,6 +27,11 @@ import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -310,24 +315,20 @@ public class MainPanel extends JPanel {
 
     @Subscribe
     public void neutralMoved(NeutralFigureMoveEvent ev) {
-        switch (ev.getType()) {
-        case NeutralFigureMoveEvent.DRAGON:
+    	NeutralFigure fig = ev.getFigure();
+        if (fig instanceof Dragon) {
             dragonLayer.setPosition(ev.getTo().getPosition());
             dragonLayer.setMoves(0);
             gridPanel.hideLayer(DragonAvailableMove.class);
             gridPanel.repaint();
-            break;
-        case NeutralFigureMoveEvent.FAIRY:
+        } else if (fig instanceof Fairy) {
             fairyLayer.setPosition(ev.getTo().getPosition());
-            break;
-        case NeutralFigureMoveEvent.MAGE:
+        } else if (fig instanceof Mage) {
             gridPanel.findLayer(MageAndWitchLayer.class).setMage(ev.getTo());
             hideMageWitchPanel();
-            break;
-        case NeutralFigureMoveEvent.WITCH:
+        } else if (fig instanceof Witch) {
             gridPanel.findLayer(MageAndWitchLayer.class).setWitch(ev.getTo());
             hideMageWitchPanel();
-            break;
         }
 
     }

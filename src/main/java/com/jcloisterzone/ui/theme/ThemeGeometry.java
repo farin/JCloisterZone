@@ -19,11 +19,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.FeatureEvent;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -70,7 +69,7 @@ public class ThemeGeometry {
         NodeList nl;
         URL aliasesResource = loader.getResource(folder + "/aliases.xml");
         if (aliasesResource != null) {
-            Element aliasesEl = XmlUtils.parseDocument(aliasesResource).getDocumentElement();
+            Element aliasesEl = XMLUtils.parseDocument(aliasesResource).getDocumentElement();
             nl = aliasesEl.getElementsByTagName("alias");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element alias = (Element) nl.item(i);
@@ -78,7 +77,7 @@ public class ThemeGeometry {
             }
         }
 
-        Element shapes = XmlUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
+        Element shapes = XMLUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
         nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
             processShapeElement((Element) nl.item(i));
@@ -97,7 +96,7 @@ public class ThemeGeometry {
     }
 
     private AreaWithZIndex createArea(Element shapeNode) {
-        Integer zIndex = XmlUtils.attributeIntValue(shapeNode, "zIndex");
+        Integer zIndex = XMLUtils.attributeIntValue(shapeNode, "zIndex");
         NodeList nl = shapeNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             if (nl.item(i) instanceof Element) {

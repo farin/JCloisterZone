@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

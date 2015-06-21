@@ -43,10 +43,10 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
+import net.miginfocom.swing.MigLayout;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ChatEvent;

@@ -1,9 +1,9 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XmlUtils.asLocation;
-import static com.jcloisterzone.XmlUtils.asLocations;
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-import static com.jcloisterzone.XmlUtils.attributeIntValue;
+import static com.jcloisterzone.XMLUtils.asLocation;
+import static com.jcloisterzone.XMLUtils.asLocations;
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
 
 import java.util.ArrayList;
 import java.util.List;

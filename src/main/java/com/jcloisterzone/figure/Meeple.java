@@ -16,7 +16,7 @@ public abstract class Meeple extends Figure {
     private transient final Player player;
     private transient Feature feature;
     private transient Integer index; //index distinguish meeples on same feature
-    private Location location;
+
 
     public static class DeploymentCheckResult {
         public final boolean result;
@@ -44,18 +44,8 @@ public abstract class Meeple extends Figure {
         return true;
     }
 
-    /** true if meeple is deploayed on board */
-    public boolean isDeployed() {
-        return location != null && location != Location.PRISON ;
-    }
-
-    public boolean isInSupply() {
-        return location == null;
-    }
-
     public void clearDeployment() {
-        setPosition(null);
-        setLocation(null);
+        setFeaturePointer(null);
         setFeature(null);
     }
 
@@ -67,27 +57,25 @@ public abstract class Meeple extends Figure {
         return tile.getFeature(loc);
     }
 
+
+    @Deprecated
     public void deployUnoccupied(Tile tile, Location loc) {
-        //perorm unoccupied check for followers only!!!
-        Feature feature = getDeploymentFeature(tile, loc);
-        deploy(tile, loc, feature);
+        //perform unoccupied check for followers only!!!
+        deploy(new FeaturePointer(tile.getPosition(), loc));
     }
 
-    public final void deploy(Tile tile, Location loc) {
-        Feature feature = getDeploymentFeature(tile, loc);
-        deploy(tile, loc, feature);
-    }
 
-    protected void deploy(Tile tile, Location loc, Feature feature) {
+    public void deploy(FeaturePointer at) {
+    	Feature feature = game.getBoard().get(at);
         DeploymentCheckResult check = isDeploymentAllowed(feature);
         if (!check.result) {
             throw new IllegalArgumentException(check.error);
         }
+        FeaturePointer origin = getFeaturePointer();
         feature.addMeeple(this);
-        setPosition(tile.getPosition());
-        setLocation(loc);
+        setFeaturePointer(at);
         setFeature(feature);
-        game.post(new MeepleEvent(game.getActivePlayer(), this, null, new FeaturePointer(tile.getPosition(), loc)));
+        game.post(new MeepleEvent(game.getActivePlayer(), this, origin, at));
     }
 
     public final void undeploy() {
@@ -95,8 +83,8 @@ public abstract class Meeple extends Figure {
     }
 
     public void undeploy(boolean checkForLonelyBuilderOrPig) {
-        assert location != null && location != Location.PRISON;
-        FeaturePointer source = new FeaturePointer(getPosition(), location);
+        assert isDeployed();
+        FeaturePointer source = getFeaturePointer();
         feature.removeMeeple(this);
         clearDeployment();
         game.post(new MeepleEvent(game.getActivePlayer(), this, source, null));
@@ -115,14 +103,6 @@ public abstract class Meeple extends Figure {
         return player;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public Integer getIndex() {
         return index;
     }
@@ -133,7 +113,7 @@ public abstract class Meeple extends Figure {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(index, location);
+        return java.util.Objects.hash(index, featurePointer);
     }
 
     @Override
@@ -143,18 +123,13 @@ public abstract class Meeple extends Figure {
         Meeple o = (Meeple) obj;
         if (!Objects.equal(player, o.player)) return false;
         if (!Objects.equal(index, o.index)) return false;
-        if (!Objects.equal(location, o.location)) return false;
         //do not compare feature - location is enough - feature is changing during time
         return true;
     }
 
     @Override
     public String toString() {
-        if (location == Location.PRISON) {
-            return getClass().getSimpleName() + "(" + player.getIndex() + "," + location.toString() + ")";
-        } else {
-            return super.toString() + "(" + player.getIndex() + ")";
-        }
+        return super.toString() + "(" + player.getIndex() + ")";
     }
 
 }

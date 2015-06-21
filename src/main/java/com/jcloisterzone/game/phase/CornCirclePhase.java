@@ -10,7 +10,6 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
@@ -181,11 +180,12 @@ public class CornCirclePhase extends ServerAwarePhase {
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    	FeaturePointer fp = new FeaturePointer(p, loc);
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
             logger.error("Deployment wasn't selected as corn options.");
             return;
         }
-        List<Meeple> meeples = getBoard().get(p).getFeature(loc).getMeeples();
+        List<Meeple> meeples = getBoard().get(fp).getMeeples();
         if (meeples.isEmpty()) {
             logger.error("Feature must be occupied");
             return;
@@ -196,8 +196,7 @@ public class CornCirclePhase extends ServerAwarePhase {
         }
 
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        Tile tile = getBoard().get(p);
-        m.deploy(tile, loc);
+        m.deploy(fp);
         nextCornPlayer();
     }
 

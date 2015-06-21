@@ -12,11 +12,9 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config.ConfirmConfig;
 import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.Castle;
@@ -193,14 +191,10 @@ public class ScorePhase extends ServerAwarePhase {
             if (ctx instanceof PositionCollectingScoreContext) {
                 PositionCollectingScoreContext pctx = (PositionCollectingScoreContext) ctx;
                 if (pctx.containsMage()) {
-                    FeaturePointer oldPlacement = mageWitchCap.getMagePlacement();
-                    mageWitchCap.setMagePlacement(null);
-                    game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.MAGE, getActivePlayer(), oldPlacement, null));
+                    mageWitchCap.getMage().undeploy();
                 }
                 if (pctx.containsWitch()) {
-                    FeaturePointer oldPlacement = mageWitchCap.getWitchPlacement();
-                    mageWitchCap.setWitchPlacement(null);
-                    game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.WITCH, getActivePlayer(), oldPlacement, null));
+                    mageWitchCap.getWitch().undeploy();
                 }
             }
         }
@@ -240,7 +234,7 @@ public class ScorePhase extends ServerAwarePhase {
             }
         }
         if (ctx.isCompleted()) {
-            Completable master = (Completable) ctx.getMasterFeature();
+            Completable master = ctx.getMasterFeature();
             if (!alredyScored.contains(master)) {
                 alredyScored.add(master);
                 game.scoreCompleted(ctx);

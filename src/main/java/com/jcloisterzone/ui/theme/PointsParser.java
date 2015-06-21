@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.theme.SvgTransformationCollector.GeometryHandler;
 
@@ -63,7 +63,7 @@ class PointsParser {
     }
 
     private Map<FeatureDescriptor, ImmutablePoint> doParse() throws IOException, SAXException, ParserConfigurationException {
-        Element root = XmlUtils.parseDocument(resource).getDocumentElement();
+        Element root = XMLUtils.parseDocument(resource).getDocumentElement();
         NodeList nl = root.getElementsByTagName("point");
         points = new HashMap<>();
         for (int i = 0; i < nl.getLength(); i++) {

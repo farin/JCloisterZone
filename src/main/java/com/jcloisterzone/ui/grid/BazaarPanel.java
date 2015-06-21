@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -27,8 +29,6 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @InteractionPanel
 public class BazaarPanel extends JPanel implements ForwardBackwardListener {

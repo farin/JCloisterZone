@@ -6,7 +6,6 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
@@ -30,15 +29,15 @@ public class MageAndWitchPhase extends Phase {
         if (getTile().hasTrigger(TileTrigger.MAGE) || mwCap.isMageAndWitchPlacedOnSameFeature()) {
             List<PlayerAction<?>> actions = mwCap.prepareMageWitchActions();
             if (actions == null) { //force removal
-                if (mwCap.getMagePlacement() != null && mwCap.getWitchPlacement() != null) {
+                if (mwCap.getMage().isDeployed() && mwCap.getWitch().isDeployed()) {
                     game.post(new MageWitchSelectRemoval(getActivePlayer(), getActivePlayer()));
                     return;
                 } else {
-                    if (mwCap.getMagePlacement() != null) {
+                    if (mwCap.getMage().isDeployed()) {
                         moveMage(null); //calls next()
                         return;
                     }
-                    if (mwCap.getWitchPlacement() != null) {
+                    if (mwCap.getWitch().isDeployed()) {
                         moveWitch(null); //calls next()
                         return;
                     }
@@ -53,17 +52,13 @@ public class MageAndWitchPhase extends Phase {
 
     @Override
     public void moveMage(FeaturePointer fp) {
-        FeaturePointer oldPlacement = mwCap.getMagePlacement();
-        mwCap.setMagePlacement(fp);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.MAGE, getActivePlayer(), oldPlacement, fp));
+        mwCap.getMage().deploy(fp);
         next();
     }
 
     @Override
     public void moveWitch(FeaturePointer fp) {
-        FeaturePointer oldPlacement = mwCap.getWitchPlacement();
-        mwCap.setWitchPlacement(fp);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.WITCH, getActivePlayer(), oldPlacement, fp));
+        mwCap.getWitch().deploy(fp);
         next();
     }
 

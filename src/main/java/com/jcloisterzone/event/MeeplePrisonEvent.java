@@ -4,17 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.TowerCapability;
 
 public class MeeplePrisonEvent extends MoveEvent<Player> implements Undoable {
 
-    private final Meeple meeple;
+    private final Follower meeple;
 
-    public MeeplePrisonEvent(Meeple meeple, Player from, Player to) {
+    public MeeplePrisonEvent(Follower meeple, Player from, Player to) {
         super(meeple.getPlayer(), from, to);
         this.meeple = meeple;
     }
@@ -27,15 +25,14 @@ public class MeeplePrisonEvent extends MoveEvent<Player> implements Undoable {
     @Override
     public void undo(Game game) {
         if (getFrom() != null) {
-            meeple.setLocation(Location.PRISON);
-            getPrisoners(game).get(getFrom()).add((Follower) meeple);
-            meeple.setLocation(Location.PRISON);
+            meeple.setInPrison(true);
+            getPrisoners(game).get(getFrom()).add(meeple);
         }
         if (getTo() != null) {
             for (List<Follower> prisoners : getPrisoners(game).values()) {
                 prisoners.remove(meeple);
             }
-            meeple.setLocation(null);
+            meeple.setInPrison(false);
         }
     }
 

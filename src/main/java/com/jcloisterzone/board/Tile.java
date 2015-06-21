@@ -19,8 +19,8 @@ import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.feature.visitor.IsOccupied;
-import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.feature.visitor.IsOccupiedAndUncompleted;
+import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Game;
 

@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -35,7 +35,7 @@ public class RiverCapability extends Capability {
         nl = xml.getElementsByTagName("river");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            Location river = XmlUtils.union(XmlUtils.asLocation((Element) nl.item(0)));
+            Location river = XMLUtils.union(XMLUtils.asLocation((Element) nl.item(0)));
             tile.setRiver(river);
             if (tile.getSymmetry() != TileSymmetry.NONE) {
                 if (tile.getRiver().isRotationOf(Location.WE)) {

@@ -10,30 +10,31 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MageAndWitchAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
 public class MageAndWitchCapability extends Capability {
 
-    public FeaturePointer magePlacement;
-    public FeaturePointer witchPlacement;
+	private Mage mage;
+	private Witch witch;
 
     public MageAndWitchCapability(Game game) {
         super(game);
+        mage = new Mage(game);
+        witch = new Witch(game);
     }
 
     @Override
@@ -45,11 +46,11 @@ public class MageAndWitchCapability extends Capability {
 
     public List<PlayerAction<?>> prepareMageWitchActions() {
         Set<Feature> touchedFeatures = new HashSet<>();
-        if (magePlacement != null) {
-            touchedFeatures.add(getBoard().get(magePlacement));
+        if (mage.isDeployed()) {
+            touchedFeatures.add(getBoard().get(mage.getFeaturePointer()));
         }
-        if (witchPlacement != null) {
-            touchedFeatures.add(getBoard().get(witchPlacement));
+        if (witch.getFeaturePointer() != null) {
+            touchedFeatures.add(getBoard().get(witch.getFeaturePointer()));
         }
         Set<FeaturePointer> placements = new HashSet<>();
         for (Tile tile: getBoard().getAllTiles()) {
@@ -71,25 +72,17 @@ public class MageAndWitchCapability extends Capability {
     }
 
     public boolean isMageAndWitchPlacedOnSameFeature() {
-        if (magePlacement == null || witchPlacement == null) return false;
-        return getBoard().get(magePlacement).walk(new ContainsFeature(witchPlacement));
+        if (mage.isInSupply() || witch.isInSupply()) return false;
+        return getBoard().get(mage.getFeaturePointer()).walk(new ContainsFeature(witch.getFeaturePointer()));
     }
 
-    public FeaturePointer getMagePlacement() {
-        return magePlacement;
-    }
+    public Mage getMage() {
+		return mage;
+	}
 
-    public void setMagePlacement(FeaturePointer magePlacement) {
-        this.magePlacement = magePlacement;
-    }
-
-    public FeaturePointer getWitchPlacement() {
-        return witchPlacement;
-    }
-
-    public void setWitchPlacement(FeaturePointer witchPlacement) {
-        this.witchPlacement = witchPlacement;
-    }
+    public Witch getWitch() {
+		return witch;
+	}
 
     static class ContainsFeature implements FeatureVisitor<Boolean> {
 
@@ -150,31 +143,29 @@ public class MageAndWitchCapability extends Capability {
     @Override
     public Object backup() {
         return new Object[] {
-            magePlacement,
-            witchPlacement
+            mage.getFeaturePointer(),
+            witch.getFeaturePointer()
          };
     }
 
     @Override
     public void restore(Object data) {
         Object[] a = (Object[]) data;
-        magePlacement = (FeaturePointer) a[0];
-        witchPlacement = (FeaturePointer) a[1];
+        mage.setFeaturePointer((FeaturePointer) a[0]);
+        witch.setFeaturePointer((FeaturePointer) a[1]);
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
-        if (magePlacement != null) {
-            Element mage = doc.createElement("mage");
-            XmlUtils.injectPosition(mage, magePlacement.getPosition());
-            mage.setAttribute("location", magePlacement.getLocation().toString());
-            node.appendChild(mage);
+        if (mage.isDeployed()) {
+            Element mageEl = doc.createElement("mage");
+            XMLUtils.injectFeaturePoiner(mageEl, mage.getFeaturePointer());
+            node.appendChild(mageEl);
         }
-        if (witchPlacement != null) {
-            Element witch = doc.createElement("witch");
-            XmlUtils.injectPosition(witch, witchPlacement.getPosition());
-            witch.setAttribute("location", witchPlacement.getLocation().toString());
-            node.appendChild(witch);
+        if (witch.isDeployed()) {
+            Element witchEl = doc.createElement("witch");
+            XMLUtils.injectFeaturePoiner(witchEl, witch.getFeaturePointer());
+            node.appendChild(witchEl);
         }
     }
 
@@ -182,19 +173,15 @@ public class MageAndWitchCapability extends Capability {
     public void loadFromSnapshot(Document doc, Element node) {
         NodeList nl = node.getElementsByTagName("mage");
         if (nl.getLength() > 0) {
-            Element mage = (Element) nl.item(0);
-            Position p = XmlUtils.extractPosition(mage);
-            Location loc =  Location.valueOf(mage.getAttribute("location"));
-            magePlacement = new FeaturePointer(p, loc);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.MAGE, null, null, magePlacement));
+            Element mageEl = (Element) nl.item(0);
+            FeaturePointer fp = XMLUtils.extractFeaturePointer(mageEl);
+            mage.deploy(fp);
         }
         nl = node.getElementsByTagName("witch");
         if (nl.getLength() > 0) {
-            Element witch = (Element) nl.item(0);
-            Position p  = XmlUtils.extractPosition(witch);
-            Location loc =  Location.valueOf(witch.getAttribute("location"));
-            witchPlacement = new FeaturePointer(p, loc);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.WITCH, null, null, witchPlacement));
+            Element witchEl = (Element) nl.item(0);
+            FeaturePointer fp  = XMLUtils.extractFeaturePointer(witchEl);
+            witch.deploy(fp);
         }
     }
 }

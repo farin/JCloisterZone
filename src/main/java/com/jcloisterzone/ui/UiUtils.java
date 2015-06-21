@@ -14,8 +14,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import com.jcloisterzone.ui.panel.BackgroundPanel;
-
 public final class UiUtils {
 
     public static final Color HIGHLIGHT = new Color(255, 253, 200);

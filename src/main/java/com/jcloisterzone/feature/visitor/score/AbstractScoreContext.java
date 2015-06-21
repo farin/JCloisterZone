@@ -3,8 +3,8 @@ package com.jcloisterzone.feature.visitor.score;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Position;

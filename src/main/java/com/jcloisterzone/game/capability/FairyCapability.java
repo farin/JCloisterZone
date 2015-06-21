@@ -9,13 +9,13 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.FairyAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -24,36 +24,39 @@ public class FairyCapability extends Capability {
 
     public static final int FAIRY_POINTS_FINISHED_OBJECT = 3;
 
-    public Position fairyPosition;
+    public final Fairy fairy;
 
     public FairyCapability(Game game) {
         super(game);
+        fairy = new Fairy(game);
     }
 
     @Override
     public Object backup() {
-        return fairyPosition;
+    	return fairy.getFeaturePointer();
     }
 
     @Override
     public void restore(Object data) {
-        fairyPosition = (Position) data;
+    	fairy.setFeaturePointer((FeaturePointer) data);
     }
 
-    public Position getFairyPosition() {
-        return fairyPosition;
+    public Fairy getFairy() {
+		return fairy;
+	}
+
+    public boolean isNextTo(Follower f) {
+    	Position pos = f.getPosition();
+    	return pos != null && pos.equals(fairy.getPosition());
     }
 
-    public void setFairyPosition(Position fairyPosition) {
-        this.fairyPosition = fairyPosition;
-    }
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         FairyAction fairyAction = new FairyAction();
         Player activePlayer = game.getActivePlayer();
         for (Follower m : Iterables.filter(activePlayer.getFollowers(), MeeplePredicates.deployed())) {
-            if (!m.at(fairyPosition)) {
+            if (!m.at(fairy.getPosition())) {
                 fairyAction.add(m.getPosition());
             }
         }
@@ -64,10 +67,10 @@ public class FairyCapability extends Capability {
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
-        if (fairyPosition != null) {
-            Element fairy = doc.createElement("fairy");
-            XmlUtils.injectPosition(fairy, fairyPosition);
-            node.appendChild(fairy);
+        if (fairy.isDeployed()) {
+            Element fairyEl = doc.createElement("fairy");
+            XMLUtils.injectFeaturePoiner(fairyEl, fairy.getFeaturePointer());
+            node.appendChild(fairyEl);
         }
     }
 
@@ -75,9 +78,8 @@ public class FairyCapability extends Capability {
     public void loadFromSnapshot(Document doc, Element node) {
         NodeList nl = node.getElementsByTagName("fairy");
         if (nl.getLength() > 0) {
-            Element fairy = (Element) nl.item(0);
-            fairyPosition = XmlUtils.extractPosition(fairy);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.FAIRY, null, null, fairyPosition));
+            Element fairyEl = (Element) nl.item(0);
+            fairy.deploy(XMLUtils.extractFeaturePointer(fairyEl));
         }
     }
 }

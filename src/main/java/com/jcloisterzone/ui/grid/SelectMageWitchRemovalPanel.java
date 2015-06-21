@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,8 +14,6 @@ import net.miginfocom.swing.MigLayout;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.controls.ControlPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class SelectMageWitchRemovalPanel extends JPanel {
 

@@ -380,7 +380,8 @@ public class Game extends GameSettings implements EventProxy {
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
         ScoreEvent scoreEvent;
-        if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
+        //hack, testing sample follower is enough because is chosen to be the one next to fairy
+        if (fairyCapability != null && fairyCapability.isNextTo(follower)) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
             scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, pointCategory, follower);
             scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);
