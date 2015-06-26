@@ -32,6 +32,7 @@ public class DragonCapability extends Capability {
     public DragonCapability(final Game game) {
         super(game);
         dragon = new Dragon(game);
+        game.getNeutralFigures().add(dragon);
     }
 
     @Override

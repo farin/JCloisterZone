@@ -47,6 +47,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
@@ -72,7 +73,8 @@ public class Game extends GameSettings implements EventProxy {
 
     /** list of players in game */
     private Player[] plist;
-    /** rules of current game */
+
+    private final List<NeutralFigure> neutralFigures = new ArrayList<>();
 
     /** player in turn */
     private Player turnPlayer;
@@ -228,6 +230,10 @@ public class Game extends GameSettings implements EventProxy {
         Phase phase = getPhase();
         return phase == null ? null : phase.getActivePlayer();
     }
+
+    public List<NeutralFigure> getNeutralFigures() {
+		return neutralFigures;
+	}
 
 
     /**

@@ -35,6 +35,8 @@ public class MageAndWitchCapability extends Capability {
         super(game);
         mage = new Mage(game);
         witch = new Witch(game);
+        game.getNeutralFigures().add(mage);
+        game.getNeutralFigures().add(witch);
     }
 
     @Override

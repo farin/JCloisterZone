@@ -29,6 +29,7 @@ public class FairyCapability extends Capability {
     public FairyCapability(Game game) {
         super(game);
         fairy = new Fairy(game);
+        game.getNeutralFigures().add(fairy);
     }
 
     @Override

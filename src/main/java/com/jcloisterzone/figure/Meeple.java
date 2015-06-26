@@ -58,14 +58,8 @@ public abstract class Meeple extends Figure {
     }
 
 
-    @Deprecated
-    public void deployUnoccupied(Tile tile, Location loc) {
-        //perform unoccupied check for followers only!!!
-        deploy(new FeaturePointer(tile.getPosition(), loc));
-    }
-
-
-    public void deploy(FeaturePointer at) {
+    @Override
+	public void deploy(FeaturePointer at) {
     	Feature feature = game.getBoard().get(at);
         DeploymentCheckResult check = isDeploymentAllowed(feature);
         if (!check.result) {
@@ -78,7 +72,8 @@ public abstract class Meeple extends Figure {
         game.post(new MeepleEvent(game.getActivePlayer(), this, origin, at));
     }
 
-    public final void undeploy() {
+    @Override
+	public final void undeploy() {
         undeploy(true);
     }
 
