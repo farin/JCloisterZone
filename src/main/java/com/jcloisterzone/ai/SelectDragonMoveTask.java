@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
 
@@ -63,6 +64,6 @@ class SelectDragonMoveTask implements Runnable {
             }
         }
         logger.info("Selected dragon move: {}", result);
-        aiPlayer.getRmiProxy().moveDragon(result);
+        aiPlayer.getRmiProxy().moveNeutralFigure(result.asFeaturePointer(), Dragon.class);
     }
 }

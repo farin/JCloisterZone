@@ -2,12 +2,19 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Set;
 
+import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.ui.GameController;
 
 
@@ -49,17 +56,22 @@ public class DragonMovePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void moveDragon(Position p) {
-        if (!dragonCap.getAvailDragonMoves().contains(p)) {
-            throw new IllegalArgumentException("Invalid dragon move.");
-        }
-        dragonCap.moveDragon(p);
-        for (Meeple m : game.getDeployedMeeples()) {
-            if (m.at(p) && m.canBeEatenByDragon()) {
-                m.undeploy();
+    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+        if (Dragon.class.equals(figureType)) {
+            assert fp.getLocation() == null;
+            Position p = fp.getPosition();
+            if (!dragonCap.getAvailDragonMoves().contains(p)) {
+                throw new IllegalArgumentException("Invalid dragon move.");
             }
+            dragonCap.moveDragon(p);
+            for (Meeple m : game.getDeployedMeeples()) {
+                if (m.at(p) && m.canBeEatenByDragon()) {
+                    m.undeploy();
+                }
+            }
+            selectDragonMove();
+        } else {
+            super.moveNeutralFigure(fp, figureType);
         }
-        selectDragonMove();
     }
-
 }

@@ -1,6 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.wsio.RmiProxy;
@@ -13,7 +14,7 @@ public class FairyAction extends SelectTileAction {
 
     @Override
     public void perform(RmiProxy server, Position p) {
-        server.moveFairy(p);
+        server.moveNeutralFigure(p.asFeaturePointer(), Fairy.class);
     }
 
     @Override

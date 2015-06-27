@@ -21,6 +21,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.RmiProxy;
@@ -63,20 +64,20 @@ public abstract class AiPlayer {
     }
 
     protected boolean isAiActive(PlayEvent ev) {
-    	return player.equals(ev.getTargetPlayer()) && !muted;
+        return player.equals(ev.getTargetPlayer()) && !muted;
     }
 
     public boolean isMuted() {
-		return muted;
-	}
+        return muted;
+    }
 
-	public void setMuted(boolean muted) {
-		this.muted = muted;
-	}
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+    }
 
     // dummy implementations
 
-	protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
+    protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
         for (PlayerAction<?> action : actions) {
             if (action instanceof TilePlacementAction) {
                 if (selectDummyTilePlacement((TilePlacementAction) action)) return;
@@ -132,7 +133,7 @@ public abstract class AiPlayer {
     }
 
     protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
-        getRmiProxy().moveDragon(positions.iterator().next());
+        getRmiProxy().moveNeutralFigure(positions.iterator().next().asFeaturePointer(), Dragon.class);
     }
 
     @Override

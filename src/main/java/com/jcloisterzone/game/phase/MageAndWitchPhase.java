@@ -7,6 +7,9 @@ import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 
@@ -34,12 +37,10 @@ public class MageAndWitchPhase extends Phase {
                     return;
                 } else {
                     if (mwCap.getMage().isDeployed()) {
-                        moveMage(null); //calls next()
-                        return;
+                        mwCap.getMage().deploy(null);
                     }
                     if (mwCap.getWitch().isDeployed()) {
-                        moveWitch(null); //calls next()
-                        return;
+                        mwCap.getWitch().deploy(null);
                     }
                 }
             } else {
@@ -51,15 +52,15 @@ public class MageAndWitchPhase extends Phase {
     }
 
     @Override
-    public void moveMage(FeaturePointer fp) {
-        mwCap.getMage().deploy(fp);
-        next();
+    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+        if (Mage.class.equals(figureType)) {
+            mwCap.getMage().deploy(fp);
+            next();
+        } else if (Witch.class.equals(figureType)) {
+            mwCap.getWitch().deploy(fp);
+            next();
+        } else {
+            super.moveNeutralFigure(fp, figureType);
+        }
     }
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        mwCap.getWitch().deploy(fp);
-        next();
-    }
-
 }

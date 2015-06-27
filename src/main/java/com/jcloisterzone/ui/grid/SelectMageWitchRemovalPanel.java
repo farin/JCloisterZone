@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -42,7 +44,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((JButton)e.getSource()).setEnabled(false);
-                gc.getRmiProxy().moveMage(null);
+                gc.getRmiProxy().moveNeutralFigure(null, Mage.class);
             }
         });
         add(btn, "wrap, growx, h 40, gapbottom 5");
@@ -54,7 +56,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((JButton)e.getSource()).setEnabled(false);
-                gc.getRmiProxy().moveWitch(null);
+                gc.getRmiProxy().moveNeutralFigure(null, Witch.class);
             }
         });
         add(btn, "wrap, growx, h 40, gapbottom 5");

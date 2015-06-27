@@ -7,6 +7,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public class DelayedServer implements RmiProxy {
@@ -61,16 +63,13 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void moveFairy(Position pos) {
-        server.moveFairy(pos);
-    }
-
-    @Override
-    public void moveDragon(Position pos) {
-        try {
-            Thread.sleep(placeTileDelay / 2);
-        } catch (InterruptedException e) {}
-        server.moveDragon(pos);
+    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+        if (Dragon.class.equals(figureType)) {
+            try {
+                Thread.sleep(placeTileDelay / 2);
+            } catch (InterruptedException e) {}
+        }
+        server.moveNeutralFigure(fp, figureType);
     }
 
     @Override
@@ -112,18 +111,5 @@ public class DelayedServer implements RmiProxy {
     @Override
     public void placeGoldPiece(Position pos) {
         server.placeGoldPiece(pos);
-    }
-
-
-    @Override
-    public void moveMage(FeaturePointer fp) {
-        server.moveMage(fp);
-    }
-
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        server.moveWitch(fp);
-
     }
 }

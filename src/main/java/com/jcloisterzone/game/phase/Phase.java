@@ -15,6 +15,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -116,11 +117,6 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void moveFairy(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveFairy");
-    }
-
-    @Override
     public void placeTowerPiece(Position p) {
         logger.error(Application.ILLEGAL_STATE_MSG, "placeTowerPiece");
     }
@@ -136,18 +132,9 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void moveDragon(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveDragon");
-    }
+    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveNeutralFigure");
 
-    @Override
-    public void moveMage(FeaturePointer fp) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveMage");
-    }
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveWitch");
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -94,13 +95,17 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void moveFairy(Position p) {
-        if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(p))) {
-            throw new IllegalArgumentException("The tile has deployed not own follower.");
+    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+        if (Fairy.class.equals(figureType)) {
+            if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(fp.getPosition()))) {
+                throw new IllegalArgumentException("The tile has deployed not own follower.");
+            }
+            Fairy fairy = game.getCapability(FairyCapability.class).getFairy();
+            fairy.deploy(fp);
+            next();
+        } else {
+            super.moveNeutralFigure(fp, figureType);
         }
-        Fairy fairy = game.getCapability(FairyCapability.class).getFairy();
-        fairy.deploy(p.asFeaturePointer());
-        next();
     }
 
     private boolean isFestivalUndeploy(Meeple m) {
@@ -146,13 +151,13 @@ public class ActionPhase extends Phase {
 
     @Override
     public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-    	FeaturePointer fp = new FeaturePointer(p, loc);
+        FeaturePointer fp = new FeaturePointer(p, loc);
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         //TODO nice to have validation in separate class (can be turned off eg for loadFromSnapshots or in AI (to speed it)
         if (m instanceof Follower) {
-        	if (getBoard().get(fp).walk(new IsOccupied())) {
-        		throw new IllegalArgumentException("Feature is occupied.");
-        	}
+            if (getBoard().get(fp).walk(new IsOccupied())) {
+                throw new IllegalArgumentException("Feature is occupied.");
+            }
         }
         m.deploy(fp);
         if (portalCap != null && loc != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !p.equals(getTile().getPosition())) {
