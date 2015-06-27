@@ -101,7 +101,7 @@ public class PlayerPanelImageCache {
             scaledImages.put("dragon", scaled);
         }
         if (game.hasCapability(FairyCapability.class)) {
-            scaledImages.put("fairy", scaleImage(theme.getNeutralImage("fairy-solid")));
+            scaledImages.put("fairy", scaleImage(theme.getNeutralImage("fairy")));
         }
         if (game.hasCapability(MageAndWitchCapability.class)) {
             scaledImages.put("mage", scaleImage(theme.getNeutralImage("mage")));

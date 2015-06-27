@@ -15,12 +15,18 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.figure.Figure;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -33,7 +39,7 @@ public class MeepleLayer extends AbstractGridLayer {
      * Corn circles allows multiple meeples on single feature.
      * In such case double meeple should be displayed after common ones.
      */
-    private LinkedList<MeeplePositionedImage> images = new LinkedList<>();
+    private LinkedList<PositionedFigureImage> images = new LinkedList<>();
     //TODO own layer ???
     private List<PositionedImage> permanentImages = new ArrayList<>();
 
@@ -60,7 +66,7 @@ public class MeepleLayer extends AbstractGridLayer {
     @Override
     public void paint(Graphics2D g) {
         int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
-        for (MeeplePositionedImage mi : images) {
+        for (PositionedFigureImage mi : images) {
             if (!mi.bridgePlacement) {
                 paintPositionedImage(g, mi, boxSize);
             }
@@ -73,7 +79,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public void paintMeeplesOnBridges(Graphics2D g) {
         int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
-        for (MeeplePositionedImage mi : images) {
+        for (PositionedFigureImage mi : images) {
             if (mi.bridgePlacement) {
                 paintPositionedImage(g, mi, boxSize );
             }
@@ -82,7 +88,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Override
     public void zoomChanged(int squareSize) {
-        for (MeeplePositionedImage mi : images) {
+        for (PositionedFigureImage mi : images) {
             mi.scaledImage = null;
         }
         for (PositionedImage mi : permanentImages) {
@@ -91,30 +97,56 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-    private MeeplePositionedImage createMeepleImage(Class<? extends Meeple> type, Color c, FeaturePointer fp) {
+    private PositionedFigureImage createMeepleImage(Class<? extends Meeple> type, Color c, FeaturePointer fp) {
         Feature feature = getGame().getBoard().get(fp);
         ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), type, fp.getLocation());
         Image image = getClient().getFigureTheme().getFigureImage(type, c, getExtraDecoration(type, fp));
         if (fp.getLocation() == Location.ABBOT) {
             image = rotate(image, 90);
         }
-        return new MeeplePositionedImage(type, fp, offset, image, feature instanceof Bridge);
+        return new PositionedFigureImage(type, fp, offset, image, feature instanceof Bridge);
+    }
+
+    private PositionedFigureImage createNeutralFigureImage(NeutralFigure fig, FeaturePointer fp) {
+        boolean bridgePlacement = false;
+        ImmutablePoint offset;
+        if (fp.getLocation() != null) {
+            Feature feature = getGame().getBoard().get(fp);
+            bridgePlacement = feature instanceof Bridge;
+            offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), SmallFollower.class, fp.getLocation());
+        } else {
+            if (fig instanceof Fairy) {
+                offset = new ImmutablePoint(62, 52);
+            } else {
+                offset = new ImmutablePoint(50, 50);
+            }
+        }
+        Image image = getClient().getFigureTheme().getNeutralImage(fig);
+        boolean mageOrWitch = fig instanceof Mage || fig instanceof Witch;
+        if (mageOrWitch) {
+            offset = offset.translate(0, -10);
+        }
+        PositionedFigureImage pfi = new PositionedFigureImage(fig.getClass(), fp, offset, image, bridgePlacement);
+        if (mageOrWitch) {
+            pfi.xScaleFactor = pfi.yScaleFactor = 1.2;
+        }
+        return pfi;
     }
 
     private void rearrangeMeeples(FeaturePointer fp) {
         int order = 0;
         //small followers first
-        for (MeeplePositionedImage mi : images) {
+        for (PositionedFigureImage mi : images) {
             if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (mi.meepleType.equals(SmallFollower.class)) {
+                if (mi.figureType.equals(SmallFollower.class)) {
                     mi.order = order++;
                 }
             }
         }
         //others on top
-        for (MeeplePositionedImage mi : images) {
+        for (PositionedFigureImage mi : images) {
             if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (!mi.meepleType.equals(SmallFollower.class)) {
+                if (!mi.figureType.equals(SmallFollower.class)) {
                     mi.order = order++;
                 }
             }
@@ -127,29 +159,44 @@ public class MeepleLayer extends AbstractGridLayer {
         rearrangeMeeples(ev.getTo());
     }
 
-    public void meepleUndeployed(MeepleEvent ev) {
-        Iterator<MeeplePositionedImage> iter = images.iterator();
+    public void neutralFigureDeployed(NeutralFigureMoveEvent ev) {
+        images.add(createNeutralFigureImage(ev.getFigure(), ev.getTo()));
+        if (ev.getTo().getLocation() != null) {
+            rearrangeMeeples(ev.getTo());
+        }
+    }
+
+    private void figureUndeployed(Class<? extends Figure> figureType, FeaturePointer from) {
+        Iterator<PositionedFigureImage> iter = images.iterator();
         while (iter.hasNext()) {
-            MeeplePositionedImage mi = iter.next();
-            if (mi.match(ev.getMeeple().getClass(), ev.getFrom())) {
+            PositionedFigureImage mi = iter.next();
+            if (mi.match(figureType, from)) {
                 iter.remove();
                 break;
             }
         }
-        rearrangeMeeples(ev.getFrom());
+        rearrangeMeeples(from);
+    }
+
+    public void meepleUndeployed(MeepleEvent ev) {
+        figureUndeployed(ev.getMeeple().getClass(), ev.getFrom());
+    }
+
+    public void neutralFigureUndeployed(NeutralFigureMoveEvent ev) {
+        figureUndeployed(ev.getFigure().getClass(), ev.getFrom());
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
-    	addPermanentImage(position, offset, image, 1.0, 1.0);
+        addPermanentImage(position, offset, image, 1.0, 1.0);
     }
 
 
     //TODO hack with xScale, yScale - clean and do better
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image, double xScale, double yScale) {
-    	PositionedImage pi = new PositionedImage(position, offset, image);
-    	pi.heightWidthRatio = image.getHeight(null) / image.getWidth(null);
-    	pi.xScaleFactor = xScale;
-    	pi.yScaleFactor = yScale;
+        PositionedImage pi = new PositionedImage(position, offset, image);
+        pi.heightWidthRatio = image.getHeight(null) / image.getWidth(null);
+        pi.xScaleFactor = xScale;
+        pi.yScaleFactor = yScale;
         permanentImages.add(pi);
     }
 
@@ -188,21 +235,21 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    private class MeeplePositionedImage extends PositionedImage {
-         public final Class<? extends Meeple> meepleType;
+    private class PositionedFigureImage extends PositionedImage {
+         public final Class<? extends Figure> figureType;
          public final Location location;
          public final boolean bridgePlacement;
          public int order;
 
-         public MeeplePositionedImage(Class<? extends Meeple> meepleType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
+         public PositionedFigureImage(Class<? extends Figure> figureType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
              super(fp.getPosition(), offset, sourceImage);
-             this.meepleType = meepleType;
+             this.figureType = figureType;
              location = fp.getLocation();
              this.bridgePlacement = bridgePlacement;
          }
 
          @Override
-		public ImmutablePoint getScaledOffset(int boxSize) {
+        public ImmutablePoint getScaledOffset(int boxSize) {
              ImmutablePoint point = offset;
              if (order > 0) {
                  point = point.translate(10*order, 0);
@@ -210,8 +257,8 @@ public class MeepleLayer extends AbstractGridLayer {
              return point.scale(getSquareSize(), boxSize);
          }
 
-         public boolean match(Class<? extends Meeple> meepleType, FeaturePointer fp) {
-             if (!meepleType.equals(this.meepleType)) return false;
+         public boolean match(Class<? extends Figure> figureType, FeaturePointer fp) {
+             if (!figureType.equals(this.figureType)) return false;
              if (location != fp.getLocation()) return false;
              if (!position.equals(fp.getPosition())) return false;
              return true;
