@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
@@ -113,10 +114,11 @@ public class MeepleLayer extends AbstractGridLayer {
         return new PositionedFigureImage(meeple, fp, offset, image, feature instanceof Bridge);
     }
 
-    private PositionedFigureImage createNeutralFigureImage(NeutralFigure fig, FeaturePointer fp) {
+    private PositionedFigureImage createNeutralFigureImage(NeutralFigure fig, BoardPointer ptr) {
         boolean bridgePlacement = false;
         ImmutablePoint offset;
-        if (fp.getLocation() != null) {
+        if (ptr instanceof FeaturePointer) {
+            FeaturePointer fp = (FeaturePointer) ptr;
             Feature feature = getGame().getBoard().get(fp);
             bridgePlacement = feature instanceof Bridge;
             offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), SmallFollower.class, fp.getLocation());
@@ -132,7 +134,7 @@ public class MeepleLayer extends AbstractGridLayer {
         if (mageOrWitch) {
             offset = offset.translate(0, -10);
         }
-        PositionedFigureImage pfi = new PositionedFigureImage(fig, fp, offset, image, bridgePlacement);
+        PositionedFigureImage pfi = new PositionedFigureImage(fig, ptr.asFeaturePointer(), offset, image, bridgePlacement);
         if (mageOrWitch) {
             pfi.xScaleFactor = pfi.yScaleFactor = 1.2;
         }
@@ -177,12 +179,12 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public void neutralFigureDeployed(NeutralFigureMoveEvent ev) {
         images.add(createNeutralFigureImage(ev.getFigure(), ev.getTo()));
-        if (ev.getTo().getLocation() != null) {
-            rearrangeMeeples(ev.getTo());
+        if (ev.getTo() instanceof FeaturePointer) {
+            rearrangeMeeples((FeaturePointer) ev.getTo());
         }
     }
 
-    private void figureUndeployed(Figure figure, FeaturePointer from) {
+    private void figureUndeployed(Figure figure, BoardPointer from) {
         Iterator<PositionedFigureImage> iter = images.iterator();
         while (iter.hasNext()) {
             PositionedFigureImage mi = iter.next();
@@ -191,7 +193,9 @@ public class MeepleLayer extends AbstractGridLayer {
                 break;
             }
         }
-        rearrangeMeeples(from);
+        if (from instanceof FeaturePointer) {
+            rearrangeMeeples((FeaturePointer) from);
+        }
     }
 
     public void meepleUndeployed(MeepleEvent ev) {

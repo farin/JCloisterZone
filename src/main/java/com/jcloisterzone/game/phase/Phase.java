@@ -12,6 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
@@ -133,7 +134,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+    public void moveNeutralFigure(BoardPointer prt, Class<? extends NeutralFigure> figureType) {
         logger.error(Application.ILLEGAL_STATE_MSG, "moveNeutralFigure");
 
     }

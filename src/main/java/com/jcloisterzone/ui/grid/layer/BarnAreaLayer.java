@@ -8,6 +8,7 @@ import com.jcloisterzone.action.BarnAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
@@ -23,7 +24,7 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
     }
 
     @Override
-    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+    protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         //quick fix
         if (getGame().getCurrentTile().getPosition().equals(p)) {
             Set<Location> locations = action.getLocations(p);
@@ -33,8 +34,8 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
     }
 
     @Override
-    protected void performAction(FeaturePointer fp) {
-        action.perform(getRmiProxy(), fp);
+    protected void performAction(BoardPointer fp) {
+        action.perform(getRmiProxy(), (FeaturePointer) fp);
     }
 
     @Override

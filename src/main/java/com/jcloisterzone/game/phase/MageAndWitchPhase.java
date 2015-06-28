@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -52,7 +53,8 @@ public class MageAndWitchPhase extends Phase {
     }
 
     @Override
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
+        FeaturePointer fp = (FeaturePointer) ptr;
         if (Mage.class.equals(figureType)) {
             mwCap.getMage().deploy(fp);
             next();

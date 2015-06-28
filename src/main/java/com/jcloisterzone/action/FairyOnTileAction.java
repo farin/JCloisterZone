@@ -6,9 +6,9 @@ import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.wsio.RmiProxy;
 
-public class FairyAction extends SelectTileAction {
+public class FairyOnTileAction extends SelectTileAction {
 
-    public FairyAction() {
+    public FairyOnTileAction() {
         super("fairy");
     }
 

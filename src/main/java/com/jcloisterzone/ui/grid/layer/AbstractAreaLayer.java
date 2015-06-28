@@ -19,6 +19,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
@@ -37,9 +38,9 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     private Player player;
     private boolean active;
-    private Map<FeaturePointer, FeatureArea> areas = Collections.emptyMap();
+    private Map<BoardPointer, FeatureArea> areas = Collections.emptyMap();
     private FeatureArea selectedArea;
-    private FeaturePointer selectedFeaturePointer;
+    private BoardPointer selectedFeaturePointer;
 
     boolean refreshAreas;
 
@@ -79,9 +80,9 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         cleanAreas();
     }
 
-    protected Map<FeaturePointer, FeatureArea> locationMapToPointers(Position pos, Map<Location, FeatureArea> locMap) {
+    protected Map<BoardPointer, FeatureArea> locationMapToPointers(Position pos, Map<Location, FeatureArea> locMap) {
         if (locMap == null) return Collections.emptyMap();
-        Map<FeaturePointer, FeatureArea> result = new HashMap<>();
+        Map<BoardPointer, FeatureArea> result = new HashMap<>();
         for (Entry<Location, FeatureArea> entry : locMap.entrySet()) {
             result.put(new FeaturePointer(pos, entry.getKey()), entry.getValue());
         }
@@ -101,7 +102,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
                 squareEntered(e, getCurrentPosition());
             }
             FeatureArea swap = null;
-            FeaturePointer swapPointer = null;
+            BoardPointer swapPointer = null;
             int size = getSquareSize();
             Point2D point = gridPanel.getRelativePoint(e.getPoint());
             int x = (int) point.getX();
@@ -110,7 +111,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             if (y < 0) y += 1000 * size; //prevent mod from negative number
             x = x % size;
             y = y % size;
-            for (Entry<FeaturePointer, FeatureArea> entry : areas.entrySet()) {
+            for (Entry<BoardPointer, FeatureArea> entry : areas.entrySet()) {
                 FeatureArea fa = entry.getValue();
                 if (fa.getTrackingArea().contains(x, y)) {
                     if (swap == null) {
@@ -167,7 +168,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         }
     }
 
-    protected abstract Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p);
+    protected abstract Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p);
 
 
     @Override
@@ -178,7 +179,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         }
     }
 
-    protected abstract void performAction(FeaturePointer selected);
+    protected abstract void performAction(BoardPointer selected);
 
     @Override
     public void mouseClicked(MouseEvent e, Position pos) {
@@ -194,7 +195,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     public void paint(Graphics2D g2) {
         if (selectedArea != null) {
             Composite old = g2.getComposite();
-            if (figureHighlight) {
+            if (figureHighlight && selectedFeaturePointer instanceof FeaturePointer) {
                 paintFigureHighlight(g2);
             } else {
                 paintAreaHighlight(g2);
@@ -205,11 +206,12 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     /** debug purposes highlight - it always shows basic follower (doesn't important for dbg */
     private void paintFigureHighlight(Graphics2D g2) {
-        Position pos = selectedFeaturePointer.getPosition();
+        FeaturePointer fp = (FeaturePointer) selectedFeaturePointer;
+        Position pos = fp.getPosition();
         //ugly copy pasted code from Meeple but uncached here
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(pos);
-        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedFeaturePointer.getLocation());
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, fp.getLocation());
         Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);

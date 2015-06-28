@@ -4,6 +4,7 @@ import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
@@ -20,7 +21,7 @@ public interface RmiProxy {
 
     public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType);
     public void undeployMeeple(MeeplePointer mp);
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType);
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType);
 
     //TODO replace with generic  placeToken (use for gold, little building, maybe bridge and castle)
     public void placeTowerPiece(Position pos);

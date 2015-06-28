@@ -9,6 +9,7 @@ import java.util.Map;
 import com.jcloisterzone.action.SelectFollowerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Meeple;
@@ -43,12 +44,12 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
 
 
     @Override
-    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+    protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         int r = (int) (getSquareSize() / 3.0);
         int innerR = (int) (getSquareSize() / 4.2);
         int boxSize = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
 
-        Map<FeaturePointer, FeatureArea> areas = new HashMap<>();
+        Map<BoardPointer, FeatureArea> areas = new HashMap<>();
         for (MeeplePointer pointer : action.getMeeplePointers(p)) {
             PositionedFigureImage pfi = null;
             for (PositionedFigureImage item : meepleLayer.getPositionedFigures()) {
@@ -88,9 +89,8 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
 
 
     @Override
-    protected void performAction(FeaturePointer fp) {
-        MeeplePointer mp = (MeeplePointer) fp;
-        action.perform(getRmiProxy(), mp);
+    protected void performAction(BoardPointer ptr) {
+        action.perform(getRmiProxy(), (MeeplePointer) ptr);
     }
 
 

@@ -56,7 +56,7 @@ public abstract class Meeple extends Figure {
     }
 
     public boolean at(MeeplePointer mp) {
-        if (!super.at(mp)) return false;
+        if (!at(mp.asFeaturePointer())) return false;
         if (!mp.getMeepleId().equals(id)) return false;
         return true;
     }
@@ -78,8 +78,6 @@ public abstract class Meeple extends Figure {
         return tile.getFeature(loc);
     }
 
-
-    @Override
     public void deploy(FeaturePointer at) {
         Feature feature = game.getBoard().get(at);
         DeploymentCheckResult check = isDeploymentAllowed(feature);
@@ -93,7 +91,7 @@ public abstract class Meeple extends Figure {
         game.post(new MeepleEvent(game.getActivePlayer(), this, origin, at));
     }
 
-    @Override
+
     public final void undeploy() {
         undeploy(true);
     }

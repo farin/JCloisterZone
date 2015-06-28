@@ -21,8 +21,8 @@ public abstract class Figure implements Serializable, Cloneable {
         this.game = game;
     }
 
-    public abstract void deploy(FeaturePointer at);
-    public abstract void undeploy();
+//    public abstract void deploy(FeaturePointer at);
+//    public abstract void undeploy();
 
     public Position getPosition() {
         return featurePointer == null ? null : featurePointer.getPosition();

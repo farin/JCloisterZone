@@ -4,6 +4,7 @@ import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
@@ -62,13 +63,13 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
         if (Dragon.class.equals(figureType)) {
             try {
                 Thread.sleep(placeTileDelay / 2);
             } catch (InterruptedException e) {}
         }
-        server.moveNeutralFigure(fp, figureType);
+        server.moveNeutralFigure(ptr, figureType);
     }
 
     @Override

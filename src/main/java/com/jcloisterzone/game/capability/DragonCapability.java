@@ -47,7 +47,7 @@ public class DragonCapability extends Capability {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT && tile.hasTrigger(TileTrigger.VOLCANO)) {
             getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
-            dragon.deploy(tile.getPosition().asFeaturePointer());
+            dragon.deploy(tile.getPosition());
         }
     }
 
@@ -72,8 +72,8 @@ public class DragonCapability extends Capability {
     }
 
     public Dragon getDragon() {
-		return dragon;
-	}
+        return dragon;
+    }
 
     @Override
     public String getTileGroup(Tile tile) {
@@ -92,7 +92,7 @@ public class DragonCapability extends Capability {
 
     @Override
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
-    	return !dragon.at(tile.getPosition());
+        return !dragon.at(tile.getPosition());
     }
 
     public Player getDragonPlayer() {
@@ -124,7 +124,7 @@ public class DragonCapability extends Capability {
         dragonVisitedTiles.add(p);
         dragonPlayer = game.getNextPlayer(dragonPlayer);
         dragonMovesLeft--;
-        dragon.deploy(p.asFeaturePointer());
+        dragon.deploy(p);
     }
 
     public Set<Position> getAvailDragonMoves() {
@@ -168,7 +168,7 @@ public class DragonCapability extends Capability {
         NodeList nl = node.getElementsByTagName("dragon");
         if (nl.getLength() > 0) {
             Element dragonEl = (Element) nl.item(0);
-            dragon.deploy(XMLUtils.extractPosition(dragonEl).asFeaturePointer());
+            dragon.deploy(XMLUtils.extractPosition(dragonEl));
             if (dragonEl.hasAttribute("moves")) {
                 dragonMovesLeft  = Integer.parseInt(dragonEl.getAttribute("moves"));
                 dragonPlayer = game.getPlayer(Integer.parseInt(dragonEl.getAttribute("movingPlayer")));

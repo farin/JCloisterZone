@@ -13,8 +13,9 @@ public enum CustomRule {
 
     TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, _("Tiny city is scored only for 2 points.")),
 
-    PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Princess MUST remove a knight from city.") + "(RGG, ZMG)"),
+    PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
     DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Dragon movement occurs after scoring.") + " (RGG)"),
+    FAIRY_ON_TILE(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Place fairy on the tile. (instead of next to a follower)") + " (RGG, ZMG)"),
 
     ESCAPE_RGG(Expansion.CATHARS, Boolean.class, _("Escape cloister can be placed adjacent to any tile of a besieged city.") + " (RGG)"),
 

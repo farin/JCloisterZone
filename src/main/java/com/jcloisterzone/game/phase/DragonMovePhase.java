@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
@@ -52,22 +53,21 @@ public class DragonMovePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
         if (Dragon.class.equals(figureType)) {
-            assert fp.getLocation() == null;
-            Position p = fp.getPosition();
-            if (!dragonCap.getAvailDragonMoves().contains(p)) {
+            Position pos = ptr.getPosition();
+            if (!dragonCap.getAvailDragonMoves().contains(pos)) {
                 throw new IllegalArgumentException("Invalid dragon move.");
             }
-            dragonCap.moveDragon(p);
+            dragonCap.moveDragon(pos);
             for (Meeple m : game.getDeployedMeeples()) {
-                if (m.at(p) && m.canBeEatenByDragon()) {
+                if (m.at(pos) && m.canBeEatenByDragon()) {
                     m.undeploy();
                 }
             }
             selectDragonMove();
         } else {
-            super.moveNeutralFigure(fp, figureType);
+            super.moveNeutralFigure(ptr, figureType);
         }
     }
 }

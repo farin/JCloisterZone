@@ -7,18 +7,36 @@ import com.jcloisterzone.figure.Meeple;
 /**
  * Points on feature on board or placed meeple.
  */
-public class MeeplePointer extends FeaturePointer {
+//do not extend Feature pointer to better type checking
+public class MeeplePointer implements BoardPointer {
 
+    private final FeaturePointer featurePointer;
     private final String meepleId;
 
-    public MeeplePointer(Position position, Location location, String meepleId) {
-        super(position, location);
+    public MeeplePointer(FeaturePointer featurePointer, String meepleId) {
+        this.featurePointer = featurePointer;
         this.meepleId = meepleId;
+    }
+
+    public MeeplePointer(Position position, Location location, String meepleId) {
+        this(new FeaturePointer(position, location), meepleId);
     }
 
     public MeeplePointer(Meeple m) {
         this(m.getPosition(), m.getLocation(), m.getId());
         assert meepleId != null;
+    }
+
+    public FeaturePointer asFeaturePointer() {
+        return featurePointer;
+    }
+
+    public Position getPosition() {
+        return featurePointer.getPosition();
+    }
+
+    public Location getLocation() {
+        return featurePointer.getLocation();
     }
 
     public String getMeepleId() {
@@ -40,7 +58,8 @@ public class MeeplePointer extends FeaturePointer {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = super.hashCode();
+        int result = 1;
+        result = prime * result + ((featurePointer == null) ? 0 : featurePointer.hashCode());
         result = prime * result + ((meepleId == null) ? 0 : meepleId.hashCode());
         return result;
     }
@@ -49,11 +68,16 @@ public class MeeplePointer extends FeaturePointer {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj))
+        if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
         MeeplePointer other = (MeeplePointer) obj;
+        if (featurePointer == null) {
+            if (other.featurePointer != null)
+                return false;
+        } else if (!featurePointer.equals(other.featurePointer))
+            return false;
         if (meepleId == null) {
             if (other.meepleId != null)
                 return false;

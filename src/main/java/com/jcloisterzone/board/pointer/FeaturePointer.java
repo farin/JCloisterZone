@@ -1,12 +1,10 @@
 package com.jcloisterzone.board.pointer;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 
-public class FeaturePointer implements Serializable {
+public class FeaturePointer implements BoardPointer {
 
     private final Position position;
     private final Location location;
@@ -18,6 +16,11 @@ public class FeaturePointer implements Serializable {
 
     public FeaturePointer(Feature feature) {
         this(feature.getTile().getPosition(), feature.getLocation());
+    }
+
+    @Override
+    public FeaturePointer asFeaturePointer() {
+        return this;
     }
 
     public Position getPosition() {

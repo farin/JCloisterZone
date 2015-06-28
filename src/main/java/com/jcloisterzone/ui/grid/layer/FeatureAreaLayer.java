@@ -12,6 +12,7 @@ import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
@@ -43,7 +44,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         return action;
     }
 
-    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+    protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         abbotOption = false;
         abbotOnlyOption = false;
         Set<Location> locations = action.getLocations(p);
@@ -71,7 +72,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
 
 
     @Override
-    protected void performAction(FeaturePointer fp) {
+    protected void performAction(BoardPointer ptr) {
+        FeaturePointer fp = (FeaturePointer) ptr;
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
 

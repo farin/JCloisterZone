@@ -12,6 +12,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.FlierRollEvent;
@@ -25,6 +26,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -96,16 +98,20 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType) {
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
         if (Fairy.class.equals(figureType)) {
-            if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(fp.getPosition()))) {
+            if (!Iterables.any(getActivePlayer().getFollowers(), MeeplePredicates.at(ptr.getPosition()))) {
                 throw new IllegalArgumentException("The tile has deployed not own follower.");
             }
             Fairy fairy = game.getCapability(FairyCapability.class).getFairy();
-            fairy.deploy(fp);
+            if (game.getBooleanValue(CustomRule.FAIRY_ON_TILE)) {
+                fairy.deploy(ptr.getPosition());
+            } else {
+                fairy.deploy((MeeplePointer) ptr);
+            }
             next();
         } else {
-            super.moveNeutralFigure(fp, figureType);
+            super.moveNeutralFigure(ptr, figureType);
         }
     }
 
