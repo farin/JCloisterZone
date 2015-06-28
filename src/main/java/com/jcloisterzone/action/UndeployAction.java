@@ -1,5 +1,6 @@
 package com.jcloisterzone.action;
 
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.wsio.RmiProxy;
 
@@ -11,7 +12,7 @@ public class UndeployAction extends SelectFollowerAction {
 
     @Override
     public void perform(RmiProxy server, MeeplePointer bp) {
-        server.undeployMeeple(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
+        server.undeployMeeple(new FeaturePointer(bp.getPosition(), bp.getLocation()), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
     }
 
     @Override

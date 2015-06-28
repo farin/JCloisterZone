@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
@@ -46,7 +47,7 @@ public class UndoableTest extends AbstractIntegrationTest {
 
         String s1 = snapshotGame(game);
         Phase phase = game.getPhase();
-        phase.deployMeeple(new Position(1, -3), Location.NE, BigFollower.class);
+        phase.deployMeeple(new FeaturePointer(new Position(1, -3), Location.NE), BigFollower.class);
         assertEquals(1, game.events.size());
 
         MeepleEvent ev = (MeepleEvent) game.events.get(0);
@@ -64,7 +65,7 @@ public class UndoableTest extends AbstractIntegrationTest {
 
         String s1 = snapshotGame(game);
         Phase phase = game.getPhase();
-        phase.deployMeeple(new Position(1, -2), Location.TOWER, SmallFollower.class);
+        phase.deployMeeple(new FeaturePointer(new Position(1, -2), Location.TOWER), SmallFollower.class);
         assertEquals(1, game.events.size());
 
         MeepleEvent ev = (MeepleEvent) game.events.get(0);

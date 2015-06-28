@@ -128,8 +128,8 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        Meeple m = game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
         boolean princess = isPrincessUndeploy(m);
         if (isFestivalUndeploy(m) || princess) {
             m.undeploy();
@@ -143,15 +143,14 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void placeTunnelPiece(Position p, Location loc, boolean isB) {
-        game.getCapability(TunnelCapability.class).placeTunnelPiece(p, loc, isB);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isB) {
+        game.getCapability(TunnelCapability.class).placeTunnelPiece(fp, isB);
         next(ActionPhase.class);
     }
 
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-        FeaturePointer fp = new FeaturePointer(p, loc);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         //TODO nice to have validation in separate class (can be turned off eg for loadFromSnapshots or in AI (to speed it)
         if (m instanceof Follower) {
@@ -160,7 +159,7 @@ public class ActionPhase extends Phase {
             }
         }
         m.deploy(fp);
-        if (portalCap != null && loc != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !p.equals(getTile().getPosition())) {
+        if (portalCap != null && fp.getLocation() != Location.TOWER && getTile().hasTrigger(TileTrigger.PORTAL) && !fp.getPosition().equals(getTile().getPosition())) {
             //magic gate usage
             portalCap.setPortalUsed(true);
         }

@@ -1,16 +1,14 @@
 package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 
 public class TunnelPiecePlacedEvent extends FeatureEvent {
 
     private boolean secondPiece;
 
-    public TunnelPiecePlacedEvent(Player player, Position position, Location location, boolean secondPiece) {
-        super(player, new FeaturePointer(position, location));
+    public TunnelPiecePlacedEvent(Player player, FeaturePointer fp, boolean secondPiece) {
+        super(player, fp);
         this.secondPiece = secondPiece;
     }
 

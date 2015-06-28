@@ -17,19 +17,14 @@ public interface RmiProxy {
     public void pass();
     public void placeTile(Rotation rotation, Position position);
 
-    public void deployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType);
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType);
+    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner);
     public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType);
 
     public void placeTowerPiece(Position pos);
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner);
-    public void placeTunnelPiece(Position pos, Location loc, boolean isSecondPiece);
+    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece);
 
-    //TODO use more generic way - and avoid RmiProxy
-//    public void moveFairy(Position pos);
-//    public void moveDragon(Position pos);
-//    public void moveMage(FeaturePointer fp);
-//    public void moveWitch(FeaturePointer fp);
 
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType);
 

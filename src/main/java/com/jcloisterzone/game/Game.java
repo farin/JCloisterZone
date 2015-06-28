@@ -232,8 +232,8 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public List<NeutralFigure> getNeutralFigures() {
-		return neutralFigures;
-	}
+        return neutralFigures;
+    }
 
 
     /**
@@ -298,9 +298,9 @@ public class Game extends GameSettings implements EventProxy {
         random.setSeed(randomSeed);
     }
 
-    public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
+    public Meeple getMeeple(final FeaturePointer fp, Class<? extends Meeple> meepleType, Player owner) {
         for (Meeple m : getDeployedMeeples()) {
-            if (m.at(p) && m.getLocation().equals(loc)) {
+            if (m.at(fp)) {
                 if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
                     return m;
                 }

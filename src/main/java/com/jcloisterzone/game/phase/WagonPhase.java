@@ -57,18 +57,17 @@ public class WagonPhase extends ServerAwarePhase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (!meepleType.equals(Wagon.class)) {
             logger.error("Illegal figure type.");
             return;
         }
-        FeaturePointer fp = new FeaturePointer(p, loc);
         Player player = wagonCap.getWagonPlayer();
         Meeple m = player.getMeepleFromSupply(Wagon.class);
-    	if (getBoard().get(fp).walk(new IsOccupied())) {
-    		throw new IllegalArgumentException("Feature is occupied.");
-    	}
-    	m.deploy(fp);
+        if (getBoard().get(fp).walk(new IsOccupied())) {
+            throw new IllegalArgumentException("Feature is occupied.");
+        }
+        m.deploy(fp);
         wagonCap.removeScoredWagon(player);
         enter();
     }
@@ -98,7 +97,7 @@ public class WagonPhase extends ServerAwarePhase {
     }
 
     private List<FeaturePointer> getPlacements(Feature f) {
-    	if (f == null) return Collections.emptyList();
+        if (f == null) return Collections.emptyList();
         CollectingIsOccupiedOrCompleted visitor = new CollectingIsOccupiedOrCompleted();
         f.walk(visitor);
         return visitor.getPlacements();
@@ -119,22 +118,22 @@ public class WagonPhase extends ServerAwarePhase {
     }
 
     private class CollectingIsOccupiedOrCompleted extends IsOccupiedOrCompleted {
-    	List<FeaturePointer> placements = new ArrayList<FeaturePointer>();
+        List<FeaturePointer> placements = new ArrayList<FeaturePointer>();
 
-    	@Override
-    	public VisitResult visit(Feature feature) {
-    		if (game.isDeployAllowed(feature.getTile(), Wagon.class)) {
-    			placements.add(new FeaturePointer(feature));
-    		}
-    		return super.visit(feature);
-    	}
+        @Override
+        public VisitResult visit(Feature feature) {
+            if (game.isDeployAllowed(feature.getTile(), Wagon.class)) {
+                placements.add(new FeaturePointer(feature));
+            }
+            return super.visit(feature);
+        }
 
-    	public List<FeaturePointer> getPlacements() {
-    		if (getResult()) {
-    			return Collections.emptyList();
-    		}
-			return placements;
-		}
+        public List<FeaturePointer> getPlacements() {
+            if (getResult()) {
+                return Collections.emptyList();
+            }
+            return placements;
+        }
     }
 
     private class FindUnoccupiedNeighbours implements FeatureVisitor<Set<FeaturePointer>> {
@@ -168,7 +167,7 @@ public class WagonPhase extends ServerAwarePhase {
 
             if (feature.getNeighbouring() != null) {
                 for (Feature nei : feature.getNeighbouring()) {
-                	Tile tile = nei.getTile();
+                    Tile tile = nei.getTile();
 
                     if ((nei instanceof Cloister) && game.isDeployAllowed(tile, Wagon.class)) {
                         Cloister cloister = (Cloister) nei;
@@ -183,7 +182,7 @@ public class WagonPhase extends ServerAwarePhase {
         }
 
         @Override
-		public Set<FeaturePointer> getResult() {
+        public Set<FeaturePointer> getResult() {
             return wagonMoves;
         }
     }

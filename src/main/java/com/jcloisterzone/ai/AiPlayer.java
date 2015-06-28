@@ -119,7 +119,7 @@ public abstract class AiPlayer {
         for (FeaturePointer fp : ma) {
             Feature f = game.getBoard().get(fp.getPosition()).getFeature(fp.getLocation());
             if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-                getRmiProxy().deployMeeple(fp.getPosition(), fp.getLocation(), ma.getMeepleType());
+                getRmiProxy().deployMeeple(fp, ma.getMeepleType());
                 return true;
             }
         }
@@ -128,7 +128,7 @@ public abstract class AiPlayer {
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         MeeplePointer mp = action.iterator().next();
-        getRmiProxy().takePrisoner(mp.getPosition(), mp.getLocation(), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
+        getRmiProxy().takePrisoner(new FeaturePointer(mp.getPosition(), mp.getLocation()), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
         return true;
     }
 

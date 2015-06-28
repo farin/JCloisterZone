@@ -36,14 +36,13 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void deployMeeple(Position pos, Location loc,
-            Class<? extends Meeple> meepleType) {
-        server.deployMeeple(pos, loc, meepleType);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
+        server.deployMeeple(fp, meepleType);
     }
 
     @Override
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.undeployMeeple(pos, loc, meepleType, meepleOwner);
+    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        server.undeployMeeple(fp, meepleType, meepleOwner);
     }
 
     @Override
@@ -52,14 +51,13 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.takePrisoner(pos, loc, meepleType, meepleOwner);
+    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+        server.takePrisoner(fp, meepleType, meepleOwner);
     }
 
     @Override
-    public void placeTunnelPiece(Position pos, Location loc,
-            boolean isSecondPiece) {
-        server.placeTunnelPiece(pos, loc, isSecondPiece);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece) {
+        server.placeTunnelPiece(fp, isSecondPiece);
     }
 
     @Override

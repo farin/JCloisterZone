@@ -27,7 +27,7 @@ public class MeepleAction extends SelectFeatureAction {
 
     @Override
     public void perform(RmiProxy server, FeaturePointer bp) {
-        server.deployMeeple(bp.getPosition(), bp.getLocation(), meepleType);
+        server.deployMeeple(bp, meepleType);
     }
 
     @Override

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.visitor.IsOccupied;
@@ -79,16 +77,15 @@ public class PhantomPhase extends Phase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (!meepleType.equals(Phantom.class)) {
             throw new IllegalArgumentException("Only phantom can be placed as second follower.");
         }
-        FeaturePointer fp = new FeaturePointer(p, loc);
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         if (m instanceof Follower) {
-        	if (getBoard().get(fp).walk(new IsOccupied())) {
-        		throw new IllegalArgumentException("Feature is occupied.");
-        	}
+            if (getBoard().get(fp).walk(new IsOccupied())) {
+                throw new IllegalArgumentException("Feature is occupied.");
+            }
         }
         m.deploy(fp);
         next();
@@ -96,7 +93,7 @@ public class PhantomPhase extends Phase {
 
     @Override
     public void pass() {
-    	game.clearLastUndoable();
+        game.clearLastUndoable();
         next();
     }
 

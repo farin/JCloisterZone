@@ -112,7 +112,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void deployMeeple(Position p,  Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         logger.error(Application.ILLEGAL_STATE_MSG, "deployMeeple");
     }
 
@@ -122,12 +122,12 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void placeTunnelPiece(Position p, Location loc, boolean isSecondPiece) {
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece) {
         logger.error(Application.ILLEGAL_STATE_MSG, "placeTunnelPiece");
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         logger.error(Application.ILLEGAL_STATE_MSG, "undeployMeeple");
     }
 
@@ -149,7 +149,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
 

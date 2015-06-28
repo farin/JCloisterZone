@@ -8,8 +8,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
@@ -163,12 +161,12 @@ public class CornCirclePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
-        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+        Meeple m = game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (!cornType.isInstance(m.getFeature())) {
             logger.error("Improper feature type");
@@ -179,8 +177,7 @@ public class CornCirclePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
-    	FeaturePointer fp = new FeaturePointer(p, loc);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
             logger.error("Deployment wasn't selected as corn options.");
             return;
