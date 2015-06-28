@@ -33,12 +33,12 @@ public abstract class Figure implements Serializable, Cloneable {
     }
 
     public void setFeaturePointer(FeaturePointer featurePointer) {
-    	this.featurePointer = featurePointer;
+        this.featurePointer = featurePointer;
     }
 
     public FeaturePointer getFeaturePointer() {
-		return featurePointer;
-	}
+        return featurePointer;
+    }
 
     public boolean at(Position p) {
         if (featurePointer == null || p == null) return false;
@@ -46,13 +46,16 @@ public abstract class Figure implements Serializable, Cloneable {
     }
 
     public boolean at(FeaturePointer fp) {
-    	if (featurePointer == null || fp == null) return false;
-    	return fp.equals(featurePointer);
+        if (featurePointer == null || fp == null) return false;
+        //dont use equals to permit use this also with MeeplePointer subclass
+        return
+            Objects.equal(fp.getLocation(), featurePointer.getLocation()) &&
+            Objects.equal(fp.getPosition(), featurePointer.getPosition());
     }
 
     public boolean at(Feature feature) {
-    	if (featurePointer == null || feature == null) return false;
-    	return featurePointer.match(feature);
+        if (featurePointer == null || feature == null) return false;
+        return featurePointer.match(feature);
     }
 
     /** true if meeple is deploayed on board */

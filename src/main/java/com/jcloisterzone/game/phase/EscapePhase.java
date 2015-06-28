@@ -115,9 +115,9 @@ public class EscapePhase extends Phase {
 
 
     @Override
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        assert meepleOwner == getActivePlayer().getIndex();
-        Meeple m = game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
+    public void undeployMeeple(MeeplePointer mp) {
+        Meeple m = game.getMeeple(mp);
+        assert m.getPlayer().equals(getActivePlayer());
         if (!(m.getFeature() instanceof City)) {
             logger.error("Feature for escape action must be a city");
             return;

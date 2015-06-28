@@ -128,7 +128,7 @@ public abstract class AiPlayer {
 
     protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
         MeeplePointer mp = action.iterator().next();
-        getRmiProxy().takePrisoner(new FeaturePointer(mp.getPosition(), mp.getLocation()), mp.getMeepleType(), mp.getMeepleOwner().getIndex());
+        getRmiProxy().takePrisoner(mp);
         return true;
     }
 

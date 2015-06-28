@@ -61,7 +61,7 @@ public class WagonCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Wagon(game, player));
+        player.addMeeple(new Wagon(game, null, player));
     }
 
     public Map<Player, Feature> getScoredWagons() {

@@ -19,7 +19,7 @@ public class BigFollowerCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new BigFollower(game, player));
+        player.addMeeple(new BigFollower(game, null, player));
     }
 
     @Override

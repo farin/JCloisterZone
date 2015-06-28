@@ -13,6 +13,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
@@ -128,8 +129,8 @@ public class ActionPhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        Meeple m = game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
+    public void undeployMeeple(MeeplePointer mp) {
+        Meeple m = game.getMeeple(mp);
         boolean princess = isPrincessUndeploy(m);
         if (isFestivalUndeploy(m) || princess) {
             m.undeploy();

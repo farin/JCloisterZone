@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
@@ -41,8 +42,8 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.undeployMeeple(fp, meepleType, meepleOwner);
+    public void undeployMeeple(MeeplePointer mp) {
+        server.undeployMeeple(mp);
     }
 
     @Override
@@ -51,8 +52,8 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.takePrisoner(fp, meepleType, meepleOwner);
+    public void takePrisoner(MeeplePointer mp) {
+        server.takePrisoner(mp);
     }
 
     @Override

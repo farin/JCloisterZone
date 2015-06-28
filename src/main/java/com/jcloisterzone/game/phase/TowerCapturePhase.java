@@ -55,8 +55,8 @@ public class TowerCapturePhase extends Phase {
     }
 
     @Override
-    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        Follower m = (Follower) game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
+    public void takePrisoner(MeeplePointer mp) {
+        Follower m = (Follower) game.getMeeple(mp);
         m.undeploy();
         //undeploy returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();

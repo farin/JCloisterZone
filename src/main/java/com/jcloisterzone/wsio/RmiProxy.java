@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -18,14 +19,14 @@ public interface RmiProxy {
     public void placeTile(Rotation rotation, Position position);
 
     public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType);
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner);
+    public void undeployMeeple(MeeplePointer mp);
     public void moveNeutralFigure(FeaturePointer fp, Class<? extends NeutralFigure> figureType);
 
+    //TODO replace with generic  placeToken (use for gold, little building, maybe bridge and castle)
     public void placeTowerPiece(Position pos);
-    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner);
     public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece);
 
-
+    public void takePrisoner(MeeplePointer mp);
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType);
 
     public void deployBridge(Position pos, Location loc); //TODO use FeaturePointer

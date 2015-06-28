@@ -161,12 +161,12 @@ public class CornCirclePhase extends ServerAwarePhase {
     }
 
     @Override
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(MeeplePointer mp) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
-        Meeple m = game.getMeeple(fp, meepleType, game.getPlayer(meepleOwner));
+        Meeple m = game.getMeeple(mp);
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (!cornType.isInstance(m.getFeature())) {
             logger.error("Improper feature type");

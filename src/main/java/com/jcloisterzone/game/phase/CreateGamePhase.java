@@ -162,7 +162,7 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void initializePlayersMeeples() {
         for (Player player : game.getAllPlayers()) {
             for (int i = 0; i < SmallFollower.QUANTITY; i++) {
-                player.addMeeple(new SmallFollower(game, player));
+                player.addMeeple(new SmallFollower(game, i, player));
             }
             game.initPlayer(player);
         }

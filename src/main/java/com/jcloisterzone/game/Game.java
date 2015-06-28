@@ -31,6 +31,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.MeepleEvent;
@@ -298,16 +299,24 @@ public class Game extends GameSettings implements EventProxy {
         random.setSeed(randomSeed);
     }
 
-    public Meeple getMeeple(final FeaturePointer fp, Class<? extends Meeple> meepleType, Player owner) {
+    public Meeple getMeeple(MeeplePointer mp) {
         for (Meeple m : getDeployedMeeples()) {
-            if (m.at(fp)) {
-                if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
-                    return m;
-                }
-            }
+            if (m.at(mp)) return m;
         }
         return null;
     }
+
+
+//    public Meeple getMeeple(final FeaturePointer fp, Class<? extends Meeple> meepleType, Player owner) {
+//        for (Meeple m : getDeployedMeeples()) {
+//            if (m.at(fp)) {
+//                if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
+//                    return m;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     public void setPlayers(List<Player> players, int turnPlayer) {
         Player[] plist = players.toArray(new Player[players.size()]);

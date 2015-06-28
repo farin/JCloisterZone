@@ -13,6 +13,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -127,7 +128,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void undeployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(MeeplePointer mp) {
         logger.error(Application.ILLEGAL_STATE_MSG, "undeployMeeple");
     }
 
@@ -149,7 +150,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(FeaturePointer fp, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void takePrisoner(MeeplePointer mp) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
 

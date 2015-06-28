@@ -17,7 +17,7 @@ public class FeaturePointer implements Serializable {
     }
 
     public FeaturePointer(Feature feature) {
-    	this(feature.getTile().getPosition(), feature.getLocation());
+        this(feature.getTile().getPosition(), feature.getLocation());
     }
 
     public Position getPosition() {

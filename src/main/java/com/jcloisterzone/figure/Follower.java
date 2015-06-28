@@ -18,8 +18,8 @@ public abstract class Follower extends Meeple {
 
     private boolean inPrison;
 
-    public Follower(Game game, Player player) {
-        super(game, player);
+    public Follower(Game game, Integer idSuffix, Player player) {
+        super(game, idSuffix, player);
     }
 
     public int getPower() {
@@ -32,15 +32,15 @@ public abstract class Follower extends Meeple {
     }
 
     public boolean isInPrison() {
-    	return inPrison;
+        return inPrison;
     }
 
     public void setInPrison(boolean inPrison) {
-		this.inPrison = inPrison;
-		if (inPrison) {
-			setFeaturePointer(null);
-		}
-	}
+        this.inPrison = inPrison;
+        if (inPrison) {
+            setFeaturePointer(null);
+        }
+    }
 
     @Override
     public boolean isInSupply() {
@@ -49,17 +49,17 @@ public abstract class Follower extends Meeple {
 
     @Override
     public void setFeaturePointer(FeaturePointer featurePointer) {
-    	if (featurePointer != null && inPrison) {
-    		inPrison = false;
-    	}
-    	super.setFeaturePointer(featurePointer);
+        if (featurePointer != null && inPrison) {
+            inPrison = false;
+        }
+        super.setFeaturePointer(featurePointer);
     }
 
 
     //TODO ??? can be this in score visitor instead of here ???
     @Override
-	public void undeploy(boolean checkForLonelyBuilderOrPig) {
-    	assert !isInPrison();
+    public void undeploy(boolean checkForLonelyBuilderOrPig) {
+        assert !isInPrison();
         //store ref which is lost be super call
         Feature piece = getFeature();
         super.undeploy(checkForLonelyBuilderOrPig); //clear piece

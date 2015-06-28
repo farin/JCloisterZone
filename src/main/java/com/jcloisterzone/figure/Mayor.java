@@ -10,8 +10,8 @@ public class Mayor extends Follower {
 
     private static final long serialVersionUID = -7602411772187519451L;
 
-    public Mayor(Game game, Player player) {
-        super(game, player);
+    public Mayor(Game game, Integer idSuffix, Player player) {
+        super(game, idSuffix, player);
     }
 
     static class PennatsCountingVisitor implements FeatureVisitor<Integer> {

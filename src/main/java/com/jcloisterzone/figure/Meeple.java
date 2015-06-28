@@ -1,10 +1,10 @@
 package com.jcloisterzone.figure;
 
-import com.google.common.base.Objects;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
@@ -13,9 +13,11 @@ public abstract class Meeple extends Figure {
 
     private static final long serialVersionUID = 251811435063355665L;
 
+    private final String id;
+
     private transient final Player player;
     private transient Feature feature;
-    private transient Integer index; //index distinguish meeples on same feature
+    private transient Integer index; //order of deployment on same feature //TODO rename variable
 
 
     public static class DeploymentCheckResult {
@@ -35,9 +37,28 @@ public abstract class Meeple extends Figure {
         public static final DeploymentCheckResult OK = new DeploymentCheckResult();
     }
 
-    public Meeple(Game game, Player player) {
+    public Meeple(Game game, Integer idSuffix, Player player) {
         super(game);
+        StringBuilder idBuilder = new StringBuilder();
+        idBuilder.append(player.getIndex());
+        idBuilder.append(".");
+        idBuilder.append(getClass().getSimpleName());
+        if (idSuffix != null) {
+            idBuilder.append(".");
+            idBuilder.append(idSuffix.toString());
+        }
+        this.id = idBuilder.toString();
         this.player = player;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public boolean at(MeeplePointer mp) {
+        if (!super.at(mp)) return false;
+        if (!mp.getMeepleId().equals(id)) return false;
+        return true;
     }
 
     public boolean canBeEatenByDragon() {
@@ -59,8 +80,8 @@ public abstract class Meeple extends Figure {
 
 
     @Override
-	public void deploy(FeaturePointer at) {
-    	Feature feature = game.getBoard().get(at);
+    public void deploy(FeaturePointer at) {
+        Feature feature = game.getBoard().get(at);
         DeploymentCheckResult check = isDeploymentAllowed(feature);
         if (!check.result) {
             throw new IllegalArgumentException(check.error);
@@ -73,7 +94,7 @@ public abstract class Meeple extends Figure {
     }
 
     @Override
-	public final void undeploy() {
+    public final void undeploy() {
         undeploy(true);
     }
 
@@ -108,23 +129,17 @@ public abstract class Meeple extends Figure {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(index, featurePointer);
+        return id.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false; //compares exact types
-        Meeple o = (Meeple) obj;
-        if (!Objects.equal(player, o.player)) return false;
-        if (!Objects.equal(index, o.index)) return false;
-        //do not compare feature - location is enough - feature is changing during time
-        return true;
+        if (!(obj instanceof Meeple)) return false;
+        return this == obj || id.equals(((Meeple)obj).id);
     }
 
     @Override
     public String toString() {
-        return super.toString() + "(" + player.getIndex() + ")";
+        return super.toString() + "(" + player.getNick() + "," + id + ")";
     }
-
 }
