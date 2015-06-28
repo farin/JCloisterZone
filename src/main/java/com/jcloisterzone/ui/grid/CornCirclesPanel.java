@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.grid;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +13,8 @@ import net.miginfocom.swing.MigLayout;
 import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @InteractionPanel
 public class CornCirclesPanel extends JPanel {

@@ -191,7 +191,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             if (piece instanceof City || piece instanceof Road) {
                 Area subs = piece instanceof Bridge ? subsBridge : subsRoadCity;
                 if (!subs.isEmpty()) {
-                    fa.getArea().subtract(subs);
+                    fa.getTrackingArea().subtract(subs);
                 }
             }
             loc =  aliasAbbot ? Location.ABBOT : loc;
@@ -213,10 +213,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
 
         for (FeatureArea fa : areas.values()) {
-            Area a = fa.getArea();
+            Area a = fa.getTrackingArea();
             a = a.createTransformedArea(transform1);
             a = a.createTransformedArea(transform2);
-            fa.setArea(a);
+            fa.setTrackingArea(a);
         }
 
        return areas;
@@ -255,7 +255,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Bridge bridge = tile.getBridge();
         if (bridge != null) {
             Area area;
-            area = getFeatureArea(tile, Bridge.class, bridge.getLocation()).getArea();
+            area = getFeatureArea(tile, Bridge.class, bridge.getLocation()).getTrackingArea();
             substractions.add(area);
         }
     }
@@ -263,10 +263,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private Area getBaseRoadAndCitySubstractions(Tile tile) {
         Area sub = new Area();
         if (tile.getTower() != null) {
-            sub.add(getFeatureArea(tile, Tower.class, Location.TOWER).getArea());
+            sub.add(getFeatureArea(tile, Tower.class, Location.TOWER).getTrackingArea());
         }
         if (tile.getFlier() != null) {
-            sub.add(getFeatureArea(tile, null, Location.FLIER).getArea());
+            sub.add(getFeatureArea(tile, null, Location.FLIER).getTrackingArea());
         }
         sub.add(getSubstractionArea(tile, false));
         return sub;
@@ -276,12 +276,12 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Area sub = new Area();
         for (Feature piece : tile.getFeatures()) {
             if (!(piece instanceof Farm)) {
-                Area area = getFeatureArea(tile, piece.getClass(), piece.getLocation()).getArea();
+                Area area = getFeatureArea(tile, piece.getClass(), piece.getLocation()).getTrackingArea();
                 sub.add(area);
             }
         }
         if (tile.getFlier() != null) {
-            sub.add(getFeatureArea(tile, null, Location.FLIER).getArea());
+            sub.add(getFeatureArea(tile, null, Location.FLIER).getTrackingArea());
         }
         sub.add(getSubstractionArea(tile, true));
         return sub;
@@ -294,7 +294,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
-                    Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getArea();
+                    Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();
                     base.subtract(area);
                 }
             }
@@ -304,7 +304,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             result = new FeatureArea(getFeatureArea(tile, Farm.class, farm));
         }
         if (!sub.isEmpty()) {
-            result.getArea().subtract(sub);
+            result.getTrackingArea().subtract(sub);
         }
         return result;
     }

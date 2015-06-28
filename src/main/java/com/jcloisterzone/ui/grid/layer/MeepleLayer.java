@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +47,10 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+    }
+
+    public LinkedList<PositionedFigureImage> getPositionedFigures() {
+        return images;
     }
 
     private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {
@@ -97,14 +103,14 @@ public class MeepleLayer extends AbstractGridLayer {
         super.zoomChanged(squareSize);
     }
 
-    private PositionedFigureImage createMeepleImage(Class<? extends Meeple> type, Color c, FeaturePointer fp) {
+    private PositionedFigureImage createMeepleImage(Meeple meeple, Color c, FeaturePointer fp) {
         Feature feature = getGame().getBoard().get(fp);
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), type, fp.getLocation());
-        Image image = getClient().getFigureTheme().getFigureImage(type, c, getExtraDecoration(type, fp));
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), meeple.getClass(), fp.getLocation());
+        Image image = getClient().getFigureTheme().getFigureImage(meeple, c, getExtraDecoration(meeple.getClass(), fp));
         if (fp.getLocation() == Location.ABBOT) {
             image = rotate(image, 90);
         }
-        return new PositionedFigureImage(type, fp, offset, image, feature instanceof Bridge);
+        return new PositionedFigureImage(meeple, fp, offset, image, feature instanceof Bridge);
     }
 
     private PositionedFigureImage createNeutralFigureImage(NeutralFigure fig, FeaturePointer fp) {
@@ -126,7 +132,7 @@ public class MeepleLayer extends AbstractGridLayer {
         if (mageOrWitch) {
             offset = offset.translate(0, -10);
         }
-        PositionedFigureImage pfi = new PositionedFigureImage(fig.getClass(), fp, offset, image, bridgePlacement);
+        PositionedFigureImage pfi = new PositionedFigureImage(fig, fp, offset, image, bridgePlacement);
         if (mageOrWitch) {
             pfi.xScaleFactor = pfi.yScaleFactor = 1.2;
         }
@@ -135,10 +141,11 @@ public class MeepleLayer extends AbstractGridLayer {
 
     private void rearrangeMeeples(FeaturePointer fp) {
         int order = 0;
+        boolean hasOther = false;
         //small followers first
         for (PositionedFigureImage mi : images) {
             if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (mi.figureType.equals(SmallFollower.class)) {
+                if (mi.getFigure() instanceof SmallFollower) {
                     mi.order = order++;
                 }
             }
@@ -146,16 +153,25 @@ public class MeepleLayer extends AbstractGridLayer {
         //others on top
         for (PositionedFigureImage mi : images) {
             if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (!mi.figureType.equals(SmallFollower.class)) {
+                if (!(mi.getFigure() instanceof SmallFollower)) {
+                    hasOther = true;
                     mi.order = order++;
                 }
             }
+        }
+        if (order > 1 && hasOther) {
+            Collections.sort(images, new Comparator<PositionedFigureImage>() {
+                @Override
+                public int compare(PositionedFigureImage o1, PositionedFigureImage o2) {
+                    return o1.order - o2.order;
+                }
+            });
         }
     }
 
     public void meepleDeployed(MeepleEvent ev) {
         Color c = ev.getMeeple().getPlayer().getColors().getMeepleColor();
-        images.add(createMeepleImage(ev.getMeeple().getClass(), c, ev.getTo()));
+        images.add(createMeepleImage(ev.getMeeple(), c, ev.getTo()));
         rearrangeMeeples(ev.getTo());
     }
 
@@ -166,11 +182,11 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    private void figureUndeployed(Class<? extends Figure> figureType, FeaturePointer from) {
+    private void figureUndeployed(Figure figure, FeaturePointer from) {
         Iterator<PositionedFigureImage> iter = images.iterator();
         while (iter.hasNext()) {
             PositionedFigureImage mi = iter.next();
-            if (mi.match(figureType, from)) {
+            if (mi.getFigure().equals(figure)) {
                 iter.remove();
                 break;
             }
@@ -179,11 +195,11 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     public void meepleUndeployed(MeepleEvent ev) {
-        figureUndeployed(ev.getMeeple().getClass(), ev.getFrom());
+        figureUndeployed(ev.getMeeple(), ev.getFrom());
     }
 
     public void neutralFigureUndeployed(NeutralFigureMoveEvent ev) {
-        figureUndeployed(ev.getFigure().getClass(), ev.getFrom());
+        figureUndeployed(ev.getFigure(), ev.getFrom());
     }
 
     public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
@@ -215,7 +231,7 @@ public class MeepleLayer extends AbstractGridLayer {
         return null;
     }
 
-    private class PositionedImage {
+    public class PositionedImage {
         public final Position position;
         public final ImmutablePoint offset;
         public final Image sourceImage;
@@ -235,34 +251,31 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    private class PositionedFigureImage extends PositionedImage {
-         public final Class<? extends Figure> figureType;
-         public final Location location;
-         public final boolean bridgePlacement;
-         public int order;
+    public class PositionedFigureImage extends PositionedImage {
+        public final Figure figure;
+        public final Location location;
+        public final boolean bridgePlacement;
+        public int order;
 
-         public PositionedFigureImage(Class<? extends Figure> figureType, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
-             super(fp.getPosition(), offset, sourceImage);
-             this.figureType = figureType;
-             location = fp.getLocation();
-             this.bridgePlacement = bridgePlacement;
-         }
+        public PositionedFigureImage(Figure figure, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
+            super(fp.getPosition(), offset, sourceImage);
+            this.figure = figure;
+            location = fp.getLocation();
+            this.bridgePlacement = bridgePlacement;
+        }
 
-         @Override
+        @Override
         public ImmutablePoint getScaledOffset(int boxSize) {
-             ImmutablePoint point = offset;
-             if (order > 0) {
-                 point = point.translate(10*order, 0);
-             }
-             return point.scale(getSquareSize(), boxSize);
-         }
+            ImmutablePoint point = offset;
+            if (order > 0) {
+                point = point.translate(10*order, 0);
+            }
+            return point.scale(getSquareSize(), boxSize);
+        }
 
-         public boolean match(Class<? extends Figure> figureType, FeaturePointer fp) {
-             if (!figureType.equals(this.figureType)) return false;
-             if (location != fp.getLocation()) return false;
-             if (!position.equals(fp.getPosition())) return false;
-             return true;
-         }
+        public Figure getFigure() {
+            return figure;
+        }
     }
 
     //TODO better use affine transform while drawing

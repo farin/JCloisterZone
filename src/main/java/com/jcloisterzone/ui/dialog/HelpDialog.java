@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JDialog;
@@ -10,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.panel.HelpPanel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class HelpDialog extends JDialog {

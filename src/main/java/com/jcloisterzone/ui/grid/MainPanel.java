@@ -28,10 +28,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.figure.neutral.Fairy;
-import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -42,7 +39,6 @@ import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
-import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
@@ -171,7 +167,7 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(goldLayer);
         }
 
-        gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
+        gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false); //70
 
         if (game.hasCapability(DragonCapability.class)) {
             gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc), false);

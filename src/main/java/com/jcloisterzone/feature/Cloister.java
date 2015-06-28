@@ -1,12 +1,12 @@
 package com.jcloisterzone.feature;
 
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.visitor.score.CloisterScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class Cloister extends TileFeature implements Completable {

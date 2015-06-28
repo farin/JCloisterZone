@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.grid.layer;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,18 +23,18 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
     }
 
     @Override
-    protected Map<Location, FeatureArea> prepareAreas(Tile tile, Position p) {
+    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         //quick fix
         if (getGame().getCurrentTile().getPosition().equals(p)) {
             Set<Location> locations = action.getLocations(p);
-            return getClient().getResourceManager().getBarnTileAreas(tile, getSquareSize(), locations);
+            return locationMapToPointers(p, getClient().getResourceManager().getBarnTileAreas(tile, getSquareSize(), locations));
         }
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
-    protected void performAction(Position pos, Location selected) {
-        action.perform(getRmiProxy(), new FeaturePointer(pos, selected));
+    protected void performAction(FeaturePointer fp) {
+        action.perform(getRmiProxy(), fp);
     }
 
     @Override

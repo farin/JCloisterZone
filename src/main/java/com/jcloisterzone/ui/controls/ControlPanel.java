@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -53,6 +51,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.message.CommitMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ControlPanel extends JPanel {
 

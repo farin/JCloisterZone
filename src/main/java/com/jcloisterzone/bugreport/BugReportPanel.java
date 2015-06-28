@@ -1,7 +1,5 @@
 package com.jcloisterzone.bugreport;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +19,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class BugReportPanel extends JPanel {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());

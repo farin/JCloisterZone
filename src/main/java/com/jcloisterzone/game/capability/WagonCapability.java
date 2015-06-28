@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.asLocation;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +28,8 @@ import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+
+import static com.jcloisterzone.XMLUtils.asLocation;
 
 public class WagonCapability extends Capability {
 

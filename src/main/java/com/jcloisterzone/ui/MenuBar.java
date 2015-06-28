@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
 

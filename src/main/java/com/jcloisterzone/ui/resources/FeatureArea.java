@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
+import java.awt.Color;
 import java.awt.geom.Area;
 
 public class FeatureArea {
@@ -10,37 +11,63 @@ public class FeatureArea {
     public final static int DEFAULT_STRUCTURE_ZINDEX = 40;
     public final static int DEFAULT_BRIDGE_ZINDEX = 50;
 
-    private Area area;
+    private Area trackingArea; //mouse tracking area
+    private Area displayArea; //mouse tracking area
     private int zIndex;
+    private Color forceAreaColor;
 
-    public FeatureArea(Area area, int zIndex) {
-        this.area = area;
+    public FeatureArea(Area trackingArea, int zIndex) {
+        this.trackingArea = trackingArea;
         this.zIndex = zIndex;
     }
 
+    public FeatureArea(Area trackingArea, Area displayArea, int zIndex) {
+        this(trackingArea, zIndex);
+        this.displayArea = displayArea;
+    }
+
     public FeatureArea(FeatureArea copy) {
-        this.area = new Area(copy.area);
+        this.trackingArea = new Area(copy.trackingArea);
+        if (copy.displayArea != null) {
+            this.displayArea = new Area(copy.displayArea);
+        }
         this.zIndex = copy.zIndex;
     }
 
-    public Area getArea() {
-        return area;
+    public Area getTrackingArea() {
+        return trackingArea;
+    }
+
+    public Area getDisplayArea() {
+        return displayArea;
     }
 
     public int getzIndex() {
         return zIndex;
     }
 
-    public void setArea(Area area) {
-        this.area = area;
+    public void setTrackingArea(Area area) {
+        this.trackingArea = area;
+    }
+
+    public void setDisplayArea(Area displayArea) {
+        this.displayArea = displayArea;
     }
 
     public void setzIndex(int zIndex) {
         this.zIndex = zIndex;
     }
 
+    public Color getForceAreaColor() {
+        return forceAreaColor;
+    }
+
+    public void setForceAreaColor(Color forceAreaColor) {
+        this.forceAreaColor = forceAreaColor;
+    }
+
     @Override
     public String toString() {
-    	return zIndex + "/" + area.toString();
+        return zIndex + "/" + trackingArea.toString();
     }
 }

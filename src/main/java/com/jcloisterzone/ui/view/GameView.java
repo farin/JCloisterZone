@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.view;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -47,6 +45,8 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
 

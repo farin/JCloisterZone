@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.controls.chat;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -55,6 +53,8 @@ import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.wsio.message.PostChatMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public abstract class ChatPanel extends JPanel implements WindowStateListener {
 

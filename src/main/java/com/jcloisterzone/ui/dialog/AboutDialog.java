@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
@@ -16,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class AboutDialog extends JDialog {

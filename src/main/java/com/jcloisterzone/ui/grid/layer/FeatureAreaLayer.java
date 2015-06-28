@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +19,8 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<SelectFeatureAction> {
@@ -42,11 +43,13 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         return action;
     }
 
-    protected Map<Location, FeatureArea> prepareAreas(Tile tile, Position p) {
+    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         abbotOption = false;
         abbotOnlyOption = false;
         Set<Location> locations = action.getLocations(p);
-        if (locations == null) return null;
+        if (locations == null) {
+            return Collections.emptyMap();
+        }
         if (locations.contains(Location.ABBOT)) {
             abbotOption = true;
             if (!locations.contains(Location.CLOISTER)) {
@@ -57,24 +60,26 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         }
 
         ConvenientResourceManager resMgr = getClient().getResourceManager();
+        Map<Location, FeatureArea> locMap;
         if (action instanceof BridgeAction) {
-            return resMgr.getBridgeAreas(tile, getSquareSize(), locations);
+            locMap = resMgr.getBridgeAreas(tile, getSquareSize(), locations);
         } else {
-            return resMgr.getFeatureAreas(tile, getSquareSize(), locations);
+            locMap =  resMgr.getFeatureAreas(tile, getSquareSize(), locations);
         }
+        return locationMapToPointers(p, locMap);
     }
 
 
     @Override
-    protected void performAction(final Position pos, Location loc) {
+    protected void performAction(FeaturePointer fp) {
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
 
-            if (loc == Location.FLIER) {
+            if (fp.getLocation() == Location.FLIER) {
                 getClient().getConnection().send(new DeployFlierMessage(getGame().getGameId(), ma.getMeepleType()));
                 return;
             }
-            if (loc == Location.CLOISTER && abbotOption) {
+            if (fp.getLocation() == Location.CLOISTER && abbotOption) {
                 String[] options;
                 if (abbotOnlyOption) {
                     options = new String[] {_("Place as abbot")};
@@ -89,11 +94,11 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
                     return;
                 }
                 if (abbotOnlyOption || result == JOptionPane.NO_OPTION) {
-                    loc = Location.ABBOT;
+                    fp = new FeaturePointer(fp.getPosition(), Location.ABBOT);
                 }
             }
         }
-        action.perform(getRmiProxy(), new FeaturePointer(pos, loc));
+        action.perform(getRmiProxy(), fp);
         return;
     }
 

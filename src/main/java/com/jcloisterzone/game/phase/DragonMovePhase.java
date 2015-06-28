@@ -2,19 +2,15 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Set;
 
-import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
-import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.ui.GameController;
 
 

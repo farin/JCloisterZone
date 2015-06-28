@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +20,8 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class PrincessCapability extends Capability {
 

@@ -157,7 +157,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                         }
                         Map<Location, FeatureArea> tileAreas = areas.get(f.getTile());
                         if (tileAreas != null) { //sync issue, feature can be extended in other thread, so it is not registered in areas yet
-                            Area featureArea = new Area(tileAreas.get(f.getLocation()).getArea());
+                            Area featureArea = new Area(tileAreas.get(f.getLocation()).getTrackingArea());
                             featureArea.transform(AffineTransform.getTranslateInstance(FULL_SIZE * (pos.x-x), FULL_SIZE*(pos.y-y)));
                             result.area.add(featureArea);
                         }

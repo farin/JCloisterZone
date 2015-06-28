@@ -6,7 +6,6 @@ import java.util.List;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.SelectActionEvent;

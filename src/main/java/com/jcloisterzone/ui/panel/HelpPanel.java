@@ -1,11 +1,10 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class HelpPanel extends JPanel {
 

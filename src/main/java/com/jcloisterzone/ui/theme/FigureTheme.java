@@ -38,6 +38,10 @@ public class FigureTheme extends Theme {
         return getFigureImage(m.getClass(), c, null);
     }
 
+    public Image getFigureImage(Meeple m, Color c, String extraDecoration) {
+        return getFigureImage(m.getClass(), c, extraDecoration);
+    }
+
     public Image getFigureImage(Class<? extends Meeple> type, Color c, String extraDecoration) {
         String name = type.getSimpleName().toLowerCase();
         return getFigureImage("player-meeples/" + name, c, extraDecoration, null);

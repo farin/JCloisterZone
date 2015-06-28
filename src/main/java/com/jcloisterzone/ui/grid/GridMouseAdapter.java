@@ -20,6 +20,10 @@ public class GridMouseAdapter extends MouseAdapter implements MouseInputListener
         this.listener = listener;
     }
 
+    public Position getCurrentPosition() {
+        return currentPosition;
+    }
+
     private Position getGridPosition(MouseEvent e) {
         int sqSize = gridPanel.getSquareSize();
         Point2D point = gridPanel.getRelativePoint(e.getPoint());

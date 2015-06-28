@@ -1,7 +1,5 @@
 package com.jcloisterzone.bugreport;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JDialog;
@@ -9,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.ui.UiUtils;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class BugReportDialog extends JDialog {

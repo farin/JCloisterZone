@@ -1,9 +1,5 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XMLUtils.attributeIntValue;
-import static com.jcloisterzone.XMLUtils.attributeStringValue;
-import static com.jcloisterzone.XMLUtils.getTileId;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +26,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
+import static com.jcloisterzone.XMLUtils.attributeStringValue;
+import static com.jcloisterzone.XMLUtils.getTileId;
 
 
 public class TilePackFactory {

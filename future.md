@@ -4,6 +4,7 @@
 
 - preferences dialog to change settings from app
 - improved TO, CC, GQ, AM images quality
+- changed meeple selection (eg. princess undeploy, crop circles undeploy etc.) - instead selecting tile feature, meeple itself is highlighted directly
 - rotate board fixes - don't rotate fairy and dragon (#145), gold counters and little building selection.
 - rules update - Wagon can not choose which tile to move after completing a feature (#148)
 - slightly changed way how are mouseover handled for overlapping feature areas  - instead selecting none, a higher one is selected.

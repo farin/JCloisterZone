@@ -3,7 +3,6 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;

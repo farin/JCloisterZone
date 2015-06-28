@@ -1,10 +1,10 @@
 package com.jcloisterzone.game;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.util.EnumMap;
 
 import com.jcloisterzone.Expansion;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 

@@ -1,27 +1,33 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import com.jcloisterzone.action.SelectFollowerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.layer.MeepleLayer.PositionedFigureImage;
 import com.jcloisterzone.ui.resources.FeatureArea;
 
 
 public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<SelectFollowerAction> {
 
     private SelectFollowerAction action;
+    private final MeepleLayer meepleLayer;
 
-    public FollowerAreaLayer(GridPanel gridPanel, GameController gc) {
+    public FollowerAreaLayer(GridPanel gridPanel, GameController gc, MeepleLayer meepleLayer) {
         super(gridPanel, gc);
+        this.meepleLayer = meepleLayer;
     }
 
     @Override
@@ -36,27 +42,55 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
     }
 
 
-    protected Map<Location, FeatureArea> prepareAreas(Tile tile, Position p) {
-        Set<Location> locations = action.getLocations(p);
-        if (locations == null) return null;
-        //TODO remove on bridge!!!
-        return getClient().getResourceManager().getFeatureAreas(tile, getSquareSize(), locations);
+    @Override
+    protected Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+        int r = (int) (getSquareSize() / 3.0);
+        int innerR = (int) (getSquareSize() / 4.2);
+        int boxSize = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
+
+        Map<FeaturePointer, FeatureArea> areas = new HashMap<>();
+        for (MeeplePointer pointer : action.getMeeplePointers(p)) {
+            PositionedFigureImage pfi = null;
+            for (PositionedFigureImage item : meepleLayer.getPositionedFigures()) {
+                if (item.getFigure() instanceof Meeple) {
+                    Meeple meeple = (Meeple) item.getFigure();
+                    if (pointer.match(meeple)) {
+                        pfi = item;
+                        break;
+                    }
+                }
+            }
+            if (pfi != null) {
+                ImmutablePoint offset = pfi.getScaledOffset(boxSize);
+                int x = offset.getX();
+                int y = offset.getY();
+                int width = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO * pfi.xScaleFactor);
+                int height = (int) (pfi.heightWidthRatio * width * pfi.yScaleFactor);
+                int cx = x+(width/2);
+                int cy = y+(height/2);
+
+                Area trackingArea = new Area(new Ellipse2D.Double(cx-r, cy-r, 2*r, 2*r));
+                Area displyArea = new Area(trackingArea);
+                displyArea.subtract(new Area(new Ellipse2D.Double(cx-innerR, cy-innerR, 2*innerR, 2*innerR)));
+                if (pfi.order > 0) {
+                    //more then one meeple on feature, remove part of are over prev meeple
+                    int subWidth = r*4/5;
+                    trackingArea.subtract(new Area(new Rectangle(cx-r, cy-r, subWidth, 2*r)));
+                }
+
+                FeatureArea fa = new FeatureArea(trackingArea, displyArea, pfi.order);
+                fa.setForceAreaColor(((Meeple) pfi.getFigure()).getPlayer().getColors().getMeepleColor());
+                areas.put(pointer, fa);
+            }
+        }
+        return areas;
     }
 
 
     @Override
-    protected void performAction(final Position pos, final Location loc) {
-        List<MeeplePointer> pointers = new ArrayList<>();
-        for (MeeplePointer mp: action.getOptions()) {
-            if (mp.getPosition().equals(pos) && mp.getLocation().equals(loc)) {
-                pointers.add(mp);
-            }
-        }
-        //if (pointers.size() == 1) {
-            //TODO
-            action.perform(getRmiProxy(), pointers.get(0));
-        //}
-
+    protected void performAction(FeaturePointer fp) {
+        MeeplePointer mp = (MeeplePointer) fp;
+        action.perform(getRmiProxy(), mp);
     }
 
 

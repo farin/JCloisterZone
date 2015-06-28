@@ -1,11 +1,15 @@
 package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Area;
 import java.awt.geom.Point2D;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,6 +19,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.ui.GameController;
@@ -32,10 +37,11 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     private Player player;
     private boolean active;
-    private Map<Location, FeatureArea> areas;
+    private Map<FeaturePointer, FeatureArea> areas = Collections.emptyMap();
     private FeatureArea selectedArea;
-    private Location selectedLocation;
-    private Position selectedPosition;
+    private FeaturePointer selectedFeaturePointer;
+
+    boolean refreshAreas;
 
     /*if true, area is displayed as placed meeple
      this method is intended for tile placement debugging and is not optimized for performace
@@ -62,7 +68,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     @Override
     public void onShow() {
         super.onShow();
-        //TODO should ne based on event player
+        //TODO should be based on event player
         player = getGame().getActivePlayer();
     }
 
@@ -71,6 +77,15 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         super.onHide();
         player = null;
         cleanAreas();
+    }
+
+    protected Map<FeaturePointer, FeatureArea> locationMapToPointers(Position pos, Map<Location, FeatureArea> locMap) {
+        if (locMap == null) return Collections.emptyMap();
+        Map<FeaturePointer, FeatureArea> result = new HashMap<>();
+        for (Entry<Location, FeatureArea> entry : locMap.entrySet()) {
+            result.put(new FeaturePointer(pos, entry.getKey()), entry.getValue());
+        }
+        return result;
     }
 
     private class MoveTrackingGridMouseAdapter extends GridMouseAdapter {
@@ -82,7 +97,11 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         @Override
         public void mouseMoved(MouseEvent e) {
             super.mouseMoved(e);
-            if (areas == null) return;
+            if (refreshAreas) {
+                squareEntered(e, getCurrentPosition());
+            }
+            FeatureArea swap = null;
+            FeaturePointer swapPointer = null;
             int size = getSquareSize();
             Point2D point = gridPanel.getRelativePoint(e.getPoint());
             int x = (int) point.getX();
@@ -91,34 +110,33 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             if (y < 0) y += 1000 * size; //prevent mod from negative number
             x = x % size;
             y = y % size;
-            FeatureArea swap = null;
-            Location swapLocation = null;
-            for (Entry<Location, FeatureArea> entry : areas.entrySet()) {
+            for (Entry<FeaturePointer, FeatureArea> entry : areas.entrySet()) {
                 FeatureArea fa = entry.getValue();
-                if (fa.getArea().contains(x, y)) {
+                if (fa.getTrackingArea().contains(x, y)) {
                     if (swap == null) {
                         swap = fa;
-                        swapLocation = entry.getKey();
+                        swapPointer = entry.getKey();
                     } else {
                         if (swap.getzIndex() == fa.getzIndex()) {
                             // two overlapping areas at same point with same zIndex - select no one
                             swap = null;
-                            swapLocation = null;
+                            swapPointer = null;
                             break;
                         } else if (fa.getzIndex() > swap.getzIndex()) {
                            swap = fa;
-                           swapLocation = entry.getKey();
+                           swapPointer = entry.getKey();
                         } //else do nothing
                     }
                 }
             }
-            if (swapLocation != selectedLocation) {
+            boolean doSwap = (swapPointer == null && selectedFeaturePointer != null) || (swapPointer != null && !swapPointer.equals(selectedFeaturePointer));
+            if (doSwap || refreshAreas) { //reassing if refreshAres is true - needs to keep prope sized area!!!
                 selectedArea = swap;
-                selectedLocation = swapLocation;
+                selectedFeaturePointer = swapPointer;
                 gridPanel.repaint();
+                refreshAreas = false;
             }
         }
-
     }
 
     @Override
@@ -127,49 +145,46 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
     }
 
     private void cleanAreas() {
-        areas = null;
-        selectedPosition = null;
+        areas = Collections.emptyMap();
+        selectedFeaturePointer = null;
         selectedArea = null;
-        selectedLocation = null;
     }
 
     @Override
     public void zoomChanged(int squareSize) {
-        Position prevSelectedPosition = selectedPosition;
+        refreshAreas = true;
         super.zoomChanged(squareSize);
-        if (selectedPosition != null && selectedPosition.equals(prevSelectedPosition)) {
-            //no square enter/leave trigger in this case - refresh areas
-            areas = prepareAreas(gridPanel.getTile(selectedPosition), selectedPosition);
-        }
     }
 
     @Override
     public void squareEntered(MouseEvent e, Position p) {
         Tile tile = gridPanel.getTile(p);
         if (tile != null) {
-            selectedPosition = p;
             areas = prepareAreas(tile, p);
+            if (!areas.isEmpty()) {
+                Area a = areas.values().iterator().next().getTrackingArea();
+            }
         }
     }
 
-    protected abstract Map<Location, FeatureArea> prepareAreas(Tile tile, Position p);
+    protected abstract Map<FeaturePointer, FeatureArea> prepareAreas(Tile tile, Position p);
 
 
     @Override
     public void squareExited(MouseEvent e, Position p) {
-        if (selectedPosition != null) {
+        if (selectedFeaturePointer != null) {
             cleanAreas();
             gridPanel.repaint();
         }
     }
 
-    protected abstract void performAction(Position pos, Location selected);
+    protected abstract void performAction(FeaturePointer selected);
 
     @Override
     public void mouseClicked(MouseEvent e, Position pos) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selectedArea != null) {
-                performAction(pos, selectedLocation);
+                performAction(selectedFeaturePointer);
                 e.consume();
             }
         }
@@ -177,7 +192,7 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     @Override
     public void paint(Graphics2D g2) {
-        if (selectedArea != null && areas != null) {
+        if (selectedArea != null) {
             Composite old = g2.getComposite();
             if (figureHighlight) {
                 paintFigureHighlight(g2);
@@ -190,26 +205,30 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
 
     /** debug purposes highlight - it always shows basic follower (doesn't important for dbg */
     private void paintFigureHighlight(Graphics2D g2) {
+        Position pos = selectedFeaturePointer.getPosition();
         //ugly copy pasted code from Meeple but uncached here
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
-        Tile tile = getGame().getBoard().get(selectedPosition);
-        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedLocation);
+        Tile tile = getGame().getBoard().get(pos);
+        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, selectedFeaturePointer.getLocation());
         Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
         int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
         Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
         scaled = new ImageIcon(scaled).getImage();
         ImmutablePoint scaledOffset = point.scale(getSquareSize(), (int)(getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO));
-        g2.drawImage(scaled, getOffsetX(selectedPosition) + scaledOffset.getX(), getOffsetY(selectedPosition) + scaledOffset.getY(), gridPanel);
+        g2.drawImage(scaled, getOffsetX(pos) + scaledOffset.getX(), getOffsetY(pos) + scaledOffset.getY(), gridPanel);
     }
 
     /** standard highlight **/
     private void paintAreaHighlight(Graphics2D g2) {
         Player p = getGame().getActivePlayer();
         if (p != null && p.equals(player)) { //sync issue
-            g2.setColor(p.getColors().getMeepleColor());
+            Color color = selectedArea.getForceAreaColor();
+            g2.setColor(color == null ? p.getColors().getMeepleColor() : color);
             g2.setComposite(AREA_ALPHA_COMPOSITE);
-            g2.fill(transformArea(selectedArea.getArea(), selectedPosition));
+            Area area = selectedArea.getDisplayArea();
+            if (area == null) area = selectedArea.getTrackingArea();
+            g2.fill(transformArea(area, selectedFeaturePointer.getPosition()));
         }
     }
 }

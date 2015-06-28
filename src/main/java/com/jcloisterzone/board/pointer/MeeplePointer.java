@@ -11,9 +11,6 @@ public class MeeplePointer extends FeaturePointer {
 
     private final String meepleId;
 
-//    private final Class<? extends Meeple> meepleType;
-//    private final Player meepleOwner;
-
     public MeeplePointer(Position position, Location location, String meepleId) {
         super(position, location);
         this.meepleId = meepleId;
@@ -26,6 +23,11 @@ public class MeeplePointer extends FeaturePointer {
 
     public String getMeepleId() {
         return meepleId;
+    }
+
+    public boolean match(Meeple meeple) {
+        if (meeple == null) return false;
+        return meepleId.equals(meeple.getId());
     }
 
     @Override
@@ -59,16 +61,4 @@ public class MeeplePointer extends FeaturePointer {
             return false;
         return true;
     }
-
-
-//    public Class<? extends Meeple> getMeepleType() {
-//        return meepleType;
-//    }
-//
-//    public Player getMeepleOwner() {
-//        return meepleOwner;
-//    }
-
-
-
 }
