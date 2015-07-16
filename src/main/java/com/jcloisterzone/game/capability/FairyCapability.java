@@ -50,8 +50,12 @@ public class FairyCapability extends Capability {
     }
 
     public boolean isNextTo(Follower f) {
-        Position pos = f.getPosition();
-        return pos != null && pos.equals(fairy.getPosition());
+        if (game.getBooleanValue(CustomRule.FAIRY_ON_TILE)) {
+            Position pos = f.getPosition();
+            return pos != null && pos.equals(fairy.getPosition());
+        } else {
+            return fairy.getFeaturePointer() != null && f.at(fairy.getFeaturePointer());
+        }
     }
 
 
