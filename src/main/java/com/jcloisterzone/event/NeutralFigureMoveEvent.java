@@ -14,14 +14,14 @@ import com.jcloisterzone.game.capability.FairyCapability;
 
 public class NeutralFigureMoveEvent extends MoveEvent<BoardPointer> implements Undoable {
 
-    private final NeutralFigure figure;
+    private final NeutralFigure<?> figure;
 
-    public NeutralFigureMoveEvent(Player player, NeutralFigure figure, BoardPointer from, BoardPointer to) {
+    public NeutralFigureMoveEvent(Player player, NeutralFigure<?> figure, BoardPointer from, BoardPointer to) {
         super(player, from, to);
         this.figure = figure;
     }
 
-    public NeutralFigure getFigure() {
+    public NeutralFigure<?> getFigure() {
         return figure;
     }
 

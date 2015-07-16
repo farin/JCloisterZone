@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
 
@@ -17,6 +18,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.feature.Bridge;
@@ -43,8 +45,10 @@ public class MeepleLayer extends AbstractGridLayer {
      * In such case double meeple should be displayed after common ones.
      */
     private LinkedList<PositionedFigureImage> images = new LinkedList<>();
+    private PositionedFigureImage fairyOnFeature = null;
     //TODO own layer ???
     private List<PositionedImage> permanentImages = new ArrayList<>();
+
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -111,19 +115,32 @@ public class MeepleLayer extends AbstractGridLayer {
         if (fp.getLocation() == Location.ABBOT) {
             image = rotate(image, 90);
         }
-        return new PositionedFigureImage(meeple, fp, offset, image, feature instanceof Bridge);
+        return new PositionedFigureImage(meeple, fp, null, offset, image, feature instanceof Bridge);
     }
 
     private PositionedFigureImage createNeutralFigureImage(NeutralFigure fig, BoardPointer ptr) {
         boolean bridgePlacement = false;
         ImmutablePoint offset;
+        FeaturePointer fp = null;
+        String nextToMeeple = null;
         if (ptr instanceof FeaturePointer) {
-            FeaturePointer fp = (FeaturePointer) ptr;
+            fp = (FeaturePointer) ptr;
+        } else if (ptr instanceof MeeplePointer) {
+            MeeplePointer mptr = (MeeplePointer) ptr;
+            nextToMeeple = mptr.getMeepleId();
+            fp = mptr.asFeaturePointer();
+        }
+        if (fp != null) {
             Feature feature = getGame().getBoard().get(fp);
             bridgePlacement = feature instanceof Bridge;
             offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), SmallFollower.class, fp.getLocation());
+            if (nextToMeeple != null) {
+                //for better fairy visibilty
+                offset = offset.translate(-5, 0);
+            }
         } else {
             if (fig instanceof Fairy) {
+                //fairy on tile
                 offset = new ImmutablePoint(62, 52);
             } else {
                 offset = new ImmutablePoint(50, 50);
@@ -134,9 +151,12 @@ public class MeepleLayer extends AbstractGridLayer {
         if (mageOrWitch) {
             offset = offset.translate(0, -10);
         }
-        PositionedFigureImage pfi = new PositionedFigureImage(fig, ptr.asFeaturePointer(), offset, image, bridgePlacement);
+        PositionedFigureImage pfi = new PositionedFigureImage(fig, ptr.asFeaturePointer(), nextToMeeple, offset, image, bridgePlacement);
         if (mageOrWitch) {
             pfi.xScaleFactor = pfi.yScaleFactor = 1.2;
+        }
+        if (nextToMeeple != null) {
+            fairyOnFeature = pfi;
         }
         return pfi;
     }
@@ -144,23 +164,52 @@ public class MeepleLayer extends AbstractGridLayer {
     private void rearrangeMeeples(FeaturePointer fp) {
         int order = 0;
         boolean hasOther = false;
-        //small followers first
-        for (PositionedFigureImage mi : images) {
+
+        LinkedList<PositionedFigureImage> featureImages = new LinkedList<>();
+        PositionedFigureImage withFairy = null;
+        boolean isFairyOnCurrentFeature = false;
+
+        //iterate revese ti have small follower is placement order
+        ListIterator<PositionedFigureImage> iter = images.listIterator(images.size());
+        while (iter.hasPrevious()) {
+            PositionedFigureImage mi = iter.previous();
             if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (mi.getFigure() instanceof SmallFollower) {
-                    mi.order = order++;
-                }
-            }
-        }
-        //others on top
-        for (PositionedFigureImage mi : images) {
-            if (mi.location == fp.getLocation() && mi.position.equals(fp.getPosition())) {
-                if (!(mi.getFigure() instanceof SmallFollower)) {
+                if (fairyOnFeature == mi) {
+                    //dont add to array, it will be assigned from
                     hasOther = true;
-                    mi.order = order++;
+                    isFairyOnCurrentFeature = true;
+                } else {
+                    if (mi.getFigure() instanceof SmallFollower) {
+                        //small followers first
+                        featureImages.addFirst(mi);
+                    } else {
+                        //others on top
+                        hasOther = true;
+                        featureImages.addLast(mi);
+                    }
+                    if (fairyOnFeature != null && mi.getFigure() instanceof Meeple) {
+                        if (((Meeple) mi.getFigure()).getId().equals(fairyOnFeature.nextToMeeple)) {
+                            withFairy = mi;
+                        }
+                    }
                 }
             }
         }
+
+        if (withFairy == null && isFairyOnCurrentFeature) {
+            fairyOnFeature.order = 0; //show lonely fairy on first position
+            order++;
+        }
+
+        for (PositionedFigureImage mi : featureImages) {
+            mi.order = order++;
+            //System.err.println("Order: "+mi.getFigure().toString() + " = " + mi.order);
+            if (mi == withFairy) {
+                fairyOnFeature.order = order++;
+                //System.err.println("Order: "+fairyOnFeature.getFigure().toString() + " = " + fairyOnFeature.order);
+            }
+        }
+
         if (order > 1 && hasOther) {
             Collections.sort(images, new Comparator<PositionedFigureImage>() {
                 @Override
@@ -179,8 +228,8 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public void neutralFigureDeployed(NeutralFigureMoveEvent ev) {
         images.add(createNeutralFigureImage(ev.getFigure(), ev.getTo()));
-        if (ev.getTo() instanceof FeaturePointer) {
-            rearrangeMeeples((FeaturePointer) ev.getTo());
+        if (ev.getTo() instanceof FeaturePointer || ev.getTo() instanceof MeeplePointer) {
+            rearrangeMeeples(ev.getTo().asFeaturePointer());
         }
     }
 
@@ -189,12 +238,15 @@ public class MeepleLayer extends AbstractGridLayer {
         while (iter.hasNext()) {
             PositionedFigureImage mi = iter.next();
             if (mi.getFigure().equals(figure)) {
+                if (mi == fairyOnFeature) {
+                    fairyOnFeature = null;
+                }
                 iter.remove();
                 break;
             }
         }
-        if (from instanceof FeaturePointer) {
-            rearrangeMeeples((FeaturePointer) from);
+        if (from instanceof FeaturePointer || from instanceof MeeplePointer) {
+            rearrangeMeeples(from.asFeaturePointer());
         }
     }
 
@@ -259,13 +311,15 @@ public class MeepleLayer extends AbstractGridLayer {
         public final Figure figure;
         public final Location location;
         public final boolean bridgePlacement;
+        public final String nextToMeeple;
         public int order;
 
-        public PositionedFigureImage(Figure figure, FeaturePointer fp, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
+        public PositionedFigureImage(Figure figure, FeaturePointer fp, String nextToMeeple, ImmutablePoint offset, Image sourceImage, boolean bridgePlacement) {
             super(fp.getPosition(), offset, sourceImage);
             this.figure = figure;
             location = fp.getLocation();
             this.bridgePlacement = bridgePlacement;
+            this.nextToMeeple = nextToMeeple;
         }
 
         @Override

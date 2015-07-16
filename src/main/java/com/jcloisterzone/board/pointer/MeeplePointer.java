@@ -7,7 +7,6 @@ import com.jcloisterzone.figure.Meeple;
 /**
  * Points on feature on board or placed meeple.
  */
-//do not extend Feature pointer to better type checking
 public class MeeplePointer implements BoardPointer {
 
     private final FeaturePointer featurePointer;
