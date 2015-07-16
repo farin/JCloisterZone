@@ -7,6 +7,7 @@
 - changed meeple selection (eg. princess undeploy, crop circles undeploy etc.) - instead selecting tile feature, meeple itself is highlighted directly
 - rotate board fixes - don't rotate fairy and dragon (#145), gold counters and little building selection.
 - rules update - Wagon can not choose which tile to move after completing a feature (#148)
+- rules update - added and make default HiG fairy scoring option - fairy is placed next to follower instead of on tile (#137)
 - slightly changed way how are mouseover handled for overlapping feature areas  - instead selecting none, a higher one is selected.
 - fix: custom rule "Tiny city is scored only for 2 points" + unfinished two tile city with cathedral (gives 2pts at end instead of 0)
 - fix #135: Gold piece distribution is incorrect
