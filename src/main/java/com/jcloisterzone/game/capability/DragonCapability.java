@@ -65,10 +65,12 @@ public class DragonCapability extends Capability {
     @Override
     public void restore(Object data) {
         Object[] a = (Object[]) data;
-        dragon.setFeaturePointer(((Position) a[0]).asFeaturePointer());
-        dragonMovesLeft = (Integer) a[1];
-        dragonPlayer = (Player) a[2];
-        dragonVisitedTiles = a[3] == null ? null : new HashSet<>((Set<Position>) a[3]);
+        if (a[0] != null) {
+	        dragon.setFeaturePointer(((Position) a[0]).asFeaturePointer());
+	        dragonMovesLeft = (Integer) a[1];
+	        dragonPlayer = (Player) a[2];
+	        dragonVisitedTiles = a[3] == null ? null : new HashSet<>((Set<Position>) a[3]);
+        }
     }
 
     public Dragon getDragon() {
