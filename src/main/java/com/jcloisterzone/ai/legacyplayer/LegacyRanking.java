@@ -159,7 +159,7 @@ public class LegacyRanking implements GameRanking {
         for (Player p : game.getAllPlayers()) {
             double meeplePoints = 0;
             int limit = 0;
-            for (Follower f : Iterables.filter(p.getFollowers(), MeeplePredicates.deployed())) {
+            for (Follower f : Iterables.filter(p.getFollowers(), MeeplePredicates.inSupply())) {
                 if (f instanceof SmallFollower) {
                     meeplePoints += 0.15;
                 } else if (f instanceof BigFollower) {

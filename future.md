@@ -12,9 +12,11 @@
 - fix: custom rule "Tiny city is scored only for 2 points" + unfinished two tile city with cathedral (gives 2pts at end instead of 0)
 - fix #135: Gold piece distribution is incorrect
 - fix #139: abbey at game end
+- fix #140: AI always use big follower
 - fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)
 - fix #149: little building can be scored multiple times for one feature
 - fix #150: Wagon can move to a tile occupied by dragon
+
 
 ## Roadmap
 
