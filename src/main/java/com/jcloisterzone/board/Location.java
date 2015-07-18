@@ -35,6 +35,7 @@ public class Location implements Serializable {
      * @param mask	bite mask of demand instance
      */
     public static Location create(int mask) {
+    	if (mask == 0) return null;
         Location loc = instances.get(mask);
         if (loc != null) return loc;
         //TODO prepare name here
@@ -263,6 +264,17 @@ public class Location implements Serializable {
             }
         }
         return result.toArray(new Location[result.size()]);
+    }
+
+    public Location[] splitToSides() {
+    	ArrayList<Location> result = new ArrayList<Location>(4);
+    	for (Location side: Location.sides()) {
+			Location part = this.intersect(side);
+			if (part != null) {
+				result.add(part);
+			}
+    	}
+    	return result.toArray(new Location[result.size()]);
     }
 
     /** Creates instance according to name */

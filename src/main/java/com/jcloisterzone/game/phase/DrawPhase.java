@@ -21,6 +21,7 @@ public class DrawPhase extends ServerAwarePhase {
     private List<String> debugTiles;
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
+    private final RiverCapability riverCap;
 
     public DrawPhase(Game game, GameController controller) {
         super(game, controller);
@@ -30,6 +31,7 @@ public class DrawPhase extends ServerAwarePhase {
         }
         bazaarCap = game.getCapability(BazaarCapability.class);
         abbeyCap = game.getCapability(AbbeyCapability.class);
+        riverCap = game.getCapability(RiverCapability.class);
     }
 
     private boolean makeDebugDraw() {
@@ -90,6 +92,7 @@ public class DrawPhase extends ServerAwarePhase {
         getBoard().refreshAvailablePlacements(tile);
         if (getBoard().getAvailablePlacementPositions().isEmpty()) {
             getBoard().discardTile(tile);
+            if (riverCap != null) riverCap.turnPartCleanUp(); //force group activation if neeeded
             next(DrawPhase.class);
             return;
         }
