@@ -12,6 +12,7 @@
 - fix: custom rule "Tiny city is scored only for 2 points" + unfinished two tile city with cathedral (gives 2pts at end instead of 0)
 - fix #34, #155: relax legal river checking - now river is almost always legally finished, don't end game in rare case when lake can't fit   
 - fix #135: Gold piece distribution is incorrect
+- fix #138: undo & magic portal issue
 - fix #139: abbey at game end
 - fix #140: AI always use big follower
 - fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)

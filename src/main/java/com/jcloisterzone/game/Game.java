@@ -164,6 +164,7 @@ public class Game extends GameSettings implements EventProxy {
         //proof of concept
         if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
             Event inverse = lastUndoable.getInverseEvent();
+            inverse.setUndo(true);
 
             lastUndoable.undo(this);
             phase = lastUndoablePhase;
