@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugins.classic" version="3.2">
+<plugin id="com.jcloisterzone.plugins.classic" version="3.3">
     <title>Classic artwork</title>
     <description>Graphics from original board game</description>
     <type>DEFAULT_GRF_SET</type>
