@@ -10,6 +10,7 @@
 - rules update - added and make default HiG fairy scoring option - fairy is placed next to follower instead of on tile (#137)
 - slightly changed way how are mouseover handled for overlapping feature areas  - instead selecting none, a higher one is selected.
 - fix: custom rule "Tiny city is scored only for 2 points" + unfinished two tile city with cathedral (gives 2pts at end instead of 0)
+- fix #34, #155: relax legal river checking - now river is almost always legally finished, don't end game in rare case when lake can't fit   
 - fix #135: Gold piece distribution is incorrect
 - fix #139: abbey at game end
 - fix #140: AI always use big follower
