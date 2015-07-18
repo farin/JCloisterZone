@@ -1,10 +1,5 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XmlUtils.asLocation;
-import static com.jcloisterzone.XmlUtils.asLocations;
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-import static com.jcloisterzone.XmlUtils.attributeIntValue;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +18,11 @@ import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
+
+import static com.jcloisterzone.XMLUtils.asLocation;
+import static com.jcloisterzone.XMLUtils.asLocations;
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
 
 
 public class TileFactory {

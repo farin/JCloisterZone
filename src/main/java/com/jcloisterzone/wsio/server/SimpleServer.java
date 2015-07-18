@@ -65,8 +65,6 @@ public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String HOST_SESSION_PLACEHOLDER = "!host";
-
     private final SimpleServerErrorHandler errHandler;
 
     private MessageParser parser = new MessageParser();
@@ -148,8 +146,9 @@ public class SimpleServer extends WebSocketServer  {
                 }
                 slot.setNickname(player.getNick());
                 slot.setAutoAssignClientId(player.getSlot().getClientId());
-                maxSerial = Math.max(maxSerial, player.getSlot().getSerial());
-                slot.setSerial(player.getSlot().getSerial());
+                int serial = player.getSlot().getSerial() == null ? player.getIndex() : player.getSlot().getSerial();
+                maxSerial = Math.max(maxSerial, serial);
+                slot.setSerial(serial);
             }
         }
         for (int i = 0; i < slots.length; i++) {

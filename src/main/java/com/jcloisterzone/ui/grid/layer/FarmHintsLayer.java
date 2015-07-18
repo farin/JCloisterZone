@@ -27,6 +27,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class FarmHintsLayer extends AbstractGridLayer {
@@ -35,7 +36,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
     private static final AlphaComposite HINT_ALPHA_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
     private boolean doRefreshHints;
-    final Map<Tile, Map<Location, Area>> areas = new HashMap<>();
+    final Map<Tile, Map<Location, FeatureArea>> areas = new HashMap<>();
     private final List<FarmHint> hints = new ArrayList<>();
 
     public FarmHintsLayer(GridPanel gridPanel, GameController gc) {
@@ -90,7 +91,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                 }
             }
             if (farmLocations.isEmpty()) return;
-            Map<Location, Area> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+            Map<Location, FeatureArea> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
             areas.put(tile, tAreas);
             refreshHints();
         }
@@ -118,7 +119,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
     private void fillHints() {
         hints.clear();
         final Set<Feature> processed = new HashSet<>();
-        for (Entry<Tile, Map<Location, Area>> entry : areas.entrySet()) {
+        for (Entry<Tile, Map<Location, FeatureArea>> entry : areas.entrySet()) {
             for (Feature f : entry.getKey().getFeatures()) {
                 if (!(f instanceof Farm)) continue;
                 if (processed.contains(f)) continue;
@@ -132,7 +133,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                     int[] power = new int[getGame().getAllPlayers().length];
 
                     @Override
-                    public boolean visit(Feature feature) {
+                    public VisitResult visit(Feature feature) {
                         Farm f = (Farm) feature;
                         processed.add(f);
                         size++;
@@ -154,13 +155,13 @@ public class FarmHintsLayer extends AbstractGridLayer {
                             if (y != Integer.MAX_VALUE) result.area.transform(AffineTransform.getTranslateInstance(0, FULL_SIZE * (y-pos.y)));
                             y = pos.y;
                         }
-                        Map<Location, Area> tileAreas = areas.get(f.getTile());
+                        Map<Location, FeatureArea> tileAreas = areas.get(f.getTile());
                         if (tileAreas != null) { //sync issue, feature can be extended in other thread, so it is not registered in areas yet
-                            Area featureArea = new Area(tileAreas.get(f.getLocation()));
+                            Area featureArea = new Area(tileAreas.get(f.getLocation()).getTrackingArea());
                             featureArea.transform(AffineTransform.getTranslateInstance(FULL_SIZE * (pos.x-x), FULL_SIZE*(pos.y-y)));
                             result.area.add(featureArea);
                         }
-                        return true;
+                        return VisitResult.CONTINUE;
                     }
 
                     @Override

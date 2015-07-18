@@ -28,8 +28,7 @@ public class MeepleEvent extends MoveEvent<FeaturePointer> implements Undoable {
         if (getFrom() != null) {
             Feature f = game.getBoard().get(getFrom());
             f.addMeeple(meeple);
-            meeple.setPosition(getFrom().getPosition());
-            meeple.setLocation(getFrom().getLocation());
+            meeple.setFeaturePointer(getFrom());
             meeple.setFeature(f);
         }
     }

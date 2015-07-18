@@ -38,7 +38,8 @@ public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback,
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         if (fairyCap != null) {
             //erase position to not affect final scoring
-            fairyCap.setFairyPosition(null);
+        	//TOOD what about rather check game phase in rating instead this hack
+            fairyCap.getFairy().setFeaturePointer(null);
         }
 
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();

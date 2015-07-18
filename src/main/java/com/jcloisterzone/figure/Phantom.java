@@ -5,10 +5,10 @@ import com.jcloisterzone.game.Game;
 
 public class Phantom extends SmallFollower {
 
-	private static final long serialVersionUID = 3013786263529361093L;
+    private static final long serialVersionUID = 3013786263529361093L;
 
-	public Phantom(Game game, Player player) {
-        super(game, player);
+    public Phantom(Game game, Integer idSuffix, Player player) {
+        super(game, idSuffix, player);
     }
 
 }

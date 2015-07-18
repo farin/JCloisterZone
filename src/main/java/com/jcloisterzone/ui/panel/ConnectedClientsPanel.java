@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -21,9 +19,10 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ConnectedClientsPanel extends JPanel {
 

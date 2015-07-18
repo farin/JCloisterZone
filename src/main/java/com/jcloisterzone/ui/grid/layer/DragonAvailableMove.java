@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.Set;
 
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -48,7 +49,7 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (positions.contains(selected)) {
                 e.consume();
-                getRmiProxy().moveDragon(selected);
+                getRmiProxy().moveNeutralFigure(selected.asFeaturePointer(), Dragon.class);
             }
         }
     }

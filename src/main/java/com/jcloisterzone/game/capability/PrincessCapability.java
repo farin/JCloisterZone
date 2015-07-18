@@ -1,14 +1,12 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-
 import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
 import com.jcloisterzone.board.Tile;
@@ -22,6 +20,8 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class PrincessCapability extends Capability {
 
@@ -89,7 +89,7 @@ public class PrincessCapability extends Capability {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        if (XmlUtils.attributeBoolValue(node, "princessUsed")) {
+        if (XMLUtils.attributeBoolValue(node, "princessUsed")) {
             princessUsed = true;
         }
     }

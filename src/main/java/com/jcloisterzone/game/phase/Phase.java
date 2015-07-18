@@ -12,9 +12,12 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -111,13 +114,8 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void deployMeeple(Position p,  Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         logger.error(Application.ILLEGAL_STATE_MSG, "deployMeeple");
-    }
-
-    @Override
-    public void moveFairy(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveFairy");
     }
 
     @Override
@@ -126,28 +124,19 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void placeTunnelPiece(Position p, Location loc, boolean isSecondPiece) {
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece) {
         logger.error(Application.ILLEGAL_STATE_MSG, "placeTunnelPiece");
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(MeeplePointer mp) {
         logger.error(Application.ILLEGAL_STATE_MSG, "undeployMeeple");
     }
 
     @Override
-    public void moveDragon(Position p) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveDragon");
-    }
+    public void moveNeutralFigure(BoardPointer prt, Class<? extends NeutralFigure> figureType) {
+        logger.error(Application.ILLEGAL_STATE_MSG, "moveNeutralFigure");
 
-    @Override
-    public void moveMage(FeaturePointer fp) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveMage");
-    }
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        logger.error(Application.ILLEGAL_STATE_MSG, "moveWitch");
     }
 
     @Override
@@ -162,7 +151,7 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void takePrisoner(MeeplePointer mp) {
          logger.error(Application.ILLEGAL_STATE_MSG, "takePrisoner");
     }
 

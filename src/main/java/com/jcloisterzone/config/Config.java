@@ -360,7 +360,7 @@ public class Config {
     }
 
     public List<String> getPlugins() {
-        return plugins;
+        return plugins == null ? Collections.<String>emptyList() : plugins;
     }
 
     public void setPlugins(List<String> plugins) {

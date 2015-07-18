@@ -1,7 +1,5 @@
 package com.jcloisterzone.feature;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.jcloisterzone.Expansion;
@@ -9,6 +7,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
+
+import static org.junit.Assert.assertEquals;
 
 public class CloisterScoring extends AbstractScoringTest {
 	

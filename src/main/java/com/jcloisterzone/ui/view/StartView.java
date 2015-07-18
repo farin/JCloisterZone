@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.view;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -22,6 +20,8 @@ import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class StartView extends AbstractUiView {
 

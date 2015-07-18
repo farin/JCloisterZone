@@ -252,7 +252,8 @@ public class CreateGamePlayerPanel extends JPanel {
         }
     }
 
-    private void sendTakeSlotMessage(PlayerSlot slot) {
+    @SuppressWarnings("unchecked")
+	private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {

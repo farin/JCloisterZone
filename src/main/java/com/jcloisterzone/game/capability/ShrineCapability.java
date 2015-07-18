@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.PointCategory;
@@ -14,6 +12,8 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 
 public final class ShrineCapability extends Capability {

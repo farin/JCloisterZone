@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -41,6 +39,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ControlPanel;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameOverPanel extends JPanel {
 

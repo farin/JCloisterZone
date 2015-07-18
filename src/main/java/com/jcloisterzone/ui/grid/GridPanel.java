@@ -2,15 +2,10 @@ package com.jcloisterzone.ui.grid;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.LayoutManager;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.sound.sampled.ReverbType;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,7 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -113,7 +106,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             NodeList nl = snapshot.getTileElements();
             for (int i = 0; i < nl.getLength(); i++) {
                 Element el = (Element) nl.item(i);
-                Position pos = XmlUtils.extractPosition(el);
+                Position pos = XMLUtils.extractPosition(el);
                 if (pos.x <= left) left = pos.x - 1;
                 if (pos.x >= right) right = pos.x + 1;
                 if (pos.y <= top) top = pos.y - 1;
@@ -497,7 +490,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //        System.out.println("------------------------");
 //        ts = last = System.currentTimeMillis();
 
-        int w = getWidth(), h = getHeight();
+        int w = getWidth();
 
         AffineTransform origTransform = g2.getTransform();
         offsetX = calculateCenterX() - (int)(cx * squareSize);
@@ -520,19 +513,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //          profile(layer.getClass().getSimpleName());
         }
 
-
-        g2.setTransform(origTransform);
-        g2.translate(w - ControlPanel.PANEL_WIDTH, 0);
-
-
-        int innerWidth;
-//        if (secondPanel != null) {
-//            g2.translate(-secondPanel.getWidth()-60, 0);
-//            secondPanel.paintComponent(g2);
-//            innerWidth = (int) g2.getTransform().getTranslateX();
-//        } else {
-            innerWidth = (int) g2.getTransform().getTranslateX() - ControlPanel.LEFT_PADDING - ControlPanel.PANEL_SHADOW_WIDTH;
-       // }
         g2.setTransform(origTransform);
 
         //paintMessages(g2, innerWidth);

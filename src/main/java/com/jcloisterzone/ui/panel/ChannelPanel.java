@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -43,6 +41,8 @@ import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class ChannelPanel extends JPanel {

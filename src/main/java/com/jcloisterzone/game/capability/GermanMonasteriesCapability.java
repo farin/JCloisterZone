@@ -10,7 +10,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class GermanMonasteriesCapability extends Capability {
 

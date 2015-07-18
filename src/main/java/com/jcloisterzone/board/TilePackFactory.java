@@ -1,9 +1,5 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XmlUtils.attributeIntValue;
-import static com.jcloisterzone.XmlUtils.attributeStringValue;
-import static com.jcloisterzone.XmlUtils.getTileId;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +18,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.CustomRule;
@@ -30,6 +26,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
+import static com.jcloisterzone.XMLUtils.attributeStringValue;
+import static com.jcloisterzone.XMLUtils.getTileId;
 
 
 public class TilePackFactory {
@@ -96,7 +96,7 @@ public class TilePackFactory {
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
-        return XmlUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
+        return XMLUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
     }
 
     protected Map<String, Integer> getDiscardTiles() {

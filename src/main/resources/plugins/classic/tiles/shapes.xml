@@ -31,7 +31,7 @@
         <apply>DG.LCcc.d CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
-        <svg:polygon points="150,780 150,410 260,300 370,440 370,530 510,490 620,580 620,720 410,810 410,880 320,900"/>
+        <svg:polygon points="137,827 137,572 135,547 145,535 145,457 195,417 250,335 297,412 345,470 350,540 360,555 487,527 600,605 590,612 597,757 385,842 385,880 300,907 260,872 222,880 212,865 172,842 155,840"/>
         <apply>TO.L CLOISTER</apply>
     </shape>
     <shape feature="CLOISTER">
@@ -108,6 +108,10 @@
 
     <!-- Road shapes -->
 
+    <shape feature="ROAD" zIndex="31"> <!-- override just zIndex -->
+        <svg:rect x="0" y="400" width="1000" height="200"/>
+        <apply>TB.RRrr WE</apply>
+    </shape>
     <shape feature="ROAD">
         <svg:polygon points="0,400 999,400 999,600 600,600 600,999 400,999 400,600 0,600"/>
         <apply allRotations="1">* _N</apply>
@@ -174,16 +178,24 @@
         <apply>IC.CcR E</apply>
         <apply>R1.CIRI S</apply>
         <apply>TB.CcR.c E</apply>
-        <apply>TB.RRC W</apply>
-        <apply>TB.RRC S</apply>
+
         <apply>BB.R.bi S</apply>
         <apply>BB.RFR.b N</apply>
         <apply>BB.RFR.bi S</apply>
     </shape>
+    <shape feature="ROAD" baseLocation="N">
+        <svg:rect x="400" y="0" width="200" height="720"/>
+        <apply>TB.RRC S</apply>
+    </shape>
     <shape feature="ROAD" baseLocation="N"> <!-- long -->
-        <svg:rect x="400" y="0" width="200" height="770"/>
+        <svg:rect x="400" y="0" width="200" height="775"/>
         <apply>BE.CFR S</apply>
     </shape>
+    <shape feature="ROAD" baseLocation="N" zIndex="31">
+        <svg:rect x="400" y="0" width="200" height="785"/>
+        <apply>TB.RRC W</apply>
+    </shape>
+
     <shape feature="ROAD" baseLocation="N"> <!-- short  -->
         <svg:rect x="400" y="0" width="200" height="300"/>
         <apply>AM.LRRRR N</apply>
@@ -325,9 +337,13 @@
     </shape>
     <shape feature="ROAD">
         <svg:polygon points="400,0 400,300 600,300 600,700 400,700 400,999 600,999 600,0"/>
-        <apply>AM.CRcr+ NS</apply>
         <apply>DG.CRcr.d NS</apply>
     </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="410,0 435,117 437,222 400,407 395,457 417,492 465,520 525,512 562,467 562,820 530,815 477,830 447,880 445,999 600,999 600,890 585,862 562,820 562,467 592,322 600,195 602,132 577,0"/>
+        <apply>AM.CRcr+ NS</apply>
+    </shape>
+
     <shape feature="ROAD" baseLocation="SE">
         <svg:polygon points="407,990 375,900 282,840 255,760 267,715 307,627 290,590 310,562 312,520 297,480 310,455 465,372 685,360 825,432 887,430 995,395 997,595 847,650 762,647 620,565 505,567 460,582 435,712 465,750 537,800 575,862 590,997"/>
         <apply>AM.RrC SW</apply>
@@ -659,8 +675,8 @@
         <svg:polygon points="0,25 132,145 157,145 180,160 597,162 620,145 640,150 932,5 997,5 997,37 805,337 820,487 825,510 805,542 807,605 817,630 802,665 812,705 837,722 995,960 995,997 927,995 615,802 585,792 547,800 512,790 475,785 285,785 260,805 207,805 17,995 0,995"/>
         <apply>AM.C!+ W</apply>
     </shape>
-    <shape feature="CITY">
-        <svg:polygon points="2,0 95,100 242,152 267,170 310,180 320,247 477,267 505,180 525,160 560,165 580,142 615,142 632,145 647,132 782,107 860,80 955,2"/>
+    <shape feature="CITY" zIndex="21">
+        <svg:polygon points="0,0 0,35 87,115 240,167 260,182 312,192 322,202 310,382 302,460 305,512 345,735 342,765 315,770 277,782 275,875 305,925 340,882 340,875 350,875 350,880 375,880 375,865 395,865 402,877 420,880 425,865 450,865 455,877 475,875 475,865 507,865 542,922 590,870 587,852 580,775 567,760 530,765 500,700 485,627 485,570 492,547 527,512 567,495 567,472 562,432 540,437 515,422 485,382 472,360 472,302 482,237 497,197 517,175 540,182 562,172 575,160 600,150 625,155 637,150 645,140 680,127 765,112 807,110 860,85 912,50 972,0"/>
         <apply>AM.CCc+ N</apply>
     </shape>
     <shape feature="CITY">
@@ -668,8 +684,8 @@
         <apply>AM.CCc+ WE</apply>
         <apply>AM.CCcc+ WE</apply>
     </shape>
-    <shape feature="CITY" baseLocation="WE">
-        <svg:polygon points="2,50 60,115 95,210 112,332 125,352 125,380 135,410 147,430 147,457 172,492 257,520 322,525 597,520 692,497 805,430 802,395 815,372 832,360 840,337 850,312 865,210 887,120 970,2 997,0 997,985 942,952 885,882 815,667 795,640 512,680 257,665 190,660 152,667 157,707 150,730 125,740 70,900 2,977"/>
+    <shape feature="CITY" zIndex="21">
+        <svg:polygon points="15,0 105,87 255,147 272,167 290,172 322,170 335,192 327,302 312,382 312,445 317,507 355,715 357,792 327,815 287,825 105,890 25,962 0,987 0,999 999,999 952,952 890,900 825,877 702,852 665,857 650,835 625,835 620,815 600,805 567,812 542,770 502,687 482,607 492,535 515,507 532,487 570,475 575,450 567,407 545,410 515,392 485,352 477,307 492,212 512,175 530,162 560,162 580,157 582,142 617,130 637,135 652,130 655,122 712,112 777,102 820,92 872,75 962,0"/>
         <apply>AM.CCcc+ NS</apply>
     </shape>
     <shape feature="CITY">
@@ -891,9 +907,12 @@
     </shape>
     <shape feature="TOWER">
         <svg:rect x="600" y="100" width="290" height="250"/>
-        <apply>TO.L TOWER</apply>
         <apply>TO.RrRr.2 TOWER</apply>
         <apply>TO.CccR TOWER</apply>
+    </shape>
+    <shape feature="TOWER">
+        <svg:rect x="600" y="120" width="290" height="250"/>
+        <apply>TO.L TOWER</apply>
     </shape>
     <shape feature="TOWER">
         <svg:rect x="650" y="80" width="290" height="250"/>

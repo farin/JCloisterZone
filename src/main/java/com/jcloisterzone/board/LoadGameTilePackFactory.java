@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Snapshot;
 
@@ -48,7 +48,7 @@ public class LoadGameTilePackFactory extends TilePackFactory {
             Element el = (Element) nl.item(i);
             preplaced[i] = new PreplacedTile();
             preplaced[i].tileId = el.getAttribute("name");
-            preplaced[i].pos = XmlUtils.extractPosition(el);
+            preplaced[i].pos = XMLUtils.extractPosition(el);
             preplaced[i].rot = snapshot.extractTileRotation(el);
             preplaced[i].element = el;
             preplacedMeeples.addAll(snapshot.extractTileMeeples(el, game, preplaced[i].pos));

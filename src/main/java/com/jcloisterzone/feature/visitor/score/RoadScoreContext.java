@@ -13,7 +13,7 @@ public class RoadScoreContext extends PositionCollectingScoreContext {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         isInn = isInn || ((Road)feature).isInn();
         return super.visit(feature);
     }

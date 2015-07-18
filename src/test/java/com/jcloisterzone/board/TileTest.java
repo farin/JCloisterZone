@@ -1,14 +1,14 @@
 package com.jcloisterzone.board;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Road;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TileTest extends AbstractTileTest {
 

@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Container;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -55,6 +53,7 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
+import com.jcloisterzone.ui.dialog.PreferencesDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
@@ -71,6 +70,8 @@ import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 @SuppressWarnings("serial")
 public class Client extends JFrame {
 
@@ -82,6 +83,7 @@ public class Client extends JFrame {
     private final Config config;
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
+    private final List<Plugin> plugins;
 
     @Deprecated
     private FigureTheme figureTheme;
@@ -103,12 +105,14 @@ public class Client extends JFrame {
         this.dataDirectory = dataDirectory;
         this.configLoader = configLoader;
         this.config = config;
+        this.plugins = plugins;
         resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
     }
 
     public static Client getInstance() {
         return instance;
     }
+
 
     public boolean mountView(UiView view) {
         return mountView(view, null);
@@ -211,6 +215,10 @@ public class Client extends JFrame {
 
     public Config getConfig() {
         return config;
+    }
+
+    public List<Plugin> getPlugins() {
+        return plugins;
     }
 
     public void saveConfig() {
@@ -449,8 +457,12 @@ public class Client extends JFrame {
         }
     }
 
-    public void handleAbout() {
+    public void showAboutDialog() {
         new AboutDialog(config.getOrigin());
+    }
+
+    public void showPreferncesDialog() {
+        new PreferencesDialog(this);
     }
 
 

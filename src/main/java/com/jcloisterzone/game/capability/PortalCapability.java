@@ -5,10 +5,13 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
@@ -36,6 +39,16 @@ public class PortalCapability extends Capability {
         if (xml.getElementsByTagName("portal").getLength() > 0) {
             tile.setTrigger(TileTrigger.PORTAL);
         }
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+    	if (event.isUndo() && event instanceof MeepleEvent) {
+    		MeepleEvent ev = (MeepleEvent) event;
+	    	if (ev.getTo() == null && game.getCurrentTile().hasTrigger(TileTrigger.PORTAL)) {
+	    		portalUsed = false;
+	    	}
+    	}
     }
 
 
@@ -79,7 +92,7 @@ public class PortalCapability extends Capability {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        if (XmlUtils.attributeBoolValue(node, "portalUsed")) {
+        if (XMLUtils.attributeBoolValue(node, "portalUsed")) {
             portalUsed = true;
         }
     }

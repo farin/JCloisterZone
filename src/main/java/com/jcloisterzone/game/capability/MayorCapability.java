@@ -23,7 +23,7 @@ public class MayorCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Mayor(game, player));
+        player.addMeeple(new Mayor(game, null, player));
     }
 
     private Set<FeaturePointer> filterMayorLocations(Set<FeaturePointer> followerOptions) {

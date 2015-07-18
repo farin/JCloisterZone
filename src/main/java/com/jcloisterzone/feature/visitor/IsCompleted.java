@@ -8,13 +8,13 @@ public class IsCompleted implements FeatureVisitor<Boolean> {
     private boolean isCompleted = true;
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         Completable completable = (Completable) feature;
         if (completable.isOpen()) {
             isCompleted = false;
-            return false;
+            return VisitResult.STOP;
         }
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

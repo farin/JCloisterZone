@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -54,6 +52,8 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.message.CommitMessage;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 public class ControlPanel extends JPanel {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
@@ -89,6 +89,7 @@ public class ControlPanel extends JPanel {
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
+    private NeutralFigurePanel neutralPanel;
 
     private BazaarCapability bcb;
     private BazaarSupplyPanel bazaarSupplyPanel;
@@ -135,6 +136,9 @@ public class ControlPanel extends JPanel {
             playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
             add(playerPanels[i], "wrap, growx, gapleft 35, gapbottom 12, h pref");
         }
+
+        neutralPanel = new NeutralFigurePanel(game, cache);
+        add(neutralPanel, "wrap, growx, gapleft 35, gapbottom 12, h pref");
 
         //better be accurate and repaint just every second - TODO
         timer = new Timer(500, new ActionListener() {
@@ -247,6 +251,8 @@ public class ControlPanel extends JPanel {
         for (PlayerPanel pp : playerPanels) {
             doRevalidate = doRevalidate || pp.repaintContent(w);
         }
+        doRevalidate = doRevalidate || neutralPanel.repaintContent(w);
+
         if (doRevalidate) {
             revalidate();
         }
@@ -345,12 +351,12 @@ public class ControlPanel extends JPanel {
 
     @Subscribe
     public void handleRequestConfirm(RequestConfirmEvent ev) {
-    	clearActions();
+        clearActions();
         if (ev.getTargetPlayer().isLocalHuman()) {
             setShowConfirmRequest(true);
         } else {
-        	actionPanel.setShowConfirmRequest(true, true);
-        	repaint();
+            actionPanel.setShowConfirmRequest(true, true);
+            repaint();
         }
     }
 

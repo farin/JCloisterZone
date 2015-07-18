@@ -14,10 +14,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
@@ -30,7 +31,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class CastleCapability extends Capability {
 
@@ -151,9 +152,10 @@ public class CastleCapability extends Capability {
             }
         }
 
+        FeaturePointer fp = new FeaturePointer(tile.getPosition(), loc);
         for (Meeple m : meeples) {
             if (m.getPlayer() == game.getActivePlayer() && m.isDeploymentAllowed(castle).result) {
-                m.deploy(tile, loc);
+                m.deploy(fp);
             }
         }
         return castle;
@@ -226,7 +228,7 @@ public class CastleCapability extends Capability {
     private Element createCastleXmlElement(Document doc, Castle castle) {
         Element el = doc.createElement("castle");
         el.setAttribute("location", castle.getLocation().toString());
-        XmlUtils.injectPosition(el, castle.getTile().getPosition());
+        XMLUtils.injectPosition(el, castle.getTile().getPosition());
         return el;
     }
 
@@ -268,11 +270,11 @@ public class CastleCapability extends Capability {
         nl = node.getElementsByTagName("castle");
         for (int i = 0; i < nl.getLength(); i++) {
             Element castleEl = (Element) nl.item(i);
-            Position pos = XmlUtils.extractPosition(castleEl);
+            Position pos = XMLUtils.extractPosition(castleEl);
             Location loc = Location.valueOf(castleEl.getAttribute("location"));
             Castle castle = convertCityToCastle(pos, loc, true);
-            boolean isNew = XmlUtils.attributeBoolValue(castleEl, "new");
-            boolean isCompleted = XmlUtils.attributeBoolValue(castleEl, "completed");
+            boolean isNew = XMLUtils.attributeBoolValue(castleEl, "new");
+            boolean isCompleted = XMLUtils.attributeBoolValue(castleEl, "completed");
             if (isNew) {
                 newCastles.add(castle);
             } else if (isCompleted) {

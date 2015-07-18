@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="com.jcloisterzone.plugins.classic" version="3.2">
-    <title>Classic art</title>
+    <title>Classic artwork</title>
     <description>Graphics from original board game</description>
+    <type>DEFAULT_GRF_SET</type>
     <expansions>
         <expansion>BASIC</expansion>
         <expansion>WINTER</expansion>

@@ -1,10 +1,10 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.util.List;
 
 import com.jcloisterzone.figure.Meeple;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class Tower extends TileFeature {

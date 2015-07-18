@@ -84,13 +84,12 @@ public class FlierActionPhase extends Phase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (!meepleType.equals(flierCap.getMeepleType())) {
             throw new IllegalArgumentException("Invalid meeple type.");
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        Tile tile = getBoard().get(p);
-        m.deploy(tile, loc);
+        m.deploy(fp);
         next();
     }
 

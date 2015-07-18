@@ -5,13 +5,10 @@ import java.util.List;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TakePrisonerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.event.TowerIncreasedEvent;
-import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -57,8 +54,8 @@ public class TowerCapturePhase extends Phase {
     }
 
     @Override
-    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        Follower m = (Follower) game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+    public void takePrisoner(MeeplePointer mp) {
+        Follower m = (Follower) game.getMeeple(mp);
         m.undeploy();
         //undeploy returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();
@@ -79,7 +76,7 @@ public class TowerCapturePhase extends Phase {
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
                 boolean removeOk = prisoners.remove(exchanged);
                 assert removeOk;
-                exchanged.clearDeployment();
+                exchanged.setInPrison(false);
                 game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
             }
         }

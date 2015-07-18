@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.MeeplePointer;
@@ -47,23 +46,23 @@ public class EscapePhase extends Phase {
         private boolean result;
 
         @Override
-		public Boolean getResult() {
+        public Boolean getResult() {
             return result;
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City city = (City) feature;
             if (city.isBesieged()) { //cloister must border Cathar tile
                 Position p = city.getTile().getPosition();
                 for (Tile tile : getBoard().getAdjacentAndDiagonalTiles(p)) {
                     if (tile.hasCloister()) {
                         result = true;
-                        return false; //do not continue, besieged cloister exists
+                        return VisitResult.STOP; //do not continue, besieged cloister exists
                     }
                 }
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
     }
 
@@ -72,12 +71,12 @@ public class EscapePhase extends Phase {
         private boolean cloisterExists;
 
         @Override
-		public Boolean getResult() {
+        public Boolean getResult() {
             return isBesieged && cloisterExists;
         }
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City city = (City) feature;
             if (city.isBesieged()) {
                 isBesieged = true;
@@ -90,7 +89,7 @@ public class EscapePhase extends Phase {
                     break;
                 }
             }
-            return true;
+            return VisitResult.CONTINUE;
         }
     }
 
@@ -98,7 +97,7 @@ public class EscapePhase extends Phase {
     public UndeployAction prepareEscapeAction() {
         UndeployAction escapeAction = null;
         for (Meeple m : game.getDeployedMeeples()) {
-        	if (!(m instanceof Follower)) continue;
+            if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
             if (!(m.getFeature() instanceof City)) continue;
 
@@ -115,9 +114,9 @@ public class EscapePhase extends Phase {
 
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        assert meepleOwner == getActivePlayer().getIndex();
-        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+    public void undeployMeeple(MeeplePointer mp) {
+        Meeple m = game.getMeeple(mp);
+        assert m.getPlayer().equals(getActivePlayer());
         if (!(m.getFeature() instanceof City)) {
             logger.error("Feature for escape action must be a city");
             return;

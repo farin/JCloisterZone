@@ -18,7 +18,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
@@ -207,23 +207,23 @@ public final class TowerCapability extends Capability {
 
     public boolean hasImprisonedFollower(Player followerOwner) {
         for (Follower m : followerOwner.getFollowers()) {
-            if (m.getLocation() == Location.PRISON) return true;
+            if (m.isInPrison()) return true;
         }
         return false;
     }
 
     public boolean hasImprisonedFollower(Player followerOwner, Class<? extends Follower> followerClass) {
         for (Follower m : followerOwner.getFollowers()) {
-            if (m.getLocation() == Location.PRISON && m.getClass().equals(followerClass)) return true;
+            if (m.isInPrison() && m.getClass().equals(followerClass)) return true;
         }
         return false;
     }
 
-    public void inprison(Meeple m, Player player) {
+    public void inprison(Follower m, Player player) {
         assert m.getLocation() == null;
-        prisoners.get(player).add((Follower) m);
+        prisoners.get(player).add(m);
         game.post(new MeeplePrisonEvent(m, null, player));
-        m.setLocation(Location.PRISON);
+        m.setInPrison(true);
     }
 
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
@@ -237,7 +237,7 @@ public final class TowerCapability extends Capability {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
-                meeple.clearDeployment();
+                meeple.setInPrison(false);
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
@@ -260,14 +260,14 @@ public final class TowerCapability extends Capability {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
         if (lastIncreasedTower != null) {
             Element it = doc.createElement("increased-tower");
-            XmlUtils.injectPosition(it, lastIncreasedTower);
+            XMLUtils.injectPosition(it, lastIncreasedTower);
             node.appendChild(it);
         }
         for (Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();
             Element el = doc.createElement("tower");
             node.appendChild(el);
-            XmlUtils.injectPosition(el, towerPos);
+            XMLUtils.injectPosition(el, towerPos);
             el.setAttribute("height", "" + tower.getHeight());
         }
         for (Player player: game.getAllPlayers()) {
@@ -290,12 +290,12 @@ public final class TowerCapability extends Capability {
         ransomPaidThisTurn = Boolean.parseBoolean(node.getAttribute("ransomPaid"));
         NodeList nl = node.getElementsByTagName("increased-tower");
         if (nl.getLength() > 0) {
-            lastIncreasedTower = XmlUtils.extractPosition((Element) nl.item(0));
+            lastIncreasedTower = XMLUtils.extractPosition((Element) nl.item(0));
         }
         nl = node.getElementsByTagName("tower");
         for (int i = 0; i < nl.getLength(); i++) {
             Element te = (Element) nl.item(i);
-            Position towerPos = XmlUtils.extractPosition(te);
+            Position towerPos = XMLUtils.extractPosition(te);
             Tower tower = getBoard().get(towerPos).getTower();
             tower.setHeight(Integer.parseInt(te.getAttribute("height")));
             towers.add(towerPos);
@@ -311,10 +311,10 @@ public final class TowerCapability extends Capability {
             NodeList priosonerNl = playerEl.getElementsByTagName("prisoner");
             for (int j = 0; j < priosonerNl.getLength(); j++) {
                 Element prisonerEl = (Element) priosonerNl.item(j);
-                int ownerIndex = XmlUtils.attributeIntValue(prisonerEl, "player");
-                Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XmlUtils.classForName(prisonerEl.getAttribute("type"));
+                int ownerIndex = XMLUtils.attributeIntValue(prisonerEl, "player");
+                Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XMLUtils.classForName(prisonerEl.getAttribute("type"));
                 Meeple m = game.getPlayer(ownerIndex).getMeepleFromSupply(meepleClass);
-                inprison(m, player);
+                inprison((Follower) m, player);
             }
         }
     }

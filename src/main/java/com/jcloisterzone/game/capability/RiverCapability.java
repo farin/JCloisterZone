@@ -1,5 +1,8 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -7,7 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -24,6 +27,9 @@ public class RiverCapability extends Capability {
 
     private static final String R1_LAKE_ID = "R1.I.e";
     private static final String R2_LAKE_ID = "R2.I.v";
+    private static final String R2_FORK_ID = "R2.III";
+
+    private static List<String> STREAM_IDS =  Arrays.asList("R1.I.s", "R2.I.s", "GQ.RFI");
 
     public RiverCapability(Game game) {
         super(game);
@@ -35,7 +41,7 @@ public class RiverCapability extends Capability {
         nl = xml.getElementsByTagName("river");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            Location river = XmlUtils.union(XmlUtils.asLocation((Element) nl.item(0)));
+            Location river = XMLUtils.union(XMLUtils.asLocation((Element) nl.item(0)));
             tile.setRiver(river);
             if (tile.getSymmetry() != TileSymmetry.NONE) {
                 if (tile.getRiver().isRotationOf(Location.WE)) {
@@ -65,11 +71,13 @@ public class RiverCapability extends Capability {
         getTilePack().setGroupState("river", TileGroupState.RETIRED);
         Tile lake = getTilePack().drawTile(TilePack.INACTIVE_GROUP, getLakeId());
         getBoard().refreshAvailablePlacements(lake);
-        Entry<Position, Set<Rotation>> entry = getBoard().getAvailablePlacements().entrySet().iterator().next();
-        lake.setRotation(entry.getValue().iterator().next());
-        getBoard().add(lake, entry.getKey());
-        getBoard().mergeFeatures(lake);
-        game.post(new TileEvent(TileEvent.PLACEMENT, null, lake, lake.getPosition()));
+        if (!getBoard().getAvailablePlacements().isEmpty()) {
+	        Entry<Position, Set<Rotation>> entry = getBoard().getAvailablePlacements().entrySet().iterator().next();
+	        lake.setRotation(entry.getValue().iterator().next());
+	        getBoard().add(lake, entry.getKey());
+	        getBoard().mergeFeatures(lake);
+	        game.post(new TileEvent(TileEvent.PLACEMENT, null, lake, lake.getPosition()));
+        }
     }
 
     @Override
@@ -85,38 +93,80 @@ public class RiverCapability extends Capability {
         }
     }
 
+    private Location getTileRiver(Tile tile) {
+    	Location loc = tile.getRiver();
+    	return loc == null ? null : loc.rotateCW(tile.getRotation());
+    }
+
+
+    enum FollowResult {
+    	LEGAL_WITH_TILE,
+    	LEGAL,
+    	ILLEGAL
+    }
+
+    //direction is relative direction ^ < or >
+    private FollowResult followPath(Tile riverTile, Position riverPos, Location forward, char direction, Tile checkTile, Position checkTilePos) {
+    	boolean checkTilePartOfRiver = false;
+
+
+    	while (forward != null) {
+    		riverPos = riverPos.add(forward);
+    		if (riverPos.equals(checkTilePos)) {
+    			riverTile = checkTile;
+    			checkTilePartOfRiver = true;
+    		} else {
+    			riverTile = getBoard().get(riverPos);
+    		}
+    		if (riverTile == null) {
+    			if (getBoard().get(riverPos.add(forward)) != null) return FollowResult.ILLEGAL; //too few space
+    			break;
+    		}
+    		Location prev = forward;
+    		Location riverLoc = getTileRiver(riverTile);
+    		if (riverLoc == null || !prev.rev().isPartOf(riverLoc)) return FollowResult.ILLEGAL; //river is not continuous;
+    		forward = riverLoc.substract(prev.rev());
+    		if (riverTile.getId().equals(R2_FORK_ID)) {
+    			for (Location part : forward.splitToSides()) {
+    				char branchDir = '^';
+    				for (Location turn : riverLoc.splitToSides()) {
+    					if (turn == part) continue;
+    					if (turn.prev() == part) branchDir = branchDir == '<' ? '!' : '>';
+    					if (turn.next() == part) branchDir = branchDir == '>' ? '!' : '<';
+    				}
+					FollowResult branchResult = followPath(riverTile, riverPos, part, branchDir, checkTile, checkTilePos);
+					if (branchResult == FollowResult.ILLEGAL) return FollowResult.ILLEGAL;
+					if (branchResult == FollowResult.LEGAL_WITH_TILE) checkTilePartOfRiver = true;
+    			}
+    			break;
+    		} else {
+	    		if (prev == forward) {
+	    			direction = '^';
+	    		} else if (prev.next() == forward) {
+	    			if (direction == '>' || direction == '!') return FollowResult.ILLEGAL; //U-turn
+	    			direction = '>';
+	    		} else if (prev.prev() == forward) {
+	    			if (direction == '<' || direction == '!') return FollowResult.ILLEGAL; //U-turn
+	    			direction = '<';
+	    		}
+    		}
+    	}
+
+    	return checkTilePartOfRiver ? FollowResult.LEGAL_WITH_TILE : FollowResult.LEGAL;
+    }
+
     @Override
-    public boolean isTilePlacementAllowed(Tile tile, Position p) {
-        if (tile.getRiver() == null) return true;
-        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
+    public boolean isTilePlacementAllowed(Tile checkTile, Position checkTilePos) {
+    	if (checkTile.getRiver() == null) return true;
 
-            //check river connection
-            Location tileRelativePosition = e.getKey();
-            Tile placedTile = e.getValue();
-            if (placedTile.getRiver() == null) return false; //e.g. count of carcassone preplaced tiles
-            boolean r1 = tileRelativePosition.rotateCCW(tile.getRotation()).isPartOf(tile.getRiver());
-            boolean r2 = tileRelativePosition.rotateCCW(placedTile.getRotation()).rev().isPartOf(placedTile.getRiver());
-            if (!(r1 & r2)) return false;
+    	//find stream to start from
+    	for (Tile t : getBoard().getAllTiles()) {
+    		if (STREAM_IDS.contains(t.getId())) {
+    			return followPath(t, t.getPosition(), getTileRiver(t), '^', checkTile, checkTilePos) == FollowResult.LEGAL_WITH_TILE;
+    		}
+    	}
 
-            //check U-turn
-            Location continueRiver = tile.getRiver().rotateCW(tile.getRotation()).substract(tileRelativePosition);
-            if (continueRiver == Location.INNER_FARM) return true; //lake
-            for (Location continueSide: Location.sides()) { //split beacuse of river fork
-                if (continueRiver.intersect(continueSide) == null) continue;
-                Position pCheck = p.add(continueSide).add(continueSide.rotateCW(Rotation.R90));
-                if (getBoard().get(pCheck) != null) return false;
-                pCheck = p.add(continueSide).add(continueSide.rotateCCW(Rotation.R90));
-                if (getBoard().get(pCheck) != null) return false;
-                pCheck = p.add(continueSide).add(continueSide);
-                if (getBoard().get(pCheck) != null) return false;
-                //also forbid fork "parallel river"
-                Tile next = getBoard().get(p.add(continueSide.rotateCW(Rotation.R90)));
-                if (next != null && next.getRiver().rotateCW(next.getRotation()).intersect(continueSide) == continueSide) return false;
-                next = getBoard().get(p.add(continueSide.rotateCCW(Rotation.R90)));
-                if (next != null && next.getRiver().rotateCW(next.getRotation()).intersect(continueSide) == continueSide) return false;
-            }
-        }
-        return true;
+    	return true;
     }
 
 }

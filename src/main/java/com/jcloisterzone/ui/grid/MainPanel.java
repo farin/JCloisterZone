@@ -27,6 +27,8 @@ import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -37,7 +39,6 @@ import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
-import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.PlagueCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.ui.Client;
@@ -56,13 +57,11 @@ import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
 import com.jcloisterzone.ui.grid.layer.DragonLayer;
-import com.jcloisterzone.ui.grid.layer.FairyLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
 import com.jcloisterzone.ui.grid.layer.GoldLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
-import com.jcloisterzone.ui.grid.layer.MageAndWitchLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
 import com.jcloisterzone.ui.grid.layer.PlagueLayer;
@@ -90,7 +89,6 @@ public class MainPanel extends JPanel {
     private MeepleLayer meepleLayer;
     private TowerLayer towerLayer;
     private DragonLayer dragonLayer;
-    private FairyLayer fairyLayer;
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
@@ -164,26 +162,17 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(bridgeLayer);
         }
 
-        //TODO use meeple layer instead and generalize neutral figures (extend from Figure ... )
-        if (game.hasCapability(MageAndWitchCapability.class)) {
-            gridPanel.addLayer(new MageAndWitchLayer(gridPanel, gc));
-        }
-
         if (game.hasCapability(GoldminesCapability.class)) {
             goldLayer = new GoldLayer(gridPanel, gc);
             gridPanel.addLayer(goldLayer);
         }
 
-        gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc), false); //70
+        gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false); //70
 
         if (game.hasCapability(DragonCapability.class)) {
             gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc), false);
             dragonLayer = new DragonLayer(gridPanel, gc);
             gridPanel.addLayer(dragonLayer); //90
-        }
-        if (game.hasCapability(FairyCapability.class)) {
-            fairyLayer = new FairyLayer(gridPanel, gc);
-            gridPanel.addLayer(fairyLayer); //90
         }
 
         if (game.hasCapability(BarnCapability.class)) {
@@ -238,7 +227,25 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void meepleEvent(MeepleEvent ev) {
+    public void onNeutralMeepleMoveEvent(NeutralFigureMoveEvent ev) {
+        NeutralFigure fig = ev.getFigure();
+        if (fig instanceof Dragon) {
+            dragonLayer.setPosition(ev.getTo().getPosition());
+            dragonLayer.setMoves(0);
+            gridPanel.hideLayer(DragonAvailableMove.class);
+            gridPanel.repaint();
+        } else {
+            if (ev.getFrom() != null) {
+                meepleLayer.neutralFigureUndeployed(ev);
+            }
+            if (ev.getTo() != null) {
+                meepleLayer.neutralFigureDeployed(ev);
+            }
+        }
+    }
+
+    @Subscribe
+    public void onMeepleEvent(MeepleEvent ev) {
         gridPanel.clearActionDecorations();
         if (ev.getFrom() != null) {
             meepleLayer.meepleUndeployed(ev);
@@ -247,17 +254,16 @@ public class MainPanel extends JPanel {
             meepleLayer.meepleDeployed(ev);
         }
         farmHintLayer.meepleEvent(ev);
-
     }
 
     @Subscribe
-    public void bridgeDeployed(BridgeDeployedEvent ev) {
+    public void onBridgeDeployed(BridgeDeployedEvent ev) {
         gridPanel.clearActionDecorations();
         bridgeLayer.bridgeDeployed(ev.getPosition(), ev.getLocation());
     }
 
     @Subscribe
-    public void castleDeployed(CastleDeployedEvent ev) {
+    public void onCastleDeployed(CastleDeployedEvent ev) {
         gridPanel.clearActionDecorations();
         castleLayer.castleDeployed(ev.getPart1(), ev.getPart2());
     }
@@ -308,29 +314,6 @@ public class MainPanel extends JPanel {
         }
     }
 
-    @Subscribe
-    public void neutralMoved(NeutralFigureMoveEvent ev) {
-        switch (ev.getType()) {
-        case NeutralFigureMoveEvent.DRAGON:
-            dragonLayer.setPosition(ev.getTo().getPosition());
-            dragonLayer.setMoves(0);
-            gridPanel.hideLayer(DragonAvailableMove.class);
-            gridPanel.repaint();
-            break;
-        case NeutralFigureMoveEvent.FAIRY:
-            fairyLayer.setPosition(ev.getTo().getPosition());
-            break;
-        case NeutralFigureMoveEvent.MAGE:
-            gridPanel.findLayer(MageAndWitchLayer.class).setMage(ev.getTo());
-            hideMageWitchPanel();
-            break;
-        case NeutralFigureMoveEvent.WITCH:
-            gridPanel.findLayer(MageAndWitchLayer.class).setWitch(ev.getTo());
-            hideMageWitchPanel();
-            break;
-        }
-
-    }
 
     @Subscribe
     public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {

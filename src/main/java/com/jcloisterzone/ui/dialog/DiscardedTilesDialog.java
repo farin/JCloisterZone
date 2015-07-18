@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.Point;
@@ -16,6 +14,8 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.Client;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class DiscardedTilesDialog extends JDialog {
 

@@ -26,7 +26,8 @@ public abstract class PositionCollectingScoreContext extends MultiTileScoreConte
 
     public abstract int getPoints(boolean completed);
 
-    public Completable getMasterFeature() {
+    @Override
+	public Completable getMasterFeature() {
         return (Completable) super.getMasterFeature();
     }
 
@@ -34,23 +35,25 @@ public abstract class PositionCollectingScoreContext extends MultiTileScoreConte
         return positions.size();
     }
 
-    public Set<Position> getPositions() {
+    @Override
+	public Set<Position> getPositions() {
         return positions;
     }
 
-    public boolean isCompleted() {
+    @Override
+	public boolean isCompleted() {
         return isCompleted;
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         positions.add(feature.getTile().getPosition());
         if (((Completable)feature).isOpen()) {
             isCompleted = false;
         }
         if (mwCap != null) {
-            containsMage = containsMage || (mwCap.getMagePlacement() != null && mwCap.getMagePlacement().match(feature));
-            containsWitch = containsWitch || (mwCap.getWitchPlacement() != null && mwCap.getWitchPlacement().match(feature));
+            containsMage = containsMage || (mwCap.getMage().at(feature));
+            containsWitch = containsWitch || (mwCap.getWitch().at(feature));
         }
         return super.visit(feature);
     }

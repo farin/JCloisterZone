@@ -12,11 +12,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.TunnelPiecePlacedEvent;
@@ -40,11 +39,11 @@ public final class TunnelCapability extends Capability {
     public TunnelCapability(Game game) {
         super(game);
         for (PlayerSlot slot : game.getPlayerSlots()) {
-        	if (!slot.isOccupied()) continue;
-    		int slotNumber = (slot.getNumber() + 2) % PlayerSlot.COUNT;
-    		if (game.getPlayerSlots()[slotNumber].isOccupied()) {
-    			slotNumber = (slotNumber + 1) % PlayerSlot.COUNT;
-    		}
+            if (!slot.isOccupied()) continue;
+            int slotNumber = (slot.getNumber() + 2) % PlayerSlot.COUNT;
+            if (game.getPlayerSlots()[slotNumber].isOccupied()) {
+                slotNumber = (slotNumber + 1) % PlayerSlot.COUNT;
+            }
             PlayerSlot fakeSlot = new PlayerSlot(slotNumber);
             //HACK to get second color - TODO fix it!
             Color tunnelBColor = Client.getInstance().getConfig().getPlayerColor(fakeSlot).getMeepleColor();
@@ -147,17 +146,17 @@ public final class TunnelCapability extends Capability {
         return p.getIndex() + (isB ? 100 : 0);
     }
 
-    public void placeTunnelPiece(Position p, Location loc, boolean isB) {
-        Road road = (Road) getBoard().get(p).getFeature(loc);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isB) {
+        Road road = (Road) getBoard().get(fp);
         if (!road.isTunnelOpen()) {
             throw new IllegalStateException("No open tunnel here.");
         }
         placedTunnelCurrentTurn = road;
         Player player = game.getActivePlayer();
-        placeTunnelPiece(road, player, p, loc, isB);
+        placeTunnelPiece(road, player, fp, isB);
     }
 
-    private void placeTunnelPiece(Road road, Player player, Position p, Location loc, boolean isB) {
+    private void placeTunnelPiece(Road road, Player player, FeaturePointer fp, boolean isB) {
         int connectionId = getTunnelId(player, isB);
         decreaseTunnelTokens(player, isB);
         for (Road r : tunnels) {
@@ -168,14 +167,14 @@ public final class TunnelCapability extends Capability {
             }
         }
         road.setTunnelEnd(connectionId);
-        game.post(new TunnelPiecePlacedEvent(player, p, loc, isB));
+        game.post(new TunnelPiecePlacedEvent(player, fp, isB));
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         if (placedTunnelCurrentTurn != null) {
             Element el = doc.createElement("placed-tunnel");
-            XmlUtils.injectPosition(el, placedTunnelCurrentTurn.getTile().getPosition());
+            XMLUtils.injectPosition(el, placedTunnelCurrentTurn.getTile().getPosition());
             el.setAttribute("location", placedTunnelCurrentTurn.getLocation().toString());
             node.appendChild(el);
         }
@@ -183,8 +182,7 @@ public final class TunnelCapability extends Capability {
             if (tunnel.getTile().getPosition() != null && tunnel.getTunnelEnd() != Road.OPEN_TUNNEL) {
                 Element el = doc.createElement("tunnel");
                 node.appendChild(el);
-                XmlUtils.injectPosition(el, tunnel.getTile().getPosition());
-                el.setAttribute("location", tunnel.getLocation().toString());
+                XMLUtils.injectFeaturePoiner(el, new FeaturePointer(tunnel));
                 el.setAttribute("player", "" + (tunnel.getTunnelEnd() % 100));
                 el.setAttribute("b", tunnel.getTunnelEnd() > 100 ? "yes" : "no");
             }
@@ -196,21 +194,20 @@ public final class TunnelCapability extends Capability {
         NodeList nl = node.getElementsByTagName("placed-tunnel");
         if (nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
-            placedTunnelCurrentTurn = (Road) getBoard().get(XmlUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
+            placedTunnelCurrentTurn = (Road) getBoard().get(XMLUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
         }
         nl = node.getElementsByTagName("tunnel");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
-            Position pos = XmlUtils.extractPosition(el);
-            Location loc = Location.valueOf(el.getAttribute("location"));
-            Road road = (Road) getBoard().get(pos).getFeature(loc);
+            FeaturePointer fp = XMLUtils.extractFeaturePointer(el);
+            Road road = (Road) getBoard().get(fp);
             if (!road.isTunnelEnd()) {
                 logger.error("Tunnel end does not exist.");
                 continue;
             }
             Player player = game.getPlayer(Integer.parseInt(el.getAttribute("player")));
             boolean isB = "yes".equals(el.getAttribute("b"));
-            placeTunnelPiece(road, player, pos, loc, isB);
+            placeTunnelPiece(road, player, fp, isB);
         }
     }
 

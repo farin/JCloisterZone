@@ -1,45 +1,51 @@
 package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 
-public class NeutralFigureMoveEvent extends MoveEvent<FeaturePointer> implements Undoable {
+public class NeutralFigureMoveEvent extends MoveEvent<BoardPointer> implements Undoable {
 
-    public static final int DRAGON = 1;
-    public static final int FAIRY = 2;
-    public static final int MAGE = 3;
-    public static final int WITCH = 4;
+    private final NeutralFigure<?> figure;
 
-    public NeutralFigureMoveEvent(int type, Player player, Position from, Position to) {
-        super(type, player, from == null ? null : from.asFeaturePointer(), to == null ? null : to.asFeaturePointer());
+    public NeutralFigureMoveEvent(Player player, NeutralFigure<?> figure, BoardPointer from, BoardPointer to) {
+        super(player, from, to);
+        this.figure = figure;
     }
 
-    public NeutralFigureMoveEvent(int type, Player player, FeaturePointer from, FeaturePointer to) {
-        super(type, player, from, to);
+    public NeutralFigure<?> getFigure() {
+        return figure;
     }
 
     @Override
     public void undo(Game game) {
-        switch (getType()) {
-        case FAIRY:
+        if (figure instanceof Fairy) {
             FairyCapability fCap = game.getCapability(FairyCapability.class);
-            fCap.setFairyPosition(getFrom().getPosition());
-            break;
-        case DRAGON:
+            if (getFrom() instanceof FeaturePointer) {
+                fCap.getFairy().setFeaturePointer((FeaturePointer) getFrom());
+            } else if (getFrom() instanceof MeeplePointer) {
+                MeeplePointer mp = (MeeplePointer) getFrom();
+                fCap.getFairy().setFeaturePointer(mp.asFeaturePointer());
+                fCap.getFairy().setNextTo((Follower) game.getMeeple(mp));
+            }
+        } else if (figure instanceof Dragon) {
             DragonCapability dCap = game.getCapability(DragonCapability.class);
-            dCap.setDragonPosition(getFrom().getPosition());
-            break;
-        default:
+            dCap.getDragon().setFeaturePointer((FeaturePointer) getFrom());
+        } else {
             throw new UnsupportedOperationException();
         }
     }
 
     @Override
     public Event getInverseEvent() {
-        return new NeutralFigureMoveEvent(getType(), getTriggeringPlayer(), to, from);
+        return new NeutralFigureMoveEvent(getTriggeringPlayer(), figure,  to, from);
     }
 }

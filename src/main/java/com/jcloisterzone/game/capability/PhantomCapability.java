@@ -19,7 +19,7 @@ public class PhantomCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Phantom(game, player));
+        player.addMeeple(new Phantom(game, null, player));
     }
 
     @Override

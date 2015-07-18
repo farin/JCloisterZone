@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
@@ -29,7 +29,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
-import static com.jcloisterzone.XmlUtils.asLocation;
+import static com.jcloisterzone.XMLUtils.asLocation;
 
 public class WagonCapability extends Capability {
 
@@ -61,7 +61,7 @@ public class WagonCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Wagon(game, player));
+        player.addMeeple(new Wagon(game, null, player));
     }
 
     public Map<Player, Feature> getScoredWagons() {
@@ -139,7 +139,7 @@ public class WagonCapability extends Capability {
             Element el = doc.createElement("wagon");
             el.setAttribute("player", "" + rv.getKey().getIndex());
             el.setAttribute("loc", "" + rv.getValue().getLocation());
-            XmlUtils.injectPosition(el, rv.getValue().getTile().getPosition());
+            XMLUtils.injectPosition(el, rv.getValue().getTile().getPosition());
             node.appendChild(el);
         }
     }
@@ -150,7 +150,7 @@ public class WagonCapability extends Capability {
         for (int i = 0; i < nl.getLength(); i++) {
             Element wg = (Element) nl.item(i);
             Location loc = Location.valueOf(wg.getAttribute("loc"));
-            Position pos = XmlUtils.extractPosition(wg);
+            Position pos = XMLUtils.extractPosition(wg);
             int playerIndex = Integer.parseInt(wg.getAttribute("player"));
             Player player = game.getPlayer(playerIndex);
             scoredWagons.put(player, getBoard().get(pos).getFeature(loc));

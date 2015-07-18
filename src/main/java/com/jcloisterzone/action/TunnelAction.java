@@ -30,7 +30,7 @@ public class TunnelAction extends SelectFeatureAction {
 
     @Override
     public void perform(RmiProxy server, FeaturePointer bp) {
-        server.placeTunnelPiece(bp.getPosition(), bp.getLocation(), secondTunnelPiece);
+        server.placeTunnelPiece(bp, secondTunnelPiece);
 
     }
 

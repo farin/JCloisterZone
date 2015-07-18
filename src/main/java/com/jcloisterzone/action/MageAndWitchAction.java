@@ -1,6 +1,8 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.wsio.RmiProxy;
 
 //todo generic NeutralMeepleAction
@@ -16,9 +18,9 @@ public class MageAndWitchAction extends SelectFeatureAction {
     @Override
     public void perform(RmiProxy server, FeaturePointer target) {
         if (mage) {
-            server.moveMage(target);
+            server.moveNeutralFigure(target, Mage.class);
         } else {
-            server.moveWitch(target);
+            server.moveNeutralFigure(target, Witch.class);
         }
     }
 }

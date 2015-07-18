@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
@@ -36,7 +36,7 @@ public class SvgTransformationCollector {
         try {
             collect(root, handler);
         } catch (Exception ex) {
-            logger.error("Invalid geometry definition:\n" + XmlUtils.nodeToString(root), ex);
+            logger.error("Invalid geometry definition:\n" + XMLUtils.nodeToString(root), ex);
         }
     }
 
@@ -59,7 +59,7 @@ public class SvgTransformationCollector {
                     af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
                 }
                 handler.processApply(child, fd, af);
-                if (XmlUtils.attributeBoolValue(child, "allRotations")) {
+                if (XMLUtils.attributeBoolValue(child, "allRotations")) {
                     Rotation rot = Rotation.R90;
                     for (int ri = 0; ri < 3; ri++) {
                         Location rotatedLoc = fd.getLocation().rotateCW(rot);

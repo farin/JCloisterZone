@@ -14,9 +14,12 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.ClothWineGrainCapability;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.ui.Client;
@@ -92,6 +95,17 @@ public class PlayerPanelImageCache {
         }
         if (game.hasCapability(GoldminesCapability.class)) {
             scaledImages.put("gold", scaleImage(theme.getNeutralImage("gold")));
+        }
+        if (game.hasCapability(DragonCapability.class)) {
+            Image scaled = new ImageIcon(theme.getNeutralImage("dragon").getScaledInstance(42, 42, Image.SCALE_SMOOTH)).getImage();
+            scaledImages.put("dragon", scaled);
+        }
+        if (game.hasCapability(FairyCapability.class)) {
+            scaledImages.put("fairy", scaleImage(theme.getNeutralImage("fairy")));
+        }
+        if (game.hasCapability(MageAndWitchCapability.class)) {
+            scaledImages.put("mage", scaleImage(theme.getNeutralImage("mage")));
+            scaledImages.put("witch", scaleImage(theme.getNeutralImage("witch")));
         }
     }
 

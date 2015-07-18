@@ -10,8 +10,8 @@ public class TakePrisonerAction extends SelectFollowerAction {
     }
 
     @Override
-    public void perform(RmiProxy server, MeeplePointer bp) {
-        server.takePrisoner(bp.getPosition(), bp.getLocation(), bp.getMeepleType(), bp.getMeepleOwner().getIndex());
+    public void perform(RmiProxy server, MeeplePointer mp) {
+        server.takePrisoner(mp);
     }
 
     @Override

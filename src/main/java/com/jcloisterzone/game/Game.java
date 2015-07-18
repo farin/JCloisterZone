@@ -31,6 +31,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.MeepleEvent;
@@ -47,6 +48,7 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
@@ -72,7 +74,8 @@ public class Game extends GameSettings implements EventProxy {
 
     /** list of players in game */
     private Player[] plist;
-    /** rules of current game */
+
+    private final List<NeutralFigure> neutralFigures = new ArrayList<>();
 
     /** player in turn */
     private Player turnPlayer;
@@ -118,7 +121,7 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public void clearLastUndoable() {
-    	lastUndoable = null;
+        lastUndoable = null;
     }
 
     private boolean isUiSupportedUndo(Event event) {
@@ -161,6 +164,7 @@ public class Game extends GameSettings implements EventProxy {
         //proof of concept
         if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
             Event inverse = lastUndoable.getInverseEvent();
+            inverse.setUndo(true);
 
             lastUndoable.undo(this);
             phase = lastUndoablePhase;
@@ -229,6 +233,10 @@ public class Game extends GameSettings implements EventProxy {
         return phase == null ? null : phase.getActivePlayer();
     }
 
+    public List<NeutralFigure> getNeutralFigures() {
+        return neutralFigures;
+    }
+
 
     /**
      * Ends turn of current active player and make active the next.
@@ -241,6 +249,12 @@ public class Game extends GameSettings implements EventProxy {
         int playerIndex = p.getIndex();
         int nextPlayerIndex = playerIndex == (plist.length - 1) ? 0 : playerIndex + 1;
         return getPlayer(nextPlayerIndex);
+    }
+
+    public Player getPrevPlayer(Player p) {
+        int playerIndex = p.getIndex();
+        int prevPlayerIndex = playerIndex == 0 ? plist.length - 1 : playerIndex - 1;
+        return getPlayer(prevPlayerIndex);
     }
 
 
@@ -286,16 +300,13 @@ public class Game extends GameSettings implements EventProxy {
         random.setSeed(randomSeed);
     }
 
-    public Meeple getMeeple(final Position p, final Location loc, Class<? extends Meeple> meepleType, Player owner) {
+    public Meeple getMeeple(MeeplePointer mp) {
         for (Meeple m : getDeployedMeeples()) {
-            if (m.at(p) && m.getLocation().equals(loc)) {
-                if (m.getClass().equals(meepleType) && m.getPlayer().equals(owner)) {
-                    return m;
-                }
-            }
+            if (m.at(mp)) return m;
         }
         return null;
     }
+
 
     public void setPlayers(List<Player> players, int turnPlayer) {
         Player[] plist = players.toArray(new Player[players.size()]);
@@ -374,7 +385,17 @@ public class Game extends GameSettings implements EventProxy {
         Follower follower = ctx.getSampleFollower(p);
         boolean isFinalScoring = getPhase() instanceof GameOverPhase;
         ScoreEvent scoreEvent;
-        if (fairyCapability != null && follower.at(fairyCapability.getFairyPosition())) {
+        boolean isFairyScore = false;
+        if (fairyCapability != null) {
+            for (Follower f : ctx.getFollowers()) {
+                if (f.getPlayer() == p && fairyCapability.isNextTo(f)) {
+                    isFairyScore = true;
+                    break;
+                }
+
+            }
+        }
+        if (isFairyScore) {
             p.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
             scoreEvent = new ScoreEvent(follower.getFeature(), points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, pointCategory, follower);
             scoreEvent.setLabel(points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT);

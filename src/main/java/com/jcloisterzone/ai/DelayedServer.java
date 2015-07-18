@@ -4,9 +4,13 @@ import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public class DelayedServer implements RmiProxy {
@@ -34,14 +38,13 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void deployMeeple(Position pos, Location loc,
-            Class<? extends Meeple> meepleType) {
-        server.deployMeeple(pos, loc, meepleType);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
+        server.deployMeeple(fp, meepleType);
     }
 
     @Override
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.undeployMeeple(pos, loc, meepleType, meepleOwner);
+    public void undeployMeeple(MeeplePointer mp) {
+        server.undeployMeeple(mp);
     }
 
     @Override
@@ -50,27 +53,23 @@ public class DelayedServer implements RmiProxy {
     }
 
     @Override
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.takePrisoner(pos, loc, meepleType, meepleOwner);
+    public void takePrisoner(MeeplePointer mp) {
+        server.takePrisoner(mp);
     }
 
     @Override
-    public void placeTunnelPiece(Position pos, Location loc,
-            boolean isSecondPiece) {
-        server.placeTunnelPiece(pos, loc, isSecondPiece);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece) {
+        server.placeTunnelPiece(fp, isSecondPiece);
     }
 
     @Override
-    public void moveFairy(Position pos) {
-        server.moveFairy(pos);
-    }
-
-    @Override
-    public void moveDragon(Position pos) {
-        try {
-            Thread.sleep(placeTileDelay / 2);
-        } catch (InterruptedException e) {}
-        server.moveDragon(pos);
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
+        if (Dragon.class.equals(figureType)) {
+            try {
+                Thread.sleep(placeTileDelay / 2);
+            } catch (InterruptedException e) {}
+        }
+        server.moveNeutralFigure(ptr, figureType);
     }
 
     @Override
@@ -112,18 +111,5 @@ public class DelayedServer implements RmiProxy {
     @Override
     public void placeGoldPiece(Position pos) {
         server.placeGoldPiece(pos);
-    }
-
-
-    @Override
-    public void moveMage(FeaturePointer fp) {
-        server.moveMage(fp);
-    }
-
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        server.moveWitch(fp);
-
     }
 }

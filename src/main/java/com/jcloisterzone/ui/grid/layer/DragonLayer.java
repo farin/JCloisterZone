@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -22,13 +23,16 @@ public class DragonLayer extends AbstractTileLayer {
         dragonImage = getClient().getFigureTheme().getNeutralImage(DRAGON_IMAGE_NAME);
     }
 
+
     public void paint(Graphics2D g2) {
-        if (getPosition() != null) {
-            g2.drawImage(dragonImage, getOffsetX(), getOffsetY(), getSquareSize(), getSquareSize(), null);
+        Position pos = getPosition();
+        if (pos != null) {
+            drawImageIgnoringRotation(g2, dragonImage, pos, 0, 0, getSquareSize(), getSquareSize());
             if (moves > 0) {
                 //tohle asi nebude uplne uprostred
-                drawAntialiasedTextCentered(g2, moves + "", 22, POINT, Color.WHITE, null);
+                drawAntialiasedTextCentered(g2, moves + "", 22, POINT.rotate100(gridPanel.getBoardRotation().inverse()), Color.WHITE, null);
             }
+
         }
     }
 

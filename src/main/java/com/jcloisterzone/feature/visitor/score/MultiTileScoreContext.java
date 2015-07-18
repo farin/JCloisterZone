@@ -8,18 +8,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
-import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.visitor.SelfReturningVisitor;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
-import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 
 public abstract class MultiTileScoreContext extends AbstractScoreContext {
 
@@ -29,16 +25,15 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
 
     private Map<Player, Integer> power = new HashMap<>();
     private Map<Player, Follower> sample = new HashMap<>();
-    private Position preferedPos = null;
 
     private List<Follower> followers = new ArrayList<>();
     private List<Special> specialMeeples = new ArrayList<>();
 
+    private FairyCapability fairyCap;
+
     public MultiTileScoreContext(Game game) {
         super(game);
-        if (game.hasCapability(FairyCapability.class)) {
-            preferedPos = game.getCapability(FairyCapability.class).getFairyPosition();
-        }
+        fairyCap = game.getCapability(FairyCapability.class);
     }
 
     public Game getGame() {
@@ -51,7 +46,7 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         for (Meeple meeple : feature.getMeeples()) {
             if (meeple instanceof Follower) {
                 Follower follower = (Follower) meeple;
@@ -60,11 +55,7 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
                 int curr = prev == null ? followerPower : prev + followerPower;
                 power.put(follower.getPlayer(), curr);
                 if (curr > bestPower) bestPower = curr;
-                if (sample.containsKey(follower.getPlayer())) {
-                    if (follower.at(preferedPos)) {
-                        sample.put(follower.getPlayer(), follower);
-                    }
-                } else {
+                if (!sample.containsKey(follower.getPlayer()) || (fairyCap != null && fairyCap.isNextTo(follower))) {
                     sample.put(follower.getPlayer(), follower);
                 }
             }
@@ -80,7 +71,7 @@ public abstract class MultiTileScoreContext extends AbstractScoreContext {
         if (lbCap != null) {
         	collectLittleBuildings(feature.getTile().getPosition());
         }
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

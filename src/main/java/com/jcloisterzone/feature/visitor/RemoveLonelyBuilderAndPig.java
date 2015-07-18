@@ -18,7 +18,7 @@ public class RemoveLonelyBuilderAndPig implements FeatureVisitor<Special> {
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         for (Meeple m : feature.getMeeples()) {
             if (m.getPlayer() != player) continue;
             if (m instanceof Builder || m instanceof Pig) {
@@ -28,10 +28,10 @@ public class RemoveLonelyBuilderAndPig implements FeatureVisitor<Special> {
             if (m instanceof Follower) {
                 //another follower exists
                 toRemove = null;
-                return false; //can stop immediately
+                return VisitResult.STOP;
             }
         }
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

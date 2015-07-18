@@ -62,7 +62,7 @@ public class CloisterScoreContext extends AbstractScoreContext implements Comple
     }
 
     @Override
-    public boolean visit(Feature feature) {
+    public VisitResult visit(Feature feature) {
         cloister = (Cloister) feature;
         Position pos = cloister.getTile().getPosition();
         List<Tile> neigbouringTiles = game.getBoard().getAdjacentAndDiagonalTiles(pos);
@@ -73,7 +73,7 @@ public class CloisterScoreContext extends AbstractScoreContext implements Comple
         		collectLittleBuildings(tile.getPosition());
         	}
         }
-        return true;
+        return VisitResult.CONTINUE;
     }
 
     @Override

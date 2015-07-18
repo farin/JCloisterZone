@@ -4,10 +4,13 @@ import java.util.List;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 
@@ -30,17 +33,15 @@ public class MageAndWitchPhase extends Phase {
         if (getTile().hasTrigger(TileTrigger.MAGE) || mwCap.isMageAndWitchPlacedOnSameFeature()) {
             List<PlayerAction<?>> actions = mwCap.prepareMageWitchActions();
             if (actions == null) { //force removal
-                if (mwCap.getMagePlacement() != null && mwCap.getWitchPlacement() != null) {
+                if (mwCap.getMage().isDeployed() && mwCap.getWitch().isDeployed()) {
                     game.post(new MageWitchSelectRemoval(getActivePlayer(), getActivePlayer()));
                     return;
                 } else {
-                    if (mwCap.getMagePlacement() != null) {
-                        moveMage(null); //calls next()
-                        return;
+                    if (mwCap.getMage().isDeployed()) {
+                        mwCap.getMage().deploy(null);
                     }
-                    if (mwCap.getWitchPlacement() != null) {
-                        moveWitch(null); //calls next()
-                        return;
+                    if (mwCap.getWitch().isDeployed()) {
+                        mwCap.getWitch().deploy(null);
                     }
                 }
             } else {
@@ -52,19 +53,16 @@ public class MageAndWitchPhase extends Phase {
     }
 
     @Override
-    public void moveMage(FeaturePointer fp) {
-        FeaturePointer oldPlacement = mwCap.getMagePlacement();
-        mwCap.setMagePlacement(fp);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.MAGE, getActivePlayer(), oldPlacement, fp));
-        next();
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
+        FeaturePointer fp = (FeaturePointer) ptr;
+        if (Mage.class.equals(figureType)) {
+            mwCap.getMage().deploy(fp);
+            next();
+        } else if (Witch.class.equals(figureType)) {
+            mwCap.getWitch().deploy(fp);
+            next();
+        } else {
+            super.moveNeutralFigure(fp, figureType);
+        }
     }
-
-    @Override
-    public void moveWitch(FeaturePointer fp) {
-        FeaturePointer oldPlacement = mwCap.getWitchPlacement();
-        mwCap.setWitchPlacement(fp);
-        game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.WITCH, getActivePlayer(), oldPlacement, fp));
-        next();
-    }
-
 }
