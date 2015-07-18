@@ -208,6 +208,7 @@ public class Snapshot implements Serializable {
             Element el = doc.createElement("meeple");
             el.setAttribute("player", "" + m.getPlayer().getIndex());
             el.setAttribute("type", "" + m.getClass().getSimpleName());
+            el.setAttribute("meeple-id", "" + m.getId());
             el.setAttribute("loc", "" + m.getLocation());
             tileEl.appendChild(el);
         }
@@ -388,13 +389,28 @@ public class Snapshot implements Serializable {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             Location loc = Location.valueOf(el.getAttribute("loc"));
-            String meepleType = el.getAttribute("type");
-            if (!meepleType.startsWith("com.")) { // 2.X snapshot compatibility
-                meepleType = "com.jcloisterzone.figure." + meepleType;
-            }
-            Class<? extends Meeple> mt = (Class<? extends Meeple>) XMLUtils.classForName(meepleType);
             int playerIndex = Integer.parseInt(el.getAttribute("player"));
-            Meeple meeple = game.getPlayer(playerIndex).getMeepleFromSupply(mt);
+            Player player = game.getPlayer(playerIndex);
+
+            Meeple meeple = null;
+            if (el.hasAttribute("meeple-id")) {
+            	String meepleId = el.getAttribute("meeple-id");
+            	for (Meeple m : player.getMeeples()) {
+            		if (m.getId().equals(meepleId)) {
+            			meeple = m;
+            			break;
+            		}
+            	}
+            } else {
+            	//compatibility with 3.2.0
+	            String meepleType = el.getAttribute("type");
+	            if (!meepleType.startsWith("com.")) { // 2.X snapshot compatibility
+	                meepleType = "com.jcloisterzone.figure." + meepleType;
+	            }
+	            Class<? extends Meeple> mt = (Class<? extends Meeple>) XMLUtils.classForName(meepleType);
+
+	            meeple = player.getMeepleFromSupply(mt);
+            }
             meeple.setFeaturePointer(new FeaturePointer(pos, loc));
             //don't set feature here. Feature must be set after meeple deployment to correct replace ref during merge
             result.add(meeple);

@@ -94,7 +94,8 @@ public class RiverCapability extends Capability {
     }
 
     private Location getTileRiver(Tile tile) {
-    	 return tile.getRiver().rotateCW(tile.getRotation());
+    	Location loc = tile.getRiver();
+    	return loc == null ? null : loc.rotateCW(tile.getRotation());
     }
 
 
@@ -123,7 +124,7 @@ public class RiverCapability extends Capability {
     		}
     		Location prev = forward;
     		Location riverLoc = getTileRiver(riverTile);
-    		if (!prev.rev().isPartOf(riverLoc)) return FollowResult.ILLEGAL; //river is not continuous;
+    		if (riverLoc == null || !prev.rev().isPartOf(riverLoc)) return FollowResult.ILLEGAL; //river is not continuous;
     		forward = riverLoc.substract(prev.rev());
     		if (riverTile.getId().equals(R2_FORK_ID)) {
     			for (Location part : forward.splitToSides()) {

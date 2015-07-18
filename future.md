@@ -17,6 +17,7 @@
 - fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)
 - fix #149: little building can be scored multiple times for one feature
 - fix #150: Wagon can move to a tile occupied by dragon
+- fix: play again button did't work for loaded games
 
 
 ## Roadmap
