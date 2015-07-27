@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -15,15 +16,10 @@ public abstract class AbstractTileLayer extends AbstractGridLayer {
     private Position position;
     private Rotation rotation;
 
-    public AbstractTileLayer(GridPanel gridPanel, Position position) {
-        this(gridPanel, position, Rotation.R0);
+    public AbstractTileLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
-    public AbstractTileLayer(GridPanel gridPanel, Position position, Rotation rotation) {
-        super(gridPanel);
-        this.position = position;
-        this.rotation = rotation;
-    }
 
     //convinient methods
 

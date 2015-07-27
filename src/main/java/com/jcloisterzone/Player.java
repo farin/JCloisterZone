@@ -36,10 +36,10 @@ public class Player implements Serializable {
     private final List<Special> specialMeeples = new ArrayList<Special>(3);
     private final Iterable<Meeple> meeples = Iterables.<Meeple>concat(followers, specialMeeples);
 
-
     final private String nick;
     final private int index;
     private PlayerSlot slot;
+    private final PlayerClock clock = new PlayerClock();
 
     public Player(String nick, int index, PlayerSlot slot) {
         this.nick = nick;
@@ -82,7 +82,6 @@ public class Player implements Serializable {
         return Iterables.any(followers, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
     }
 
-
     public Meeple getMeepleFromSupply(Class<? extends Meeple> clazz) {
         assert !Modifier.isAbstract(clazz.getModifiers());
         Iterable<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? followers : specialMeeples);
@@ -119,15 +118,15 @@ public class Player implements Serializable {
         return slot.getColors();
     }
 
-    public Long getOwnerId() {
-        return slot.getOwner();
-    }
-
     public PlayerSlot getSlot() {
         return slot;
     }
     public void setSlot(PlayerSlot slot) {
         this.slot = slot;
+    }
+
+    public PlayerClock getClock() {
+        return clock;
     }
 
     @Override
@@ -154,6 +153,14 @@ public class Player implements Serializable {
     public int getPointsInCategory(PointCategory cat) {
         Integer points = pointStats.get(cat);
         return points == null ? 0 : points;
+    }
+
+    public void setPointsInCategory(PointCategory category, int points) {
+        pointStats.put(category, points);
+    }
+
+    public boolean isLocalHuman() {
+        return getSlot().isOwn() && !getSlot().isAi();
     }
 
 }

@@ -4,26 +4,45 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 
+import com.jcloisterzone.action.FairyOnTileAction;
+import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.action.SelectTileAction;
+import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 
-public class TileActionLayer extends AbstractGridLayer implements GridMouseListener {
+public class TileActionLayer extends AbstractGridLayer implements GridMouseListener, ActionLayer<SelectTileAction> {
 
-    private final SelectTileAction action;
-    private final Image gridDecoration;
+    private SelectTileAction action;
+    private boolean active;
+    private Image gridDecoration;
 
-    public TileActionLayer(GridPanel gridPanel, SelectTileAction action, Image gridDecoration) {
-        super(gridPanel);
-        this.action = action;
-        this.gridDecoration = gridDecoration;
+    public TileActionLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
     }
 
     @Override
-    public int getZIndex() {
-        return 70;
+    public void setAction(boolean active, SelectTileAction action) {
+        this.action = action;
+        this.active = active;
+        if (action == null) {
+            gridDecoration = null;
+        } else if (action instanceof FairyOnTileAction) {
+            gridDecoration = getClient().getControlsTheme().getActionDecoration("fairy");
+        } else if (action instanceof TowerPieceAction) {
+            gridDecoration = getClient().getControlsTheme().getActionDecoration("tower");
+        } else if (action instanceof GoldPieceAction) {
+            gridDecoration = getClient().getControlsTheme().getActionDecoration("gold");
+        }
+    }
+
+    @Override
+    public SelectTileAction getAction() {
+        return action;
     }
 
     public void paint(Graphics2D g2) {
@@ -35,10 +54,11 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
 
     @Override
     public void mouseClicked(MouseEvent e, Position p) {
+        if (!active) return;
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (action.getOptions().contains(p)) {
                 e.consume();
-                action.perform(getClient().getServer(), p);
+                action.perform(getRmiProxy(), p);
             }
         }
     }
@@ -48,7 +68,6 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
     public void squareEntered(MouseEvent e, Position p) { }
     @Override
     public void squareExited(MouseEvent e, Position p) {  }
-
 
 
 }

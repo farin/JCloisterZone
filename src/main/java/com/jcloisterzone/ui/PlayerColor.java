@@ -12,6 +12,7 @@ public class PlayerColor {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Color meeple, font;
+    private Color tunnelB;
 
     public PlayerColor() {
         meeple = Color.BLACK;
@@ -29,6 +30,14 @@ public class PlayerColor {
 
     public Color getFontColor() {
         return font;
+    }
+
+    public Color getTunnelBColor() {
+    	return tunnelB;
+    }
+
+    public void setTunnelBColor(Color tunnelB) {
+    	this.tunnelB = tunnelB;
     }
 
     private Color stringToColor(String s, Color defaultColor) {

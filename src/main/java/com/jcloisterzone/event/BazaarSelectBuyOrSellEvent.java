@@ -9,8 +9,8 @@ public class BazaarSelectBuyOrSellEvent extends PlayEvent {
     private final BazaarItem bazaarItem;
     private final int supplyIndex;
 
-    public BazaarSelectBuyOrSellEvent(Player player, BazaarItem bazaarItem, int supplyIndex) {
-        super(player);
+    public BazaarSelectBuyOrSellEvent(Player targetPlayer, BazaarItem bazaarItem, int supplyIndex) {
+        super(null, targetPlayer);
         this.bazaarItem = bazaarItem;
         this.supplyIndex = supplyIndex;
     }

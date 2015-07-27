@@ -6,26 +6,25 @@ import com.jcloisterzone.Player;
  * Ancestor for all in-game event.
  */
 public abstract class PlayEvent extends Event {
-	
-	//TODO there should be always triggering player (but it is true now, eg meeple events)
-	private final Player player;
-	
-	public PlayEvent() {
-		this(null);
-	}
-	
-	public PlayEvent(Player player) {
-		super();
-		this.player = player;
-	}
 
-	public PlayEvent(int type, Player player) {
-		super(type);
-		this.player = player;
-	}
+    private final Player triggeringPlayer;
+    private final Player targetPlayer;
 
-    public Player getPlayer() {
-        return player;
+    public PlayEvent(Player triggeringPlayer, Player targetPlayer) {
+        this(0, triggeringPlayer, targetPlayer);
     }
 
+    public PlayEvent(int type, Player triggeringPlayer, Player targetPlayer) {
+        super(type);
+        this.triggeringPlayer = triggeringPlayer;
+        this.targetPlayer = targetPlayer;
+    }
+
+    public Player getTargetPlayer() {
+        return targetPlayer;
+    }
+
+    public Player getTriggeringPlayer() {
+        return triggeringPlayer;
+    }
 }

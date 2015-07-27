@@ -46,6 +46,9 @@
         <city>W E</city>
         <farm city="W">NL NR</farm>
         <farm city="W">SL SR</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER W</neighbouring>
+        </wagon-move>
     </tile>
     <tile id="LRFr">
         <cloister/>

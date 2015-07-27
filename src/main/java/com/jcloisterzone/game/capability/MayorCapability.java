@@ -9,7 +9,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Mayor;
@@ -24,24 +23,24 @@ public class MayorCapability extends Capability {
 
     @Override
     public void initPlayer(Player player) {
-        player.addMeeple(new Mayor(game, player));
+        player.addMeeple(new Mayor(game, null, player));
     }
 
-    private Set<FeaturePointer> filterMayorLocations(Set<FeaturePointer> followerOptions) {   	
-    	return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
-			@Override
-			public boolean apply(FeaturePointer bp) {
-				Feature fe = getTile().getFeature(bp.getLocation());
-				return fe instanceof City;
-			}
-		});
-    	
+    private Set<FeaturePointer> filterMayorLocations(Set<FeaturePointer> followerOptions) {
+        return Sets.filter(followerOptions, new Predicate<FeaturePointer>() {
+            @Override
+            public boolean apply(FeaturePointer bp) {
+                Feature fe = getBoard().get(bp);
+                return fe instanceof City;
+            }
+        });
+
     }
 
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (game.getActivePlayer().hasFollower(Mayor.class) && !followerOptions.isEmpty()) {
-        	Set<FeaturePointer> mayorLocations = filterMayorLocations(followerOptions);
+            Set<FeaturePointer> mayorLocations = filterMayorLocations(followerOptions);
             if (!mayorLocations.isEmpty()) {
                 actions.add(new MeepleAction(Mayor.class).addAll(mayorLocations));
             }

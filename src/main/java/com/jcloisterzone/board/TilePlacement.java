@@ -4,7 +4,7 @@ package com.jcloisterzone.board;
 /**
  * Represents allowed tile placement on particular board position.
  */
-public class TilePlacement {
+public class TilePlacement implements Comparable<TilePlacement> {
 
     private final Position position;
     private final Rotation rotation;
@@ -56,5 +56,12 @@ public class TilePlacement {
         if (rotation != other.rotation)
             return false;
         return true;
+    }
+
+    @Override
+    public int compareTo(TilePlacement o) {
+        int p = position.compareTo(o.position);
+        if (p != 0) return p;
+        return rotation.ordinal() -  o.rotation.ordinal();
     }
 }

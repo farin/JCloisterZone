@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
-import java.awt.geom.Area;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +25,13 @@ public class ConvenientResourceManager implements ResourceManager {
 
     //helper methods
 
-    public Area getBridgeArea(Tile tile, int size, Location loc) {
-        Map<Location, Area> result = manager.getBridgeAreas(tile, size, Collections.singleton(loc));
+    public FeatureArea getBridgeArea(Tile tile, int size, Location loc) {
+        Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, size, Collections.singleton(loc));
         return result.isEmpty() ? null : result.values().iterator().next();
     }
 
-    public Area getMeepleTileArea(Tile tile, int size, Location loc) {
-        Map<Location, Area> result =  manager.getFeatureAreas(tile, size, Collections.singleton(loc));
+    public FeatureArea getMeepleTileArea(Tile tile, int size, Location loc) {
+        Map<Location, FeatureArea> result =  manager.getFeatureAreas(tile, size, Collections.singleton(loc));
         return result.isEmpty() ? null : result.values().iterator().next();
     }
 
@@ -64,17 +63,17 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public Map<Location, Area> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
         return manager.getBarnTileAreas(tile, size, corners);
     }
 
     @Override
-    public Map<Location, Area> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         return manager.getBridgeAreas(tile, size, locations);
     }
 
     @Override
-    public Map<Location, Area> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
         return manager.getFeatureAreas(tile, size, locations);
     }
 

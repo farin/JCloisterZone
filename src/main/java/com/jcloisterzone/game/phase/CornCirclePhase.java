@@ -8,12 +8,10 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
+import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
@@ -29,13 +27,14 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
+import com.jcloisterzone.ui.GameController;
 
-public class CornCirclePhase extends Phase {
+public class CornCirclePhase extends ServerAwarePhase {
 
     private final CornCircleCapability cornCircleCap;
 
-    public CornCirclePhase(Game game) {
-        super(game);
+    public CornCirclePhase(Game game, GameController controller) {
+        super(game, controller);
         cornCircleCap = game.getCapability(CornCircleCapability.class);
     }
 
@@ -53,7 +52,19 @@ public class CornCirclePhase extends Phase {
 
     @Override
     public void enter() {
-        if (getTile().getCornCircle() == null) {
+        Class<? extends Feature> cornType = getTile().getCornCircle();
+        if (cornType == null) {
+            next();
+            return;
+        }
+        boolean deployedFollowerExists = false;
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (m instanceof Follower && cornType.isInstance(m.getFeature())) {
+                deployedFollowerExists = true;
+                break;
+            }
+        }
+        if (!deployedFollowerExists) {
             next();
             return;
         }
@@ -80,6 +91,7 @@ public class CornCirclePhase extends Phase {
         } else {
             cornCircleCap.setCornCircleOption(CornCicleOption.DEPLOYMENT);
         }
+        game.post(new CornCirclesOptionEvent(getActivePlayer(), cornCircleCap.getCornCircleOption()));
         Player cornPlayer = game.getNextPlayer(getActivePlayer());
         cornCircleCap.setCornCirclePlayer(cornPlayer);
         prepareCornAction();
@@ -97,7 +109,9 @@ public class CornCirclePhase extends Phase {
             nextCornPlayer();
         } else {
             boolean passAllowed = cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT;
-            game.post(new SelectActionEvent(getActivePlayer(), actions, passAllowed));
+            Player activePlayer = getActivePlayer();
+            toggleClock(activePlayer);
+            game.post(new SelectActionEvent(activePlayer, actions, passAllowed));
         }
     }
 
@@ -132,7 +146,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private List<PlayerAction<?>> prepareRemovalAction(Class<? extends Feature> cornType) {
-    	UndeployAction action = null;
+        UndeployAction action = null;
         for (Meeple m : game.getDeployedMeeples()) {
             if (!(m instanceof Follower)) continue;
             if (m.getPlayer() != getActivePlayer()) continue;
@@ -147,12 +161,12 @@ public class CornCirclePhase extends Phase {
     }
 
     @Override
-    public void undeployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
+    public void undeployMeeple(MeeplePointer mp) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
         }
-        Meeple m = game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+        Meeple m = game.getMeeple(mp);
         Class<? extends Feature> cornType = getTile().getCornCircle();
         if (!cornType.isInstance(m.getFeature())) {
             logger.error("Improper feature type");
@@ -163,12 +177,12 @@ public class CornCirclePhase extends Phase {
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.DEPLOYMENT) {
             logger.error("Deployment wasn't selected as corn options.");
             return;
         }
-        List<Meeple> meeples = getBoard().get(p).getFeature(loc).getMeeples();
+        List<Meeple> meeples = getBoard().get(fp).getMeeples();
         if (meeples.isEmpty()) {
             logger.error("Feature must be occupied");
             return;
@@ -179,8 +193,7 @@ public class CornCirclePhase extends Phase {
         }
 
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        Tile tile = getBoard().get(p);
-        m.deploy(tile, loc);
+        m.deploy(fp);
         nextCornPlayer();
     }
 

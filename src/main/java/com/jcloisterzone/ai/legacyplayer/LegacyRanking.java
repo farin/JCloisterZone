@@ -29,6 +29,7 @@ import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+import com.jcloisterzone.feature.visitor.score.MonasteryAbbotScoreContext;
 import com.jcloisterzone.feature.visitor.score.RoadScoreContext;
 import com.jcloisterzone.feature.visitor.score.ScoreContext;
 import com.jcloisterzone.figure.Barn;
@@ -64,6 +65,8 @@ public class LegacyRanking implements GameRanking {
 
     private int[] openCount = new int[4]; //number of my open objects
 
+    //don't use to accest points/followers etc. - this player is not related to cloned game and reflect current state of real game only!!!
+    //TODO store only index to prevent accidentally access
     private final AiPlayer aiPlayer;
 
 
@@ -81,7 +84,8 @@ public class LegacyRanking implements GameRanking {
         myTurnsLeft = ((packSize-1) / (enemyPlayers+1)) + 1;
     }
 
-    public double getPartialAfterTilePlacement(Game game, Tile tile) {
+    @Override
+	public double getPartialAfterTilePlacement(Game game, Tile tile) {
         Position pos = tile.getPosition();
         //return 0.001 * game.getBoard().getAdjacentAndDiagonalTiles(pos).size();
         return 0.001 * game.getBoard().getAdjacentTilesMap(pos).size(); //adjacent only is better
@@ -155,7 +159,7 @@ public class LegacyRanking implements GameRanking {
         for (Player p : game.getAllPlayers()) {
             double meeplePoints = 0;
             int limit = 0;
-            for (Follower f : Iterables.filter(p.getFollowers(), MeeplePredicates.deployed())) {
+            for (Follower f : Iterables.filter(p.getFollowers(), MeeplePredicates.inSupply())) {
                 if (f instanceof SmallFollower) {
                     meeplePoints += 0.15;
                 } else if (f instanceof BigFollower) {
@@ -164,7 +168,17 @@ public class LegacyRanking implements GameRanking {
                 if (++limit == myTurnsLeft) break;
             }
             rating += reducePoints(meeplePoints, p);
+
+            if (p.equals(aiPlayer.getPlayer())) {
+            	for (Follower f : p.getFollowers()) {
+                	if (f.getLocation() == Location.TOWER) {
+                		rating -= 9.0;
+                	}
+                }
+            }
         }
+
+
         return rating;
     }
 
@@ -179,16 +193,24 @@ public class LegacyRanking implements GameRanking {
             this.game = game;
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
             if (towerCap != null) {
-                for (Position towerPos : towerCap.getTowers()) {
-                    int dangerDistance = 1 + game.getBoard().get(towerPos).getTower().getHeight();
-                    towerDanger.add(towerPos);
-                    for (int i = 1; i < dangerDistance; i++) {
-                        towerDanger.add(towerPos.add(new Position(i, 0)));
-                        towerDanger.add(towerPos.add(new Position(-i, 0)));
-                        towerDanger.add(towerPos.add(new Position(0, i)));
-                        towerDanger.add(towerPos.add(new Position(0, -i)));
-                    }
-                }
+            	//TODO ignore if opponents has no tower tokens
+            	int pieces = 0;
+            	for (Player p : game.getAllPlayers()) {
+            		if (p.equals(aiPlayer.getPlayer())) continue;
+            		pieces += towerCap.getTowerPieces(p);
+            	}
+            	if (pieces > 0) {
+	                for (Position towerPos : towerCap.getTowers()) {
+	                    int dangerDistance = 1 + game.getBoard().get(towerPos).getTower().getHeight();
+	                    towerDanger.add(towerPos);
+	                    for (int i = 1; i < dangerDistance; i++) {
+	                        towerDanger.add(towerPos.add(new Position(i, 0)));
+	                        towerDanger.add(towerPos.add(new Position(-i, 0)));
+	                        towerDanger.add(towerPos.add(new Position(0, i)));
+	                        towerDanger.add(towerPos.add(new Position(0, -i)));
+	                    }
+	                }
+            	}
             }
         }
 
@@ -244,10 +266,18 @@ public class LegacyRanking implements GameRanking {
 
         @Override
         public void scoreCompletableFeature(CompletableScoreContext ctx) {
-            if (isInTowerDanger(ctx)) return;
-            rank += rankUnfishedCompletable(ctx.getMasterFeature(), (LegacyAiScoreContext) ctx);
+            if (ctx instanceof MonasteryAbbotScoreContext) {
+                int points = ctx.getPoints();
+                for (Player p : ctx.getMajorOwners()) {
+                    rank += reducePoints(points, p);
+                }
+                return;
+            }
             rank += rankTrappedMeeples((LegacyAiScoreContext) ctx);
-            rank += rankSpecialFigures(game, (LegacyAiScoreContext) ctx);
+            if (!isInTowerDanger(ctx)) {
+            	rank += rankUnfishedCompletable(ctx.getMasterFeature(), (LegacyAiScoreContext) ctx);
+            	rank += rankSpecialFigures(game, (LegacyAiScoreContext) ctx);
+            }
         }
 
         public double getRanking() {
@@ -476,53 +506,26 @@ public class LegacyRanking implements GameRanking {
     protected double rankFairy(Game game) {
         if (!game.hasCapability(FairyCapability.class)) return 0;
         FairyCapability fc = game.getCapability(FairyCapability.class);
-        Position fairyPos = fc.getFairyPosition();
-        if (fairyPos == null) return 0;
+        if (fc.getFairy().isInSupply()) return 0;
 
         double rating = 0;
 
 //		TODO more sophisticated rating
         for (Meeple meeple : game.getDeployedMeeples()) {
-            if (!meeple.at(fairyPos)) continue;
             if (!(meeple instanceof Follower)) continue;
+            if (!fc.isNextTo((Follower) meeple)) continue;
             if (meeple.getFeature() instanceof Castle) continue;
 
             rating += reducePoints(1.0, meeple.getPlayer());
         }
 
         return rating;
-
-// 		//OLD legacy impl
-//		Set<PlacedFigure> onTile = gc.getPlacedFiguresForTile(board.get(fairyPos.x,fairyPos.y));
-//		Set<Player> onePointPlayers = new HashSet<>();
-//		for (PlacedFigure pfi : onTile) {
-//			if (pfi != null && gi.get().equals(pfi.player)) {
-//				onePointPlayers.add(pfi.player);
-//			}
-//			if (pfi.et == FeatureType.TOWER) continue;
-//			LastPlaceInfo last = gc.getBoard().getLastPlacementInfo();
-//			if (gc.getBoard().get(last.pos).getTrigger() == TileTrigger.DRAGON) {
-//				int dist = last.pos.squareDistance(pfi.position);
-//				if (dist == 1) {
-//					//figurka hned vedle, heuristika
-//					/*Tile lastTile = gc.getBoard().get(pfi.position);
-//					if (pfi.et == ElementType.CLOISTER) {
-//						//lastTile.getCloister().get ...
-//					}*/
-//					rating += reducePoints(4, pfi.player); //zatim proste odhadnem cenu figurky na 4 body
-//				}
-//			}
-//		}
-//		//kvuli brane a vice figurkam na jednom poli, aby kazdy hrac max +1 za kolo
-//
-//		for (Player player : onePointPlayers) {
-//			rating += reducePoints(0.8, player);
-//		}
     }
 
     protected double rankUnfishedCompletable(Completable completable, LegacyAiScoreContext ctx) {
         double rating = 0.0;
         double points = getUnfinishedCompletablePoints(completable, ctx);
+
         for (Player p : ctx.getMajorOwners()) {
             rating += reducePoints(points, p);
         }

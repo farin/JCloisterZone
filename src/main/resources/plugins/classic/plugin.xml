@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="com.jcloisterzone.plugins.classic" version="2">
-    <title>Classic art</title>
+<plugin id="com.jcloisterzone.plugins.classic" version="3.2">
+    <title>Classic artwork</title>
     <description>Graphics from original board game</description>
+    <type>DEFAULT_GRF_SET</type>
     <expansions>
         <expansion>BASIC</expansion>
         <expansion>WINTER</expansion>
@@ -28,5 +29,8 @@
         <expansion>GERMAN_MONASTERIES</expansion>
         <expansion>FLIER</expansion>
         <expansion>CORN_CIRCLES_II</expansion>
+        <expansion>MAGE_AND_WITCH</expansion>
+        <expansion>GOLDMINES</expansion>
+        <expansion>FERRIES</expansion>
     </expansions>
 </plugin>

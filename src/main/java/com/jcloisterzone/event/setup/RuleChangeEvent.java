@@ -6,21 +6,24 @@ import com.jcloisterzone.game.CustomRule;
 public class RuleChangeEvent extends Event {
 
     private final CustomRule rule;
-    private final boolean enabled;
+    private final Object value;
 
-    public RuleChangeEvent(CustomRule rule, boolean enabled) {
+    public RuleChangeEvent(CustomRule rule, Object value) {
         this.rule = rule;
-        this.enabled = enabled;
+        this.value = value;
     }
 
     public CustomRule getRule() {
         return rule;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public Object getValue() {
+        return value;
     }
 
-
+    @Override
+    public String toString() {
+        return super.toString() + " " + rule.name() + " " + value;
+    }
 
 }

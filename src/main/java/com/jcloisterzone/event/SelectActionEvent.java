@@ -13,8 +13,8 @@ public class SelectActionEvent extends PlayEvent {
     private final List<? extends PlayerAction<?>> actions;
 
 
-    public SelectActionEvent(Player player, List<? extends PlayerAction<?>> actions, boolean passAllowed) {
-        super(player);
+    public SelectActionEvent(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean passAllowed) {
+        super(null, targetPlayer);
         this.actions = actions;
         this.passAllowed = passAllowed;
     }
@@ -29,5 +29,10 @@ public class SelectActionEvent extends PlayEvent {
 
     public boolean isPassAllowed() {
         return passAllowed;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " passAllowed:" + passAllowed + " actions:" + actions;
     }
 }

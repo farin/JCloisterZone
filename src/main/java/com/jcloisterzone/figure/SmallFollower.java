@@ -9,8 +9,8 @@ public class SmallFollower extends Follower {
 
     public static final int QUANTITY = 7;
 
-    public SmallFollower(Game game, Player player) {
-        super(game, player);
+    public SmallFollower(Game game, Integer idSuffix, Player player) {
+        super(game, idSuffix, player);
     }
 
 }

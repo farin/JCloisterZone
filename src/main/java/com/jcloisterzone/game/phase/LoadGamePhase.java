@@ -15,15 +15,15 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.GameController;
 
 public class LoadGamePhase extends CreateGamePhase {
 
     private Snapshot snapshot;
     private LoadGameTilePackFactory tilePackFactory;
 
-    public LoadGamePhase(Game game, Snapshot snapshot, ServerIF server) {
-        super(game, server);
+    public LoadGamePhase(Game game, Snapshot snapshot, GameController controller) {
+        super(game, controller);
         this.snapshot = snapshot;
     }
 
@@ -78,7 +78,7 @@ public class LoadGamePhase extends CreateGamePhase {
             }
             m.setFeature(f);
             f.addMeeple(m);
-            game.post(new MeepleEvent(m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
+            game.post(new MeepleEvent(null, m, null, new FeaturePointer(m.getPosition(), m.getLocation())));
         }
         tilePackFactory.activateGroups((DefaultTilePack) game.getTilePack());
     }
@@ -87,7 +87,7 @@ public class LoadGamePhase extends CreateGamePhase {
     protected void prepareTilePack() {
         tilePackFactory = new LoadGameTilePackFactory();
         tilePackFactory.setGame(game);
-        tilePackFactory.setConfig(game.getConfig());
+        tilePackFactory.setConfig(getConfig());
         tilePackFactory.setExpansions(game.getExpansions());
         tilePackFactory.setSnapshot(snapshot);
         DefaultTilePack tilePack = tilePackFactory.createTilePack();
@@ -100,6 +100,9 @@ public class LoadGamePhase extends CreateGamePhase {
 
     @Override
     public void next() {
+        for (Player player : game.getAllPlayers()) {
+            player.getClock().resetRunning(); //start running clock from now
+        }
         super.next();
         getDefaultNext().loadGame(snapshot); //call after super.next() to be able fake entered flag
     }

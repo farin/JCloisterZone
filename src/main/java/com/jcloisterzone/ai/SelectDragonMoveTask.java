@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
 
@@ -36,7 +37,7 @@ class SelectDragonMoveTask implements Runnable {
      * simple heuristic
      */
     public void selectDragonMove(Game game) {
-        Position dragonPosition = game.getCapability(DragonCapability.class).getDragonPosition();
+        Position dragonPosition = game.getCapability(DragonCapability.class).getDragon().getPosition();
         double tensionX = 0, tensionY = 0;
 
         for (Meeple m : game.getDeployedMeeples()) {
@@ -63,6 +64,6 @@ class SelectDragonMoveTask implements Runnable {
             }
         }
         logger.info("Selected dragon move: {}", result);
-        aiPlayer.getServer().moveDragon(result);
+        aiPlayer.getRmiProxy().moveNeutralFigure(result.asFeaturePointer(), Dragon.class);
     }
 }

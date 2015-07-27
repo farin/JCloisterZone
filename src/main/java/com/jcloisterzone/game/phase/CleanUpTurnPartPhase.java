@@ -29,5 +29,4 @@ public class CleanUpTurnPartPhase extends Phase {
             next();
         }
     }
-
 }

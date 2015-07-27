@@ -1,7 +1,7 @@
 package com.jcloisterzone.ai.choice;
 
 import com.jcloisterzone.ai.SavePoint;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class PassChoice extends AiChoice {
 
@@ -11,7 +11,7 @@ public class PassChoice extends AiChoice {
     }
 
     @Override
-    public void perform(Client2ClientIF server) {
+    public void perform(RmiProxy server) {
         server.pass();
     }
 

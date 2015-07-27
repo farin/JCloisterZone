@@ -19,15 +19,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
+import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
+import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.theme.SvgTransformationCollector.GeometryHandler;
 
 
@@ -35,8 +38,18 @@ public class ThemeGeometry {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static class AreaWithZIndex {
+        Area area;
+        Integer zIndex;
+
+        public AreaWithZIndex(Area area, Integer zIndex) {
+            this.area = area;
+            this.zIndex = zIndex;
+        }
+    }
+
     private final Map<String, String> aliases = new HashMap<>();
-    private final Map<FeatureDescriptor, Area> areas = new HashMap<>();
+    private final Map<FeatureDescriptor, FeatureArea> areas = new HashMap<>();
     private final Map<String, Area> substractionAll = new HashMap<>(); //key tile ID
     private final Map<String, Area> substractionFarm = new HashMap<>(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = new HashSet<>();
@@ -56,7 +69,7 @@ public class ThemeGeometry {
         NodeList nl;
         URL aliasesResource = loader.getResource(folder + "/aliases.xml");
         if (aliasesResource != null) {
-            Element aliasesEl = XmlUtils.parseDocument(aliasesResource).getDocumentElement();
+            Element aliasesEl = XMLUtils.parseDocument(aliasesResource).getDocumentElement();
             nl = aliasesEl.getElementsByTagName("alias");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element alias = (Element) nl.item(i);
@@ -64,7 +77,7 @@ public class ThemeGeometry {
             }
         }
 
-        Element shapes = XmlUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
+        Element shapes = XMLUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
         nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
             processShapeElement((Element) nl.item(i));
@@ -82,21 +95,36 @@ public class ThemeGeometry {
         return FeatureDescriptor.valueOf(tokens[0], featureName, tokens[1]);
     }
 
-    private Area createArea(Element shapeNode) {
+    private AreaWithZIndex createArea(Element shapeNode) {
+        Integer zIndex = XMLUtils.attributeIntValue(shapeNode, "zIndex");
         NodeList nl = shapeNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             if (nl.item(i) instanceof Element) {
                 Element el = (Element) nl.item(i);
                 if (el.getNodeName().startsWith("svg:")) {
-                    return new SvgToShapeConverter().convert(el);
+                    Area area = new SvgToShapeConverter().convert(el);
+                    return new AreaWithZIndex(area, zIndex);
                 }
             }
         }
         throw new IllegalArgumentException("Node doesn't contains svg shape.");
     }
 
+    private int getZIndex(Integer explicit, FeatureDescriptor fd) {
+        if (explicit != null) {
+            return explicit;
+        }
+        Class<? extends Feature> ft = fd.getFeatureType();
+        if (ft != null) {
+            if (Road.class.isAssignableFrom(ft)) return FeatureArea.DEFAULT_ROAD_ZINDEX;
+            if (City.class.isAssignableFrom(ft)) return FeatureArea.DEFAULT_CITY_ZINDEX;
+            if (Farm.class.isAssignableFrom(ft)) return FeatureArea.DEFAULT_FARM_ZINDEX;
+        }
+        return FeatureArea.DEFAULT_STRUCTURE_ZINDEX;
+    }
+
     private void processShapeElement(Element shapeNode) {
-        final Area area = createArea(shapeNode);
+        final AreaWithZIndex az = createArea(shapeNode);
 
         SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode);
         transformCollector.collect(new GeometryHandler() {
@@ -104,7 +132,7 @@ public class ThemeGeometry {
             @Override
             public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
                 assert !areas.containsKey(fd) : "Duplicate key " + fd;
-                areas.put(fd, area.createTransformedArea(transform));
+                areas.put(fd, new FeatureArea(az.area.createTransformedArea(transform), getZIndex(az.zIndex, fd)));
             }
 
             @Override
@@ -112,7 +140,7 @@ public class ThemeGeometry {
                 Map<String, Area> target = isFarm ? substractionFarm : substractionAll;
                 //TODO merge if already exists
                 assert !target.containsKey(tileId);
-                target.put(tileId, area.createTransformedArea(transform));
+                target.put(tileId, az.area.createTransformedArea(transform));
             }
 
         });
@@ -138,7 +166,7 @@ public class ThemeGeometry {
         return fd;
     }
 
-    public Area getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+    public FeatureArea getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
         Rotation tileRotation = tile.getRotation();
         if (featureClass != null && featureClass.equals(Bridge.class)) {
             Area a =  getBridgeArea(loc.rotateCCW(tileRotation));
@@ -148,14 +176,14 @@ public class ThemeGeometry {
                 a = new Area(a);
                 a.transform(Rotation.R180.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
             }
-            return a;
+            return new FeatureArea(a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
         }
         loc = loc.rotateCCW(tileRotation);
         FeatureDescriptor lookups[] = getLookups(tile, featureClass, loc);
-        Area area;
+        FeatureArea fa;
         for (FeatureDescriptor fd : lookups) {
-            area = areas.get(fd);
-            if (area != null) return area;
+            fa = areas.get(fd);
+            if (fa != null) return fa;
         }
         return null;
     }
@@ -204,6 +232,6 @@ public class ThemeGeometry {
             if (point != null) break;
         }
         if (point == null) return null;
-        return point.rotate(tile.getRotation());
+        return point.rotate100(tile.getRotation());
     }
 }

@@ -7,16 +7,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -24,30 +24,37 @@ public class DragonCapability extends Capability {
 
     public static final int DRAGON_MOVES = 6;
 
-    private Position dragonPosition;
+    private final Dragon dragon;
     private int dragonMovesLeft;
     private Player dragonPlayer;
     private Set<Position> dragonVisitedTiles;
 
     public DragonCapability(final Game game) {
         super(game);
+        dragon = new Dragon(game);
+        game.getNeutralFigures().add(dragon);
     }
 
-    @Subscribe
-    public void tilePlaced(TileEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof TileEvent) {
+           tilePlaced((TileEvent) event);
+       }
+
+    }
+
+    private void tilePlaced(TileEvent ev) {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT && tile.hasTrigger(TileTrigger.VOLCANO)) {
-            Position fromPosition = dragonPosition;
-            dragonPosition = tile.getPosition();
             getTilePack().setGroupState("dragon", TileGroupState.ACTIVE);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, fromPosition, dragonPosition));
+            dragon.deploy(tile.getPosition());
         }
     }
 
     @Override
     public Object backup() {
         return new Object[] {
-            dragonPosition,
+            dragon.getPosition(),
             dragonMovesLeft,
             dragonPlayer,
             dragonVisitedTiles == null ? null : new HashSet<>(dragonVisitedTiles)
@@ -58,12 +65,17 @@ public class DragonCapability extends Capability {
     @Override
     public void restore(Object data) {
         Object[] a = (Object[]) data;
-        dragonPosition = (Position) a[0];
-        dragonMovesLeft = (Integer) a[1];
-        dragonPlayer = (Player) a[2];
-        dragonVisitedTiles = a[3] == null ? null : new HashSet<>((Set<Position>) a[3]);
+        if (a[0] != null) {
+	        dragon.setFeaturePointer(((Position) a[0]).asFeaturePointer());
+	        dragonMovesLeft = (Integer) a[1];
+	        dragonPlayer = (Player) a[2];
+	        dragonVisitedTiles = a[3] == null ? null : new HashSet<>((Set<Position>) a[3]);
+        }
     }
 
+    public Dragon getDragon() {
+        return dragon;
+    }
 
     @Override
     public String getTileGroup(Tile tile) {
@@ -82,16 +94,7 @@ public class DragonCapability extends Capability {
 
     @Override
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
-        if (tile.getPosition().equals(dragonPosition)) return false;
-        return true;
-    }
-
-    public Position getDragonPosition() {
-        return dragonPosition;
-    }
-
-    public void setDragonPosition(Position dragonPosition) {
-        this.dragonPosition = dragonPosition;
+        return !dragon.at(tile.getPosition());
     }
 
     public Player getDragonPlayer() {
@@ -110,7 +113,7 @@ public class DragonCapability extends Capability {
         dragonMovesLeft = DRAGON_MOVES;
         dragonPlayer = game.getTurnPlayer();
         dragonVisitedTiles = new HashSet<>();
-        dragonVisitedTiles.add(dragonPosition);
+        dragonVisitedTiles.add(dragon.getPosition());
     }
 
     public void endDragonMove() {
@@ -121,20 +124,20 @@ public class DragonCapability extends Capability {
 
     public void moveDragon(Position p) {
         dragonVisitedTiles.add(p);
-        dragonPosition = p;
         dragonPlayer = game.getNextPlayer(dragonPlayer);
         dragonMovesLeft--;
+        dragon.deploy(p);
     }
 
     public Set<Position> getAvailDragonMoves() {
         Set<Position> result = new HashSet<>();
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         for (Position offset: Position.ADJACENT.values()) {
-            Position position = dragonPosition.add(offset);
+            Position position = dragon.getPosition().add(offset);
             Tile tile = getBoard().get(position);
             if (tile == null || CountCapability.isTileForbidden(tile)) continue;
             if (dragonVisitedTiles != null && dragonVisitedTiles.contains(position)) { continue; }
-            if (fairyCap != null && position.equals(fairyCap.getFairyPosition())) { continue; }
+            if (fairyCap != null && position.equals(fairyCap.getFairy().getPosition())) { continue; }
             result.add(position);
         }
         return result;
@@ -144,21 +147,21 @@ public class DragonCapability extends Capability {
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
-        if (dragonPosition != null) {
-            Element dragon = doc.createElement("dragon");
-            XmlUtils.injectPosition(dragon, dragonPosition);
+        if (dragon.isDeployed()) {
+            Element dragonEl = doc.createElement("dragon");
+            XMLUtils.injectPosition(dragonEl, dragon.getPosition());
             if (dragonMovesLeft > 0) {
-                dragon.setAttribute("moves", "" + dragonMovesLeft);
-                dragon.setAttribute("movingPlayer", "" + dragonPlayer.getIndex());
+                dragonEl.setAttribute("moves", "" + dragonMovesLeft);
+                dragonEl.setAttribute("movingPlayer", "" + dragonPlayer.getIndex());
                 if (dragonVisitedTiles != null) {
                     for (Position visited : dragonVisitedTiles) {
                         Element ve = doc.createElement("visited");
-                        XmlUtils.injectPosition(ve, visited);
-                        dragon.appendChild(ve);
+                        XMLUtils.injectPosition(ve, visited);
+                        dragonEl.appendChild(ve);
                     }
                 }
             }
-            node.appendChild(dragon);
+            node.appendChild(dragonEl);
         }
     }
 
@@ -166,16 +169,15 @@ public class DragonCapability extends Capability {
     public void loadFromSnapshot(Document doc, Element node) {
         NodeList nl = node.getElementsByTagName("dragon");
         if (nl.getLength() > 0) {
-            Element dragon = (Element) nl.item(0);
-            dragonPosition = XmlUtils.extractPosition(dragon);
-            game.post(new NeutralFigureMoveEvent(NeutralFigureMoveEvent.DRAGON, null, null, dragonPosition));
-            if (dragon.hasAttribute("moves")) {
-                dragonMovesLeft  = Integer.parseInt(dragon.getAttribute("moves"));
-                dragonPlayer = game.getPlayer(Integer.parseInt(dragon.getAttribute("movingPlayer")));
+            Element dragonEl = (Element) nl.item(0);
+            dragon.deploy(XMLUtils.extractPosition(dragonEl));
+            if (dragonEl.hasAttribute("moves")) {
+                dragonMovesLeft  = Integer.parseInt(dragonEl.getAttribute("moves"));
+                dragonPlayer = game.getPlayer(Integer.parseInt(dragonEl.getAttribute("movingPlayer")));
                 dragonVisitedTiles = new HashSet<>();
-                NodeList vl = dragon.getElementsByTagName("visited");
+                NodeList vl = dragonEl.getElementsByTagName("visited");
                 for (int i = 0; i < vl.getLength(); i++) {
-                    dragonVisitedTiles.add(XmlUtils.extractPosition((Element) vl.item(i)));
+                    dragonVisitedTiles.add(XMLUtils.extractPosition((Element) vl.item(i)));
                 }
             }
         }

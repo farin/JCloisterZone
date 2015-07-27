@@ -31,6 +31,11 @@
         <apply allRotations="1">* NL.NR</apply>
         <apply allRotations="1">* EL.WR</apply>
     </shape>
+    <shape feature="FARM">
+        <title>bottom half</title>
+        <svg:rect x="0" y="500" width="1000" height="500"/>
+        <apply>* INNER_FARM_B</apply>
+    </shape>
 
     <shape feature="@">
         <svg:circle cx="500" cy="500" r="200"/>

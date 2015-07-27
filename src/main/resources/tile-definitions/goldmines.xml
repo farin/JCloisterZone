@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="LRr">
+        <goldmine/>
+        <cloister/>
+        <road>E S</road>
+        <farm>NL NR EL SR WL WR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="LCc">
+        <goldmine/>
+        <cloister/>
+        <city>N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="LCcRr">
+        <goldmine/>
+        <cloister/>
+        <road>E S</road>
+        <city>N W</city>
+        <farm city="N">EL SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="LRrRr">
+        <goldmine/>
+        <cloister/>
+        <road>N E</road>
+        <road>S W</road>
+        <farm>NR EL</farm>
+        <farm>SR WL</farm>
+        <farm>WR NL ER SL</farm>
+    </tile>
+    <tile id="RrRr">
+        <goldmine/>
+        <road>N W</road>
+        <road>S E</road>
+        <farm>NL WR</farm>
+        <farm>SL ER</farm>
+        <farm>NR EL SR WL</farm>
+    </tile>
+    <tile id="CcRr">
+        <goldmine/>
+        <road>E S</road>
+        <city>N W</city>
+        <farm city="N">EL SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="CRcr">
+        <goldmine/>
+        <road>N S</road>
+        <city>W E</city>
+        <farm city="W">NL</farm>
+        <farm city="W">NR</farm>
+        <farm city="W">SL</farm>
+        <farm city="W">SR</farm>
+    </tile>
+    <tile id="RRrr.X">
+        <goldmine/>
+        <road>N S</road>
+        <road>W E</road>
+        <farm>WR NL</farm>
+        <farm>NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+</pack>

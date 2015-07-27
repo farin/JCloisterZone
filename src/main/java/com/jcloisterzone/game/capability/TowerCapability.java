@@ -18,14 +18,13 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.feature.Tower;
@@ -45,6 +44,8 @@ public final class TowerCapability extends Capability {
     private final Set<Position> towers = new HashSet<>();
     private final Map<Player, Integer> towerPieces = new HashMap<>();
     private boolean ransomPaidThisTurn;
+
+    private Position lastIncreasedTower; //needed for persist game in TowerCapturePhase
 
     //key is Player who keeps follower imprisoned
     //synchronized because of GUI is looking inside
@@ -139,7 +140,7 @@ public final class TowerCapability extends Capability {
     @Override
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (hasSmallOrBigFollower(game.getActivePlayer())) {
-            prepareTowerFollowerDeploy(findFollowerActions(actions));
+            prepareTowerFollowerDeploy(findAndFillFollowerActions(actions));
         }
         if (getTowerPieces(game.getActivePlayer()) > 0) {
             Set<Position> availTowers = getOpenTowers(0);
@@ -165,6 +166,20 @@ public final class TowerCapability extends Capability {
         }
     }
 
+    public void placeTowerPiece(Player player, Position pos) {
+        Tower tower = getBoard().get(pos).getTower();
+        if (tower  == null) {
+            throw new IllegalArgumentException("No tower on tile.");
+        }
+        if (tower.getMeeple() != null) {
+            throw new IllegalArgumentException("The tower is sealed");
+        }
+        decreaseTowerPieces(player);
+        tower.increaseHeight();
+        lastIncreasedTower = pos;
+        game.post(new TowerIncreasedEvent(player, pos, tower.getHeight()));
+    }
+
     protected Set<Position> getOpenTowers(int minHeight) {
         Set<Position> availTower = new HashSet<>();
         for (Position p : getTowers()) {
@@ -180,25 +195,33 @@ public final class TowerCapability extends Capability {
         return prisoners;
     }
 
+    public Position getLastIncreasedTower() {
+        return lastIncreasedTower;
+    }
+
+    public void setLastIncreasedTower(Position lastIncreasedTower) {
+        this.lastIncreasedTower = lastIncreasedTower;
+    }
+
     public boolean hasImprisonedFollower(Player followerOwner) {
         for (Follower m : followerOwner.getFollowers()) {
-            if (m.getLocation() == Location.PRISON) return true;
+            if (m.isInPrison()) return true;
         }
         return false;
     }
 
     public boolean hasImprisonedFollower(Player followerOwner, Class<? extends Follower> followerClass) {
         for (Follower m : followerOwner.getFollowers()) {
-            if (m.getLocation() == Location.PRISON && m.getClass().equals(followerClass)) return true;
+            if (m.isInPrison() && m.getClass().equals(followerClass)) return true;
         }
         return false;
     }
 
-    public void inprison(Meeple m, Player player) {
+    public void inprison(Follower m, Player player) {
         assert m.getLocation() == null;
-        prisoners.get(player).add((Follower) m);
+        prisoners.get(player).add(m);
         game.post(new MeeplePrisonEvent(m, null, player));
-        m.setLocation(Location.PRISON);
+        m.setInPrison(true);
     }
 
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType) {
@@ -212,7 +235,7 @@ public final class TowerCapability extends Capability {
             Follower meeple = i.next();
             if (meepleType.isInstance(meeple)) {
                 i.remove();
-                meeple.clearDeployment();
+                meeple.setInPrison(false);
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
                 ransomPaidThisTurn = true;
                 game.getActivePlayer().addPoints(-RANSOM_POINTS, PointCategory.TOWER_RANSOM);
@@ -227,16 +250,22 @@ public final class TowerCapability extends Capability {
     @Override
     public void turnCleanUp() {
         ransomPaidThisTurn = false;
+        lastIncreasedTower = null;
     }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("ransomPaid", ransomPaidThisTurn + "");
+        if (lastIncreasedTower != null) {
+            Element it = doc.createElement("increased-tower");
+            XMLUtils.injectPosition(it, lastIncreasedTower);
+            node.appendChild(it);
+        }
         for (Position towerPos : towers) {
             Tower tower = getBoard().get(towerPos).getTower();
             Element el = doc.createElement("tower");
             node.appendChild(el);
-            XmlUtils.injectPosition(el, towerPos);
+            XMLUtils.injectPosition(el, towerPos);
             el.setAttribute("height", "" + tower.getHeight());
         }
         for (Player player: game.getAllPlayers()) {
@@ -257,10 +286,14 @@ public final class TowerCapability extends Capability {
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
         ransomPaidThisTurn = Boolean.parseBoolean(node.getAttribute("ransomPaid"));
-        NodeList nl = node.getElementsByTagName("tower");
+        NodeList nl = node.getElementsByTagName("increased-tower");
+        if (nl.getLength() > 0) {
+            lastIncreasedTower = XMLUtils.extractPosition((Element) nl.item(0));
+        }
+        nl = node.getElementsByTagName("tower");
         for (int i = 0; i < nl.getLength(); i++) {
             Element te = (Element) nl.item(i);
-            Position towerPos = XmlUtils.extractPosition(te);
+            Position towerPos = XMLUtils.extractPosition(te);
             Tower tower = getBoard().get(towerPos).getTower();
             tower.setHeight(Integer.parseInt(te.getAttribute("height")));
             towers.add(towerPos);
@@ -276,10 +309,10 @@ public final class TowerCapability extends Capability {
             NodeList priosonerNl = playerEl.getElementsByTagName("prisoner");
             for (int j = 0; j < priosonerNl.getLength(); j++) {
                 Element prisonerEl = (Element) priosonerNl.item(j);
-                int ownerIndex = XmlUtils.attributeIntValue(prisonerEl, "player");
-                Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XmlUtils.classForName(prisonerEl.getAttribute("type"));
+                int ownerIndex = XMLUtils.attributeIntValue(prisonerEl, "player");
+                Class<? extends Meeple> meepleClass = (Class<? extends Meeple>) XMLUtils.classForName(prisonerEl.getAttribute("type"));
                 Meeple m = game.getPlayer(ownerIndex).getMeepleFromSupply(meepleClass);
-                inprison(m, player);
+                inprison((Follower) m, player);
             }
         }
     }

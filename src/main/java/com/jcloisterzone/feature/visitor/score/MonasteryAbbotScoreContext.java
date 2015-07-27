@@ -39,7 +39,7 @@ public class MonasteryAbbotScoreContext extends CloisterScoreContext {
     @Override
     public boolean isCompleted() {
         //TOOD what about extend monastery context from AbstractScoreContext
-        throw new UnsupportedOperationException("No sense for manastery with abbot");
+        return false;
     }
 
 

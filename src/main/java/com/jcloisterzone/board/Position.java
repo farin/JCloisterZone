@@ -1,10 +1,11 @@
 package com.jcloisterzone.board;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcloisterzone.board.pointer.BoardPointer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 
 
 /**
@@ -12,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * @author Roman Krejcik
  */
-public class Position implements Serializable {
+public class Position implements BoardPointer, Comparable<Position> {
 
     public final int x;
     public final int y;
@@ -46,6 +47,11 @@ public class Position implements Serializable {
 
     public Position(Position p) {
         this(p.x,p.y);
+    }
+
+    @Override
+    public Position getPosition() {
+        return this;
     }
 
     public String toString() {
@@ -97,5 +103,19 @@ public class Position implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public int compareTo(Position o) {
+        if (y == o.y) {
+            return x - o.x;
+        }
+        return y - o.y;
+    }
+
+    @Override
+    public FeaturePointer asFeaturePointer() {
+        return new FeaturePointer(this, null);
+    }
+
 
 }

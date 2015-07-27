@@ -9,32 +9,43 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.score.ScoreAllCallback;
 import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.GameOverMessage;
+import com.jcloisterzone.wsio.message.ToggleClockMessage;
 
 
-public class GameOverPhase extends Phase implements ScoreAllCallback {
+public class GameOverPhase extends ServerAwarePhase implements ScoreAllCallback, ScoringStrategy {
 
-    public GameOverPhase(Game game) {
-        super(game);
+    public GameOverPhase(Game game, GameController controller) {
+        super(game, controller);
     }
 
     @Override
     public void enter() {
+        if (isLocalPlayer(game.getTurnPlayer())) {
+            //invoke only by single client
+            getConnection().send(new ToggleClockMessage(game.getGameId(), null));
+            getConnection().send(new GameOverMessage(game.getGameId()));
+        }
+
         FairyCapability fairyCap = game.getCapability(FairyCapability.class);
         if (fairyCap != null) {
             //erase position to not affect final scoring
-            fairyCap.setFairyPosition(null);
+        	//TOOD what about rather check game phase in rating instead this hack
+            fairyCap.getFairy().setFeaturePointer(null);
         }
 
         ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
         scoreAll.scoreAll(game, this);
 
-        game.finalScoring();
+        game.finalScoring(this);
         game.post(new GameStateChangeEvent(GameStateChangeEvent.GAME_OVER));
     }
 
@@ -79,6 +90,11 @@ public class GameOverPhase extends Phase implements ScoreAllCallback {
     @Override
     public Player getActivePlayer() {
         return null;
+    }
+
+    @Override
+    public void addPoints(Player player, int points, PointCategory category) {
+        player.addPoints(points, category);
     }
 
 }

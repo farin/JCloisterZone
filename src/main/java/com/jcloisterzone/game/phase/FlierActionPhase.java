@@ -6,11 +6,13 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
 
@@ -45,6 +47,13 @@ public class FlierActionPhase extends Phase {
         MeepleAction action = new MeepleAction(meepleType);
         for (Feature f : target.getFeatures()) {
             if (!(f instanceof Completable)) continue;
+            if (f instanceof Cloister) {
+                Cloister cloister = (Cloister) f;
+                if (cloister.isMonastery()) {
+                    action.add(new FeaturePointer(pos, Location.ABBOT));
+                }
+            }
+
             if (f.walk(new IsCompleted())) continue;
             if (follower.isDeploymentAllowed(f).result) {
                 action.add(new FeaturePointer(pos, f.getLocation()));
@@ -64,18 +73,23 @@ public class FlierActionPhase extends Phase {
 
     @Override
     public void next() {
-        flierCap.setFlierDistance(null, 0);
-        super.next();
+        boolean isPhantom = Phantom.class.equals(flierCap.getMeepleType());
+        flierCap.setFlierDistance(null, 0); //resets meepleType
+        if (isPhantom) {
+            PhantomPhase pp = game.getPhases().getInstance(PhantomPhase.class);
+            super.next(pp.getDefaultNext());
+        } else {
+            super.next();
+        }
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (!meepleType.equals(flierCap.getMeepleType())) {
             throw new IllegalArgumentException("Invalid meeple type.");
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        Tile tile = getBoard().get(p);
-        m.deploy(tile, loc);
+        m.deploy(fp);
         next();
     }
 

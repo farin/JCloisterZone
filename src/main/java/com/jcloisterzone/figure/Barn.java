@@ -37,7 +37,7 @@ public class Barn extends Special {
         ctx.setCityCache(new HashMap<City, CityScoreContext>());
         farm.walk(ctx);
 
-        if (!farm.getTile().getGame().hasRule(CustomRule.MULTI_BARN_ALLOWED)) {
+        if (!farm.getTile().getGame().getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
             for (Special m : ctx.getSpecialMeeples()) {
                 if (m instanceof Barn) {
                     return new DeploymentCheckResult("Another barn is already placed on the farm.");

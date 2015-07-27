@@ -15,17 +15,17 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePlacement;
-import com.jcloisterzone.rmi.Client2ClientIF;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.controls.ActionPanel;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
-public class TilePlacementAction extends PlayerAction<TilePlacement> {
+public class TilePlacementAction extends PlayerAction<TilePlacement> implements ForwardBackwardListener {
 
     private final Tile tile;
+    private ForwardBackwardListener forwardBackwardDelegate;
 
-    //HACK should be here?, used only for getImage
     private Rotation tileRotation = Rotation.R0;
 
     public TilePlacementAction(Tile tile) {
@@ -41,6 +41,20 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
         return tileRotation;
     }
 
+    public void setTileRotation(Rotation tileRotation) {
+        this.tileRotation = tileRotation;
+    }
+
+    @Override
+    public void forward() {
+        forwardBackwardDelegate.forward();
+    }
+
+    @Override
+    public void backward() {
+        forwardBackwardDelegate.backward();
+    }
+
     public Map<Position, Set<Rotation>> groupByPosition() {
         Map<Position, Set<Rotation>> map = new HashMap<>();
         for (TilePlacement tp: options) {
@@ -54,11 +68,15 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
         return map;
     }
 
-    //TODO direct implementation
     public Set<Rotation> getRotations(Position p) {
-        return groupByPosition().get(p);
+        Set<Rotation> rotations = new HashSet<>();
+        for (TilePlacement tp: options) {
+            if (tp.getPosition().equals(p)) {
+                rotations.add(tp.getRotation());
+            }
+        }
+        return rotations;
     }
-
 
     @Override
     public Image getImage(Player player, boolean active) {
@@ -74,32 +92,26 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     @Override
-    public void perform(Client2ClientIF server, TilePlacement tp) {
+    public void perform(RmiProxy server, TilePlacement tp) {
         server.placeTile(tp.getRotation(), tp.getPosition());
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        return new TilePlacementLayer(client.getGridPanel(), this);
-    }
-
-    @Override
-    public void forward() {
-        tileRotation = tileRotation.next();
-        ActionPanel panel = client.getControlPanel().getActionPanel();
-        panel.refreshImageCache();
-    }
-
-    @Override
-    public void backward() {
-        tileRotation = tileRotation.prev();
-        ActionPanel panel = client.getControlPanel().getActionPanel();
-        panel.refreshImageCache();
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TilePlacementLayer.class;
     }
 
     @Override
     public String toString() {
-        return "place tile";
+        return "place tile " + tile.getId();
     }
 
+    public ForwardBackwardListener getForwardBackwardDelegate() {
+        return forwardBackwardDelegate;
+    }
+
+    public void setForwardBackwardDelegate(
+            ForwardBackwardListener forwardBackwardDelegate) {
+        this.forwardBackwardDelegate = forwardBackwardDelegate;
+    }
 }

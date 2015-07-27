@@ -27,21 +27,21 @@ public class PigCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         Player player = game.getActivePlayer();
         if (!player.hasSpecialMeeple(Pig.class)) return;
 
-        Tile tile = getTile();
+        Tile tile = getCurrentTile();
         if (!game.isDeployAllowed(tile, Pig.class)) return;
 
         Position pos = tile.getPosition();
         MeepleAction pigAction = null;
         for (Location loc : tile.getPlayerFeatures(player, Farm.class)) {
-        	if (pigAction == null) {
-        		pigAction = new MeepleAction(Pig.class);
-        		actions.add(pigAction);
-        	}
-        	pigAction.add(new FeaturePointer(pos, loc));
+            if (pigAction == null) {
+                pigAction = new MeepleAction(Pig.class);
+                actions.add(pigAction);
+            }
+            pigAction.add(new FeaturePointer(pos, loc));
         }
     }
 }

@@ -1,11 +1,9 @@
 package com.jcloisterzone.action;
 
-import java.awt.Image;
-
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.rmi.Client2ClientIF;
-import com.jcloisterzone.ui.grid.GridLayer;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.wsio.RmiProxy;
 
 
 public class TowerPieceAction extends SelectTileAction {
@@ -16,7 +14,7 @@ public class TowerPieceAction extends SelectTileAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, Position p) {
+    public void perform(RmiProxy server, Position p) {
         server.placeTowerPiece(p);
     }
 
@@ -26,10 +24,10 @@ public class TowerPieceAction extends SelectTileAction {
     }
 
     @Override
-    protected GridLayer createGridLayer() {
-        Image gd = client.getControlsTheme().getActionDecoration("tower");
-        return new TileActionLayer(client.getGridPanel(), this, gd);
+    protected Class<? extends ActionLayer<?>> getActionLayerType() {
+        return TileActionLayer.class;
     }
+
 
     @Override
     public String toString() {

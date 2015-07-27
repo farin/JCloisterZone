@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.FairyCapability;
 
 public class ScoreEvent extends PlayEvent implements Undoable {
 
@@ -16,25 +17,25 @@ public class ScoreEvent extends PlayEvent implements Undoable {
 
     private final int points;
     private final PointCategory category;
-    private final Meeple meeple;
+    private final Class<? extends Meeple> meepleType;
 
     private String label;
     private boolean isFinal;
 
     public ScoreEvent(Feature feature, int points, PointCategory category, Meeple meeple) {
-        super(meeple == null ? null : meeple.getPlayer());
+        super(null, meeple == null ? null : meeple.getPlayer());
         this.feature = feature;
         this.position = feature.getTile().getPosition();
         this.points = points;
         this.category = category;
-        this.meeple = meeple;
+        this.meepleType = meeple.getClass();
     }
 
-    public ScoreEvent(Position position, Player player, int points, PointCategory category) {
-        super(player);
+    public ScoreEvent(Position position, Player targetPlayer, int points, PointCategory category) {
+        super(null, targetPlayer);
         this.position = position;
         this.feature = null;
-        this.meeple = null;
+        this.meepleType = null;
         this.points = points;
         this.category = category;
     }
@@ -42,11 +43,11 @@ public class ScoreEvent extends PlayEvent implements Undoable {
     public Feature getFeature() {
         return feature;
     }
-    
+
     public Position getPosition() {
-		return position;
-	}
-    
+        return position;
+    }
+
     public int getPoints() {
         return points;
     }
@@ -59,8 +60,8 @@ public class ScoreEvent extends PlayEvent implements Undoable {
         return label == null ? points + "" : label;
     }
 
-    public Meeple getMeeple() {
-        return meeple;
+    public Class<? extends Meeple> getMeepleType() {
+        return meepleType;
     }
 
     public PointCategory getCategory() {
@@ -77,6 +78,23 @@ public class ScoreEvent extends PlayEvent implements Undoable {
 
     @Override
     public void undo(Game game) {
-        getPlayer().addPoints(-points, category);
+        if (label != null && label.contains(" + ")) {
+            //HACK: nasty hack, fairy finished object fires score event as one, but points are in two categories
+            getTargetPlayer().addPoints(-FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+            getTargetPlayer().addPoints(-points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, category);
+        } else {
+            getTargetPlayer().addPoints(-points, category);
+        }
+    }
+
+    @Override
+    public Event getInverseEvent() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return super.toString() + " feature:"+feature + " position:"+position;
     }
 }

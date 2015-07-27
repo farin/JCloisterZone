@@ -7,6 +7,8 @@ package com.jcloisterzone.event;
 public abstract class Event {
 
     private final int type;
+    /* flag if event is inverse event triggered by undo */
+    private boolean undo;
 
     public Event() {
         this(0);
@@ -28,4 +30,11 @@ public abstract class Event {
     	return getClass().getSimpleName();
     }
 
+	public boolean isUndo() {
+		return undo;
+	}
+
+	public void setUndo(boolean undo) {
+		this.undo = undo;
+	}
 }

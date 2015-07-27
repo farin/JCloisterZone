@@ -19,9 +19,9 @@ public class TileEvent extends PlayEvent implements Undoable {
     private final Tile tile;
     private final Position position;
 
-    
+
     public TileEvent(int type, Player player, Tile tile, Position position) {
-        super(type, player);
+        super(type, player, type == DRAW ? player : null);
         this.tile = tile;
         this.position = position;
     }
@@ -29,10 +29,10 @@ public class TileEvent extends PlayEvent implements Undoable {
     public Tile getTile() {
         return tile;
     }
-    
+
     public Position getPosition() {
-		return position;
-	}
+        return position;
+    }
 
     @Override
     public void undo(Game game) {
@@ -44,12 +44,27 @@ public class TileEvent extends PlayEvent implements Undoable {
                 tile.setRotation(Rotation.R0);
                 game.setCurrentTile(null);
                 ((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
-                game.getCapability(AbbeyCapability.class).undoUseAbbey(getPlayer());
+                game.getCapability(AbbeyCapability.class).undoUseAbbey(getTriggeringPlayer());
             }
             break;
         default:
             throw new UnsupportedOperationException();
         }
+    }
+
+    @Override
+    public Event getInverseEvent() {
+        switch (getType()) {
+        case PLACEMENT:
+            return new TileEvent(TileEvent.REMOVE, getTriggeringPlayer(), tile, getPosition());
+        default:
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " tile:" + tile.getId() + " position:" + position;
     }
 
 }

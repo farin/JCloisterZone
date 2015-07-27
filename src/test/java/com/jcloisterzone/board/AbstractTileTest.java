@@ -10,7 +10,7 @@ import com.jcloisterzone.game.Game;
 
 public class AbstractTileTest {
 
-    protected Game game = new Game();
+    protected Game game = new Game("12345678");
     protected TilePackFactory packFactory = new TilePackFactory();
     protected TileFactory tileFactory = new TileFactory();
 
@@ -21,7 +21,6 @@ public class AbstractTileTest {
     @Before
     public void initFactories() {
         Config config = new Config();
-        game.setConfig(config);
         setUpGame(game);
         packFactory.setGame(game);
         packFactory.setConfig(config);

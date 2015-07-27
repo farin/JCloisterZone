@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XmlUtils.attributeBoolValue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,13 +13,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -31,6 +30,8 @@ import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class CastleCapability extends Capability {
 
@@ -61,9 +62,16 @@ public class CastleCapability extends Capability {
         throw new UnsupportedOperationException();
     }
 
-    @Subscribe
-    public void undeployed(MeepleEvent ev) {
-    	if (ev.getFrom() == null) return;
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof MeepleEvent) {
+           undeployed((MeepleEvent) event);
+       }
+
+    }
+
+    private void undeployed(MeepleEvent ev) {
+        if (ev.getFrom() == null) return;
         Feature f = getBoard().get(ev.getFrom());
         if (f instanceof Castle) {
             Castle castle = (Castle) f.getMaster();
@@ -144,20 +152,27 @@ public class CastleCapability extends Capability {
             }
         }
 
+        FeaturePointer fp = new FeaturePointer(tile.getPosition(), loc);
         for (Meeple m : meeples) {
             if (m.getPlayer() == game.getActivePlayer() && m.isDeploymentAllowed(castle).result) {
-                m.deploy(tile, loc);
+                m.deploy(fp);
             }
         }
         return castle;
     }
 
     public Castle convertCityToCastle(Position pos, Location loc) {
+        return convertCityToCastle(pos, loc, false);
+    }
+
+    private Castle convertCityToCastle(Position pos, Location loc, boolean loadFromSnaphot) {
         Castle castle1 = replaceCityWithCastle(getBoard().get(pos), loc);
         Castle castle2 = replaceCityWithCastle(getBoard().get(pos.add(loc)), loc.rev());
         castle1.getEdges()[0] = castle2;
         castle2.getEdges()[0] = castle1;
-        newCastles.add(castle1.getMaster());
+        if (!loadFromSnaphot) {
+            newCastles.add(castle1.getMaster());
+        }
         game.post(new CastleDeployedEvent(game.getActivePlayer(), castle1, castle2));
         return castle1.getMaster();
     }
@@ -213,7 +228,7 @@ public class CastleCapability extends Capability {
     private Element createCastleXmlElement(Document doc, Castle castle) {
         Element el = doc.createElement("castle");
         el.setAttribute("location", castle.getLocation().toString());
-        XmlUtils.injectPosition(el, castle.getTile().getPosition());
+        XMLUtils.injectPosition(el, castle.getTile().getPosition());
         return el;
     }
 
@@ -255,11 +270,11 @@ public class CastleCapability extends Capability {
         nl = node.getElementsByTagName("castle");
         for (int i = 0; i < nl.getLength(); i++) {
             Element castleEl = (Element) nl.item(i);
-            Position pos = XmlUtils.extractPosition(castleEl);
+            Position pos = XMLUtils.extractPosition(castleEl);
             Location loc = Location.valueOf(castleEl.getAttribute("location"));
-            Castle castle = convertCityToCastle(pos, loc);
-            boolean isNew = XmlUtils.attributeBoolValue(castleEl, "new");
-            boolean isCompleted = XmlUtils.attributeBoolValue(castleEl, "completed");
+            Castle castle = convertCityToCastle(pos, loc, true);
+            boolean isNew = XMLUtils.attributeBoolValue(castleEl, "new");
+            boolean isCompleted = XMLUtils.attributeBoolValue(castleEl, "completed");
             if (isNew) {
                 newCastles.add(castle);
             } else if (isCompleted) {

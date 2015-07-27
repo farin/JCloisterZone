@@ -1,62 +1,28 @@
 package com.jcloisterzone.ai;
 
-import java.util.EnumSet;
-
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.BoardPointer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.wsio.RmiProxy;
 
-public class DelayedServer implements ServerIF {
+public class DelayedServer implements RmiProxy {
 
-    private final ServerIF server;
+    private final RmiProxy server;
     private final int placeTileDelay;
 
-    public DelayedServer(ServerIF server, int placeTileDelay) {
+    public DelayedServer(RmiProxy server, int placeTileDelay) {
         this.server = server;
         this.placeTileDelay = placeTileDelay;
     }
 
-    @Override
-    public void updateSlot(PlayerSlot slot,
-            EnumSet<Expansion> supportedExpansions) {
-        server.updateSlot(slot, supportedExpansions);
-    }
-
-    @Override
-    public void selectTiles(int tilesCount, int drawCount) {
-        server.selectTiles(tilesCount, drawCount);
-    }
-
-    @Override
-    public void rollFlierDice(Class<? extends Meeple> meepleType) {
-        server.rollFlierDice(null);
-    }
-
-    @Override
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
-        server.updateExpansion(expansion, enabled);
-    }
-
-    @Override
-    public void updateCustomRule(CustomRule rule, Boolean enabled) {
-        server.updateCustomRule(rule, enabled);
-    }
-
-    @Override
-    public void updateGameSetup(Expansion[] expansions, CustomRule[] rules) {
-        server.updateGameSetup(expansions, rules);
-    }
-
-    @Override
-    public void startGame() {
-        server.startGame();
-    }
 
     @Override
     public void pass() {
@@ -72,14 +38,13 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
-    public void deployMeeple(Position pos, Location loc,
-            Class<? extends Meeple> meepleType) {
-        server.deployMeeple(pos, loc, meepleType);
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
+        server.deployMeeple(fp, meepleType);
     }
 
     @Override
-    public void undeployMeeple(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.undeployMeeple(pos, loc, meepleType, meepleOwner);
+    public void undeployMeeple(MeeplePointer mp) {
+        server.undeployMeeple(mp);
     }
 
     @Override
@@ -88,27 +53,23 @@ public class DelayedServer implements ServerIF {
     }
 
     @Override
-    public void takePrisoner(Position pos, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        server.takePrisoner(pos, loc, meepleType, meepleOwner);
+    public void takePrisoner(MeeplePointer mp) {
+        server.takePrisoner(mp);
     }
 
     @Override
-    public void placeTunnelPiece(Position pos, Location loc,
-            boolean isSecondPiece) {
-        server.placeTunnelPiece(pos, loc, isSecondPiece);
+    public void placeTunnelPiece(FeaturePointer fp, boolean isSecondPiece) {
+        server.placeTunnelPiece(fp, isSecondPiece);
     }
 
     @Override
-    public void moveFairy(Position pos) {
-        server.moveFairy(pos);
-    }
-
-    @Override
-    public void moveDragon(Position pos) {
-        try {
-            Thread.sleep(placeTileDelay / 2);
-        } catch (InterruptedException e) {}
-        server.moveDragon(pos);
+    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
+        if (Dragon.class.equals(figureType)) {
+            try {
+                Thread.sleep(placeTileDelay / 2);
+            } catch (InterruptedException e) {}
+        }
+        server.moveNeutralFigure(ptr, figureType);
     }
 
     @Override
@@ -142,13 +103,13 @@ public class DelayedServer implements ServerIF {
         server.cornCiclesRemoveOrDeploy(remove);
     }
 
-    public void chatMessage(Integer player, String message) {
-        server.chatMessage(player, message);
-    }
-    
     @Override
-    public void undo() {
-    	server.undo();
+    public void placeLittleBuilding(LittleBuilding lbType) {
+        server.placeLittleBuilding(lbType);
     }
 
+    @Override
+    public void placeGoldPiece(Position pos) {
+        server.placeGoldPiece(pos);
+    }
 }

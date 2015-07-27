@@ -2,19 +2,19 @@ package com.jcloisterzone.game.capability;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsCompleted;
@@ -26,6 +26,7 @@ import com.jcloisterzone.game.SnapshotCorruptedException;
 
 public class FlierCapability extends Capability {
 
+    boolean flierUsed = false; //prevent phantom use flier if flier used this turn
     private int flierDistance;
     private Class<? extends Meeple> meepleType;
 
@@ -35,7 +36,7 @@ public class FlierCapability extends Capability {
 
     @Override
     public Object backup() {
-        return new Object[] { flierDistance, meepleType };
+        return new Object[] { flierDistance, meepleType, flierUsed };
     }
 
     @SuppressWarnings("unchecked")
@@ -44,6 +45,7 @@ public class FlierCapability extends Capability {
         Object[] a = (Object[]) data;
         flierDistance = (Integer) a[0];
         meepleType = (Class<? extends Meeple>) a[1];
+        flierUsed = (Boolean) a[2];
     }
 
     public int getFlierDistance() {
@@ -65,20 +67,27 @@ public class FlierCapability extends Capability {
         NodeList nl = xml.getElementsByTagName("flier");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            Location flier = XmlUtils.union(XmlUtils.asLocation((Element) nl.item(0)));
+            Location flier = XMLUtils.union(XMLUtils.asLocation((Element) nl.item(0)));
             tile.setFlier(flier);
         }
     }
 
     private List<Feature> getReachableFeatures() {
         List<Feature> result = new ArrayList<>();
-        Location direction = getTile().getFlier().rotateCW(getTile().getRotation());
-        Position pos = getTile().getPosition();
+        Location direction = getCurrentTile().getFlier().rotateCW(getCurrentTile().getRotation());
+        Position pos = getCurrentTile().getPosition();
         for (int i = 0; i < 3; i++) {
             pos = pos.add(direction);
             Tile target = getBoard().get(pos);
             if (target != null) {
                 for (Feature f : target.getFeatures()) {
+                    if (f instanceof Cloister) {
+                       Cloister cloister = (Cloister) f;
+                       if (cloister.isMonastery()) {
+                           result.add(f); //monastery is always valid target
+                           continue;
+                       }
+                    }
                     if (f instanceof Completable) {
                         if (f.walk(new IsCompleted())) continue;
                         result.add(f);
@@ -97,9 +106,14 @@ public class FlierCapability extends Capability {
     }
 
     @Override
-    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+    public void postPrepareActions(List<PlayerAction<?>> actions) {
+        prepareFlier(actions, true);
+    }
+
+
+    public void prepareFlier(List<PlayerAction<?>> actions, boolean allowAdd) {
         Tile tile = game.getCurrentTile();
-        if (tile.getFlier() == null) return;
+        if (flierUsed || tile.getFlier() == null) return;
 
         List<Feature> reachable = getReachableFeatures();
         if (reachable.isEmpty()) return;
@@ -121,16 +135,32 @@ public class FlierCapability extends Capability {
                 }
             }
 
-            if (landingExists) {
+            if (allowAdd && landingExists) {
                 MeepleAction action = new MeepleAction(f.getClass());
-                action.add(new FeaturePointer(getTile().getPosition(), Location.FLIER));
+                action.add(new FeaturePointer(getCurrentTile().getPosition(), Location.FLIER));
                 actions.add(action);
             }
         }
     }
 
     @Override
+    public void turnPartCleanUp() {
+        flierUsed = false;
+    }
+
+    public boolean isFlierUsed() {
+        return flierUsed;
+    }
+
+    public void setFlierUsed(boolean flierUsed) {
+        this.flierUsed = flierUsed;
+    }
+
+    @Override
     public void saveToSnapshot(Document doc, Element node) {
+        if (flierUsed) {
+            node.setAttribute("flierUsed", "true");
+        }
         if (flierDistance > 0) {
             node.setAttribute("flierDistance", ""+flierDistance);
             node.setAttribute("meepleType", meepleType.getName());
@@ -140,9 +170,12 @@ public class FlierCapability extends Capability {
     @SuppressWarnings("unchecked")
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+        if (XMLUtils.attributeBoolValue(node, "flierUsed")) {
+            flierUsed = true;
+        }
         if (node.hasAttribute("flierDistance")) {
              flierDistance = Integer.parseInt(node.getAttribute("flierDistance"));
-             meepleType = (Class<? extends Meeple>) XmlUtils.classForName(node.getAttribute("meepleType"));
+             meepleType = (Class<? extends Meeple>) XMLUtils.classForName(node.getAttribute("meepleType"));
         }
     }
 

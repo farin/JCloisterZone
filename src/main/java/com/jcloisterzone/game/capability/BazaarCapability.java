@@ -8,11 +8,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -93,7 +93,7 @@ public class BazaarCapability extends Capability {
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) {
-        bazaarTriggered = XmlUtils.attributeBoolValue(node,"bazaar-triggered");
+        bazaarTriggered = XMLUtils.attributeBoolValue(node,"bazaar-triggered");
         NodeList nl = node.getElementsByTagName("bazaar-supply");
         if (nl.getLength() > 0) {
             bazaarSupply = new ArrayList<BazaarItem>(nl.getLength());
@@ -104,8 +104,8 @@ public class BazaarCapability extends Capability {
                 bazaarSupply.add(bi);
                 if (el.hasAttribute("owner")) bi.setOwner(game.getPlayer(Integer.parseInt(el.getAttribute("owner"))));
                 if (el.hasAttribute("bidder")) bi.setCurrentBidder(game.getPlayer(Integer.parseInt(el.getAttribute("bidder"))));
-                bi.setCurrentPrice(XmlUtils.attributeIntValue(el, "price"));
-                if (XmlUtils.attributeBoolValue(el, "selected")) {
+                bi.setCurrentPrice(XMLUtils.attributeIntValue(el, "price"));
+                if (XMLUtils.attributeBoolValue(el, "selected")) {
                     currentBazaarAuction = bi;
                 }
             }
@@ -164,8 +164,15 @@ public class BazaarCapability extends Capability {
         bazaarTriggered = false;
     }
 
-    @Subscribe
-    public void tileDrawn(TileEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof TileEvent) {
+           tileDrawn((TileEvent) event);
+       }
+
+    }
+
+    private void tileDrawn(TileEvent ev) {
         if (ev.getType() == TileEvent.DRAW && ev.getTile().hasTrigger(TileTrigger.BAZAAR)) {
             bazaarTriggered = true;
         }

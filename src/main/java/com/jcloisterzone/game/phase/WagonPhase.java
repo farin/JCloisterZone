@@ -1,31 +1,40 @@
 package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.visitor.FeatureVisitor;
+import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.ui.GameController;
 
 
-public class WagonPhase extends Phase {
+public class WagonPhase extends ServerAwarePhase {
 
     final WagonCapability wagonCap;
 
 
-    public WagonPhase(Game game) {
-        super(game);
+    public WagonPhase(Game game, GameController controller) {
+        super(game, controller);
         wagonCap = game.getCapability(WagonCapability.class);
     }
 
@@ -42,17 +51,24 @@ public class WagonPhase extends Phase {
 
     @Override
     public void pass() {
+        Player player = wagonCap.getWagonPlayer();
+        wagonCap.removeScoredWagon(player);
         enter();
     }
 
     @Override
-    public void deployMeeple(Position p, Location loc, Class<? extends Meeple> meepleType) {
+    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
         if (!meepleType.equals(Wagon.class)) {
             logger.error("Illegal figure type.");
             return;
         }
-        Meeple m = getActivePlayer().getMeepleFromSupply(Wagon.class);
-        m.deployUnoccupied(getBoard().get(p), loc);
+        Player player = wagonCap.getWagonPlayer();
+        Meeple m = player.getMeepleFromSupply(Wagon.class);
+        if (getBoard().get(fp).walk(new IsOccupied())) {
+            throw new IllegalArgumentException("Feature is occupied.");
+        }
+        m.deploy(fp);
+        wagonCap.removeScoredWagon(player);
         enter();
     }
 
@@ -63,45 +79,110 @@ public class WagonPhase extends Phase {
     }
 
     private boolean existsLegalMove() {
-        Map<Player, Feature> rw = wagonCap.getReturnedWagons();
-        while (!rw.isEmpty()) {
-            int pi = game.getTurnPlayer().getIndex();
-            while(! rw.containsKey(game.getAllPlayers()[pi])) {
-                pi++;
-                if (pi == game.getAllPlayers().length) pi = 0;
-            }
-            Player player = game.getAllPlayers()[pi];
-            Feature f = rw.remove(player);
-            List<FeaturePointer> wagonMoves = prepareWagonMoves(f);
+        Map<Player, Feature> rw = wagonCap.getScoredWagons();
+        Player wagonPlayer;
+        while ((wagonPlayer = wagonCap.getWagonPlayer()) != null) {
+            Feature f = rw.get(wagonPlayer);
+            Set<FeaturePointer> wagonMoves = prepareWagonMoves(f);
             if (!wagonMoves.isEmpty()) {
-                wagonCap.setWagonPlayer(player);
-                game.post(new SelectActionEvent(getActivePlayer(), new MeepleAction(Wagon.class).addAll(wagonMoves), true));
+                Player activePlayer = getActivePlayer();
+                toggleClock(activePlayer);
+                game.post(new SelectActionEvent(activePlayer, new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
+            } else {
+                rw.remove(wagonPlayer);
             }
         }
         return false;
     }
 
-    private List<FeaturePointer> prepareWagonMoves(Feature source) {
-        return source.walk(new FindUnoccupiedNeighbours());
+    private List<FeaturePointer> getPlacements(Feature f) {
+        if (f == null) return Collections.emptyList();
+        CollectingIsOccupiedOrCompleted visitor = new CollectingIsOccupiedOrCompleted();
+        f.walk(visitor);
+        return visitor.getPlacements();
     }
 
-    private class FindUnoccupiedNeighbours implements FeatureVisitor<List<FeaturePointer>> {
+    private Set<FeaturePointer> prepareWagonMoves(Feature source) {
+        if (source.getTile().isAbbeyTile()) {
+            Set<FeaturePointer> wagonMoves = new HashSet<>();
+            for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(source.getTile().getPosition()).entrySet()) {
+                Tile tile = entry.getValue();
+                Feature f = tile.getFeaturePartOf(entry.getKey().rev());
+                wagonMoves.addAll(getPlacements(f));
+            }
+            return wagonMoves;
+        } else {
+            return source.walk(new FindUnoccupiedNeighbours());
+        }
+    }
 
-        private List<FeaturePointer> wagonMoves = new ArrayList<>();
+    private class CollectingIsOccupiedOrCompleted extends IsOccupiedOrCompleted {
+        List<FeaturePointer> placements = new ArrayList<FeaturePointer>();
 
         @Override
-        public boolean visit(Feature feature) {
-            if (feature.getNeighbouring() != null) {
-                for (Feature nei : feature.getNeighbouring()) {
-                    if (nei.walk(new IsOccupiedOrCompleted())) continue;
-                    wagonMoves.add(new FeaturePointer(nei.getTile().getPosition(), nei.getLocation()));
-                }
+        public VisitResult visit(Feature feature) {
+            if (game.isDeployAllowed(feature.getTile(), Wagon.class)) {
+                placements.add(new FeaturePointer(feature));
             }
-            return true;
+            return super.visit(feature);
         }
 
-        public List<FeaturePointer> getResult() {
+        public List<FeaturePointer> getPlacements() {
+            if (getResult()) {
+                return Collections.emptyList();
+            }
+            return placements;
+        }
+    }
+
+    private class FindUnoccupiedNeighbours implements FeatureVisitor<Set<FeaturePointer>> {
+
+        private Set<FeaturePointer> wagonMoves = new HashSet<>();
+
+        @Override
+        public VisitResult visit(Feature feature) {
+            if (feature instanceof MultiTileFeature) {
+                MultiTileFeature f = (MultiTileFeature) feature;
+                MultiTileFeature[] edges = f.getEdges();
+                for (int i = 0; i < edges.length; i++) {
+                    if (edges[i] == f) { //special value - neigbouring abbey
+                        int j = 0;
+                        for (Location side : Location.sides()) {
+                            if (side.intersect(f.getLocation()) != null) {
+                                if (j == i) {
+                                    //Abbey at side;
+                                    Position target = f.getTile().getPosition().add(side);
+                                    Tile abbeyTile = getBoard().get(target);
+                                    assert abbeyTile.isAbbeyTile();
+                                    wagonMoves.addAll(getPlacements(abbeyTile.getCloister()));
+                                }
+                                j++;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (feature.getNeighbouring() != null) {
+                for (Feature nei : feature.getNeighbouring()) {
+                    Tile tile = nei.getTile();
+
+                    if ((nei instanceof Cloister) && game.isDeployAllowed(tile, Wagon.class)) {
+                        Cloister cloister = (Cloister) nei;
+                        if (cloister.isMonastery() && cloister.getMeeples().isEmpty()) {
+                            wagonMoves.add(new FeaturePointer(tile.getPosition(), Location.ABBOT));
+                        }
+                    }
+                    wagonMoves.addAll(getPlacements(nei));
+                }
+            }
+            return VisitResult.CONTINUE;
+        }
+
+        @Override
+        public Set<FeaturePointer> getResult() {
             return wagonMoves;
         }
     }

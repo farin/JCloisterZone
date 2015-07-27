@@ -1,6 +1,7 @@
 package com.jcloisterzone.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,9 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -46,8 +49,14 @@ public abstract class Capability {
     protected Board getBoard() {
         return game.getBoard();
     }
-    protected Tile getTile() {
+    protected Tile getCurrentTile() {
         return game.getCurrentTile();
+    }
+
+    /* no @Subscribe for Capabilities
+     * it cause post from another event handler and makes trouble with AI tasks
+     * */
+    public void handleEvent(Event event) {
     }
 
     public void saveToSnapshot(Document doc, Element node) {
@@ -77,27 +86,48 @@ public abstract class Capability {
 
     public void begin() {
     }
-    
+
     /** convenient method to find follower action in all actions */
     protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
-    	List<MeepleAction> followerActions = new ArrayList<>();
-    	for (PlayerAction<?> a : actions) {
-    		if (a instanceof MeepleAction) {
-    			MeepleAction ma = (MeepleAction) a;
-    			if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
-    				followerActions.add(ma);
-    			}
-    		}
-    	}
-    	return followerActions;
+        List<MeepleAction> followerActions = new ArrayList<>();
+        for (PlayerAction<?> a : actions) {
+            if (a instanceof MeepleAction) {
+                MeepleAction ma = (MeepleAction) a;
+                if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
+                    followerActions.add(ma);
+                }
+            }
+        }
+        return followerActions;
+    }
+
+    /** convenient method to find follower action in all actions, or create new if player has follower and action doesn't exists*/
+    protected List<MeepleAction> findAndFillFollowerActions(List<PlayerAction<?>> actions) {
+        List<MeepleAction> followerActions = findFollowerActions(actions);
+        Set<Class<? extends Meeple>> hasAction = new HashSet<>();
+        for (MeepleAction ma : followerActions) {
+            hasAction.add(ma.getMeepleType());
+        }
+
+        for (Follower f : game.getActivePlayer().getFollowers()) {
+            if (f.isInSupply() && !hasAction.contains(f.getClass())) {
+                MeepleAction ma = new MeepleAction(f.getClass());
+                actions.add(ma);
+                followerActions.add(ma);
+                hasAction.add(f.getClass());
+            }
+        }
+        return followerActions;
+    }
+
+    public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
     }
 
     public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
     }
-    public void postPrepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+
+    public void postPrepareActions(List<PlayerAction<?>> actions) {
     }
-//    public void prepareAnyTimeActions(List<PlayerAction> actions) {
-//    }
 
     public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
         return true;
@@ -113,7 +143,7 @@ public abstract class Capability {
     }
 
 
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy strategy) {
     }
 
     public boolean isTilePlacementAllowed(Tile tile, Position p) {

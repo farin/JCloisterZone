@@ -1,9 +1,92 @@
 # Version history
 
-## master branch
-*appears in next release*
+## 3.2.0
+*2015-04-26*
 
+* game clock
+* meeple deployment undo - confirmations has been redesigned. Deploy is done immediately with possibility to undo it.
+* better broken connection indicator
+* auto reconnect and join game when connection is lost
+* expansion: The Goldmines
+* expansion: Little buildings
+* fix #58: wrong nickname in pre-game chat
+* fix: chat panel now auto hides again
+* fix #123: after selecting "play again", game dialog don't hide ai unsupported expansion
+* fix #124: non-bidding bidding bazaars and tile stealing
+* fix #134: allow abbot placement on tile already surrounded by 8 tiles
+* online play: fixed "continue" and wrong player order and names when game created with RANDOM_SEATING_ORDER
+* online play: chat is available after game ends
+
+## 3.1.1
+*2015-03-04*
+
+* online play - password protected games support
+* tile color adjustment (Jozsef T)
+* updated es translation (outdated in 3.1.0)
+* error message bar can be dismissed
+* rotate board (/ key)
+* right click on board with shift down behave as middle mouse click (center board to click point)
+* fix: too often AI placement on top of tower
+* fix: "2-tiles bug" - if playing with GQ11 & King and Scout - at game and counter still shows 2 tiles
+* fix: can't place on tower if there isn't normal placement possibility
+* fix: It is not possible to place the phantom as an abbot on a German monastery
+* fix: checking show farm hints option before game starts is broken
+
+
+## 3.1.0
+*2015-01-29*
+
+* play online feature - play through public webserver
+* Mage and Witch (Mini #5) expansion
+* tile rotation behavior changed - tile is rotated to first valid position
+* added play again button
+* show tunnel tokens supply in control panel
+* CornCicles ui - don't ask if there is not deployed any follower of that kind (if no player can perform any action)
+* click on tile in control panel triggers rotation
+* take board screenshot (pull request by Decar)
+* game setup dialog (you can get included expansion/rules during game)
+* improved image quality (Tunnel, Corn Circles, Festival, Flier)
+* server can be run without ui - just run SimpleServer.main()
+* fix: if game folder is not writeable, system APPDATA dir (win) or ~/.jcloisterzone (unix) is used
+* fix: Cathars escape is not allowed for builder
+* fix: beep sound playback in Linux
+* fix: bazaar & builder & end of turn. (ArrayIndexOutOfBoundsException / unused auctioned tiles in hand when game over)
+
+## 3.0.2
+*2014-11-02*
+
+* rules update: taking prisoner is now not mandatory
+* rules update: The placement of a princess tile (Princess & Dragon) with removal of a knight
+   from the city cannot be used as a first “follower move” and be followed by placement
+   of the Phantom (e.g. into the now-vacated city). As per the rules for the princess,
+    “if a knight is removed from the city, the player may not deploy or move any other figure.”
+* fix: abbot tower capture
+* fix: wrong nickname in pre-game chat
+
+## 3.0.1
+*2014-09-17*
+
+* bug reporting feature (in help menu)
+* fix: wagon issue (usually when playing against ai causing game freeze)
+* fix: wrong colors of chat nicknames
+
+## 3.0
+*2014-08-27*
+
+* network protocol changed completely
 * German Monasteries expansion
+* list of connected clients is displayed during game setup (can see unassigned players)
+* chat is available during game setup
+* more intuitive display of followers on and "under" bridges - bridge with it's follower always above other followers
+* rules update: wagon moves for Inns & Cathedrals special cases, according to Completely Annotated Rules
+* rules update: wagon can't move through a fair
+* rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn
+* rules update: wagon can move to/from abbey
+* fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
+* fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
+* fix: loading game resets point statistics
+* fix: in some cases unable to start loaded game initially created with "randomize seating order"
+
 
 ## 2.7
 *2014-06-26*
@@ -419,3 +502,4 @@ many internal changes in code
 
 ## 0.8
 * initial version
+

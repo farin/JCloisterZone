@@ -1,10 +1,13 @@
 package com.jcloisterzone.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ import com.floreysoft.jmte.Engine;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
+import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PlayersConfig;
@@ -32,58 +36,69 @@ public class ConfigLoader {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String DEFAULT_CONFIG = "config.yaml";
+    public static final String DEFAULT_UPDATE = "http://jcloisterzone.com/version.xml";
+    public static final int DEFAULT_PORT = 37447;
+    public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
+    public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
+    public static final int DEFAULT_SCREENSHOT_SCALE = 120;
+    public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
 
+    private final Path dataDirectory;
     private final Yaml yaml;
     private final Pattern indentPatter = Pattern.compile("^", Pattern.MULTILINE);
 
-    public ConfigLoader() {
+    public ConfigLoader(Path dataDirectory) {
+        this.dataDirectory = dataDirectory;
         yaml = new Yaml(new Constructor(Config.class));
     }
 
-    private String getConfigFile() {
+    private File getConfigFile() {
         String configFile = System.getProperty("config");
-        if (configFile == null) {
-            return DEFAULT_CONFIG;
+        if (configFile != null) {
+            File file = Paths.get(configFile).toFile();
+            if (!file.exists()) { //for dev purposes try to load also from classpath
+                URL resource = Client.class.getClassLoader().getResource(configFile);
+                if (resource != null) {
+                    file = new File(resource.getFile());
+                }
+            }
+            if (file.exists()) {
+                return file;
+            } else {
+                logger.warn("Custom configuration file not found {}. Using default.", file.toString());
+            }
         }
-        return configFile;
+        return dataDirectory.resolve("config.yaml").toFile();
     }
 
     public Config load() {
         Yaml yaml = new Yaml(new Constructor(Config.class));
-        String configFile = getConfigFile();
-        URL configResource = Client.class.getClassLoader().getResource(configFile);
-        if (configResource == null && !configFile.equals(DEFAULT_CONFIG)) {
-            logger.warn("Configuration file not found {}", configFile);
-            configFile = DEFAULT_CONFIG;
-            configResource = Client.class.getClassLoader().getResource(configFile);
-        }
+        File configFile = getConfigFile();
 
         Config config = null;
         boolean save = false;
-        if (configResource == null) {
-            logger.info("Default configuration file {} doesn't exist. Creating new one.", DEFAULT_CONFIG);
+        if (!configFile.exists()) {
+            logger.info("Default configuration file {} doesn't exist. Creating new one.", configFile);
             config = createDefault();
-            config.setOrigin(new File(DEFAULT_CONFIG));
+            config.setOrigin(configFile);
             save = true;
         } else {
             logger.info("Loading configuration {}", configFile);
-            File origin = new File(configResource.getFile());
             try {
-                config = (Config) yaml.load(configResource.openStream());
+                config = (Config) yaml.load(new FileInputStream(configFile));
             } catch (Exception ex) {
                 logger.warn("Error reading configuration.", ex);
-                if (ex instanceof ParserException && origin.isFile()) {
+                if (ex instanceof ParserException) {
                     String name;
-                    if (origin.getParent() == null) {
-                        name = "~" + origin.getName();
+                    if (configFile.getParent() == null) {
+                        name = "~" + configFile.getName();
                     } else {
-                        name = origin.getParent() + File.separator + "~" + origin.getName();
+                        name = configFile.getParent() + File.separator + "~" + configFile.getName();
                     }
                     File backup = new File(name);
                     if (!backup.isFile()) {
                         try {
-                            Files.copy(origin.toPath(), backup.toPath());
+                            Files.copy(configFile.toPath(), backup.toPath());
                         } catch (IOException copyEx) {
                             logger.warn("Unable to backup invalid config.", copyEx);
                         }
@@ -92,7 +107,15 @@ public class ConfigLoader {
                 }
                 config = createDefault();
             }
-            config.setOrigin(origin);
+            config.setOrigin(configFile);
+        }
+        if (config.getClient_id() == null) {
+            config.setClient_id(KeyUtils.createRandomId());
+            save = true;
+        }
+        if (config.getSecret() == null) {
+            config.setSecret(KeyUtils.createRandomId());
+            save = true;
         }
         if (save) {
             save(config);
@@ -102,10 +125,8 @@ public class ConfigLoader {
 
     public void save(Config config) {
         File file = config.getOrigin();
-        try {
-            PrintWriter writer = new PrintWriter(file);
+        try (PrintWriter writer = new PrintWriter(file)) {
             writer.print(fillTemplate(config));
-            writer.close();
             logger.info("Configuration saved {}", file);
         } catch (IOException e) {
             logger.warn("Unable to create configuration file {}", file);
@@ -114,13 +135,17 @@ public class ConfigLoader {
 
     private Config createDefault() {
         Config config = new Config();
-        config.setUpdate("http://jcloisterzone.com/version.xml");
-        config.setPort(37447);
-        config.setScore_display_duration(7);
-        config.setAi_place_tile_delay(250);
-        config.getConfirm().setTower_place(true);
+        config.setUpdate(DEFAULT_UPDATE);
+        config.setPort(DEFAULT_PORT);
+        config.setScore_display_duration(DEFAULT_SCORE_DISPLAY_DURATION);
+        config.setAi_place_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
+        config.setClient_name("");
+        config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
+        config.setClient_id(KeyUtils.createRandomId());
+        config.setSecret(KeyUtils.createRandomId());
+        config.getConfirm().setFarm_deployment(true);
+        config.getConfirm().setOn_tower_deployment(true);
         config.getConfirm().setRansom_payment(true);
-        config.getConfirm().setGame_close(true);
         config.getPlayers().setColors(Lists.newArrayList(
             new ColorConfig("RED"),
             new ColorConfig("#008ffe"),
@@ -131,6 +156,7 @@ public class ConfigLoader {
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
+        config.getScreenshots().setScale(DEFAULT_SCREENSHOT_SCALE);
         return config;
     }
 
@@ -151,6 +177,12 @@ public class ConfigLoader {
         model.put("score_display_duration", config.getScore_display_duration());
         model.put("ai_place_tile_delay", config.getAi_place_tile_delay());
         model.put("beep_alert", config.getBeep_alert());
+        model.put("client_name", config.getClient_name());
+        model.put("play_online_host", config.getPlay_online_host());
+        model.put("client_id", config.getClient_id());
+        model.put("secret", config.getSecret());
+        model.put("screenshot_folder", config.getScreenshots().getFolder());
+        model.put("screenshot_scale", config.getScreenshots().getScale());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));
@@ -187,6 +219,7 @@ public class ConfigLoader {
         model.put("hasDebug", dc != null);
         if (dc != null) {
             model.put("save_format", dc.getSave_format());
+            model.put("window_size", dc.getWindow_size());
             model.put("autosave", dc.getAutosave());
             if (dc.getAutostart() != null) {
                 model.put("autostart", indent(2, yaml.dumpAs(dc.getAutostart(), Tag.MAP, FlowStyle.BLOCK)));

@@ -29,6 +29,7 @@ import com.jcloisterzone.ai.choice.PassChoice;
 import com.jcloisterzone.ai.choice.TilePlacementChoice;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -40,6 +41,7 @@ import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
+import com.jcloisterzone.game.phase.WagonPhase;
 
 public class SelectActionTask implements Runnable {
 
@@ -55,6 +57,9 @@ public class SelectActionTask implements Runnable {
 
     private SavePointManager spm;
     private Game game;
+
+    @SuppressWarnings("unchecked")
+    private static final List<Class<? extends Phase>> ALLOWED_IN_PHASE_LOOP = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class, WagonPhase.class);
 
     public SelectActionTask(RankingAiPlayer aiPlayer, SelectActionEvent rootEv) {
         this.aiPlayer = aiPlayer;
@@ -105,6 +110,7 @@ public class SelectActionTask implements Runnable {
 
     @Override
     public void run() {
+        //logger.info("Select action task started " + aiPlayer.getClientStub().getGame().getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString());
         boolean dbgPrint = false;
         try {
             this.game = aiPlayer.copyGame(this);
@@ -127,27 +133,32 @@ public class SelectActionTask implements Runnable {
                 if (dbgPrint) dbgPringStep(choice, isFinal);
             }
             if (dbgPrint) dbgPringFooter();
-            aiPlayer.setBestChain(bestSoFar);
-            aiPlayer.popActionChain();
+            //logger.info("Select action task finished "  + game.getTilePack().size() + " " + rootEv.getPlayer() + " > " + rootEv.getActions().toString() + " " + bestSoFar.chainToString());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        }
+        if (bestSoFar == null) {
+            //in perfect world it should never happen
             aiPlayer.setBestChain(null);
             aiPlayer.selectDummyAction(rootEv.getActions(), rootEv.isPassAllowed());
+        } else {
+            aiPlayer.setBestChain(bestSoFar);
+            aiPlayer.popActionChain();
         }
     }
 
-    @SuppressWarnings("unchecked")
     private boolean phaseLoop() {
         Phase phase = game.getPhase();
-        List<Class<? extends Phase>> allowed = Lists.newArrayList(ActionPhase.class, EscapePhase.class, TowerCapturePhase.class);
         while (!phase.isEntered()) {
-            if (!Iterables.contains(allowed, phase.getClass())) {
+            if (!Iterables.contains(ALLOWED_IN_PHASE_LOOP, phase.getClass())) {
                 return true;
             }
             phase.setEntered(true);
             phase.enter();
             phase = game.getPhase();
+            game.flushEventQueue();
         }
+        game.flushEventQueue();
         return false;
     }
 
@@ -169,6 +180,10 @@ public class SelectActionTask implements Runnable {
 
     @Subscribe
     public void handleActionEvent(SelectActionEvent ev) {
+        if (!game.getActivePlayer().equals(aiPlayer.getPlayer())) {
+            return; //e.g. wagon move of other player
+        }
+        //logger.info("....T " + game.getTilePack().size() + "|" + ev.getPlayer() + " > " + ev.getActions().toString());
         List<MeepleAction> meepleActions = new ArrayList<MeepleAction>();
         SavePoint savePoint = spm.save();
 
@@ -198,8 +213,22 @@ public class SelectActionTask implements Runnable {
     }
 
     protected void handleTilePlacementAction(SavePoint savePoint, TilePlacementAction action) {
-        for (TilePlacement tp : action.getOptions()) {
-            queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+        TileSymmetry sym = action.getTile().getSymmetry();
+        //do not symmetric tiles
+        if (sym == TileSymmetry.S4) {
+            List<TilePlacement> options = new ArrayList<>(action.getOptions());
+            Collections.sort(options);
+            int size = options.size();
+            for (int i = 0; i < size; i++) {
+                TilePlacement tp = options.get(i);
+                if (i == 0 || !options.get(i-1).getPosition().equals(tp.getPosition())) {
+                    queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+                }
+            }
+        } else {
+            for (TilePlacement tp : action.getOptions()) {
+                queue.push(new TilePlacementChoice(choice, savePoint, action, tp));
+            }
         }
     }
 
@@ -228,9 +257,9 @@ public class SelectActionTask implements Runnable {
         boolean hasSmallFollower = false;
         boolean hasPhantom = false;
         for (MeepleAction a : actions) {
-            if (a instanceof MeepleAction && a.getMeepleType().equals(SmallFollower.class))
+            if (a.getMeepleType().equals(SmallFollower.class))
                 hasSmallFollower = true;
-            if (a instanceof MeepleAction && a.getMeepleType().equals(Phantom.class))
+            if (a.getMeepleType().equals(Phantom.class))
                 hasPhantom = true;
         }
         if (hasSmallFollower && hasPhantom) {

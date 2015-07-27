@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class CastleAction extends SelectFeatureAction {
 
@@ -9,7 +9,7 @@ public class CastleAction extends SelectFeatureAction {
         super("castle");
     }
 
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
+    public void perform(RmiProxy server, FeaturePointer bp) {
         server.deployCastle(bp.getPosition(), bp.getLocation());
     }
 

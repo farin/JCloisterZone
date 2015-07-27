@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
@@ -17,20 +18,25 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
+    protected boolean visible;
     protected final GridPanel gridPanel;
+    protected final GameController gc;
     private MouseInputListener mouseListener;
 
-    public AbstractGridLayer(GridPanel gridPanel) {
+    public AbstractGridLayer(GridPanel gridPanel, GameController gc) {
         this.gridPanel = gridPanel;
+        this.gc = gc;
     }
 
     private void triggerFakeMouseEvent() {
@@ -49,17 +55,26 @@ public abstract class AbstractGridLayer implements GridLayer {
         }
     }
 
-//	@Override
-//	public void gridChanged(int left, int right, int top, int bottom) {
-//	}
+    @Override
+    public void boardRotated(Rotation boardRotation) {
+        if (mouseListener != null) {
+            triggerFakeMouseEvent();
+        }
+    }
 
     protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
         return new GridMouseAdapter(gridPanel, listener);
     }
 
     @Override
-    public void layerAdded() {
-        if (this instanceof GridMouseListener && getClient().isClientActive()) {
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public void onShow() {
+        visible = true;
+        if (this instanceof GridMouseListener) {
             mouseListener = new DragInsensitiveMouseClickListener(createGridMouserAdapter((GridMouseListener) this));
             gridPanel.addMouseListener(mouseListener);
             gridPanel.addMouseMotionListener(mouseListener);
@@ -68,7 +83,8 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     @Override
-    public void layerRemoved() {
+    public void onHide() {
+        visible = false;
         if (mouseListener != null) {
             gridPanel.removeMouseMotionListener(mouseListener);
             gridPanel.removeMouseListener(mouseListener);
@@ -102,6 +118,21 @@ public abstract class AbstractGridLayer implements GridLayer {
         return t;
     }
 
+    protected AffineTransform getAffineTransformIgnoringRotation(Position pos) {
+        int x = getOffsetX(pos);
+        int y = getOffsetY(pos);
+        AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+        at.concatenate(gridPanel.getBoardRotation().inverse().getAffineTransform(getSquareSize()));
+        return at;
+    }
+
+    protected void drawImageIgnoringRotation(Graphics2D g2, Image img, Position pos, int tx, int ty, int width, int height) {
+        AffineTransform at = getAffineTransformIgnoringRotation(pos);
+        at.concatenate(AffineTransform.getTranslateInstance(tx, ty));
+        at.concatenate(AffineTransform.getScaleInstance(width / (double) img.getWidth(null), height / (double) img.getHeight(null)));
+        g2.drawImage(img, at, null);
+    }
+
     public int getOffsetX(Position pos) {
         return getSquareSize() * pos.x;
     }
@@ -119,7 +150,11 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     protected Game getGame() {
-        return getClient().getGame();
+        return gc.getGame();
+    }
+
+    protected RmiProxy getRmiProxy() {
+        return gc.getRmiProxy();
     }
 
     protected Area transformArea(Area area, Position pos) {
@@ -136,15 +171,10 @@ public abstract class AbstractGridLayer implements GridLayer {
     private Font getFont(int relativeSize) {
         int realSize = scale(relativeSize);
         return new Font(null, Font.BOLD, realSize);
-//		Font font = Square.cachedFont;
-//		if (font == null || font.getSize() != realSize) {
-//			font = new Font(null, Font.BOLD, realSize);
-//			Square.cachedFont = font;
-//		}
-//		return font;
     }
 
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
+        //gridPanel.getBoardRotation().
         ImmutablePoint center = centerNoScaled.scale(getSquareSize());
         drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
     }
@@ -157,16 +187,24 @@ public abstract class AbstractGridLayer implements GridLayer {
         TextLayout tl = new TextLayout(text, getFont(fontSize),frc);
         Rectangle2D bounds = tl.getBounds();
 
-        center = center.translate( (int) (bounds.getWidth() / -2), (int) (bounds.getHeight() / -2));
+        int w = (int) bounds.getWidth();
+        int h = (int) bounds.getHeight();
+        center = center.translate(-w/2, -h/2);
+        int x = getOffsetX(pos) + center.getX();
+        int y = getOffsetY(pos) + center.getY();
 
+        AffineTransform orig = g2.getTransform();
+        g2.rotate(-gridPanel.getBoardRotation().getTheta(), x+w/2, y+h/2);
         if (bgColor != null) {
             g2.setColor(bgColor);
-            g2.fillRect(getOffsetX(pos) + center.getX() - 6, getOffsetY(pos) + center.getY() - 5, 12 + (int)bounds.getWidth(),10 +(int) bounds.getHeight());
+            g2.fillRect(x-6, y-5, w+12, h+10);
         }
 
         g2.setColor(fgColor);
-        tl.draw(g2, getOffsetX(pos) + center.getX(),  getOffsetY(pos) + center.getY() + (int) bounds.getHeight());
+        tl.draw(g2, x,  y+h);
         g2.setColor(original);
+        g2.setTransform(orig);
+
     }
 
 }

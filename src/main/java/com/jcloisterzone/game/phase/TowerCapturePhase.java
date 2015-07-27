@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Location;
+import com.jcloisterzone.action.TakePrisonerAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.MeepleEvent;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeeplePrisonEvent;
+import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
@@ -16,8 +17,11 @@ import com.jcloisterzone.game.capability.TowerCapability;
 
 public class TowerCapturePhase extends Phase {
 
+    private final TowerCapability towerCap;
+
     public TowerCapturePhase(Game game) {
         super(game);
+        towerCap = game.getCapability(TowerCapability.class);
     }
 
     @Override
@@ -27,14 +31,33 @@ public class TowerCapturePhase extends Phase {
 
     @Override
     public void enter() {
-        //TODO move handle tower placement here from action phase or not ? nice to have but activated tower arg is needed for it
+        Position pos = towerCap.getLastIncreasedTower();
+        TakePrisonerAction captureAction = prepareCapture(pos, getBoard().get(pos).getTower().getHeight());
+        if (captureAction.isEmpty()) {
+            next();
+            return;
+        }
+        game.post(new SelectActionEvent(getActivePlayer(), captureAction, true));
+    }
+
+    private TakePrisonerAction prepareCapture(Position p, int range) {
+        //TODO custom rule - opponent only
+        TakePrisonerAction captureAction = new TakePrisonerAction();
+        for (Meeple pf : game.getDeployedMeeples()) {
+            if (!(pf instanceof Follower)) continue;
+            Position pos = pf.getPosition();
+            if (pos.x != p.x && pos.y != p.y) continue; //check if is in same row or column
+            if (pos.squareDistance(p) > range) continue;
+            captureAction.add(new MeeplePointer(pf));
+        }
+        return captureAction;
     }
 
     @Override
-    public void takePrisoner(Position p, Location loc, Class<? extends Meeple> meepleType, Integer meepleOwner) {
-        Follower m = (Follower) game.getMeeple(p, loc, meepleType, game.getPlayer(meepleOwner));
+    public void takePrisoner(MeeplePointer mp) {
+        Follower m = (Follower) game.getMeeple(mp);
         m.undeploy();
-        //unplace figure returns figure to owner -> we must handle capture / prisoner exchange
+        //undeploy returns figure to owner -> we must handle capture / prisoner exchange
         Player me = getActivePlayer();
         if (m.getPlayer() != me) {
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
@@ -49,15 +72,19 @@ public class TowerCapturePhase extends Phase {
             if (myCapturedFollowers.isEmpty()) {
                 towerCap.inprison(m, me);
             } else {
-                //opponent has my prisoner - figure exchage
+                //opponent has my prisoner - figure exchange
                 Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
                 boolean removeOk = prisoners.remove(exchanged);
-                assert removeOk;                
-                exchanged.clearDeployment();
+                assert removeOk;
+                exchanged.setInPrison(false);
                 game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
             }
         }
         next();
     }
 
+    @Override
+    public void pass() {
+        next();
+    }
 }

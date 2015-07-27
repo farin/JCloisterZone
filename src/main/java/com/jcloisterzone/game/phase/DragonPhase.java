@@ -21,7 +21,7 @@ public class DragonPhase extends Phase {
     @Override
     public void enter() {
         if (getTile().hasTrigger(TileTrigger.DRAGON)) {
-            if (dragonCap.getDragonPosition() != null) {
+            if (dragonCap.getDragon().getPosition() != null) {
                 dragonCap.triggerDragonMove();
                 next(DragonMovePhase.class);
                 return;
@@ -29,10 +29,4 @@ public class DragonPhase extends Phase {
         }
         next();
     }
-
-
-
-
-
-
 }

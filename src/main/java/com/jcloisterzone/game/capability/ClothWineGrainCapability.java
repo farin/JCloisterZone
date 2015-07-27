@@ -7,14 +7,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeResource;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.FeatureCompletedEvent;
+import com.jcloisterzone.event.TradeResourceEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -27,14 +29,23 @@ public class ClothWineGrainCapability extends Capability {
         super(game);
     }
 
-    @Subscribe
-    public void completed(FeatureCompletedEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof FeatureCompletedEvent) {
+           completed((FeatureCompletedEvent) event);
+       }
+
+    }
+
+    private void completed(FeatureCompletedEvent ev) {
         if (ev.getFeature() instanceof City) {
             int cityTradeResources[] = ((CityScoreContext)ev.getScoreContent()).getCityTradeResources();
             if (cityTradeResources != null) {
-                int playersTradeResources[] = tradeResources.get(game.getActivePlayer());
+                Player player = game.getActivePlayer();
+                int playersTradeResources[] = tradeResources.get(player);
                 for (int i = 0; i < cityTradeResources.length; i++) {
                     playersTradeResources[i] += cityTradeResources[i];
+                    game.post(new TradeResourceEvent(player, TradeResource.values()[i], cityTradeResources[i]));
                 }
             }
         }
@@ -76,7 +87,7 @@ public class ClothWineGrainCapability extends Capability {
 
 
     @Override
-    public void finalScoring() {
+    public void finalScoring(ScoringStrategy strategy) {
         for (TradeResource tr : TradeResource.values()) {
             int hiVal = 1;
             for (Player player: game.getAllPlayers()) {
@@ -88,13 +99,12 @@ public class ClothWineGrainCapability extends Capability {
             for (Player player: game.getAllPlayers()) {
                 int playerValue = getTradeResources(player, tr);
                 if (playerValue == hiVal) {
-                    player.addPoints(10, PointCategory.TRADE_GOODS);
+                    strategy.addPoints(player, 10, PointCategory.TRADE_GOODS);
                 }
             }
 
         }
     }
-
 
 
     @Override

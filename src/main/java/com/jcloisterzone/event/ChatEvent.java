@@ -1,22 +1,22 @@
 package com.jcloisterzone.event;
 
-import com.jcloisterzone.Player;
+import com.jcloisterzone.wsio.server.RemoteClient;
 
 public class ChatEvent extends Event {
 
-	private final Player player;
-    private final String message;
+    private final RemoteClient remoteClient;
+    private final String text;
 
-    public ChatEvent(Player player, String message) {
-        this.player = player;
-        this.message = message;
+    public ChatEvent(RemoteClient remoteClient, String text) {
+        this.remoteClient = remoteClient;
+        this.text = text;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
-    
-    public Player getPlayer() {
-		return player;
-	}
+
+    public RemoteClient getRemoteClient() {
+        return remoteClient;
+    }
 }

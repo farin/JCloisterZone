@@ -64,7 +64,7 @@ public class BridgeCapability extends Capability {
     }
 
     @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> commonSites) {
+    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
         if (!bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
             BridgeAction action = prepareBridgeAction();
             if (action != null) {

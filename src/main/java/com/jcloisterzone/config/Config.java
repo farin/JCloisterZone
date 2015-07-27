@@ -14,8 +14,9 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.rmi.ServerIF;
 import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.wsio.Connection;
+import com.jcloisterzone.wsio.message.GameSetupMessage;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -36,17 +37,40 @@ public class Config {
     private Integer ai_place_tile_delay;
 
     private Boolean beep_alert;
+    private String client_name;
+    private String client_id;
+    private String secret;
+    private String play_online_host;
 
     private List<String> plugins;
     private ConfirmConfig confirm;
     private PlayersConfig players;
+    private ScreenshotsConfig screenshots;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
 
+    public static class ScreenshotsConfig {
+        private String folder;
+        private Integer scale;
+
+        public String getFolder() {
+            return folder;
+        }
+        public void setFolder(String folder) {
+            this.folder = folder;
+        }
+        public Integer getScale() {
+            return scale;
+        }
+        public void setScale(Integer scale) {
+            this.scale = scale;
+        }
+    }
+
     public static class PresetConfig {
         private List<String> expansions;
-        private List<String> rules;
+        private Map<CustomRule, Object> rules;
 
         public List<String> getExpansions() {
             return expansions == null ? Collections.<String>emptyList() : expansions;
@@ -54,25 +78,24 @@ public class Config {
         public void setExpansions(List<String> expansions) {
             this.expansions = expansions;
         }
-        public List<String> getRules() {
+        public Map<CustomRule, Object> getRules() {
             return rules;
         }
-        public void setRules(List<String> rules) {
+        public void setRules(Map<CustomRule, Object> rules) {
             this.rules = rules;
         }
 
-        public void updateGameSetup(ServerIF server) {
+        public void updateGameSetup(Connection conn, String gameId) {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
             for (String expName : expansions) {
-                expansionSet.add(Expansion.valueOf(expName));
+                try {
+                    expansionSet.add(Expansion.valueOf(expName));
+                } catch (IllegalArgumentException ex) {
+                    LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+                }
             }
-
-            EnumSet<CustomRule> ruleSet = EnumSet.noneOf(CustomRule.class);
-            for (String ruleName : rules) {
-                ruleSet.add(CustomRule.valueOf(ruleName));
-            }
-            server.updateGameSetup(expansionSet.toArray(new Expansion[expansionSet.size()]), ruleSet.toArray(new CustomRule[ruleSet.size()]));
+            conn.send(new GameSetupMessage(gameId, rules, expansionSet, null));
         }
     }
 
@@ -80,6 +103,7 @@ public class Config {
 
         private String preset;
         private List<String> players;
+        private Boolean online;
 
         public String getPreset() {
             return preset;
@@ -93,10 +117,17 @@ public class Config {
         public void setPlayers(List<String> players) {
             this.players = players;
         }
+        public Boolean getOnline() {
+            return online;
+        }
+        public void setOnline(Boolean online) {
+            this.online = online;
+        }
     }
 
     public static class DebugConfig {
         private String save_format;
+        private String window_size;
         private String autosave;
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
@@ -105,7 +136,7 @@ public class Config {
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
-            return autostart != null && autostart.getPreset() != null;
+            return autostart != null && (autostart.getPreset() != null || Boolean.TRUE.equals(autostart.getOnline()));
         }
 
         public String getSave_format() {
@@ -114,6 +145,14 @@ public class Config {
         public void setSave_format(String save_format) {
             this.save_format = save_format;
         }
+
+        public String getWindow_size() {
+            return window_size;
+        }
+        public void setWindow_size(String window_size) {
+            this.window_size = window_size;
+        }
+
         public String getAutosave() {
             return autosave;
         }
@@ -153,28 +192,40 @@ public class Config {
     }
 
     public static class ConfirmConfig {
-        private Boolean farm_place;
-        private Boolean tower_place;
-        private Boolean game_close;
+        private Boolean any_deployment;
+        private Boolean farm_deployment;
+        private Boolean on_tower_deployment;
         private Boolean ransom_payment;
 
-        public Boolean getFarm_place() {
-            return farm_place == null ? Boolean.FALSE : farm_place;
+        public Boolean getAny_deployment() {
+            return any_deployment == null ? Boolean.FALSE : any_deployment;
         }
+        public void setAny_deployment(Boolean any_deployment) {
+            this.any_deployment = any_deployment;
+        }
+        public Boolean getFarm_deployment() {
+            return farm_deployment == null ? Boolean.FALSE : farm_deployment;
+        }
+        public void setFarm_deployment(Boolean farm_deployment) {
+            this.farm_deployment = farm_deployment;
+        }
+        public Boolean getOn_tower_deployment() {
+            return on_tower_deployment == null ? Boolean.FALSE : on_tower_deployment;
+        }
+        public void setOn_tower_deployment(Boolean on_tower_deployment) {
+            this.on_tower_deployment = on_tower_deployment;
+        }
+        @Deprecated
         public void setFarm_place(Boolean farm_place) {
-            this.farm_place = farm_place;
+            this.farm_deployment = farm_place;
         }
-        public Boolean getTower_place() {
-            return tower_place == null ? Boolean.FALSE : tower_place;
-        }
+        @Deprecated
         public void setTower_place(Boolean tower_place) {
-            this.tower_place = tower_place;
+            this.on_tower_deployment = tower_place;
         }
-        public Boolean getGame_close() {
-            return game_close == null ? Boolean.FALSE : game_close;
-        }
+        @Deprecated
         public void setGame_close(Boolean game_close) {
-            this.game_close = game_close;
+            //ignore - keep for backward compatibility
         }
         public Boolean getRansom_payment() {
             return ransom_payment == null ? Boolean.FALSE : ransom_payment;
@@ -309,7 +360,7 @@ public class Config {
     }
 
     public List<String> getPlugins() {
-        return plugins;
+        return plugins == null ? Collections.<String>emptyList() : plugins;
     }
 
     public void setPlugins(List<String> plugins) {
@@ -353,6 +404,39 @@ public class Config {
         return presets;
     }
 
+    public String getClient_name() {
+        return client_name;
+    }
+
+    public void setClient_name(String client_name) {
+        this.client_name = client_name;
+    }
+
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getPlay_online_host() {
+        return play_online_host;
+    }
+
+    public void setPlay_online_host(String play_online_host) {
+        this.play_online_host = play_online_host;
+    }
+
     public void setPresets(Map<String, PresetConfig> presets) {
         this.presets = presets;
     }
@@ -373,6 +457,14 @@ public class Config {
         this.origin = origin;
     }
 
+    public ScreenshotsConfig getScreenshots() {
+        if (screenshots == null) {
+            screenshots = new ScreenshotsConfig();
+        }
+        return screenshots;
+    }
 
-
+    public void setScreenshots(ScreenshotsConfig screenshots) {
+        this.screenshots = screenshots;
+    }
 }

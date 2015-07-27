@@ -9,8 +9,8 @@ public class FeatureCompletedEvent extends PlayEvent {
     private final Completable feature;
     private final CompletableScoreContext scoreContent;
 
-    public FeatureCompletedEvent(Player player, Completable feature, CompletableScoreContext scoreContent) {
-        super(player);
+    public FeatureCompletedEvent(Player triggeringPlayer, Completable feature, CompletableScoreContext scoreContent) {
+        super(triggeringPlayer, null);
         this.feature = feature;
         this.scoreContent = scoreContent;
     }
@@ -21,6 +21,11 @@ public class FeatureCompletedEvent extends PlayEvent {
 
     public CompletableScoreContext getScoreContent() {
         return scoreContent;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " feature:" + feature;
     }
 
 }

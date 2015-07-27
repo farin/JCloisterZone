@@ -1,9 +1,5 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XmlUtils.attributeIntValue;
-import static com.jcloisterzone.XmlUtils.attributeStringValue;
-import static com.jcloisterzone.XmlUtils.getTileId;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +18,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.CustomRule;
@@ -30,6 +26,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
+import static com.jcloisterzone.XMLUtils.attributeStringValue;
+import static com.jcloisterzone.XMLUtils.getTileId;
 
 
 public class TilePackFactory {
@@ -77,20 +77,26 @@ public class TilePackFactory {
         return size;
     }
 
-    private URL getCardsConfig(Expansion expansion) {
+    protected  URL getStandardCardsConfig(Expansion expansion) {
+        String fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+        return TilePackFactory.class.getClassLoader().getResource(fileName);
+    }
+
+    protected URL getCardsConfig(Expansion expansion) {
         DebugConfig debugConfig = config.getDebug();
         String fileName = null;
         if (debugConfig != null && debugConfig.getTile_definitions() != null) {
             fileName = debugConfig.getTile_definitions().get(expansion.name());
         }
         if (fileName == null) {
-            fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+            return getStandardCardsConfig(expansion);
+        } else {
+            return TilePackFactory.class.getClassLoader().getResource(fileName);
         }
-        return TilePackFactory.class.getClassLoader().getResource(fileName);
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
-        return XmlUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
+        return XMLUtils.parseDocument(getCardsConfig(expansion)).getDocumentElement();
     }
 
     protected Map<String, Integer> getDiscardTiles() {
@@ -112,7 +118,7 @@ public class TilePackFactory {
 
     protected boolean isTunnelActive(Expansion expansion) {
         return expansion == Expansion.TUNNEL ||
-            (game.hasCapability(TunnelCapability.class) && game.hasRule(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
+            (game.hasCapability(TunnelCapability.class) && game.getBooleanValue(CustomRule.TUNNELIZE_ALL_EXPANSIONS));
     }
 
     protected int getTileCount(Element card, String tileId) {
@@ -184,6 +190,12 @@ public class TilePackFactory {
             NodeList nl = entry.getValue().getElementsByTagName("tile");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element tileElement = (Element) nl.item(i);
+                if (!game.hasCapability(RiverCapability.class)) {
+                    //if not playing river skip rivet tiles to prevent wrong tile count in pack (GQ11 rivers)
+                    if (tileElement.getElementsByTagName("river").getLength() > 0) {
+                        continue;
+                    }
+                }
                 String tileId = getTileId(expansion, tileElement);
                 LinkedList<Position> positions = getPreplacedPositions(tileId, tileElement);
                 for (Tile tile : createTiles(expansion, tileId, tileElement, discardList)) {

@@ -9,7 +9,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class MeepleAction extends SelectFeatureAction {
 
@@ -26,14 +26,14 @@ public class MeepleAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
-        server.deployMeeple(bp.getPosition(), bp.getLocation(), meepleType);
+    public void perform(RmiProxy server, FeaturePointer bp) {
+        server.deployMeeple(bp, meepleType);
     }
 
     @Override
     protected int getSortOrder() {
-        if (meepleType.equals(SmallFollower.class)) return 10;
-        if (meepleType.equals(BigFollower.class)) return 11;
+        if (meepleType.equals(SmallFollower.class)) return 9;
+        if (meepleType.equals(BigFollower.class)) return 10;
         if (meepleType.equals(Wagon.class)) return 12;
         if (meepleType.equals(Mayor.class)) return 13;
         if (meepleType.equals(Builder.class)) return 14;
@@ -44,6 +44,6 @@ public class MeepleAction extends SelectFeatureAction {
 
     @Override
     public String toString() {
-        return "place " + meepleType.getSimpleName();
+        return "place " + meepleType.getSimpleName() + " ? " + getOptions();
     }
 }

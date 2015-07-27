@@ -1,10 +1,10 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
+
+import static com.jcloisterzone.ui.I18nUtils._;
 
 public class Farm extends MultiTileFeature {
 

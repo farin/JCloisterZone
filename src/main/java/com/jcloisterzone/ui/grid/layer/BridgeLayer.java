@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class BridgeLayer extends AbstractGridLayer {
@@ -20,12 +21,18 @@ public class BridgeLayer extends AbstractGridLayer {
     private static final AlphaComposite BRIDGE_FILL_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
     //private static final AlphaComposite BRIDGE_STROKE_COMPOSITE = AlphaComposite.SrcOver;
 
-    public BridgeLayer(GridPanel gridPanel) {
-        super(gridPanel);
-    }
-
     //TODO store direct images as in Meeple layer???
     private Map<Tile, Location> bridges = new HashMap<>();
+
+    private MeepleLayer meepleLayer;
+
+    public BridgeLayer(GridPanel gridPanel, GameController gc) {
+        super(gridPanel, gc);
+    }
+
+
+
+
 
     @Override
     public void paint(Graphics2D g2) {
@@ -37,7 +44,7 @@ public class BridgeLayer extends AbstractGridLayer {
             Tile tile = entry.getKey();
             Location loc = entry.getValue();
             Position pos = tile.getPosition();
-            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc);
+            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc).getTrackingArea();
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
             g2.setColor(Color.BLACK);
             g2.setComposite(BRIDGE_FILL_COMPOSITE);
@@ -50,16 +57,22 @@ public class BridgeLayer extends AbstractGridLayer {
 //		g2.setStroke(oldStroke);
         g2.setComposite(oldComposite);
 
+        meepleLayer.paintMeeplesOnBridges(g2);
+
     }
 
-    @Override
-    public int getZIndex() {
-        return 45;
-    }
 
     public void bridgeDeployed(Position pos, Location loc) {
-        Tile tile = getClient().getGame().getBoard().get(pos);
+        Tile tile = getGame().getBoard().get(pos);
         bridges.put(tile, loc);
     }
 
+    public MeepleLayer getMeepleLayer() {
+        return meepleLayer;
+    }
+
+
+    public void setMeepleLayer(MeepleLayer meepleLayer) {
+        this.meepleLayer = meepleLayer;
+    }
 }

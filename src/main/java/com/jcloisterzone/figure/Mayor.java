@@ -10,18 +10,18 @@ public class Mayor extends Follower {
 
     private static final long serialVersionUID = -7602411772187519451L;
 
-    public Mayor(Game game, Player player) {
-        super(game, player);
+    public Mayor(Game game, Integer idSuffix, Player player) {
+        super(game, idSuffix, player);
     }
 
     static class PennatsCountingVisitor implements FeatureVisitor<Integer> {
         int pennats = 0;
 
         @Override
-        public boolean visit(Feature feature) {
+        public VisitResult visit(Feature feature) {
             City c = (City) feature;
             pennats += c.getPennants();
-            return true;
+            return VisitResult.CONTINUE;
         }
 
         @Override

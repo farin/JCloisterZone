@@ -3,14 +3,14 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XmlUtils;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.game.Capability;
@@ -28,8 +28,15 @@ public class WindRoseCapability extends Capability {
         super(game);
     }
 
-    @Subscribe
-    public void tilePlaced(TileEvent ev) {
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof TileEvent) {
+           tilePlaced((TileEvent) event);
+       }
+
+    }
+
+    private void tilePlaced(TileEvent ev) {
         if (ev.getType() != TileEvent.PLACEMENT) return;
         Tile tile = ev.getTile();
         Location rose = tile.getWindRose();
@@ -86,13 +93,13 @@ public class WindRoseCapability extends Capability {
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         node.setAttribute("rotation", roseRotation.name());
-        XmlUtils.injectPosition(node, rosePosition);
+        XMLUtils.injectPosition(node, rosePosition);
     }
 
     @Override
     public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
         roseRotation = Rotation.valueOf(node.getAttribute("rotation"));
-        rosePosition = XmlUtils.extractPosition(node);
+        rosePosition = XMLUtils.extractPosition(node);
     }
 
 }

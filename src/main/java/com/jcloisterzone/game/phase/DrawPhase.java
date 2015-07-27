@@ -11,7 +11,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.rmi.ServerIF;
+import com.jcloisterzone.ui.GameController;
 
 
 public class DrawPhase extends ServerAwarePhase {
@@ -21,15 +21,17 @@ public class DrawPhase extends ServerAwarePhase {
     private List<String> debugTiles;
     private final BazaarCapability bazaarCap;
     private final AbbeyCapability abbeyCap;
+    private final RiverCapability riverCap;
 
-    public DrawPhase(Game game, ServerIF server) {
-        super(game, server);
-        DebugConfig debugConfig = game.getConfig().getDebug();
+    public DrawPhase(Game game, GameController controller) {
+        super(game, controller);
+        DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null) {
             debugTiles = debugConfig.getDraw();
         }
         bazaarCap = game.getCapability(BazaarCapability.class);
         abbeyCap = game.getCapability(AbbeyCapability.class);
+        riverCap = game.getCapability(RiverCapability.class);
     }
 
     private boolean makeDebugDraw() {
@@ -59,17 +61,6 @@ public class DrawPhase extends ServerAwarePhase {
 
     @Override
     public void enter() {
-        if (getTilePack().isEmpty()) {
-            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
-                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
-                    abbeyCap.setAbbeyRoundLastPlayer(getActivePlayer());
-                }
-                next(CleanUpTurnPartPhase.class);
-                return;
-            }
-            next(GameOverPhase.class);
-            return;
-        }
         if (bazaarCap != null) {
             Tile tile = bazaarCap.drawNextTile();
             if (tile != null) {
@@ -77,22 +68,22 @@ public class DrawPhase extends ServerAwarePhase {
                 return;
             }
         }
-
+        if (getTilePack().isEmpty()) {
+            if (abbeyCap != null && !getActivePlayer().equals(abbeyCap.getAbbeyRoundLastPlayer())) {
+                if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
+                    abbeyCap.setAbbeyRoundLastPlayer(game.getPrevPlayer(getActivePlayer()));
+                }
+                next(CleanUpTurnPartPhase.class);
+                return;
+            }
+            next(GameOverPhase.class);
+            return;
+        }
         if (makeDebugDraw()) {
             return;
         }
-        if (isLocalPlayer(getActivePlayer())) {
-            //call only from one client (from the active one)
-            getServer().selectTiles(getTilePack().size(), 1);
-        }
-    }
-
-
-
-    @Override
-    public void drawTiles(int[] tileIndex) {
-        assert tileIndex.length == 1;
-        Tile tile = getTilePack().drawTile(tileIndex[0]);
+        int rndIndex = game.getRandom().nextInt(getTilePack().size());
+        Tile tile = getTilePack().drawTile(rndIndex);
         nextTile(tile);
     }
 
@@ -101,11 +92,12 @@ public class DrawPhase extends ServerAwarePhase {
         getBoard().refreshAvailablePlacements(tile);
         if (getBoard().getAvailablePlacementPositions().isEmpty()) {
             getBoard().discardTile(tile);
+            if (riverCap != null) riverCap.turnPartCleanUp(); //force group activation if neeeded
             next(DrawPhase.class);
             return;
         }
+        toggleClock(getActivePlayer());
         game.post(new TileEvent(TileEvent.DRAW, getActivePlayer(), tile, null));
         next();
     }
-
 }

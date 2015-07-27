@@ -35,6 +35,7 @@ public class Location implements Serializable {
      * @param mask	bite mask of demand instance
      */
     public static Location create(int mask) {
+    	if (mask == 0) return null;
         Location loc = instances.get(mask);
         if (loc != null) return loc;
         //TODO prepare name here
@@ -87,17 +88,20 @@ public class Location implements Serializable {
     public static final Location _E = new Location("_E", 243 << 8);
 
     /** Cloister on tile */
-    public static final Location CLOISTER = new Location("CLOISTER", 1 << 16 );
-    /** Tower on tile */
-    public static final Location TOWER = new Location("TOWER", 1 << 17);
-    /** Inprisoned follower */
-    public static final Location PRISON = new Location("PRISON", 1 << 18);
-    /** Flier location - follower can be placed here just for moment, before dice roll  */
-    public static final Location FLIER = new Location("FLIER", 1 << 19);
+    public static final Location CLOISTER = new Location("CLOISTER", 1 << 18);
     /** on monastery as Abbot */
-    public static final Location ABBOT = new Location("ABBOT", 1 << 20);
+    public static final Location ABBOT = new Location("ABBOT", 1 << 19);
+    /** Tower on tile */
+    public static final Location TOWER = new Location("TOWER", 1 << 20);
+    /** Flier location - follower can be placed here just for moment, before dice roll  */
+    public static final Location FLIER = new Location("FLIER", 1 << 21);
 
     // --- farm locations ---
+
+    /** Inner farm*/
+    public static final Location INNER_FARM = new Location("INNER_FARM", 1 << 16);
+    /** for tiles with two inner farms */
+    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 1 << 17);
 
     /** North left farm */
     public static final Location NL = new Location("NL", 1);
@@ -115,8 +119,6 @@ public class Location implements Serializable {
     public static final Location WL = new Location("WL", 64);
     /** West right farm */
     public static final Location WR = new Location("WR", 128);
-    /** Center farm*/
-    public static final Location INNER_FARM = new Location("INNER_FARM", 0);
 
 
     private static final Location[] SIDES = {N, E, S, W};
@@ -264,6 +266,17 @@ public class Location implements Serializable {
         return result.toArray(new Location[result.size()]);
     }
 
+    public Location[] splitToSides() {
+    	ArrayList<Location> result = new ArrayList<Location>(4);
+    	for (Location side: Location.sides()) {
+			Location part = this.intersect(side);
+			if (part != null) {
+				result.add(part);
+			}
+    	}
+    	return result.toArray(new Location[result.size()]);
+    }
+
     /** Creates instance according to name */
     public static Location valueOf(String name) {
         Location value = null;
@@ -296,14 +309,14 @@ public class Location implements Serializable {
     //assertion methods
 
     public boolean isFarmLocation() {
-        return this == INNER_FARM || (mask & 255) > 0;
+        return ((mask & 0x30000) | (mask & 0xFF)) > 0;
     }
 
     public boolean isEdgeLocation() {
-        return (mask & 65280) > 0;
+        return (mask & 0xFF00) > 0;
     }
 
     public boolean isSpecialLocation() {
-        return (mask & ~65535) > 0;
+        return (mask & ~0x3FFFF) > 0;
     }
 }

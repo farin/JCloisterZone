@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.rmi.Client2ClientIF;
+import com.jcloisterzone.wsio.RmiProxy;
 
 public class TunnelAction extends SelectFeatureAction {
 
@@ -18,7 +18,7 @@ public class TunnelAction extends SelectFeatureAction {
     @Override
     public Image getImage(Player player, boolean active) {
         if (active && isSecondTunnelPiece()) {
-            return getImage(client.getPlayerSecondTunelColor(player));
+            return getImage(player.getColors().getTunnelBColor());
         } else {
             return super.getImage(player, active);
         }
@@ -29,8 +29,8 @@ public class TunnelAction extends SelectFeatureAction {
     }
 
     @Override
-    public void perform(Client2ClientIF server, FeaturePointer bp) {
-        server.placeTunnelPiece(bp.getPosition(), bp.getLocation(), secondTunnelPiece);
+    public void perform(RmiProxy server, FeaturePointer bp) {
+        server.placeTunnelPiece(bp, secondTunnelPiece);
 
     }
 

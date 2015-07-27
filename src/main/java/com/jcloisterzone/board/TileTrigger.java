@@ -8,5 +8,8 @@ public enum TileTrigger {
     BESIEGED,
     BAZAAR,
     FESTIVAL,
-    PLAGUE;
+    PLAGUE,
+    MAGE,
+    FERRY,
+    GOLDMINE;
 }

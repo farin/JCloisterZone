@@ -1,7 +1,5 @@
 package com.jcloisterzone.feature;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.jcloisterzone.Expansion;
@@ -11,6 +9,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.visitor.score.CityScoreContext;
 import com.jcloisterzone.game.CustomRule;
+
+import static org.junit.Assert.assertEquals;
 
 public class CityScoring extends AbstractScoringTest {
 
@@ -33,7 +33,7 @@ public class CityScoring extends AbstractScoringTest {
 
     @Test
     public void tinyCustomRule() {
-        game.getCustomRules().add(CustomRule.TINY_CITY_2_POINTS);
+        game.getCustomRules().put(CustomRule.TINY_CITY_2_POINTS, true);
 
         Tile t;
         t = putTile(new Position(0,0), Rotation.R0, Expansion.BASIC, "RCr");
