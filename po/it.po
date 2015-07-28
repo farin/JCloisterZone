@@ -244,12 +244,12 @@ msgstr "Il movimento del drago avviene dopo aver fatto punti."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr ""
+msgstr "Piazza la fata sulla tessera (invece che vicino a un seguace)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
-"Il chiostro di fuga può essere posizionato accanto a qualsiasi tessera di "
+"Il monastero di fuga può essere posizionato accanto a qualsiasi tessera di "
 "una città assediata"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:22
@@ -271,7 +271,7 @@ msgstr "Applica la regola del tunnel sui tunnel delle altre espansioni."
 msgid "No bazaar bidding. Each players just choose one tile."
 msgstr ""
 "Non puoi fare offerte sui bazar. Ogni giocatore deve scegliere una "
-"soltessera."
+"soltessera."m
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
 msgid "Keep basic cloisters in the game."
@@ -283,15 +283,15 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr ""
+msgstr "Conferma o annulla il piazzamento del seguace"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr ""
+msgstr "In attesa della conferma da parte del giocatore remoto"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
-msgstr ""
+msgstr "Nessuna azione disponibile. Passa o annulla il piazzamento della tessera."
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
@@ -348,7 +348,7 @@ msgstr "Versioni incompatibili."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
 msgid "Invalid password"
-msgstr ""
+msgstr "Password non valida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
@@ -410,7 +410,7 @@ msgstr "Diminuisci zoom"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Rotate board"
-msgstr ""
+msgstr "Ruota la mappa"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
@@ -442,20 +442,20 @@ msgstr "Avverti un giocatore con un beep al suo turno"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
-msgstr ""
+msgstr "Conferma ogni volta il piazzamento di un seguace"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr ""
+msgstr "Conferma il piazzamento di un seguace su una fattoria"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr ""
+msgstr "Conferma il piazzamento di un seguace in una torre"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
 msgid "Preferences"
-msgstr ""
+msgstr "Preferenze"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "About"
@@ -595,6 +595,8 @@ msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
+"La partita non è finita. Vuoi veramente interrompere la partita e disconnettere "
+"gli altri giocatori?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:282
 msgid "The game is not finished. Do you really want to leave it?"
@@ -697,7 +699,7 @@ msgstr "Commercio"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "Gold"
-msgstr ""
+msgstr "Oro"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
 msgid "Fairy"
@@ -817,15 +819,15 @@ msgstr "Regole"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
-msgstr ""
+msgstr "Orologio"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr ""
+msgstr "limite di tempo per i giocatori"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
-msgstr ""
+msgstr "minuti"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -859,11 +861,11 @@ msgstr "Titolo della partita"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr ""
+msgstr "Se lasci la password vuota, chiunque può connettersi alla tua partita."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -920,7 +922,7 @@ msgstr "JCloisterZone "
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
-msgstr ""
+msgstr "Riconnessione..."
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:165
 msgid "%d tiles left"
@@ -950,35 +952,35 @@ msgstr "Queste tessere sono state scartate durante la partita"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
-msgstr ""
+msgstr "Configurazione partita"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
 msgid "Use system language"
-msgstr ""
+msgstr "Usa lingua di sistema"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
 msgid "Language"
-msgstr ""
+msgstr "Lingua"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr ""
+msgstr "Per applicare la nuova lingua è necessario riavviare l'applicazione"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr ""
+msgstr "Ritardo di piazzamento per l'IA (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
-msgstr ""
+msgstr "Tempo di visualizzazione punteggi (sec)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Interface"
-msgstr ""
+msgstr "Interfaccia"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
-msgstr ""
+msgstr "Plugin"
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Rimuovi il seguace"
