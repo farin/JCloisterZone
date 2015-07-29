@@ -76,7 +76,7 @@ public class Tile /*implements Cloneable*/ {
         this.edgePattern = edgePattern;
     }
 
-    public char getEdge(Location side) {
+    public Edge getEdge(Location side) {
         return getEdgePattern().at(side, rotation);
     }
 
