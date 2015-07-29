@@ -184,7 +184,7 @@ msgid "Mage & Witch"
 msgstr "El Mago y la Bruja"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Ladrones"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92

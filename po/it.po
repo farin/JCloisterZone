@@ -183,7 +183,7 @@ msgid "Mage & Witch"
 msgstr "Il Mago E La Strega"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Il Brigante"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92

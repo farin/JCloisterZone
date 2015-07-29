@@ -179,7 +179,7 @@ msgid "Mage & Witch"
 msgstr "Μάγος & Μάγισσα"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Ο Ληστής"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
