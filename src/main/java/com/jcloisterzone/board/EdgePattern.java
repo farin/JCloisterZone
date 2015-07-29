@@ -17,6 +17,11 @@ public class EdgePattern {
 	private EdgePattern(char[] code) { this.code = code; }
 
 	private static char getTileEdgePattern(Tile tile, Location loc) {
+		
+		if (tile.getRiver() != null && loc.isPartOf(tile.getRiver())) {
+			return 'V';
+		}
+		
 		Feature f = tile.getFeaturePartOf(loc);
 		if (f == null) {
 			return 'F';
@@ -88,6 +93,7 @@ public class EdgePattern {
 			EdgePattern p = q.poll();
 			int i = 0;
 			while(p.code[i] != '?') i++;
+			q.add(switchEdge(i, 'V')); // fatsu: not sure what this fill() method is supposed to do. but added this line anyway.
 			q.add(switchEdge(i, 'R'));
 			q.add(switchEdge(i, 'C'));
 			q.add(switchEdge(i, 'F'));
