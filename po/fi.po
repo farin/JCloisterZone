@@ -265,7 +265,7 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Tunneli-sääntö pätee myös muiden lisäosien tunneleille."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr "Ei basaaritarjouksia. Jokainen pelaaja valitsee yhden palan."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30

@@ -264,7 +264,7 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Εφαρμογή του κανόνα της σήραγγας σε σήραγγες άλλων επεκτάσεων"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
 "Καθόλου προσφορές για το παζάρι. Κάθε παίκτης απλά διαλέγει ένα κομμάτι"
 
