@@ -490,7 +490,7 @@ msgstr "Mágus és boszorkány"
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
-"feature. Select what figure do you want to remove from board?"
+"feature. Select what figure do you want to remove from board."
 msgstr ""
 "Nem lehetséges a mágus és a boszorkány elhelyezése, mert nincs befejezetlen "
 "elem. Válaszd ki, melyik figurát szeretnéd eltávolítani!"
@@ -905,7 +905,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
-"Conenct to other players and play with them using internet connection and "
+"Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Csatlakozz a többi játékoshoz, és játssz velük az interneten keresztül a "

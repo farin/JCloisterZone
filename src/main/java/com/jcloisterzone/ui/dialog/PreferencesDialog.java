@@ -74,6 +74,7 @@ public class PreferencesDialog extends JDialog {
     private void initLocaleOptions(JComboBox<LocaleOption> comboBox) {
         ArrayList<LocaleOption> result = new ArrayList<>();
         result.add(new LocaleOption(null, _("Use system language")));
+        result.add(new LocaleOption("ca", "català (ca)"));
         result.add(new LocaleOption("cs", "čeština (cs)"));
         result.add(new LocaleOption("de", "deutch (de)"));
         result.add(new LocaleOption("el", "ελληνικά (el)"));
