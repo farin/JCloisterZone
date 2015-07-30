@@ -11,20 +11,25 @@ import com.jcloisterzone.feature.Road;
 
 public class EdgePattern {
 
-	private char[] code = new char[4];
+	private Edge[] code = new Edge[4];
 
 	private EdgePattern() { }
-	private EdgePattern(char[] code) { this.code = code; }
+	private EdgePattern(Edge[] code) { this.code = code; }
 
-	private static char getTileEdgePattern(Tile tile, Location loc) {
+	private static Edge getTileEdgePattern(Tile tile, Location loc) {
+		
+		if (tile.getRiver() != null && loc.isPartOf(tile.getRiver())) {
+			return Edge.RIVER;
+		}
+		
 		Feature f = tile.getFeaturePartOf(loc);
 		if (f == null) {
-			return 'F';
+			return Edge.FARM;
 		}
 		if (f instanceof Road) {
-			return 'R';
+			return Edge.ROAD;
 		}
-		return 'C';
+		return Edge.CITY;
 	}
 
 	public static EdgePattern forTile(Tile tile) {
@@ -49,7 +54,7 @@ public class EdgePattern {
 			Tile t = board.get(pos.add(loc));
 			int idx = indexfor (loc);
 			if (t == null) {
-				pattern.code[idx] = '?';
+				pattern.code[idx] = Edge.UNKNOWN;
 			} else {
 				pattern.code[idx] = getTileEdgePattern(t, loc.rev());
 			}
@@ -57,24 +62,24 @@ public class EdgePattern {
 		return pattern;
 	}
 
-	public char at(Location loc) {
+	public Edge at(Location loc) {
 		return code[indexfor (loc)];
 	}
 
-	public char at(Location loc, Rotation rotation) {
+	public Edge at(Location loc, Rotation rotation) {
 		return at(loc.rotateCCW(rotation));
 	}
 
 	public int wildcardSize() {
 		int size = 0;
 		for (int i = 0; i < code.length; i++) {
-			if (code[i] == '?') size++;
+			if (code[i] == Edge.UNKNOWN) size++;
 		}
 		return size;
 	}
 
-	private EdgePattern switchEdge(int i, char ch) {
-		char[] switched = Arrays.copyOf(code, code.length);
+	private EdgePattern switchEdge(int i, Edge ch) {
+		Edge[] switched = Arrays.copyOf(code, code.length);
 		switched[i] = ch;
 		return new EdgePattern(switched);
 	}
@@ -87,33 +92,34 @@ public class EdgePattern {
 		while(q.peek().wildcardSize() > 0) {
 			EdgePattern p = q.poll();
 			int i = 0;
-			while(p.code[i] != '?') i++;
-			q.add(switchEdge(i, 'R'));
-			q.add(switchEdge(i, 'C'));
-			q.add(switchEdge(i, 'F'));
+			while(p.code[i] != Edge.UNKNOWN) i++;
+			q.add(switchEdge(i, Edge.RIVER)); // fatsu: not sure what this fill() method is supposed to do. but added this line anyway.
+			q.add(switchEdge(i, Edge.ROAD));
+			q.add(switchEdge(i, Edge.CITY));
+			q.add(switchEdge(i, Edge.FARM));
 		}
 		return q;
 	}
 
-	private char[] shift(int shift) {
-		char[] result = new char[4];
+	private Edge[] shift(int shift) {
+		Edge[] result = new Edge[4];
 		for (int i = 0; i < code.length; i++) {
 			result[i] = code[(i+shift)%code.length];
 		}
 		return result;
 	}
 
-	private char[] canonize() {
-		char[] result = code;
+	private Edge[] canonize() {
+		Edge[] result = code;
 		shiftLoop:
 		for (int shift = 1; shift < code.length; shift++) {
-			char[] c = shift(shift);
+			Edge[] c = shift(shift);
 			for (int i = 0; i < code.length; i++) {
-				if (c[i] < result[i]) {
+				if (c[i].ordinal() < result[i].ordinal()) {
 					result = c;
 					continue shiftLoop;
 				}
-				if (c[i] > result[i]) {
+				if (c[i].ordinal() > result[i].ordinal()) {
 					break;
 				}
 			}
@@ -123,23 +129,23 @@ public class EdgePattern {
 	
 	public boolean isBridgeAllowed(Location bridge, Rotation tileRotation) {
 		if (bridge == Location.NS) {
-			if (at(Location.N, tileRotation) != 'F') return false;
-			if (at(Location.S, tileRotation) != 'F') return false;
+			if (at(Location.N, tileRotation) != Edge.FARM) return false;
+			if (at(Location.S, tileRotation) != Edge.FARM) return false;
 		} else {
-			if (at(Location.W, tileRotation) != 'F') return false;
-			if (at(Location.E, tileRotation) != 'F') return false;
+			if (at(Location.W, tileRotation) != Edge.FARM) return false;
+			if (at(Location.E, tileRotation) != Edge.FARM) return false;
 		}
 		return true;
 	}
 	
 	public EdgePattern getBridgePattern(Location bridge) {
-		char[] bridgeCode = Arrays.copyOf(code, code.length); 
+		Edge[] bridgeCode = Arrays.copyOf(code, code.length); 
 		if (bridge == Location.NS) {
-			bridgeCode[0] = 'R';
-			bridgeCode[2] = 'R';
+			bridgeCode[0] = Edge.ROAD;
+			bridgeCode[2] = Edge.ROAD;
 		} else {
-			bridgeCode[1] = 'R';
-			bridgeCode[3] = 'R';
+			bridgeCode[1] = Edge.ROAD;
+			bridgeCode[3] = Edge.ROAD;
 		}		
 		return new EdgePattern(bridgeCode);
 	}
@@ -154,10 +160,10 @@ public class EdgePattern {
 
 	@Override
 	public int hashCode() {
-		char[] c = canonize();
+		Edge[] c = canonize();
 		int hash = 0;
 		for (int i = 0; i < c.length; i++) {
-			hash = hash * 91 + c[i];
+			hash = hash * 91 + c[i].ordinal();
 		}
 		return hash;
 	}
