@@ -102,7 +102,7 @@ public class StartPanel extends JPanel {
         playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
         playOnlinePanel.add(new MultiLineLabel(
-          _("Conenct to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
+          _("Connect to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
 
         btn = new JButton(_("Play online"));
         playOnlinePanel.add(btn, "wrap, alignx center, aligny top");

@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jcloisterzone.board.Tile;
@@ -27,7 +28,10 @@ public class DrawPhase extends ServerAwarePhase {
         super(game, controller);
         DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null) {
-            debugTiles = debugConfig.getDraw();
+            List<String> draw = debugConfig.getDraw();
+            if (draw != null && !draw.isEmpty()) {
+                debugTiles = new ArrayList<String>(draw);
+            }
         }
         bazaarCap = game.getCapability(BazaarCapability.class);
         abbeyCap = game.getCapability(AbbeyCapability.class);

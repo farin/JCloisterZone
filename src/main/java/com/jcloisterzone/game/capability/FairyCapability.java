@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.capability;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +18,10 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
@@ -25,6 +30,7 @@ import com.jcloisterzone.game.Game;
 
 public class FairyCapability extends Capability {
 
+    public static final int FAIRY_POINTS_BEGINNING_OF_TURN = 1;
     public static final int FAIRY_POINTS_FINISHED_OBJECT = 3;
 
     public final Fairy fairy;
@@ -33,6 +39,21 @@ public class FairyCapability extends Capability {
         super(game);
         fairy = new Fairy(game);
         game.getNeutralFigures().add(fairy);
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+       if (event instanceof MeepleEvent) {
+           undeployed((MeepleEvent) event);
+       }
+
+    }
+
+    private void undeployed(MeepleEvent ev) {
+        if (ev.getFrom() == null) return;
+        if (ev.getMeeple() == fairy.getNextTo()) {
+            fairy.setNextTo(null);
+        }
     }
 
     @Override
@@ -54,8 +75,24 @@ public class FairyCapability extends Capability {
             Position pos = f.getPosition();
             return pos != null && pos.equals(fairy.getPosition());
         } else {
-            return fairy.getFeaturePointer() != null && f.at(fairy.getFeaturePointer());
+            return fairy.getNextTo() == f && f.at(fairy.getFeaturePointer());
         }
+    }
+
+    public List<Follower> getFollowersNextToFairy() {
+        if (fairy.getFeaturePointer() == null) {
+            return Collections.emptyList();
+        }
+        List<Follower> result = new ArrayList<>();
+        for (Meeple m : game.getDeployedMeeples()) {
+            if (m instanceof Follower) {
+                Follower f = (Follower) m;
+                if (isNextTo(f)) {
+                    result.add(f);
+                }
+            }
+        }
+        return result;
     }
 
 

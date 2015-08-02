@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.figure.Meeple;
@@ -35,9 +34,10 @@ public class FairyPhase extends Phase {
                             m.at(fp.getPosition()) :
                             m.at(fp) && m == fairyCap.getFairy().getNextTo();
                     if (match) {
-                        //always draw in center to now draw over meeples
-                        m.getPlayer().addPoints(1, PointCategory.FAIRY);
-                        game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), 1, PointCategory.FAIRY));
+                        m.getPlayer().addPoints(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, PointCategory.FAIRY);
+                        //don't bind score event with exact feature
+                        //score box should be always draw in the center of tile to not hide followers - propagate just position even fairy stands next to a follower
+                        game.post(new ScoreEvent(m.getPosition(), m.getPlayer(), FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, PointCategory.FAIRY));
                         break;
                     }
                 }

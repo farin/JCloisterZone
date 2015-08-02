@@ -25,7 +25,7 @@ public enum CustomRule {
 
     TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, Boolean.class, _("Apply tunnel rule on tunnels from other expansions.")),
 
-    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _("No bazaar bidding. Each players just choose one tile.")),
+    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _("No bazaar bidding. Each player just chooses one tile.")),
 
     KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, _("Keep basic cloisters in the game.")),
 

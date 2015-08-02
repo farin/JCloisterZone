@@ -24,5 +24,6 @@ public interface ScoreContext extends FeatureVisitor<SelfReturningVisitor> {
     List<Special> getSpecialMeeples();
     Iterable<? extends Meeple> getMeeples();
     Map<Player, Integer> getPowers();
+
     Map<LittleBuilding, Integer> getLittleBuildings();
 }

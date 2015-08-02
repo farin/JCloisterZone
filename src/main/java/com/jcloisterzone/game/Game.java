@@ -392,7 +392,6 @@ public class Game extends GameSettings implements EventProxy {
                     isFairyScore = true;
                     break;
                 }
-
             }
         }
         if (isFairyScore) {
@@ -412,6 +411,19 @@ public class Game extends GameSettings implements EventProxy {
         int points = ctx.getPoints();
         for (Player p : players) {
             scoreFeature(points, ctx, p);
+        }
+        if (fairyCapability != null) {
+            Set<Player> fairyPlayersWithoutMayority = new HashSet<>();
+            for (Follower f : ctx.getFollowers()) {
+                Player owner = f.getPlayer();
+                if (fairyCapability.isNextTo(f) && !players.contains(owner)
+                    && !fairyPlayersWithoutMayority.contains(owner)) {
+                    fairyPlayersWithoutMayority.add(owner);
+
+                    owner.addPoints(FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY);
+                    post(new ScoreEvent(f.getFeature(), FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY, f));
+                }
+            }
         }
     }
 

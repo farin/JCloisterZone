@@ -31,6 +31,4 @@ public class Fairy extends NeutralFigure<Position> {
         setNextTo((Follower) game.getMeeple(at));
         game.post(new NeutralFigureMoveEvent(game.getActivePlayer(), this, origin, at));
     }
-
-
 }

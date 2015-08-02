@@ -88,7 +88,7 @@ public enum Expansion {
     FERRIES("FR", "#3 - " + _("The Ferries"), false),
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), new Class[] { GoldminesCapability.class }),
     MAGE_AND_WITCH("MW", "#5 - " + _("Mage & Witch"), new Class[] { MageAndWitchCapability.class }),
-    ROBBER("RO", "#6 - " + _("The Robber"), false),
+    ROBBERS("RO", "#6 - " + _("The Robbers"), false),
     CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class }),
 
     //promo/one tile expansions

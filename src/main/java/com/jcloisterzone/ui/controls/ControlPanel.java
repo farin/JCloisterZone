@@ -273,9 +273,7 @@ public class ControlPanel extends JPanel {
             gc.getConnection().send(new CommitMessage(game.getGameId()));
             repaint();
         } else {
-            if (canPass) {
-                gc.getRmiProxy().pass();
-            }
+            gc.getRmiProxy().pass();
         }
     }
 

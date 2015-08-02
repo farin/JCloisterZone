@@ -20,8 +20,10 @@ import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -62,6 +64,13 @@ public class ActionPhase extends Phase {
         Set<FeaturePointer> followerLocations = game.prepareFollowerLocations();
         if (getActivePlayer().hasFollower(SmallFollower.class)  && !followerLocations.isEmpty()) {
             actions.add(new MeepleAction(SmallFollower.class).addAll(followerLocations));
+        }
+        //HACK put this directly here instead of BigFollower or Phatom capability - to avoid "priority" issues
+        if (game.getActivePlayer().hasFollower(BigFollower.class) && !followerLocations.isEmpty()) {
+            actions.add(new MeepleAction(BigFollower.class).addAll(followerLocations));
+        }
+        if (getActivePlayer().hasFollower(Phantom.class)  && !followerLocations.isEmpty()) {
+            actions.add(new MeepleAction(Phantom.class).addAll(followerLocations));
         }
         game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
         game.post(new SelectActionEvent(getActivePlayer(), actions, true));

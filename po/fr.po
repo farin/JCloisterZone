@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-18 21:45+0200\n"
 "PO-Revision-Date: 2015-04-26 20:49+0100\n"
-"Last-Translator: Roman <farin@farin.cz>\n"
+"Last-Translator: Fazer <fazer.sb@gmail.com>\n"
 "Language-Team: fr-team <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Décrivez l'erreur s'il vous plait..."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
-msgstr "... puis téléchargez l'archive et envoyez par mail à farin@farin.cz"
+msgstr "... puis téléchargez l'archive et l'envoyez par mail à farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
@@ -182,7 +182,7 @@ msgid "Mage & Witch"
 msgstr "Magicien & Sorcière "
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Les Brigands"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
@@ -243,7 +243,7 @@ msgstr "Le mouvement du dragon survient après le score"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr ""
+msgstr "Placer la fée sur la tuile. (au lieu de le positionner a proximité d'un partisan)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -267,9 +267,9 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Utiliser la règle du Tunnel pour les tunnels des autres extensions."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
-"Pas d’enchères après le placement d’une tuile bazar. Chaque joueur choisit "
+"Pas denchères après le placement dune tuile bazar. Chaque joueur choisit "
 "juste une tuile."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
@@ -454,7 +454,7 @@ msgstr "Confirmer le placement d'un partisan sur une tour"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
 msgid "Preferences"
-msgstr ""
+msgstr "Préférences"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "About"
@@ -492,7 +492,7 @@ msgstr "Magicien et sorcière"
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
-"feature. Select what figure do you want to remove from board?"
+"feature. Select what figure do you want to remove from board."
 msgstr ""
 "Ce n'est pas possible de placer un magicien ou une sorcière car il n'y a pas "
 "de construction non terminée . Sélectionnez le pion que vous voulez enlever "
@@ -573,7 +573,7 @@ msgid "Corn circle"
 msgstr "Cercle de récoltes"
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:38
-msgid "Each player…"
+msgid "Each player"
 msgstr "Chaque joueur..."
 
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:44
@@ -587,19 +587,19 @@ msgstr "doit enlever un partisan"
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:66
 #, java-format
 msgid "on/from a {0}."
-msgstr "sur:depuis un {0}."
+msgstr "sur/depuis un {0}."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:275
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
-"Le jeu n'est pas fini. Voulez vous vraiment arrêter le jeu et déconnecter "
+"La partie n'est pas terminée. Voulez vous vraiment arrêter le jeu et déconnecter "
 "tous les autres joueurs"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:282
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr "Le jeu n'est pas fini. Voulez vous vraiment quitter le jeu."
+msgstr "La partie n'est pas terminée. Voulez vous vraiment quitter le jeu."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:405
 #: src/main/java/com/jcloisterzone/ui/Client.java:448
@@ -631,7 +631,7 @@ msgstr "Retour"
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:113
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
 msgid "Connection failed. Unknown host."
-msgstr "La connexion à échoué. Hôte inconnu."
+msgstr "La connexion a échoué. Hôte inconnu."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
@@ -737,12 +737,12 @@ msgstr "Joueur distant"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:183
 msgid "Computer player"
-msgstr "Joueur géré par l’ordinateur"
+msgstr "Joueur géré par lordinateur"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:158
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:186
 msgid "Remote computer player"
-msgstr "Joueur distant géré par l’ordinateur"
+msgstr "Joueur distant géré par lordinateur"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:168
 msgid "Open player slot"
@@ -774,7 +774,7 @@ msgid ""
 "select appropriate action.</html>"
 msgstr ""
 "<html>Quand la tuile est posée, utilisez la touche <b>Tab</b> ou le <b>clic-"
-"droit</b> de nouveau pour sélectionner l’action appropriée.</html>"
+"droit</b> de nouveau pour sélectionner laction appropriée.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
 msgid ""
@@ -782,7 +782,7 @@ msgid ""
 "no action.</html>"
 msgstr ""
 "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre "
-"d’<b>espace</b> pour ne pas effectuer d'action.</html>"
+"d<b>espace</b> pour ne pas effectuer d'action.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
 msgid ""
@@ -912,7 +912,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
-"Conenct to other players and play with them using internet connection and "
+"Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Connectez vous à d'autres joueurs et jouez avec eux par Internet sur le "
@@ -957,31 +957,31 @@ msgstr "Configuration du jeu"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
 msgid "Use system language"
-msgstr ""
+msgstr "Utiliser la langue du système"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr ""
+msgstr "Pour activer une nouvelle langue vous devez redémarrer l'application"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr ""
+msgstr "Délai de placement d'un joueurcgére par l'ordinateur (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
-msgstr ""
+msgstr "Durée d'affichage du score (sec)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Interface"
-msgstr ""
+msgstr "Interface"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
-msgstr ""
+msgstr "Composants optionnels"
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Partisan non utilisé"
@@ -1012,7 +1012,7 @@ msgstr ""
 #~ "(To prevent tower from adding more pieces on the top)"
 #~ msgstr ""
 #~ "Voulez vous vraiment placer un partisan dans la tour ?\n"
-#~ "(Pour éviter l’ajout d’autres pièces sur le dessus de la tour)"
+#~ "(Pour éviter lajout dautres pièces sur le dessus de la tour)"
 
 #~ msgid ""
 #~ "Connect to other players and play with them using internet connection and "

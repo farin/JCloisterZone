@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: SK verzia\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-18 21:45+0200\n"
-"PO-Revision-Date: 2015-06-07 10:10+0100\n"
+"PO-Revision-Date: 2015-07-24 09:44+0200\n"
 "Last-Translator: pd <ditrich@pdsoftware.sk>\n"
 "Language-Team: pd <ditrich@pdosftware.sk>\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:25
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
@@ -181,7 +181,7 @@ msgid "Mage & Witch"
 msgstr "Mág a čarodejnica"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Zbojníci"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
@@ -242,7 +242,7 @@ msgstr "Presun draka až po bodovaní"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr ""
+msgstr "Položiť vílu na celé pole. (namiesto umiestnenia vedľa figúrky)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -264,7 +264,7 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Povoliť pravidlá o tuneloch aj na tunely z ostatných rozšírení."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr "V bazáre žiadna ponuka. (iba výber kartičky)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
@@ -450,7 +450,7 @@ msgstr "Potvrdiť položenie figúrky na vežu"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
 msgid "Preferences"
-msgstr ""
+msgstr "Nastavenia"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "About"
@@ -488,7 +488,7 @@ msgstr "Mág a čarodejnica"
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
-"feature. Select what figure do you want to remove from board?"
+"feature. Select what figure do you want to remove from board."
 msgstr ""
 "Nie je možné položiť mága alebo čarodejnicu, pretože v hre nie je žiadna "
 "nedokončená cesta alebo mesto. Vyberte ktorú figúrku chcete odstrániť."
@@ -900,7 +900,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
-"Conenct to other players and play with them using internet connection and "
+"Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Pripojte sa s ostatnými hráčmi a hrajte cez internetové pripojenie na "
@@ -945,31 +945,31 @@ msgstr "Nastavenie hry"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
 msgid "Use system language"
-msgstr ""
+msgstr "Použiť jazyk systému"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
 msgid "Language"
-msgstr ""
+msgstr "Jazyk"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr ""
+msgstr "Pre zmenu jazyka je nutné reštartovať aplikáciu"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr ""
+msgstr "Oneskorenie umiestnenia AI (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
-msgstr ""
+msgstr "Čas zobrazenia bodov (sec)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Interface"
-msgstr ""
+msgstr "Rozhranie"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
-msgstr ""
+msgstr "Pluginy"
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Odobranie figúrky"

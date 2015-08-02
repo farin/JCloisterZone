@@ -181,7 +181,7 @@ msgid "Mage & Witch"
 msgstr "Magier & Hexe"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "Die Räuber"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
@@ -267,7 +267,7 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Verwende die Tunnel-Regel auf Tunnel aus anderen Erweiterungen."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr "Kein Bieten beim Basar. Jeder Spieler wählt nur eine Karte."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
@@ -492,7 +492,7 @@ msgstr "Zauberer & Hexe"
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
-"feature. Select what figure do you want to remove from board?"
+"feature. Select what figure do you want to remove from board."
 msgstr ""
 "Es kann keine Hexe oder Zauberer gesetzt werden, weil alle Bauwerke "
 "abgeschlossen sind. Welche Figur soll entfernt werden?"
@@ -907,7 +907,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
-"Conenct to other players and play with them using internet connection and "
+"Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Mit anderen Spielern verbinden und mit ihnen über eine Internetverbindung "

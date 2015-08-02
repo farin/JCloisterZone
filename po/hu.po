@@ -1,4 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -7,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-18 21:45+0200\n"
-"PO-Revision-Date: 2015-01-27 22:31+0100\n"
+"POT-Creation-Date: 2015-07-19 14:24+0200\n"
+"PO-Revision-Date: 2015-07-27 22:42+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "Language: hu\n"
@@ -128,11 +127,11 @@ msgstr "A mini kiegészítő"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Cult"
-msgstr "A kultusz"
+msgstr "Szentély"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Tunnel"
-msgstr "Az alagút"
+msgstr "Alagút"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Corn Circles"
@@ -183,7 +182,7 @@ msgid "Mage & Witch"
 msgstr "Mágus és boszorkány"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
-msgid "The Robber"
+msgid "The Robbers"
 msgstr "A rablók"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
@@ -245,6 +244,8 @@ msgstr "A sárkány csak a pontok kiértékelése után mozog."
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
 msgstr ""
+"A tündér a lapkán álló bármely követőt ponthoz juttatja (nem csak azt, "
+"amelyik mellé állt)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -266,7 +267,7 @@ msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Csatorna szabály engedélyezése más kiegészítőkben is."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
-msgid "No bazaar bidding. Each players just choose one tile."
+msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr "Bazár lapon nincs licit kör. Minden játékos csak választ egy lapot."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
@@ -275,19 +276,19 @@ msgstr "Az alapjáték kolostorai is maradjanak játékban."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:32
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr ""
+msgstr "A torony, a ház és a pajta rendre 3, 2 ill. 1 pontot ér"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr ""
+msgstr "Hagyd jóvá vagy vond vissza a lépésedet!"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr ""
+msgstr "Várakozás a távoli játákos válaszára"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
-msgstr ""
+msgstr "Nincs elvégezhető művelet. Passzolj vagy vond vissza a lépésedet!"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
@@ -344,7 +345,7 @@ msgstr "Nem egyező verzió."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
 msgid "Invalid password"
-msgstr ""
+msgstr "Nem megfelelő jelszó"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
@@ -406,7 +407,7 @@ msgstr "Kicsinyítés"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Rotate board"
-msgstr ""
+msgstr "Elforgatás"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show last placements"
@@ -438,20 +439,20 @@ msgstr "Sípszó a játékos körénél"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
-msgstr ""
+msgstr "Megerősítő kérdés alattvaló lehelyezésekor"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr ""
+msgstr "Megerősítő kérdés mezőre helyezésnél"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr ""
+msgstr "Megerősítő kérdés toronyra helyezésnél"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
 msgid "Preferences"
-msgstr ""
+msgstr "Egyéb beállítások"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "About"
@@ -489,7 +490,7 @@ msgstr "Mágus és boszorkány"
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
 "It's not possible to place mage or witch because there isn't an unfinished "
-"feature. Select what figure do you want to remove from board?"
+"feature. Select what figure do you want to remove from board."
 msgstr ""
 "Nem lehetséges a mágus és a boszorkány elhelyezése, mert nincs befejezetlen "
 "elem. Válaszd ki, melyik figurát szeretnéd eltávolítani!"
@@ -696,7 +697,7 @@ msgstr "Kereskedés"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "Gold"
-msgstr ""
+msgstr "Arany"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
 msgid "Fairy"
@@ -815,15 +816,15 @@ msgstr "Szabályok"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
 msgid "Clock"
-msgstr ""
+msgstr "Óra"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr ""
+msgstr "Gondolkodási idő"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
-msgstr ""
+msgstr "perc"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
@@ -857,11 +858,11 @@ msgstr "Játék címe"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
 msgid "Password"
-msgstr ""
+msgstr "Jelszó"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr ""
+msgstr "Jelszó megadásának hiányában bárki csatlakozhat a játékhoz."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -904,7 +905,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
 msgid ""
-"Conenct to other players and play with them using internet connection and "
+"Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Csatlakozz a többi játékoshoz, és játssz velük az interneten keresztül a "
@@ -916,7 +917,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
-msgstr ""
+msgstr "Újracsatlakozás..."
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:165
 msgid "%d tiles left"
@@ -945,35 +946,35 @@ msgstr "Kihagyott lapok a játék folyamán"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
-msgstr ""
+msgstr "Beállítások"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
 msgid "Use system language"
-msgstr ""
+msgstr "Op. rendszer nyelve"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
 msgid "Language"
-msgstr ""
+msgstr "Nyelv"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr ""
+msgstr "A beállított nyelv érvénybe lépéséhez újraindítás szükséges"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr ""
+msgstr "Gép lépésének ideje (ezredmp)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
-msgstr ""
+msgstr "Szerzett pontok kijelzése (mp)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Interface"
-msgstr ""
+msgstr "Felület"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
-msgstr ""
+msgstr "Plugin"
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Követő visszavétele"

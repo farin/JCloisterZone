@@ -33,7 +33,6 @@ public class WindRoseCapability extends Capability {
        if (event instanceof TileEvent) {
            tilePlaced((TileEvent) event);
        }
-
     }
 
     private void tilePlaced(TileEvent ev) {
