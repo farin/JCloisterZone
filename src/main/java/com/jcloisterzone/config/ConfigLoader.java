@@ -224,13 +224,13 @@ public class ConfigLoader {
             if (dc.getAutostart() != null) {
                 model.put("autostart", indent(2, yaml.dumpAs(dc.getAutostart(), Tag.MAP, FlowStyle.BLOCK)));
             }
-            if (dc.getTile_definitions() != null) {
+            if (dc.getTile_definitions() != null && !dc.getTile_definitions().isEmpty()) {
                 model.put("tile_definitions", indent(2, yaml.dumpAs(dc.getTile_definitions(), Tag.MAP, FlowStyle.BLOCK)));
             }
-            if (dc.getDraw() != null) {
-                model.put("draw", indent(1, yaml.dumpAs(dc.getDraw(), Tag.SEQ, FlowStyle.BLOCK)));
+            if (dc.getDraw() != null && !dc.getDraw().isEmpty()) {
+                model.put("draw", indent(2, yaml.dumpAs(dc.getDraw(), Tag.SEQ, FlowStyle.BLOCK)));
             }
-            if (dc.getOff_capabilities() != null) {
+            if (dc.getOff_capabilities() != null && !dc.getOff_capabilities().isEmpty()) {
                 model.put("off_capabilities", indent(2, yaml.dumpAs(dc.getOff_capabilities(), Tag.SEQ, FlowStyle.BLOCK)));
             }
             model.put("area_highlight", dc.getArea_highlight());
