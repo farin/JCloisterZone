@@ -161,7 +161,7 @@ msgstr "La rosa dels vents"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The German Monasteries"
-msgstr "Els monestirs alemanys"
+msgstr "Monestirs alemanys"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Flier"
@@ -185,7 +185,7 @@ msgstr "El mag i la bruixa"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Robbers"
-msgstr "Lladres"
+msgstr "Els lladres"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Corn circles II"
@@ -265,13 +265,13 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:26
 msgid "Apply tunnel rule on tunnels from other expansions."
-msgstr "Aplica la regla del túnel en túnels d'altres expansions."
+msgstr "Aplica la regla del túnel als túnels d'altres expansions."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
 "Quan apareix el basar, no hi ha subhasta: cada jugador només escull la "
-"lloseta."
+"seva lloseta."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
 msgid "Keep basic cloisters in the game."
@@ -295,7 +295,7 @@ msgstr "No es pot fer cap acció. Passeu o desfeu la col·locació de la lloseta
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
-msgstr "Pagueu un rescat"
+msgstr "Paga un rescat"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 #: src/main/java/com/jcloisterzone/ui/Client.java:273
@@ -398,7 +398,7 @@ msgstr "Surt"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
 msgid "Undo"
-msgstr "Desfes"
+msgstr "Desfés"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
 msgid "Zoom in"
@@ -878,7 +878,7 @@ msgstr "Afegeix-me a la partida"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:193
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
 msgid "Remove game"
-msgstr "Esborrar la partida"
+msgstr "Esborra la partida"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
 msgid "Do you want to remove game permanently?"
