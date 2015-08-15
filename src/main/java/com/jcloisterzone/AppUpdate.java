@@ -21,8 +21,8 @@ public class AppUpdate {
         NodeList nl = el.getElementsByTagName("url");
         for (int i = 0; i < nl.getLength(); i++) {
             String value = nl.item(i).getTextContent().trim();
-            boolean isZip = value.endsWith(".zip");
-            if (downloadUrl == null || (isWin == isZip)) {
+            boolean isWinUrl = value.endsWith(".zip") || value.endsWith(".7z") || value.endsWith(".exe");
+            if (downloadUrl == null || (isWin == isWinUrl)) {
                 downloadUrl = value;
             }
         }
