@@ -193,9 +193,15 @@ rm po/keys.pot
 
 ### package
 
-mkdir builds/JCloisterZone
+```
+mvn package
 
+cd build
 chmod a+x JCloisterZone.jar
+mkdir JCloisterZone
+mv JCloisterZone.jar plugins JCloisterZone
 
-zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
 tar cvzf JCloisterZone-3.1.0.tgz JCloisterZone
+7z a JCloisterZone-3.3.0.7z JCloisterZone
+zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
+```
