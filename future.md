@@ -2,6 +2,7 @@
 
 ## Done in current dev
 
+* fix #174: undo placement of a tile with tower base crash game
 
 ## Roadmap
 
