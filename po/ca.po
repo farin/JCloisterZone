@@ -390,7 +390,7 @@ msgstr "Desa la partida"
 #: src/main/java/com/jcloisterzone/ui/Client.java:436
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
 msgid "Load game"
-msgstr "Carrega la partida"
+msgstr "Carrega una partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:35
 msgid "Quit"
@@ -823,7 +823,7 @@ msgstr "Rellotge"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
 msgid "player time limit"
-msgstr "Temps límit del jugador:"
+msgstr "Temps límit de cada jugador:"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
 msgid "minutes"
@@ -831,7 +831,7 @@ msgstr "min"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
 msgid "Presets"
-msgstr "Ajustaments definits"
+msgstr "Ajustaments predefinits"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:308
 msgid "Preset name"
@@ -914,7 +914,7 @@ msgid ""
 "public game server play.jcloisterzone.com."
 msgstr ""
 "Connecteu-vos amb altres jugadors i jugueu-hi usant la connexió a Internet i "
-"el servidor de partides públic en play.cloisterzone.com."
+"el servidor públic de partides en play.cloisterzone.com."
 
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
 msgid "JCloisterZone "
