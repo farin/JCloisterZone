@@ -186,7 +186,7 @@ public class ActionPhase extends Phase {
     public void deployBridge(Position pos, Location loc) {
         BridgeCapability bridgeCap = game.getCapability(BridgeCapability.class);
         bridgeCap.decreaseBridges(getActivePlayer());
-        bridgeCap.deployBridge(pos, loc);
+        bridgeCap.deployBridge(pos, loc, false);
         next(ActionPhase.class);
     }
 

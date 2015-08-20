@@ -2,6 +2,7 @@
 
 ## Done in current dev
 
+* undo is possible also for bridge placements (and also for a tile which forced bridge placement) (#170)
 * fix #174: undo placement of a tile with tower base crash game
 
 ## Roadmap

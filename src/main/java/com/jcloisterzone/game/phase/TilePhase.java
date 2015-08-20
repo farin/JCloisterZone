@@ -28,12 +28,12 @@ public class TilePhase extends Phase {
 
     @Override
     public void enter() {
-    	TilePlacementAction action = new TilePlacementAction(game.getCurrentTile());
-    	for (Entry<Position, Set<Rotation>> entry: getBoard().getAvailablePlacements().entrySet()) {
-    		for (Rotation rotation : entry.getValue()) {
-    			action.add(new TilePlacement(entry.getKey(), rotation));
-    		}
-    	}
+        TilePlacementAction action = new TilePlacementAction(game.getCurrentTile());
+        for (Entry<Position, Set<Rotation>> entry: getBoard().getAvailablePlacements().entrySet()) {
+            for (Rotation rotation : entry.getValue()) {
+                action.add(new TilePlacement(entry.getKey(), rotation));
+            }
+        }
         game.post(new SelectActionEvent(getActivePlayer(), action, false));
     }
 
@@ -66,7 +66,7 @@ public class TilePhase extends Phase {
             FeaturePointer bp = action.getOptions().iterator().next();
 
             bridgeCap.decreaseBridges(getActivePlayer());
-            bridgeCap.deployBridge(bp.getPosition(), bp.getLocation());
+            bridgeCap.deployBridge(bp.getPosition(), bp.getLocation(), true);
         }
         getBoard().mergeFeatures(tile);
 
