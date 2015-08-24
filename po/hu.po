@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-19 14:24+0200\n"
-"PO-Revision-Date: 2015-07-27 22:42+0100\n"
+"PO-Revision-Date: 2015-08-24 22:09+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "Language: hu\n"
@@ -934,7 +934,7 @@ msgstr "Verzió"
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:69
 msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
-msgstr "Terjeszthető a GPL3 licenc szerint"
+msgstr "Terjeszthető a GNU Affero General Public License v3 licenc szerint"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
 msgid "Discarded tiles"

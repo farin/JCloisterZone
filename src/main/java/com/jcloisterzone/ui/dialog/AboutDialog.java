@@ -42,8 +42,8 @@ public class AboutDialog extends JDialog {
      */
     public AboutDialog(File configLocation) {
         setTitle(_("About application"));
-        UiUtils.centerDialog(this, 450, 220);
-        contentPanel.setBounds(0, 0, 434, 204);
+        UiUtils.centerDialog(this, 460, 230);
+        contentPanel.setBounds(0, 0, 444, 214);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel);
         contentPanel.setLayout(null);
