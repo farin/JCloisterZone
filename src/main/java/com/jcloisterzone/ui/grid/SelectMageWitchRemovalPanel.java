@@ -32,7 +32,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
         label.setForeground(ControlPanel.HEADER_FONT_COLOR);
         add(label, "wrap, gapbottom 10");
 
-        MultiLineLabel mll = new MultiLineLabel(_("It's not possible to place mage or witch because there isn't an unfinished feature. Select what figure do you want to remove from board."));
+        MultiLineLabel mll = new MultiLineLabel(_("It''s not possible to place mage or witch because there isn''t an unfinished feature. Select what figure do you want to remove from board."));
         add(mll, "wrap, growx, gapbottom 5");
 
         boolean isActive = gc.getGame().getActivePlayer().isLocalHuman();

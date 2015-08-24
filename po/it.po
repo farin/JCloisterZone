@@ -492,7 +492,7 @@ msgstr "Il Mago e la Strega"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
-"It's not possible to place mage or witch because there isn't an unfinished "
+"It''s not possible to place mage or witch because there isn''t an unfinished "
 "feature. Select what figure do you want to remove from board."
 msgstr ""
 "Non è possibile piazzare il mago o la strega, perché non c''è una città o una "
