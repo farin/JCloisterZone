@@ -21,30 +21,30 @@ msgstr ""
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
 msgid "Report bug"
-msgstr "Informa d'un error"
+msgstr "Informa d''un error"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
 msgstr ""
-"<html>Per simplificar el procés de depuració, l'informe inclou "
+"<html>Per simplificar el procés de depuració, l''informe inclou "
 "automàticament la partida desada, el fitxer de registre i la informació de "
 "sistema.</html>"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
-msgstr "Descripció de l'error:"
+msgstr "Descripció de l''error:"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
 msgstr ""
 "Tot seguit, cal guardar l'informe i enviar-lo via correu electrònic a "
-"l'adreça farin@farin.cz."
+"l''adreça farin@farin.cz."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
-msgstr "Ha fallat l'informe d'error."
+msgstr "Ha fallat l''informe d''error."
 
 #: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Basic game"
@@ -56,11 +56,11 @@ msgstr "La roda de la fortuna"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:47
 msgid "Winter Edition"
-msgstr "Edició d'hivern"
+msgstr "Edició d''hivern"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
-msgstr "L'home de gingebre"
+msgstr "L''home de gingebre"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
@@ -80,7 +80,7 @@ msgstr "La torre"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:59
 msgid "Abbey & Mayor"
-msgstr "L'abadia i l'alcalde"
+msgstr "L''abadia i l''alcalde"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:61
 msgid "The Catapult"
@@ -177,7 +177,7 @@ msgstr "Els transbordadors"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The Goldmines"
-msgstr "Les mines d'or"
+msgstr "Les mines d''or"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "Mage & Witch"
@@ -193,7 +193,7 @@ msgstr "Els cercles de les collites II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The school"
-msgstr "L'escola"
+msgstr "L''escola"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "La porxada"
@@ -245,7 +245,7 @@ msgstr "El drac es mou després de puntuar."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr "Posa la fada a la nova lloseta, no al costat d'un seguidor."
+msgstr "Posa la fada a la nova lloseta, no al costat d''un seguidor."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -261,11 +261,11 @@ msgstr "La porcada està present a la lloseta del camp."
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
 msgstr ""
-"Permet posar directament un graner en un camp on ja n'hi hagi un altre."
+"Permet posar directament un graner en un camp on ja n''hi hagi un altre."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:26
 msgid "Apply tunnel rule on tunnels from other expansions."
-msgstr "Aplica la regla del túnel als túnels d'altres expansions."
+msgstr "Aplica la regla del túnel als túnels d''altres expansions."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
 msgid "No bazaar bidding. Each player just chooses one tile."
@@ -287,7 +287,7 @@ msgstr "Confirmeu o desfeu la col·locació del meeple."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr "Esperant la confirmació d'un jugador remot."
+msgstr "Esperant la confirmació d''un jugador remot."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
@@ -332,7 +332,7 @@ msgid ""
 "JCloisterZone to the latest version."
 msgstr ""
 "El servidor per a partides en línia no és compatible amb la vostra "
-"aplicació. Cal que actualitzeu el JCloisterZone a l'última versió disponible."
+"aplicació. Cal que actualitzeu el JCloisterZone a l''última versió disponible."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
 msgid ""
@@ -438,7 +438,7 @@ msgstr "Pren una captura de pantalla"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
 msgid "Beep alert at player turn"
-msgstr "So d'alerta quan comenci el torn del jugador"
+msgstr "So d''alerta quan comenci el torn del jugador"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
 msgid "Confirm every meeple deployment"
@@ -459,7 +459,7 @@ msgstr "Preferències"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "About"
-msgstr "Sobre l'aplicació"
+msgstr "Sobre l''aplicació"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
@@ -534,16 +534,16 @@ msgstr "Escolliu una lloseta."
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
-"<html>Escolliu la lloseta de la propera subhasta<br>i feu-ne l'oferta "
+"<html>Escolliu la lloseta de la propera subhasta<br>i feu-ne l''oferta "
 "inicial.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:218
 msgid "Raise bid or pass."
-msgstr "Pugeu l'oferta o passeu."
+msgstr "Pugeu l''oferta o passeu."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Buy or sell tile from latest bidder."
-msgstr "Compra o ven la lloseta de l'últim postor."
+msgstr "Compra o ven la lloseta de l''últim postor."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:227
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:230
@@ -608,12 +608,12 @@ msgstr "La partida no ha acabat. Voleu realment sortir?"
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:447
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:482
 msgid "Error"
-msgstr "S'ha produït un error."
+msgstr "S''ha produït un error."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:568
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Connection lost"
-msgstr "S'ha perdut la connexió."
+msgstr "S''ha perdut la connexió."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
@@ -637,7 +637,7 @@ msgstr "Ha fallat la connexió. Amfitrió desconegut."
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
 msgid "Connection refused."
-msgstr "S'ha refusat la connexió."
+msgstr "S''ha refusat la connexió."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
@@ -775,7 +775,7 @@ msgid ""
 "select appropriate action.</html>"
 msgstr ""
 "<html>Quan situeu una lloseta, useu <b>Tab</b> o bé cliqueu amb el botó "
-"<b>dret</b> un altre cop per escollir l'acció desitjada.</html>"
+"<b>dret</b> un altre cop per escollir l''acció desitjada.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
 msgid ""
@@ -790,7 +790,7 @@ msgid ""
 "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
-"<html>Premeu <b>F</b> per habilitar/deshabilitar l'ajuda dels camps i <b>X</"
+"<html>Premeu <b>F</b> per habilitar/deshabilitar l''ajuda dels camps i <b>X</"
 "b> per destacar les últimes llosetes jugades.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
@@ -835,7 +835,7 @@ msgstr "Ajustaments predefinits"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:308
 msgid "Preset name"
-msgstr "Nom de l'ajustament"
+msgstr "Nom de l''ajustament"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:341
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:262
@@ -865,7 +865,7 @@ msgstr "Contrasenya"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
-msgstr "Si no poseu contrasenya, tothom s'hi podrà connectar."
+msgstr "Si no poseu contrasenya, tothom s''hi podrà connectar."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
 msgid "Create game"
@@ -891,7 +891,7 @@ msgid ""
 "also play only against any number of computer players."
 msgstr ""
 "Creeu una partida nova o continueu-ne una que hi hagi desada. El vostre "
-"ordinador serà l'amfitrió i altres jugadors s'hi podran connectar durant la "
+"ordinador serà l''amfitrió i altres jugadors s''hi podran connectar durant la "
 "fase de configuració. També podeu jugar contra qualsevol nombre de jugadors "
 "IA."
 
@@ -930,7 +930,7 @@ msgstr "Queden %d llosetes"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
 msgid "About application"
-msgstr "Sobre l'aplicació"
+msgstr "Sobre l''aplicació"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:65
 msgid "Version"
@@ -947,7 +947,7 @@ msgstr "Llosetes descartades"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
 msgid "These tiles have been discarded during the game"
-msgstr "Aquestes llosetes s'han descartat durant la partida."
+msgstr "Aquestes llosetes s''han descartat durant la partida."
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
@@ -955,7 +955,7 @@ msgstr "Configuració del joc"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
 msgid "Use system language"
-msgstr "Empra l'idioma del sistema"
+msgstr "Empra l''idioma del sistema"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
 msgid "Language"
@@ -963,11 +963,11 @@ msgstr "Idioma"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr "Cal reiniciar l'aplicació per aplicar el nou idioma."
+msgstr "Cal reiniciar l''aplicació per aplicar el nou idioma."
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr "Retard de la col·locació de l'IA (en ms)"
+msgstr "Retard de la col·locació de l''IA (en ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"

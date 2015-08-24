@@ -11,3 +11,4 @@ chmod a+x build/JCloisterZone/JCloisterZone.jar
 cd build
 zip -r -9 JCloisterZone-$1.zip JCloisterZone
 tar cvzf JCloisterZone-$1.tgz JCloisterZone
+7z a JCloisterZone-$1.7z JCloisterZone
