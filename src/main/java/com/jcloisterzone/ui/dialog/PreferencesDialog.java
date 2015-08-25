@@ -222,7 +222,7 @@ public class PreferencesDialog extends JDialog {
         this.config = client.getConfig();
         setTitle(_("Preferences"));
         setModalityType(ModalityType.DOCUMENT_MODAL);
-        UiUtils.centerDialog(this, 600, 300);
+        UiUtils.centerDialog(this, 650, 300);
 
         getContentPane().setLayout(new MigLayout("ins 0", "[][grow]", "[grow][]"));
 

@@ -1,5 +1,12 @@
 # Version history
 
+## 3.3.1
+*2015-08-25
+
+* undo is possible also for bridge placements (and also for a tile which forced bridge placement) (#170)
+* fix #174: undo placement of a tile with tower base crash game
+* fix #177: apostrophes in translations are not shown
+
 ## 3.3.0
 *2015-08-15*
 

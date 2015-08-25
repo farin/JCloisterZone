@@ -12,7 +12,7 @@ import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.BridgeDeployedEvent;
+import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
@@ -257,9 +257,13 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void onBridgeDeployed(BridgeDeployedEvent ev) {
+    public void onBridgeEvent(BridgeEvent ev) {
         gridPanel.clearActionDecorations();
-        bridgeLayer.bridgeDeployed(ev.getPosition(), ev.getLocation());
+        if (ev.getType() == BridgeEvent.DEPLOY) {
+            bridgeLayer.bridgeDeployed(ev.getPosition(), ev.getLocation());
+        } else {
+            bridgeLayer.bridgeRemoved(ev.getPosition());
+        }
     }
 
     @Subscribe

@@ -140,8 +140,6 @@ public class CreateGamePanel extends JPanel {
 
         startGameButton = new JButton(_("Start game"));
         startGameButton.setFont(new Font(null, Font.PLAIN, 25));
-//        startGameButton.setIcon(new ImageIcon(CreateGamePanel.class
-//                .getResource("/sysimages/endTurn.png")));
         header.add(startGameButton, "width 240, h 40, east");
 
         if (gc.getChannel() != null) {

@@ -39,7 +39,7 @@ msgstr "Per favore, descrivi il problema..."
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
 msgstr ""
-"...poi scarica l'archivio del rapporto e invialo via mail a farin@farin.cz"
+"...poi scarica l''archivio del rapporto e invialo via mail a farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
@@ -59,7 +59,7 @@ msgstr "Edizione Invernale"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
-msgstr "L'uomo di zenzero"
+msgstr "L''uomo di zenzero"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
@@ -228,7 +228,7 @@ msgstr "La Torre"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:12
 msgid "Randomize seating order"
-msgstr "Rendi casuale l'ordine di gioco"
+msgstr "Rendi casuale l''ordine di gioco"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:14
 msgid "Tiny city is scored only for 2 points."
@@ -271,7 +271,7 @@ msgstr "Applica la regola del tunnel sui tunnel delle altre espansioni."
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
 "Non puoi fare offerte sui bazar. Ogni giocatore deve scegliere una "
-"soltessera."m
+"soltessera."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
 msgid "Keep basic cloisters in the game."
@@ -332,7 +332,7 @@ msgid ""
 "JCloisterZone to the latest version."
 msgstr ""
 "Il server di gioco online non è compatibile con la tua applicazione. "
-"Aggiornare JCloisterZone all'ultima versione."
+"Aggiornare JCloisterZone all''ultima versione."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
 msgid ""
@@ -492,10 +492,10 @@ msgstr "Il Mago e la Strega"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
-"It's not possible to place mage or witch because there isn't an unfinished "
+"It''s not possible to place mage or witch because there isn''t an unfinished "
 "feature. Select what figure do you want to remove from board."
 msgstr ""
-"Non è possibile piazzare il mago o la strega, perché non c'è una città o una "
+"Non è possibile piazzare il mago o la strega, perché non c''è una città o una "
 "strada incompleta. Seleziona quale pedina vuoi rimuovere dalla mappa"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:41
@@ -542,7 +542,7 @@ msgstr "Rilancia o passa"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Buy or sell tile from latest bidder."
-msgstr "<html>Compra o vendi la tessera<br>dall'ultimo offerente</html>"
+msgstr "<html>Compra o vendi la tessera<br>dall''ultimo offerente</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:227
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:230
@@ -563,7 +563,7 @@ msgstr "Seleziona"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:263
 msgid "Bid"
-msgstr "Fai un'offerta"
+msgstr "Fai un''offerta"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:264
 msgid "Pass"
@@ -774,7 +774,7 @@ msgid ""
 "select appropriate action.</html>"
 msgstr ""
 "<html>Dopo aver piazzato la tessera, usa il tasto <b>Tab</b> o il tasto "
-"<b>destro</b> del mouse per selezionare l'azione desiderata.</html>"
+"<b>destro</b> del mouse per selezionare l''azione desiderata.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
 msgid ""
@@ -930,7 +930,7 @@ msgstr "%d tessere rimaste"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
 msgid "About application"
-msgstr "Informazioni sull'applicazione"
+msgstr "Informazioni sull''applicazione"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:65
 msgid "Version"
@@ -964,11 +964,11 @@ msgstr "Lingua"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr "Per applicare la nuova lingua è necessario riavviare l'applicazione"
+msgstr "Per applicare la nuova lingua è necessario riavviare l''applicazione"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr "Ritardo di piazzamento per l'IA (ms)"
+msgstr "Ritardo di piazzamento per l''IA (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
@@ -981,84 +981,3 @@ msgstr "Interfaccia"
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
 msgstr "Plugin"
-
-#~ msgid "Undeploy meeple"
-#~ msgstr "Rimuovi il seguace"
-
-#~ msgid "Select meeple to undeploy"
-#~ msgstr "Seleziona il seguace da ritirare"
-
-#~ msgid "Confirm placement on a farm"
-#~ msgstr "Conferma il piazzamento su una fattoria"
-
-#~ msgid "Confirm placement on a tower"
-#~ msgstr "Conferma il piazzamento su una torre"
-
-#~ msgid "Place a follower"
-#~ msgstr "Inserisci un seguace"
-
-#~ msgid "Do you really want to place a follower on farm?"
-#~ msgstr "Sei sicuro di voler mettere un seguace sulla fattoria?"
-
-#~ msgid "Confirm follower placement"
-#~ msgstr "Conferma dove vuoi piazzare il seguace"
-
-#~ msgid "Place a tower piece"
-#~ msgstr "Metti un pezzo di torre"
-
-#~ msgid ""
-#~ "Do you really want to place a follower on the tower?\n"
-#~ "(To prevent tower from adding more pieces on the top)"
-#~ msgstr ""
-#~ "Sei sicuro di voler mettere un seguace sulla torre?\n"
-#~ "(Per impedire che siamo messi altri pezzi sulla torre)"
-
-#~ msgid ""
-#~ "Create a new local or network game. You can play against any number of "
-#~ "computer players."
-#~ msgstr ""
-#~ "Crea una nuova partita locale o in rete. Puoi giocare contro un numero "
-#~ "qualsiasi di giocatori."
-
-#~ msgid "Connect to a remote JCloisterZone application with settled new game."
-#~ msgstr ""
-#~ "Connettiti ad una applicazione JCloisterZone remota con partita "
-#~ "organizzata"
-
-#~ msgid "Load from a file previously saved game."
-#~ msgstr "Carica una partita salvata in precedenza."
-
-#~ msgid "Close game"
-#~ msgstr "Chiudi partita"
-
-#~ msgid ""
-#~ "Game is running. Do you really want to quit game and also disconnect all "
-#~ "other players?"
-#~ msgstr ""
-#~ "Una partita è in corso. Vuoi davvero uscire e disconnettere tutti gli "
-#~ "altri giocatori?"
-
-#~ msgid "Game is running. Do you really want to leave it?"
-#~ msgstr "Una partita è in corso. Vuoi davvero uscire?"
-
-#~ msgid "Game overview"
-#~ msgstr "Resoconto partita"
-
-#~ msgid "Load"
-#~ msgstr "Carica"
-
-#~ msgid "Window"
-#~ msgstr "Finestra"
-
-#~ msgid "Confirm game close"
-#~ msgstr "Conferma chiusura partita"
-
-#~ msgid "Load error"
-#~ msgstr "Errore di caricamento"
-
-#~ msgid ""
-#~ "Saved game is incompatible or file is corrupted. Game couldn't work "
-#~ "properly."
-#~ msgstr ""
-#~ "Il salvataggio è incompatibile o il file è corrotto. Il gioco non "
-#~ "funzionerebbe correttamente."

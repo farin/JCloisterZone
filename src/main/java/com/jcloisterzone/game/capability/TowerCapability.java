@@ -91,6 +91,10 @@ public final class TowerCapability extends Capability {
         towers.add(p);
     }
 
+    public void unregisterTower(Position p) {
+        towers.remove(p);
+    }
+
     public Set<Position> getTowers() {
         return towers;
     }

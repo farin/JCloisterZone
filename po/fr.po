@@ -28,21 +28,21 @@ msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
 msgstr ""
-"<html>Ensemble d'outils de rapport d'erreurs de partie sauvegardée, du "
+"<html>Ensemble d''outils de rapport d''erreurs de partie sauvegardée, du "
 "journal interne de jeu et du système pour simplifier le processus de "
-"recherche d'erreurs.</html>"
+"recherche d''erreurs.</html>"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
 msgid "Please describe bug..."
-msgstr "Décrivez l'erreur s'il vous plait..."
+msgstr "Décrivez l''erreur s''il vous plait..."
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
 msgid "...then download report archive and send via email to farin@farin.cz"
-msgstr "... puis téléchargez l'archive et l'envoyez par mail à farin@farin.cz"
+msgstr "... puis téléchargez l''archive et l''envoyez par mail à farin@farin.cz"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
-msgstr "Le rapport d'erreur à échoué"
+msgstr "Le rapport d''erreur à échoué"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:43
 msgid "Basic game"
@@ -58,7 +58,7 @@ msgstr "Edition hiver"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "The Gingerbread man"
-msgstr "L'homme pain d'épice"
+msgstr "L''homme pain d''épice"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "Inns & Cathedrals"
@@ -175,7 +175,7 @@ msgstr "Les Ferrys"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The Goldmines"
-msgstr "Les Mines d'or"
+msgstr "Les Mines d''or"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "Mage & Witch"
@@ -191,7 +191,7 @@ msgstr "Crop Circles / Cercles de récoltes II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The school"
-msgstr "L'école"
+msgstr "L''école"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "La porxada"
@@ -243,13 +243,13 @@ msgstr "Le mouvement du dragon survient après le score"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr "Placer la fée sur la tuile. (au lieu de le positionner a proximité d'un partisan)"
+msgstr "Placer la fée sur la tuile. (au lieu de le positionner a proximité d''un partisan)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
-"L'église permettant de faire échapper des partisans peut être placé de façon "
-"adjacente sur n'importe quelle tuile d'une ville assiégée "
+"L''église permettant de faire échapper des partisans peut être placé de façon "
+"adjacente sur n''importe quelle tuile d''une ville assiégée "
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:22
 msgid "The Pig herd is present on the farm tile."
@@ -259,7 +259,7 @@ msgstr "Troupeau de cochon présent sur les tuiles comportant un pré."
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
 msgstr ""
-"Permettre le placement d'une grange sur un pré où une autre grange a déjà "
+"Permettre le placement d''une grange sur un pré où une autre grange a déjà "
 "été placée."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:26
@@ -282,15 +282,15 @@ msgstr "Ajouter 3/2/1 points par tour/maison/hangar"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
 msgid "Confirm or undo a meeple placement."
-msgstr "Confirmer ou annuler le placement d'un partisan."
+msgstr "Confirmer ou annuler le placement d''un partisan."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Waiting for a confirmation by remote player."
-msgstr "En attente de confirmation d'un joueur distant."
+msgstr "En attente de confirmation d''un joueur distant."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "No action available. Pass or undo a tile placement."
-msgstr "Aucune action possible. Passer ou annueler le placement d'une tuile."
+msgstr "Aucune action possible. Passer ou annueler le placement d''une tuile."
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
@@ -330,7 +330,7 @@ msgid ""
 "Online play server is not compatible with your application. Please upgrade "
 "JCloisterZone to the latest version."
 msgstr ""
-"Le serveur de jeu en ligne n'est pas compatible avec votre application. S'il "
+"Le serveur de jeu en ligne n''est pas compatible avec votre application. S''il "
 "vous plait, mettez à jour JCloisterZone à la dernière version."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
@@ -338,7 +338,7 @@ msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
 msgstr ""
-"La version du serveur JCloisterZone n'est pas compatible avec la version du "
+"La version du serveur JCloisterZone n''est pas compatible avec la version du "
 "client. Veuillez mettre les logiciels dans la même version"
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:532
@@ -433,7 +433,7 @@ msgstr "Montrer les options du jeu"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
 msgid "Take screenshot"
-msgstr "Prendre une capture d'écran"
+msgstr "Prendre une capture d''écran"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
 msgid "Beep alert at player turn"
@@ -445,11 +445,11 @@ msgstr "Confirmer chaque placement de partisan"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
 msgid "Confirm meeple deployment on a farm"
-msgstr "Confirmer le placement d'un partisan sur un pré"
+msgstr "Confirmer le placement d''un partisan sur un pré"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
 msgid "Confirm meeple deployment on a tower"
-msgstr "Confirmer le placement d'un partisan sur une tour"
+msgstr "Confirmer le placement d''un partisan sur une tour"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
@@ -491,10 +491,10 @@ msgstr "Magicien et sorcière"
 
 #: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
-"It's not possible to place mage or witch because there isn't an unfinished "
+"It''s not possible to place mage or witch because there isn''t an unfinished "
 "feature. Select what figure do you want to remove from board."
 msgstr ""
-"Ce n'est pas possible de placer un magicien ou une sorcière car il n'y a pas "
+"Ce n''est pas possible de placer un magicien ou une sorcière car il n''y a pas "
 "de construction non terminée . Sélectionnez le pion que vous voulez enlever "
 "du plateau de jeu."
 
@@ -594,12 +594,12 @@ msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
-"La partie n'est pas terminée. Voulez vous vraiment arrêter le jeu et déconnecter "
+"La partie n''est pas terminée. Voulez vous vraiment arrêter le jeu et déconnecter "
 "tous les autres joueurs"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:282
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr "La partie n'est pas terminée. Voulez vous vraiment quitter le jeu."
+msgstr "La partie n''est pas terminée. Voulez vous vraiment quitter le jeu."
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:405
 #: src/main/java/com/jcloisterzone/ui/Client.java:448
@@ -782,7 +782,7 @@ msgid ""
 "no action.</html>"
 msgstr ""
 "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre "
-"d<b>espace</b> pour ne pas effectuer d'action.</html>"
+"d<b>espace</b> pour ne pas effectuer d''action.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
 msgid ""
@@ -805,7 +805,7 @@ msgstr "Joueurs"
 msgid "Click twice on a slot button to add a computer player."
 msgstr ""
 "Cliquer deux fois sur un emplacement pour ajouter un joueur géré par "
-"l'ordinateur."
+"l''ordinateur."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:203
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
@@ -867,7 +867,7 @@ msgstr "Mot de passe"
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
 msgid "If you leave password empty, anybody can connect to your game."
 msgstr ""
-"Si vous ne mettez pas de mot de passe, n'importe qui pourra se connecter à "
+"Si vous ne mettez pas de mot de passe, n''importe qui pourra se connecter à "
 "votre partie."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
@@ -915,7 +915,7 @@ msgid ""
 "Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
 msgstr ""
-"Connectez vous à d'autres joueurs et jouez avec eux par Internet sur le "
+"Connectez vous à d''autres joueurs et jouez avec eux par Internet sur le "
 "serveur public play.jcloisterzone.com."
 
 #: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
@@ -965,15 +965,15 @@ msgstr "Langue"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
 msgid "To apply new language you must restart the application"
-msgstr "Pour activer une nouvelle langue vous devez redémarrer l'application"
+msgstr "Pour activer une nouvelle langue vous devez redémarrer l''application"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
 msgid "AI placement delay (ms)"
-msgstr "Délai de placement d'un joueurcgére par l'ordinateur (ms)"
+msgstr "Délai de placement d''un joueurcgére par l''ordinateur (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
 msgid "Score display duration (sec)"
-msgstr "Durée d'affichage du score (sec)"
+msgstr "Durée d''affichage du score (sec)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Interface"
@@ -982,89 +982,3 @@ msgstr "Interface"
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
 msgid "Plugins"
 msgstr "Composants optionnels"
-
-#~ msgid "Undeploy meeple"
-#~ msgstr "Partisan non utilisé"
-
-#~ msgid "Select meeple to undeploy"
-#~ msgstr "Sélectionner un partisan à récupérer"
-
-#~ msgid "Confirm placement on a farm"
-#~ msgstr "Confirmer le placement sur un pré"
-
-#~ msgid "Confirm placement on a tower"
-#~ msgstr "Confirmer le placement sur une tour"
-
-#~ msgid "Place a follower"
-#~ msgstr "Placer un partisan"
-
-#~ msgid "Do you really want to place a follower on farm?"
-#~ msgstr "Voulez vous vraiment placer un partisan sur le pré"
-
-#~ msgid "Confirm follower placement"
-#~ msgstr "Confirmer le placement du partisan"
-
-#~ msgid "Place a tower piece"
-#~ msgstr "Placer un morceau de tour"
-
-#~ msgid ""
-#~ "Do you really want to place a follower on the tower?\n"
-#~ "(To prevent tower from adding more pieces on the top)"
-#~ msgstr ""
-#~ "Voulez vous vraiment placer un partisan dans la tour ?\n"
-#~ "(Pour éviter lajout dautres pièces sur le dessus de la tour)"
-
-#~ msgid ""
-#~ "Connect to other players and play with them using internet connection and "
-#~ "public game server play.jcloisterzone.com."
-#~ msgstr ""
-#~ "Connectez vous à d'autres joueurs et jouez avec eux par Internet sur le "
-#~ "serveur public play.jcloisterzone.com."
-
-#~ msgid ""
-#~ "Create a new local or network game. You can play against any number of "
-#~ "computer players."
-#~ msgstr ""
-#~ "Créer une nouvelle partie locale ou en réseau. Vous pouvez jouer contre "
-#~ "plusieurs joueurs gérés par des ordinateurs."
-
-#~ msgid "Connect to a remote JCloisterZone application with settled new game."
-#~ msgstr "Connexion à une nouvelle partie JCloisterZone."
-
-#~ msgid "Load from a file previously saved game."
-#~ msgstr "Charger une partie depuis un fichier de sauvegarde."
-
-#~ msgid "Close game"
-#~ msgstr "Quitter la partie"
-
-#~ msgid ""
-#~ "Game is running. Do you really want to quit game and also disconnect all "
-#~ "other players?"
-#~ msgstr ""
-#~ "Une partie est en cours. Voulez vous vraiment quitter la partie et "
-#~ "déconnecter tous les autres joueurs ?"
-
-#~ msgid "Game is running. Do you really want to leave it?"
-#~ msgstr "La partie est en cours. Voulez vous vraiment quitter ?"
-
-#~ msgid "Game overview"
-#~ msgstr "Résumé de la partie"
-
-#~ msgid "Load"
-#~ msgstr "Charger"
-
-#~ msgid "Window"
-#~ msgstr "Affichage"
-
-#~ msgid "Confirm game close"
-#~ msgstr "Confirmer la fermeture du jeu"
-
-#~ msgid "Load error"
-#~ msgstr "Erreur de chargement"
-
-#~ msgid ""
-#~ "Saved game is incompatible or file is corrupted. Game couldn't work "
-#~ "properly."
-#~ msgstr ""
-#~ "La sauvegarde du jeu est incompatible ou le fichier de sauvegarde est "
-#~ "corrompu. Le jeu ne peut pas fonctionner correctement."

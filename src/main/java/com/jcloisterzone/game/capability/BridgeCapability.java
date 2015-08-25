@@ -18,7 +18,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.BridgeDeployedEvent;
+import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 
@@ -192,14 +192,27 @@ public class BridgeCapability extends Capability {
         bridges.put(player, n-1);
     }
 
-    public void deployBridge(Position pos, Location loc) {
+    public void increaseBridges(Player player) {
+        int n = getPlayerBridges(player);
+        bridges.put(player, n+1);
+    }
+
+    public void deployBridge(Position pos, Location loc, boolean forced) {
         Tile tile = getBoard().get(pos);
         if (!tile.isBridgeAllowed(loc)) {
             throw new IllegalArgumentException("Cannot deploy " + loc + " bridge on " + pos);
         }
         bridgeUsed = true;
         tile.placeBridge(loc);
-        game.post(new BridgeDeployedEvent(game.getActivePlayer(), pos, loc));
+        BridgeEvent ev = new BridgeEvent(BridgeEvent.DEPLOY, game.getActivePlayer(), pos, loc);
+        ev.setForced(forced);
+        game.post(ev);
+    }
+
+    public void undoDeployBridge(Position pos, Location loc) {
+        Tile tile = getBoard().get(pos);
+        bridgeUsed = false;
+        tile.removeBridge(loc);
     }
 
 

@@ -32,6 +32,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.MeepleEvent;
@@ -86,7 +87,7 @@ public class Game extends GameSettings implements EventProxy {
     private List<Capability> capabilities = new ArrayList<>(); //TODO change to map?
     private FairyCapability fairyCapability; //shortcut - TODO remove
 
-    private Undoable lastUndoable;
+    private ArrayList<Undoable> lastUndoable = new ArrayList<>();
     private Phase lastUndoablePhase;
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
@@ -117,16 +118,17 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public Undoable getLastUndoable() {
-        return lastUndoable;
+        return lastUndoable.size() == 0 ? null : lastUndoable.get(lastUndoable.size()-1);
     }
 
     public void clearLastUndoable() {
-        lastUndoable = null;
+        lastUndoable.clear();
     }
 
     private boolean isUiSupportedUndo(Event event) {
         if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
         if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
+        if (event instanceof BridgeEvent && event.getType() == BridgeEvent.DEPLOY) return true;
         return false;
     }
 
@@ -136,13 +138,19 @@ public class Game extends GameSettings implements EventProxy {
         for (Capability capability: capabilities) {
             capability.handleEvent(event);
         }
-        if (event instanceof PlayEvent) {
+        if (event instanceof PlayEvent && !event.isUndo()) {
             if (isUiSupportedUndo(event)) {
-                lastUndoable = (Undoable) event;
-                lastUndoablePhase = phase;
+                if (event instanceof BridgeEvent && ((BridgeEvent)event).isForced()) {
+                    //jsut add to chain after tile event
+                    lastUndoable.add((Undoable) event);
+                } else {
+                    lastUndoable.clear();
+                    lastUndoable.add((Undoable) event);
+                    lastUndoablePhase = phase;
+                }
             } else {
                 if (event.getClass().getAnnotation(Idempotent.class) == null) {
-                    lastUndoable = null;
+                    lastUndoable.clear();
                     lastUndoablePhase = null;
                 }
             }
@@ -157,23 +165,22 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public boolean isUndoAllowed() {
-        return lastUndoable != null;
+        return lastUndoable.size() > 0;
     }
 
     public void undo() {
-        //proof of concept
-        if (lastUndoable instanceof TileEvent || lastUndoable instanceof MeepleEvent) {
-            Event inverse = lastUndoable.getInverseEvent();
+        for (int i = lastUndoable.size()-1; i >= 0; i--) {
+            Undoable ev = lastUndoable.get(i);
+            Event inverse = ev.getInverseEvent();
             inverse.setUndo(true);
 
-            lastUndoable.undo(this);
-            phase = lastUndoablePhase;
-            lastUndoable = null;
-            lastUndoablePhase = null;
-
+            ev.undo(this);
             post(inverse); //should be post inside undo? silent vs. firing undo?
-            phase.enter();
         }
+        phase = lastUndoablePhase;
+        lastUndoable.clear();
+        lastUndoablePhase = null;
+        phase.enter();
     }
 
     public Tile getCurrentTile() {
