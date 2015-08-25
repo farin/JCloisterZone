@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -rf build/plugins/JCloisterZone
-mkdir -p build/plugins/JCloisterZone
+rm -rf build/JCloisterZone
+mkdir -p build/JCloisterZone
 
 mv build/plugins build/JCloisterZone
 mv build/JCloisterZone.jar build/JCloisterZone
