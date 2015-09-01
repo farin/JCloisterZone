@@ -242,7 +242,7 @@ msgstr "Der Drachen wird nach der Punktvergabe bewegt."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:18
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr ""
+msgstr "Weise die Fee einem ganzen Plättchen zu, statt einem einzelnen Gefolgsmann. (Relevant für die Bonuspunkte.)"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:20
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
