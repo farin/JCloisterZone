@@ -26,11 +26,11 @@
     <alias treat="CC.RrC" as="BA.RrC" />
 
     <alias treat="WI.R" as="AM.R" />
-    <alias treat="WI.CRr" as="AM.CRr" />
+    <alias treat="WI.CRr" as="BA.CRr" />
     <alias treat="WI.RC" as="AM.RC" />
     <alias treat="WI.LR" as="BA.LR" />
     <alias treat="WI.RRR" as="BA.RRR" />
-    <alias treat="WI.RrC.i" as="IC.RrC.i" />
+    <alias treat="WI.RrC" as="BA.RrC" />
     <alias treat="WI.RCc.i" as="IC.RCc.i" />
     <alias treat="WI.CFR" as="IC.CFR" />
     <alias treat="WI.LRFR" as="IC.LRFR" />
