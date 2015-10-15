@@ -3,6 +3,7 @@
 ## Done in current dev
 
 * winter theme
+* it's possible to enable/disable plugins without app restart
 * fixed few winter extra tiles definitions to match original winter tiles
 * fixed #184 - opponent can accidentally skip follower placement on Abbey
 * fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine

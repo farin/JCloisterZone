@@ -52,6 +52,7 @@ public class PreferencesDialog extends JDialog {
     private JComboBox<LocaleOption> langComboBox;
     private JTextField aiPlaceTileDelay;
     private JTextField scoreDisplayDuration;
+    private List<PluginRow> pluginRows = new ArrayList<>();
 
     private static class LocaleOption {
         private final String locale, title;
@@ -124,9 +125,22 @@ public class PreferencesDialog extends JDialog {
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
 
         List<String> enabledPlugins = new ArrayList<>();
-        for (Plugin plugin : client.getPlugins()) {
-            if (plugin.isEnabled() || plugin.getType() == PluginType.DEFAULT_GRF_SET) {
+        for (PluginRow row : pluginRows) {
+            Plugin plugin = row.plugin;
+            if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
                 enabledPlugins.add(plugin.getRelativePath());
+                continue;
+            }
+            if (row.isEnabled()) {
+                try {
+                    plugin.load();
+                    plugin.setEnabled(true);
+                    enabledPlugins.add(plugin.getRelativePath());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            } else {
+                plugin.setEnabled(false);
             }
         }
         config.setPlugins(enabledPlugins);
@@ -174,24 +188,22 @@ public class PreferencesDialog extends JDialog {
 
     private class PluginRow {
         private final Plugin plugin;
+        private JCheckBox chbox;
 
         public PluginRow(Plugin plugin) {
            this.plugin = plugin;
         }
 
+        public boolean isEnabled() {
+            return chbox.isSelected();
+        }
+
         public void render(JPanel panel) {
-            JCheckBox chbox = new JCheckBox();
+            chbox = new JCheckBox();
             chbox.setSelected(plugin.isEnabled());
             if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
                 chbox.setEnabled(false);
             }
-            chbox.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 JCheckBox chbox = (JCheckBox) e.getSource();
-                 plugin.setEnabled(chbox.isSelected());
-             }
-            });
             panel.add(chbox, "sy 2, gapright 5, gapbottom 8");
 
             JLabel label = new JLabel(plugin.getTitle());
@@ -210,7 +222,9 @@ public class PreferencesDialog extends JDialog {
 
         // Iterate in reverse.
         while(li.hasPrevious()) {
-          (new PluginRow(li.previous())).render(panel);
+            PluginRow row = new PluginRow(li.previous());
+            row.render(panel);
+            pluginRows.add(row);
         }
 
         return panel;
