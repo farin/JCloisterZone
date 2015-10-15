@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aliases xmlns="http://www.jcloisterzone.com/aliases">
+    <alias treat="WI.LR" as="BA.LR" />
+    <alias treat="WI.RRR" as="BA.RRR" />
+</aliases>

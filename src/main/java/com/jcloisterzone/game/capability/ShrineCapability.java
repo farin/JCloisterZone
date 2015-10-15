@@ -66,19 +66,28 @@ public final class ShrineCapability extends Capability {
     @Override
     public boolean isTilePlacementAllowed(Tile tile, Position p) {
         if (tile.hasCloister()) {
-            int opositeCount = 0;
-            int sameCount = 0;
+            Cloister opposite = null;
             for (Tile nt: getBoard().getAdjacentAndDiagonalTiles(p)) {
                 if (nt.hasCloister()) {
                     if  (tile.getCloister().isShrine() ^ nt.getCloister().isShrine()) {
-                        opositeCount++;
-                    } else {
-                        sameCount++;
+                        if (opposite == null) {
+                            opposite = nt.getCloister();
+                        } else {
+                            //second opposite, not allowed by rules
+                            return false;
+                        }
                     }
                 }
             }
-            if (opositeCount > 1 || (opositeCount == 1 && sameCount > 0)) {
-                return false;
+            if (opposite != null) {
+                //we must also check if second "same" feature is not place next to "oposite"
+                for (Tile nt: getBoard().getAdjacentAndDiagonalTiles(opposite.getTile().getPosition())) {
+                    if (nt.hasCloister()) {
+                        if  (!(tile.getCloister().isShrine() ^ nt.getCloister().isShrine())) {
+                            return false;
+                        }
+                    }
+                }
             }
         }
         return true;

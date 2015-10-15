@@ -60,8 +60,7 @@
     <tile id="CRr">
         <city castle-base="true">N</city>
         <road>S E</road>
-        <farm city="N">WL WR SR</farm>
-        <farm city="N">EL</farm>
+        <farm city="N">SR WL WR EL</farm>
         <farm>ER SL</farm>
     </tile>
     <tile id="CFR">
@@ -93,9 +92,9 @@
         <road>S</road>
         <farm>NL NR EL ER SL SR WL WR</farm>
     </tile>
-    <tile id="RrC.i">
+    <tile id="RrC">
         <city castle-base="true">N</city>
-        <road inn="yes">W S</road>
+        <road>W S</road>
         <farm>SR WL</farm>
         <farm city="N">WR EL ER SL</farm>
     </tile>

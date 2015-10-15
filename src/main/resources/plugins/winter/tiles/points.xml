@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<points xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+
+    <point feature="CITY" cx="450" cy="120" baseLocation="N"> <!-- tiny -->
+        <apply>BA.CC.2 W</apply>
+    </point>
+    <point feature="CITY" cx="550" cy="120" baseLocation="N"> <!-- tiny rev -->
+        <apply>BA.CC.2 N</apply>
+        <apply>BA.RrC N</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="120">
+        <apply>WI.RrC N</apply>
+        <apply>WI.CR N</apply>
+    </point>
+    <point feature="CITY" cx="500" cy="460">
+        <apply>BA.CFc.1 WE</apply>
+        <apply>BA.CFc+ WE</apply>
+    </point>
+    <point feature="CITY" cx="200" cy="350">
+        <apply>BA.CcRr NW</apply>
+        <apply>BA.CcRr+ NW</apply>
+    </point>
+
+    <point feature="ROAD" cx="580" cy="800">
+        <apply>BA.LR S</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="560">
+        <apply>BA.RCr WE</apply>
+    </point>
+    <point feature="ROAD" cx="545" cy="840">
+        <apply>BA.CccR S</apply>
+        <apply>BA.CccR+ S</apply>
+    </point>
+    <point feature="ROAD" cx="520" cy="750">
+        <apply>BA.CcRr SE</apply>
+        <apply>BA.CcRr+ SE</apply>
+    </point>
+    <point feature="ROAD" cx="340" cy="750">
+        <apply>BA.Rr SW</apply>
+    </point>
+    <point feature="ROAD" cx="320" cy="500">
+        <apply>BA.RrC SW</apply>
+    </point>
+    <point feature="ROAD" cx="330" cy="640">
+        <apply>WI.RrC SW</apply>
+    </point>
+    <point feature="ROAD" cx="140" cy="540">
+        <apply>WI.LRFR W</apply>
+    </point>
+    <point feature="ROAD" cx="860" cy="470">
+        <apply>WI.LRFR E</apply>
+    </point>
+    <point feature="ROAD" cx="550" cy="800">
+        <apply>WI.RCc.i S</apply>
+        <apply>WI.R S</apply>
+    </point>
+    <point feature="ROAD" cx="650" cy="650">
+        <apply>WI.CR E</apply>
+    </point>
+    <point feature="ROAD" cx="800" cy="680">
+        <apply>WI.CcR E</apply>
+    </point>
+
+    <point feature="FARM" cx="800" cy="200">
+        <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>WI.R NL.NR.EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="800" cy="800">
+        <apply>BA.RCr ER.SL.SR.WL</apply>
+        <apply>WI.LRFR ER.SL.SR.WL</apply>
+        <apply>WI.RCc.i EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="150" cy="300">
+        <apply>BA.RCr WR.EL</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="90">
+        <apply>BA.CFc.1 NL.NR</apply>
+        <apply>BA.CFc+ NL.NR</apply>
+    </point>
+    <point feature="FARM" cx="720" cy="880">
+        <apply>BA.CccR SL</apply>
+        <apply>BA.CccR+ SL</apply>
+    </point>
+    <point feature="FARM" cx="300" cy="850">
+        <apply>BA.CcRr EL.SR</apply>
+        <apply>BA.CcRr+ EL.SR</apply>
+    </point>
+    <point feature="FARM" cx="160" cy="840">
+        <apply>BA.Rr SR.WL</apply>
+        <apply>WI.RrC SR.WL</apply>
+    </point>
+    <point feature="FARM" cx="800" cy="500">
+        <apply>BA.RrC WR.EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>WI.LRFR WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="400" cy="850">
+        <apply>WI.CcR ER.SL.SR</apply>
+    </point>
+</points>

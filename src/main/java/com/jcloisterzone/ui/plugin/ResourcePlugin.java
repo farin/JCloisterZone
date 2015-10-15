@@ -229,7 +229,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     //TODO Move to default provider ???
     @Override
-	public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         if (!isEnabled()) return null;
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
@@ -291,7 +291,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
         FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
+            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, NORMALIZED_SIZE-1));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();

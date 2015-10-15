@@ -268,12 +268,14 @@ public class ControlPanel extends JPanel {
     }
 
     public void pass() {
-        if (showConfirmRequest) {
-            setShowConfirmRequest(false);
-            gc.getConnection().send(new CommitMessage(game.getGameId()));
-            repaint();
-        } else {
-            gc.getRmiProxy().pass();
+        if (game.getActivePlayer().isLocalHuman()) {
+            if (showConfirmRequest) {
+                setShowConfirmRequest(false);
+                gc.getConnection().send(new CommitMessage(game.getGameId()));
+                repaint();
+            } else {
+                gc.getRmiProxy().pass();
+            }
         }
     }
 
