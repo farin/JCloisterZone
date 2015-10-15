@@ -8,6 +8,10 @@
         <apply>BA.CC.2 N</apply>
         <apply>BA.RrC N</apply>
     </point>
+    <point feature="CITY" cx="500" cy="120">
+        <apply>WI.RrC N</apply>
+        <apply>WI.CR N</apply>
+    </point>
     <point feature="CITY" cx="500" cy="460">
         <apply>BA.CFc.1 WE</apply>
         <apply>BA.CFc+ WE</apply>
@@ -37,13 +41,37 @@
     <point feature="ROAD" cx="320" cy="500">
         <apply>BA.RrC SW</apply>
     </point>
+    <point feature="ROAD" cx="330" cy="640">
+        <apply>WI.RrC SW</apply>
+    </point>
+    <point feature="ROAD" cx="140" cy="540">
+        <apply>WI.LRFR W</apply>
+    </point>
+    <point feature="ROAD" cx="860" cy="470">
+        <apply>WI.LRFR E</apply>
+    </point>
+    <point feature="ROAD" cx="550" cy="800">
+        <apply>WI.RCc.i S</apply>
+        <apply>WI.R S</apply>
+    </point>
+    <point feature="ROAD" cx="650" cy="650">
+        <apply>WI.CR E</apply>
+    </point>
+    <point feature="ROAD" cx="800" cy="680">
+        <apply>WI.CcR E</apply>
+    </point>
 
     <point feature="FARM" cx="800" cy="200">
         <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
     </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>WI.R NL.NR.EL.ER.SL.SR.WL.WR</apply>
+    </point>
     <point feature="FARM" cx="800" cy="800">
         <apply>BA.RCr ER.SL.SR.WL</apply>
+        <apply>WI.LRFR ER.SL.SR.WL</apply>
+        <apply>WI.RCc.i EL.ER.SL</apply>
     </point>
     <point feature="FARM" cx="150" cy="300">
         <apply>BA.RCr WR.EL</apply>
@@ -62,8 +90,15 @@
     </point>
     <point feature="FARM" cx="160" cy="840">
         <apply>BA.Rr SR.WL</apply>
+        <apply>WI.RrC SR.WL</apply>
     </point>
     <point feature="FARM" cx="800" cy="500">
         <apply>BA.RrC WR.EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>WI.LRFR WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="400" cy="850">
+        <apply>WI.CcR ER.SL.SR</apply>
     </point>
 </points>
