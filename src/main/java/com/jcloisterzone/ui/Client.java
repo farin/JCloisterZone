@@ -195,9 +195,9 @@ public class Client extends JFrame {
         initWindowSize();
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
-        
+
         if (Bootstrap.isMac()) {
-            enableFullScreenMode(this);
+            enableFullScreenMode();
         }
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -209,22 +209,20 @@ public class Client extends JFrame {
             }
         });
     }
-    
-    public static void enableFullScreenMode(Window window) {
+
+    private void enableFullScreenMode() {
         String className = "com.apple.eawt.FullScreenUtilities";
         String methodName = "setWindowCanFullScreen";
- 
+
         try {
             Class<?> clazz = Class.forName(className);
-            Method method = clazz.getMethod(methodName, new Class<?>[] {
-                    Window.class, boolean.class });
-            method.invoke(null, window, true);
-        } catch (Throwable t) {
-            System.err.println("Full screen mode is not supported");
-            t.printStackTrace();
+            Method method = clazz.getMethod(methodName, new Class<?>[] { Window.class, boolean.class });
+            method.invoke(null, this, true);
+        } catch (Throwable e) {
+            logger.info("OSX full screen mode isn't supported.", e);
         }
     }
-    
+
     @Override
     public MenuBar getJMenuBar() {
         return (MenuBar) super.getJMenuBar();
