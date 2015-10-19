@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
@@ -53,6 +52,7 @@ public class MenuBar extends JMenuBar {
         PREFERENCES(_("Preferences")),
         //Help
         ABOUT(_("About")),
+        TILE_DISTRIBUTION(_("Tile distribution"), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0)),
         CONTROLS(_("Controls")),
         REPORT_BUG(_("Report bug"));
 
@@ -216,10 +216,17 @@ public class MenuBar extends JMenuBar {
             }));
         }
 
+        menu.add(createMenuItem(MenuItem.TILE_DISTRIBUTION, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.showTileDistribution();
+            }
+        }));
+
         menu.add(createMenuItem(MenuItem.CONTROLS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HelpDialog();
+                client.showHelpDialog();
             }
         }));
         menu.add(createMenuItem(MenuItem.REPORT_BUG, false));

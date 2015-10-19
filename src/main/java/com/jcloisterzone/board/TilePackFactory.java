@@ -46,6 +46,16 @@ public class TilePackFactory {
 
     private Set<String> usedIds = new HashSet<>(); //for assertion only
 
+    public static class TileCount {
+        public String tileId;
+        public Integer count;
+
+        public TileCount(String tileId, Integer count) {
+            this.tileId = tileId;
+            this.count = count;
+        }
+    }
+
 
     public void setGame(Game game) {
         this.game = game;
@@ -61,6 +71,24 @@ public class TilePackFactory {
         for (Expansion expansion : expansions) {
             defs.put(expansion, getExpansionDefinition(expansion));
         }
+    }
+
+
+
+    public List<TileCount> getExpansionTiles(Expansion expansion) {
+        List<TileCount> result = new ArrayList<>();
+        Element el = getExpansionDefinition(expansion);
+        NodeList nl = el.getElementsByTagName("tile");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element tileElement = (Element) nl.item(i);
+            String tileId = getTileId(expansion, tileElement);
+            if (Tile.ABBEY_TILE_ID.equals(tileId)) {
+                result.add(new TileCount(tileId, null));
+            } else {
+                result.add(new TileCount(tileId, getTileCount(tileElement, tileId)));
+            }
+        }
+        return result;
     }
 
     public int getExpansionSize(Expansion expansion) {

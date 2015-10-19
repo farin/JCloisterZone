@@ -55,7 +55,9 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
+import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.dialog.PreferencesDialog;
+import com.jcloisterzone.ui.dialog.TileDistributionWindow;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
@@ -96,6 +98,9 @@ public class Client extends JFrame {
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
+    private HelpDialog helpDialog;
+    private AboutDialog aboutDialog;
+    private TileDistributionWindow tileDistributionWindow;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
@@ -477,12 +482,50 @@ public class Client extends JFrame {
         }
     }
 
+    public void showHelpDialog() {
+        if (helpDialog == null) {
+            helpDialog = new HelpDialog();
+            helpDialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    helpDialog = null;
+                }
+            });
+        } else {
+            helpDialog.toFront();
+        }
+    }
+
     public void showAboutDialog() {
-        new AboutDialog(config.getOrigin());
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(config.getOrigin());
+            aboutDialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    aboutDialog = null;
+                }
+            });
+        } else {
+            aboutDialog.toFront();
+        }
     }
 
     public void showPreferncesDialog() {
         new PreferencesDialog(this);
+    }
+
+    public void showTileDistribution() {
+        if (tileDistributionWindow == null) {
+            tileDistributionWindow = new TileDistributionWindow(this);
+            tileDistributionWindow.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    tileDistributionWindow = null;
+                }
+            });
+        } else {
+            tileDistributionWindow.toFront();
+        }
     }
 
 
