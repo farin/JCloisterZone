@@ -5,12 +5,14 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -193,6 +195,10 @@ public class Client extends JFrame {
         initWindowSize();
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
+        
+        if (Bootstrap.isMac()) {
+            enableFullScreenMode(this);
+        }
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
@@ -203,7 +209,22 @@ public class Client extends JFrame {
             }
         });
     }
-
+    
+    public static void enableFullScreenMode(Window window) {
+        String className = "com.apple.eawt.FullScreenUtilities";
+        String methodName = "setWindowCanFullScreen";
+ 
+        try {
+            Class<?> clazz = Class.forName(className);
+            Method method = clazz.getMethod(methodName, new Class<?>[] {
+                    Window.class, boolean.class });
+            method.invoke(null, window, true);
+        } catch (Throwable t) {
+            System.err.println("Full screen mode is not supported");
+            t.printStackTrace();
+        }
+    }
+    
     @Override
     public MenuBar getJMenuBar() {
         return (MenuBar) super.getJMenuBar();
