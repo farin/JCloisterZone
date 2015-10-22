@@ -197,7 +197,7 @@ public class MainPanel extends JPanel {
         gridPanel.addLayer(new AnimationLayer(gridPanel, gc, animationService)); //zindex 800
         animationService.setGridPanel(gridPanel);
 
-        placementHistoryLayer = new PlacementHistory(gridPanel, gc, game.getBoard().getAllTiles());
+        placementHistoryLayer = new PlacementHistory(gridPanel, gc);
         gridPanel.addLayer(placementHistoryLayer, false);
 
         add(gridPanel);
@@ -205,7 +205,6 @@ public class MainPanel extends JPanel {
 
     public void toggleRecentHistory(boolean show) {
         if (show) {
-            placementHistoryLayer.update();
             gridPanel.showLayer(placementHistoryLayer);
         } else {
             gridPanel.hideLayer(placementHistoryLayer);
@@ -219,7 +218,6 @@ public class MainPanel extends JPanel {
     }
 
     public void tileEvent(TileEvent ev) {
-        placementHistoryLayer.update();
         gridPanel.tileEvent(ev, tileLayer);
         if (farmHintLayer != null) {
             farmHintLayer.tileEvent(ev);
