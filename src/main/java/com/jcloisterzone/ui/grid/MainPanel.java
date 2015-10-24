@@ -206,15 +206,11 @@ public class MainPanel extends JPanel {
 
     public void tileEvent(TileEvent ev) {
         gridPanel.tileEvent(ev, tileLayer);
-        if (farmHintLayer != null) {
-            farmHintLayer.tileEvent(ev);
-        }
     }
 
     @Subscribe
     public void onMeepleEvent(MeepleEvent ev) {
         gridPanel.clearActionDecorations();
-        farmHintLayer.meepleEvent(ev);
     }
 
     @Subscribe
