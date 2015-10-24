@@ -18,7 +18,7 @@ import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 
-public class DragonAvailableMove extends AbstractGridLayer implements GridMouseListener {
+public class DragonLayer extends AbstractGridLayer implements GridMouseListener {
 
     private static final ImmutablePoint POINT = new ImmutablePoint(45,50);
 
@@ -26,7 +26,7 @@ public class DragonAvailableMove extends AbstractGridLayer implements GridMouseL
     private Set<Position> availablePositions;
     private int movesLeft = 0;
 
-    public DragonAvailableMove(GridPanel gridPanel, GameController gc) {
+    public DragonLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         gc.register(this);
         toggleVisibility();

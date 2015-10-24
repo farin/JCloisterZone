@@ -53,7 +53,7 @@ import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
-import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
+import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
@@ -166,7 +166,7 @@ public class MainPanel extends JPanel {
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false); //70
 
         if (game.hasCapability(DragonCapability.class)) {
-            gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc));
+            gridPanel.addLayer(new DragonLayer(gridPanel, gc));
         }
 
         if (game.hasCapability(BarnCapability.class)) {
