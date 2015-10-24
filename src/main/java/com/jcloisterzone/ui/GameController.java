@@ -1,12 +1,13 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -15,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.BazaarAuctionEndEvent;
 import com.jcloisterzone.event.BazaarMakeBidEvent;
@@ -45,8 +45,6 @@ import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
-import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
-import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameView;
@@ -55,8 +53,6 @@ import com.jcloisterzone.wsio.RmiProxy;
 import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.RmiMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameController extends EventProxyUiController<Game> implements InvocationHandler {
 
@@ -211,18 +207,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void handleSelectDragonMove(SelectDragonMoveEvent ev) {
-        Set<Position> positions = ev.getPositions();
-        int movesLeft = ev.getMovesLeft();
         clearActions();
         gameView.getControlPanel().getActionPanel().setFakeAction("dragonmove");
-        DragonLayer dragonDecoration = gameView.getGridPanel().findLayer(DragonLayer.class);
-        dragonDecoration.setMoves(movesLeft);
         gameView.getGridPanel().repaint();
-        logger.debug("UI selectdragon move, left {}, {}", movesLeft, positions);
+
         if (ev.getTargetPlayer().isLocalHuman()) {
-            DragonAvailableMove availMoves = gameView.getGridPanel().findLayer(DragonAvailableMove.class);
-            availMoves.setPositions(positions);
-            gameView.getGridPanel().showLayer(availMoves);
             client.beep();
         }
     }

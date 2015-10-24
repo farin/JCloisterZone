@@ -12,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.ImageIcon;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
@@ -28,6 +26,7 @@ import com.jcloisterzone.figure.Figure;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -58,41 +57,36 @@ public class MeepleLayer extends AbstractGridLayer {
         return images;
     }
 
-    private void paintPositionedImage(Graphics2D g, PositionedImage mi, int boxSize) {
-        ImmutablePoint scaledOffset = mi.getScaledOffset(boxSize);
-        //TODO optimize also for scrolling
-        if (mi.scaledImage == null) {
-            int width = (int) (getSquareSize() * FIGURE_SIZE_RATIO * mi.xScaleFactor);
-            int height = (int) (mi.heightWidthRatio * width * mi.yScaleFactor);
-            Image img = mi.sourceImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            mi.scaledImage = new ImageIcon(img).getImage();
-        }
-        int x = getOffsetX(mi.position) + scaledOffset.getX();
-        int y = getOffsetY(mi.position) + scaledOffset.getY();
-        g.rotate(-gridPanel.getBoardRotation().getTheta(), x+boxSize/2, y+boxSize/2);
-        g.drawImage(mi.scaledImage, x, y, gridPanel);
-        g.rotate(gridPanel.getBoardRotation().getTheta(), x+boxSize/2, y+boxSize/2);
+    private void paintPositionedImage(Graphics2D g, PositionedImage mi, int squareSize) {
+        ImageData i = mi.getScaledImageData(squareSize);
+
+        int x = getOffsetX(mi.position) + i.offset.getX();
+        int y = getOffsetY(mi.position) + i.offset.getY();
+
+        g.rotate(-gridPanel.getBoardRotation().getTheta(), x+i.boxSize/2, y+i.boxSize/2);
+        g.drawImage(i.image, x, y, gridPanel);
+        g.rotate(gridPanel.getBoardRotation().getTheta(), x+i.boxSize/2, y+i.boxSize/2);
     }
 
     @Override
     public void paint(Graphics2D g) {
-        int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
+        int squareSize = getSquareSize();
+
         for (PositionedFigureImage mi : images) {
             if (!mi.bridgePlacement) {
-                paintPositionedImage(g, mi, boxSize);
+                paintPositionedImage(g, mi, squareSize);
             }
         }
         for (PositionedImage mi : permanentImages) {
-            paintPositionedImage(g, mi, boxSize);
+            paintPositionedImage(g, mi, squareSize);
         }
 
     }
 
     public void paintMeeplesOnBridges(Graphics2D g) {
-        int boxSize = (int) (getSquareSize() * FIGURE_SIZE_RATIO); //TODO no resize - direct image resize???
         for (PositionedFigureImage mi : images) {
             if (mi.bridgePlacement) {
-                paintPositionedImage(g, mi, boxSize );
+                paintPositionedImage(g, mi, getSquareSize() );
             }
         }
     }
@@ -100,10 +94,10 @@ public class MeepleLayer extends AbstractGridLayer {
     @Override
     public void zoomChanged(int squareSize) {
         for (PositionedFigureImage mi : images) {
-            mi.scaledImage = null;
+            mi.resetScaledImageData();
         }
         for (PositionedImage mi : permanentImages) {
-            mi.scaledImage = null;
+            mi.resetScaledImageData();
         }
         super.zoomChanged(squareSize);
     }
@@ -152,6 +146,11 @@ public class MeepleLayer extends AbstractGridLayer {
             offset = offset.translate(0, -10);
         }
         PositionedFigureImage pfi = new PositionedFigureImage(fig, ptr.asFeaturePointer(), nextToMeeple, offset, image, bridgePlacement);
+
+        if (fig instanceof Dragon) {
+            pfi.sizeRatio = 1.0;
+        }
+
         if (mageOrWitch) {
             pfi.xScaleFactor = pfi.yScaleFactor = 1.2;
         }
@@ -291,10 +290,12 @@ public class MeepleLayer extends AbstractGridLayer {
         public final Position position;
         public final ImmutablePoint offset;
         public final Image sourceImage;
-        public Image scaledImage;
         public double heightWidthRatio = 1.0;
         public double xScaleFactor = 1.0;
         public double yScaleFactor = 1.0;
+        public double sizeRatio = FIGURE_SIZE_RATIO;
+
+        private ImageData scaledImageData;
 
         public PositionedImage(Position position, ImmutablePoint offset, Image sourceImage) {
             this.position = position;
@@ -304,6 +305,27 @@ public class MeepleLayer extends AbstractGridLayer {
 
         public ImmutablePoint getScaledOffset(int boxSize) {
             return offset.scale(getSquareSize(), boxSize);
+        }
+
+        public ImageData getScaledImageData(int squareSize) {
+            if (scaledImageData == null) {
+
+        	int boxSize = (int) (getSquareSize() * sizeRatio); //TODO no resize - direct image resize???
+
+        	ImmutablePoint scaledOffset = getScaledOffset(boxSize);
+
+                int width = (int) (boxSize * xScaleFactor);
+                int height = (int) (heightWidthRatio * width * yScaleFactor);
+                Image scaledImage = sourceImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+                scaledImageData = new ImageData(scaledImage, scaledOffset, boxSize);
+            }
+
+            return scaledImageData;
+        }
+
+        public void resetScaledImageData() {
+            scaledImageData = null;
         }
     }
 
@@ -334,6 +356,19 @@ public class MeepleLayer extends AbstractGridLayer {
         public Figure getFigure() {
             return figure;
         }
+    }
+
+    private class ImageData {
+    	public final ImmutablePoint offset;
+        public final Image image;
+        public final int boxSize;
+
+    	public ImageData(Image image, ImmutablePoint offset, int boxSize) {
+    	    super();
+    	    this.image = image;
+    	    this.offset = offset;
+    	    this.boxSize = boxSize;
+    	}
     }
 
     //TODO better use affine transform while drawing

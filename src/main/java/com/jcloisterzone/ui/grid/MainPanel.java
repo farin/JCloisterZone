@@ -27,8 +27,6 @@ import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -56,7 +54,6 @@ import com.jcloisterzone.ui.grid.layer.BarnAreaLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.DragonAvailableMove;
-import com.jcloisterzone.ui.grid.layer.DragonLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
@@ -88,7 +85,6 @@ public class MainPanel extends JPanel {
     private TileLayer tileLayer;
     private MeepleLayer meepleLayer;
     private TowerLayer towerLayer;
-    private DragonLayer dragonLayer;
     private BridgeLayer bridgeLayer;
     private CastleLayer castleLayer;
     private PlagueLayer plagueLayer;
@@ -170,9 +166,7 @@ public class MainPanel extends JPanel {
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false); //70
 
         if (game.hasCapability(DragonCapability.class)) {
-            gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc), false);
-            dragonLayer = new DragonLayer(gridPanel, gc);
-            gridPanel.addLayer(dragonLayer); //90
+            gridPanel.addLayer(new DragonAvailableMove(gridPanel, gc));
         }
 
         if (game.hasCapability(BarnCapability.class)) {
@@ -226,19 +220,11 @@ public class MainPanel extends JPanel {
 
     @Subscribe
     public void onNeutralMeepleMoveEvent(NeutralFigureMoveEvent ev) {
-        NeutralFigure fig = ev.getFigure();
-        if (fig instanceof Dragon) {
-            dragonLayer.setPosition(ev.getTo().getPosition());
-            dragonLayer.setMoves(0);
-            gridPanel.hideLayer(DragonAvailableMove.class);
-            gridPanel.repaint();
-        } else {
-            if (ev.getFrom() != null) {
-                meepleLayer.neutralFigureUndeployed(ev);
-            }
-            if (ev.getTo() != null) {
-                meepleLayer.neutralFigureDeployed(ev);
-            }
+        if (ev.getFrom() != null) {
+            meepleLayer.neutralFigureUndeployed(ev);
+        }
+        if (ev.getTo() != null) {
+            meepleLayer.neutralFigureDeployed(ev);
         }
     }
 
