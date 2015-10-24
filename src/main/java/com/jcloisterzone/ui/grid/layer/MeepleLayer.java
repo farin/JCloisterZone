@@ -12,13 +12,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.LittleBuilding;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.LittleBuildingEvent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.NeutralFigureMoveEvent;
+import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.BigFollower;
@@ -51,6 +57,56 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+
+        gc.register(this);
+    }
+
+    @Subscribe
+    public void onNeutralMeepleMoveEvent(NeutralFigureMoveEvent ev) {
+        if (ev.getFrom() != null) {
+            neutralFigureUndeployed(ev);
+        }
+        if (ev.getTo() != null) {
+            neutralFigureDeployed(ev);
+        }
+    }
+
+    @Subscribe
+    public void onMeepleEvent(MeepleEvent ev) {
+        if (ev.getFrom() != null) {
+            meepleUndeployed(ev);
+        }
+        if (ev.getTo() != null) {
+            meepleDeployed(ev);
+        }
+    }
+
+    @Subscribe
+    public void onTunnelPiecePlacedEvent(TunnelPiecePlacedEvent ev) {
+        Player player = ev.getTriggeringPlayer();
+        Color c;
+        if (ev.isSecondPiece()) {
+            c = player.getColors().getTunnelBColor();
+        } else {
+            c = player.getColors().getMeepleColor();
+        }
+        Image tunnelPiece = getClient().getFigureTheme().getTunnelImage(c);
+        Tile tile = gridPanel.getTile(ev.getPosition());
+        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
+        addPermanentImage(ev.getPosition(), offset, tunnelPiece);
+    }
+
+    @Subscribe
+    public void onLittleBuildingEvent(LittleBuildingEvent ev) {
+        Image img = getClient().getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
+        ImmutablePoint offset = new ImmutablePoint(65, 35);
+        double xScale = 1.15, yScale = 1.15;
+        //TODO tightly coupled with current theme, todo change image size in theme
+        if (ev.getBuilding() == LittleBuilding.TOWER) {
+            xScale = 1.0;
+            yScale = 0.7;
+        }
+        addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
     }
 
     public LinkedList<PositionedFigureImage> getPositionedFigures() {
@@ -219,13 +275,13 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    public void meepleDeployed(MeepleEvent ev) {
+    private void meepleDeployed(MeepleEvent ev) {
         Color c = ev.getMeeple().getPlayer().getColors().getMeepleColor();
         images.add(createMeepleImage(ev.getMeeple(), c, ev.getTo()));
         rearrangeMeeples(ev.getTo());
     }
 
-    public void neutralFigureDeployed(NeutralFigureMoveEvent ev) {
+    private void neutralFigureDeployed(NeutralFigureMoveEvent ev) {
         images.add(createNeutralFigureImage(ev.getFigure(), ev.getTo()));
         if (ev.getTo() instanceof FeaturePointer || ev.getTo() instanceof MeeplePointer) {
             rearrangeMeeples(ev.getTo().asFeaturePointer());
@@ -249,21 +305,21 @@ public class MeepleLayer extends AbstractGridLayer {
         }
     }
 
-    public void meepleUndeployed(MeepleEvent ev) {
+    private void meepleUndeployed(MeepleEvent ev) {
         figureUndeployed(ev.getMeeple(), ev.getFrom());
     }
 
-    public void neutralFigureUndeployed(NeutralFigureMoveEvent ev) {
+    private void neutralFigureUndeployed(NeutralFigureMoveEvent ev) {
         figureUndeployed(ev.getFigure(), ev.getFrom());
     }
 
-    public void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
+    private void addPermanentImage(Position position, ImmutablePoint offset, Image image) {
         addPermanentImage(position, offset, image, 1.0, 1.0);
     }
 
 
     //TODO hack with xScale, yScale - clean and do better
-    public void addPermanentImage(Position position, ImmutablePoint offset, Image image, double xScale, double yScale) {
+    private void addPermanentImage(Position position, ImmutablePoint offset, Image image, double xScale, double yScale) {
         PositionedImage pi = new PositionedImage(position, offset, image);
         pi.heightWidthRatio = image.getHeight(null) / image.getWidth(null);
         pi.xScaleFactor = xScale;
@@ -272,7 +328,7 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     //TODO path from Theme
-    public String getExtraDecoration(Class<? extends Meeple> type, FeaturePointer fp) {
+    private String getExtraDecoration(Class<? extends Meeple> type, FeaturePointer fp) {
         if (Follower.class.isAssignableFrom(type) && fp.getLocation().isFarmLocation()) {
             return "farm.png";
         }

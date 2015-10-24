@@ -1,14 +1,11 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Image;
 
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -17,16 +14,12 @@ import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.GoldChangeEvent;
-import com.jcloisterzone.event.LittleBuildingEvent;
 import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.event.NeutralFigureMoveEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.event.TowerIncreasedEvent;
-import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -219,24 +212,8 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void onNeutralMeepleMoveEvent(NeutralFigureMoveEvent ev) {
-        if (ev.getFrom() != null) {
-            meepleLayer.neutralFigureUndeployed(ev);
-        }
-        if (ev.getTo() != null) {
-            meepleLayer.neutralFigureDeployed(ev);
-        }
-    }
-
-    @Subscribe
     public void onMeepleEvent(MeepleEvent ev) {
         gridPanel.clearActionDecorations();
-        if (ev.getFrom() != null) {
-            meepleLayer.meepleUndeployed(ev);
-        }
-        if (ev.getTo() != null) {
-            meepleLayer.meepleDeployed(ev);
-        }
         farmHintLayer.meepleEvent(ev);
     }
 
@@ -302,34 +279,6 @@ public class MainPanel extends JPanel {
         }
     }
 
-
-    @Subscribe
-    public void tunnelPiecePlaced(TunnelPiecePlacedEvent ev) {
-        Player player = ev.getTriggeringPlayer();
-        Color c;
-        if (ev.isSecondPiece()) {
-            c = player.getColors().getTunnelBColor();
-        } else {
-            c = player.getColors().getMeepleColor();
-        }
-        Image tunnelPiece = client.getFigureTheme().getTunnelImage(c);
-        Tile tile = gridPanel.getTile(ev.getPosition());
-        ImmutablePoint offset = client.getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
-        meepleLayer.addPermanentImage(ev.getPosition(), offset, tunnelPiece);
-    }
-
-    @Subscribe
-    public void littleBuildingPlaced(LittleBuildingEvent ev) {
-        Image img = client.getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
-        ImmutablePoint offset = new ImmutablePoint(65, 35);
-        double xScale = 1.15, yScale = 1.15;
-        //TODO tightly coupled with current theme, todo change image size in theme
-        if (ev.getBuilding() == LittleBuilding.TOWER) {
-            xScale = 1.0;
-            yScale = 0.7;
-        }
-        meepleLayer.addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
-    }
 
     @Subscribe
     public void onGoldChangeEvent(GoldChangeEvent ev) {
