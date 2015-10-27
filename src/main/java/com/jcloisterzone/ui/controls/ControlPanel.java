@@ -76,8 +76,8 @@ public class ControlPanel extends JPanel {
 
     private static final String PASS_LABEL = _("Skip");
     private static final String CONFIRMATION_LABEL = _("Continue");
-    private static final String NO_TILES_LABEL = _("NoTiles");
-    private static final String LAST_ABBEY_CHANCE_LABEL = _("LastAbbey"); 
+    private static final String LAST_MOVE_LABEL = _("Last move");
+    private static final String ABBEY_PASS_LABEL = _("Are you sure? There are no other tiles left."); 
 
     private final Client client;
     private final GameView gameView;
@@ -280,7 +280,7 @@ public class ControlPanel extends JPanel {
             } else {
             	if (passWarning) {
             		passWarning = false;
-            		gc.showWarning(NO_TILES_LABEL, LAST_ABBEY_CHANCE_LABEL);
+            		gc.showWarning(LAST_MOVE_LABEL, ABBEY_PASS_LABEL);
             	} else {
             		gc.getRmiProxy().pass();
             	}

@@ -981,9 +981,9 @@ msgid "The game is not finished. Do you really want to leave it?"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
-msgid ""No more tiles left""
+msgid "Last move"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
-msgid "Last chance to place an abbey"
+msgid "Are you sure? There are no other tiles left."
 msgstr ""

@@ -1021,6 +1021,14 @@ msgstr ""
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "Gra nie jest zakończona. Czy naprawdę chcesz ją opuścić?"
 
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
+msgid "Last move"
+msgstr "Ostatni ruch"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
+msgid "Are you sure? There are no other tiles left."
+msgstr "Jesteś pewien? Nie ma już innych kafelków."
+
 #~ msgid "Undeploy meeple"
 #~ msgstr "Zabierz pionek do rezerw"
 
