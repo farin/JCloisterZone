@@ -73,7 +73,7 @@ public class ActionPhase extends Phase {
             actions.add(new MeepleAction(Phantom.class).addAll(followerLocations));
         }
         game.prepareActions(actions, ImmutableSet.copyOf(followerLocations));
-        game.post(new SelectActionEvent(getActivePlayer(), actions, true));
+        game.post(new SelectActionEvent(getActivePlayer(), actions, true, false));
     }
 
     @Override

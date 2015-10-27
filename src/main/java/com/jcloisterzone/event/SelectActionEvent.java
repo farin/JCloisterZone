@@ -10,17 +10,19 @@ import com.jcloisterzone.action.PlayerAction;
 public class SelectActionEvent extends PlayEvent {
 
     private final boolean passAllowed;
+    private final boolean passWarning;
     private final List<? extends PlayerAction<?>> actions;
 
 
-    public SelectActionEvent(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean passAllowed) {
+    public SelectActionEvent(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean passAllowed, boolean passWarning) {
         super(null, targetPlayer);
         this.actions = actions;
         this.passAllowed = passAllowed;
+        this.passWarning = passWarning;
     }
 
-    public SelectActionEvent(Player player, PlayerAction<?> action, boolean passAllowed) {
-        this(player, Collections.<PlayerAction<?>>singletonList(action), passAllowed);
+    public SelectActionEvent(Player player, PlayerAction<?> action, boolean passAllowed, boolean passWarning) {
+        this(player, Collections.<PlayerAction<?>>singletonList(action), passAllowed, passWarning);
     }
 
     public List<? extends PlayerAction<?>> getActions() {
@@ -29,6 +31,10 @@ public class SelectActionEvent extends PlayEvent {
 
     public boolean isPassAllowed() {
         return passAllowed;
+    }
+    
+    public boolean hasPassWarning() {
+    	return passWarning;
     }
 
     @Override

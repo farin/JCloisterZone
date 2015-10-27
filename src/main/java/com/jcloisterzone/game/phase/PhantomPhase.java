@@ -72,7 +72,7 @@ public class PhantomPhase extends Phase {
         if (phantomAction.isEmpty()) {
             next();
         } else {
-            game.post(new SelectActionEvent(getActivePlayer(), actions, true));
+            game.post(new SelectActionEvent(getActivePlayer(), actions, true, false));
         }
     }
 

@@ -38,7 +38,7 @@ public class AbbeyPhase extends ServerAwarePhase {
         if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && !getBoard().getHoles().isEmpty()) {
                 toggleClock(getActivePlayer());
-                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
+                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true, abbeyCap.hasLastAbbeyChance()));
                 return;
             }
         }

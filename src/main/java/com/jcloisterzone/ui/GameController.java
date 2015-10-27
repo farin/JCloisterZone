@@ -239,7 +239,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
     @Subscribe
     public void handleSelectAction(SelectActionEvent ev) {
         clearActions();
-        gameView.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed());
+        gameView.getControlPanel().selectAction(ev.getTargetPlayer(), ev.getActions(), ev.isPassAllowed(), ev.hasPassWarning());
         gameView.getGridPanel().repaint();
         //TODO generic solution
         if (game.isUndoAllowed() && ev.getTargetPlayer().isLocalHuman()) {

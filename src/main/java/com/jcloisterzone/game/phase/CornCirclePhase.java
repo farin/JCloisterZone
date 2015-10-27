@@ -111,7 +111,7 @@ public class CornCirclePhase extends ServerAwarePhase {
             boolean passAllowed = cornCircleCap.getCornCircleOption() == CornCicleOption.DEPLOYMENT;
             Player activePlayer = getActivePlayer();
             toggleClock(activePlayer);
-            game.post(new SelectActionEvent(activePlayer, actions, passAllowed));
+            game.post(new SelectActionEvent(activePlayer, actions, passAllowed, false));
         }
     }
 

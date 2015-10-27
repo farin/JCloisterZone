@@ -39,7 +39,7 @@ public class GoldPiecePhase extends Phase {
                     return t.getPosition();
                 }
             }));
-            game.post(new SelectActionEvent(getActivePlayer(), action, false));
+            game.post(new SelectActionEvent(getActivePlayer(), action, false, false));
         } else {
             next();
         }

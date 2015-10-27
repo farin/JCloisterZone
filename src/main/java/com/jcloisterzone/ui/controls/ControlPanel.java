@@ -76,6 +76,8 @@ public class ControlPanel extends JPanel {
 
     private static final String PASS_LABEL = _("Skip");
     private static final String CONFIRMATION_LABEL = _("Continue");
+    private static final String NO_TILES_LABEL = _("NoTiles");
+    private static final String LAST_ABBEY_CHANCE_LABEL = _("LastAbbey"); 
 
     private final Client client;
     private final GameView gameView;
@@ -85,8 +87,9 @@ public class ControlPanel extends JPanel {
     private JButton passButton;
     private boolean showConfirmRequest;
     private boolean canPass;
+    private boolean passWarning;
     private boolean showProjectedPoints, projectedPointsValid = true;
-
+    
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
     private NeutralFigurePanel neutralPanel;
@@ -152,9 +155,10 @@ public class ControlPanel extends JPanel {
     }
 
 
-    private void setCanPass(boolean canPass) {
+    private void setCanPass(boolean canPass, boolean passWarning) {
         this.canPass = canPass;
         passButton.setVisible(canPass);
+        this.passWarning = passWarning;
     }
 
 
@@ -274,7 +278,12 @@ public class ControlPanel extends JPanel {
                 gc.getConnection().send(new CommitMessage(game.getGameId()));
                 repaint();
             } else {
-                gc.getRmiProxy().pass();
+            	if (passWarning) {
+            		passWarning = false;
+            		gc.showWarning(NO_TILES_LABEL, LAST_ABBEY_CHANCE_LABEL);
+            	} else {
+            		gc.getRmiProxy().pass();
+            	}
             }
         }
     }
@@ -284,7 +293,7 @@ public class ControlPanel extends JPanel {
     }
 
 
-    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
+    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass, boolean passWarning) {
         // direct collection sort can be unsupported - so copy to array first!
         int i = 0;
         PlayerAction<?>[] arr = new PlayerAction[actions.size()];
@@ -294,13 +303,13 @@ public class ControlPanel extends JPanel {
         }
         Arrays.sort(arr);
         actionPanel.setActions(targetPlayer.isLocalHuman(), arr);
-        setCanPass(targetPlayer.isLocalHuman() ? canPass : false);
+        setCanPass(targetPlayer.isLocalHuman() ? canPass : false, targetPlayer.isLocalHuman() ? passWarning : false);
     }
 
     public void clearActions() {
         actionPanel.clearActions();
         actionPanel.setFakeAction(null);
-        setCanPass(false);
+        setCanPass(false, false);
     }
 
     public boolean isShowPotentialPoints() {

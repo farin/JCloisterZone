@@ -77,6 +77,7 @@ public class DrawPhase extends ServerAwarePhase {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
                     abbeyCap.setAbbeyRoundLastPlayer(game.getPrevPlayer(getActivePlayer()));
                 }
+                abbeyCap.setLastAbbeyChance(true);
                 next(CleanUpTurnPartPhase.class);
                 return;
             }

@@ -45,7 +45,7 @@ public class MageAndWitchPhase extends Phase {
                     }
                 }
             } else {
-                game.post(new SelectActionEvent(getActivePlayer(), actions, false));
+                game.post(new SelectActionEvent(getActivePlayer(), actions, false, false));
                 return;
             }
         }

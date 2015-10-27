@@ -30,7 +30,7 @@ public class EscapePhase extends Phase {
     public void enter() {
         UndeployAction action = prepareEscapeAction();
         if (prepareEscapeAction() != null) {
-            game.post(new SelectActionEvent(getActivePlayer(), action, true));
+            game.post(new SelectActionEvent(getActivePlayer(), action, true, false));
         } else {
             next();
         }

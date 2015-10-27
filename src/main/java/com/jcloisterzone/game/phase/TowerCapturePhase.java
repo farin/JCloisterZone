@@ -37,7 +37,7 @@ public class TowerCapturePhase extends Phase {
             next();
             return;
         }
-        game.post(new SelectActionEvent(getActivePlayer(), captureAction, true));
+        game.post(new SelectActionEvent(getActivePlayer(), captureAction, true, false));
     }
 
     private TakePrisonerAction prepareCapture(Position p, int range) {
