@@ -76,12 +76,6 @@ public class MainPanel extends JPanel {
     private ChatPanel chatPanel;
 
     private TileLayer tileLayer;
-    private MeepleLayer meepleLayer;
-    private TowerLayer towerLayer;
-    private BridgeLayer bridgeLayer;
-    private CastleLayer castleLayer;
-    private PlagueLayer plagueLayer;
-    private GoldLayer goldLayer;
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
@@ -122,38 +116,34 @@ public class MainPanel extends JPanel {
     public void started(Snapshot snapshot) {
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);
-        meepleLayer = new MeepleLayer(gridPanel, gc);
+        MeepleLayer meepleLayer = new MeepleLayer(gridPanel, gc);
         tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
 
         gridPanel.addLayer(tileLayer);  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
-            towerLayer = new TowerLayer(gridPanel, gc);
-            gridPanel.addLayer(towerLayer); //5
+            gridPanel.addLayer(new TowerLayer(gridPanel, gc)); //5
         }
 
         gridPanel.addLayer(farmHintLayer, false); //zindex 10
 
 
         if (game.hasCapability(CastleCapability.class)) {
-            castleLayer = new CastleLayer(gridPanel, gc);
-            gridPanel.addLayer(castleLayer); //45
+            gridPanel.addLayer(new CastleLayer(gridPanel, gc)); //45
         }
         if (game.hasCapability(PlagueCapability.class)) {
-            plagueLayer = new PlagueLayer(gridPanel, gc);
-            gridPanel.addLayer(plagueLayer); //45
+            gridPanel.addLayer(new PlagueLayer(gridPanel, gc)); //45
         }
 
         gridPanel.addLayer(meepleLayer); //zindex 50
         if (game.hasCapability(BridgeCapability.class)) {
-            bridgeLayer = new BridgeLayer(gridPanel, gc);
+            BridgeLayer bridgeLayer = new BridgeLayer(gridPanel, gc);
             bridgeLayer.setMeepleLayer(meepleLayer);
             gridPanel.addLayer(bridgeLayer);
         }
 
         if (game.hasCapability(GoldminesCapability.class)) {
-            goldLayer = new GoldLayer(gridPanel, gc);
-            gridPanel.addLayer(goldLayer);
+            gridPanel.addLayer(new GoldLayer(gridPanel, gc));
         }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false); //70
@@ -262,12 +252,12 @@ public class MainPanel extends JPanel {
         repaint();
     }
 
-    private void hideMageWitchPanel() {
-        if (gridPanel.getMageWitchPanel() != null) {
-            gridPanel.remove(gridPanel.getMageWitchPanel());
-            gridPanel.revalidate();
-        }
-    }
+//    private void hideMageWitchPanel() {
+//        if (gridPanel.getMageWitchPanel() != null) {
+//            gridPanel.remove(gridPanel.getMageWitchPanel());
+//            gridPanel.revalidate();
+//        }
+//    }
 
 
     @Subscribe
