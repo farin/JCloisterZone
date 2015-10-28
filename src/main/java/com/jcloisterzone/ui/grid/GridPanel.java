@@ -39,8 +39,6 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.animation.AnimationService;
-import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
@@ -223,10 +221,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public Client getClient() {
         return client;
-    }
-
-    public AnimationService getAnimationService() {
-        return gc.getGameView().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {
@@ -436,7 +430,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         hideLayer(AbstractTilePlacementLayer.class);
 
         if (ev.getType() == TileEvent.PLACEMENT) {
-            Tile tile = ev.getTile();
             Position p = ev.getPosition();
 
             if (p.x == left) --left;
@@ -444,11 +437,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             if (p.y == top) --top;
             if (p.y == bottom) ++bottom;
 
-            boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
-            if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
-                (initialPlacement && tile.equals(gameView.getGame().getCurrentTile()))) {
-                getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
-            }
         }
         repaint();
     }
