@@ -54,6 +54,8 @@ public class BridgeLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onBridgeEvent(BridgeEvent ev) {
+	gridPanel.clearActionDecorations();
+
         if (ev.getType() == BridgeEvent.DEPLOY) {
             bridgeDeployed(ev.getPosition(), ev.getLocation());
         } else if (ev.getType() == BridgeEvent.REMOVE) {

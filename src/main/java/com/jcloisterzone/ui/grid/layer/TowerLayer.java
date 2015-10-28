@@ -44,6 +44,7 @@ public class TowerLayer extends AbstractGridLayer {
     @Subscribe
     public void towerIncreased(TowerIncreasedEvent ev) {
         setTowerHeight(ev.getPosition(), ev.getCaptureRange());
+        gridPanel.repaint();
     }
 
     private void setTowerHeight(Position p, int towerHeight) {

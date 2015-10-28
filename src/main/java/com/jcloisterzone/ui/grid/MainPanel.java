@@ -6,14 +6,9 @@ import java.awt.Component;
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.event.BridgeEvent;
-import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
-import com.jcloisterzone.event.GoldChangeEvent;
-import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.event.TowerIncreasedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -178,21 +173,6 @@ public class MainPanel extends JPanel {
     }
 
     @Subscribe
-    public void onMeepleEvent(MeepleEvent ev) {
-        gridPanel.clearActionDecorations();
-    }
-
-    @Subscribe
-    public void onBridgeEvent(BridgeEvent ev) {
-        gridPanel.clearActionDecorations();
-    }
-
-    @Subscribe
-    public void onCastleDeployed(CastleDeployedEvent ev) {
-        gridPanel.clearActionDecorations();
-    }
-
-    @Subscribe
     public void scored(ScoreEvent ev) {
         repaint();
     }
@@ -203,17 +183,6 @@ public class MainPanel extends JPanel {
 //            gridPanel.revalidate();
 //        }
 //    }
-
-
-    @Subscribe
-    public void onGoldChangeEvent(GoldChangeEvent ev) {
-        gridPanel.repaint();
-    }
-
-    @Subscribe
-    public void towerIncreased(TowerIncreasedEvent ev) {
-        gridPanel.repaint();
-    }
 
     @Subscribe
     public void cornOptionSelected(CornCirclesOptionEvent ev) {

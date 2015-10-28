@@ -37,6 +37,7 @@ public class CastleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onCastleDeployed(CastleDeployedEvent ev) {
+	gridPanel.clearActionDecorations();
         castleDeployed(ev.getPart1(), ev.getPart2());
     }
 

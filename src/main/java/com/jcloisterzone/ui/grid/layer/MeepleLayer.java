@@ -73,6 +73,8 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onMeepleEvent(MeepleEvent ev) {
+	gridPanel.clearActionDecorations();
+
         if (ev.getFrom() != null) {
             meepleUndeployed(ev);
         }

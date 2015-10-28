@@ -35,6 +35,7 @@ public class GoldLayer extends AbstractGridLayer {
     @Subscribe
     public void onGoldChangeEvent(GoldChangeEvent ev) {
         setGoldCount(ev.getPos(), ev.getCount());
+        gridPanel.repaint();
     }
 
     private void setGoldCount(Position pos, int count) {
