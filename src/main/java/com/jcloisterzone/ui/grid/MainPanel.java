@@ -278,7 +278,6 @@ public class MainPanel extends JPanel {
 
     @Subscribe
     public void onGoldChangeEvent(GoldChangeEvent ev) {
-        goldLayer.setGoldCount(ev.getPos(), ev.getCount());
         gridPanel.repaint();
     }
 
