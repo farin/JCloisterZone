@@ -226,7 +226,6 @@ public class MainPanel extends JPanel {
     @Subscribe
     public void onCastleDeployed(CastleDeployedEvent ev) {
         gridPanel.clearActionDecorations();
-        castleLayer.castleDeployed(ev.getPart1(), ev.getPart2());
     }
 
 
