@@ -282,7 +282,6 @@ public class MainPanel extends JPanel {
 
     @Subscribe
     public void towerIncreased(TowerIncreasedEvent ev) {
-        towerLayer.setTowerHeight(ev.getPosition(), ev.getCaptureRange());
         gridPanel.repaint();
     }
 
