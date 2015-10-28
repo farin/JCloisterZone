@@ -216,11 +216,6 @@ public class MainPanel extends JPanel {
     @Subscribe
     public void onBridgeEvent(BridgeEvent ev) {
         gridPanel.clearActionDecorations();
-        if (ev.getType() == BridgeEvent.DEPLOY) {
-            bridgeLayer.bridgeDeployed(ev.getPosition(), ev.getLocation());
-        } else {
-            bridgeLayer.bridgeRemoved(ev.getPosition());
-        }
     }
 
     @Subscribe
