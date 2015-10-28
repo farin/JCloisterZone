@@ -6,8 +6,10 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -18,6 +20,8 @@ public class TileLayer extends AbstractGridLayer {
 
     public TileLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+
+        gc.register(this);
     }
 
     @Override
@@ -44,11 +48,20 @@ public class TileLayer extends AbstractGridLayer {
         }
     }
 
-    public void tilePlaced(Tile tile) {
+    @Subscribe
+    public void handleTileEvent(TileEvent ev) {
+	if (ev.getType() == TileEvent.PLACEMENT) {
+	    tilePlaced(ev.getTile());
+	} else if (ev.getType() == TileEvent.REMOVE) {
+	    tileRemoved(ev.getTile());
+	}
+    }
+
+    private void tilePlaced(Tile tile) {
         placedTiles.add(tile);
     }
 
-    public void tileRemoved(Tile tile) {
+    private void tileRemoved(Tile tile) {
         placedTiles.remove(tile);
     }
 

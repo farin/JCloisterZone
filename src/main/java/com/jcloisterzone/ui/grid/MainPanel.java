@@ -75,7 +75,6 @@ public class MainPanel extends JPanel {
     private ControlPanel controlPanel;
     private ChatPanel chatPanel;
 
-    private TileLayer tileLayer;
     private FarmHintsLayer farmHintLayer;
     private PlacementHistory placementHistoryLayer;
 
@@ -117,10 +116,9 @@ public class MainPanel extends JPanel {
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);
         MeepleLayer meepleLayer = new MeepleLayer(gridPanel, gc);
-        tileLayer = new TileLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
 
-        gridPanel.addLayer(tileLayer);  //zindex 2
+        gridPanel.addLayer(new TileLayer(gridPanel, gc));  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
             gridPanel.addLayer(new TowerLayer(gridPanel, gc)); //5
         }
@@ -195,7 +193,7 @@ public class MainPanel extends JPanel {
     }
 
     public void tileEvent(TileEvent ev) {
-        gridPanel.tileEvent(ev, tileLayer);
+        gridPanel.tileEvent(ev);
     }
 
     @Subscribe
