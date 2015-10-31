@@ -34,7 +34,7 @@ public class TilePhase extends Phase {
                 action.add(new TilePlacement(entry.getKey(), rotation));
             }
         }
-        game.post(new SelectActionEvent(getActivePlayer(), action, false, false));
+        game.post(new SelectActionEvent(getActivePlayer(), action, false));
     }
 
     @Override

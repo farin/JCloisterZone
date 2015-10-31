@@ -86,7 +86,7 @@ public class CastlePhase extends Phase {
         for (Location loc: currentTileCastleBases.remove(player)) {
         	action.add(new FeaturePointer(getTile().getPosition(), loc));
         }
-        game.post(new SelectActionEvent(player, action, true, false));
+        game.post(new SelectActionEvent(player, action, true));
     }
 
     @Override

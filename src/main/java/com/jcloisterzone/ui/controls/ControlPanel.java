@@ -34,6 +34,7 @@ import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.WarningEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -87,7 +88,7 @@ public class ControlPanel extends JPanel {
     private JButton passButton;
     private boolean showConfirmRequest;
     private boolean canPass;
-    private boolean passWarning;
+    private boolean showWarning;
     private boolean showProjectedPoints, projectedPointsValid = true;
     
     private ActionPanel actionPanel;
@@ -155,10 +156,9 @@ public class ControlPanel extends JPanel {
     }
 
 
-    private void setCanPass(boolean canPass, boolean passWarning) {
+    private void setCanPass(boolean canPass) {
         this.canPass = canPass;
         passButton.setVisible(canPass);
-        this.passWarning = passWarning;
     }
 
 
@@ -277,13 +277,11 @@ public class ControlPanel extends JPanel {
                 setShowConfirmRequest(false);
                 gc.getConnection().send(new CommitMessage(game.getGameId()));
                 repaint();
+            } else if (showWarning) {
+            	showWarning = false;
+                gc.showWarning(LAST_MOVE_LABEL, ABBEY_PASS_LABEL);
             } else {
-            	if (passWarning) {
-            		passWarning = false;
-            		gc.showWarning(LAST_MOVE_LABEL, ABBEY_PASS_LABEL);
-            	} else {
-            		gc.getRmiProxy().pass();
-            	}
+            	gc.getRmiProxy().pass();
             }
         }
     }
@@ -293,7 +291,7 @@ public class ControlPanel extends JPanel {
     }
 
 
-    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass, boolean passWarning) {
+    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
         // direct collection sort can be unsupported - so copy to array first!
         int i = 0;
         PlayerAction<?>[] arr = new PlayerAction[actions.size()];
@@ -303,13 +301,13 @@ public class ControlPanel extends JPanel {
         }
         Arrays.sort(arr);
         actionPanel.setActions(targetPlayer.isLocalHuman(), arr);
-        setCanPass(targetPlayer.isLocalHuman() ? canPass : false, targetPlayer.isLocalHuman() ? passWarning : false);
+        setCanPass(targetPlayer.isLocalHuman() ? canPass : false);
     }
 
     public void clearActions() {
         actionPanel.clearActions();
         actionPanel.setFakeAction(null);
-        setCanPass(false, false);
+        setCanPass(false);
     }
 
     public boolean isShowPotentialPoints() {
@@ -366,6 +364,16 @@ public class ControlPanel extends JPanel {
         } else {
             actionPanel.setShowConfirmRequest(true, true);
             repaint();
+        }
+    }
+    
+    @Subscribe
+    public void handleWarning(WarningEvent ev) {
+        clearActions();
+        if (ev.getTargetPlayer().isLocalHuman()) {
+        	showWarning = true;
+        } else {
+        	showWarning = false;
         }
     }
 
