@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -19,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -36,8 +40,6 @@ import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.component.StrechIconPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.plugin.PluginType;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class PreferencesDialog extends JDialog {
 
@@ -234,14 +236,10 @@ public class PreferencesDialog extends JDialog {
         private JCheckBox chbox;
 
         public PluginPanel(PluginModel model) {
-            super(new MigLayout());
+            super(new MigLayout("fillx", "[][][grow]"));
             this.model = model;
 
             add(new StrechIconPanel(model.getIcon()), "w 120!, h 120!, sy 2, gapright 10");
-
-            JLabel label = new JLabel(model.getTitle());
-            label.setFont(PLUGIN_TITLE_FONT);
-            add(label, "growx");
 
             chbox = new JCheckBox();
             chbox.setSelected(model.isEnabled());
@@ -255,17 +253,23 @@ public class PreferencesDialog extends JDialog {
                     }
                 });
             }
-            add(chbox, "egx, wrap");
+            add(chbox, "");
+
+            JLabel label = new JLabel(model.getTitle());
+            label.setHorizontalAlignment(SwingConstants.LEFT);
+            label.setFont(PLUGIN_TITLE_FONT);
+            add(label, "alignx left, wrap");
 
 
             MultiLineLabel desc = new MultiLineLabel(model.getDescription());
             desc.setFont(PLUGIN_DESCRIPTION_FONT);
-            add(desc, "sx 2");
+            add(desc, "sx 2, growx, aligny top");
         }
     }
 
     private JComponent createPluginsTab() {
-        JPanel panel = new JPanel(new MigLayout("ins 0"));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         ArrayList<Plugin> arr = new ArrayList<Plugin>(client.getPlugins());
         ListIterator<Plugin> li = arr.listIterator(arr.size());
@@ -275,10 +279,10 @@ public class PreferencesDialog extends JDialog {
             PluginModel row = new PluginModel(li.previous());
             //row.render(panel);
             pluginRows.add(row);
-            panel.add(new PluginPanel(row), "wrap");
+            panel.add(new PluginPanel(row));
         }
 
-        JScrollPane scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         return scrollPane;
     }
 
@@ -310,7 +314,7 @@ public class PreferencesDialog extends JDialog {
                int idx = tabList.getSelectedIndex();
                getContentPane().remove(visibleTab);
                visibleTab = tabs[idx];
-               getContentPane().add(visibleTab, "cell 1 0, aligny top");
+               getContentPane().add(visibleTab, "cell 1 0, aligny top, grow");
                revalidate();
                repaint();
             }
