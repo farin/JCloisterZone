@@ -7,21 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-18 21:45+0200\n"
-"PO-Revision-Date: 2015-04-26 20:47+0100\n"
+"POT-Creation-Date: 2015-10-31 15:08+0100\n"
+"PO-Revision-Date: 2015-10-22 13:08+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
-
-#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:25
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
-msgid "Report bug"
-msgstr "Informar de error"
+"X-Generator: Poedit 1.7.5\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
 msgid ""
@@ -42,190 +36,212 @@ msgstr ""
 "...entonces descarga el archivo de informe y envíalo por email a farin@farin."
 "cz"
 
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
+#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:25
+msgid "Report bug"
+msgstr "Informar de error"
+
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
 msgid "Bug report failed"
 msgstr "El informe de error ha fallado"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:43
+#: src/main/java/com/jcloisterzone/Expansion.java:46
 msgid "Basic game"
 msgstr "Juego base"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:44
+#: src/main/java/com/jcloisterzone/Expansion.java:47
 msgid "Wheel of Fortune"
 msgstr "La Rueda de la Fortuna"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "Winter Edition"
 msgstr "Edición de Invierno"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:48
-msgid "The Gingerbread man"
+#: src/main/java/com/jcloisterzone/Expansion.java:51
+msgid "The Gingerbread Man"
 msgstr "El Hombre de Jengibre"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:51
+#: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "Inns & Cathedrals"
 msgstr "Posadas y Catedrales"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:53
+#: src/main/java/com/jcloisterzone/Expansion.java:56
 msgid "Traders & Builders"
 msgstr "Comerciantes y Constructores"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:55
-msgid "The Princess & the Dragon"
+#: src/main/java/com/jcloisterzone/Expansion.java:58
+msgid "The Princess & The Dragon"
 msgstr "La Princesa y el Dragón"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:57
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "The Tower"
 msgstr "La Torre"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:59
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Abbey & Mayor"
 msgstr "La Abadía y el Alcalde"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:61
+#: src/main/java/com/jcloisterzone/Expansion.java:64
 msgid "The Catapult"
 msgstr "La Catapulta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:61
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:64
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "tiles only"
 msgstr "sólo piezas"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "Bridges, Castles and Bazaars"
 msgstr "Puentes, Castillos y Bazares"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
-msgid "Hills and sheep"
+#: src/main/java/com/jcloisterzone/Expansion.java:67
+msgid "Hills and Sheep"
 msgstr "Colinas y ovejas"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "King and Robber Baron"
 msgstr "Rey y Robber Baron"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:68
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The River"
 msgstr "El Río"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The River II"
 msgstr "El Río II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Cathars / Siege"
 msgstr "Los Cátaros"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Besiegers"
 msgstr "Asediadores"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Count of Carcassonne"
 msgstr "El Conde de Carcassonne"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Mini Expansion (GQ11)"
 msgstr "La Mini Expansión (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Cult"
 msgstr "El Culto"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "The Tunnel"
 msgstr "El Túnel"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:76
+#: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Corn Circles"
 msgstr "Círculos en los Cultivos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "The Plague"
 msgstr "La Plaga"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:79
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "The Phantom"
 msgstr "El Fantasma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The Festival (10th an.)"
 msgstr "El Festival (10º aniv.)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "Little Buildings"
 msgstr "Edificios Pequeños"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:82
+#: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Wind Rose"
 msgstr "La Rosa de los Vientos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:83
+#: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The German Monasteries"
 msgstr "Los Monasterios Germanos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:87
+msgid "Castles in Germany"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:89
+msgid "Halfings"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Flier"
 msgstr "Máquinas Voladoras"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:93
 msgid "The Messages"
 msgstr "Despachos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:94
 msgid "The Ferries"
 msgstr "Transbordadores"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The Goldmines"
 msgstr "Minas de Oro"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "Mage & Witch"
 msgstr "El Mago y la Bruja"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:97
 msgid "The Robbers"
 msgstr "Ladrones"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
-msgid "The Corn circles II"
+#: src/main/java/com/jcloisterzone/Expansion.java:98
+msgid "The Corn Circles II"
 msgstr "Círculos en los Cultivos II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
-msgid "The school"
+#: src/main/java/com/jcloisterzone/Expansion.java:101
+msgid "The School"
 msgstr "La escuela"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
-msgid "La porxada"
+#: src/main/java/com/jcloisterzone/Expansion.java:102
+msgid "La Porxada"
 msgstr "La porxada"
 
-#: src/main/java/com/jcloisterzone/feature/Bridge.java:8
-msgid "Bridge"
-msgstr "Puente"
+#: src/main/java/com/jcloisterzone/Expansion.java:103
+msgid "Russian Promos"
+msgstr ""
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:51
-msgid "Cloister"
-msgstr "Monasterio"
-
-#: src/main/java/com/jcloisterzone/feature/Castle.java:58
-msgid "Castle"
-msgstr "Castillo"
-
-#: src/main/java/com/jcloisterzone/feature/Farm.java:56
-msgid "Farm"
-msgstr "Granja"
-
-#: src/main/java/com/jcloisterzone/feature/Road.java:67
-msgid "Road"
-msgstr "Camino"
+#: src/main/java/com/jcloisterzone/Expansion.java:104
+msgid "Darmstadt Promo"
+msgstr ""
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
 msgstr "Ciudad"
 
+#: src/main/java/com/jcloisterzone/feature/Castle.java:58
+msgid "Castle"
+msgstr "Castillo"
+
+#: src/main/java/com/jcloisterzone/feature/Bridge.java:8
+msgid "Bridge"
+msgstr "Puente"
+
 #: src/main/java/com/jcloisterzone/feature/Tower.java:33
 msgid "Tower"
 msgstr "La Torre"
+
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:51
+msgid "Cloister"
+msgstr "Monasterio"
+
+#: src/main/java/com/jcloisterzone/feature/Road.java:67
+msgid "Road"
+msgstr "Camino"
+
+#: src/main/java/com/jcloisterzone/feature/Farm.java:56
+msgid "Farm"
+msgstr "Granja"
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:12
 msgid "Randomize seating order"
@@ -280,248 +296,6 @@ msgstr "Mantener los claustros básicos en el juego."
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "Añadir 3/2/1 puntos para torre/casa/cobertizo"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
-msgid "Confirm or undo a meeple placement."
-msgstr "Confirmar o deshacer la colocación del meeple."
-
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
-msgid "Waiting for a confirmation by remote player."
-msgstr "Esperando la confirmación del jugador remoto."
-
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
-msgid "No action available. Pass or undo a tile placement."
-msgstr "No hay acción disponible. Pasa o deshaz la colocación de una casilla."
-
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
-msgid "Pay ransom"
-msgstr "Pagar rescate"
-
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
-#: src/main/java/com/jcloisterzone/ui/Client.java:273
-#: src/main/java/com/jcloisterzone/ui/Client.java:280
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:254
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
-msgid "Do you really want to pay 3 points to release prisoner?"
-msgstr "¿Estás seguro de pagar 3 puntos para liberar al prisionero?"
-
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
-msgid "Confirm ransom payment"
-msgstr "Confirmar el pago del rescate"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
-msgid "Skip"
-msgstr "Saltar"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
-msgid "Continue"
-msgstr "Continuar"
-
-#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:121
-msgid "Type to chat"
-msgstr "Escribe para chatear"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:528
-msgid ""
-"Online play server is not compatible with your application. Please upgrade "
-"JCloisterZone to the latest version."
-msgstr ""
-"El servidor de juego online no es compatible con tu aplicación. Por favor "
-"actualiza JCloisterZone a la última versión."
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
-msgid ""
-"Remote JCloisterZone is not compatible with local application. Please "
-"upgrade both applications to same version."
-msgstr ""
-"La versión remota de JCloisterZone no es compatible con la aplicación local. "
-"Por favor, actualiza ambas aplicaciones a la misma versión."
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:532
-msgid "Incompatible versions"
-msgstr "Versiones incompatibles"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
-msgid "Invalid password"
-msgstr "Contraseña incorrecta"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
-msgid "New game"
-msgstr "Nueva partida"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:70
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:89
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:89
-msgid "Connect"
-msgstr "Conectar"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
-msgid "Play online"
-msgstr "Jugar online"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
-msgid "Disconnect"
-msgstr "Desconectar"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
-#: src/main/java/com/jcloisterzone/ui/Client.java:273
-#: src/main/java/com/jcloisterzone/ui/Client.java:276
-#: src/main/java/com/jcloisterzone/ui/Client.java:280
-#: src/main/java/com/jcloisterzone/ui/Client.java:283
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:148
-msgid "Leave game"
-msgstr "Dejar partida"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
-msgid "Save game"
-msgstr "Guardar partida"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
-#: src/main/java/com/jcloisterzone/ui/Client.java:436
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
-msgid "Load game"
-msgstr "Cargar partida"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:35
-msgid "Quit"
-msgstr "Salir"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
-msgid "Undo"
-msgstr "Deshacer"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
-msgid "Zoom in"
-msgstr "Acercar"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:39
-msgid "Zoom out"
-msgstr "Alejar"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
-msgid "Rotate board"
-msgstr "Rotar tablero"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
-msgid "Show last placements"
-msgstr "Mostrar las últimas fichas colocadas"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
-msgid "Show farm hints"
-msgstr "Mostrar consejos para las granjas"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
-msgid "Show projected points"
-msgstr "Mostrar puntos proyectados"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
-msgid "Show discarded tiles"
-msgstr "Mostrar fichas descartadas"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
-msgid "Show game setup"
-msgstr "Mostrar configuración de la partida"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
-msgid "Take screenshot"
-msgstr "Capturar pantalla"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
-msgid "Beep alert at player turn"
-msgstr "Alerta auditiva cuando sea el turno del jugador"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
-msgid "Confirm every meeple deployment"
-msgstr "Confirmar cada colocación de meeple"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
-msgid "Confirm meeple deployment on a farm"
-msgstr "Confirmar la colocación de un meeple en una granja"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
-msgid "Confirm meeple deployment on a tower"
-msgstr "Confirmar la colocación de un meeple en una torre"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:222
-msgid "Preferences"
-msgstr ""
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
-msgid "About"
-msgstr "Acerca de"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
-#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
-msgid "Controls"
-msgstr "Controles"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:86
-msgid "Session"
-msgstr "Sesión"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:131
-msgid "Game"
-msgstr "Juego"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:149
-msgid "Settings"
-msgstr "Configuración"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:208
-msgid "Help"
-msgstr "Ayuda"
-
-#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
-msgid "JCloisterZone saved games"
-msgstr "Partidas guardadas de JCloisterZone"
-
-#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:30
-msgid "Mage and Witch"
-msgstr "El mago y la bruja"
-
-#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
-msgid ""
-"It''s not possible to place mage or witch because there isn''t an unfinished "
-"feature. Select what figure do you want to remove from board."
-msgstr ""
-"No es posible colocar el mago o la bruja porque no hay ninguna "
-"característica sin acabar. Elige qué figura quieres eliminar del tablero."
-
-#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:41
-msgid "Remove the mage."
-msgstr "Quitar el mago."
-
-#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:53
-msgid "Remove the witch."
-msgstr "Quitar la bruja."
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:87
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:89
-msgid "Place as abbot"
-msgstr "Colocar como abad"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:89
-msgid "Place as monk"
-msgstr "Colocar como monje"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:92
-msgid "How do you want to place follower on monastery?"
-msgstr "¿Cómo quieres colocar al seguidor en el monasterio?"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:93
-msgid "Monastery"
-msgstr "Monasterio"
-
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:73
 msgid "Bazaar supply"
 msgstr "Suministro del bazar"
@@ -569,6 +343,23 @@ msgstr "Pujar"
 msgid "Pass"
 msgstr "Pasar"
 
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:87
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:89
+msgid "Place as abbot"
+msgstr "Colocar como abad"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:89
+msgid "Place as monk"
+msgstr "Colocar como monje"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:92
+msgid "How do you want to place follower on monastery?"
+msgstr "¿Cómo quieres colocar al seguidor en el monasterio?"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:93
+msgid "Monastery"
+msgstr "Monasterio"
+
 #: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:33
 msgid "Corn circle"
 msgstr "Círculo en los cultivos"
@@ -590,64 +381,77 @@ msgstr "debe eliminar un seguidor"
 msgid "on/from a {0}."
 msgstr "en/de un {0}."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:275
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:30
+msgid "Mage and Witch"
+msgstr "El mago y la bruja"
+
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
 msgid ""
-"The game is not finished. Do you really want to stop game and disconnect all "
-"other players?"
+"It''s not possible to place mage or witch because there isn''t an unfinished "
+"feature. Select what figure do you want to remove from board."
 msgstr ""
-"La partida no ha acabado. ¿Seguro que deseas parar la partida y desconectar "
-"al resto de jugadores?"
+"No es posible colocar el mago o la bruja porque no hay ninguna "
+"característica sin acabar. Elige qué figura quieres eliminar del tablero."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:282
-msgid "The game is not finished. Do you really want to leave it?"
-msgstr "La partida no ha acabado. ¿Seguro que quieres dejarla?"
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:41
+msgid "Remove the mage."
+msgstr "Quitar el mago."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:405
-#: src/main/java/com/jcloisterzone/ui/Client.java:448
-#: src/main/java/com/jcloisterzone/ui/Client.java:576
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:447
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:482
-msgid "Error"
-msgstr "Error"
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:53
+msgid "Remove the witch."
+msgstr "Quitar la bruja."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:568
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
-msgid "Connection lost"
-msgstr "Conexión perdida"
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:15
+msgid ""
+"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
+"scroll the board. Click with <b>middle</b> mouse button to center the board. "
+"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr ""
+"<html>Usar teclas <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o <b>flechas</b> "
+"para desplazarse por el tablero. Click con el botón <b>medio</b> del ratón "
+"para centrar el tablero. Zoom con las teclas <b>+</b> o <b>-</b> o usar la "
+"<b>rueda</b> del ratón.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
-msgid "Connecting"
-msgstr "Conectando"
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:20
+msgid ""
+"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
+"by <b>left</b> click.</html>"
+msgstr ""
+"<html>Rotar una pieza con la tecla <b>Tab</b> o el botón <b>derecho</b> del "
+"mouse. Colocarla con el botón <b>izquierdo</b>.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
-msgid "Nickname"
-msgstr "Apodo"
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
+msgid ""
+"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
+"select appropriate action.</html>"
+msgstr ""
+"<html>Cuando una pieza esté colocada utilizar <b>Tab</b> o botón <b>derecho</"
+"b> nuevamente para elegir la acción apropiada.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
-msgid "Back"
-msgstr "Atrás"
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
+msgid ""
+"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
+"no action.</html>"
+msgstr ""
+"<html>Alternativamente, puedes pasar con <b>Enter</b> o <b>Espacio</b> para "
+"no realizar ninguna acción.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:113
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
-msgid "Connection failed. Unknown host."
-msgstr "Fallo en la conexión. Host desconocido."
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
+msgid ""
+"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"tiles.</html>"
+msgstr ""
+"<html>Presionar <b>F</b> para alternar los consejos de las granjas o <b>X</"
+"b> para ver las últimas piezas colocadas.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
-msgid "Connection refused."
-msgstr "Conexión rechazada."
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
-msgid "Connection failed."
-msgstr "Fallo en la conexión."
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:128
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:152
-msgid "Invalid port number."
-msgstr "Número de puerto inválido."
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:146
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:301
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/Client.java:308
+msgid "Leave game"
+msgstr "Dejar partida"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
 msgid "Play again"
@@ -717,6 +521,155 @@ msgstr "Bazares"
 msgid "Wind rose"
 msgstr "La rosa de los vientos"
 
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
+msgid "Connecting"
+msgstr "Conectando"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:69
+msgid "Host"
+msgstr "Host"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:80
+msgid "Port"
+msgstr "Puerto"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:89
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:89
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:70
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
+msgid "Connect"
+msgstr "Conectar"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
+msgid "Back"
+msgstr "Atrás"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:113
+msgid "Connection failed. Unknown host."
+msgstr "Fallo en la conexión. Host desconocido."
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
+msgid "Connection refused."
+msgstr "Conexión rechazada."
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
+msgid "Connection failed."
+msgstr "Fallo en la conexión."
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:128
+msgid "Invalid port number."
+msgstr "Número de puerto inválido."
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
+msgid ""
+"Create a new game or continue a previously saved one. A game will be hosted "
+"on your computer and other players may connect during game set up. You can "
+"also play only against any number of computer players."
+msgstr ""
+"Crea una nueva partida o continúa una guardada. Tu computadora gestionará "
+"una partida y otros jugadores se pueden conectar durante su configuración. "
+"También puedes jugar solo contra cualquier número de jugadores computadora."
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
+msgid "New game"
+msgstr "Nueva partida"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
+msgid "or"
+msgstr "o"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
+#: src/main/java/com/jcloisterzone/ui/Client.java:461
+msgid "Load game"
+msgstr "Cargar partida"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
+msgid ""
+"You can also connect to remote JCloisterZone application hosting a game. "
+"Connect when game is created but not yet started."
+msgstr ""
+"También te puedes conectar a la aplicación remota JCloisterZone hospedando "
+"una partida. Conéctate cuando la partida se haya creado pero todavía no haya "
+"comenzado."
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
+msgid ""
+"Connect to other players and play with them using internet connection and "
+"public game server play.jcloisterzone.com."
+msgstr ""
+"Conectarse con otros jugadores y jugar con ellos usando conexión a Internet "
+"y el servidor público de juegos play.jcloisterzone.com."
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
+msgid "Play online"
+msgstr "Jugar online"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
+msgid "Nickname"
+msgstr "Apodo"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
+msgid "Start game"
+msgstr "Iniciar partida"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:226
+msgid "Players"
+msgstr "Jugadores"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:177
+msgid "Click twice on a slot button to add a computer player."
+msgstr ""
+"Haz clic dos veces en un botón de ranura para añadir a un jugador "
+"computadora."
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:201
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:36
+msgid "Expansions"
+msgstr "Expansiones"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:215
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:41
+msgid "Rules"
+msgstr "Reglas"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:245
+msgid "Clock"
+msgstr "Reloj"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:249
+msgid "player time limit"
+msgstr "tiempo límite para el jugador"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:260
+msgid "minutes"
+msgstr "minutos"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:286
+msgid "Presets"
+msgstr "Ajustes"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:306
+msgid "Preset name"
+msgstr "Nombre de los ajustes"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:339
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:334
+msgid "Save"
+msgstr "Guardar"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:367
+msgid "Delete"
+msgstr "Eliminar"
+
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:45
 msgid "Connected clients"
 msgstr "Clientes conectados"
@@ -749,112 +702,6 @@ msgstr "Jugador computadora remoto"
 msgid "Open player slot"
 msgstr "Posición de jugador abierta"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:15
-msgid ""
-"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
-"scroll the board. Click with <b>middle</b> mouse button to center the board. "
-"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr ""
-"<html>Usar teclas <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> o <b>flechas</b> "
-"para desplazarse por el tablero. Click con el botón <b>medio</b> del ratón "
-"para centrar el tablero. Zoom con las teclas <b>+</b> o <b>-</b> o usar la "
-"<b>rueda</b> del ratón.</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:20
-msgid ""
-"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
-"by <b>left</b> click.</html>"
-msgstr ""
-"<html>Rotar una pieza con la tecla <b>Tab</b> o el botón <b>derecho</b> del "
-"mouse. Colocarla con el botón <b>izquierdo</b>.</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
-msgid ""
-"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
-"select appropriate action.</html>"
-msgstr ""
-"<html>Cuando una pieza esté colocada utilizar <b>Tab</b> o botón <b>derecho</"
-"b> nuevamente para elegir la acción apropiada.</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
-msgid ""
-"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
-"no action.</html>"
-msgstr ""
-"<html>Alternativamente, puedes pasar con <b>Enter</b> o <b>Espacio</b> para "
-"no realizar ninguna acción.</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
-msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
-"tiles.</html>"
-msgstr ""
-"<html>Presionar <b>F</b> para alternar los consejos de las granjas o <b>X</"
-"b> para ver las últimas piezas colocadas.</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
-msgid "Start game"
-msgstr "Iniciar partida"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:175
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:226
-msgid "Players"
-msgstr "Jugadores"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:179
-msgid "Click twice on a slot button to add a computer player."
-msgstr ""
-"Haz clic dos veces en un botón de ranura para añadir a un jugador "
-"computadora."
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:203
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:36
-msgid "Expansions"
-msgstr "Expansiones"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:217
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:41
-msgid "Rules"
-msgstr "Reglas"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:247
-msgid "Clock"
-msgstr "Reloj"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:251
-msgid "player time limit"
-msgstr "tiempo límite para el jugador"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:262
-msgid "minutes"
-msgstr "minutos"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:288
-msgid "Presets"
-msgstr "Ajustes"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:308
-msgid "Preset name"
-msgstr "Nombre de los ajustes"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:341
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:262
-msgid "Save"
-msgstr "Guardar"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:369
-msgid "Delete"
-msgstr "Eliminar"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:69
-msgid "Host"
-msgstr "Host"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:80
-msgid "Port"
-msgstr "Puerto"
-
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:92
 msgid "Game title"
 msgstr "Título de la partida"
@@ -877,6 +724,11 @@ msgstr "Crear partida"
 msgid "Join game"
 msgstr "Unirse a partida"
 
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
+msgid "Continue"
+msgstr "Continuar"
+
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:193
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
 msgid "Remove game"
@@ -886,48 +738,48 @@ msgstr "Eliminar partida"
 msgid "Do you want to remove game permanently?"
 msgstr "¿Deseas eliminar la partida de forma permanente?"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
-msgid ""
-"Create a new game or continue a previously saved one. A game will be hosted "
-"on your computer and other players may connect during game set up. You can "
-"also play only against any number of computer players."
-msgstr ""
-"Crea una nueva partida o continúa una guardada. Tu computadora gestionará "
-"una partida y otros jugadores se pueden conectar durante su configuración. "
-"También puedes jugar solo contra cualquier número de jugadores computadora."
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
-msgid "or"
-msgstr "o"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
-msgid ""
-"You can also connect to remote JCloisterZone application hosting a game. "
-"Connect when game is created but not yet started."
-msgstr ""
-"También te puedes conectar a la aplicación remota JCloisterZone hospedando "
-"una partida. Conéctate cuando la partida se haya creado pero todavía no haya "
-"comenzado."
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
-msgid ""
-"Connect to other players and play with them using internet connection and "
-"public game server play.jcloisterzone.com."
-msgstr ""
-"Conectarse con otros jugadores y jugar con ellos usando conexión a Internet "
-"y el servidor público de juegos play.jcloisterzone.com."
-
-#: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
-msgid "JCloisterZone "
-msgstr "JCloisterZone "
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
+#: src/main/java/com/jcloisterzone/ui/Client.java:631
+msgid "Connection lost"
+msgstr "Conexión perdida"
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
 msgid "Reconnecting..."
 msgstr "Reconectando..."
 
-#: src/main/java/com/jcloisterzone/ui/GameController.java:165
-msgid "%d tiles left"
-msgstr "Quedan %d piezas"
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
+msgid "Save game"
+msgstr "Guardar partida"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:447
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:482
+#: src/main/java/com/jcloisterzone/ui/Client.java:430
+#: src/main/java/com/jcloisterzone/ui/Client.java:473
+#: src/main/java/com/jcloisterzone/ui/Client.java:639
+msgid "Error"
+msgstr "Error"
+
+#: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
+msgid "JCloisterZone "
+msgstr "JCloisterZone "
+
+#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:46
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
+msgid "Tile Distribution"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
+msgid "Controls"
+msgstr "Controles"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
+msgid "Discarded tiles"
+msgstr "Piezas descartadas"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
+msgid "These tiles have been discarded during the game"
+msgstr "Estas piezas han sido descartadas durante la partida"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
 msgid "About application"
@@ -943,45 +795,249 @@ msgid ""
 msgstr ""
 "Distribuido bajo los términos de GNU Affero General Public License version 3"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
-msgid "Discarded tiles"
-msgstr "Piezas descartadas"
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:86
+msgid "Use system language"
+msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
-msgid "These tiles have been discarded during the game"
-msgstr "Estas piezas han sido descartadas durante la partida"
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:163
+msgid "Language"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:179
+msgid "To apply new language you must restart the application"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:184
+msgid "AI placement delay (ms)"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:190
+msgid "Score display duration (sec)"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:293
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
+msgid "Preferences"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
+msgid "Interface"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
+msgid "Plugins"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:326
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
+msgid "Cancel"
+msgstr "Cancelar"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
 msgid "Game setup"
 msgstr "Configuración de la partida"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:76
-msgid "Use system language"
+#: src/main/java/com/jcloisterzone/ui/GameController.java:165
+msgid "%d tiles left"
+msgstr "Quedan %d piezas"
+
+#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
+msgid "JCloisterZone saved games"
+msgstr "Partidas guardadas de JCloisterZone"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
+msgid "Play Online"
+msgstr "Jugar online"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
+msgid "Disconnect"
+msgstr "Desconectar"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
+msgid "Leave Game"
+msgstr "Dejar partida"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
+msgid "Save Game"
+msgstr "Guardar partida"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
+msgid "Load Game"
+msgstr "Cargar partida"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
+msgid "Quit"
+msgstr "Salir"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:36
+msgid "Undo"
+msgstr "Deshacer"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
+msgid "Zoom In"
+msgstr "Acercar"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
+msgid "Zoom Out"
+msgstr "Alejar"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:39
+msgid "Rotate Board"
+msgstr "Rotar tablero"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
+msgid "Show Last Placements"
+msgstr "Mostrar las últimas fichas colocadas"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
+msgid "Show Farm Hints"
+msgstr "Mostrar consejos para las granjas"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
+msgid "Show Projected Points"
+msgstr "Mostrar puntos proyectados"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
+msgid "Show Discarded Tiles"
+msgstr "Mostrar fichas descartadas"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
+msgid "Show Game Setup"
+msgstr "Mostrar configuración de la partida"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
+msgid "Take Screenshot"
+msgstr "Capturar pantalla"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
+msgid "Beep Alert at Player Turn"
+msgstr "Alerta auditiva cuando sea el turno del jugador"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
+msgid "Confirm Every Meeple Deployment"
+msgstr "Confirmar cada colocación de meeple"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
+msgid "Confirm Meeple Deployment on a Farm"
+msgstr "Confirmar la colocación de un meeple en una granja"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
+msgid "Confirm Meeple Deployment on a Tower"
+msgstr "Confirmar la colocación de un meeple en una torre"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
+msgid "Confirm Ransom Payment"
+msgstr "Confirmar el pago del rescate"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:54
+msgid "About"
+msgstr "Acerca de"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
+msgid "Report Bug"
+msgstr "Informar de error"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:86
+msgid "Session"
+msgstr "Sesión"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:131
+msgid "Game"
+msgstr "Juego"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:149
+msgid "Settings"
+msgstr "Configuración"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:208
+msgid "Help"
+msgstr "Ayuda"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:528
+msgid ""
+"Online play server is not compatible with your application. Please upgrade "
+"JCloisterZone to the latest version."
+msgstr ""
+"El servidor de juego online no es compatible con tu aplicación. Por favor "
+"actualiza JCloisterZone a la última versión."
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
+msgid ""
+"Remote JCloisterZone is not compatible with local application. Please "
+"upgrade both applications to same version."
+msgstr ""
+"La versión remota de JCloisterZone no es compatible con la aplicación local. "
+"Por favor, actualiza ambas aplicaciones a la misma versión."
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:532
+msgid "Incompatible versions"
+msgstr "Versiones incompatibles"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
+msgid "Invalid password"
+msgstr "Contraseña incorrecta"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
+msgid "Skip"
+msgstr "Saltar"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Skip Abbey"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:139
-msgid "Language"
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Cancel and place Abbey"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:155
-msgid "To apply new language you must restart the application"
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:160
-msgid "AI placement delay (ms)"
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:291
+msgid "Last chance to place the Abbey"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:166
-msgid "Score display duration (sec)"
-msgstr ""
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
+msgid "Pay ransom"
+msgstr "Pagar rescate"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
-msgid "Interface"
-msgstr ""
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
+msgid "Do you really want to pay 3 points to release prisoner?"
+msgstr "¿Estás seguro de pagar 3 puntos para liberar al prisionero?"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:234
-msgid "Plugins"
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
+msgid "Confirm ransom payment"
+msgstr "Confirmar el pago del rescate"
+
+#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:121
+msgid "Type to chat"
+msgstr "Escribe para chatear"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
+msgid "Confirm or undo a meeple placement."
+msgstr "Confirmar o deshacer la colocación del meeple."
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
+msgid "Waiting for a confirmation by remote player."
+msgstr "Esperando la confirmación del jugador remoto."
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
+msgid "No action available. Pass or undo a tile placement."
+msgstr "No hay acción disponible. Pasa o deshaz la colocación de una casilla."
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+msgid ""
+"The game is not finished. Do you really want to stop game and disconnect all "
+"other players?"
 msgstr ""
+"La partida no ha acabado. ¿Seguro que deseas parar la partida y desconectar "
+"al resto de jugadores?"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:307
+msgid "The game is not finished. Do you really want to leave it?"
+msgstr "La partida no ha acabado. ¿Seguro que quieres dejarla?"
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Recoger meeple"

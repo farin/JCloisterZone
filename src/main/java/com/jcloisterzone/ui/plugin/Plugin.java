@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.plugin;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,6 +64,17 @@ public abstract class Plugin {
         if (nl.getLength() > 0) {
             type = PluginType.valueOf(nl.item(0).getTextContent());
         }
+    }
+
+    protected Image getImageResource(String path) {
+        logger.debug("Trying to load image resource {}:{}", getTitle(), path);
+        URL url = getLoader().getResource(path);
+        if (url == null) return null;
+        return Toolkit.getDefaultToolkit().getImage(url);
+    }
+
+    public Image getIcon() {
+        return getImageResource("icon.jpg");
     }
 
     public URL getUrl() {
@@ -130,18 +143,5 @@ public abstract class Plugin {
         }
         return readPlugin(path.toUri().toURL(), relativePath);
     }
-
-//    public static Plugin readPlugin(String path) throws Exception {
-//        URL pluginURL = Plugin.class.getClassLoader().getResource(path);
-//        if (pluginURL == null) {
-//            // development helper - try to load unpacked plugin
-//            String unpacked = path.replace(".jar", "");
-//            pluginURL = Plugin.class.getClassLoader().getResource(unpacked);
-//            if (pluginURL == null) {
-//                throw new IllegalArgumentException("Plugin " + path + " not found.");
-//            }
-//        }
-//        return readPlugin(pluginURL);
-//    }
 }
 

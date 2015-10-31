@@ -1,21 +1,29 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -28,30 +36,32 @@ import com.google.common.base.Objects;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.component.StrechIconPanel;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.plugin.PluginType;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class PreferencesDialog extends JDialog {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Font HINT_FONT = new Font(null, Font.ITALIC, 10);
-    private final Font PLUGIN_DESCRIPTION_FONT = new Font(null, Font.ITALIC, 11);
+    private static final Font HINT_FONT = new Font(null, Font.ITALIC, 10);
+    private static final Font PLUGIN_DESCRIPTION_FONT = new Font(null, Font.ITALIC, 11);
+    private static final Font PLUGIN_TITLE_FONT = new Font(null, Font.BOLD, 12);
 
     private final Client client;
     private final Config config;
     private String initialLocale;
 
-    private JPanel[] tabs;
-    private JPanel visibleTab;
+    private JComponent[] tabs;
+    private JComponent visibleTab;
 
     private JLabel languageHint;
 
     private JComboBox<LocaleOption> langComboBox;
     private JTextField aiPlaceTileDelay;
     private JTextField scoreDisplayDuration;
+    private List<PluginModel> pluginRows = new ArrayList<>();
 
     private static class LocaleOption {
         private final String locale, title;
@@ -124,9 +134,22 @@ public class PreferencesDialog extends JDialog {
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
 
         List<String> enabledPlugins = new ArrayList<>();
-        for (Plugin plugin : client.getPlugins()) {
-            if (plugin.isEnabled() || plugin.getType() == PluginType.DEFAULT_GRF_SET) {
+        for (PluginModel row : pluginRows) {
+            Plugin plugin = row.plugin;
+            if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
                 enabledPlugins.add(plugin.getRelativePath());
+                continue;
+            }
+            if (row.isEnabled()) {
+                try {
+                    plugin.load();
+                    plugin.setEnabled(true);
+                    enabledPlugins.add(plugin.getRelativePath());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            } else {
+                plugin.setEnabled(false);
             }
         }
         config.setPlugins(enabledPlugins);
@@ -172,48 +195,95 @@ public class PreferencesDialog extends JDialog {
         return panel;
     }
 
-    private class PluginRow {
+    private class PluginModel {
         private final Plugin plugin;
+        private boolean enabled;
+        private Image icon;
 
-        public PluginRow(Plugin plugin) {
+        public PluginModel(Plugin plugin) {
            this.plugin = plugin;
+           enabled = plugin.isEnabled();
+           icon = plugin.getIcon();
         }
 
-        public void render(JPanel panel) {
-            JCheckBox chbox = new JCheckBox();
-            chbox.setSelected(plugin.isEnabled());
-            if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
-                chbox.setEnabled(false);
-            }
-            chbox.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 JCheckBox chbox = (JCheckBox) e.getSource();
-                 plugin.setEnabled(chbox.isSelected());
-             }
-            });
-            panel.add(chbox, "sy 2, gapright 5, gapbottom 8");
+        public Image getIcon() {
+            return icon;
+        }
 
-            JLabel label = new JLabel(plugin.getTitle());
-            panel.add(label, "wrap");
-            label = new JLabel(plugin.getDescription());
-            label.setFont(PLUGIN_DESCRIPTION_FONT);
-            panel.add(label, "wrap, gapbottom 8");
+        public String getTitle() {
+            return plugin.getTitle();
+        }
+
+        public String getDescription() {
+            return plugin.getDescription();
+        }
+
+        public boolean isReadOnly() {
+            return plugin.getType() == PluginType.DEFAULT_GRF_SET;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
         }
     }
 
-    private JPanel createPluginsTab() {
-        JPanel panel = new JPanel(new MigLayout());
+    private class PluginPanel extends JPanel {
+        private final PluginModel model;
+        private JCheckBox chbox;
+
+        public PluginPanel(PluginModel model) {
+            super(new MigLayout("fillx", "[][][grow]"));
+            this.model = model;
+
+            add(new StrechIconPanel(model.getIcon()), "w 120!, h 120!, sy 2, gapright 10");
+
+            chbox = new JCheckBox();
+            chbox.setSelected(model.isEnabled());
+            if (model.isReadOnly()) {
+                chbox.setEnabled(false);
+            } else {
+                chbox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PluginPanel.this.model.setEnabled(chbox.isSelected());
+                    }
+                });
+            }
+            add(chbox, "");
+
+            JLabel label = new JLabel(model.getTitle());
+            label.setHorizontalAlignment(SwingConstants.LEFT);
+            label.setFont(PLUGIN_TITLE_FONT);
+            add(label, "alignx left, wrap");
+
+
+            MultiLineLabel desc = new MultiLineLabel(model.getDescription());
+            desc.setFont(PLUGIN_DESCRIPTION_FONT);
+            add(desc, "sx 2, growx, aligny top");
+        }
+    }
+
+    private JComponent createPluginsTab() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         ArrayList<Plugin> arr = new ArrayList<Plugin>(client.getPlugins());
         ListIterator<Plugin> li = arr.listIterator(arr.size());
 
         // Iterate in reverse.
         while(li.hasPrevious()) {
-          (new PluginRow(li.previous())).render(panel);
+            PluginModel row = new PluginModel(li.previous());
+            //row.render(panel);
+            pluginRows.add(row);
+            panel.add(new PluginPanel(row));
         }
 
-        return panel;
+        JScrollPane scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        return scrollPane;
     }
 
     public PreferencesDialog(Client client) {
@@ -222,11 +292,11 @@ public class PreferencesDialog extends JDialog {
         this.config = client.getConfig();
         setTitle(_("Preferences"));
         setModalityType(ModalityType.DOCUMENT_MODAL);
-        UiUtils.centerDialog(this, 650, 300);
+        UiUtils.centerDialog(this, 650, Math.min(client.getHeight(), 600));
 
         getContentPane().setLayout(new MigLayout("ins 0", "[][grow]", "[grow][]"));
 
-        tabs = new JPanel[] {
+        tabs = new JComponent[] {
            createInerfaceTab(),
            createPluginsTab()
         };
@@ -236,6 +306,7 @@ public class PreferencesDialog extends JDialog {
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.setLayoutOrientation(JList.VERTICAL);
         tabList.setSelectedIndex(0);
+        tabList.setBorder(new EmptyBorder(4,4,4,4));
         tabList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -243,13 +314,13 @@ public class PreferencesDialog extends JDialog {
                int idx = tabList.getSelectedIndex();
                getContentPane().remove(visibleTab);
                visibleTab = tabs[idx];
-               getContentPane().add(visibleTab, "cell 1 0, aligny top");
+               getContentPane().add(visibleTab, "cell 1 0, aligny top, grow");
                revalidate();
                repaint();
             }
         });
-        getContentPane().add(tabList, "cell 0 0, growy, w 160");
-        getContentPane().add(visibleTab, "cell 1 0, aligny top");
+        getContentPane().add(tabList, "cell 0 0, growy, w 160!");
+        getContentPane().add(visibleTab, "cell 1 0, aligny top, grow");
 
         JPanel buttonBox = new JPanel(new MigLayout("fill", "[grow][][]", "[]"));
         JButton cancel = new JButton(_("Cancel"));

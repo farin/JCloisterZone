@@ -23,6 +23,10 @@ public class ConvenientResourceManager implements ResourceManager {
         this.manager = manager;
     }
 
+    public void clearCache() {
+        imageCache.clear();
+    }
+
     //helper methods
 
     public FeatureArea getBridgeArea(Tile tile, int size, Location loc) {

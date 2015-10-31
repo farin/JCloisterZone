@@ -80,13 +80,6 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
 
-    protected Image getImageResource(String path) {
-        logger.debug("Trying to load image resource {}:{}", getTitle(), path);
-        URL url = getLoader().getResource(path);
-        if (url == null) return null;
-        return Toolkit.getDefaultToolkit().getImage(url);
-    }
-
     protected boolean containsTile(String tileId) {
         if (!isEnabled()) return false;
         String expCode = tileId.substring(0, 2);

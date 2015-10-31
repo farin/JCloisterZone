@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.jcloisterzone.plugins.rgg_siege" version="2">
+    <title>Monasteries in the Netherlands &amp; Belgium</title>
+    <description>Replace German monasteries with monasteris in Netherlands &amp; Belgium</description>
+    <type>GRF_SET</type>
+    <expansions>
+         <expansion>GERMAN_MONASTERIES</expansion>
+    </expansions>
+</plugin>

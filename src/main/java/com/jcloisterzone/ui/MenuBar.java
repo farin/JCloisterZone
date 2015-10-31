@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
@@ -27,34 +26,35 @@ public class MenuBar extends JMenuBar {
         //Session
         NEW_GAME(_("New game"), KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         CONNECT_P2P(_("Connect"), KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        PLAY_ONLINE(_("Play online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        PLAY_ONLINE(_("Play Online"), KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         DISCONNECT(_("Disconnect")),
-        LEAVE_GAME(_("Leave game")),
-        SAVE(_("Save game"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        LOAD(_("Load game"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        LEAVE_GAME(_("Leave Game")),
+        SAVE(_("Save Game"), KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        LOAD(_("Load Game"), KeyStroke.getKeyStroke(KeyEvent.VK_L, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         QUIT(_("Quit"), KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         //Game
         UNDO(_("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        ZOOM_IN(_("Zoom in"), KeyStroke.getKeyStroke('+')),
-        ZOOM_OUT(_("Zoom out"), KeyStroke.getKeyStroke('-')),
-        ROTATE_BOARD(_("Rotate board"), KeyStroke.getKeyStroke('/')),
-        LAST_PLACEMENTS(_("Show last placements"), KeyStroke.getKeyStroke('x')),
-        FARM_HINTS(_("Show farm hints"), KeyStroke.getKeyStroke('f')),
-        PROJECTED_POINTS(_("Show projected points"), KeyStroke.getKeyStroke('p')),
-        DISCARDED_TILES(_("Show discarded tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        GAME_SETUP(_("Show game setup")),
-        TAKE_SCREENSHOT(_("Take screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
+        ZOOM_IN(_("Zoom In"), KeyStroke.getKeyStroke('+')),
+        ZOOM_OUT(_("Zoom Out"), KeyStroke.getKeyStroke('-')),
+        ROTATE_BOARD(_("Rotate Board"), KeyStroke.getKeyStroke('/')),
+        LAST_PLACEMENTS(_("Show Last Placements"), KeyStroke.getKeyStroke('x')),
+        FARM_HINTS(_("Show Farm Hints"), KeyStroke.getKeyStroke('f')),
+        PROJECTED_POINTS(_("Show Projected Points"), KeyStroke.getKeyStroke('p')),
+        DISCARDED_TILES(_("Show Discarded Tiles"), KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
+        GAME_SETUP(_("Show Game Setup")),
+        TAKE_SCREENSHOT(_("Take Screenshot"), KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)),
         //Settings
-        BEEP_ALERT(_("Beep alert at player turn")),
-        CONFIRM_ANY_DEPLOYMENT(_("Confirm every meeple deployment")),
-        CONFIRM_FARM_DEPLOYMENT(_("Confirm meeple deployment on a farm")),
-        CONFIRM_TOWER_DEPLOYMENT(_("Confirm meeple deployment on a tower")),
-        CONFIRM_RANSOM(_("Confirm ransom payment")),
+        BEEP_ALERT(_("Beep Alert at Player Turn")),
+        CONFIRM_ANY_DEPLOYMENT(_("Confirm Every Meeple Deployment")),
+        CONFIRM_FARM_DEPLOYMENT(_("Confirm Meeple Deployment on a Farm")),
+        CONFIRM_TOWER_DEPLOYMENT(_("Confirm Meeple Deployment on a Tower")),
+        CONFIRM_RANSOM(_("Confirm Ransom Payment")),
         PREFERENCES(_("Preferences")),
         //Help
         ABOUT(_("About")),
+        TILE_DISTRIBUTION(_("Tile Distribution"), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0)),
         CONTROLS(_("Controls")),
-        REPORT_BUG(_("Report bug"));
+        REPORT_BUG(_("Report Bug"));
 
         String title;
         KeyStroke accelerator;
@@ -216,10 +216,17 @@ public class MenuBar extends JMenuBar {
             }));
         }
 
+        menu.add(createMenuItem(MenuItem.TILE_DISTRIBUTION, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.showTileDistribution();
+            }
+        }));
+
         menu.add(createMenuItem(MenuItem.CONTROLS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HelpDialog();
+                client.showHelpDialog();
             }
         }));
         menu.add(createMenuItem(MenuItem.REPORT_BUG, false));

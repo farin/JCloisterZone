@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<points xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+<points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
 
     <point feature="CITY" cx="450" cy="120" baseLocation="N"> <!-- tiny -->
         <apply>BA.CC.2 W</apply>
