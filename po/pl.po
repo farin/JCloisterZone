@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-22 13:03+0200\n"
+"POT-Creation-Date: 2015-10-31 15:08+0100\n"
 "PO-Revision-Date: 2015-10-22 13:10+0100\n"
 "Last-Translator: Tomasz Skowroński\n"
 "Language-Team: \n"
@@ -661,7 +661,7 @@ msgid "Preset name"
 msgstr "Nazwa ustawienia"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:339
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:330
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:334
 msgid "Save"
 msgstr "Zapisz"
 
@@ -723,7 +723,7 @@ msgid "Join game"
 msgstr "Dołącz do gry"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
 msgid "Continue"
 msgstr "Kontynuuj"
 
@@ -793,40 +793,40 @@ msgid ""
 msgstr ""
 "Rozpowszechniane na zasadach licencji GNU Affero General Public License 3"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:84
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:86
 msgid "Use system language"
 msgstr "Wykryj język"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:161
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:163
 msgid "Language"
 msgstr "Język"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:177
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:179
 msgid "To apply new language you must restart the application"
 msgstr "Aby uwzględnić nowy język należy uruchomić ponownie aplikację"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:182
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:184
 msgid "AI placement delay (ms)"
 msgstr "Opóźnienie ruchu komputera (ms)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:188
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:190
 msgid "Score display duration (sec)"
 msgstr "Czas wyświetlania wyniku (sek)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:289
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:293
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Preferences"
 msgstr "Preferencje"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
 msgid "Interface"
 msgstr "Interfejs"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
 msgid "Plugins"
 msgstr "Wtyczki"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:322
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:326
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 #: src/main/java/com/jcloisterzone/ui/Client.java:298
 #: src/main/java/com/jcloisterzone/ui/Client.java:305
@@ -977,9 +977,25 @@ msgstr "Niekompatybilne wersje"
 msgid "Invalid password"
 msgstr "Błędne hasło"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
 msgid "Skip"
 msgstr "Pomiń"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Skip Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Cancel and place Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:291
+msgid "Last chance to place the Abbey"
+msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
@@ -1021,13 +1037,11 @@ msgstr ""
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "Gra nie jest zakończona. Czy naprawdę chcesz ją opuścić?"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
-msgid "Last move"
-msgstr "Ostatni ruch"
+#~ msgid "Last move"
+#~ msgstr "Ostatni ruch"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
-msgid "Are you sure? There are no other tiles left."
-msgstr "Jesteś pewien? Nie ma już innych kafelków."
+#~ msgid "Are you sure? There are no other tiles left."
+#~ msgstr "Jesteś pewien? Nie ma już innych kafelków."
 
 #~ msgid "Undeploy meeple"
 #~ msgstr "Zabierz pionek do rezerw"

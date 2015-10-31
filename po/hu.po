@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-22 13:03+0200\n"
+"POT-Creation-Date: 2015-10-31 15:08+0100\n"
 "PO-Revision-Date: 2015-10-22 13:09+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
@@ -657,7 +657,7 @@ msgid "Preset name"
 msgstr "Megnevezés"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:339
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:330
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:334
 msgid "Save"
 msgstr "Mentés"
 
@@ -719,7 +719,7 @@ msgid "Join game"
 msgstr "Csatlakozás a játékhoz"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:80
 msgid "Continue"
 msgstr "Folytatás"
 
@@ -788,40 +788,40 @@ msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr "Terjeszthető a GNU Affero General Public License v3 licenc szerint"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:84
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:86
 msgid "Use system language"
 msgstr "Op. rendszer nyelve"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:161
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:163
 msgid "Language"
 msgstr "Nyelv"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:177
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:179
 msgid "To apply new language you must restart the application"
 msgstr "A beállított nyelv érvénybe lépéséhez újraindítás szükséges"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:182
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:184
 msgid "AI placement delay (ms)"
 msgstr "Gép lépésének ideje (ezredmp)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:188
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:190
 msgid "Score display duration (sec)"
 msgstr "Szerzett pontok kijelzése (mp)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:289
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:293
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Preferences"
 msgstr "Egyéb beállítások"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
 msgid "Interface"
 msgstr "Felület"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:305
 msgid "Plugins"
 msgstr "Plugin"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:322
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:326
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 #: src/main/java/com/jcloisterzone/ui/Client.java:298
 #: src/main/java/com/jcloisterzone/ui/Client.java:305
@@ -972,9 +972,25 @@ msgstr "Nem egyező verzió."
 msgid "Invalid password"
 msgstr "Nem megfelelő jelszó"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:79
 msgid "Skip"
 msgstr "Passzolás"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Skip Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
+msgid "Cancel and place Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:291
+msgid "Last chance to place the Abbey"
+msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
