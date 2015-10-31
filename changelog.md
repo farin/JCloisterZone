@@ -1,5 +1,20 @@
 # Version history
 
+## 3.4.1
+*2015-10-31
+
+* it's possible to enable/disable plugins without app restart
+* tile distribution window (in help menu) - show overview of tiles in expansions
+* added OSX native full screen hook (thx khalidqasrawi)
+* monasteries in netherlands and belgium theme plugin
+* winter theme plugin
+* plugin icons are displayed in preferences/plugins
+* colored placement history (thx fatsu)
+* #112 - warn aboul last chance to place abbey
+* fixed few winter extra tiles definitions to match original winter tiles
+* fixed #184 - opponent can accidentally skip follower placement on Abbey
+* fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine
+
 ## 3.3.1
 *2015-08-25
 
