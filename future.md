@@ -9,6 +9,7 @@
 * winter theme plugin
 * plugin icons are displayed in preferences/plugins
 * colored placement history (thx fatsu)
+* #112 - warn aboul last chance to place abbey
 * fixed few winter extra tiles definitions to match original winter tiles
 * fixed #184 - opponent can accidentally skip follower placement on Abbey
 * fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine

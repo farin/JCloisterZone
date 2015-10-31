@@ -6,7 +6,6 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.event.WarningEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -39,9 +38,6 @@ public class AbbeyPhase extends ServerAwarePhase {
         if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && !getBoard().getHoles().isEmpty()) {
                 toggleClock(getActivePlayer());
-                if (abbeyCap.hasLastAbbeyChance()) {
-                	game.post(new WarningEvent(getActivePlayer()));
-                }
                 game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
                 return;
             }

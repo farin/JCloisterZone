@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -23,6 +26,7 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
@@ -34,7 +38,6 @@ import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.event.WarningEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -52,8 +55,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.message.CommitMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ControlPanel extends JPanel {
 
@@ -77,8 +78,6 @@ public class ControlPanel extends JPanel {
 
     private static final String PASS_LABEL = _("Skip");
     private static final String CONFIRMATION_LABEL = _("Continue");
-    private static final String LAST_MOVE_LABEL = _("Last move");
-    private static final String ABBEY_PASS_LABEL = _("Are you sure? There are no other tiles left."); 
 
     private final Client client;
     private final GameView gameView;
@@ -88,9 +87,8 @@ public class ControlPanel extends JPanel {
     private JButton passButton;
     private boolean showConfirmRequest;
     private boolean canPass;
-    private boolean showWarning;
     private boolean showProjectedPoints, projectedPointsValid = true;
-    
+
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
     private NeutralFigurePanel neutralPanel;
@@ -271,16 +269,31 @@ public class ControlPanel extends JPanel {
         paintBackgroundShadow((Graphics2D) g);
     }
 
+    private boolean isLastAbbeyPlacement() {
+    	PlayerAction<?>[] actions = actionPanel.getActions();
+    	if (actions == null) return false;
+    	if (actions.length == 0) return false;
+    	if (!(actions[0] instanceof AbbeyPlacementAction)) return false;
+    	return game.getTilePack().size() == 0;
+    }
+
     public void pass() {
         if (game.getActivePlayer().isLocalHuman()) {
             if (showConfirmRequest) {
                 setShowConfirmRequest(false);
                 gc.getConnection().send(new CommitMessage(game.getGameId()));
                 repaint();
-            } else if (showWarning) {
-            	showWarning = false;
-                gc.showWarning(LAST_MOVE_LABEL, ABBEY_PASS_LABEL);
             } else {
+            	if (isLastAbbeyPlacement()) {
+            	    String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
+            		int result = JOptionPane.showOptionDialog(client,
+                        _("This is your last turn. If you skip it your Abbey remain unplaced."),
+                        _("Last chance to place the Abbey"),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    if (result == -1 || result == 1) { //closed dialog
+                        return;
+                    }
+            	}
             	gc.getRmiProxy().pass();
             }
         }
@@ -366,16 +379,7 @@ public class ControlPanel extends JPanel {
             repaint();
         }
     }
-    
-    @Subscribe
-    public void handleWarning(WarningEvent ev) {
-        clearActions();
-        if (ev.getTargetPlayer().isLocalHuman()) {
-        	showWarning = true;
-        } else {
-        	showWarning = false;
-        }
-    }
+
 
     @Subscribe
     public void handleClockUpdateEvent(ClockUpdateEvent ev) {

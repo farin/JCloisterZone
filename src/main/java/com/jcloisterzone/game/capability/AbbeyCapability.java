@@ -16,8 +16,7 @@ public class AbbeyCapability extends Capability {
 
     private final Set<Player> unusedAbbey = new HashSet<>();
     private Player abbeyRoundLastPlayer; //when last tile is drawn all players can still place abbey
-    private boolean lastAbbeyChance = false;
-    
+
     public AbbeyCapability(Game game) {
         super(game);
     }
@@ -58,7 +57,7 @@ public class AbbeyCapability extends Capability {
             throw new IllegalArgumentException("Player alredy used his abbey");
         }
     }
-    
+
     public void undoUseAbbey(Player player) {
     	unusedAbbey.add(player);
     }
@@ -70,14 +69,7 @@ public class AbbeyCapability extends Capability {
     public void setAbbeyRoundLastPlayer(Player abbeyRoundLastPlayer) {
         this.abbeyRoundLastPlayer = abbeyRoundLastPlayer;
     }
-    
-    public boolean hasLastAbbeyChance() {
-    	return lastAbbeyChance;
-    }
-    
-    public void setLastAbbeyChance(boolean lastAbbeyChance) {
-    	this.lastAbbeyChance = lastAbbeyChance;
-    }
+
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {
