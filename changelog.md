@@ -1,7 +1,7 @@
 # Version history
 
 ## 3.4.1
-*2015-10-31
+*2015-10-31*
 
 * it's possible to enable/disable plugins without app restart
 * tile distribution window (in help menu) - show overview of tiles in expansions
@@ -16,7 +16,7 @@
 * fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine
 
 ## 3.3.1
-*2015-08-25
+*2015-08-25*
 
 * undo is possible also for bridge placements (and also for a tile which forced bridge placement) (#170)
 * fix #174: undo placement of a tile with tower base crash game
