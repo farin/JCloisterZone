@@ -5,8 +5,10 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -29,9 +31,17 @@ public class CastleLayer extends AbstractGridLayer {
     public CastleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         castleImage = getClient().getFigureTheme().getNeutralImage("castle");
+
+        gc.register(this);
     }
 
-    public void castleDeployed(Castle castle1, Castle castle2) {
+    @Subscribe
+    public void onCastleDeployed(CastleDeployedEvent ev) {
+	gridPanel.clearActionDecorations();
+        castleDeployed(ev.getPart1(), ev.getPart2());
+    }
+
+    private void castleDeployed(Castle castle1, Castle castle2) {
         Position p1 = castle1.getTile().getPosition();
         Position p2 = castle2.getTile().getPosition();
         Position pos;

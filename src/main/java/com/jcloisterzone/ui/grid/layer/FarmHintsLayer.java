@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -41,6 +42,9 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
     public FarmHintsLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+
+        gc.register(this);
+
         refreshHints();
     }
 
@@ -80,7 +84,8 @@ public class FarmHintsLayer extends AbstractGridLayer {
         g2.setComposite(old);
     }
 
-    public void tileEvent(TileEvent ev) {
+    @Subscribe
+    public void onTileEvent(TileEvent ev) {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT) {
             ResourceManager resourceManager = getClient().getResourceManager();
@@ -102,7 +107,8 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
     }
 
-    public void meepleEvent(MeepleEvent ev) {
+    @Subscribe
+    public void onMeepleEvent(MeepleEvent ev) {
         if (
             (ev.getFrom() != null && ev.getFrom().getLocation().isFarmLocation()) ||
             (ev.getTo() != null && ev.getTo().getLocation().isFarmLocation())
@@ -112,7 +118,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
     }
 
 
-    public void refreshHints() {
+    private void refreshHints() {
         doRefreshHints = true;
     }
 
