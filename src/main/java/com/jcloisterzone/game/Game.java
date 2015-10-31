@@ -141,7 +141,7 @@ public class Game extends GameSettings implements EventProxy {
         if (event instanceof PlayEvent && !event.isUndo()) {
             if (isUiSupportedUndo(event)) {
                 if (event instanceof BridgeEvent && ((BridgeEvent)event).isForced()) {
-                    //jsut add to chain after tile event
+                    //just add to chain after tile event
                     lastUndoable.add((Undoable) event);
                 } else {
                     lastUndoable.clear();
