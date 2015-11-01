@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.Client;
@@ -42,17 +43,22 @@ public class PlugableResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
+    	return getTileImage(tile, tile.getRotation());
+    }
+
+    @Override
+    public Image getTileImage(Tile tile, Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getTileImage(tile);
+            Image result = manager.getTileImage(tile, rot);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Image getAbbeyImage() {
+    public Image getAbbeyImage(Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getAbbeyImage();
+            Image result = manager.getAbbeyImage(rot);
             if (result != null) return result;
         }
         return null;

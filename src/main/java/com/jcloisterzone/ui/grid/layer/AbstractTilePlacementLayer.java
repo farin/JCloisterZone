@@ -22,8 +22,6 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     private Set<Position> availablePositions;
 
     private Position previewPosition;
-    private Image previewIcon;
-
 
     public AbstractTilePlacementLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -48,14 +46,11 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     }
 
 
-    abstract protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position pos);
-    abstract protected Image createPreviewIcon();
-
+    abstract protected void drawPreviewIcon(Graphics2D g2, Position pos);
 
     @Override
     public void onHide() {
         super.onHide();
-        previewIcon = null;
         availablePositions = null;
         previewPosition = null;
     }
@@ -81,10 +76,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
         }
 
         if (previewPosition != null) {
-            if (previewIcon == null) {
-                previewIcon = createPreviewIcon();
-            }
-            drawPreviewIcon(g2, previewIcon, previewPosition);
+            drawPreviewIcon(g2, previewPosition);
         }
         g2.setColor(active ? Color.BLACK : Color.GRAY);
 

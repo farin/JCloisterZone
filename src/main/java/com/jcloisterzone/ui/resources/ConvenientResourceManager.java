@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -43,20 +44,27 @@ public class ConvenientResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
-        Image img = imageCache.get(tile.getId());
+    	return getTileImage(tile, tile.getRotation());
+    }
+
+    @Override
+    public Image getTileImage(Tile tile, Rotation rot) {
+    	String key = tile.getId()+"@"+rot.toString();
+        Image img = imageCache.get(key);
         if (img == null) {
-            img = manager.getTileImage(tile);
-            imageCache.put(tile.getId(), img);
+            img = manager.getTileImage(tile, rot);
+            imageCache.put(key, img);
         }
         return img;
     }
 
     @Override
-    public Image getAbbeyImage() {
-        Image img = imageCache.get(Tile.ABBEY_TILE_ID);
+    public Image getAbbeyImage(Rotation rot) {
+    	String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
+        Image img = imageCache.get(key);
         if (img == null) {
-            img = manager.getAbbeyImage();
-            imageCache.put(Tile.ABBEY_TILE_ID, img);
+            img = manager.getAbbeyImage(rot);
+            imageCache.put(key, img);
         }
         return img;
     }

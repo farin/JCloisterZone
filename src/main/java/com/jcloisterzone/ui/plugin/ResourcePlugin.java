@@ -1,9 +1,11 @@
 package com.jcloisterzone.ui.plugin;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
@@ -32,6 +35,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.theme.FeatureDescriptor;
@@ -87,22 +91,47 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
-        return getTileImage(tile.getId());
+        return getTileImage(tile.getId(), tile.getRotation());
     }
 
     @Override
-    public Image getAbbeyImage() {
-        return getTileImage(Tile.ABBEY_TILE_ID);
+    public Image getTileImage(Tile tile, Rotation rot) {
+        return getTileImage(tile.getId(), rot);
     }
 
-    private Image getTileImage(String tileId) {
+    @Override
+    public Image getAbbeyImage(Rotation rot) {
+        return getTileImage(Tile.ABBEY_TILE_ID, rot);
+    }
+
+    private Image getTileImage(String tileId, Rotation rot) {
         if (!containsTile(tileId)) return null;
-        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
-        Image img = getImageResource(fileName);
-        if (img == null) return null;
-        return (new ImageIcon(img)).getImage();
+        String baseName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
+        String fileName;
+        Image img;
+        // first try to find rotation specific image
+        fileName = baseName + "@" + rot.toString() +".jpg";
+        img = getImageResource(fileName);
+        if (img != null) {
+        	return (new ImageIcon(img)).getImage();
+        }
+        // if not found, load generic one and rotate manually
+    	fileName = baseName + ".jpg";
+        img = getImageResource(fileName);
+    	if (img == null) return null;
+    	if (rot == Rotation.R0) return (new ImageIcon(img)).getImage();
+    	BufferedImage buf;
+    	int w = img.getWidth(null);
+    	int h = img.getHeight(null);
+    	if (rot == Rotation.R180) {
+    		buf = UiUtils.newTransparentImage(w, h);
+    	} else {
+    		buf = UiUtils.newTransparentImage(h, w);
+    	}
+		Graphics2D g = (Graphics2D) buf.getGraphics();
+		g.drawImage(img, rot.getAffineTransform(w, h), null);
+		return buf;
     }
-
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {

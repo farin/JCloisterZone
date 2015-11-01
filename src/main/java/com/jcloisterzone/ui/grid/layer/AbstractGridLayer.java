@@ -114,7 +114,9 @@ public abstract class AbstractGridLayer implements GridLayer {
         return t;
     }
 
-    public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Rotation rotation) {
+    //called only with R0
+    @Deprecated
+    private AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Rotation rotation) {
     	double ratioX, ratioY;
         if (rotation == Rotation.R0 || rotation == Rotation.R180) {
         	ratioX =  getTileWidth() / (double) fromWidth;

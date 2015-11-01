@@ -48,21 +48,17 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     }
 
     @Override
-    protected Image createPreviewIcon() {
-        return getClient().getResourceManager().getTileImage(action.getTile());
-    }
-
-    @Override
-    protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position previewPosition) {
+    protected void drawPreviewIcon(Graphics2D g2, Position previewPosition) {
         if (realRotation != action.getTileRotation()) {
             preparePreviewRotation(previewPosition);
         }
+        Image previewIcon = rm.getTileImage(action.getTile(), previewRotation);
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);
         g2.drawImage(previewIcon, getAffineTransform(
         	previewIcon.getWidth(null),
         	previewIcon.getHeight(null),
-        	previewPosition, previewRotation
+        	previewPosition
         ), null);
         g2.setComposite(compositeBackup);
     }
