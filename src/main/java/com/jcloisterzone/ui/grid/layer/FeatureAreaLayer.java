@@ -11,6 +11,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -60,12 +61,20 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
             }
             locations.remove(Location.ABBOT);
         }
+        int sizeX, sizeY;
+        if (tile.getRotation() == Rotation.R0 || tile.getRotation() == Rotation.R180) {
+        	sizeX = getTileWidth();
+        	sizeY = getTileHeight();
+        } else {
+        	sizeY = getTileWidth();
+        	sizeX = getTileHeight();
+        }
 
         Map<Location, FeatureArea> locMap;
         if (action instanceof BridgeAction) {
-            locMap = rm.getBridgeAreas(tile, getTileWidth(), getTileHeight(), locations);
+            locMap = rm.getBridgeAreas(tile, sizeX, sizeY, locations);
         } else {
-            locMap =  rm.getFeatureAreas(tile, getTileWidth(), getTileHeight(), locations);
+            locMap =  rm.getFeatureAreas(tile, sizeX, sizeY, locations);
         }
         return locationMapToPointers(p, locMap);
     }

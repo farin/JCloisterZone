@@ -200,7 +200,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         } else {
             double ratioX = width/(double)NORMALIZED_SIZE;
             double ratioY = height/(double)NORMALIZED_SIZE;
-            transform1 = AffineTransform.getScaleInstance(ratioX,ratioY);
+            transform1 = AffineTransform.getScaleInstance(ratioX, ratioY);
         }
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
         AffineTransform transform2 = tile.getRotation().getAffineTransform(width, height);

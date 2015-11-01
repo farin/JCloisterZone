@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.ui.GameController;

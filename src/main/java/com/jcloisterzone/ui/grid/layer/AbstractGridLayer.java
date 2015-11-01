@@ -103,15 +103,26 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
-        AffineTransform r =  rotation.getAffineTransform(getTileWidth(), getTileHeight());
+    	AffineTransform r;
+    	if (rotation == Rotation.R0 || rotation == Rotation.R180) {
+    		r =  rotation.getAffineTransform(getTileWidth(), getTileHeight());
+    	} else {
+    		r =  rotation.getAffineTransform(getTileHeight(), getTileWidth());
+    	}
         AffineTransform t =  AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos));
         t.concatenate(r);
         return t;
     }
 
     public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Rotation rotation) {
-        double ratioX =  getTileWidth() / (double) fromWidth;
-        double ratioY =  getTileHeight() / (double) fromHeight;
+    	double ratioX, ratioY;
+        if (rotation == Rotation.R0 || rotation == Rotation.R180) {
+        	ratioX =  getTileWidth() / (double) fromWidth;
+            ratioY =  getTileHeight() / (double) fromHeight;
+        } else {
+        	ratioX =  getTileHeight() / (double) fromWidth;
+            ratioY =  getTileWidth() / (double) fromHeight;
+        }
         return getAffineTransform(pos, rotation, ratioX, ratioY);
     }
 
