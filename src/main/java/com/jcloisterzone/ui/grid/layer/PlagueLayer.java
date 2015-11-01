@@ -23,7 +23,7 @@ public class PlagueLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g2) {
-        int sqSize = getSquareSize();
+        int sqSize = getTileWidth();
         int boxSize = (int)(sqSize*0.4);
         int i = 0;
 

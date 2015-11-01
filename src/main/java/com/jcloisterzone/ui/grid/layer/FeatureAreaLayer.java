@@ -44,7 +44,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         return action;
     }
 
-    protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+    @Override
+	protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         abbotOption = false;
         abbotOnlyOption = false;
         Set<Location> locations = action.getLocations(p);
@@ -60,12 +61,11 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
             locations.remove(Location.ABBOT);
         }
 
-        ConvenientResourceManager resMgr = getClient().getResourceManager();
         Map<Location, FeatureArea> locMap;
         if (action instanceof BridgeAction) {
-            locMap = resMgr.getBridgeAreas(tile, getSquareSize(), locations);
+            locMap = rm.getBridgeAreas(tile, getTileWidth(), getTileHeight(), locations);
         } else {
-            locMap =  resMgr.getFeatureAreas(tile, getSquareSize(), locations);
+            locMap =  rm.getFeatureAreas(tile, getTileWidth(), getTileHeight(), locations);
         }
         return locationMapToPointers(p, locMap);
     }

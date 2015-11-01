@@ -90,7 +90,7 @@ public class PlacementHistory extends AbstractGridLayer {
     		String text = String.valueOf(++counter);
     		Color color = entry.player != null ?  entry.player.getColors().getFontColor() : DEFAULT_COLOR;
 
-    		BufferedImage buf = UiUtils.newTransparentImage(getSquareSize(), getSquareSize());
+    		BufferedImage buf = UiUtils.newTransparentImage(getTileWidth(), getTileHeight());
     		Graphics2D gb = (Graphics2D) buf.getGraphics();
     		drawAntialiasedTextCentered(gb, text, 80, ZERO, POINT, color, null);
     		gb.setComposite(AlphaComposite.DstOver);

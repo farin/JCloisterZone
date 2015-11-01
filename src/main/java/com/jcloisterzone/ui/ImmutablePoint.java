@@ -2,7 +2,6 @@ package com.jcloisterzone.ui;
 
 import com.jcloisterzone.board.Rotation;
 
-//import java.util.WeakHashMap;
 
 public class ImmutablePoint {
 
@@ -14,10 +13,6 @@ public class ImmutablePoint {
         this.y = y;
     }
 
-    /*static public ImmutablePoint newInstance(int x, int y) {
-        return new ImmutablePoint(x,y);
-    }*/
-
     public int getX() {
         return x;
     }
@@ -26,20 +21,19 @@ public class ImmutablePoint {
         return y;
     }
 
-    public ImmutablePoint scale(int squareSize) {
-        return scale(squareSize, 0, 0);
+    public ImmutablePoint scale(int tileWidth, int tileHeight) {
+        return scale(tileWidth, tileHeight, 0, 0);
     }
 
-    public ImmutablePoint scale(int squareSize, int boxSize) {
-        return scale(squareSize, boxSize,boxSize);
+    public ImmutablePoint scale(int tileWidth, int tileHeight, int boxSize) {
+        return scale(tileWidth, tileHeight, boxSize, boxSize);
     }
 
-    public ImmutablePoint scale(int squareSize, int xSize, int ySize) {
+    public ImmutablePoint scale(int tileWidth, int tileHeight, int xSize, int ySize) {
         return new ImmutablePoint(
-                (int) (squareSize * (x / 100.0))
+                (int) (tileWidth * (x / 100.0))
                     - xSize / 2,
-
-                (int) (squareSize * (y / 100.0))
+                (int) (tileHeight * (y / 100.0))
                     - ySize / 2);
     }
 
@@ -97,7 +91,8 @@ public class ImmutablePoint {
         return false;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return getClass().getName() + "[x=" + x + ",y=" + y + "]";
     }
 }

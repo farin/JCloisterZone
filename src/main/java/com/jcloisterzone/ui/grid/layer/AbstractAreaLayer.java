@@ -103,14 +103,15 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
             }
             FeatureArea swap = null;
             BoardPointer swapPointer = null;
-            int size = getSquareSize();
+            int w = getTileWidth();
+            int h = getTileHeight();
             Point2D point = gridPanel.getRelativePoint(e.getPoint());
             int x = (int) point.getX();
             int y = (int) point.getY();
-            if (x < 0) x += 1000 * size; //prevent mod from negative number
-            if (y < 0) y += 1000 * size; //prevent mod from negative number
-            x = x % size;
-            y = y % size;
+            if (x < 0) x += 1000 * w; //prevent mod from negative number
+            if (y < 0) y += 1000 * h; //prevent mod from negative number
+            x = x % w;
+            y = y % h;
             for (Entry<BoardPointer, FeatureArea> entry : areas.entrySet()) {
                 FeatureArea fa = entry.getValue();
                 if (fa.getTrackingArea().contains(x, y)) {
@@ -214,10 +215,10 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, fp.getLocation());
         Player p = getGame().getActivePlayer();
         Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
-        int size = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
+        int size = (int) (getTileWidth() * MeepleLayer.FIGURE_SIZE_RATIO);
         Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
         scaled = new ImageIcon(scaled).getImage();
-        ImmutablePoint scaledOffset = point.scale(getSquareSize(), (int)(getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO));
+        ImmutablePoint scaledOffset = point.scale(getTileWidth(), getTileHeight(), size);
         g2.drawImage(scaled, getOffsetX(pos) + scaledOffset.getX(), getOffsetY(pos) + scaledOffset.getY(), gridPanel);
     }
 

@@ -49,7 +49,7 @@ public class GoldLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g2) {
-        int size = getSquareSize();
+        int size = getTileWidth();
         int w = (int)(size*0.4);
         int h = (int)(w / widthHeightRatio);
         g2.setColor(FILL_COLOR);

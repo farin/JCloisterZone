@@ -29,13 +29,13 @@ public class ConvenientResourceManager implements ResourceManager {
 
     //helper methods
 
-    public FeatureArea getBridgeArea(Tile tile, int size, Location loc) {
-        Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, size, Collections.singleton(loc));
+    public FeatureArea getBridgeArea(Tile tile, int width, int height, Location loc) {
+        Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, width, height, Collections.singleton(loc));
         return result.isEmpty() ? null : result.values().iterator().next();
     }
 
-    public FeatureArea getMeepleTileArea(Tile tile, int size, Location loc) {
-        Map<Location, FeatureArea> result =  manager.getFeatureAreas(tile, size, Collections.singleton(loc));
+    public FeatureArea getMeepleTileArea(Tile tile, int width, int height, Location loc) {
+        Map<Location, FeatureArea> result =  manager.getFeatureAreas(tile, width, height, Collections.singleton(loc));
         return result.isEmpty() ? null : result.values().iterator().next();
     }
 
@@ -67,18 +67,18 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
-        return manager.getBarnTileAreas(tile, size, corners);
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
+        return manager.getBarnTileAreas(tile, width, height, corners);
     }
 
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
-        return manager.getBridgeAreas(tile, size, locations);
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
+        return manager.getBridgeAreas(tile, width, height, locations);
     }
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
-        return manager.getFeatureAreas(tile, size, locations);
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
+        return manager.getFeatureAreas(tile, width, height, locations);
     }
 
 }

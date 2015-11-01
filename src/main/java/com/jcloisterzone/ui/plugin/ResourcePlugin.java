@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.plugin;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
@@ -154,7 +153,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         if (!containsTile(tile.getId())) return null;
 
         Map<Location, FeatureArea> areas = new HashMap<>();
@@ -196,14 +195,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
 
         AffineTransform transform1;
-        if (size == NORMALIZED_SIZE) {
+        if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
         } else {
-            double ratio = size/(double)NORMALIZED_SIZE;
-            transform1 = AffineTransform.getScaleInstance(ratio,ratio);
+            double ratioX = width/(double)NORMALIZED_SIZE;
+            double ratioY = height/(double)NORMALIZED_SIZE;
+            transform1 = AffineTransform.getScaleInstance(ratioX,ratioY);
         }
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
-        AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
+        AffineTransform transform2 = tile.getRotation().getAffineTransform(width, height);
 
         for (FeatureArea fa : areas.values()) {
             Area a = fa.getTrackingArea();
@@ -216,29 +216,30 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         return null;
     }
 
     //TODO Move to default provider ???
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
         if (!isEnabled()) return null;
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
-            result.put(loc, getBridgeArea(size, loc));
+            result.put(loc, getBridgeArea(width, height, loc));
         }
         return result;
     }
 
     //TODO move to Area Provider ???
-    private FeatureArea getBridgeArea(int size, Location loc) {
+    private FeatureArea getBridgeArea(int width, int height, Location loc) {
         AffineTransform transform1;
-        if (size == NORMALIZED_SIZE) {
+        if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
         } else {
-            double ratio = size/(double)NORMALIZED_SIZE;
-            transform1 = AffineTransform.getScaleInstance(ratio,ratio);
+            double ratioX = width/(double)NORMALIZED_SIZE;
+            double ratioY = height/(double)NORMALIZED_SIZE;
+            transform1 = AffineTransform.getScaleInstance(ratioX,ratioY);
         }
         Area a = pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
         return new FeatureArea(a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);

@@ -39,7 +39,6 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     };
 
 
-
     public boolean isActive() {
         return active;
     }
@@ -65,18 +64,19 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     @Override
     public void paint(Graphics2D g2) {
         if (availablePositions == null) return;
-        int borderSize = getSquareSize() - 4,
+        int xSize = getTileWidth() - 4,
+        	ySize = getTileHeight() - 4,
             shift = 2,
-            thickness = borderSize/14;
+            thickness = xSize/14;
 
         g2.setColor(Color.LIGHT_GRAY);
         for (Position p : availablePositions) {
             if (previewPosition == null || !previewPosition.equals(p)) {
                 int x = getOffsetX(p)+shift, y = getOffsetY(p)+shift;
-                g2.fillRect(x, y, borderSize, thickness);
-                g2.fillRect(x, y+borderSize-thickness, borderSize, thickness);
-                g2.fillRect(x, y, thickness, borderSize);
-                g2.fillRect(x+borderSize-thickness, y, thickness, borderSize);
+                g2.fillRect(x, y, xSize, thickness);
+                g2.fillRect(x, y+ySize-thickness, xSize, thickness);
+                g2.fillRect(x, y, thickness, ySize);
+                g2.fillRect(x+xSize-thickness, y, thickness, ySize);
             }
         }
 

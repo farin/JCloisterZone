@@ -40,7 +40,8 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
     protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position previewPosition) {
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(ALLOWED_PREVIEW);
-        g2.drawImage(previewIcon, getAffineTransform(previewIcon.getWidth(null), previewPosition), null);
+        g2.drawImage(previewIcon,
+        	getAffineTransform(previewIcon.getWidth(null), previewIcon.getHeight(null), previewPosition), null);
         g2.setComposite(compositeBackup);
     }
 

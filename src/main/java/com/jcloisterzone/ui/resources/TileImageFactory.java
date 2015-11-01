@@ -16,6 +16,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.ui.plugin.Plugin;
 
+@Deprecated
 public class TileImageFactory {
 
     private URLClassLoader loader;
@@ -75,7 +76,7 @@ public class TileImageFactory {
             if (rot != null) {
                 String path = feature.getClass().getSimpleName().toLowerCase();
                 Image img = getImageResource("tiles/"+path+"/"+base.toString()+".png");
-                g2.drawImage(img, rot.getAffineTransform(SIZE), null);
+                g2.drawImage(img, rot.getAffineTransform(SIZE, SIZE), null);
                 break;
             }
         }

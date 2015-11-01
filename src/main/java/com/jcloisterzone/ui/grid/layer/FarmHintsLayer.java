@@ -54,7 +54,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
         Composite old = g2.getComposite();
         g2.setComposite(HINT_ALPHA_COMPOSITE);
-        int sqSize = getSquareSize();
+        int sqSize = getTileWidth();
         Double scale = sqSize == FULL_SIZE ? null : (double) sqSize / FULL_SIZE;
         TextureFactory textures = new TextureFactory(sqSize);
 
@@ -88,7 +88,6 @@ public class FarmHintsLayer extends AbstractGridLayer {
     public void onTileEvent(TileEvent ev) {
         Tile tile = ev.getTile();
         if (ev.getType() == TileEvent.PLACEMENT) {
-            ResourceManager resourceManager = getClient().getResourceManager();
             Set<Location> farmLocations = new HashSet<>();
             for (Feature f : tile.getFeatures()) {
                 if (f instanceof Farm) {
@@ -96,7 +95,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
                 }
             }
             if (farmLocations.isEmpty()) return;
-            Map<Location, FeatureArea> tAreas = resourceManager.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+            Map<Location, FeatureArea> tAreas = rm.getFeatureAreas(tile, FULL_SIZE, FULL_SIZE, farmLocations);
             areas.put(tile, tAreas);
             refreshHints();
         }

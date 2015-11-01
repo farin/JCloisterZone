@@ -59,8 +59,13 @@ public class CastleLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g2) {
-        int size = getSquareSize();
+        int size;
         for (DeployedCastle dc : castles) {
+        	if (dc.rotation == Rotation.R0 || dc.rotation == Rotation.R180) {
+        		size = getTileWidth();
+        	} else {
+        		size = getTileHeight();
+        	}
             if (dc.rotation == Rotation.R0) {
                 g2.drawImage(castleImage, getOffsetX(dc.position), getOffsetY(dc.position) + size/2, size, size, null);
             } else {

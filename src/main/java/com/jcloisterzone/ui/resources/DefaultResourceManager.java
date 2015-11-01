@@ -19,12 +19,14 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
-        return (new TileImageFactory()).getTileImage(tile);
+        //return (new TileImageFactory()).getTileImage(tile);
+    	return null;
     }
 
     @Override
     public Image getAbbeyImage() {
-        return (new TileImageFactory()).getAbbeyImage();
+        //return (new TileImageFactory()).getAbbeyImage();
+        return null;
     }
 
 
@@ -45,14 +47,15 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-	public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+	public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location corner : corners) {
-            int r = size/2;
-            Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
-            if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
-            if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
-            if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
+            int rx = width/2;
+            int ry = height/2;
+            Area a = new Area(new Ellipse2D.Double(-rx,-ry,2*rx,2*ry));
+            if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(width, height));
+            if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(width, height));
+            if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(width, height));
             result.put(corner, new FeatureArea(a, FeatureArea.DEFAULT_FARM_ZINDEX));
         }
         return result;
@@ -60,12 +63,12 @@ public class DefaultResourceManager implements ResourceManager {
 
 
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
         return null;
     }
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         return null;
     }
 

@@ -59,7 +59,11 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         }
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);
-        g2.drawImage(previewIcon, getAffineTransform(previewIcon.getWidth(null), previewPosition, previewRotation), null);
+        g2.drawImage(previewIcon, getAffineTransform(
+        	previewIcon.getWidth(null),
+        	previewIcon.getHeight(null),
+        	previewPosition, previewRotation
+        ), null);
         g2.setComposite(compositeBackup);
     }
 

@@ -128,7 +128,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g) {
-        int squareSize = getSquareSize();
+        int squareSize = getTileWidth();
 
         for (PositionedFigureImage mi : images) {
             if (!mi.bridgePlacement) {
@@ -144,7 +144,7 @@ public class MeepleLayer extends AbstractGridLayer {
     public void paintMeeplesOnBridges(Graphics2D g) {
         for (PositionedFigureImage mi : images) {
             if (mi.bridgePlacement) {
-                paintPositionedImage(g, mi, getSquareSize() );
+                paintPositionedImage(g, mi, getTileWidth() );
             }
         }
     }
@@ -362,13 +362,13 @@ public class MeepleLayer extends AbstractGridLayer {
         }
 
         public ImmutablePoint getScaledOffset(int boxSize) {
-            return offset.scale(getSquareSize(), boxSize);
+            return offset.scale(getTileWidth(), getTileHeight(), boxSize);
         }
 
         public ImageData getScaledImageData(int squareSize) {
             if (scaledImageData == null) {
 
-        	int boxSize = (int) (getSquareSize() * sizeRatio); //TODO no resize - direct image resize???
+        	int boxSize = (int) (getTileWidth() * sizeRatio); //TODO no resize - direct image resize???
 
         	ImmutablePoint scaledOffset = getScaledOffset(boxSize);
 
@@ -408,7 +408,7 @@ public class MeepleLayer extends AbstractGridLayer {
             if (order > 0) {
                 point = point.translate(10*order, 0);
             }
-            return point.scale(getSquareSize(), boxSize);
+            return point.scale(getTileWidth(), getTileHeight(), boxSize);
         }
 
         public Figure getFigure() {

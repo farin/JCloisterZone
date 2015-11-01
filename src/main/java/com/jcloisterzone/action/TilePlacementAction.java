@@ -83,7 +83,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> implements 
         Image img =  client.getResourceManager().getTileImage(tile);
         int w = img.getWidth(null), h = img.getHeight(null);
         BufferedImage bi = UiUtils.newTransparentImage(w, h);
-        AffineTransform at = tileRotation.getAffineTransform(w);
+        AffineTransform at = tileRotation.getAffineTransform(w, h);
         Graphics2D ig = bi.createGraphics();
         ig.drawImage(img, at, null);
         ig.setColor(Color.BLACK);

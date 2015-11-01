@@ -20,13 +20,13 @@ public class FlierDiceRollAnimation extends AbstractAnimation {
 
     @Override
     public void paint(AnimationLayer l, Graphics2D g2) {
-        int sqSize = l.getSquareSize(),
-            s = (int)(sqSize * 0.4),
-            padding = (int)(sqSize * 0.05),
-            dotSize = (int)(sqSize * 0.08),
+        int size = l.getTileWidth(),
+            s = (int)(size * 0.4),
+            padding = (int)(size * 0.05),
+            dotSize = (int)(size * 0.08),
             x = l.getOffsetX(tilePosition),
             y = l.getOffsetY(tilePosition),
-            boxX = x+sqSize-padding-s,
+            boxX = x+size-padding-s,
             boxY = y+padding;
         g2.setColor(Color.WHITE);
         g2.fillRect(boxX, boxY, s, s);
@@ -44,5 +44,4 @@ public class FlierDiceRollAnimation extends AbstractAnimation {
             }
         }
     }
-
 }

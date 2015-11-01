@@ -29,13 +29,14 @@ public class TileLayer extends AbstractGridLayer {
         //TODO nice shadow
         if (!getClient().getGridPanel().isLayerVisible(AbstractTilePlacementLayer.class)) {
             g2.setColor(Color.WHITE);
-            int squareSize = getSquareSize(),
-                thickness = squareSize / 11;
+            int xSize = getTileWidth(),
+            	ySize = getTileHeight(),
+                thickness = xSize / 11;
             for (Tile tile : placedTiles) {
                 Position p = tile.getPosition();
                 if (tile.getPosition() != null) { //threading, tile can be removed
                     int x = getOffsetX(p), y = getOffsetY(p);
-                    g2.fillRect(x-thickness, y-thickness, squareSize+2*thickness, squareSize+2*thickness);
+                    g2.fillRect(x-thickness, y-thickness, xSize+2*thickness, ySize+2*thickness);
                 }
             }
         }
@@ -43,7 +44,9 @@ public class TileLayer extends AbstractGridLayer {
         for (Tile tile : placedTiles) {
             if (tile.getPosition() != null) {
                 Image img = getClient().getResourceManager().getTileImage(tile);
-                g2.drawImage(img, getAffineTransform(img.getWidth(null), tile.getPosition(), tile.getRotation()), null);
+                int w = img.getWidth(null);
+                int h = img.getHeight(null);
+                g2.drawImage(img, getAffineTransform(w, h, tile.getPosition(), tile.getRotation()), null);
             }
         }
     }
