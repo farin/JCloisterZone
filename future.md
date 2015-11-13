@@ -2,6 +2,7 @@
 
 ## Done in current dev
 
+fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
 
 ## Roadmap
 
