@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -47,6 +48,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
+    private String tileImagesExt = ".jpg";
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
@@ -80,6 +82,14 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             Expansion exp = Expansion.valueOf(expName);
             supportedExpansions.add(exp.getCode());
         }
+
+        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
+        if (tiles != null) {
+            String ext = XMLUtils.childValue(tiles, "image-type");
+            if (ext != null) {
+                tileImagesExt = "." + ext.trim();
+            }
+        }
     }
 
 
@@ -110,27 +120,27 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         String fileName;
         Image img;
         // first try to find rotation specific image
-        fileName = baseName + "@" + rot.toString() +".jpg";
+        fileName = baseName + "@" + rot.ordinal() + tileImagesExt;
         img = getImageResource(fileName);
         if (img != null) {
-        	return (new ImageIcon(img)).getImage();
+            return (new ImageIcon(img)).getImage();
         }
         // if not found, load generic one and rotate manually
-    	fileName = baseName + ".jpg";
+        fileName = baseName + tileImagesExt;
         img = getImageResource(fileName);
-    	if (img == null) return null;
-    	if (rot == Rotation.R0) return (new ImageIcon(img)).getImage();
-    	BufferedImage buf;
-    	int w = img.getWidth(null);
-    	int h = img.getHeight(null);
-    	if (rot == Rotation.R180) {
-    		buf = UiUtils.newTransparentImage(w, h);
-    	} else {
-    		buf = UiUtils.newTransparentImage(h, w);
-    	}
-		Graphics2D g = (Graphics2D) buf.getGraphics();
-		g.drawImage(img, rot.getAffineTransform(w, h), null);
-		return buf;
+        if (img == null) return null;
+        if (rot == Rotation.R0) return (new ImageIcon(img)).getImage();
+        BufferedImage buf;
+        int w = img.getWidth(null);
+        int h = img.getHeight(null);
+        if (rot == Rotation.R180) {
+            buf = UiUtils.newTransparentImage(w, h);
+        } else {
+            buf = UiUtils.newTransparentImage(h, w);
+        }
+        Graphics2D g = (Graphics2D) buf.getGraphics();
+        g.drawImage(img, rot.getAffineTransform(w, h), null);
+        return buf;
     }
 
     @Override
