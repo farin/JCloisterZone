@@ -2,14 +2,12 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.ui.GameController;
@@ -19,7 +17,13 @@ import com.jcloisterzone.ui.resources.TileImage;
 public class TileLayer extends AbstractGridLayer {
 
     //keep own copy of tiles in Swing thread to prevent concurent modification ex. of tile list on game
-    private List<Tile> placedTiles = new ArrayList<>();
+    private SortedSet<Tile> placedTiles = new TreeSet<>(new Comparator<Tile>() {
+        @Override
+        public int compare(Tile o1, Tile o2) {
+            return o1.getPosition().compareTo(o2.getPosition());
+
+        }
+    });
 
     public TileLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
