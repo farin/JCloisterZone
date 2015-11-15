@@ -101,8 +101,6 @@
     </point>
     <point feature="FARM" cx="800" cy="300">
         <apply allRotations="1">* NR.EL.ER</apply>
-    </point>
-    <point feature="FARM" cx="800" cy="500">
         <apply allRotations="1">* NR.EL.ER.SL</apply>
     </point>
 
