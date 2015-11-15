@@ -16,6 +16,7 @@ import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.TileImage;
 
 public class TilePlacementLayer extends AbstractTilePlacementLayer implements ActionLayer<TilePlacementAction>, ForwardBackwardListener {
 
@@ -37,7 +38,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
             setAvailablePositions(null);
             realRotation = null;
         } else {
-        	action.setForwardBackwardDelegate(this);
+            action.setForwardBackwardDelegate(this);
             setAvailablePositions(action.groupByPosition().keySet());
         };
     }
@@ -52,14 +53,10 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         if (realRotation != action.getTileRotation()) {
             preparePreviewRotation(previewPosition);
         }
-        Image previewIcon = rm.getTileImage(action.getTile(), previewRotation);
+        TileImage previewIcon = rm.getTileImage(action.getTile(), previewRotation);
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);
-        g2.drawImage(previewIcon, getAffineTransform(
-        	previewIcon.getWidth(null),
-        	previewIcon.getHeight(null),
-        	previewPosition
-        ), null);
+        g2.drawImage(previewIcon.getImage(), getAffineTransform(previewIcon, previewPosition), null);
         g2.setComposite(compositeBackup);
     }
 
@@ -85,39 +82,39 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
 
     @Override
     public void forward() {
-    	rotate(Rotation.R90);
+        rotate(Rotation.R90);
     }
 
     @Override
     public void backward() {
-    	rotate(Rotation.R270);
+        rotate(Rotation.R270);
     }
 
     private void rotate(Rotation spin) {
-    	Rotation current = action.getTileRotation();
-    	Rotation next = current.add(spin);
-    	if (getPreviewPosition() != null) {
-    		Set<Rotation> rotations = action.getRotations(getPreviewPosition());
-    		if (!rotations.isEmpty()) {
-	    		if (rotations.size() == 1) {
-	    			next = rotations.iterator().next();
-	    		} else {
+        Rotation current = action.getTileRotation();
+        Rotation next = current.add(spin);
+        if (getPreviewPosition() != null) {
+            Set<Rotation> rotations = action.getRotations(getPreviewPosition());
+            if (!rotations.isEmpty()) {
+                if (rotations.size() == 1) {
+                    next = rotations.iterator().next();
+                } else {
 
-	    			if (rotations.contains(current)) {
-	    				while (!rotations.contains(next)) next = next.add(spin);
-	    			} else {
-	    				if (action.getTile().getSymmetry() == TileSymmetry.S2 && rotations.size() == 2) {
-	    					//if S2 and size == 2 rotate to flip preview to second choice
-	    					next = next.add(spin);
-	    				} else {
-	    					next = current;
-	    				}
-	    				while (!rotations.contains(next)) next = next.add(spin);
-	    			}
-	    		}
-    		}
-    	}
-    	action.setTileRotation(next);
+                    if (rotations.contains(current)) {
+                        while (!rotations.contains(next)) next = next.add(spin);
+                    } else {
+                        if (action.getTile().getSymmetry() == TileSymmetry.S2 && rotations.size() == 2) {
+                            //if S2 and size == 2 rotate to flip preview to second choice
+                            next = next.add(spin);
+                        } else {
+                            next = current;
+                        }
+                        while (!rotations.contains(next)) next = next.add(spin);
+                    }
+                }
+            }
+        }
+        action.setTileRotation(next);
         ActionPanel panel = action.getMainPanel().getControlPanel().getActionPanel();
         panel.refreshImageCache();
         action.getMainPanel().getGridPanel().repaint();

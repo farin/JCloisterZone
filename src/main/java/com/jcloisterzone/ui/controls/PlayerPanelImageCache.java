@@ -87,7 +87,7 @@ public class PlayerPanelImageCache {
             scaledImages.put("wine", theme.getNeutralImage("wine"));
         }
         if (game.hasCapability(BarnCapability.class)) {
-            scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage(Rotation.R0)));
+            scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage(Rotation.R0).getImage()));
         }
         if (game.hasCapability(LittleBuildingsCapability.class)) {
             scaledImages.put("lb-tower", scaleImage(theme.getNeutralImage("lb-tower")));

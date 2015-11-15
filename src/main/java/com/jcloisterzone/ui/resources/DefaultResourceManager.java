@@ -18,20 +18,20 @@ public class DefaultResourceManager implements ResourceManager {
 
 
     @Override
-    public Image getTileImage(Tile tile) {
+    public TileImage getTileImage(Tile tile) {
         //return (new TileImageFactory()).getTileImage(tile);
-    	return null;
+        return null;
     }
 
     @Override
-    public Image getTileImage(Tile tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         //return (new TileImageFactory()).getTileImage(tile);
-    	return null;
+        return null;
     }
 
 
     @Override
-    public Image getAbbeyImage(Rotation rot) {
+    public TileImage getAbbeyImage(Rotation rot) {
         //return (new TileImageFactory()).getAbbeyImage();
         return null;
     }
@@ -54,7 +54,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-	public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location corner : corners) {
             int rx = width/2;
@@ -78,7 +78,4 @@ public class DefaultResourceManager implements ResourceManager {
     public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         return null;
     }
-
-
-
 }

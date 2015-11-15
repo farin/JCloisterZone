@@ -120,9 +120,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     private void updateTileSize(int baseWidth) {
-    	tileWidth = baseWidth;
-    	tileHeight = baseWidth;
-    	//tileHeight = (int)(0.8 * baseWidth);
+        tileWidth = baseWidth;
+        //tileHeight = baseWidth;
+        tileHeight = (int)(240.0/340.0 * baseWidth);
     }
 
 
@@ -231,12 +231,12 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public int getTileWidth() {
-		return tileWidth;
-	}
+        return tileWidth;
+    }
 
     public int getTileHeight() {
-		return tileHeight;
-	}
+        return tileHeight;
+    }
 
     public int getOffsetX() {
         return offsetX;
@@ -416,11 +416,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void showErrorMessage(String errorMessage) {
-    	if (errorMsg != null) {
-    		remove(errorMsg);
-    	}
-    	errorMsg = new ErrorMessagePanel(errorMessage);
-    	errorMsg.setOpaque(true);
+        if (errorMsg != null) {
+            remove(errorMsg);
+        }
+        errorMsg = new ErrorMessagePanel(errorMessage);
+        errorMsg.setOpaque(true);
         add(errorMsg, "pos 0 0 (100%-242) 30");
         revalidate();
         repaint();

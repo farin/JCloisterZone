@@ -18,7 +18,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public class ConvenientResourceManager implements ResourceManager {
 
     private final ResourceManager manager;
-    private final Map<String, Image> imageCache = new HashMap<>();
+    private final Map<String, TileImage> imageCache = new HashMap<>();
 
     public ConvenientResourceManager(ResourceManager manager) {
         this.manager = manager;
@@ -43,14 +43,14 @@ public class ConvenientResourceManager implements ResourceManager {
     //delegate methods
 
     @Override
-    public Image getTileImage(Tile tile) {
-    	return getTileImage(tile, tile.getRotation());
+    public TileImage getTileImage(Tile tile) {
+        return getTileImage(tile, tile.getRotation());
     }
 
     @Override
-    public Image getTileImage(Tile tile, Rotation rot) {
-    	String key = tile.getId()+"@"+rot.toString();
-        Image img = imageCache.get(key);
+    public TileImage getTileImage(Tile tile, Rotation rot) {
+        String key = tile.getId()+"@"+rot.toString();
+        TileImage img = imageCache.get(key);
         if (img == null) {
             img = manager.getTileImage(tile, rot);
             imageCache.put(key, img);
@@ -59,9 +59,9 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public Image getAbbeyImage(Rotation rot) {
-    	String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
-        Image img = imageCache.get(key);
+    public TileImage getAbbeyImage(Rotation rot) {
+        String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
+        TileImage img = imageCache.get(key);
         if (img == null) {
             img = manager.getAbbeyImage(rot);
             imageCache.put(key, img);

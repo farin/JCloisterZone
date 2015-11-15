@@ -27,6 +27,7 @@ import com.jcloisterzone.board.TilePackFactory.TileCount;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.WrapLayout;
+import com.jcloisterzone.ui.resources.TileImage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -99,7 +100,7 @@ public class TileDistributionWindow extends JFrame {
     }
 
     private class TileLabel extends JPanel {
-        private final Image image;
+        private final TileImage image;
         private String count;
 
         public TileLabel(Expansion exp, TileCount tc) {
@@ -112,7 +113,9 @@ public class TileDistributionWindow extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
-            g2.drawImage(image,0,0,SIZE,SIZE,this);
+            if (image != null) {
+                g2.drawImage(image.getImage(), 0, 0, SIZE, SIZE, this);
+            }
             g2.setColor(Color.WHITE);
             g2.fillRect(0, SIZE, SIZE, BANNER);
             g2.setColor(Color.BLACK);

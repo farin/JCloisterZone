@@ -270,11 +270,11 @@ public class ControlPanel extends JPanel {
     }
 
     private boolean isLastAbbeyPlacement() {
-    	PlayerAction<?>[] actions = actionPanel.getActions();
-    	if (actions == null) return false;
-    	if (actions.length == 0) return false;
-    	if (!(actions[0] instanceof AbbeyPlacementAction)) return false;
-    	return game.getTilePack().size() == 0;
+        PlayerAction<?>[] actions = actionPanel.getActions();
+        if (actions == null) return false;
+        if (actions.length == 0) return false;
+        if (!(actions[0] instanceof AbbeyPlacementAction)) return false;
+        return game.getTilePack().size() == 0;
     }
 
     public void pass() {
@@ -284,17 +284,17 @@ public class ControlPanel extends JPanel {
                 gc.getConnection().send(new CommitMessage(game.getGameId()));
                 repaint();
             } else {
-            	if (isLastAbbeyPlacement()) {
-            	    String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
-            		int result = JOptionPane.showOptionDialog(client,
+                if (isLastAbbeyPlacement()) {
+                    String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
+                    int result = JOptionPane.showOptionDialog(client,
                         _("This is your last turn. If you skip it your Abbey remain unplaced."),
                         _("Last chance to place the Abbey"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                     if (result == -1 || result == 1) { //closed dialog
                         return;
                     }
-            	}
-            	gc.getRmiProxy().pass();
+                }
+                gc.getRmiProxy().pass();
             }
         }
     }
@@ -486,7 +486,7 @@ public class ControlPanel extends JPanel {
             if (!queue.isEmpty()) {
                 int x = LEFT_MARGIN+LEFT_PADDING;
                 for (Tile tile : queue) {
-                    Image img = client.getResourceManager().getTileImage(tile);
+                    Image img = client.getResourceManager().getTileImage(tile).getImage();
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;
                 }

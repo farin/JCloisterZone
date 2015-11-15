@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
@@ -26,6 +27,7 @@ import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AbstractGridLayer implements GridLayer {
@@ -94,6 +96,21 @@ public abstract class AbstractGridLayer implements GridLayer {
             mouseListener = null;
         }
     }
+
+    public AffineTransform getAffineTransform(TileImage tileImage, Position pos) {
+        Insets offset = tileImage.getOffset();
+        Image img = tileImage.getImage();
+        int w = img.getWidth(null) - offset.left - offset.right;
+        int h = img.getHeight(null) - offset.top - offset.bottom;
+        return getAffineTransform(w, h, pos, offset);
+    }
+
+    public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Insets offset) {
+        AffineTransform t = getAffineTransform(fromWidth, fromHeight, pos, Rotation.R0);
+        t.concatenate(AffineTransform.getTranslateInstance(-offset.left, -offset.top));
+        return t;
+    }
+
     public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos) {
         return getAffineTransform(fromWidth, fromHeight, pos, Rotation.R0);
     }
@@ -103,12 +120,12 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
-    	AffineTransform r;
-    	if (rotation == Rotation.R0 || rotation == Rotation.R180) {
-    		r =  rotation.getAffineTransform(getTileWidth(), getTileHeight());
-    	} else {
-    		r =  rotation.getAffineTransform(getTileHeight(), getTileWidth());
-    	}
+        AffineTransform r;
+        if (rotation == Rotation.R0 || rotation == Rotation.R180) {
+            r =  rotation.getAffineTransform(getTileWidth(), getTileHeight());
+        } else {
+            r =  rotation.getAffineTransform(getTileHeight(), getTileWidth());
+        }
         AffineTransform t =  AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos));
         t.concatenate(r);
         return t;
@@ -117,12 +134,12 @@ public abstract class AbstractGridLayer implements GridLayer {
     //called only with R0
     @Deprecated
     private AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Rotation rotation) {
-    	double ratioX, ratioY;
+        double ratioX, ratioY;
         if (rotation == Rotation.R0 || rotation == Rotation.R180) {
-        	ratioX =  getTileWidth() / (double) fromWidth;
+            ratioX =  getTileWidth() / (double) fromWidth;
             ratioY =  getTileHeight() / (double) fromHeight;
         } else {
-        	ratioX =  getTileHeight() / (double) fromWidth;
+            ratioX =  getTileHeight() / (double) fromWidth;
             ratioY =  getTileWidth() / (double) fromHeight;
         }
         return getAffineTransform(pos, rotation, ratioX, ratioY);

@@ -3,6 +3,7 @@ package com.jcloisterzone.ui.grid.layer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.TileEvent;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.TileImage;
 
 public class TileLayer extends AbstractGridLayer {
 
@@ -31,7 +33,7 @@ public class TileLayer extends AbstractGridLayer {
         if (!getClient().getGridPanel().isLayerVisible(AbstractTilePlacementLayer.class)) {
             g2.setColor(Color.WHITE);
             int xSize = getTileWidth(),
-            	ySize = getTileHeight(),
+                ySize = getTileHeight(),
                 thickness = xSize / 11;
             for (Tile tile : placedTiles) {
                 Position p = tile.getPosition();
@@ -44,21 +46,19 @@ public class TileLayer extends AbstractGridLayer {
 
         for (Tile tile : placedTiles) {
             if (tile.getPosition() != null) {
-                Image img = getClient().getResourceManager().getTileImage(tile);
-                int w = img.getWidth(null);
-                int h = img.getHeight(null);
-                g2.drawImage(img, getAffineTransform(w, h, tile.getPosition()), null);
+                TileImage tileImg = getClient().getResourceManager().getTileImage(tile);
+                g2.drawImage(tileImg.getImage(), getAffineTransform(tileImg, tile.getPosition()), null);
             }
         }
     }
 
     @Subscribe
     public void handleTileEvent(TileEvent ev) {
-	if (ev.getType() == TileEvent.PLACEMENT) {
-	    tilePlaced(ev.getTile());
-	} else if (ev.getType() == TileEvent.REMOVE) {
-	    tileRemoved(ev.getTile());
-	}
+    if (ev.getType() == TileEvent.PLACEMENT) {
+        tilePlaced(ev.getTile());
+    } else if (ev.getType() == TileEvent.REMOVE) {
+        tileRemoved(ev.getTile());
+    }
     }
 
     private void tilePlaced(Tile tile) {

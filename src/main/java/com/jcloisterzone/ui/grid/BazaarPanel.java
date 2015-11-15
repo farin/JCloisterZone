@@ -104,13 +104,13 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                	if (state == BazaarPanelState.SELECT_TILE) {
-                		ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
-                		int idx = BazaarItemPanel.this.idx;
-                		if (supply.get(idx).getOwner() == null) {
-                			setSelectedItem(idx);
-                		}
-                	}
+                    if (state == BazaarPanelState.SELECT_TILE) {
+                        ArrayList<BazaarItem> supply = bcb.getBazaarSupply();
+                        int idx = BazaarItemPanel.this.idx;
+                        if (supply.get(idx).getOwner() == null) {
+                            setSelectedItem(idx);
+                        }
+                    }
                 }
             });
         }
@@ -120,7 +120,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
 
-            Image img =  client.getResourceManager().getTileImage(bi.getTile());
+            Image img =  client.getResourceManager().getTileImage(bi.getTile()).getImage();
 
             if (selectedItem == idx) {
                 g2.setColor(ControlPanel.PLAYER_BG_COLOR);

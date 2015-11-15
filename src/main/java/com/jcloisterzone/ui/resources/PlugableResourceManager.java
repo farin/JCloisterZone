@@ -42,23 +42,23 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Image getTileImage(Tile tile) {
-    	return getTileImage(tile, tile.getRotation());
+    public TileImage getTileImage(Tile tile) {
+        return getTileImage(tile, tile.getRotation());
     }
 
     @Override
-    public Image getTileImage(Tile tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getTileImage(tile, rot);
+            TileImage result = manager.getTileImage(tile, rot);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Image getAbbeyImage(Rotation rot) {
+    public TileImage getAbbeyImage(Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getAbbeyImage(rot);
+            TileImage result = manager.getAbbeyImage(rot);
             if (result != null) return result;
         }
         return null;

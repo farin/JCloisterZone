@@ -80,7 +80,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> implements 
 
     @Override
     public Image getImage(Player player, boolean active) {
-        Image img =  client.getResourceManager().getTileImage(tile);
+        Image img =  client.getResourceManager().getTileImage(tile).getImage();
         int w = img.getWidth(null), h = img.getHeight(null);
         BufferedImage bi = UiUtils.newTransparentImage(w, h);
         AffineTransform at = tileRotation.getAffineTransform(w, h);

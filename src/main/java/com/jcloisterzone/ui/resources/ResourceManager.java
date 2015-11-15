@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.resources;
 
-import java.awt.Image;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,10 +11,9 @@ import com.jcloisterzone.ui.ImmutablePoint;
 
 public interface ResourceManager {
 
-
-    Image getTileImage(Tile tile);  //take rotation from tile instance
-    Image getTileImage(Tile tile, Rotation rot); //use custom rotation
-    Image getAbbeyImage(Rotation rot);
+    TileImage getTileImage(Tile tile);  //take rotation from tile instance
+    TileImage getTileImage(Tile tile, Rotation rot); //use custom rotation
+    TileImage getAbbeyImage(Rotation rot);
 
     Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations);
     Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners);

@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.plugin;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -39,6 +40,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.ResourceManager;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.theme.FeatureDescriptor;
 import com.jcloisterzone.ui.theme.ThemeGeometry;
 
@@ -49,6 +51,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
     private String tileImagesExt = ".jpg";
+    private Insets imageOffset = new Insets(49, 0, 0, 0); //TODO load from xml
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
@@ -100,21 +103,21 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public Image getTileImage(Tile tile) {
+    public TileImage getTileImage(Tile tile) {
         return getTileImage(tile.getId(), tile.getRotation());
     }
 
     @Override
-    public Image getTileImage(Tile tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         return getTileImage(tile.getId(), rot);
     }
 
     @Override
-    public Image getAbbeyImage(Rotation rot) {
+    public TileImage getAbbeyImage(Rotation rot) {
         return getTileImage(Tile.ABBEY_TILE_ID, rot);
     }
 
-    private Image getTileImage(String tileId, Rotation rot) {
+    private TileImage getTileImage(String tileId, Rotation rot) {
         if (!containsTile(tileId)) return null;
         String baseName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
         String fileName;
@@ -123,13 +126,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         fileName = baseName + "@" + rot.ordinal() + tileImagesExt;
         img = getImageResource(fileName);
         if (img != null) {
-            return (new ImageIcon(img)).getImage();
+            return new TileImage((new ImageIcon(img)).getImage(), imageOffset);
         }
         // if not found, load generic one and rotate manually
         fileName = baseName + tileImagesExt;
         img = getImageResource(fileName);
         if (img == null) return null;
-        if (rot == Rotation.R0) return (new ImageIcon(img)).getImage();
+        if (rot == Rotation.R0) {
+            return new TileImage((new ImageIcon(img)).getImage(), imageOffset);
+        }
         BufferedImage buf;
         int w = img.getWidth(null);
         int h = img.getHeight(null);
@@ -140,7 +145,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         Graphics2D g = (Graphics2D) buf.getGraphics();
         g.drawImage(img, rot.getAffineTransform(w, h), null);
-        return buf;
+        return new TileImage(buf, imageOffset);
     }
 
     @Override
