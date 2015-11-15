@@ -95,6 +95,7 @@ public class MainPanel extends JPanel {
         MeepleLayer meepleLayer = new MeepleLayer(gridPanel, gc);
         farmHintLayer = new FarmHintsLayer(gridPanel, gc);
 
+        gridPanel.addLayer(new TilePlacementLayer(gridPanel, gc), false);
         gridPanel.addLayer(new TileLayer(gridPanel, gc));  //zindex 2
         if (game.hasCapability(TowerCapability.class)) {
             gridPanel.addLayer(new TowerLayer(gridPanel, gc)); //5
@@ -131,7 +132,6 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(new BarnAreaLayer(gridPanel, gc), false);
         }
 
-        gridPanel.addLayer(new TilePlacementLayer(gridPanel, gc), false);
         gridPanel.addLayer(new FeatureAreaLayer(gridPanel, gc), false);
         if (game.hasCapability(TowerCapability.class) || game.hasCapability(FairyCapability.class) || game.hasCapability(GoldminesCapability.class)) {
             gridPanel.addLayer(new TileActionLayer(gridPanel, gc), false);
