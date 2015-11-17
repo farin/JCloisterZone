@@ -79,7 +79,7 @@ public class AnimationLayer extends AbstractGridLayer {
     private void scored(Feature scoreable, Player player, String points, Class<? extends Meeple> meepleType, boolean finalScoring) {
         Tile tile = scoreable.getTile();
         Position pos = tile.getPosition();
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, meepleType, scoreable.getLocation());
+        ImmutablePoint offset = rm.getMeeplePlacement(tile, meepleType, scoreable.getLocation());
         service.registerAnimation(new ScoreAnimation(
             pos,
             points,

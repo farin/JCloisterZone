@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.plugin;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,13 +14,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.ui.resources.ImageLoader;
 
 public abstract class Plugin {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final URL url;
+    private final ImageLoader imageLoader;
     private final URLClassLoader loader;
+    /** used to identify plugin and to be able save it back to config file */
     private final String relativePath;
 
     private String id;
@@ -37,6 +39,7 @@ public abstract class Plugin {
         this.url = fixPluginURL(url);
         logger.debug("Creating plugin loader for URL {}", this.url);
         loader = new URLClassLoader(new URL[] { this.url });
+        imageLoader = new ImageLoader(loader);
     }
 
     private URL fixPluginURL(URL url) throws MalformedURLException {
@@ -66,15 +69,8 @@ public abstract class Plugin {
         }
     }
 
-    public Image getImageResource(String path) {
-        logger.debug("Trying to load image resource {}:{}", getTitle(), path);
-        URL url = getLoader().getResource(path);
-        if (url == null) return null;
-        return Toolkit.getDefaultToolkit().getImage(url);
-    }
-
     public Image getIcon() {
-        return getImageResource("icon.jpg");
+        return imageLoader.getImage("icon");
     }
 
     public URL getUrl() {
@@ -113,6 +109,10 @@ public abstract class Plugin {
     public URLClassLoader getLoader() {
         return loader;
     }
+
+    public ImageLoader getImageLoader() {
+		return imageLoader;
+	}
 
     @Override
     public String toString() {

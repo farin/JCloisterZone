@@ -12,6 +12,7 @@ import com.jcloisterzone.event.CastleDeployedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 public class CastleLayer extends AbstractGridLayer {
 
@@ -30,8 +31,7 @@ public class CastleLayer extends AbstractGridLayer {
 
     public CastleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        castleImage = getClient().getFigureTheme().getNeutralImage("castle");
-
+        castleImage = rm.getImage("neutral/castle");
         gc.register(this);
     }
 

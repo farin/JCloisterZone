@@ -16,12 +16,11 @@ public interface ResourceManager {
 
      //generic image, path is without extension
      Image getImage(String path);
+     Image getLayeredImage(LayeredImageDescriptor lid);
 
      Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations);
      Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners);
      Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations);
-
-
 
      //TODO change to 1000x1000
      /** returns meeple offset on tile, normalized to 100x100 tile size */

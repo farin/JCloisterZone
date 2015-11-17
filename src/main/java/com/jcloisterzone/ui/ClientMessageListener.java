@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,8 +74,6 @@ import com.jcloisterzone.wsio.message.WsInChannelMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class ClientMessageListener implements MessageListener {

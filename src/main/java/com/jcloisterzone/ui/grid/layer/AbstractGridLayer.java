@@ -25,6 +25,8 @@ import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.ConvenientResourceManager;
+import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AbstractGridLayer implements GridLayer {
@@ -32,11 +34,13 @@ public abstract class AbstractGridLayer implements GridLayer {
     protected boolean visible;
     protected final GridPanel gridPanel;
     protected final GameController gc;
+    protected final ConvenientResourceManager rm;
     private MouseInputListener mouseListener;
 
     public AbstractGridLayer(GridPanel gridPanel, GameController gc) {
         this.gridPanel = gridPanel;
         this.gc = gc;
+        this.rm = gc.getClient().getResourceManager();
     }
 
     private void triggerFakeMouseEvent() {

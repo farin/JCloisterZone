@@ -20,6 +20,7 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.GameView;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -285,7 +286,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         if (fakeAction == null) {
             fakeActionImage = null;
         } else {
-            fakeActionImage = client.getFigureTheme().getLayeredImage("actions/"+fakeAction, null).getScaledInstance(FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, Image.SCALE_SMOOTH);
+        	fakeActionImage = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("actions/"+fakeAction));
+        	fakeActionImage = fakeActionImage.getScaledInstance(FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, Image.SCALE_SMOOTH);
         }
         repaint();
     }

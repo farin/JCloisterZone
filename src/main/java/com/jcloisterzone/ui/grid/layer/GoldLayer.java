@@ -26,7 +26,7 @@ public class GoldLayer extends AbstractGridLayer {
 
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        goldImage = getClient().getFigureTheme().getNeutralImage("gold");
+		goldImage = rm.getImage("neutral/gold");
         widthHeightRatio = goldImage.getWidth(null) / (double) goldImage.getHeight(null);
 
         gc.register(this);
@@ -46,7 +46,6 @@ public class GoldLayer extends AbstractGridLayer {
         }
     }
 
-
     @Override
     public void paint(Graphics2D g2) {
         int size = getSquareSize();
@@ -65,7 +64,5 @@ public class GoldLayer extends AbstractGridLayer {
             ImmutablePoint point = new ImmutablePoint(90,10).rotate100(gridPanel.getBoardRotation().inverse());
             drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), point, Color.WHITE, null);
         }
-
     }
-
 }

@@ -1,10 +1,10 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class SavegameFileFilter extends FileFilter {
 

@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class PlugableResourceManager implements ResourceManager {
             Image result = manager.getTileImage(tile);
             if (result != null) return result;
         }
+        logger.warn("Unable to load tile image for {}", tile.getId());
         return null;
     }
 
@@ -55,6 +57,7 @@ public class PlugableResourceManager implements ResourceManager {
             Image result = manager.getAbbeyImage();
             if (result != null) return result;
         }
+        logger.warn("Unable to load tile Abbey image");
         return null;
     }
 
@@ -64,6 +67,17 @@ public class PlugableResourceManager implements ResourceManager {
             Image result = manager.getImage(path);
             if (result != null) return result;
         }
+    	logger.warn("Unable to load image {}", path);
+        return null;
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	for (ResourceManager manager : managers) {
+            Image result = manager.getLayeredImage(lid);
+            if (result != null) return result;
+        }
+    	logger.warn("Unable to load layered image {}", lid.getBaseName());
         return null;
     }
 

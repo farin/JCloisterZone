@@ -66,7 +66,6 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
-import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -87,9 +86,6 @@ public class Client extends JFrame {
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
     private final List<Plugin> plugins;
-
-    @Deprecated
-    private FigureTheme figureTheme;
 
     private UiView view;
 
@@ -168,7 +164,6 @@ public class Client extends JFrame {
 
     public void init() {
         setLocale(config.getLocaleObject());
-        figureTheme = new FigureTheme(this);
 
         resetWindowIcon();
 
@@ -248,11 +243,6 @@ public class Client extends JFrame {
 
     public ConvenientResourceManager getResourceManager() {
         return resourceManager;
-    }
-
-    @Deprecated
-    public FigureTheme getFigureTheme() {
-        return figureTheme;
     }
 
     public SimpleServer getLocalServer() {

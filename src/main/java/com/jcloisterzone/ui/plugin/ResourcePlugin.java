@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.plugin;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.LoggerFactory;
@@ -34,6 +32,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.theme.FeatureDescriptor;
 import com.jcloisterzone.ui.theme.ThemeGeometry;
@@ -98,22 +97,18 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private Image getTileImage(String tileId) {
         if (!containsTile(tileId)) return null;
-        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
-        Image img = getImageResource(fileName);
-        if (img == null) return null;
-        return (new ImageIcon(img)).getImage();
+        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
+        return getImageLoader().getImage(fileName);
     }
 
     @Override
     public Image getImage(String path) {
-    	Image img = getImageResource(path + ".png");
-        if (img == null) {
-        	img = getImageResource(path + ".jpg");
-        }
-        if (img == null) {
-        	return null;
-        }
-        return (new ImageIcon(img)).getImage();
+    	return getImageLoader().getImage(path);
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	return getImageLoader().getLayeredImage(lid);
     }
 
     @Override
