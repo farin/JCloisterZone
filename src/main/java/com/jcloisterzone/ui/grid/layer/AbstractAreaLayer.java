@@ -29,6 +29,7 @@ import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 
 public abstract class AbstractAreaLayer extends AbstractGridLayer implements GridMouseListener {
@@ -212,9 +213,11 @@ public abstract class AbstractAreaLayer extends AbstractGridLayer implements Gri
         //ugly copy pasted code from Meeple but uncached here
         g2.setComposite(FIGURE_HIGHLIGHT_AREA_ALPHA_COMPOSITE);
         Tile tile = getGame().getBoard().get(pos);
-        ImmutablePoint point = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, fp.getLocation());
+        ImmutablePoint point = rm.getMeeplePlacement(tile, SmallFollower.class, fp.getLocation());
         Player p = getGame().getActivePlayer();
-        Image unscaled = getClient().getFigureTheme().getFigureImage(SmallFollower.class, p.getColors().getMeepleColor(), null);
+		Image unscaled = rm.getLayeredImage(
+			new LayeredImageDescriptor(SmallFollower.class, p.getColors().getMeepleColor())
+		);
         int size = (int) (getTileWidth() * MeepleLayer.FIGURE_SIZE_RATIO);
         Image scaled = unscaled.getScaledInstance(size, size, Image.SCALE_SMOOTH);
         scaled = new ImageIcon(scaled).getImage();

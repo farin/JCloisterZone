@@ -29,7 +29,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.FeatureArea;
-import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class FarmHintsLayer extends AbstractGridLayer {
 

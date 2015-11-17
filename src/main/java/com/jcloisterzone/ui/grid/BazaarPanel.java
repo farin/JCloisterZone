@@ -27,6 +27,7 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -130,7 +131,9 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             g2.drawImage(img, 20, 0, 90, 90, null);
 
             if (bi.getCurrentBidder() == null && bi.getOwner() != null) {
-                Image playerImage = client.getFigureTheme().getFigureImage(SmallFollower.class, bi.getOwner().getColors().getMeepleColor(), null);
+                Image playerImage = client.getResourceManager().getLayeredImage(
+                	new LayeredImageDescriptor(SmallFollower.class, bi.getOwner().getColors().getMeepleColor())
+                );
                 //TODO smooth image
                 g2.drawImage(playerImage, 140, 12, 64, 64, null);
             }

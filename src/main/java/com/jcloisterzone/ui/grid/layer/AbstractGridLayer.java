@@ -41,7 +41,7 @@ public abstract class AbstractGridLayer implements GridLayer {
     public AbstractGridLayer(GridPanel gridPanel, GameController gc) {
         this.gridPanel = gridPanel;
         this.gc = gc;
-        this.rm = getClient().getResourceManager();
+        this.rm = gc.getClient().getResourceManager();
     }
 
     private void triggerFakeMouseEvent() {

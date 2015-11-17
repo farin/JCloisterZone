@@ -2,6 +2,7 @@ package com.jcloisterzone.ui.panel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -28,6 +29,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 
@@ -131,7 +133,9 @@ public class CreateGamePlayerPanel extends JPanel {
     }
 
     private void updateIcon(String iconType, Color color, boolean state) {
-        ImageIcon img = new ImageIcon(client.getFigureTheme().getPlayerSlotImage(iconType, color));
+    	Image imgRes = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("player-slot/" + iconType, color));
+    	imgRes = imgRes.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        ImageIcon img = new ImageIcon(imgRes);
         icon.setIcon(img);
         icon.setDisabledIcon(img);
         icon.setEnabled(state);

@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -39,10 +37,12 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.resources.TileImage;
-import com.jcloisterzone.ui.theme.FeatureDescriptor;
-import com.jcloisterzone.ui.theme.ThemeGeometry;
+import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
+
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
@@ -50,14 +50,13 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
-    private String tileImagesExt = ".jpg";
     private Insets imageOffset = new Insets(49, 0, 0, 0); //TODO load from xml
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults");
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -86,13 +85,13 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             supportedExpansions.add(exp.getCode());
         }
 
-        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
-        if (tiles != null) {
-            String ext = XMLUtils.childValue(tiles, "image-type");
-            if (ext != null) {
-                tileImagesExt = "." + ext.trim();
-            }
-        }
+//        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
+//        if (tiles != null) {
+//            String ext = XMLUtils.childValue(tiles, "image-type");
+//            if (ext != null) {
+//                tileImagesExt = "." + ext.trim();
+//            }
+//        }
     }
 
 
@@ -123,17 +122,17 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         String fileName;
         Image img;
         // first try to find rotation specific image
-        fileName = baseName + "@" + rot.ordinal() + tileImagesExt;
-        img = getImageResource(fileName);
+        fileName = baseName + "@" + rot.ordinal();
+        img =  getImageLoader().getImage(fileName);
         if (img != null) {
-            return new TileImage((new ImageIcon(img)).getImage(), imageOffset);
+        	return new TileImage(img, imageOffset);
         }
         // if not found, load generic one and rotate manually
-        fileName = baseName + tileImagesExt;
-        img = getImageResource(fileName);
+        fileName = baseName;
+        img =  getImageLoader().getImage(fileName);
         if (img == null) return null;
         if (rot == Rotation.R0) {
-            return new TileImage((new ImageIcon(img)).getImage(), imageOffset);
+            return new TileImage(img, imageOffset);
         }
         BufferedImage buf;
         int w = img.getWidth(null);
@@ -146,6 +145,16 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         Graphics2D g = (Graphics2D) buf.getGraphics();
         g.drawImage(img, rot.getAffineTransform(w, h), null);
         return new TileImage(buf, imageOffset);
+    }
+
+    @Override
+    public Image getImage(String path) {
+    	return getImageLoader().getImage(path);
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	return getImageLoader().getLayeredImage(lid);
     }
 
     @Override

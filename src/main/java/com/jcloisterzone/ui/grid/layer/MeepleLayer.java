@@ -40,6 +40,7 @@ import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 public class MeepleLayer extends AbstractGridLayer {
 
@@ -92,15 +93,15 @@ public class MeepleLayer extends AbstractGridLayer {
         } else {
             c = player.getColors().getMeepleColor();
         }
-        Image tunnelPiece = getClient().getFigureTheme().getTunnelImage(c);
+        Image tunnelPiece = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", c));
         Tile tile = gridPanel.getTile(ev.getPosition());
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
+        ImmutablePoint offset = rm.getMeeplePlacement(tile, SmallFollower.class, ev.getLocation());
         addPermanentImage(ev.getPosition(), offset, tunnelPiece);
     }
 
     @Subscribe
     public void onLittleBuildingEvent(LittleBuildingEvent ev) {
-        Image img = getClient().getFigureTheme().getNeutralImage("lb-"+ev.getBuilding().name().toLowerCase());
+        Image img = rm.getImage("lb-"+ev.getBuilding().name().toLowerCase());
         ImmutablePoint offset = new ImmutablePoint(65, 35);
         double xScale = 1.15, yScale = 1.15;
         //TODO tightly coupled with current theme, todo change image size in theme
@@ -162,8 +163,10 @@ public class MeepleLayer extends AbstractGridLayer {
 
     private PositionedFigureImage createMeepleImage(Meeple meeple, Color c, FeaturePointer fp) {
         Feature feature = getGame().getBoard().get(fp);
-        ImmutablePoint offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), meeple.getClass(), fp.getLocation());
-        Image image = getClient().getFigureTheme().getFigureImage(meeple, c, getExtraDecoration(meeple.getClass(), fp));
+        ImmutablePoint offset = rm.getMeeplePlacement(feature.getTile(), meeple.getClass(), fp.getLocation());
+        LayeredImageDescriptor lid = new LayeredImageDescriptor(meeple.getClass(), c);
+        lid.setAdditionalLayer(getExtraDecoration(meeple.getClass(), fp));
+        Image image = rm.getLayeredImage(lid);
         if (fp.getLocation() == Location.ABBOT) {
             image = rotate(image, 90);
         }
@@ -185,7 +188,7 @@ public class MeepleLayer extends AbstractGridLayer {
         if (fp != null) {
             Feature feature = getGame().getBoard().get(fp);
             bridgePlacement = feature instanceof Bridge;
-            offset = getClient().getResourceManager().getMeeplePlacement(feature.getTile(), SmallFollower.class, fp.getLocation());
+            offset = rm.getMeeplePlacement(feature.getTile(), SmallFollower.class, fp.getLocation());
             if (nextToMeeple != null) {
                 //for better fairy visibilty
                 offset = offset.translate(-5, 0);
@@ -198,7 +201,7 @@ public class MeepleLayer extends AbstractGridLayer {
                 offset = new ImmutablePoint(50, 50);
             }
         }
-        Image image = getClient().getFigureTheme().getNeutralImage(fig);
+        Image image = rm.getImage("neutral/"+fig.getClass().getSimpleName().toLowerCase());
         boolean mageOrWitch = fig instanceof Mage || fig instanceof Witch;
         if (mageOrWitch) {
             offset = offset.translate(0, -10);
@@ -332,13 +335,13 @@ public class MeepleLayer extends AbstractGridLayer {
     //TODO path from Theme
     private String getExtraDecoration(Class<? extends Meeple> type, FeaturePointer fp) {
         if (Follower.class.isAssignableFrom(type) && fp.getLocation().isFarmLocation()) {
-            return "farm.png";
+            return "player-meeples/decorations/farm";
         }
         if (fp.getLocation() == Location.TOWER) {
             if (BigFollower.class.isAssignableFrom(type)) {
-                return "big_tower.png";
+                return "player-meeples/decorations/big_tower";
             } else {
-                return "tower.png";
+                return "player-meeples/decorations/tower";
             }
         }
         return null;

@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid.layer;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -18,11 +20,8 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<SelectFeatureAction> {

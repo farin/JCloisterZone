@@ -23,7 +23,6 @@ import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.theme.FigureTheme;
 
 public class LittleBuildingActionLayer extends AbstractTileLayer implements ActionLayer<LittleBuildingAction>, GridMouseListener {
 
@@ -40,10 +39,8 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
 
     public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-
-        FigureTheme theme = getClient().getFigureTheme();
         for (LittleBuilding lb : LittleBuilding.values()) {
-            Image img = theme.getNeutralImage("lb-"+lb.name().toLowerCase());
+            Image img = rm.getImage("lb-"+lb.name().toLowerCase());
             images.put(lb, img);
         }
         recomputeDimenensions(getTileWidth());

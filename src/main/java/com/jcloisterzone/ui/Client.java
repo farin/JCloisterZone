@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -64,8 +66,6 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
-import com.jcloisterzone.ui.theme.ControlsTheme;
-import com.jcloisterzone.ui.theme.FigureTheme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -73,8 +73,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -88,11 +86,6 @@ public class Client extends JFrame {
     private final ConfigLoader configLoader;
     private final ConvenientResourceManager resourceManager;
     private final List<Plugin> plugins;
-
-    @Deprecated
-    private FigureTheme figureTheme;
-    @Deprecated
-    private ControlsTheme controlsTheme;
 
     private UiView view;
 
@@ -113,7 +106,7 @@ public class Client extends JFrame {
         this.configLoader = configLoader;
         this.config = config;
         this.plugins = plugins;
-        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(plugins));
     }
 
     public static Client getInstance() {
@@ -171,8 +164,6 @@ public class Client extends JFrame {
 
     public void init() {
         setLocale(config.getLocaleObject());
-        figureTheme = new FigureTheme(this);
-        controlsTheme = new ControlsTheme(this);
 
         resetWindowIcon();
 
@@ -252,16 +243,6 @@ public class Client extends JFrame {
 
     public ConvenientResourceManager getResourceManager() {
         return resourceManager;
-    }
-
-    @Deprecated
-    public FigureTheme getFigureTheme() {
-        return figureTheme;
-    }
-
-    @Deprecated
-    public ControlsTheme getControlsTheme() {
-        return controlsTheme;
     }
 
     public SimpleServer getLocalServer() {

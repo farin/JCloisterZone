@@ -2,9 +2,9 @@ package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
@@ -18,7 +18,8 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public class ConvenientResourceManager implements ResourceManager {
 
     private final ResourceManager manager;
-    private final Map<String, TileImage> imageCache = new HashMap<>();
+    private final Map<String, Object> imageCache = new WeakHashMap<>(64);
+
 
     public ConvenientResourceManager(ResourceManager manager) {
         this.manager = manager;
@@ -50,7 +51,7 @@ public class ConvenientResourceManager implements ResourceManager {
     @Override
     public TileImage getTileImage(Tile tile, Rotation rot) {
         String key = tile.getId()+"@"+rot.toString();
-        TileImage img = imageCache.get(key);
+        TileImage img = (TileImage) imageCache.get(key);
         if (img == null) {
             img = manager.getTileImage(tile, rot);
             imageCache.put(key, img);
@@ -61,12 +62,33 @@ public class ConvenientResourceManager implements ResourceManager {
     @Override
     public TileImage getAbbeyImage(Rotation rot) {
         String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
-        TileImage img = imageCache.get(key);
+        TileImage img = (TileImage) imageCache.get(key);
         if (img == null) {
             img = manager.getAbbeyImage(rot);
             imageCache.put(key, img);
         }
         return img;
+    }
+
+    @Override
+    public Image getImage(String path) {
+    	Image img = (Image) imageCache.get(path);
+    	if (img == null) {
+    		img = manager.getImage(path);
+    		imageCache.put(path, img);
+    	}
+    	return img;
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	String key = lid.toString();
+        Image img = (Image) imageCache.get(key);
+        if (img == null) {
+        	img = manager.getLayeredImage(lid);
+        	imageCache.put(key, img);
+        }
+    	return img;
     }
 
     @Override

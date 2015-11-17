@@ -50,7 +50,7 @@ public class TileLayer extends AbstractGridLayer {
 
         for (Tile tile : placedTiles) {
             if (tile.getPosition() != null) {
-                TileImage tileImg = getClient().getResourceManager().getTileImage(tile);
+                TileImage tileImg = rm.getTileImage(tile);
                 g2.drawImage(tileImg.getImage(), getAffineTransform(tileImg, tile.getPosition()), null);
             }
         }

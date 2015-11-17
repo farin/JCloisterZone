@@ -3,9 +3,16 @@ package com.jcloisterzone.ui.resources;
 import java.awt.Image;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
@@ -16,6 +23,22 @@ import com.jcloisterzone.ui.ImmutablePoint;
 
 public class DefaultResourceManager implements ResourceManager {
 
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+
+	private final ImageLoader imgLoader;
+
+	public DefaultResourceManager() {
+		ImageLoader imgLoader = null;
+		try {
+			URL defaults = getClass().getClassLoader().getResource("defaults/").toURI().toURL();
+			URLClassLoader loader = new URLClassLoader(new URL[] { defaults });
+			imgLoader = new ImageLoader(loader);
+		} catch (URISyntaxException | MalformedURLException e) {
+			//should never happen
+			logger.error(e.getMessage(), e);
+		}
+		this.imgLoader = imgLoader;
+	}
 
     @Override
     public TileImage getTileImage(Tile tile) {
@@ -36,6 +59,15 @@ public class DefaultResourceManager implements ResourceManager {
         return null;
     }
 
+    @Override
+    public Image getImage(String path) {
+    	return imgLoader.getImage(path);
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	return imgLoader.getLayeredImage(lid);
+    }
 
     private ImmutablePoint getBarnPlacement(Location loc) {
         if (loc.intersect(Location.NL.union(Location.WR)) != null) return new ImmutablePoint(0, 0);

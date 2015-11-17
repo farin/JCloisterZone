@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
+import java.awt.Image;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +15,10 @@ public interface ResourceManager {
     TileImage getTileImage(Tile tile);  //take rotation from tile instance
     TileImage getTileImage(Tile tile, Rotation rot); //use custom rotation
     TileImage getAbbeyImage(Rotation rot);
+
+    //generic image, path is without extension
+    Image getImage(String path);
+    Image getLayeredImage(LayeredImageDescriptor lid);
 
     Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations);
     Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners);

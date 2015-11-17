@@ -39,6 +39,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -174,7 +175,7 @@ public class GameOverPanel extends JPanel {
             for (Player player : players) {
                 gridy = 0;
                 Color color = player.getColors().getMeepleColor();
-                Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);
+                Image img = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor(SmallFollower.class, color));
                 Icon icon = new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
                 add(new JLabel(icon, SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel(player.getNick(), SwingConstants.CENTER), getSpec(gridx, gridy++));

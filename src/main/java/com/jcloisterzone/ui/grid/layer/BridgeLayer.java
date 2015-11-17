@@ -39,6 +39,7 @@ public class BridgeLayer extends AbstractGridLayer {
             Position pos = entry.getKey();
             Location loc = entry.getValue();
             Tile tile = getGame().getBoard().get(pos);
+
             Area a = rm.getBridgeArea(tile, getTileWidth(), getTileHeight(), loc).getTrackingArea();
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
 

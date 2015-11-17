@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 

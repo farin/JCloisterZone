@@ -46,6 +46,7 @@ import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
 import com.jcloisterzone.ui.panel.GameOverPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
@@ -146,7 +147,7 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
         // TODO better image quality ?
         Color c = ev.getTargetPlayer().getColors().getMeepleColor();
-        Image image = client.getFigureTheme().getFigureImage(SmallFollower.class, c, null);
+        Image image = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor(SmallFollower.class, c));
         client.setIconImage(image);
     }
 

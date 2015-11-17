@@ -24,15 +24,16 @@ import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
+import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class PlayerPanelImageCache {
 
-    private final Client client;
+    private final ResourceManager rm;
     private Map<String, Image> scaledImages = new HashMap<>();
 
     public PlayerPanelImageCache(Client client, Game game) {
-        this.client = client;
+        this.rm = client.getResourceManager();
         scaleImages(game);
     }
 
@@ -49,64 +50,65 @@ public class PlayerPanelImageCache {
     }
 
     private void scaleFigureImages(Player player, Color color, Collection<? extends Meeple> meeples) {
-        FigureTheme theme = client.getFigureTheme();
-        //Image img = theme.getFigureImage(type, color, null);
         for (Meeple f : meeples) {
             String key = player.getIndex() + f.getClass().getSimpleName();
             if (!scaledImages.containsKey(key)) {
-                scaledImages.put(key, scaleImage(theme.getFigureImage(f.getClass(), color, null)));
+            	Image img = rm.getLayeredImage(new LayeredImageDescriptor(f.getClass(), color));
+                scaledImages.put(key, scaleImage(img));
             }
         }
     }
 
     private void scaleImages(Game game) {
-        FigureTheme theme = client.getFigureTheme();
         for (Player player : game.getAllPlayers()) {
             Color color = player.getColors().getMeepleColor();
             scaleFigureImages(player, color, player.getFollowers());
             scaleFigureImages(player, color, player.getSpecialMeeples());
             if (game.hasCapability(TunnelCapability.class)) {
-                scaledImages.put(player.getIndex()+"tunnelA", scaleImage(theme.getTunnelImage(player.getColors().getMeepleColor())));
-                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(theme.getTunnelImage(player.getColors().getTunnelBColor())));
+            	Image tunnelA = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", player.getColors().getMeepleColor()));
+            	Image tunnelB = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", player.getColors().getTunnelBColor()));
+
+                scaledImages.put(player.getIndex()+"tunnelA", scaleImage(tunnelA));
+                scaledImages.put(player.getIndex()+"tunnelB", scaleImage(tunnelB));
             }
         }
         if (game.hasCapability(TowerCapability.class)) {
-            scaledImages.put("towerpiece", scaleImage(theme.getNeutralImage("towerpiece")));
+            scaledImages.put("towerpiece", scaleImage(rm.getImage("neutral/towerpiece")));
         }
         if (game.hasCapability(KingAndRobberBaronCapability.class)) {
-            scaledImages.put("king", scaleImage(theme.getNeutralImage("king")));
-            scaledImages.put("robber", scaleImage(theme.getNeutralImage("robber")));
+            scaledImages.put("king", scaleImage(rm.getImage("neutral/king")));
+            scaledImages.put("robber", scaleImage(rm.getImage("neutral/robber")));
         }
         if (game.hasCapability(BazaarCapability.class)) {
-            scaledImages.put("bridge", scaleImage(theme.getNeutralImage("bridge")));
-            scaledImages.put("castle", scaleImage(theme.getNeutralImage("castle")));
+            scaledImages.put("bridge", scaleImage(rm.getImage("neutral/bridge")));
+            scaledImages.put("castle", scaleImage(rm.getImage("neutral/castle")));
         }
         if (game.hasCapability(ClothWineGrainCapability.class)) {
-            scaledImages.put("cloth", theme.getNeutralImage("cloth"));
-            scaledImages.put("grain", theme.getNeutralImage("grain"));
-            scaledImages.put("wine", theme.getNeutralImage("wine"));
+            scaledImages.put("cloth", rm.getImage("neutral/cloth"));
+            scaledImages.put("grain", rm.getImage("neutral/grain"));
+            scaledImages.put("wine", rm.getImage("neutral/wine"));
         }
         if (game.hasCapability(BarnCapability.class)) {
-            scaledImages.put("abbey", scaleImage(client.getResourceManager().getAbbeyImage(Rotation.R0).getImage()));
+            scaledImages.put("abbey", scaleImage(rm.getAbbeyImage(Rotation.R0).getImage()));
         }
         if (game.hasCapability(LittleBuildingsCapability.class)) {
-            scaledImages.put("lb-tower", scaleImage(theme.getNeutralImage("lb-tower")));
-            scaledImages.put("lb-house", scaleImage(theme.getNeutralImage("lb-house")));
-            scaledImages.put("lb-shed", scaleImage(theme.getNeutralImage("lb-shed")));
+            scaledImages.put("lb-tower", scaleImage(rm.getImage("neutral/lb-tower")));
+            scaledImages.put("lb-house", scaleImage(rm.getImage("neutral/lb-house")));
+            scaledImages.put("lb-shed", scaleImage(rm.getImage("neutral/lb-shed")));
         }
         if (game.hasCapability(GoldminesCapability.class)) {
-            scaledImages.put("gold", scaleImage(theme.getNeutralImage("gold")));
+            scaledImages.put("gold", scaleImage(rm.getImage("neutral/gold")));
         }
         if (game.hasCapability(DragonCapability.class)) {
-            Image scaled = new ImageIcon(theme.getNeutralImage("dragon").getScaledInstance(42, 42, Image.SCALE_SMOOTH)).getImage();
+            Image scaled = new ImageIcon(rm.getImage("neutral/dragon").getScaledInstance(42, 42, Image.SCALE_SMOOTH)).getImage();
             scaledImages.put("dragon", scaled);
         }
         if (game.hasCapability(FairyCapability.class)) {
-            scaledImages.put("fairy", scaleImage(theme.getNeutralImage("fairy")));
+            scaledImages.put("fairy", scaleImage(rm.getImage("neutral/fairy")));
         }
         if (game.hasCapability(MageAndWitchCapability.class)) {
-            scaledImages.put("mage", scaleImage(theme.getNeutralImage("mage")));
-            scaledImages.put("witch", scaleImage(theme.getNeutralImage("witch")));
+            scaledImages.put("mage", scaleImage(rm.getImage("neutral/mage")));
+            scaledImages.put("witch", scaleImage(rm.getImage("neutral/witch")));
         }
     }
 

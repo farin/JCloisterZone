@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.resources.svg;
 
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
@@ -17,7 +17,8 @@ import org.xml.sax.SAXException;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.ui.ImmutablePoint;
-import com.jcloisterzone.ui.theme.SvgTransformationCollector.GeometryHandler;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
+import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHandler;
 
 class PointsParser {
     final URL resource;
