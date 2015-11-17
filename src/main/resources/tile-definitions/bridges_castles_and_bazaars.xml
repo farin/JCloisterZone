@@ -35,7 +35,7 @@
         <bazaar/>
         <city castle-base="true">N</city>
         <road>S</road>
-        <farm>EL ER SL SR WL WR</farm>
+        <farm city="N">EL ER SL SR WL WR</farm>
     </tile>
     <tile id="F.b">
         <bazaar/>
