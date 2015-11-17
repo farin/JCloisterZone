@@ -62,6 +62,16 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
+    public Image getImage(String path) {
+    	Image img = imageCache.get(path);
+    	if (img == null) {
+    		img = manager.getImage(path);
+    		imageCache.put(path, img);
+    	}
+    	return img;
+    }
+
+    @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
         return manager.getMeeplePlacement(tile, type, loc);
     }

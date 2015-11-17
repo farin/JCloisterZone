@@ -16,6 +16,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.ui.plugin.Plugin;
 
+@Deprecated
 public class TileImageFactory {
 
     private URLClassLoader loader;

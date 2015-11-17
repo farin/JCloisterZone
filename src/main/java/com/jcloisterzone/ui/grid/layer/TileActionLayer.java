@@ -32,11 +32,11 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
         if (action == null) {
             gridDecoration = null;
         } else if (action instanceof FairyOnTileAction) {
-            gridDecoration = getClient().getControlsTheme().getActionDecoration("fairy");
+            gridDecoration = getClient().getResourceManager().getImage("decorations/fairy");
         } else if (action instanceof TowerPieceAction) {
-            gridDecoration = getClient().getControlsTheme().getActionDecoration("tower");
+            gridDecoration =  getClient().getResourceManager().getImage("decorations/tower");
         } else if (action instanceof GoldPieceAction) {
-            gridDecoration = getClient().getControlsTheme().getActionDecoration("gold");
+            gridDecoration = getClient().getResourceManager().getImage("decorations/gold");
         }
     }
 
@@ -45,7 +45,8 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
         return action;
     }
 
-    public void paint(Graphics2D g2) {
+    @Override
+	public void paint(Graphics2D g2) {
         int imgSize = gridDecoration.getWidth(null);
         for (Position pos : action.getOptions()) {
             g2.drawImage(gridDecoration, getAffineTransform(imgSize, pos), null);

@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -91,12 +92,12 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
     @Override
     public void show(Container pane, Object ctx) {
-        BackgroundPanel bg = new BackgroundPanel();
-        bg.setLayout(new BorderLayout());
-        pane.add(bg);
-
         mainPanel = new MainPanel(client, this, chatPanel);
-        bg.add(mainPanel, BorderLayout.CENTER);
+        //DARK
+        //mainPanel.setBackground(new Color(40, 44, 52));
+
+        pane.add(mainPanel);
+
         gc.getReportingTool().setContainer(mainPanel);
         mainPanel.started(snapshot);
 

@@ -49,7 +49,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults");
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -104,6 +104,17 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return (new ImageIcon(img)).getImage();
     }
 
+    @Override
+    public Image getImage(String path) {
+    	Image img = getImageResource(path + ".png");
+        if (img == null) {
+        	img = getImageResource(path + ".jpg");
+        }
+        if (img == null) {
+        	return null;
+        }
+        return (new ImageIcon(img)).getImage();
+    }
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {

@@ -66,7 +66,7 @@ public abstract class Plugin {
         }
     }
 
-    protected Image getImageResource(String path) {
+    public Image getImageResource(String path) {
         logger.debug("Trying to load image resource {}:{}", getTitle(), path);
         URL url = getLoader().getResource(path);
         if (url == null) return null;

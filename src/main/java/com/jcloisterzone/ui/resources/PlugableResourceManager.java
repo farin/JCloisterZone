@@ -58,6 +58,15 @@ public class PlugableResourceManager implements ResourceManager {
         return null;
     }
 
+    @Override
+    public Image getImage(String path) {
+    	for (ResourceManager manager : managers) {
+            Image result = manager.getImage(path);
+            if (result != null) return result;
+        }
+        return null;
+    }
+
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {

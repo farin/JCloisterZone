@@ -39,7 +39,7 @@ public class DragonLayer extends AbstractGridLayer implements GridMouseListener 
 
         // paint available moves
         if (availablePositions != null) {
-            Image availableDragonMove = getClient().getControlsTheme().getActionDecoration("dragon");
+        	Image availableDragonMove = getClient().getResourceManager().getImage("decorations/dragon");
             for (Position pos : availablePositions) {
                 g2.drawImage(availableDragonMove, getOffsetX(pos), getOffsetY(pos), getSquareSize(), getSquareSize(), null);
             }

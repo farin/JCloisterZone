@@ -1,11 +1,15 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.ImageIcon;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
@@ -17,14 +21,36 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public class DefaultResourceManager implements ResourceManager {
 
 
+	protected Image getImageResource(String path) {
+		URL url = DefaultResourceManager.class.getClassLoader().getResource(path);
+		if (url == null) return null;
+        return Toolkit.getDefaultToolkit().getImage(url);
+    }
+
+
     @Override
     public Image getTileImage(Tile tile) {
-        return (new TileImageFactory()).getTileImage(tile);
+    	throw new UnsupportedOperationException("TODO create empty tile");
+        //return (new TileImageFactory()).getTileImage(tile);
     }
 
     @Override
     public Image getAbbeyImage() {
-        return (new TileImageFactory()).getAbbeyImage();
+    	throw new UnsupportedOperationException("TODO create empty tile");
+        //return (new TileImageFactory()).getAbbeyImage();
+    }
+
+    @Override
+    public Image getImage(String path) {
+    	//TODO this is just copy from ResourcePlugin - TODO resuse
+    	Image img = getImageResource("defaults/" + path + ".png");
+        if (img == null) {
+        	img = getImageResource("defaults/" + path + ".jpg");
+        }
+        if (img == null) {
+        	return null;
+        }
+        return (new ImageIcon(img)).getImage();
     }
 
 
