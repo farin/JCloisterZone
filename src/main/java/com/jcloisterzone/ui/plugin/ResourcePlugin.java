@@ -32,10 +32,10 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
-import com.jcloisterzone.ui.theme.FeatureDescriptor;
-import com.jcloisterzone.ui.theme.ThemeGeometry;
+import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 

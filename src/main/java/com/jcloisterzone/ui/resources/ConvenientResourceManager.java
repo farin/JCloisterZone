@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.resources;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.util.Collections;
 import java.util.Map;

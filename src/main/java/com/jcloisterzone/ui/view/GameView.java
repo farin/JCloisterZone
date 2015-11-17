@@ -1,7 +1,7 @@
 package com.jcloisterzone.ui.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,11 +43,8 @@ import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.dialog.GameSetupDialog;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameView extends AbstractUiView implements WindowStateListener {
 

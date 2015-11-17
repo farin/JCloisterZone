@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.resources;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +22,16 @@ import com.jcloisterzone.ui.plugin.Plugin;
 public class PlugableResourceManager implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-
-    private final Client client;
     private final List<ResourceManager> managers;
 
 
-    public PlugableResourceManager(Client client, List<Plugin> plugins) {
-        this.client = client;
+    public PlugableResourceManager(List<Plugin> plugins) {
         managers = new ArrayList<>();
-
         for (Plugin p: plugins) {
             if (p instanceof ResourceManager) {
                 managers.add((ResourceManager) p);
             }
         }
-
         managers.add(new DefaultResourceManager());
     }
 

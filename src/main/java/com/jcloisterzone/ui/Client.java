@@ -106,7 +106,7 @@ public class Client extends JFrame {
         this.configLoader = configLoader;
         this.config = config;
         this.plugins = plugins;
-        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(plugins));
     }
 
     public static Client getInstance() {

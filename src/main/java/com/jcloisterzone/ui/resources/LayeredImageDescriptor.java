@@ -1,7 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Color;
-import java.awt.Image;
 
 import com.jcloisterzone.figure.Meeple;
 
