@@ -163,12 +163,12 @@ msgstr "Монастыри Германии"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Castles in Germany"
-msgstr ""
+msgstr "Замки Германии"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:88
 #: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "Halfings"
-msgstr ""
+msgstr "Половинки"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Flier"
@@ -208,11 +208,11 @@ msgstr "La Porxada"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:103
 msgid "Russian Promos"
-msgstr ""
+msgstr "Русские промо"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:104
 msgid "Darmstadt Promo"
-msgstr ""
+msgstr "Дармштадт промо"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
@@ -768,7 +768,7 @@ msgstr "JCloisterZone "
 #: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:46
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "Tile Distribution"
-msgstr ""
+msgstr "Список карточек"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
@@ -987,19 +987,19 @@ msgstr "Пропустить"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
 msgid "Skip Abbey"
-msgstr ""
+msgstr "Пропустить карточку аббатства"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
 msgid "Cancel and place Abbey"
-msgstr ""
+msgstr "Отменить и разместить карточку аббатства"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
-msgstr ""
+msgstr "Это Ваш последний ход. Если Вы пропустите его, Ваша карточка аббатства останется неиспользованной."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:291
 msgid "Last chance to place the Abbey"
-msgstr ""
+msgstr "Последний шанс разместить карточку аббатства"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
 msgid "Pay ransom"
