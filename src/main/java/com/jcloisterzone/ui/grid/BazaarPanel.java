@@ -64,9 +64,8 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
        noAuction = gc.getGame().getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
        bcb = gc.getGame().getCapability(BazaarCapability.class);
 
-
        setOpaque(true);
-       setBackground(ControlPanel.PANEL_BG_COLOR);
+       setBackground(client.getTheme().getPanelBg());
        setLayout(new MigLayout("ins 0", "[grow]", ""));
 
        JLabel label;
@@ -124,7 +123,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             Image img =  client.getResourceManager().getTileImage(bi.getTile());
 
             if (selectedItem == idx) {
-                g2.setColor(ControlPanel.PLAYER_BG_COLOR);
+                g2.setColor(client.getTheme().getPlayerBoxBg());
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 

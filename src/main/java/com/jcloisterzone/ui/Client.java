@@ -66,6 +66,7 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
+import com.jcloisterzone.ui.theme.Theme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -88,6 +89,7 @@ public class Client extends JFrame {
     private final List<Plugin> plugins;
 
     private UiView view;
+    private Theme theme;
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
@@ -165,6 +167,8 @@ public class Client extends JFrame {
     public void init() {
         setLocale(config.getLocaleObject());
 
+        theme = Theme.DARK;
+
         resetWindowIcon();
 
         try {
@@ -227,6 +231,10 @@ public class Client extends JFrame {
     void resetWindowIcon() {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
     }
+
+    public Theme getTheme() {
+		return theme;
+	}
 
     public Config getConfig() {
         return config;

@@ -22,7 +22,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
 
     public SelectMageWitchRemovalPanel(final GameController gc) {
         setOpaque(true);
-        setBackground(ControlPanel.PANEL_BG_COLOR);
+        setBackground(gc.getClient().getTheme().getPanelBg());
         setLayout(new MigLayout("ins 10 20 10 20", "[grow]", ""));
 
         JLabel label;

@@ -29,7 +29,6 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
         super(gridPanel, gc);
     }
 
-
     public void setAvailablePositions(Set<Position> availablePositions) {
         this.availablePositions = availablePositions;
     }
@@ -37,8 +36,6 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     public Position getPreviewPosition() {
         return previewPosition;
     };
-
-
 
     public boolean isActive() {
         return active;
@@ -69,7 +66,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
             shift = 2,
             thickness = borderSize/14;
 
-        g2.setColor(Color.LIGHT_GRAY);
+        g2.setColor(getClient().getTheme().getTilePlacementColor());
         for (Position p : availablePositions) {
             if (previewPosition == null || !previewPosition.equals(p)) {
                 int x = getOffsetX(p)+shift, y = getOffsetY(p)+shift;

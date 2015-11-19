@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.controls.chat;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -51,10 +53,7 @@ import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
-import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
@@ -62,7 +61,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
     public static final int DISPLAY_MESSAGES_INTERVAL = 9000;
 
-    private final Client client;
+    protected final Client client;
 
     private boolean hidingMode;
     private boolean forceFocus;
@@ -117,7 +116,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         });
 
         input.setOpaque(false);
-        input.setBackground(new Color(255, 255, 255, 8));
+        input.setBackground(client.getTheme().getTransparentInputBg());
         TextPrompt tp = new TextPrompt(_("Type to chat"), input);
         tp.setShow(Show.FOCUS_LOST);
         tp.changeStyle(Font.ITALIC);
@@ -128,7 +127,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         messagesPane.setFocusable(false);
         messagesPane.setOpaque(false);
 
-        setBackground(Color.WHITE);
+        setBackground(client.getTheme().getPanelBg());
         setLayout(new MigLayout(""));
         add(messagesPane, "pos 10 n (100%-10) (100%-35)");
         add(input, "pos 10 (100%-35) (100%-10) (100%-10)");
@@ -153,7 +152,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         });
 
         setBackground(new Color(0, 0, 0, 0));
-        input.setBackground(Color.WHITE);
+        input.setBackground(client.getTheme().getInputBg());
         updateMessaagesVisibility();
     }
 
@@ -169,7 +168,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(ControlPanel.PANEL_BG_COLOR);
+        g2.setColor(client.getTheme().getPanelBg());
         if (messagesPane.isVisible()) {
             g2.fillRect(0, 0, getWidth(), getHeight());
         } else {
@@ -248,12 +247,14 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             for (ReceivedChatMessage msg : formattedMessages) {
                 SimpleAttributeSet attrs = new SimpleAttributeSet();
                 ColorConstants.setForeground(attrs, msg.color);
-
                 String nick = msg.nickname;
                 String text = msg.ev.getText();
                 doc.insertString(offset, nick + ": ", attrs);
                 offset += nick.length() + 2;
-                doc.insertString(offset, text + "\n", null);
+
+                attrs = new SimpleAttributeSet();
+                ColorConstants.setForeground(attrs, client.getTheme().getChatMessageColor());
+                doc.insertString(offset, text + "\n", attrs);
                 offset += text.length() + 1;
             }
         } catch (BadLocationException e) {

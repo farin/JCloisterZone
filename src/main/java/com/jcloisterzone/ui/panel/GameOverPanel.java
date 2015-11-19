@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -38,10 +40,7 @@ import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class GameOverPanel extends JPanel {
 
@@ -59,7 +58,7 @@ public class GameOverPanel extends JPanel {
         this.game = gc.getGame();
 
         setOpaque(true);
-        setBackground(ControlPanel.PANEL_DARK_BG_COLOR);
+        setBackground(client.getTheme().getDenseBg());
         setLayout(new MigLayout("ins 20", "[][grow]", "[]20[]"));
 
         add(new PointStatsPanel(), "sx 2, wrap, hidemode 3");

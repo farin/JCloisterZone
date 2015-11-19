@@ -90,8 +90,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     @Override
     public void show(Container pane, Object ctx) {
         mainPanel = new MainPanel(client, this, chatPanel);
-        //DARK
-        //mainPanel.setBackground(new Color(40, 44, 52));
+        mainPanel.setBackground(client.getTheme().getMainBg());
 
         pane.add(mainPanel);
 

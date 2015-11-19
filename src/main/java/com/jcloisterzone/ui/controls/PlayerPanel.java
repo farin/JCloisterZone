@@ -43,12 +43,9 @@ import com.jcloisterzone.ui.view.GameView;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
 public class PlayerPanel extends MouseTrackingComponent implements RegionMouseListener {
 
-    private static final Color DELIM_TOP_COLOR = new Color(250,250,250);
-    private static final Color DELIM_BOTTOM_COLOR = new Color(220,220,220);
     private static final Color KING_ROBBER_OVERLAY = new Color(0f,0f,0f,0.4f);
     private static final Color POTENTIAL_POINTS_COLOR = new Color(160, 160, 160);
     //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
@@ -118,9 +115,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     }
 
     private void drawDelimiter(int y) {
-        g2.setColor(DELIM_TOP_COLOR);
+        g2.setColor(client.getTheme().getDelimiterTopColor());
         g2.drawLine(PADDING_L, y, PANEL_WIDTH /*-PADDING_R*/, y);
-        g2.setColor(DELIM_BOTTOM_COLOR);
+        g2.setColor(client.getTheme().getDelimiterBottomColor());
         g2.drawLine(PADDING_L, y+1, PANEL_WIDTH /*-PADDING_R*/, y+1);
     }
 
@@ -375,7 +372,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     @Override
     public void paint(Graphics g) {
         Graphics2D parentGraphics = (Graphics2D) g;
-        parentGraphics.setColor(PLAYER_BG_COLOR);
+        parentGraphics.setColor(client.getTheme().getPlayerBoxBg());
         parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
         parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
         super.paintComponent(g);

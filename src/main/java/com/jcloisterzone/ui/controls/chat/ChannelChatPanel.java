@@ -22,7 +22,7 @@ public class ChannelChatPanel extends ChatPanel {
 			return new ReceivedChatMessage(ev, "* play.jcz *", new Color(0, 140, 0));
 		} else {
 			boolean isMe = cc.getConnection().getSessionId().equals(ev.getRemoteClient().getSessionId());
-			return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ? Color.BLUE : Color.BLACK);
+			return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ? Color.BLUE : client.getTheme().getChatNeutralColor());
 		}
 	}
 
