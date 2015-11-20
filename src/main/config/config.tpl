@@ -9,6 +9,7 @@ locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
 ai_place_tile_delay: ${ai_place_tile_delay} # miliseconds to wait before computer player place tile
+theme: ${theme}
 
 beep_alert: ${beep_alert}
 confirm: ${confirm}

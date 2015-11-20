@@ -127,7 +127,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
         messagesPane.setFocusable(false);
         messagesPane.setOpaque(false);
 
-        setBackground(client.getTheme().getPanelBg());
+        setBackground(client.getTheme().getTransparentPanelBg());
         setLayout(new MigLayout(""));
         add(messagesPane, "pos 10 n (100%-10) (100%-35)");
         add(input, "pos 10 (100%-35) (100%-10) (100%-10)");
@@ -168,7 +168,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(client.getTheme().getPanelBg());
+        g2.setColor(client.getTheme().getTransparentPanelBg());
         if (messagesPane.isVisible()) {
             g2.fillRect(0, 0, getWidth(), getHeight());
         } else {

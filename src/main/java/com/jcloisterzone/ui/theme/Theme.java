@@ -6,7 +6,8 @@ public class Theme {
 
 	private Color mainBg;
 	private Color panelBg;
-	private Color denseBg;
+	private Color transparentPanelBg;
+	private Color semiTransparentBg;
 	private Color playerBoxBg;
 	private Color panelShadow;
 	private Color markerColor;
@@ -29,8 +30,11 @@ public class Theme {
 	public Color getPanelBg() {
 		return panelBg;
 	}
-	public Color getDenseBg() {
-		return denseBg;
+	public Color getTransparentPanelBg() {
+		return transparentPanelBg;
+	}
+	public Color getSemiTransparentBg() {
+		return semiTransparentBg;
 	}
 	public Color getPlayerBoxBg() {
 		return playerBoxBg;
@@ -77,8 +81,9 @@ public class Theme {
 
 	static {
 		LIGHT.mainBg = null;
-		LIGHT.panelBg = new Color(255, 255, 255, 225);
-		LIGHT.denseBg = new Color(255, 255, 255, 245);
+		LIGHT.panelBg = null;
+		LIGHT.transparentPanelBg = new Color(255, 255, 255, 225);
+		LIGHT.semiTransparentBg = new Color(255, 255, 255, 245);
 		LIGHT.playerBoxBg =  new Color(210, 210, 210, 200);
 		LIGHT.panelShadow = new Color(255, 255, 255, 158);
 		LIGHT.markerColor = Color.BLACK;
@@ -94,8 +99,9 @@ public class Theme {
 		LIGHT.fontShadowColor = new Color(0, 0, 0, 60);
 
 		DARK.mainBg = new Color(40, 44, 52);
-		DARK.panelBg = new Color(0, 0, 0, 225);
-		DARK.denseBg = new Color(0, 0, 0, 245);
+		DARK.panelBg = new Color(20, 22, 26); //TODO polish
+		DARK.transparentPanelBg = new Color(0, 0, 0, 225);
+		DARK.semiTransparentBg = new Color(0, 0, 0, 245);
 		DARK.playerBoxBg = new Color(128, 128, 128, 200);
 		DARK.panelShadow = new Color(0, 0, 0, 158);
 		DARK.markerColor = Color.WHITE;

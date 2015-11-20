@@ -167,7 +167,11 @@ public class Client extends JFrame {
     public void init() {
         setLocale(config.getLocaleObject());
 
-        theme = Theme.DARK;
+        if ("dark".equalsIgnoreCase(config.getTheme())) {
+        	theme = Theme.DARK;
+        } else {
+        	theme = Theme.LIGHT;
+        }
 
         resetWindowIcon();
 

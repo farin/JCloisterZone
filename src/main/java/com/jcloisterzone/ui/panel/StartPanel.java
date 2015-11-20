@@ -46,7 +46,9 @@ public class StartPanel extends JPanel {
 
         JPanel playHostedPanel = new JPanel();
         playHostedPanel.setBackground(bgColor);
-        playHostedPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        playHostedPanel.setBorder(new TitledBorder(
+        		UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING,
+        		TitledBorder.TOP, null, new Color(0, 0, 0)));
 
         add(playHostedPanel, "grow 2, width :500:");
         playHostedPanel.setBackground(bgColor);

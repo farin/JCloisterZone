@@ -35,6 +35,7 @@ public class Config {
 
     private Integer score_display_duration;
     private Integer ai_place_tile_delay;
+    private String theme;
 
     private Boolean beep_alert;
     private String client_name;
@@ -350,6 +351,14 @@ public class Config {
     public void setAi_place_tile_delay(Integer ai_place_tile_delay) {
         this.ai_place_tile_delay = ai_place_tile_delay;
     }
+
+    public String getTheme() {
+		return theme;
+	}
+
+    public void setTheme(String theme) {
+		this.theme = theme;
+	}
 
     public Boolean getBeep_alert() {
         return beep_alert == null ? Boolean.FALSE : beep_alert;

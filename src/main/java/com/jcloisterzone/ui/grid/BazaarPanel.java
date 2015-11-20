@@ -65,7 +65,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
        bcb = gc.getGame().getCapability(BazaarCapability.class);
 
        setOpaque(true);
-       setBackground(client.getTheme().getPanelBg());
+       setBackground(client.getTheme().getTransparentPanelBg());
        setLayout(new MigLayout("ins 0", "[grow]", ""));
 
        JLabel label;

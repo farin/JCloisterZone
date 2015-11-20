@@ -156,7 +156,7 @@ public class ControlPanel extends JPanel {
 
 
     private void paintBackgroundBody(Graphics2D g2) {
-        g2.setColor(client.getTheme().getPanelBg());
+        g2.setColor(client.getTheme().getTransparentPanelBg());
         g2.fillRect(LEFT_MARGIN+LEFT_PADDING , 0, getWidth()-LEFT_MARGIN-LEFT_PADDING, getHeight());
     }
 
@@ -166,7 +166,7 @@ public class ControlPanel extends JPanel {
 
         Player player = game.getTurnPlayer();
         if (player == null) {
-            g2.setColor(client.getTheme().getPanelBg());
+            g2.setColor(client.getTheme().getTransparentPanelBg());
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, h);
             g2.setColor(client.getTheme().getPanelShadow());
             g2.fillRect(-LEFT_PADDING-3, 0, 3, h);
@@ -174,7 +174,7 @@ public class ControlPanel extends JPanel {
             PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
 
-            g2.setColor(client.getTheme().getPanelBg());
+            g2.setColor(client.getTheme().getTransparentPanelBg());
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, y-ACTIVE_MARKER_SIZE);
             g2.fillRect(-LEFT_PADDING , y+ACTIVE_MARKER_SIZE, LEFT_PADDING, h-y-ACTIVE_MARKER_SIZE);
             g2.fillPolygon(

@@ -58,7 +58,7 @@ public class GameOverPanel extends JPanel {
         this.game = gc.getGame();
 
         setOpaque(true);
-        setBackground(client.getTheme().getDenseBg());
+        setBackground(client.getTheme().getSemiTransparentBg());
         setLayout(new MigLayout("ins 20", "[][grow]", "[]20[]"));
 
         add(new PointStatsPanel(), "sx 2, wrap, hidemode 3");
