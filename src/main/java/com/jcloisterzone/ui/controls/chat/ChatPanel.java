@@ -117,8 +117,11 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
         input.setOpaque(false);
         input.setBackground(client.getTheme().getTransparentInputBg());
-        input.setForeground(client.getTheme().getTextColor());
-        input.setCaretColor(client.getTheme().getTextColor());
+        Color textColor = client.getTheme().getTextColor();
+        if (textColor != null) {
+            input.setForeground(client.getTheme().getTextColor());
+            input.setCaretColor(client.getTheme().getTextColor());
+        }
         TextPrompt tp = new TextPrompt(_("Type to chat"), input);
         tp.setShow(Show.FOCUS_LOST);
         tp.changeStyle(Font.ITALIC);
@@ -256,8 +259,13 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
                 doc.insertString(offset, nick + ": ", attrs);
                 offset += nick.length() + 2;
 
-                attrs = new SimpleAttributeSet();
-                ColorConstants.setForeground(attrs, client.getTheme().getTextColor());
+                Color textColor = client.getTheme().getTextColor();
+                if (textColor == null) {
+                    attrs = null;
+                } else {
+                    attrs = new SimpleAttributeSet();
+                    ColorConstants.setForeground(attrs, client.getTheme().getTextColor());
+                }
                 doc.insertString(offset, text + "\n", attrs);
                 offset += text.length() + 1;
             }

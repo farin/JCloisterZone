@@ -39,7 +39,11 @@ public class StartPanel extends JPanel {
 
 
         JLabel lblNewLabel = new JLabel();
-        lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
+        if (client.getTheme().isDark()) {
+            lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone-dark.png")));
+        } else {
+            lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
+        }
         add(lblNewLabel, "span 2, wrap, center");
         helpPanel = new HelpPanel();
         add(helpPanel, "span 2, wrap, grow, gap 30 30");

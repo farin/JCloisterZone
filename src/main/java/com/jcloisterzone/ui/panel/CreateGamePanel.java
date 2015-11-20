@@ -135,7 +135,7 @@ public class CreateGamePanel extends JPanel {
 
         setLayout(new MigLayout("", "[grow]", "[][grow]"));
         add(header = new JPanel(), "cell 0 0, growx");
-
+        header.setBackground(client.getTheme().getMainBg());
         header.setLayout(new MigLayout("", "[grow]"));
 
         startGameButton = new JButton(_("Start game"));
@@ -166,11 +166,14 @@ public class CreateGamePanel extends JPanel {
         }
 
         JPanel scrolled = new JPanel();
+        scrolled.setBackground(client.getTheme().getMainBg());
         scrolled.setLayout(new MigLayout("", "[][grow][grow]", "[grow]"));
 
 
         playersPanel = new JPanel();
-        playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        if (!client.getTheme().isDark()) {
+            playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         playersPanel.setLayout(new MigLayout("", "[grow]", ""));
 
         if (mutableSlots) {
@@ -198,8 +201,10 @@ public class CreateGamePanel extends JPanel {
         scrolled.add(playersPanel, "cell 0 0, grow");
 
         expansionPanel = new JPanel();
-        expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
+        if (!client.getTheme().isDark()) {
+            expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
 
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setConfig(client.getConfig());
@@ -212,8 +217,10 @@ public class CreateGamePanel extends JPanel {
         scrolled.add(expansionPanel, "cell 1 0,grow");
 
         rulesPanel = new JPanel();
-        rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
+        if (!client.getTheme().isDark()) {
+            rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
         scrolled.add(rulesPanel, "cell 2 0,grow");
 
@@ -242,7 +249,9 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel createClockPanel() {
         JPanel clockPanel = new JPanel();
-        clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        if (!client.getTheme().isDark()) {
+            clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         clockPanel.setLayout(new MigLayout("", "[][][]", ""));
 
         Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
@@ -283,8 +292,10 @@ public class CreateGamePanel extends JPanel {
 
     private JPanel createPresetPanel() {
         JPanel presetPanel = new JPanel();
-        presetPanel.setBorder(new TitledBorder(null, _("Presets"),
+        if (!client.getTheme().isDark()) {
+            presetPanel.setBorder(new TitledBorder(null, _("Presets"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         presetPanel.setLayout(new MigLayout());
 
         presets = new JComboBox<Object>(getPresets());
