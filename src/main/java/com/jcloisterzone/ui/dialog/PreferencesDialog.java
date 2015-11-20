@@ -52,27 +52,30 @@ public class PreferencesDialog extends JDialog {
     private final Client client;
     private final Config config;
     private String initialLocale;
+    private String initialTheme;
 
     private JComponent[] tabs;
     private JComponent visibleTab;
 
     private JLabel languageHint;
+    private JLabel themeHint;
 
-    private JComboBox<LocaleOption> langComboBox;
+    private JComboBox<StringOption> langComboBox;
+    private JComboBox<StringOption> themeComboBox;
     private JTextField aiPlaceTileDelay;
     private JTextField scoreDisplayDuration;
     private List<PluginModel> pluginRows = new ArrayList<>();
 
-    private static class LocaleOption {
-        private final String locale, title;
+    private static class StringOption {
+        private final String key, title;
 
-        public LocaleOption(String locale, String title) {
-            this.locale = locale;
+        public StringOption(String key, String title) {
+            this.key = key;
             this.title = title;
         }
 
-        public String getLocale() {
-            return locale;
+        public String getKey() {
+            return key;
         }
 
         @Override
@@ -81,38 +84,57 @@ public class PreferencesDialog extends JDialog {
         }
     }
 
-    private void initLocaleOptions(JComboBox<LocaleOption> comboBox) {
-        ArrayList<LocaleOption> result = new ArrayList<>();
-        result.add(new LocaleOption(null, _("Use system language")));
-        result.add(new LocaleOption("ca", "català (ca)"));
-        result.add(new LocaleOption("cs", "čeština (cs)"));
-        result.add(new LocaleOption("de", "deutch (de)"));
-        result.add(new LocaleOption("el", "ελληνικά (el)"));
-        result.add(new LocaleOption("en", "english (en)"));
-        result.add(new LocaleOption("es", "español (es)"));
-        result.add(new LocaleOption("fr", "français (fr)"));
-        result.add(new LocaleOption("hu", "magyar (hu)"));
-        result.add(new LocaleOption("it", "italiano (it)"));
-        result.add(new LocaleOption("nl", "nederlands (nl)"));
-        result.add(new LocaleOption("pl", "polski (pl)"));
-        result.add(new LocaleOption("ro", "român (ro)"));
-        result.add(new LocaleOption("ru", "русский (ru)"));
-        result.add(new LocaleOption("sk", "slovenčina (sk)"));
+    private void initLocaleOptions(JComboBox<StringOption> comboBox) {
+        ArrayList<StringOption> result = new ArrayList<>();
+        result.add(new StringOption(null, _("Use system language")));
+        result.add(new StringOption("ca", "català (ca)"));
+        result.add(new StringOption("cs", "čeština (cs)"));
+        result.add(new StringOption("de", "deutch (de)"));
+        result.add(new StringOption("el", "ελληνικά (el)"));
+        result.add(new StringOption("en", "english (en)"));
+        result.add(new StringOption("es", "español (es)"));
+        result.add(new StringOption("fr", "français (fr)"));
+        result.add(new StringOption("hu", "magyar (hu)"));
+        result.add(new StringOption("it", "italiano (it)"));
+        result.add(new StringOption("nl", "nederlands (nl)"));
+        result.add(new StringOption("pl", "polski (pl)"));
+        result.add(new StringOption("ro", "român (ro)"));
+        result.add(new StringOption("ru", "русский (ru)"));
+        result.add(new StringOption("sk", "slovenčina (sk)"));
 
         boolean match = false;
-        for (LocaleOption opt : result) {
+        for (StringOption opt : result) {
             comboBox.addItem(opt);
-            if (Objects.equal(opt.getLocale(), config.getLocale())) {
+            if (Objects.equal(opt.getKey(), config.getLocale())) {
                 comboBox.setSelectedItem(opt);
                 match = true;
             }
         }
         if (!match) {
-            LocaleOption unknown = new LocaleOption(config.getLocale(), config.getLocale());
+            StringOption unknown = new StringOption(config.getLocale(), config.getLocale());
             comboBox.addItem(unknown);
             comboBox.setSelectedItem(unknown);
         }
         initialLocale = config.getLocale();
+    }
+
+    private void initThemeOptions(JComboBox<StringOption> comboBox) {
+        ArrayList<StringOption> result = new ArrayList<>();
+        result.add(new StringOption("light", "Light"));
+        result.add(new StringOption("dark", "Dark"));
+
+        boolean match = false;
+        for (StringOption opt : result) {
+            comboBox.addItem(opt);
+            if (Objects.equal(opt.getKey(), config.getTheme())) {
+                comboBox.setSelectedItem(opt);
+                match = true;
+            }
+        }
+        if (!match) {
+            comboBox.setSelectedItem(result.get(0));
+        }
+        initialTheme = config.getTheme();
     }
 
     private String valueOf(Object obj) {
@@ -127,8 +149,10 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void save() {
-        LocaleOption opt = (LocaleOption) langComboBox.getSelectedItem();
-        config.setLocale(opt.getLocale());
+        StringOption opt = (StringOption) langComboBox.getSelectedItem();
+        config.setLocale(opt.getKey());
+        opt = (StringOption) themeComboBox.getSelectedItem();
+        config.setTheme(opt.getKey());
         //TODO error handling
         config.setAi_place_tile_delay(intValue(aiPlaceTileDelay.getText()));
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
@@ -162,16 +186,16 @@ public class PreferencesDialog extends JDialog {
 
         panel.add(new JLabel(_("Language")), "alignx trailing");
 
-        langComboBox = new JComboBox<LocaleOption>();
+        langComboBox = new JComboBox<StringOption>();
         langComboBox.setEditable(false);
         initLocaleOptions(langComboBox);
         langComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 @SuppressWarnings("unchecked")
-                JComboBox<LocaleOption> comboBox = (JComboBox<LocaleOption>) e.getSource();
-                LocaleOption opt = (LocaleOption) comboBox.getSelectedItem();
-                languageHint.setVisible(opt.getLocale() != initialLocale);
+                JComboBox<StringOption> comboBox = (JComboBox<StringOption>) e.getSource();
+                StringOption opt = (StringOption) comboBox.getSelectedItem();
+                languageHint.setVisible(!opt.getKey().equals(initialLocale));
             }
         });
         panel.add(langComboBox, "wrap, growx");
@@ -180,6 +204,27 @@ public class PreferencesDialog extends JDialog {
         languageHint.setVisible(false);
         languageHint.setFont(HINT_FONT);
         panel.add(languageHint, "sx 2, wrap");
+
+        panel.add(new JLabel(_("Theme")), "alignx trailing");
+
+        themeComboBox = new JComboBox<StringOption>();
+        themeComboBox.setEditable(false);
+        initThemeOptions(themeComboBox);
+        themeComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                @SuppressWarnings("unchecked")
+                JComboBox<StringOption> comboBox = (JComboBox<StringOption>) e.getSource();
+                StringOption opt = (StringOption) comboBox.getSelectedItem();
+                themeHint.setVisible(!opt.getKey().equals(initialTheme));
+            }
+        });
+        panel.add(themeComboBox, "wrap, growx");
+
+        themeHint = new JLabel(_("To apply new theme you must restart the application"));
+        themeHint.setVisible(false);
+        themeHint.setFont(HINT_FONT);
+        panel.add(themeHint, "sx 2, wrap");
 
         panel.add(new JLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 
