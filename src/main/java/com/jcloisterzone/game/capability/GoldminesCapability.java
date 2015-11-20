@@ -80,6 +80,14 @@ public class GoldminesCapability  extends Capability {
         return curr;
     }
 
+    public void setGoldCount(Position pos, int count) {
+        if (count == 0) {
+            boardGold.remove(pos);
+        } else {
+            boardGold.put(pos, count);
+        }
+    }
+
     @Override
     public void saveToSnapshot(Document doc, Element node) {
         for (Entry<Position, Integer> entry : boardGold.entrySet()) {
@@ -104,7 +112,7 @@ public class GoldminesCapability  extends Capability {
             Position pos = XMLUtils.extractPosition(el);
             int count = XMLUtils.attributeIntValue(el, "count");
             boardGold.put(pos, count);
-            game.post(new GoldChangeEvent(null, pos, count));
+            game.post(new GoldChangeEvent(null, pos, 0, count));
         }
         nl = node.getElementsByTagName("player");
         for (int i = 0; i < nl.getLength(); i++) {
@@ -165,6 +173,7 @@ public class GoldminesCapability  extends Capability {
     }
 
     public void awardGoldPieces() {
+        Map<Position, Integer> initialGoldCount = new HashMap<>();
         List<Entry<Position, Set<Player>>> entries = new ArrayList<>(claimedGold.entrySet());
         Collections.sort(entries, new Comparator<Entry<Position, Set<Player>>>() {
             @Override
@@ -174,7 +183,9 @@ public class GoldminesCapability  extends Capability {
         });
         int goldPieces = 0;
         for (Position pos : claimedGold.keySet()) {
-            goldPieces += boardGold.get(pos);
+            int count = boardGold.get(pos);
+            goldPieces += count;
+            initialGoldCount.put(pos, count);
         }
         Player player = game.getActivePlayer();
         while (goldPieces > 0) {
@@ -196,7 +207,7 @@ public class GoldminesCapability  extends Capability {
             player = game.getNextPlayer(player);
         }
         for (Position pos : claimedGold.keySet()) {
-            game.post(new GoldChangeEvent(null, pos, 0));
+            game.post(new GoldChangeEvent(null, pos, initialGoldCount.get(pos), 0));
         }
         claimedGold.clear();
     }

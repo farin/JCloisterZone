@@ -26,7 +26,7 @@ public class GoldLayer extends AbstractGridLayer {
 
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-		goldImage = rm.getImage("neutral/gold");
+        goldImage = rm.getImage("neutral/gold");
         widthHeightRatio = goldImage.getWidth(null) / (double) goldImage.getHeight(null);
 
         gc.register(this);
@@ -34,7 +34,7 @@ public class GoldLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onGoldChangeEvent(GoldChangeEvent ev) {
-        setGoldCount(ev.getPos(), ev.getCount());
+        setGoldCount(ev.getPos(), ev.getCurrCount());
         gridPanel.repaint();
     }
 

@@ -3,6 +3,7 @@
 ## Done in current dev
 
 * Russian Promos "expansion"
+* fixed: Impossible to undo Goldmine tile placement
 * fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
 * fixed BB.CFR.b tile definition - another missing city-farm link
 
