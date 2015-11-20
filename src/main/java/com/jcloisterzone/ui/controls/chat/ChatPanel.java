@@ -145,13 +145,15 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
                 updateMessaagesVisibility();
             }
         });
-
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentHidden(ComponentEvent e) {
                 repaintTimer.stop();
             }
         });
+        if (forceFocus) {
+            repaintTimer.start();
+        }
 
         setBackground(new Color(0, 0, 0, 0));
         input.setBackground(client.getTheme().getInputBg());
