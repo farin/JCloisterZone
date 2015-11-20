@@ -42,14 +42,12 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public Image getTileImage(Tile tile) {
-    	return null;
-        //return (new TileImageFactory()).getTileImage(tile);
+        return (new TileImageFactory()).getTileImage(tile);
     }
 
     @Override
     public Image getAbbeyImage() {
-    	return null;
-        //return (new TileImageFactory()).getAbbeyImage();
+        return (new TileImageFactory()).getAbbeyImage();
     }
 
     @Override
