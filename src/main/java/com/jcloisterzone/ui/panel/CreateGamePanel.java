@@ -413,7 +413,8 @@ public class CreateGamePanel extends JPanel {
         JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
         if (exp == Expansion.KING_AND_ROBBER_BARON
                 || exp == Expansion.INNS_AND_CATHEDRALS
-                || exp == Expansion.FLIER) {
+                || exp == Expansion.FLIER
+                || exp == Expansion.RUSSIAN_PROMOS) {
             expansionPanel.add(chbox, "gaptop 5");
         } else {
             expansionPanel.add(chbox, "");
