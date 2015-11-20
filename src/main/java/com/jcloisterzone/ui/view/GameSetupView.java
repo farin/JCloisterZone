@@ -88,7 +88,7 @@ public class GameSetupView extends AbstractUiView {
         chatColumn.setPreferredSize(new Dimension(250, panel.getHeight()));
         panel.add(chatColumn, BorderLayout.WEST);
 
-        chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(game.getName()), "cell 0 0, grow");
+        chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(client, game.getName()), "cell 0 0, grow");
 
 
         chatPanel = new GameChatPanel(client, game);
@@ -147,7 +147,7 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Override
-	public void onWebsocketClose(int code, String reason, boolean remote) {
-		client.mountView(new StartView(client));
-	}
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+        client.mountView(new StartView(client));
+    }
 }

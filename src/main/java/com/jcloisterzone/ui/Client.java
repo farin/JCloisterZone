@@ -182,6 +182,7 @@ public class Client extends JFrame {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
+        theme.setUiMangerDefaults();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {

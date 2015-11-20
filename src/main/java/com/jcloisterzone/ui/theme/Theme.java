@@ -2,6 +2,10 @@ package com.jcloisterzone.ui.theme;
 
 import java.awt.Color;
 
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+
 public class Theme {
 
     private boolean dark;
@@ -10,6 +14,7 @@ public class Theme {
     private Color transparentPanelBg;
     private Color semiTransparentBg;
     private Color playerBoxBg;
+    private Color connectedClientsBg;
     private Color panelShadow;
     private Color markerColor;
     private Color headerFontColor;
@@ -42,6 +47,9 @@ public class Theme {
     }
     public Color getPlayerBoxBg() {
         return playerBoxBg;
+    }
+    public Color getConnectedClientsBg() {
+        return connectedClientsBg;
     }
     public Color getPanelShadow() {
         return panelShadow;
@@ -80,6 +88,28 @@ public class Theme {
         return fontShadowColor;
     }
 
+    public void setUiMangerDefaults() {
+        //HACK make classes form themes?
+        if (this == DARK) {
+            ColorUIResource textColor = new ColorUIResource(this.textColor);
+            ColorUIResource panelBg = new ColorUIResource(this.panelBg);
+            UIDefaults defs = UIManager.getDefaults();
+            defs.put("Button.background", panelBg);
+            defs.put("Panel.background", panelBg);
+            defs.put("List.background", new ColorUIResource(this.mainBg));
+            defs.put("List.foreground", textColor);
+            defs.put("CheckBox.background", panelBg);
+            defs.put("CheckBox.foreground", textColor);
+            //defs.put("TextPane.background", panelBg);
+            //defs.put("TextPane.disabledBackground", panelBg);
+            defs.put("Panel.foreground", textColor);
+            defs.put("Label.foreground", textColor);
+            defs.put("TextArea.foreground", textColor);
+            //defs.put("TextPane.foreground", textColor);
+            defs.put("TitledBorder.titleColor", textColor);
+        }
+    }
+
     public static final Theme LIGHT = new Theme();
     public static final Theme DARK = new Theme();
 
@@ -90,6 +120,7 @@ public class Theme {
         LIGHT.transparentPanelBg = new Color(255, 255, 255, 225);
         LIGHT.semiTransparentBg = new Color(255, 255, 255, 245);
         LIGHT.playerBoxBg =  new Color(219, 219, 219);
+        LIGHT.connectedClientsBg = Color.WHITE;
         LIGHT.panelShadow = new Color(255, 255, 255, 158);
         LIGHT.markerColor = Color.BLACK;
         LIGHT.headerFontColor =  new Color(190, 190, 190);
@@ -109,6 +140,7 @@ public class Theme {
         DARK.transparentPanelBg = new Color(33, 37, 43, 220);
         DARK.semiTransparentBg = new Color(33, 37, 43, 245);
         DARK.playerBoxBg = new Color(70, 70, 70);
+        DARK.connectedClientsBg = DARK.panelBg;
         DARK.panelShadow = new Color(33, 37, 43, 150);
         DARK.markerColor = Color.WHITE;
         DARK.headerFontColor =  new Color(200, 200, 200);

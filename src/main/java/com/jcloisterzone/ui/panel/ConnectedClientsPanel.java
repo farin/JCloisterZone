@@ -19,6 +19,7 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -26,62 +27,64 @@ import static com.jcloisterzone.ui.I18nUtils._;
 
 public class ConnectedClientsPanel extends JPanel {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static Font FONT_TITLE = new Font(null, Font.BOLD, 20);
+    private static Font FONT_TITLE = new Font(null, Font.BOLD, 20);
 
-	private JTextPane connectedClients;
+    private JTextPane connectedClients;
 
-	public ConnectedClientsPanel(String titleText) {
-		setLayout(new MigLayout("ins 0", "[grow]", "[][grow]"));
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		setBackground(Color.WHITE);
+    public ConnectedClientsPanel(Client client, String titleText) {
+        setLayout(new MigLayout("ins 0", "[grow]", "[][grow]"));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setBackground(client.getTheme().getConnectedClientsBg());
 
-		JLabel title = new JLabel(titleText);
-		title.setFont(FONT_TITLE);
-		add(title, "wrap");
-		//add(new JLabel(_("Connected clients")+":"), "wrap");
-		connectedClients = new JTextPane();
-		connectedClients.setToolTipText(_("Connected clients"));
-		connectedClients.setEditable(false);
-		add(connectedClients, "wrap, align 0 0");
-	}
+        JLabel title = new JLabel(titleText);
+        title.setFont(FONT_TITLE);
+        add(title, "wrap");
 
-	public void updateClients(List<RemoteClient> clients) {
-		DefaultStyledDocument doc = new DefaultStyledDocument();
+        connectedClients = new JTextPane();
+        connectedClients.setToolTipText(_("Connected clients"));
+        connectedClients.setEditable(false);
+        connectedClients.setBackground(client.getTheme().getConnectedClientsBg());
+        connectedClients.setForeground(client.getTheme().getTextColor());
+        add(connectedClients, "wrap, align 0 0");
+    }
 
-		List<RemoteClient> inGameClients = new ArrayList<>();
-		int offs = 0;
+    public void updateClients(List<RemoteClient> clients) {
+        DefaultStyledDocument doc = new DefaultStyledDocument();
 
-		try {
-			for (RemoteClient rc : clients) {
-				if (ClientState.ACTIVE.equals(rc.getState())) {
-					SimpleAttributeSet attrs = new SimpleAttributeSet();
-					String text = rc.getName();
-					doc.insertString(offs, text+"\n", attrs);
-					offs += text.length() + 1;
-				}
-				if (ClientState.IN_GAME.equals(rc.getState	())) {
-					inGameClients.add(rc);
-				}
-			}
-			if (!inGameClients.isEmpty()) {
-				doc.insertString(offs, "\n", new SimpleAttributeSet());
-				offs += 1;
-				for (RemoteClient rc : inGameClients) {
-					SimpleAttributeSet attrs = new SimpleAttributeSet();
-					ColorConstants.setForeground(attrs, Color.LIGHT_GRAY);
-					String text = rc.getName();
-					doc.insertString(offs, text+"\n", attrs);
-					offs += text.length() + 1;
-				}
-			}
-		} catch (BadLocationException e) {
-			logger.error(e.getMessage(), e); //should never happen
-		}
+        List<RemoteClient> inGameClients = new ArrayList<>();
+        int offs = 0;
 
-		connectedClients.setDocument(doc);
-		connectedClients.repaint();
-	}
+        try {
+            for (RemoteClient rc : clients) {
+                if (ClientState.ACTIVE.equals(rc.getState())) {
+                    SimpleAttributeSet attrs = new SimpleAttributeSet();
+                    String text = rc.getName();
+                    doc.insertString(offs, text+"\n", attrs);
+                    offs += text.length() + 1;
+                }
+                if (ClientState.IN_GAME.equals(rc.getState	())) {
+                    inGameClients.add(rc);
+                }
+            }
+            if (!inGameClients.isEmpty()) {
+                doc.insertString(offs, "\n", new SimpleAttributeSet());
+                offs += 1;
+                for (RemoteClient rc : inGameClients) {
+                    SimpleAttributeSet attrs = new SimpleAttributeSet();
+                    ColorConstants.setForeground(attrs, Color.LIGHT_GRAY);
+                    String text = rc.getName();
+                    doc.insertString(offs, text+"\n", attrs);
+                    offs += text.length() + 1;
+                }
+            }
+        } catch (BadLocationException e) {
+            logger.error(e.getMessage(), e); //should never happen
+        }
+
+        connectedClients.setDocument(doc);
+        connectedClients.repaint();
+    }
 
 }

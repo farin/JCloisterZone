@@ -117,6 +117,8 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
         input.setOpaque(false);
         input.setBackground(client.getTheme().getTransparentInputBg());
+        input.setForeground(client.getTheme().getTextColor());
+        input.setCaretColor(client.getTheme().getTextColor());
         TextPrompt tp = new TextPrompt(_("Type to chat"), input);
         tp.setShow(Show.FOCUS_LOST);
         tp.changeStyle(Font.ITALIC);
@@ -159,10 +161,10 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
     private void updateMessaagesVisibility() {
         messagesPane.setVisible(!hidingMode || !isFolded());
         if (getParent() == null) {
-        	repaint();
-    	} else {
-    		getParent().repaint();
-    	}
+            repaint();
+        } else {
+            getParent().repaint();
+        }
     }
 
     @Override
