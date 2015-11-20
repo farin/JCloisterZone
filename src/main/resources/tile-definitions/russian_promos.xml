@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<tile id="L">
+		<cloister yaga="yes" />
+		<farm>NL NR EL ER SL SR WL WR</farm>
+	</tile>
+	<tile id="RRrr">
+        <road>N</road>
+        <road>E S W</road>
+        <farm>WR NL</farm>
+        <farm>NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+</pack>
