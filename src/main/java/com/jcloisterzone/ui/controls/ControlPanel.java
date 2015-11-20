@@ -60,7 +60,6 @@ public class ControlPanel extends JPanel {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
 
-    public static final Color HEADER_FONT_COLOR = new Color(170, 170, 170, 200);
 
     @Deprecated
     public static final Color FONT_SHADOW_COLOR = new Color(0, 0, 0, 60);
@@ -231,7 +230,7 @@ public class ControlPanel extends JPanel {
         TilePack tilePack = game.getTilePack();
         if (tilePack != null) { //null is possible for just loaded game
             g2.setFont(FONT_PACK_SIZE);
-            g2.setColor(HEADER_FONT_COLOR);
+            g2.setColor(client.getTheme().getHeaderFontColor());
             int packSize = tilePack.totalSize();
             g2.drawString("" + packSize, w - 42, 24);
         }

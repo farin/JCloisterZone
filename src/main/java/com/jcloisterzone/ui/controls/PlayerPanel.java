@@ -48,7 +48,6 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     private static final Color KING_ROBBER_OVERLAY = new Color(0f,0f,0f,0.4f);
     private static final Color POTENTIAL_POINTS_COLOR = new Color(160, 160, 160);
-    //private static final Color ACTIVE_TOWER_BG = new Color(255, 255, 70);
 
     private static Font FONT_POINTS = new Font("Georgia", Font.BOLD, 30);
     private static Font FONT_MEEPLE = new Font("Georgia", Font.BOLD, 18);
@@ -129,7 +128,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         //TODO shadow color based on color ??
         /*g2.setColor(Color.DARK_GRAY);
         g2.drawString(text, x+0.8f, y+0.7f);*/
-        g2.setColor(ControlPanel.FONT_SHADOW_COLOR);
+        g2.setColor(client.getTheme().getFontShadowColor());
         g2.drawString(text, x+0.6f, y+0.5f);
         g2.setColor(color);
         g2.drawString(text, x, y);

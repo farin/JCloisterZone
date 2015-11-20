@@ -72,7 +72,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
 
        label = new JLabel(_("Bazaar supply"));
        label.setFont(FONT_HEADER);
-       label.setForeground(ControlPanel.HEADER_FONT_COLOR);
+       label.setForeground(client.getTheme().getHeaderFontColor());
        add(label, "wrap, gap 20 20 10 5");
 
        hint = new JLabel();

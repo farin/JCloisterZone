@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,9 +15,6 @@ import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.component.MultiLineLabel;
-import com.jcloisterzone.ui.controls.ControlPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class SelectMageWitchRemovalPanel extends JPanel {
 
@@ -29,7 +28,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
 
         label = new JLabel(_("Mage and Witch"));
         label.setFont(CornCirclesPanel.FONT_HEADER);
-        label.setForeground(ControlPanel.HEADER_FONT_COLOR);
+        label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 
         MultiLineLabel mll = new MultiLineLabel(_("It''s not possible to place mage or witch because there isn''t an unfinished feature. Select what figure do you want to remove from board."));

@@ -253,7 +253,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
                 offset += nick.length() + 2;
 
                 attrs = new SimpleAttributeSet();
-                ColorConstants.setForeground(attrs, client.getTheme().getChatMessageColor());
+                ColorConstants.setForeground(attrs, client.getTheme().getTextColor());
                 doc.insertString(offset, text + "\n", attrs);
                 offset += text.length() + 1;
             }

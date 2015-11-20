@@ -36,6 +36,7 @@ public class StartView extends AbstractUiView {
 	public void show(Container pane, Object ctx) {
 		pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
+        envelope.setBackground(client.getTheme().getMainBg());
         pane.add(envelope, BorderLayout.CENTER);
 
         MenuBar menu = client.getJMenuBar();
@@ -46,8 +47,7 @@ public class StartView extends AbstractUiView {
         menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
         menu.setItemEnabled(MenuItem.CONNECT_P2P, true);
 
-        startPanel = new StartPanel();
-        startPanel.setClient(client);
+        startPanel = new StartPanel(client);
         envelope.add(startPanel);
 	}
 

@@ -32,7 +32,7 @@ public class CornCirclesPanel extends JPanel {
 
         label = new JLabel(_("Corn circle"));
         label.setFont(FONT_HEADER);
-        label.setForeground(ControlPanel.HEADER_FONT_COLOR);
+        label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 
         label = new JLabel(_("Each player…"));

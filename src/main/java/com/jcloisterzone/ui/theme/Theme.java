@@ -10,6 +10,7 @@ public class Theme {
 	private Color playerBoxBg;
 	private Color panelShadow;
 	private Color markerColor;
+	private Color headerFontColor;
 	private Color delimiterTopColor;
 	private Color delimiterBottomColor;
 	private Color inputBg;
@@ -17,7 +18,10 @@ public class Theme {
 	private Color tileBorder;
 	private Color tilePlacementColor;
 	private Color chatNeutralColor;
-	private Color chatMessageColor;
+	private Color textColor;
+
+	//TODO better to based shadow on text color?
+	private Color fontShadowColor;
 
 	public Color getMainBg() {
 		return mainBg;
@@ -36,6 +40,9 @@ public class Theme {
 	}
 	public Color getMarkerColor() {
 		return markerColor;
+	}
+	public Color getHeaderFontColor() {
+		return headerFontColor;
 	}
 	public Color getDelimiterBottomColor() {
 		return delimiterBottomColor;
@@ -58,8 +65,11 @@ public class Theme {
 	public Color getChatNeutralColor() {
 		return chatNeutralColor;
 	}
-	public Color getChatMessageColor() {
-		return chatMessageColor;
+	public Color getTextColor() {
+		return textColor;
+	}
+	public Color getFontShadowColor() {
+		return fontShadowColor;
 	}
 
 	public static final Theme LIGHT = new Theme();
@@ -72,6 +82,7 @@ public class Theme {
 		LIGHT.playerBoxBg =  new Color(210, 210, 210, 200);
 		LIGHT.panelShadow = new Color(255, 255, 255, 158);
 		LIGHT.markerColor = Color.BLACK;
+		LIGHT.headerFontColor =  new Color(170, 170, 170, 200);
 		LIGHT.delimiterTopColor = new Color(250,250,250);
 	    LIGHT.delimiterBottomColor = new Color(220,220,220);
 		LIGHT.tileBorder = Color.WHITE;
@@ -79,7 +90,8 @@ public class Theme {
 		LIGHT.transparentInputBg = new Color(255, 255, 255, 8);
 		LIGHT.tilePlacementColor = Color.LIGHT_GRAY;
 		LIGHT.chatNeutralColor = Color.DARK_GRAY;
-		LIGHT.chatMessageColor = null;
+		LIGHT.textColor = null;
+		LIGHT.fontShadowColor = new Color(0, 0, 0, 60);
 
 		DARK.mainBg = new Color(40, 44, 52);
 		DARK.panelBg = new Color(0, 0, 0, 225);
@@ -87,6 +99,7 @@ public class Theme {
 		DARK.playerBoxBg = new Color(128, 128, 128, 200);
 		DARK.panelShadow = new Color(0, 0, 0, 158);
 		DARK.markerColor = Color.WHITE;
+		DARK.headerFontColor =  new Color(200, 200, 200);
 		DARK.delimiterTopColor = new Color(0,0,0);
 	    DARK.delimiterBottomColor = new Color(50,50,50);
 		DARK.tileBorder = new Color(128, 128, 128);
@@ -94,6 +107,7 @@ public class Theme {
 		DARK.transparentInputBg = new Color(40, 44, 52, 8);
 		DARK.tilePlacementColor = Color.GRAY;
 		DARK.chatNeutralColor = Color.WHITE;
-		DARK.chatMessageColor = new Color(200, 200, 200);
+		DARK.textColor = new Color(200, 200, 200);
+		DARK.fontShadowColor = new Color(255, 255, 255, 60);
 	}
 }
