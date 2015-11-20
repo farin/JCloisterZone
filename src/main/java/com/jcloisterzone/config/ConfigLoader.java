@@ -150,11 +150,11 @@ public class ConfigLoader {
         config.getConfirm().setRansom_payment(true);
         config.getPlayers().setColors(Lists.newArrayList(
             new ColorConfig("RED"),
-            new ColorConfig("#008ffe"),
+            new ColorConfig("#008ffe", null, "#5bb7fe"),
             new ColorConfig("#FFED00"),
-            new ColorConfig("#009900"),
-            new ColorConfig("BLACK"),
-            new ColorConfig("#812EFF")
+            new ColorConfig("#009900", null, "#37a800"),
+            new ColorConfig("BLACK", null, "WHITE"),
+            new ColorConfig("#812EFF", null, "#ba92f8")
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));

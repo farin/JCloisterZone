@@ -115,7 +115,6 @@ public class Client extends JFrame {
         return instance;
     }
 
-
     public boolean mountView(UiView view) {
         return mountView(view, null);
     }
@@ -168,10 +167,12 @@ public class Client extends JFrame {
         setLocale(config.getLocaleObject());
 
         if ("dark".equalsIgnoreCase(config.getTheme())) {
-        	theme = Theme.DARK;
+            theme = Theme.DARK;
         } else {
-        	theme = Theme.LIGHT;
+            theme = Theme.LIGHT;
         }
+
+        config.setDarkTheme(theme.isDark());
 
         resetWindowIcon();
 
@@ -237,8 +238,8 @@ public class Client extends JFrame {
     }
 
     public Theme getTheme() {
-		return theme;
-	}
+        return theme;
+    }
 
     public Config getConfig() {
         return config;

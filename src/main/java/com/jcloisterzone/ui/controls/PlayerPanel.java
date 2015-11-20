@@ -126,10 +126,11 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     private void drawTextShadow(String text, int x, int y, Color color) {
         //TODO shadow color based on color ??
-        /*g2.setColor(Color.DARK_GRAY);
-        g2.drawString(text, x+0.8f, y+0.7f);*/
-        g2.setColor(client.getTheme().getFontShadowColor());
-        g2.drawString(text, x+0.6f, y+0.5f);
+        Color shadowColor = client.getTheme().getFontShadowColor();
+        if (shadowColor != null) {
+            g2.setColor(shadowColor);
+            g2.drawString(text, x+1, y+1);
+        }
         g2.setColor(color);
         g2.drawString(text, x, y);
     }
@@ -199,6 +200,10 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         g2 = bimg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //HACK - needed final bg for proper antialiasing - but can't overlap rounded corners
+        g2.setColor(client.getTheme().getPlayerBoxBg());
+        g2.fillRect(8, 8, PANEL_WIDTH, 36);
 
 //		gp.profile(" > create buffer");
 
