@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -12,7 +14,6 @@ import java.util.EnumSet;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.CaretEvent;
@@ -34,8 +35,6 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePlayerPanel extends ThemedJPanel {
 

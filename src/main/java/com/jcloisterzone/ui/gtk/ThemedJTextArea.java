@@ -4,6 +4,9 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.text.Document;
 
+/**
+ * Fix for GTK+ LaF to respect UIManager defaults
+ */
 public class ThemedJTextArea extends JTextArea {
 
 	public ThemedJTextArea() {

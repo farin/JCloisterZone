@@ -7,8 +7,10 @@ import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.UIManager;
 
+/**
+ * Fix for GTK+ LaF to respect UIManager defaults
+ */
 public class ThemedJCheckBox extends JCheckBox {
-
 
 	public ThemedJCheckBox() {
 		super();

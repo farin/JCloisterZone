@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -60,8 +62,6 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class CreateGamePanel extends ThemedJPanel {
 

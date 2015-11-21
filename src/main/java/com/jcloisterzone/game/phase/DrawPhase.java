@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;

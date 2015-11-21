@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -23,8 +25,6 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 public class ConnectedClientsPanel extends JPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,9 +34,12 @@ public class ConnectedClientsPanel extends JPanel {
     private JTextPane connectedClients;
 
     public ConnectedClientsPanel(Client client, String titleText) {
-        setLayout(new MigLayout("ins 0", "[grow]", "[][grow]"));
+    	Color bg = client.getTheme().getPanelBg();
+    	if (bg == null) bg = Color.WHITE;
+
+        setLayout(new MigLayout("ins 0, fillx", "[grow]", "[][grow]"));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        setBackground(client.getTheme().getConnectedClientsBg());
+        setBackground(bg);
 
         JLabel title = new JLabel(titleText);
         title.setFont(FONT_TITLE);
@@ -45,9 +48,10 @@ public class ConnectedClientsPanel extends JPanel {
         connectedClients = new JTextPane();
         connectedClients.setToolTipText(_("Connected clients"));
         connectedClients.setEditable(false);
-        connectedClients.setBackground(client.getTheme().getConnectedClientsBg());
+        connectedClients.setBackground(bg);
         connectedClients.setForeground(client.getTheme().getTextColor());
-        add(connectedClients, "wrap, align 0 0");
+
+        add(connectedClients, "wrap, grow, align 0 0");
     }
 
     public void updateClients(List<RemoteClient> clients) {

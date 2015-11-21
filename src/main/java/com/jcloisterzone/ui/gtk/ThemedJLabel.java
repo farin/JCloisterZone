@@ -4,6 +4,9 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 
+/**
+ * Fix for GTK+ LaF to respect UIManager defaults
+ */
 public class ThemedJLabel extends JLabel {
 
 	public ThemedJLabel() {

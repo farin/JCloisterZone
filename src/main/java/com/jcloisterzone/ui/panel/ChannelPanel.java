@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -35,6 +37,8 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.LengthRestrictedDocument;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
@@ -42,10 +46,8 @@ import com.jcloisterzone.wsio.message.GameMessage.GameState;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 @SuppressWarnings("serial")
-public class ChannelPanel extends JPanel {
+public class ChannelPanel extends ThemedJPanel {
 
     private static final int MAX_GAME_TITLE_LENGTH = 60;
 
@@ -60,6 +62,7 @@ public class ChannelPanel extends JPanel {
         this.client = client;
         this.cc = cc;
         setLayout(new MigLayout("ins 0", "[][]0[grow]", "[][grow]"));
+        setBackground(client.getTheme().getMainBg());
 
         add(connectedClientsPanel = new ConnectedClientsPanel(client, "play.jcz"), "cell 0 0, sy 2, width 150::, grow");
 
@@ -69,7 +72,13 @@ public class ChannelPanel extends JPanel {
 
         gameListPanel = new JPanel();
         gameListPanel.setLayout(new MigLayout("ins rel 0, gap 0 rel", "[grow]", ""));
-        gameListPanel.setBackground(Color.WHITE);
+        //HACK
+        if (client.getTheme().isDark()) {
+        	gameListPanel.setBackground(client.getTheme().getMainBg());
+        } else {
+        	gameListPanel.setBackground(new Color(180, 180, 180));
+        }
+
 
         JScrollPane scroll = new JScrollPane(gameListPanel);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -83,13 +92,13 @@ public class ChannelPanel extends JPanel {
 
     private JPanel createCreateGamePanel() {
         String maintenance = ((WebSocketConnection) cc.getConnection()).getMaintenance();
-        JPanel createGamePanel = new JPanel(new MigLayout());
+        JPanel createGamePanel = new ThemedJPanel(new MigLayout());
 
         if (maintenance != null) {
-            createGamePanel.add(new JLabel("Server is in maintenance mode."), "wrap");
-            createGamePanel.add(new JLabel(maintenance), "wrap");
+            createGamePanel.add(new ThemedJLabel("Server is in maintenance mode."), "wrap");
+            createGamePanel.add(new ThemedJLabel(maintenance), "wrap");
         } else {
-            createGamePanel.add(new JLabel(_("Game title")+":"));
+            createGamePanel.add(new ThemedJLabel(_("Game title")+":"));
 
             String defaultTitle = cc.getConnection().getNickname() + "'s game";
             final JTextField gameTitle = new JTextField();
@@ -97,11 +106,11 @@ public class ChannelPanel extends JPanel {
             gameTitle.setText(defaultTitle); //set after document
             createGamePanel.add(gameTitle, "wrap, width 250::");
 
-            createGamePanel.add(new JLabel(_("Password")+":"));
+            createGamePanel.add(new ThemedJLabel(_("Password")+":"));
             final JTextField password = new JPasswordField();
             createGamePanel.add(password, "wrap, width 250::");
 
-            JLabel passwordHint = new JLabel(_("If you leave password empty, anybody can connect to your game."));
+            JLabel passwordHint = new ThemedJLabel(_("If you leave password empty, anybody can connect to your game."));
             passwordHint.setFont(new Font(null, Font.ITALIC, 12));
             createGamePanel.add(passwordHint, "wrap, span 2");
 
@@ -143,7 +152,7 @@ public class ChannelPanel extends JPanel {
 
     private static Font FONT_GAME_TITLE = new Font(null, Font.BOLD, 20);
 
-    class GameItemPanel extends JPanel {
+    class GameItemPanel extends ThemedJPanel {
 
         private JLabel name;
         private JLabel expansionNames;
@@ -159,20 +168,20 @@ public class ChannelPanel extends JPanel {
             expansions = new HashSet<Expansion>(game.getExpansions());
             expansions.remove(Expansion.BASIC);
 
-            name = new JLabel(game.getName());
+            name = new ThemedJLabel(game.getName());
             name.setFont(FONT_GAME_TITLE);
 
-            expansionNames = new JLabel();
+            expansionNames = new ThemedJLabel();
             updateExpansionsLabel();
-            connectedClients = new JLabel();
+            connectedClients = new ThemedJLabel();
             updateClientsLabel(gc.getRemoteClients());
 
-            JPanel buttons = new JPanel();
+            JPanel buttons = new ThemedJPanel();
             buttons.setLayout(new MigLayout("ins 0"));
 
             final JPasswordField password = new JPasswordField();
             if (gc.isPasswordProtected()) {
-                buttons.add(new JLabel(_("Password")+":"));
+                buttons.add(new ThemedJLabel(_("Password")+":"));
                 buttons.add(password, "width 160");
             }
 

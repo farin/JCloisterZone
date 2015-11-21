@@ -493,7 +493,7 @@ public class Client extends JFrame {
 
     public void showAboutDialog() {
         if (aboutDialog == null) {
-            aboutDialog = new AboutDialog(config.getOrigin());
+            aboutDialog = new AboutDialog(this, config.getOrigin());
             aboutDialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {

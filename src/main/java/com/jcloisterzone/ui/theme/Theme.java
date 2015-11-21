@@ -14,7 +14,8 @@ public class Theme {
     private Color transparentPanelBg;
     private Color semiTransparentBg;
     private Color playerBoxBg;
-    private Color connectedClientsBg;
+    private Color alternativeBg;
+    private Color tileDistCountBg;
     private Color panelShadow;
     private Color markerColor;
     private Color headerFontColor;
@@ -26,6 +27,8 @@ public class Theme {
     private Color tileBorder;
     private Color tilePlacementColor;
     private Color chatNeutralColor;
+    private Color chatMyColor;
+    private Color chatSystemColor;
     private Color textColor;
 
     //TODO better to based shadow on text color?
@@ -49,9 +52,12 @@ public class Theme {
     public Color getPlayerBoxBg() {
         return playerBoxBg;
     }
-    public Color getConnectedClientsBg() {
-        return connectedClientsBg;
+    public Color getAlternativeBg() {
+        return alternativeBg;
     }
+    public Color getTileDistCountBg() {
+		return tileDistCountBg;
+	}
     public Color getPanelShadow() {
         return panelShadow;
     }
@@ -82,9 +88,15 @@ public class Theme {
     public Color getTilePlacementColor() {
         return tilePlacementColor;
     }
+    public Color getChatMyColor() {
+		return chatMyColor;
+	}
     public Color getChatNeutralColor() {
         return chatNeutralColor;
     }
+    public Color getChatSystemColor() {
+		return chatSystemColor;
+	}
     public Color getTextColor() {
         return textColor;
     }
@@ -104,12 +116,9 @@ public class Theme {
             defs.put("List.foreground", textColor);
             defs.put("CheckBox.background", panelBg);
             defs.put("CheckBox.foreground", textColor);
-            //defs.put("TextPane.background", panelBg);
-            //defs.put("TextPane.disabledBackground", panelBg);
             defs.put("Panel.foreground", textColor);
             defs.put("Label.foreground", textColor);
             defs.put("TextArea.foreground", textColor);
-            //defs.put("TextPane.foreground", textColor);
             defs.put("TitledBorder.titleColor", textColor);
         }
     }
@@ -124,7 +133,8 @@ public class Theme {
         LIGHT.transparentPanelBg = new Color(255, 255, 255, 225);
         LIGHT.semiTransparentBg = new Color(255, 255, 255, 245);
         LIGHT.playerBoxBg =  new Color(219, 219, 219);
-        LIGHT.connectedClientsBg = Color.WHITE;
+        LIGHT.alternativeBg = LIGHT.playerBoxBg;
+        LIGHT.tileDistCountBg = Color.WHITE;
         LIGHT.panelShadow = new Color(255, 255, 255, 158);
         LIGHT.markerColor = Color.BLACK;
         LIGHT.hintColor = Color.DARK_GRAY;
@@ -136,6 +146,8 @@ public class Theme {
         LIGHT.transparentInputBg = new Color(255, 255, 255, 8);
         LIGHT.tilePlacementColor = Color.LIGHT_GRAY;
         LIGHT.chatNeutralColor = Color.DARK_GRAY;
+        LIGHT.chatMyColor = Color.BLUE;
+        LIGHT.chatSystemColor = new Color(0, 140, 0);
         LIGHT.textColor = null;
         LIGHT.fontShadowColor = new Color(0, 0, 0, 60);
 
@@ -145,7 +157,8 @@ public class Theme {
         DARK.transparentPanelBg = new Color(33, 37, 43, 220);
         DARK.semiTransparentBg = new Color(33, 37, 43, 245);
         DARK.playerBoxBg = new Color(70, 70, 70);
-        DARK.connectedClientsBg = DARK.panelBg;
+        DARK.alternativeBg = new Color(10, 11, 13);
+        DARK.tileDistCountBg = DARK.alternativeBg;
         DARK.panelShadow = new Color(33, 37, 43, 150);
         DARK.markerColor = Color.WHITE;
         DARK.headerFontColor =  new Color(200, 200, 200);
@@ -157,6 +170,8 @@ public class Theme {
         DARK.transparentInputBg = new Color(30, 33, 39, 245);
         DARK.tilePlacementColor = Color.GRAY;
         DARK.chatNeutralColor = Color.WHITE;
+        DARK.chatMyColor = new Color(91, 183, 254);
+        DARK.chatSystemColor = new Color(173, 235, 173);
         DARK.textColor = new Color(200, 200, 200);
         DARK.fontShadowColor = null; //no shadow
     }

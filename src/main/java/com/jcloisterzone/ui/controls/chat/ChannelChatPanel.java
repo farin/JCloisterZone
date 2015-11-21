@@ -1,7 +1,5 @@
 package com.jcloisterzone.ui.controls.chat;
 
-import java.awt.Color;
-
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
@@ -19,10 +17,12 @@ public class ChannelChatPanel extends ChatPanel {
 	@Override
 	protected ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
 		if (ev.getRemoteClient() == null) {
-			return new ReceivedChatMessage(ev, "* play.jcz *", new Color(0, 140, 0));
+			return new ReceivedChatMessage(ev, "* play.jcz *", client.getTheme().getChatSystemColor());
 		} else {
 			boolean isMe = cc.getConnection().getSessionId().equals(ev.getRemoteClient().getSessionId());
-			return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ? Color.BLUE : client.getTheme().getChatNeutralColor());
+			return new ReceivedChatMessage(ev, ev.getRemoteClient().getName(), isMe ?
+					client.getTheme().getChatMyColor() :
+					client.getTheme().getChatNeutralColor());
 		}
 	}
 
