@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.resources;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;

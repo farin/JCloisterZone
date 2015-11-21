@@ -12,6 +12,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.MainPanel;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.RmiProxy;
 
@@ -86,7 +87,7 @@ public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>, It
     }
 
     protected Image getImage(Color color) {
-        return client.getFigureTheme().getActionImage(this, color);
+    	return client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("actions/" + getName(), color));
     }
 
 

@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.resources.svg;
 
 import java.awt.Polygon;
 import java.awt.Rectangle;

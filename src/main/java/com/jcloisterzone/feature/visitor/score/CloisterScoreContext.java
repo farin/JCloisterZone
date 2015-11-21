@@ -38,7 +38,13 @@ public class CloisterScoreContext extends AbstractScoreContext implements Comple
 
     @Override
     public int getPoints() {
-        return neigbouringTilesCount + 1 + getLittleBuildingPoints();
+    	int tilePoints;
+    	if (cloister.isYagaHut()) {
+    		tilePoints = 9 - neigbouringTilesCount;
+    	} else {
+    		tilePoints = neigbouringTilesCount + 1;
+    	}
+        return tilePoints + getLittleBuildingPoints();
     }
 
     @Override

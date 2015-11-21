@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,14 +29,15 @@ import com.jcloisterzone.board.TilePackFactory.TileCount;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.WrapLayout;
-
-import static com.jcloisterzone.ui.I18nUtils._;
+import com.jcloisterzone.ui.gtk.ThemedJList;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
+import com.jcloisterzone.ui.theme.Theme;
 
 public class TileDistributionWindow extends JFrame {
 
     final Client client;
     final JScrollPane scrollPane;
-    final JPanel content = new JPanel();
+    final JPanel content = new ThemedJPanel();
     final TilePackFactory tilePackFactory;
 
     private static Font FONT = new Font("Dialog", Font.PLAIN, 26);
@@ -52,8 +55,9 @@ public class TileDistributionWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         UiUtils.centerDialog(this, Math.min(client.getWidth(), 890), client.getHeight() - 40);
         getContentPane().setLayout(new BorderLayout(0, 0));
+        getContentPane().setBackground(client.getTheme().getPanelBg());
 
-        final JList<Expansion> list = new JList<Expansion>(getImplementedExpansions());
+        final JList<Expansion> list = new ThemedJList<Expansion>(getImplementedExpansions());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setPreferredSize(new Dimension(200, client.getHeight()));
         list.setSelectedValue(Expansion.BASIC, true);
@@ -90,7 +94,7 @@ public class TileDistributionWindow extends JFrame {
         content.removeAll();
         Dimension dim = new Dimension(SIZE, SIZE+BANNER);
         for (TileCount tc : tilePackFactory.getExpansionTiles(exp)) {
-            TileLabel tileLabel = new TileLabel(exp, tc);
+            TileLabel tileLabel = new TileLabel(client.getTheme(), exp, tc);
             tileLabel.setPreferredSize(dim);
             content.add(tileLabel);
         }
@@ -99,11 +103,13 @@ public class TileDistributionWindow extends JFrame {
     }
 
     private class TileLabel extends JPanel {
+    	private final Theme theme;
         private final Image image;
         private String count;
 
-        public TileLabel(Expansion exp, TileCount tc) {
+        public TileLabel(Theme theme, Expansion exp, TileCount tc) {
             Tile tile = new Tile(exp, tc.tileId);
+            this.theme = theme;
             this.image = client.getResourceManager().getTileImage(tile);
             this.count = tc.count == null ? "" : tc.count + "";
         }
@@ -113,9 +119,11 @@ public class TileDistributionWindow extends JFrame {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
             g2.drawImage(image,0,0,SIZE,SIZE,this);
-            g2.setColor(Color.WHITE);
+            Color bgColor = theme.getTileDistCountBg();
+            g2.setColor(bgColor == null ? Color.WHITE : bgColor);
             g2.fillRect(0, SIZE, SIZE, BANNER);
-            g2.setColor(Color.BLACK);
+            Color textColor = theme.getTextColor();
+            g2.setColor(textColor == null ? Color.BLACK : textColor);
             g2.setFont(FONT);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g2.drawString(count, SIZE/2, SIZE+BANNER-8);

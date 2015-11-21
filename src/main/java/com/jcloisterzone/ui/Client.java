@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -64,8 +66,7 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
-import com.jcloisterzone.ui.theme.ControlsTheme;
-import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.ui.theme.Theme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -73,8 +74,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -89,12 +88,8 @@ public class Client extends JFrame {
     private final ConvenientResourceManager resourceManager;
     private final List<Plugin> plugins;
 
-    @Deprecated
-    private FigureTheme figureTheme;
-    @Deprecated
-    private ControlsTheme controlsTheme;
-
     private UiView view;
+    private Theme theme;
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
@@ -113,13 +108,12 @@ public class Client extends JFrame {
         this.configLoader = configLoader;
         this.config = config;
         this.plugins = plugins;
-        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(plugins));
     }
 
     public static Client getInstance() {
         return instance;
     }
-
 
     public boolean mountView(UiView view) {
         return mountView(view, null);
@@ -171,8 +165,14 @@ public class Client extends JFrame {
 
     public void init() {
         setLocale(config.getLocaleObject());
-        figureTheme = new FigureTheme(this);
-        controlsTheme = new ControlsTheme(this);
+
+        if ("dark".equalsIgnoreCase(config.getTheme())) {
+            theme = Theme.DARK;
+        } else {
+            theme = Theme.LIGHT;
+        }
+
+        config.setDarkTheme(theme.isDark());
 
         resetWindowIcon();
 
@@ -182,6 +182,7 @@ public class Client extends JFrame {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
+        theme.setUiMangerDefaults();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -237,6 +238,10 @@ public class Client extends JFrame {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
     }
 
+    public Theme getTheme() {
+        return theme;
+    }
+
     public Config getConfig() {
         return config;
     }
@@ -252,16 +257,6 @@ public class Client extends JFrame {
 
     public ConvenientResourceManager getResourceManager() {
         return resourceManager;
-    }
-
-    @Deprecated
-    public FigureTheme getFigureTheme() {
-        return figureTheme;
-    }
-
-    @Deprecated
-    public ControlsTheme getControlsTheme() {
-        return controlsTheme;
     }
 
     public SimpleServer getLocalServer() {
@@ -498,7 +493,7 @@ public class Client extends JFrame {
 
     public void showAboutDialog() {
         if (aboutDialog == null) {
-            aboutDialog = new AboutDialog(config.getOrigin());
+            aboutDialog = new AboutDialog(this, config.getOrigin());
             aboutDialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {

@@ -1,7 +1,16 @@
 # Version history
 
+## 3.4.2
+*2015-11-21*
+
+* Russian Promos "expansion"
+* dark theme (there is definitely place for many improvements, especially in create game view)
+* fixed: Impossible to undo Goldmine tile placement
+* fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
+* fixed BB.CFR.b tile definition - another missing city-farm link
+
 ## 3.4.1
-*2015-10-31
+*2015-10-31*
 
 * it's possible to enable/disable plugins without app restart
 * tile distribution window (in help menu) - show overview of tiles in expansions
@@ -16,7 +25,7 @@
 * fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine
 
 ## 3.3.1
-*2015-08-25
+*2015-08-25*
 
 * undo is possible also for bridge placements (and also for a tile which forced bridge placement) (#170)
 * fix #174: undo placement of a tile with tower base crash game

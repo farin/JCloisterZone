@@ -32,5 +32,6 @@
         <expansion>MAGE_AND_WITCH</expansion>
         <expansion>GOLDMINES</expansion>
         <expansion>FERRIES</expansion>
+        <expansion>RUSSIAN_PROMOS</expansion>
     </expansions>
 </plugin>

@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -24,18 +26,25 @@ public class GoldLayer extends AbstractGridLayer {
 
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        goldImage = getClient().getFigureTheme().getNeutralImage("gold");
+        goldImage = rm.getImage("neutral/gold");
         widthHeightRatio = goldImage.getWidth(null) / (double) goldImage.getHeight(null);
+
+        gc.register(this);
     }
 
-    public void setGoldCount(Position pos, int count) {
+    @Subscribe
+    public void onGoldChangeEvent(GoldChangeEvent ev) {
+        setGoldCount(ev.getPos(), ev.getCurrCount());
+        gridPanel.repaint();
+    }
+
+    private void setGoldCount(Position pos, int count) {
         if (count == 0) {
             placedGold.remove(pos);
         } else {
             placedGold.put(pos, count);
         }
     }
-
 
     @Override
     public void paint(Graphics2D g2) {
@@ -55,7 +64,5 @@ public class GoldLayer extends AbstractGridLayer {
             ImmutablePoint point = new ImmutablePoint(90,10).rotate100(gridPanel.getBoardRotation().inverse());
             drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), point, Color.WHITE, null);
         }
-
     }
-
 }

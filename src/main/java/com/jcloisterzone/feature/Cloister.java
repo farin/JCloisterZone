@@ -13,6 +13,7 @@ public class Cloister extends TileFeature implements Completable {
 
     private boolean shrine;
     private boolean monastery;
+    private boolean yagaHut;
 
     public boolean isShrine() {
         return shrine;
@@ -22,7 +23,6 @@ public class Cloister extends TileFeature implements Completable {
         this.shrine = shrine;
     }
 
-
     public boolean isMonastery() {
         return monastery;
     }
@@ -31,7 +31,15 @@ public class Cloister extends TileFeature implements Completable {
         this.monastery = monastery;
     }
 
-    @Override
+    public boolean isYagaHut() {
+		return yagaHut;
+	}
+
+	public void setYagaHut(boolean yagaHut) {
+		this.yagaHut = yagaHut;
+	}
+
+	@Override
     public boolean isOpen() {
         Position p = getTile().getPosition();
         return getGame().getBoard().getAdjacentAndDiagonalTiles(p).size() < 8;

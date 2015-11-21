@@ -34,6 +34,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.event.Idempotent;
 import com.jcloisterzone.event.MeepleEvent;
 import com.jcloisterzone.event.PlayEvent;
@@ -129,6 +130,7 @@ public class Game extends GameSettings implements EventProxy {
         if (event instanceof TileEvent && event.getType() == TileEvent.PLACEMENT) return true;
         if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
         if (event instanceof BridgeEvent && event.getType() == BridgeEvent.DEPLOY) return true;
+        if (event instanceof GoldChangeEvent) return true;
         return false;
     }
 
@@ -140,7 +142,8 @@ public class Game extends GameSettings implements EventProxy {
         }
         if (event instanceof PlayEvent && !event.isUndo()) {
             if (isUiSupportedUndo(event)) {
-                if (event instanceof BridgeEvent && ((BridgeEvent)event).isForced()) {
+                if ((event instanceof BridgeEvent && ((BridgeEvent)event).isForced()) ||
+                     event instanceof GoldChangeEvent && ((GoldChangeEvent)event).getPos().equals(getCurrentTile().getPosition())) {
                     //just add to chain after tile event
                     lastUndoable.add((Undoable) event);
                 } else {
@@ -180,7 +183,7 @@ public class Game extends GameSettings implements EventProxy {
         phase = lastUndoablePhase;
         lastUndoable.clear();
         lastUndoablePhase = null;
-        phase.enter();
+        phase.reenter();
     }
 
     public Tile getCurrentTile() {
