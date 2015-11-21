@@ -18,6 +18,7 @@ public class Theme {
     private Color panelShadow;
     private Color markerColor;
     private Color headerFontColor;
+    private Color hintColor;
     private Color delimiterTopColor;
     private Color delimiterBottomColor;
     private Color inputBg;
@@ -60,6 +61,9 @@ public class Theme {
     public Color getHeaderFontColor() {
         return headerFontColor;
     }
+    public Color getHintColor() {
+		return hintColor;
+	}
     public Color getDelimiterBottomColor() {
         return delimiterBottomColor;
     }
@@ -123,6 +127,7 @@ public class Theme {
         LIGHT.connectedClientsBg = Color.WHITE;
         LIGHT.panelShadow = new Color(255, 255, 255, 158);
         LIGHT.markerColor = Color.BLACK;
+        LIGHT.hintColor = Color.DARK_GRAY;
         LIGHT.headerFontColor =  new Color(190, 190, 190);
         LIGHT.delimiterTopColor = new Color(250,250,250);
         LIGHT.delimiterBottomColor = new Color(220,220,220);
@@ -144,6 +149,7 @@ public class Theme {
         DARK.panelShadow = new Color(33, 37, 43, 150);
         DARK.markerColor = Color.WHITE;
         DARK.headerFontColor =  new Color(200, 200, 200);
+        DARK.hintColor = DARK.headerFontColor;
         DARK.delimiterTopColor = new Color(0, 0, 0);
         DARK.delimiterBottomColor = new Color(50, 50, 50);
         DARK.tileBorder = new Color(128, 128, 128);

@@ -15,6 +15,7 @@ import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
 
 public class SelectMageWitchRemovalPanel extends JPanel {
 
@@ -26,7 +27,7 @@ public class SelectMageWitchRemovalPanel extends JPanel {
 
         JLabel label;
 
-        label = new JLabel(_("Mage and Witch"));
+        label = new ThemedJLabel(_("Mage and Witch"));
         label.setFont(CornCirclesPanel.FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");

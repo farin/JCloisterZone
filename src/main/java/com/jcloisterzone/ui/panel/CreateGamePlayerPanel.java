@@ -29,13 +29,15 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-public class CreateGamePlayerPanel extends JPanel {
+public class CreateGamePlayerPanel extends ThemedJPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -76,7 +78,7 @@ public class CreateGamePlayerPanel extends JPanel {
 
         setLayout(new MigLayout("", "[][][10px][grow]", "[][]"));
 
-        serialLabel = new JLabel("");
+        serialLabel = new ThemedJLabel("");
         serialLabel.setHorizontalAlignment(SwingConstants.CENTER);
         serialLabel.setForeground(new Color(180,180,180));
         serialLabel.setFont(FONT_SERIAL);
@@ -91,7 +93,7 @@ public class CreateGamePlayerPanel extends JPanel {
         updateNickname(false);
         add(nickname, "cell 3 0,growx,width :200:,gapy 10");
 
-        status = new JLabel("");
+        status = new ThemedJLabel("");
         status.setFont(FONT_PLAYER_TYPE);
         add(status, "cell 3 1,growx");
 

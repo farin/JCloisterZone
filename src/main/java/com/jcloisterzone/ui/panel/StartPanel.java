@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,13 +18,12 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
-import com.jcloisterzone.ui.theme.Theme;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-public class StartPanel extends JPanel {
+public class StartPanel extends ThemedJPanel {
 
     static Font FONT_LARGE_BUTTON = new Font(null, Font.PLAIN, 25);
 
@@ -48,7 +49,7 @@ public class StartPanel extends JPanel {
         helpPanel = new HelpPanel();
         add(helpPanel, "span 2, wrap, grow, gap 30 30");
 
-        JPanel playHostedPanel = new JPanel();
+        JPanel playHostedPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) { //HACK
             playHostedPanel.setBorder(new TitledBorder(
                 UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING,
@@ -64,7 +65,7 @@ public class StartPanel extends JPanel {
             "wrap, grow");
 
 
-        JPanel btnPanel = new JPanel();
+        JPanel btnPanel = new ThemedJPanel();
         btnPanel.setLayout(new MigLayout("", "[]30[]30[]", "[]"));
         playHostedPanel.add(btnPanel, "wrap");
 
@@ -78,7 +79,7 @@ public class StartPanel extends JPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-        btnPanel.add(new JLabel(_("or")));
+        btnPanel.add(new ThemedJLabel(_("or")));
 
         btn = new JButton(_("Load game"));
         btnPanel.add(btn, "aligny top");
@@ -104,7 +105,7 @@ public class StartPanel extends JPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-        JPanel playOnlinePanel = new JPanel();
+        JPanel playOnlinePanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) { //HACK
             playOnlinePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         }
