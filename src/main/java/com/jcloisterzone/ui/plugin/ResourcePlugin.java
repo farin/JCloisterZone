@@ -2,7 +2,6 @@ package com.jcloisterzone.ui.plugin;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.LoggerFactory;
@@ -34,9 +32,10 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.FeatureArea;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
-import com.jcloisterzone.ui.theme.FeatureDescriptor;
-import com.jcloisterzone.ui.theme.ThemeGeometry;
+import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
@@ -49,7 +48,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults");
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -80,13 +79,6 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
 
-    protected Image getImageResource(String path) {
-        logger.debug("Trying to load image resource {}:{}", getTitle(), path);
-        URL url = getLoader().getResource(path);
-        if (url == null) return null;
-        return Toolkit.getDefaultToolkit().getImage(url);
-    }
-
     protected boolean containsTile(String tileId) {
         if (!isEnabled()) return false;
         String expCode = tileId.substring(0, 2);
@@ -105,12 +97,19 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private Image getTileImage(String tileId) {
         if (!containsTile(tileId)) return null;
-        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3) + ".jpg";
-        Image img = getImageResource(fileName);
-        if (img == null) return null;
-        return (new ImageIcon(img)).getImage();
+        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
+        return getImageLoader().getImage(fileName);
     }
 
+    @Override
+    public Image getImage(String path) {
+    	return getImageLoader().getImage(path);
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	return getImageLoader().getLayeredImage(lid);
+    }
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
@@ -229,7 +228,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     //TODO Move to default provider ???
     @Override
-	public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
         if (!isEnabled()) return null;
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
@@ -291,7 +290,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
         FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE, NORMALIZED_SIZE));
+            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, NORMALIZED_SIZE-1));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();

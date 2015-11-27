@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -15,7 +16,7 @@ public class BugReportDialog extends JDialog {
 
     private static final long serialVersionUID = 4697784648983290492L;
 
-    private final JPanel contentPanel = new JPanel();
+    private final JPanel contentPanel = new ThemedJPanel();
 
 
     /**
@@ -23,8 +24,8 @@ public class BugReportDialog extends JDialog {
      */
     public BugReportDialog(ReportingTool reportingTool) {
         setTitle(_("Report bug"));
-        UiUtils.centerDialog(this, 480, 300);
-        contentPanel.setBounds(0, 0, 480, 30);
+        UiUtils.centerDialog(this, 560, 300);
+        contentPanel.setBounds(0, 0, 560, 30);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPanel.setLayout(new BorderLayout());
         BugReportPanel panel = new BugReportPanel();

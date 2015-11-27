@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,36 +18,43 @@ import net.miginfocom.swing.MigLayout;
 
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-public class StartPanel extends JPanel {
+public class StartPanel extends ThemedJPanel {
 
     static Font FONT_LARGE_BUTTON = new Font(null, Font.PLAIN, 25);
-
-    private Client client;
 
     private HelpPanel helpPanel;
 
     /**
      * Create the panel.
      */
-    public StartPanel() {
-        setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    public StartPanel(final Client client) {
+        if (!client.getTheme().isDark()) { //HACK
+            setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         setLayout(new MigLayout("", "[center,grow]20[center,grow]", "[]20[]10[]"));
 
+
         JLabel lblNewLabel = new JLabel();
-        lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
+        if (client.getTheme().isDark()) {
+            lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone-dark.png")));
+        } else {
+            lblNewLabel.setIcon(new ImageIcon(StartPanel.class.getResource("/sysimages/jcloisterzone.png")));
+        }
         add(lblNewLabel, "span 2, wrap, center");
         helpPanel = new HelpPanel();
         add(helpPanel, "span 2, wrap, grow, gap 30 30");
 
-        //JPanel createPanel = new JPanel();
-        //createPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        JPanel playHostedPanel = new JPanel();
-        playHostedPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        JPanel playHostedPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) { //HACK
+            playHostedPanel.setBorder(new TitledBorder(
+                UIManager.getBorder("TitledBorder.border"),  "", TitledBorder.LEADING,
+                TitledBorder.TOP, null, new Color(0, 0, 0)));
+        }
 
         add(playHostedPanel, "grow 2, width :500:");
         playHostedPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
@@ -56,7 +65,7 @@ public class StartPanel extends JPanel {
             "wrap, grow");
 
 
-        JPanel btnPanel = new JPanel();
+        JPanel btnPanel = new ThemedJPanel();
         btnPanel.setLayout(new MigLayout("", "[]30[]30[]", "[]"));
         playHostedPanel.add(btnPanel, "wrap");
 
@@ -70,7 +79,7 @@ public class StartPanel extends JPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-        btnPanel.add(new JLabel(_("or")));
+        btnPanel.add(new ThemedJLabel(_("or")));
 
         btn = new JButton(_("Load game"));
         btnPanel.add(btn, "aligny top");
@@ -96,8 +105,10 @@ public class StartPanel extends JPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-        JPanel playOnlinePanel = new JPanel();
-        playOnlinePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        JPanel playOnlinePanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) { //HACK
+            playOnlinePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        }
         add(playOnlinePanel, "grow, width :250:, wrap");
         playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
@@ -114,14 +125,6 @@ public class StartPanel extends JPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
     }
 
     public HelpPanel getHelpPanel() {

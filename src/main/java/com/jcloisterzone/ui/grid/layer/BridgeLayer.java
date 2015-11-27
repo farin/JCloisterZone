@@ -10,67 +10,70 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 public class BridgeLayer extends AbstractGridLayer {
 
     private static final AlphaComposite BRIDGE_FILL_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
-    //private static final AlphaComposite BRIDGE_STROKE_COMPOSITE = AlphaComposite.SrcOver;
 
-    //TODO store direct images as in Meeple layer???
-    private Map<Tile, Location> bridges = new HashMap<>();
+    private Map<Position, Location> bridges = new HashMap<>();
 
     private MeepleLayer meepleLayer;
 
     public BridgeLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+
+        gc.register(this);
     }
-
-
-
-
 
     @Override
     public void paint(Graphics2D g2) {
         Composite oldComposite = g2.getComposite();
-//		Stroke oldStroke = g2.getStroke();
-//		g2.setStroke(new BasicStroke(getSquareSize() * 0.015f));
-        for (Entry<Tile, Location> entry : bridges.entrySet()) {
-            //devel code only - use image instead
-            Tile tile = entry.getKey();
+        for (Entry<Position, Location> entry : bridges.entrySet()) {
+            Position pos = entry.getKey();
             Location loc = entry.getValue();
-            Position pos = tile.getPosition();
-            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc).getTrackingArea();
+            Tile tile = getGame().getBoard().get(pos);
+            Area a = rm.getBridgeArea(tile, getSquareSize(), loc).getTrackingArea();
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
+
             g2.setColor(Color.BLACK);
             g2.setComposite(BRIDGE_FILL_COMPOSITE);
             g2.fill(a);
-//			g2.setColor(Color.BLACK);
-//			g2.setComposite(BRIDGE_STROKE_COMPOSITE);
-//			g2.draw(a);
 
         }
-//		g2.setStroke(oldStroke);
         g2.setComposite(oldComposite);
 
         meepleLayer.paintMeeplesOnBridges(g2);
-
     }
 
+    @Subscribe
+    public void onBridgeEvent(BridgeEvent ev) {
+	gridPanel.clearActionDecorations();
 
-    public void bridgeDeployed(Position pos, Location loc) {
-        Tile tile = getGame().getBoard().get(pos);
-        bridges.put(tile, loc);
+        if (ev.getType() == BridgeEvent.DEPLOY) {
+            bridgeDeployed(ev.getPosition(), ev.getLocation());
+        } else if (ev.getType() == BridgeEvent.REMOVE) {
+            bridgeRemoved(ev.getPosition());
+        }
+    }
+
+    private void bridgeDeployed(Position pos, Location loc) {
+        bridges.put(pos, loc);
+    }
+
+    private void bridgeRemoved(Position pos) {
+        bridges.remove(pos);
     }
 
     public MeepleLayer getMeepleLayer() {
         return meepleLayer;
     }
-
 
     public void setMeepleLayer(MeepleLayer meepleLayer) {
         this.meepleLayer = meepleLayer;

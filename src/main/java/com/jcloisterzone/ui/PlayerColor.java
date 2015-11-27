@@ -19,9 +19,9 @@ public class PlayerColor {
         font = Color.BLACK;
     }
 
-    public PlayerColor(ColorConfig cfg) {
+    public PlayerColor(ColorConfig cfg, boolean darkTheme) {
         this.meeple = stringToColor(cfg.getMeeple(), Color.BLACK);
-        this.font = stringToColor(cfg.getFont(), meeple);
+        this.font = stringToColor(darkTheme ? cfg.getFontDark() : cfg.getFontLight(), meeple);
     }
 
     public Color getMeepleColor() {
@@ -33,11 +33,11 @@ public class PlayerColor {
     }
 
     public Color getTunnelBColor() {
-    	return tunnelB;
+        return tunnelB;
     }
 
     public void setTunnelBColor(Color tunnelB) {
-    	this.tunnelB = tunnelB;
+        this.tunnelB = tunnelB;
     }
 
     private Color stringToColor(String s, Color defaultColor) {

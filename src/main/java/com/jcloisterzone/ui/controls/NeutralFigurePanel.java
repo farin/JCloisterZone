@@ -14,10 +14,10 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
+import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
-import static com.jcloisterzone.ui.controls.ControlPanel.PLAYER_BG_COLOR;
 
 public class NeutralFigurePanel extends JComponent {
 
@@ -30,6 +30,7 @@ public class NeutralFigurePanel extends JComponent {
     private BufferedImage bimg;
     private Graphics2D g2;
 
+    private final Client client;
     private final Game game;
     private final PlayerPanelImageCache cache;
 
@@ -40,7 +41,8 @@ public class NeutralFigurePanel extends JComponent {
     private final FairyCapability fairyCap;
     private final MageAndWitchCapability mwCap;
 
-    public NeutralFigurePanel(Game game, PlayerPanelImageCache cache) {
+    public NeutralFigurePanel(Client client, Game game, PlayerPanelImageCache cache) {
+    	this.client = client;
         this.game = game;
         this.cache = cache;
         dragonCap = game.getCapability(DragonCapability.class);
@@ -122,7 +124,7 @@ public class NeutralFigurePanel extends JComponent {
     public void paint(Graphics g) {
         if (realHeight > 0) {
             Graphics2D parentGraphics = (Graphics2D) g;
-            parentGraphics.setColor(PLAYER_BG_COLOR);
+            parentGraphics.setColor(client.getTheme().getPlayerBoxBg());
             parentGraphics.fillRoundRect(0, 0, PANEL_WIDTH+CORNER_DIAMETER, realHeight, CORNER_DIAMETER, CORNER_DIAMETER);
             parentGraphics.drawImage(bimg, 0, 0, PANEL_WIDTH, realHeight, 0, 0, PANEL_WIDTH, realHeight, null);
         }

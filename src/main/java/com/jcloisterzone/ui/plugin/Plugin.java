@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.plugin;
 
+import java.awt.Image;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,13 +14,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.ui.resources.ImageLoader;
 
 public abstract class Plugin {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final URL url;
+    private final ImageLoader imageLoader;
     private final URLClassLoader loader;
+    /** used to identify plugin and to be able save it back to config file */
     private final String relativePath;
 
     private String id;
@@ -35,6 +39,7 @@ public abstract class Plugin {
         this.url = fixPluginURL(url);
         logger.debug("Creating plugin loader for URL {}", this.url);
         loader = new URLClassLoader(new URL[] { this.url });
+        imageLoader = new ImageLoader(loader);
     }
 
     private URL fixPluginURL(URL url) throws MalformedURLException {
@@ -62,6 +67,10 @@ public abstract class Plugin {
         if (nl.getLength() > 0) {
             type = PluginType.valueOf(nl.item(0).getTextContent());
         }
+    }
+
+    public Image getIcon() {
+        return imageLoader.getImage("icon");
     }
 
     public URL getUrl() {
@@ -101,6 +110,10 @@ public abstract class Plugin {
         return loader;
     }
 
+    public ImageLoader getImageLoader() {
+		return imageLoader;
+	}
+
     @Override
     public String toString() {
         return title;
@@ -130,18 +143,5 @@ public abstract class Plugin {
         }
         return readPlugin(path.toUri().toURL(), relativePath);
     }
-
-//    public static Plugin readPlugin(String path) throws Exception {
-//        URL pluginURL = Plugin.class.getClassLoader().getResource(path);
-//        if (pluginURL == null) {
-//            // development helper - try to load unpacked plugin
-//            String unpacked = path.replace(".jar", "");
-//            pluginURL = Plugin.class.getClassLoader().getResource(unpacked);
-//            if (pluginURL == null) {
-//                throw new IllegalArgumentException("Plugin " + path + " not found.");
-//            }
-//        }
-//        return readPlugin(pluginURL);
-//    }
 }
 

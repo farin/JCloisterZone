@@ -173,6 +173,7 @@ area_highlight: figure
 
 ```bash
 xgettext -k_ -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
+msgmerge -N -U po/ca.po po/keys.pot
 msgmerge -N -U po/cs.po po/keys.pot
 msgmerge -N -U po/de.po po/keys.pot
 msgmerge -N -U po/el.po po/keys.pot
@@ -193,9 +194,15 @@ rm po/keys.pot
 
 ### package
 
-mkdir builds/JCloisterZone
+```
+mvn package
 
+cd build
 chmod a+x JCloisterZone.jar
+mkdir JCloisterZone
+mv JCloisterZone.jar plugins JCloisterZone
 
-zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
 tar cvzf JCloisterZone-3.1.0.tgz JCloisterZone
+7z a JCloisterZone-3.3.0.7z JCloisterZone
+zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
+```

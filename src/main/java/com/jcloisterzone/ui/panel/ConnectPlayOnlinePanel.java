@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +10,6 @@ import java.nio.channels.UnresolvedAddressException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -19,12 +20,12 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.StartView;
 
-import static com.jcloisterzone.ui.I18nUtils._;
 
-
-public class ConnectPlayOnlinePanel extends JPanel {
+public class ConnectPlayOnlinePanel extends ThemedJPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -50,14 +51,16 @@ public class ConnectPlayOnlinePanel extends JPanel {
             }
         };
 
-        setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        if (!client.getTheme().isDark()) {
+        	setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
 
         setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
 
-        JLabel helpLabel = new JLabel("Enter your nickname");
+        JLabel helpLabel = new ThemedJLabel("Enter your nickname");
         add(helpLabel, "cell 0 0,spanx 3");
 
-        JLabel hostLabel = new JLabel(_("Nickname"));
+        JLabel hostLabel = new ThemedJLabel(_("Nickname"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
 
 
@@ -80,7 +83,7 @@ public class ConnectPlayOnlinePanel extends JPanel {
         });
         add(btnBack, "cell 2 2");
 
-        message = new JLabel("");
+        message = new ThemedJLabel("");
         message.setForeground(Color.BLACK);
         add(message, "cell 1 3,spanx 2, height 20");
     }

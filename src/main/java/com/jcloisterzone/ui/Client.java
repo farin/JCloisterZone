@@ -1,16 +1,20 @@
 package com.jcloisterzone.ui;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -53,15 +57,16 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
+import com.jcloisterzone.ui.dialog.HelpDialog;
 import com.jcloisterzone.ui.dialog.PreferencesDialog;
+import com.jcloisterzone.ui.dialog.TileDistributionWindow;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
-import com.jcloisterzone.ui.theme.ControlsTheme;
-import com.jcloisterzone.ui.theme.FigureTheme;
+import com.jcloisterzone.ui.theme.Theme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -69,8 +74,6 @@ import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.server.SimpleServer;
 import com.jcloisterzone.wsio.server.SimpleServer.SimpleServerErrorHandler;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 @SuppressWarnings("serial")
 public class Client extends JFrame {
@@ -85,15 +88,14 @@ public class Client extends JFrame {
     private final ConvenientResourceManager resourceManager;
     private final List<Plugin> plugins;
 
-    @Deprecated
-    private FigureTheme figureTheme;
-    @Deprecated
-    private ControlsTheme controlsTheme;
-
     private UiView view;
+    private Theme theme;
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
+    private HelpDialog helpDialog;
+    private AboutDialog aboutDialog;
+    private TileDistributionWindow tileDistributionWindow;
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
@@ -106,13 +108,12 @@ public class Client extends JFrame {
         this.configLoader = configLoader;
         this.config = config;
         this.plugins = plugins;
-        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(this, plugins));
+        resourceManager = new ConvenientResourceManager(new PlugableResourceManager(plugins));
     }
 
     public static Client getInstance() {
         return instance;
     }
-
 
     public boolean mountView(UiView view) {
         return mountView(view, null);
@@ -164,8 +165,14 @@ public class Client extends JFrame {
 
     public void init() {
         setLocale(config.getLocaleObject());
-        figureTheme = new FigureTheme(this);
-        controlsTheme = new ControlsTheme(this);
+
+        if ("dark".equalsIgnoreCase(config.getTheme())) {
+            theme = Theme.DARK;
+        } else {
+            theme = Theme.LIGHT;
+        }
+
+        config.setDarkTheme(theme.isDark());
 
         resetWindowIcon();
 
@@ -175,6 +182,7 @@ public class Client extends JFrame {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
+        theme.setUiMangerDefaults();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -194,6 +202,10 @@ public class Client extends JFrame {
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
+        if (Bootstrap.isMac()) {
+            enableFullScreenMode();
+        }
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent ev) {
@@ -204,6 +216,19 @@ public class Client extends JFrame {
         });
     }
 
+    private void enableFullScreenMode() {
+        String className = "com.apple.eawt.FullScreenUtilities";
+        String methodName = "setWindowCanFullScreen";
+
+        try {
+            Class<?> clazz = Class.forName(className);
+            Method method = clazz.getMethod(methodName, new Class<?>[] { Window.class, boolean.class });
+            method.invoke(null, this, true);
+        } catch (Throwable e) {
+            logger.info("OSX full screen mode isn't supported.", e);
+        }
+    }
+
     @Override
     public MenuBar getJMenuBar() {
         return (MenuBar) super.getJMenuBar();
@@ -211,6 +236,10 @@ public class Client extends JFrame {
 
     void resetWindowIcon() {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
     public Config getConfig() {
@@ -223,20 +252,11 @@ public class Client extends JFrame {
 
     public void saveConfig() {
         configLoader.save(config);
+        resourceManager.clearCache();
     }
 
     public ConvenientResourceManager getResourceManager() {
         return resourceManager;
-    }
-
-    @Deprecated
-    public FigureTheme getFigureTheme() {
-        return figureTheme;
-    }
-
-    @Deprecated
-    public ControlsTheme getControlsTheme() {
-        return controlsTheme;
     }
 
     public SimpleServer getLocalServer() {
@@ -457,12 +477,50 @@ public class Client extends JFrame {
         }
     }
 
+    public void showHelpDialog() {
+        if (helpDialog == null) {
+            helpDialog = new HelpDialog();
+            helpDialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    helpDialog = null;
+                }
+            });
+        } else {
+            helpDialog.toFront();
+        }
+    }
+
     public void showAboutDialog() {
-        new AboutDialog(config.getOrigin());
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(this, config.getOrigin());
+            aboutDialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    aboutDialog = null;
+                }
+            });
+        } else {
+            aboutDialog.toFront();
+        }
     }
 
     public void showPreferncesDialog() {
         new PreferencesDialog(this);
+    }
+
+    public void showTileDistribution() {
+        if (tileDistributionWindow == null) {
+            tileDistributionWindow = new TileDistributionWindow(this);
+            tileDistributionWindow.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    tileDistributionWindow = null;
+                }
+            });
+        } else {
+            tileDistributionWindow.toFront();
+        }
     }
 
 

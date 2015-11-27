@@ -16,6 +16,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
@@ -30,15 +31,16 @@ public class GameSetupDialog extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         Container pane = getContentPane();
+        pane.setBackground(client.getTheme().getPanelBg());
         pane.setLayout(new MigLayout("", "[]", ""));
 
         Joiner joiner = Joiner.on(", ").skipNulls();
-        pane.add(new JLabel(_("Expansions")), "wrap, w 600, gaptop 5");
+        pane.add(new ThemedJLabel(_("Expansions")), "wrap, w 600, gaptop 5");
         MultiLineLabel lExpansion = new MultiLineLabel(joiner.join(game.getExpansions()));
         pane.add(lExpansion, "wrap, w 600");
 
         joiner = Joiner.on("\n").skipNulls();
-        pane.add(new JLabel(_("Rules")), "wrap, w 600, gaptop 10");
+        pane.add(new ThemedJLabel(_("Rules")), "wrap, w 600, gaptop 10");
         List<String> rules = new ArrayList<>();
         for (Entry<CustomRule, Object> entry : game.getCustomRules().entrySet()) {
             CustomRule rule = entry.getKey();

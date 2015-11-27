@@ -28,7 +28,7 @@ public class BarnAreaLayer extends AbstractAreaLayer implements ActionLayer<Barn
         //quick fix
         if (getGame().getCurrentTile().getPosition().equals(p)) {
             Set<Location> locations = action.getLocations(p);
-            return locationMapToPointers(p, getClient().getResourceManager().getBarnTileAreas(tile, getSquareSize(), locations));
+            return locationMapToPointers(p, rm.getBarnTileAreas(tile, getSquareSize(), locations));
         }
         return Collections.emptyMap();
     }

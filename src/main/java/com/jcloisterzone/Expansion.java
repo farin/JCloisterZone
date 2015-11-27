@@ -1,5 +1,7 @@
 package com.jcloisterzone;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -34,8 +36,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
-
-import static com.jcloisterzone.ui.I18nUtils._;
+import com.jcloisterzone.game.capability.YagaCapability;
 
 @SuppressWarnings("unchecked")
 public enum Expansion {
@@ -45,14 +46,14 @@ public enum Expansion {
 
     //Winter branch
     WINTER("WI", _("Winter Edition")),
-    GINGERBREAD_MAN("GM", _("The Gingerbread man"), false),
+    GINGERBREAD_MAN("GM", _("The Gingerbread Man"), false),
 
     //Big expansions
     INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
             new Class[] { BigFollowerCapability.class ,InnCapability.class, CathedralCapability.class}),
     TRADERS_AND_BUILDERS("TB", _("Traders & Builders"),
             new Class[] { PigCapability.class, BuilderCapability.class, ClothWineGrainCapability.class }),
-    PRINCESS_AND_DRAGON("DG", _("The Princess & the Dragon"),
+    PRINCESS_AND_DRAGON("DG", _("The Princess & The Dragon"),
             new Class[] { FairyCapability.class, DragonCapability.class, PortalCapability.class, PrincessCapability.class }),
     TOWER("TO", _("The Tower"),
             new Class[] { TowerCapability.class }),
@@ -61,7 +62,7 @@ public enum Expansion {
     CATAPULT("CA", _("The Catapult") + " (" + _("tiles only") + ")"),
     BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }),
-    HILLS_AND_SHEEP("HS", _("Hills and sheep"), false),
+    HILLS_AND_SHEEP("HS", _("Hills and Sheep"), false),
 
     //Small expansion
     KING_AND_ROBBER_BARON("KR", _("King and Robber Baron"), new Class[] { KingAndRobberBaronCapability.class }),
@@ -81,6 +82,9 @@ public enum Expansion {
     LITTLE_BUILDINGS("LB", _("Little Buildings"), new Class[] { LittleBuildingsCapability.class }),
     WIND_ROSE("WR", _("The Wind Rose"), new Class[] { WindRoseCapability.class }),
     GERMAN_MONASTERIES("GM", _("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }),
+    CASTLES("CA", _("Castles in Germany"), false),
+    HALFINGS_I("H1", _("Halfings") + " I" , false),
+    HALFINGS_II("H2", _("Halfings") + " ÏI", false),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),
@@ -89,11 +93,13 @@ public enum Expansion {
     GOLDMINES("GO", "#4 - " + _("The Goldmines"), new Class[] { GoldminesCapability.class }),
     MAGE_AND_WITCH("MW", "#5 - " + _("Mage & Witch"), new Class[] { MageAndWitchCapability.class }),
     ROBBERS("RO", "#6 - " + _("The Robbers"), false),
-    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn circles II"), new Class[] { CornCircleCapability.class }),
+    CORN_CIRCLES_II("C2", "#7 - " + _("The Corn Circles II"), new Class[] { CornCircleCapability.class }),
 
     //promo/one tile expansions
-    SCHOOL("SC", _("The school"), false),
-    LA_PORXADA("PX", _("La porxada"), false);
+    SCHOOL("SC", _("The School"), false),
+    LA_PORXADA("PX", _("La Porxada"), false),
+    RUSSIAN_PROMOS("RP", _("Russian Promos"), new Class[] { YagaCapability.class }),
+    DARMSTADT_PROMO("DP", _("Darmstadt Promo"), false);
 
     String code;
     String label;

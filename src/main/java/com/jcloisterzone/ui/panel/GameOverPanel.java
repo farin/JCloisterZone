@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -38,9 +40,7 @@ import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.controls.ControlPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
+import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 public class GameOverPanel extends JPanel {
 
@@ -58,7 +58,7 @@ public class GameOverPanel extends JPanel {
         this.game = gc.getGame();
 
         setOpaque(true);
-        setBackground(ControlPanel.PANEL_DARK_BG_COLOR);
+        setBackground(client.getTheme().getSemiTransparentBg());
         setLayout(new MigLayout("ins 20", "[][grow]", "[]20[]"));
 
         add(new PointStatsPanel(), "sx 2, wrap, hidemode 3");
@@ -174,7 +174,7 @@ public class GameOverPanel extends JPanel {
             for (Player player : players) {
                 gridy = 0;
                 Color color = player.getColors().getMeepleColor();
-                Image img = client.getFigureTheme().getFigureImage(SmallFollower.class, color, null);
+                Image img = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor(SmallFollower.class, color));
                 Icon icon = new ImageIcon(img.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
                 add(new JLabel(icon, SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel(player.getNick(), SwingConstants.CENTER), getSpec(gridx, gridy++));

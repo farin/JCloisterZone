@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 
 public class TileEvent extends PlayEvent implements Undoable {
 
@@ -45,6 +46,9 @@ public class TileEvent extends PlayEvent implements Undoable {
                 game.setCurrentTile(null);
                 ((DefaultTilePack)game.getTilePack()).addTile(tile, TilePack.INACTIVE_GROUP);
                 game.getCapability(AbbeyCapability.class).undoUseAbbey(getTriggeringPlayer());
+            }
+            if (tile.getTower() != null) {
+                game.getCapability(TowerCapability.class).unregisterTower(position);
             }
             break;
         default:

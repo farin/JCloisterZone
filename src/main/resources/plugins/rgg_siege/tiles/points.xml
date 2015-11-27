@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<points xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+<points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
     <point feature="ROAD" cx="280" cy="280" baseLocation="NW"> <!-- oblique -->
         <apply>SI.CcRr SE</apply>
     </point>

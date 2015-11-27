@@ -1,5 +1,61 @@
 # Version history
 
+## 3.4.2
+*2015-11-21*
+
+* Russian Promos "expansion"
+* dark theme (there is definitely place for many improvements, especially in create game view)
+* fixed: Impossible to undo Goldmine tile placement
+* fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
+* fixed BB.CFR.b tile definition - another missing city-farm link
+
+## 3.4.1
+*2015-10-31*
+
+* it's possible to enable/disable plugins without app restart
+* tile distribution window (in help menu) - show overview of tiles in expansions
+* added OSX native full screen hook (thx khalidqasrawi)
+* monasteries in netherlands and belgium theme plugin
+* winter theme plugin
+* plugin icons are displayed in preferences/plugins
+* colored placement history (thx fatsu)
+* #112 - warn aboul last chance to place abbey
+* fixed few winter extra tiles definitions to match original winter tiles
+* fixed #184 - opponent can accidentally skip follower placement on Abbey
+* fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine
+
+## 3.3.1
+*2015-08-25*
+
+* undo is possible also for bridge placements (and also for a tile which forced bridge placement) (#170)
+* fix #174: undo placement of a tile with tower base crash game
+* fix #177: apostrophes in translations are not shown
+
+## 3.3.0
+*2015-08-15*
+
+* preferences dialog to change settings from app
+* improved TO, CC, GQ, AM images quality
+* changed meeple selection (eg. princess undeploy, crop circles undeploy etc.) - instead selecting tile feature, meeple itself is highlighted directly
+* rotate board fixes - don't rotate fairy and dragon (#145), gold counters and little building selection.
+* rules update - Wagon can not choose which tile to move after completing a feature (#148)
+* rules update - added and make default HiG fairy scoring option - fairy is placed next to follower instead of on tile (#137)
+* slightly changed way how are mouseover handled for overlapping feature areas  - instead selecting none, a higher one is selected.
+* added Catalan localization (thx to Joan Josep)
+* packed to 7z instead zip - see #160 - new Players execute the jar from within the zip
+* fix: custom rule "Tiny city is scored only for 2 points" + unfinished two tile city with cathedral (gives 2pts at end instead of 0)
+* fix #34, #155: relax legal river checking - now river is almost always legally finished, don't end game in rare case when lake can't fit
+* fix #135: Gold piece distribution is incorrect
+* fix #138: undo & magic portal issue
+* fix #139: abbey at game end
+* fix #140: AI always use big follower
+* fix #147: Missing farms on Abbey & Mayor tiles (small farms between crossed cities)
+* fix #149: little building can be scored multiple times for one feature
+* fix #150: Wagon can move to a tile occupied by dragon
+* fix #158: Only the player with majority gets fairy bonus when completing a feature.
+* fix: play again button did't work for loaded games
+* online play: play server supports also legacy clients (since 3.2.0)
+
 ## 3.2.0
 *2015-04-26*
 

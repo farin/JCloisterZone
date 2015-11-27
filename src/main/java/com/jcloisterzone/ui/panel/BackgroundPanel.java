@@ -5,9 +5,10 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 
-public class BackgroundPanel extends JPanel {
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
+
+public class BackgroundPanel extends ThemedJPanel {
 
     static private int W = 396;
     static private int H = 396;

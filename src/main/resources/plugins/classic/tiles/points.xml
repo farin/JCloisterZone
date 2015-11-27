@@ -211,6 +211,9 @@
     <point feature="ROAD" cx="860" cy="350">
         <apply>GO.LRrRr NE</apply>
     </point>
+    <point feature="ROAD" cx="500" cy="800">
+        <apply>RP.RRrr _N</apply>
+    </point>
 
     <point feature="CITY" cx="300" cy="200">
         <apply>DG.CCc+.p N</apply>
@@ -449,6 +452,7 @@
         <apply>GM.Marienthal NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>GM.Maulbronn NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>GO.LRr NL.NR.EL.SR.WL.WR</apply>
+        <apply>RP.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
     </point>
     <point feature="FARM" cx="800" cy="800">
         <apply>BB.R.bi NL.NR.EL.ER.SL.SR.WL.WR</apply>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.jcloisterzone.plugins.classic" version="3.3">
+    <title>Winter</title>
+    <description>Winter artwork for basic and winter extra tiles</description>
+    <type>GRF_SET</type>
+    <expansions>
+        <expansion>BASIC</expansion>
+        <expansion>WINTER</expansion>
+    </expansions>
+</plugin>

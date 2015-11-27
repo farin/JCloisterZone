@@ -158,6 +158,18 @@ public class EdgePattern {
         return new EdgePattern(bridgeCode);
     }
 
+    public EdgePattern removeBridgePattern(Location bridge) {
+        Edge[] bridgeCode = Arrays.copyOf(edges, edges.length);
+        if (bridge == Location.NS) {
+            bridgeCode[0] = Edge.FARM;
+            bridgeCode[2] = Edge.FARM;
+        } else {
+            bridgeCode[1] = Edge.FARM;
+            bridgeCode[3] = Edge.FARM;
+        }
+        return new EdgePattern(bridgeCode);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

@@ -36,7 +36,7 @@ public class GameChatPanel extends ChatPanel {
     @Override
     protected ReceivedChatMessage createReceivedMessage(ChatEvent ev) {
         String nick = ev.getRemoteClient().getName();
-        Color color = Color.DARK_GRAY;
+        Color color = client.getTheme().getChatNeutralColor();
 
         if (game.isStarted()) {
             Player selected = null, active = game.getActivePlayer();

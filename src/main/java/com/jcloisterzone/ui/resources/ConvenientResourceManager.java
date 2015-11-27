@@ -2,9 +2,9 @@ package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
@@ -17,10 +17,14 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public class ConvenientResourceManager implements ResourceManager {
 
     private final ResourceManager manager;
-    private final Map<String, Image> imageCache = new HashMap<>();
+    private final Map<String, Image> imageCache = new WeakHashMap<>(64);
 
     public ConvenientResourceManager(ResourceManager manager) {
         this.manager = manager;
+    }
+
+    public void clearCache() {
+        imageCache.clear();
     }
 
     //helper methods
@@ -55,6 +59,27 @@ public class ConvenientResourceManager implements ResourceManager {
             imageCache.put(Tile.ABBEY_TILE_ID, img);
         }
         return img;
+    }
+
+    @Override
+    public Image getImage(String path) {
+    	Image img = imageCache.get(path);
+    	if (img == null) {
+    		img = manager.getImage(path);
+    		imageCache.put(path, img);
+    	}
+    	return img;
+    }
+
+    @Override
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+    	String key = lid.toString();
+        Image img = imageCache.get(key);
+        if (img == null) {
+        	img = manager.getLayeredImage(lid);
+        	imageCache.put(key, img);
+        }
+    	return img;
     }
 
     @Override
