@@ -164,12 +164,12 @@ msgstr "Monestirs alemanys"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Castles in Germany"
-msgstr ""
+msgstr "Castells alemanys"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 #: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Halfings"
-msgstr ""
+msgstr "Mitges llosetes"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The Flier"
@@ -209,11 +209,11 @@ msgstr "La porxada"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Russian Promos"
-msgstr ""
+msgstr "Promocionals russes"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "Darmstadt Promo"
-msgstr ""
+msgstr "Promocionals Darmstadt"
 
 #: src/main/java/com/jcloisterzone/feature/City.java:65
 msgid "City"
@@ -736,7 +736,7 @@ msgstr "Esborra la partida"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Do you want to remove game permanently?"
-msgstr "Voleu realment esborrar la partida per sempre?"
+msgstr "Voleu realment esborrar la partida?"
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
 #: src/main/java/com/jcloisterzone/ui/Client.java:626
@@ -808,11 +808,11 @@ msgstr "Cal reiniciar l''aplicació per aplicar el nou idioma."
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
 msgid "To apply new theme you must restart the application"
-msgstr ""
+msgstr "Cal reiniciar l''aplicació per aplicar el nou tema."
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
@@ -904,7 +904,7 @@ msgstr "Mostra els camps ressaltats"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
 msgid "Show Projected Points"
-msgstr "Mostra els punts projectats"
+msgstr "Mostra els punts previstos"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
 msgid "Show Discarded Tiles"
@@ -993,19 +993,19 @@ msgstr "Passa"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Skip Abbey"
-msgstr ""
+msgstr "Passa l''abadia"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Cancel and place Abbey"
-msgstr ""
+msgstr "Cancel·la i situa l''abadia"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
-msgstr ""
+msgstr "Aquest és el vostre últim torn. Si passeu, no col·locareu l''abadia"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Last chance to place the Abbey"
-msgstr ""
+msgstr "Última ocasió de situar l''abadia"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
 msgid "Pay ransom"
