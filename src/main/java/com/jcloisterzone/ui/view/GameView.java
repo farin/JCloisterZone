@@ -326,6 +326,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             if (result) e.consume();
             return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
+        	e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
             return dispatchKeyTyped(e);
         }
         return false;
