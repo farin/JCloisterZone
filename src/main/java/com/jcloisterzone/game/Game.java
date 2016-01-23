@@ -243,6 +243,19 @@ public class Game extends GameSettings implements EventProxy {
         return phase == null ? null : phase.getActivePlayer();
     }
 
+    public int getActivePlayersCount() {
+    	Player actual = getNextPlayer(turnPlayer);
+    	int result = turnPlayer.hasResigned() ? 0 : 1;
+
+    	while(turnPlayer != actual) {
+    		if (!actual.hasResigned()) {
+    			result++;
+    		}
+    		actual = getNextPlayer(actual);
+    	}
+    	return result;
+    }
+
     public List<NeutralFigure> getNeutralFigures() {
         return neutralFigures;
     }
@@ -258,13 +271,23 @@ public class Game extends GameSettings implements EventProxy {
     public Player getNextPlayer(Player p) {
         int playerIndex = p.getIndex();
         int nextPlayerIndex = playerIndex == (plist.length - 1) ? 0 : playerIndex + 1;
-        return getPlayer(nextPlayerIndex);
+        Player player = getPlayer(nextPlayerIndex);
+        if(player.hasResigned()) {
+        	return getNextPlayer(player);
+        } else {
+        	return player;
+        }
     }
 
     public Player getPrevPlayer(Player p) {
         int playerIndex = p.getIndex();
         int prevPlayerIndex = playerIndex == 0 ? plist.length - 1 : playerIndex - 1;
-        return getPlayer(prevPlayerIndex);
+        Player player = getPlayer(prevPlayerIndex);
+        if(player.hasResigned()) {
+        	return getPrevPlayer(player);
+        } else {
+        	return player;
+        }
     }
 
 

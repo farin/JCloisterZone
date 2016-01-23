@@ -73,6 +73,7 @@ public class ControlPanel extends JPanel {
 
     private static final String PASS_LABEL = _("Skip");
     private static final String CONFIRMATION_LABEL = _("Continue");
+    private static final String RESIGN_LABEL = _("Resign from playing");
 
     private final Client client;
     private final GameView gameView;
@@ -80,6 +81,7 @@ public class ControlPanel extends JPanel {
     private final Game game;
 
     private JButton passButton;
+    private JButton resignButton;
     private boolean showConfirmRequest;
     private boolean canPass;
     private boolean showProjectedPoints, projectedPointsValid = true;
@@ -115,6 +117,17 @@ public class ControlPanel extends JPanel {
             }
         });
         add(passButton, "pos 35 4");
+
+        resignButton = new JButton(RESIGN_LABEL);
+        resignButton.setBorder(BorderFactory.createEmptyBorder(1, 30, 1, 30));
+        resignButton.setVisible(true);
+        resignButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resign();
+            }
+        });
+        add(resignButton, "pos 34 750");
 
         actionPanel = new ActionPanel(gameView);
         add(actionPanel, "wrap, growx, gapleft 35, h 106");
@@ -291,6 +304,25 @@ public class ControlPanel extends JPanel {
             	}
             	gc.getRmiProxy().pass();
             }
+        }
+    }
+
+    public void resign() {
+    	Player player = game.getActivePlayer();
+    	if (player.isLocalHuman()) {
+    		if(game.getActivePlayersCount() == 1) {
+    			gc.showWarning("Action blocked", "You can't resign, if you want to finish game, close it");
+    			return;
+    		}
+    		String[] options = new String[] {_("Resign"), _("Cancel and continue playing") };
+    		int result = JOptionPane.showOptionDialog(client,
+                _("You won't be able to continue playing."),
+                _("Are yu sure?"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (result == -1 || result == 1) { //closed dialog
+                return;
+            }
+            player.resign();
         }
     }
 

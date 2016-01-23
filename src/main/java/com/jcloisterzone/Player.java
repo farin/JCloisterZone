@@ -40,6 +40,7 @@ public class Player implements Serializable {
     final private int index;
     private PlayerSlot slot;
     private final PlayerClock clock = new PlayerClock();
+    private boolean resigned = false;
 
     public Player(String nick, int index, PlayerSlot slot) {
         this.nick = nick;
@@ -161,6 +162,14 @@ public class Player implements Serializable {
 
     public boolean isLocalHuman() {
         return getSlot().isOwn() && !getSlot().isAi();
+    }
+
+    public void resign() {
+    	resigned = true;
+    }
+
+    public boolean hasResigned() {
+    	return resigned;
     }
 
 }
