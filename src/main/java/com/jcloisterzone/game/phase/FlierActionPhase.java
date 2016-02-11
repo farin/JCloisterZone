@@ -63,7 +63,7 @@ public class FlierActionPhase extends Phase {
             next();
             return;
         }
-        game.post(new SelectActionEvent(getActivePlayer(), action, false, false));
+        game.post(new SelectActionEvent(getActivePlayer(), action, false));
     }
 
     @Override

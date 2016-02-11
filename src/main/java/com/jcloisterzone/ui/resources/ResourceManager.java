@@ -14,6 +14,10 @@ public interface ResourceManager {
      Image getTileImage(Tile tile);
      Image getAbbeyImage();
 
+     //generic image, path is without extension
+     Image getImage(String path);
+     Image getLayeredImage(LayeredImageDescriptor lid);
+
      Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations);
      Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners);
      Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations);

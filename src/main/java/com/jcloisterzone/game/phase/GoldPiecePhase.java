@@ -30,8 +30,15 @@ public class GoldPiecePhase extends Phase {
         if (getTile().hasTrigger(TileTrigger.GOLDMINE)) {
             Position pos = getTile().getPosition();
             int count = gldCap.addGold(pos);
-            game.post(new GoldChangeEvent(getActivePlayer(), pos, count));
+            game.post(new GoldChangeEvent(getActivePlayer(), pos, count-1, count));
+        }
+        reenter();
+    }
 
+    @Override
+    public void reenter() {
+        if (getTile().hasTrigger(TileTrigger.GOLDMINE)) {
+            Position pos = getTile().getPosition();
             GoldPieceAction action = new GoldPieceAction();
             action.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles(pos), new Function<Tile, Position>() {
                 @Override
@@ -39,7 +46,7 @@ public class GoldPiecePhase extends Phase {
                     return t.getPosition();
                 }
             }));
-            game.post(new SelectActionEvent(getActivePlayer(), action, false, false));
+            game.post(new SelectActionEvent(getActivePlayer(), action, false));
         } else {
             next();
         }
@@ -49,7 +56,7 @@ public class GoldPiecePhase extends Phase {
     public void placeGoldPiece(Position pos) {
         //TODO nice to have validate position
         int count = gldCap.addGold(pos);
-        game.post(new GoldChangeEvent(getActivePlayer(), pos, count));
+        game.post(new GoldChangeEvent(getActivePlayer(), pos, count-1, count));
         next();
     }
 }

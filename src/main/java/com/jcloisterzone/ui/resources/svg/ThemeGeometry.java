@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.resources.svg;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -31,7 +31,8 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.resources.FeatureArea;
-import com.jcloisterzone.ui.theme.SvgTransformationCollector.GeometryHandler;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
+import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHandler;
 
 
 public class ThemeGeometry {

@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.theme;
+package com.jcloisterzone.ui.resources.svg;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayDeque;
@@ -12,6 +12,7 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
+import com.jcloisterzone.ui.resources.FeatureDescriptor;
 
 public class SvgTransformationCollector {
 

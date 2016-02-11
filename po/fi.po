@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-22 13:03+0200\n"
+"POT-Creation-Date: 2015-11-21 13:58+0100\n"
 "PO-Revision-Date: 2015-10-22 13:09+0100\n"
 "Last-Translator: Ahti <ahti.komu@gmail.com>\n"
 "Language-Team: Ahti Komu\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.7.5\n"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:36
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
@@ -25,192 +25,192 @@ msgstr ""
 "<html>Virheraportointityökalu pakkaa tallennetun pelin, sisäisen pelilokin, "
 "sekä järjestelmätiedot helpottaakseen virheenetsintäprosessia.</html>"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:39
 msgid "Please describe bug..."
 msgstr "Kuvaile ohjelmistovirhettä..."
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:55
 msgid "...then download report archive and send via email to farin@farin.cz"
 msgstr ""
 "...jonka jälkeen lataa raportti ja lähetä sähköpostilla osoitteeseen "
 "farin@farin.cz"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
-#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:25
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
+#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
 msgid "Report bug"
 msgstr "Raportoi ohjelmistovirheestä"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:80
 msgid "Bug report failed"
 msgstr "Ohjelmistovirheen raportointi epäonnistui"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:46
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Basic game"
 msgstr "Tavallinen peli"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
+#: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "Wheel of Fortune"
 msgstr "Wheel of Fortune"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "Winter Edition"
 msgstr "Winter Edition"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:51
+#: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "The Gingerbread Man"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:54
+#: src/main/java/com/jcloisterzone/Expansion.java:52
 msgid "Inns & Cathedrals"
 msgstr "Kirkot ja Kievarit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:56
+#: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "Traders & Builders"
 msgstr "Kirjurit ja Kauppiaat"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:58
+#: src/main/java/com/jcloisterzone/Expansion.java:56
 msgid "The Princess & The Dragon"
 msgstr "Lohikäärme ja Linnanneito"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:58
 msgid "The Tower"
 msgstr "Torni"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "Abbey & Mayor"
 msgstr "Kärryt ja Kartanot"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "The Catapult"
 msgstr "Katapultti"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "tiles only"
 msgstr "vain kortit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:65
+#: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "Bridges, Castles and Bazaars"
 msgstr "Basaarit ja Bastionit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "Hills and Sheep"
 msgstr "Pedot ja Paimenet"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "King and Robber Baron"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The River"
 msgstr "Joki"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The River II"
 msgstr "Joki II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Cathars / Siege"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Besiegers"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Count of Carcassonne"
 msgstr "Kreivi"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:76
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Mini Expansion (GQ11)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Cult"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Tunnel"
 msgstr "Tunneli"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:79
+#: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Corn Circles"
 msgstr "Viljaympyrät"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Plague"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:82
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Phantom"
 msgstr "Phantom"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:83
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "The Festival (10th an.)"
 msgstr "Juhlat (10-vuotisjuhlajulkaisu)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:84
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "Little Buildings"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The Wind Rose"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "The German Monasteries"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Castles in Germany"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Halfings"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The Flier"
 msgstr "Liiturit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:93
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Messages"
 msgstr "Viestit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Ferries"
 msgstr "Lossit"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:93
 msgid "The Goldmines"
 msgstr "Kaivokset"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
+#: src/main/java/com/jcloisterzone/Expansion.java:94
 msgid "Mage & Witch"
 msgstr "Noidat"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:97
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The Robbers"
 msgstr "Rosvot"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:98
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "The Corn Circles II"
 msgstr "Viljaympyrät II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:101
+#: src/main/java/com/jcloisterzone/Expansion.java:99
 msgid "The School"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:102
+#: src/main/java/com/jcloisterzone/Expansion.java:100
 msgid "La Porxada"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:103
+#: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Russian Promos"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:104
+#: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "Darmstadt Promo"
 msgstr ""
 
@@ -230,7 +230,7 @@ msgstr "Silta"
 msgid "Tower"
 msgstr "Torni"
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:51
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:59
 msgid "Cloister"
 msgstr "Luostari"
 
@@ -292,49 +292,49 @@ msgstr "Pidä tavalliset luostarit pelissä."
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "Lisää 3/2/1 pistettä tornille/talolle/vajalle."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:75
 msgid "Bazaar supply"
 msgstr "Basaarin tarjonta"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:211
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Choose your tile."
 msgstr "Valitse laattasi."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:217
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 "<html>Valitse laatta seuraavaan huutokauppaan<br>ja tee alkutarjous.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:218
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Raise bid or pass."
 msgstr "Korota tarjousta tai ohita."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:226
 msgid "Buy or sell tile from latest bidder."
 msgstr "Myy tai osta laatta viimeisimmältä tarjoajalta."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:227
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:230
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:231
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:234
 msgid "points"
 msgstr "pistettä"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:244
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:248
 msgid "Buy"
 msgstr "Osta"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:245
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:249
 msgid "Sell"
 msgstr "Myy"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:254
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:258
 msgid "Select"
 msgstr "Valitse"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:263
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:267
 msgid "Bid"
 msgstr "Tarjoa"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:264
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:268
 msgid "Pass"
 msgstr "Ohita"
 
@@ -355,23 +355,23 @@ msgstr "Kuinka haluat asettaa seuraajan luostariin?\t"
 msgid "Monastery"
 msgstr "Luostarit"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:33
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
 msgid "Corn circle"
 msgstr "Viljaympyrä"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:38
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
 msgid "Each player…"
 msgstr "Jokainen pelaaja..."
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:45
 msgid "may deploy additional follower"
 msgstr "voi asettaa ylimääräisen seuraajan"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:55
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:56
 msgid "must remove follower"
 msgstr "poistaa seuraajaan"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:67
 #, java-format
 msgid "on/from a {0}."
 msgstr "paikasta/paikkaan {0}"
@@ -396,7 +396,7 @@ msgstr "Poista maagi."
 msgid "Remove the witch."
 msgstr "Poista noita."
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:15
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:18
 msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
@@ -407,7 +407,7 @@ msgstr ""
 "b> kohdistaaksesi laudan keskelle. Tarkenna ja loitonna <b>+</b> ja <b>-</b> "
 "näppäimillä tai hiiren <b>rullalla</b>.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:20
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
@@ -416,7 +416,7 @@ msgstr ""
 "näppäimellä</b>. Aseta laatta laudalle hiiren <b>vasemmalla näppäimellä</b>."
 "</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:26
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
@@ -424,7 +424,7 @@ msgstr ""
 "<html>Kun laatta on asetettu laudalle, paina <b>tabulaattoria</b> tai hiiren "
 "<b>oikeaa näppäintä</b> uudelleen haluamasi toiminnon valintaan.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
@@ -432,7 +432,7 @@ msgstr ""
 "<html>Voit myös painaa <b>Enteriä</b> tai <b>välilyöntiä</b> jatkaaksesi "
 "ilman toimintoja.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
 "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
 "tiles.</html>"
@@ -441,11 +441,11 @@ msgstr ""
 "<b>X</b> näppäintä nähdäksesi viimeisimmin asetetut palat.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:146
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:301
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
-#: src/main/java/com/jcloisterzone/ui/Client.java:308
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:149
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
 msgid "Leave game"
 msgstr "Poistu pelistä"
 
@@ -517,52 +517,52 @@ msgstr "Basaarit"
 msgid "Wind rose"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:52
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:48
 msgid "Connecting"
 msgstr "Yhdistetään"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:69
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:72
 msgid "Host"
 msgstr "Palvelin"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:80
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
 msgid "Port"
 msgstr "Portti"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:89
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:89
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:70
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:98
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:73
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:96
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:77
 msgid "Back"
 msgstr "Takaisin"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:113
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:137
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:116
 msgid "Connection failed. Unknown host."
 msgstr "Yhdistäminen epäonnistui. Tuntematon isäntä."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:118
 msgid "Connection refused."
 msgstr "Yhteys estettiin."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:120
 msgid "Connection failed."
 msgstr "Yhdistäminen epäonnistui."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:152
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:128
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:131
 msgid "Invalid port number."
 msgstr "Väärä porttinumero."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
 msgid ""
 "Create a new game or continue a previously saved one. A game will be hosted "
 "on your computer and other players may connect during game set up. You can "
@@ -572,21 +572,21 @@ msgstr ""
 "isännöimään sinun koneellasi ja muita pelaajia voidaan liittää peliin sen "
 "luonnin aikana. Voit myös halutessasi pelata yksin tietokonepelaajia vastaan."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
 msgid "New game"
 msgstr "Uusi peli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:82
 msgid "or"
 msgstr "tai"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
-#: src/main/java/com/jcloisterzone/ui/Client.java:461
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
+#: src/main/java/com/jcloisterzone/ui/Client.java:456
 msgid "Load game"
 msgstr "Lataa peli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:95
 msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
@@ -594,7 +594,7 @@ msgstr ""
 "Voit myös yhdistää toiseen JCloisterZone-ohjelmaan, joka isännöi peliä. "
 "Yhdistä toiseen peliin kun peli on luotu, mutta sitä ei ole vielä aloitettu."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:116
 msgid ""
 "Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
@@ -602,152 +602,152 @@ msgstr ""
 "Löydä muita pelaajia ja pelaa heidän kanssaan julkisella play.jcloisterzone."
 "com pelipalvelimella."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:118
 msgid "Play online"
 msgstr "Pelaa verkossa"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:63
 msgid "Nickname"
 msgstr "Nimimerkki"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:144
 msgid "Start game"
 msgstr "Aloita peli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:173
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:226
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:178
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:235
 msgid "Players"
 msgstr "Pelaajat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:177
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:183
 msgid "Click twice on a slot button to add a computer player."
 msgstr "Klikkaa pelaajapaikkaa kahdesti lisätäksesi tietokonepelaajan."
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:201
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:36
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:241
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:38
 msgid "Expansions"
 msgstr "Lisäosat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:215
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:41
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:224
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:43
 msgid "Rules"
 msgstr "Säännöt"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:245
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:256
 msgid "Clock"
 msgstr "Kello"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:249
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:261
 msgid "player time limit"
 msgstr "pelaajan aikaraja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:260
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:272
 msgid "minutes"
 msgstr "minuuttia"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:286
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:299
 msgid "Presets"
 msgstr "Esiasetukset"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:306
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:320
 msgid "Preset name"
 msgstr "Esiasetuksen nimi"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:339
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:330
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:353
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:387
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:367
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:381
 msgid "Delete"
 msgstr "Poista"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:45
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:49
 msgid "Connected clients"
 msgstr "Yhdistetyt vierailijat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:143
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:148
 msgid "Unassigned player"
 msgstr "Määrittämätön pelaaja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:147
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:178
 msgid "Local player"
 msgstr "Paikallinen pelaaja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:150
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:177
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:182
 msgid "Remote player"
 msgstr "Etäpelaaja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:183
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:160
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:188
 msgid "Computer player"
 msgstr "Tietokonepelaaja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:158
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:186
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:163
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:191
 msgid "Remote computer player"
 msgstr "Etätietokonepelaaja"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:168
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
 msgid "Open player slot"
 msgstr "Vapaa pelaajapaikka"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:101
 msgid "Game title"
 msgstr "Pelin nimi"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:109
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
 msgid "Password"
 msgstr "Salasana"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:113
 msgid "If you leave password empty, anybody can connect to your game."
 msgstr "Jos jätät salasanan tyhjäksi, kuka tahansa voi yhdistää peliisi"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:117
 msgid "Create game"
 msgstr "Luo peli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
 msgid "Join game"
 msgstr "Yhdistä peliin"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:75
 msgid "Continue"
 msgstr "Jatka"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:193
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:202
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Remove game"
 msgstr "Poista peli"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Do you want to remove game permanently?"
 msgstr "Haluatko poistaa pelin pysyvästi?"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
-#: src/main/java/com/jcloisterzone/ui/Client.java:631
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
+#: src/main/java/com/jcloisterzone/ui/Client.java:626
 msgid "Connection lost"
 msgstr "Yhteys kadotettu"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
 msgid "Reconnecting..."
 msgstr "Ydistetään uudelleen..."
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:424
 msgid "Save game"
 msgstr "Tallenna peli"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:447
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:482
-#: src/main/java/com/jcloisterzone/ui/Client.java:430
-#: src/main/java/com/jcloisterzone/ui/Client.java:473
-#: src/main/java/com/jcloisterzone/ui/Client.java:639
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:444
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:479
+#: src/main/java/com/jcloisterzone/ui/Client.java:425
+#: src/main/java/com/jcloisterzone/ui/Client.java:468
+#: src/main/java/com/jcloisterzone/ui/Client.java:634
 msgid "Error"
 msgstr "Virhe"
 
@@ -755,7 +755,7 @@ msgstr "Virhe"
 msgid "JCloisterZone "
 msgstr "JCloisterZone "
 
-#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:46
+#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:49
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "Tile Distribution"
 msgstr ""
@@ -765,73 +765,81 @@ msgstr ""
 msgid "Controls"
 msgstr "Ohjaintoiminnot"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:34
 msgid "Discarded tiles"
 msgstr "Hylätyt palat"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:43
 msgid "These tiles have been discarded during the game"
 msgstr "Nämä palat on hylätty pelin aikana"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:34
 msgid "About application"
 msgstr "Tietoja sovelluksesta"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:65
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:55
 msgid "Version"
 msgstr "Versio"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:69
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:59
 msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr ""
 "Julkaistu GNU Affero General Public License version 3 - lisenssin ehdoilla."
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:84
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:93
 msgid "Use system language"
 msgstr "Käytä järjestelmän kieltä"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:161
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:191
 msgid "Language"
 msgstr "Kieli"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:177
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:207
 msgid "To apply new language you must restart the application"
 msgstr "Uuden kielen käyttöönotto vaatii uudelleenkäynnistyksen"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:182
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
+msgid "Theme"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
+msgid "To apply new theme you must restart the application"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
 msgstr "Tekoälyn palan asettamisen viive (millisekuntia)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:188
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:241
 msgid "Score display duration (sec)"
 msgstr "Pisteiden näyttöaika (sekuntia)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:289
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:344
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Interface"
 msgstr "Käyttöliittymä"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Plugins"
 msgstr "Laajennukset"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:322
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:379
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:28
 msgid "Game setup"
 msgstr "Pelin määritys"
 
-#: src/main/java/com/jcloisterzone/ui/GameController.java:165
+#: src/main/java/com/jcloisterzone/ui/GameController.java:162
 msgid "%d tiles left"
 msgstr "%d palaa jäljellä"
 
@@ -971,39 +979,55 @@ msgstr "Versiot eivät ole yhteensopivia"
 msgid "Invalid password"
 msgstr "Väärä salasana"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
 msgid "Skip"
 msgstr "Ohita"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Skip Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Cancel and place Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
+msgid "Last chance to place the Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
 msgid "Pay ransom"
 msgstr "Maksa lunnaat"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Haluatko varmasti maksaa 3 pistettä vangin vapauttamiseksi?"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:412
 msgid "Confirm ransom payment"
 msgstr "Vahvista lunnaiden maksu"
 
-#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:121
+#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:125
 msgid "Type to chat"
 msgstr "Kirjoita..."
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Confirm or undo a meeple placement."
 msgstr "Vahvista tai peruuta pöytääminen."
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "Waiting for a confirmation by remote player."
 msgstr "Odotetaan etäpelaajan vahvistusta."
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:47
 msgid "No action available. Pass or undo a tile placement."
 msgstr "Ei toimintoa saatavilla. Ohita tai peruuta palan asettaminen."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
@@ -1011,7 +1035,7 @@ msgstr ""
 "Tätä peliä ei ole pelattu loppuun. Haluatko varmasti lopettaa pelin ja "
 "katkaista yhteyden muihin pelaajiin?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:307
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "Tätä peliä ei ole pelattu loppuun. Haluatko varmasti poistua siitä?"
 

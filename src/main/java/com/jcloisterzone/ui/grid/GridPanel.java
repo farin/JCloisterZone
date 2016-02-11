@@ -39,15 +39,12 @@ import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
-import com.jcloisterzone.ui.animation.AnimationService;
-import com.jcloisterzone.ui.animation.RecentPlacement;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
-import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.view.GameView;
 
 public class GridPanel extends JPanel implements ForwardBackwardListener {
@@ -224,10 +221,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public Client getClient() {
         return client;
-    }
-
-    public AnimationService getAnimationService() {
-        return gc.getGameView().getMainPanel().getAnimationService();
     }
 
     public int getSquareSize() {
@@ -433,27 +426,17 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     // delegated UI methods
 
-    public void tileEvent(TileEvent ev, TileLayer tileLayer) {
-        Tile tile = ev.getTile();
-        Position p = ev.getPosition();
-
+    public void tileEvent(TileEvent ev) {
         hideLayer(AbstractTilePlacementLayer.class);
 
         if (ev.getType() == TileEvent.PLACEMENT) {
+            Position p = ev.getPosition();
+
             if (p.x == left) --left;
             if (p.x == right) ++right;
             if (p.y == top) --top;
             if (p.y == bottom) ++bottom;
 
-            tileLayer.tilePlaced(tile);
-
-            boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
-            if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
-                (initialPlacement && tile.equals(gameView.getGame().getCurrentTile()))) {
-                getAnimationService().registerAnimation(new RecentPlacement(tile.getPosition()));
-            }
-        } else if (ev.getType() == TileEvent.REMOVE) {
-            tileLayer.tileRemoved(tile);
         }
         repaint();
     }

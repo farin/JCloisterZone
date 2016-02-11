@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroupState;
@@ -77,7 +78,6 @@ public class DrawPhase extends ServerAwarePhase {
                 if (abbeyCap.getAbbeyRoundLastPlayer() == null) {
                     abbeyCap.setAbbeyRoundLastPlayer(game.getPrevPlayer(getActivePlayer()));
                 }
-                abbeyCap.setLastAbbeyChance(true);
                 next(CleanUpTurnPartPhase.class);
                 return;
             }

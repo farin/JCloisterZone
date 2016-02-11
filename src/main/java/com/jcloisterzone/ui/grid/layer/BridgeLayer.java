@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.event.BridgeEvent;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
@@ -26,6 +28,8 @@ public class BridgeLayer extends AbstractGridLayer {
 
     public BridgeLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
+
+        gc.register(this);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class BridgeLayer extends AbstractGridLayer {
             Position pos = entry.getKey();
             Location loc = entry.getValue();
             Tile tile = getGame().getBoard().get(pos);
-            Area a = getClient().getResourceManager().getBridgeArea(tile, getSquareSize(), loc).getTrackingArea();
+            Area a = rm.getBridgeArea(tile, getSquareSize(), loc).getTrackingArea();
             a.transform(AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos)));
 
             g2.setColor(Color.BLACK);
@@ -48,11 +52,22 @@ public class BridgeLayer extends AbstractGridLayer {
         meepleLayer.paintMeeplesOnBridges(g2);
     }
 
-    public void bridgeDeployed(Position pos, Location loc) {
+    @Subscribe
+    public void onBridgeEvent(BridgeEvent ev) {
+	gridPanel.clearActionDecorations();
+
+        if (ev.getType() == BridgeEvent.DEPLOY) {
+            bridgeDeployed(ev.getPosition(), ev.getLocation());
+        } else if (ev.getType() == BridgeEvent.REMOVE) {
+            bridgeRemoved(ev.getPosition());
+        }
+    }
+
+    private void bridgeDeployed(Position pos, Location loc) {
         bridges.put(pos, loc);
     }
 
-    public void bridgeRemoved(Position pos) {
+    private void bridgeRemoved(Position pos) {
         bridges.remove(pos);
     }
 

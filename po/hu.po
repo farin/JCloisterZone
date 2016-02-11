@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-22 13:03+0200\n"
+"POT-Creation-Date: 2015-11-21 13:58+0100\n"
 "PO-Revision-Date: 2015-10-22 13:09+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.5\n"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:34
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:36
 msgid ""
 "<html>Bug report tool pack saved game, internal game log and system "
 "information to simplify debugging process.</html>"
@@ -25,191 +25,191 @@ msgstr ""
 "naplózást és a rendszerinformációkat egy fájlba csomagolja, így segítve a "
 "hibajavítási folyamatot.</html>"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:37
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:39
 msgid "Please describe bug..."
 msgstr "Kérlek, fejtsd ki a hibát..."
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:52
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:55
 msgid "...then download report archive and send via email to farin@farin.cz"
 msgstr ""
 "...majd az előálló riportot mentsd le és küldd el a farin@farin.cz címre!"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:60
-#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:25
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
+#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
 msgid "Report bug"
 msgstr "Hibabejelentés"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:77
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:80
 msgid "Bug report failed"
 msgstr "Hibabejelentő elkészítése sikertelen"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:46
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Basic game"
 msgstr "Alapjáték"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:47
+#: src/main/java/com/jcloisterzone/Expansion.java:45
 msgid "Wheel of Fortune"
 msgstr "Szerencsekerék"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:50
+#: src/main/java/com/jcloisterzone/Expansion.java:48
 msgid "Winter Edition"
 msgstr "Téli kiadás"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:51
+#: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "The Gingerbread Man"
 msgstr "Mézeskalács emberke"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:54
+#: src/main/java/com/jcloisterzone/Expansion.java:52
 msgid "Inns & Cathedrals"
 msgstr "Fogadók és katedrálisok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:56
+#: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "Traders & Builders"
 msgstr "Kereskedők és építészek"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:58
+#: src/main/java/com/jcloisterzone/Expansion.java:56
 msgid "The Princess & The Dragon"
 msgstr "A hercegnő és a sárkány"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:58
 msgid "The Tower"
 msgstr "A torony"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "Abbey & Mayor"
 msgstr "Apátság és polgármester"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "The Catapult"
 msgstr "A Katapult"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "tiles only"
 msgstr "csak lapok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:65
+#: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "Bridges, Castles and Bazaars"
 msgstr "Hidak, erődök és bazárok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "Hills and Sheep"
 msgstr "Dombok és birkák"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "King and Robber Baron"
 msgstr "Király és Rablólovag"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:69
 msgid "The River"
 msgstr "A folyó"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "The River II"
 msgstr "A folyó II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Cathars / Siege"
 msgstr "A Katharok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Besiegers"
 msgstr "Ostromlók"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Count of Carcassonne"
 msgstr "Carcassonne grófja"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:76
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Mini Expansion (GQ11)"
 msgstr "A mini kiegészítő"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Cult"
 msgstr "Szentély"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Tunnel"
 msgstr "Alagút"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:79
+#: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Corn Circles"
 msgstr "Gabonakörök"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "The Plague"
 msgstr "A pestis"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:82
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Phantom"
 msgstr "A fantom"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:83
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "The Festival (10th an.)"
 msgstr "A fesztivál (10. évf.)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:84
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "Little Buildings"
 msgstr "Kis épületek"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "The Wind Rose"
 msgstr "A szélrózsák"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "The German Monasteries"
 msgstr "Német kolostorok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Castles in Germany"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Halfings"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The Flier"
 msgstr "A repülő szerkezet"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:93
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Messages"
 msgstr "Sürgönyök"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Ferries"
 msgstr "Kompok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:93
 msgid "The Goldmines"
 msgstr "Aranybányák"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
+#: src/main/java/com/jcloisterzone/Expansion.java:94
 msgid "Mage & Witch"
 msgstr "Mágus és boszorkány"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:97
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The Robbers"
 msgstr "A rablók"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:98
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "The Corn Circles II"
 msgstr "Gabonakörök II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:101
+#: src/main/java/com/jcloisterzone/Expansion.java:99
 msgid "The School"
 msgstr "Az iskola"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:102
+#: src/main/java/com/jcloisterzone/Expansion.java:100
 msgid "La Porxada"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:103
+#: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Russian Promos"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:104
+#: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "Darmstadt Promo"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr "Hidak"
 msgid "Tower"
 msgstr "A torony"
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:51
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:59
 msgid "Cloister"
 msgstr "Kolostorok"
 
@@ -294,50 +294,50 @@ msgstr "Az alapjáték kolostorai is maradjanak játékban."
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "A torony, a ház és a pajta rendre 3, 2 ill. 1 pontot ér"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:75
 msgid "Bazaar supply"
 msgstr "Bazár készlet"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:211
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
 msgid "Choose your tile."
 msgstr "Válassz lapot"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:213
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:217
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
 msgstr ""
 "<html>Válassz lapot a következő licithez,<br>és tedd meg az induló ajánlatod."
 "</html>"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:218
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Raise bid or pass."
 msgstr "Tét emelése vagy passzolás."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:226
 msgid "Buy or sell tile from latest bidder."
 msgstr "Vétel vagy eladás az utolsó licitálótól."
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:227
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:230
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:231
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:234
 msgid "points"
 msgstr "pontok"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:244
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:248
 msgid "Buy"
 msgstr "Vétel"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:245
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:249
 msgid "Sell"
 msgstr "Eladás"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:254
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:258
 msgid "Select"
 msgstr "Kiválasztás"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:263
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:267
 msgid "Bid"
 msgstr "Licit tétel"
 
-#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:264
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:268
 msgid "Pass"
 msgstr "Passzolás"
 
@@ -358,23 +358,23 @@ msgstr "Miként szeretnéd elhelyezni az alattvalódat a kolostorban?"
 msgid "Monastery"
 msgstr "Kolostor"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:33
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
 msgid "Corn circle"
 msgstr "Gabonakörök"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:38
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
 msgid "Each player…"
 msgstr "Minden játékos…"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:45
 msgid "may deploy additional follower"
 msgstr "letehet még egy követőt"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:55
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:56
 msgid "must remove follower"
 msgstr "el kell távolítson egy követőt"
 
-#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:67
 #, java-format
 msgid "on/from a {0}."
 msgstr "a {0} -ról/re."
@@ -399,7 +399,7 @@ msgstr "A mágus eltávolítása"
 msgid "Remove the witch."
 msgstr "A boszorkány eltávolítása"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:15
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:18
 msgid ""
 "<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
 "scroll the board. Click with <b>middle</b> mouse button to center the board. "
@@ -410,7 +410,7 @@ msgstr ""
 "középre ugráshoz. Zoom-olj a <b>+</b> vagy <b>-</b> gombokkal vagy az egér "
 "<b>görgővel</b>.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:20
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
 msgid ""
 "<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
 "by <b>left</b> click.</html>"
@@ -418,7 +418,7 @@ msgstr ""
 "<html>Forgasd a lapot a <b>Tab</b>-bal vagy a <b>jobb</b> kattintással. "
 "Helyezd el a lapot a <b>bal</b> kattintással.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:26
 msgid ""
 "<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
 "select appropriate action.</html>"
@@ -426,7 +426,7 @@ msgstr ""
 "<html>Az elhelyezett lapon <b>Tab</b>-bal vagy a <b>jobb</b> kattintással "
 "választhatsz megfelelő cselekvést.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:27
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
 msgid ""
 "<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
 "no action.</html>"
@@ -434,7 +434,7 @@ msgstr ""
 "<html>Egyébként passzolhatsz az <b>Enter</b> vagy <b>Szóköz</b> gombbal, ha "
 "nem kívánsz cselekedni.</html>"
 
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
 "<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
 "tiles.</html>"
@@ -443,11 +443,11 @@ msgstr ""
 "lapok kiemelését az <b>X</b> billentyű lenyomásával kérheted.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:146
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:301
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
-#: src/main/java/com/jcloisterzone/ui/Client.java:308
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:149
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
 msgid "Leave game"
 msgstr "Kilépés a játékból"
 
@@ -519,52 +519,52 @@ msgstr "Bazárok"
 msgid "Wind rose"
 msgstr "Szélrózsa"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:51
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:47
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:52
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:48
 msgid "Connecting"
 msgstr "Csatlakozás"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:69
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:72
 msgid "Host"
 msgstr "Szerver"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:80
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
 msgid "Port"
 msgstr "Port"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:89
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:89
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:70
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:98
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:73
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 msgid "Connect"
 msgstr "Csatlakozás"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:93
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:74
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:96
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:77
 msgid "Back"
 msgstr "Vissza"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:134
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:113
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:137
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:116
 msgid "Connection failed. Unknown host."
 msgstr "Csatlakozás sikertelen, ismeretlen szerver."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:136
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:115
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:118
 msgid "Connection refused."
 msgstr "Csatlakozás visszautasítva."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:120
 msgid "Connection failed."
 msgstr "Csatlakozás sikertelen."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:152
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:128
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:131
 msgid "Invalid port number."
 msgstr "Érvénytelen portszám."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:54
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
 msgid ""
 "Create a new game or continue a previously saved one. A game will be hosted "
 "on your computer and other players may connect during game set up. You can "
@@ -574,21 +574,21 @@ msgstr ""
 "kiszolgálója a te géped lesz, a többi játékos a játék konfigurálása közben "
 "csatlakozhat. Tetszőleges számú számítógép ellenfél ellen is játszhatsz."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
 msgid "New game"
 msgstr "Új játék"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:82
 msgid "or"
 msgstr "vagy"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:75
-#: src/main/java/com/jcloisterzone/ui/Client.java:461
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
+#: src/main/java/com/jcloisterzone/ui/Client.java:456
 msgid "Load game"
 msgstr "Játék betöltése"
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:86
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:95
 msgid ""
 "You can also connect to remote JCloisterZone application hosting a game. "
 "Connect when game is created but not yet started."
@@ -596,7 +596,7 @@ msgstr ""
 "Csatlakozhatsz egy távoli gépen indított játékhoz is. Addig tudsz "
 "csatlakozni, amíg a játék el nem kezdődik."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:105
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:116
 msgid ""
 "Connect to other players and play with them using internet connection and "
 "public game server play.jcloisterzone.com."
@@ -604,152 +604,152 @@ msgstr ""
 "Csatlakozz a többi játékoshoz, és játssz velük az interneten keresztül a "
 "play.jcloisterzone.com címen elérhető publikus szerverrel."
 
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:107
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:118
 msgid "Play online"
 msgstr "Online játék"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:60
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:63
 msgid "Nickname"
 msgstr "Név"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:144
 msgid "Start game"
 msgstr "Játék indítása"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:173
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:226
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:178
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:235
 msgid "Players"
 msgstr "Játékosok"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:177
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:183
 msgid "Click twice on a slot button to add a computer player."
 msgstr "Számítógép játékos hozzáadásához kattints duplán egy slot gombon."
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:201
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:232
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:36
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:241
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:38
 msgid "Expansions"
 msgstr "Kiegészítők"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:215
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:41
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:224
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:43
 msgid "Rules"
 msgstr "Szabályok"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:245
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:256
 msgid "Clock"
 msgstr "Óra"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:249
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:261
 msgid "player time limit"
 msgstr "Gondolkodási idő"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:260
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:272
 msgid "minutes"
 msgstr "perc"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:286
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:299
 msgid "Presets"
 msgstr "Mentett beállítások"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:306
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:320
 msgid "Preset name"
 msgstr "Megnevezés"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:339
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:330
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:353
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:387
 msgid "Save"
 msgstr "Mentés"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:367
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:381
 msgid "Delete"
 msgstr "Törlés"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:45
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:49
 msgid "Connected clients"
 msgstr "Kapcsolódó kliensek"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:143
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:148
 msgid "Unassigned player"
 msgstr "Üres játékos"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:147
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:178
 msgid "Local player"
 msgstr "Helyi játékos"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:150
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:177
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:182
 msgid "Remote player"
 msgstr "Távoli játékos"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:183
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:160
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:188
 msgid "Computer player"
 msgstr "Számítógép játékos"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:158
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:186
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:163
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:191
 msgid "Remote computer player"
 msgstr "Távoli számítógép játékos"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:168
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
 msgid "Open player slot"
 msgstr "Nyitott játékoshelyek"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:101
 msgid "Game title"
 msgstr "Játék címe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:100
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:175
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:109
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
 msgid "Password"
 msgstr "Jelszó"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:104
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:113
 msgid "If you leave password empty, anybody can connect to your game."
 msgstr "Jelszó megadásának hiányában bárki csatlakozhat a játékhoz."
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:108
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:117
 msgid "Create game"
 msgstr "Játék létrehozása"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
 msgid "Join game"
 msgstr "Csatlakozás a játékhoz"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:179
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:78
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:75
 msgid "Continue"
 msgstr "Folytatás"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:193
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:202
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Remove game"
 msgstr "Játék eltávolítása"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:198
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Do you want to remove game permanently?"
 msgstr "Véglegesen eltávolítod a játékot?"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
-#: src/main/java/com/jcloisterzone/ui/Client.java:631
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
+#: src/main/java/com/jcloisterzone/ui/Client.java:626
 msgid "Connection lost"
 msgstr "A kapcsolat megszakadt"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:278
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
 msgid "Reconnecting..."
 msgstr "Újracsatlakozás..."
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:424
 msgid "Save game"
 msgstr "Játék mentése"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:447
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:482
-#: src/main/java/com/jcloisterzone/ui/Client.java:430
-#: src/main/java/com/jcloisterzone/ui/Client.java:473
-#: src/main/java/com/jcloisterzone/ui/Client.java:639
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:444
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:479
+#: src/main/java/com/jcloisterzone/ui/Client.java:425
+#: src/main/java/com/jcloisterzone/ui/Client.java:468
+#: src/main/java/com/jcloisterzone/ui/Client.java:634
 msgid "Error"
 msgstr "Hiba"
 
@@ -757,7 +757,7 @@ msgstr "Hiba"
 msgid "JCloisterZone "
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:46
+#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:49
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "Tile Distribution"
 msgstr ""
@@ -767,72 +767,80 @@ msgstr ""
 msgid "Controls"
 msgstr "Irányítás"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:32
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:34
 msgid "Discarded tiles"
 msgstr "Kihagyott lapok"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:40
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:43
 msgid "These tiles have been discarded during the game"
 msgstr "Kihagyott lapok a játék folyamán"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:44
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:34
 msgid "About application"
 msgstr "A programról"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:65
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:55
 msgid "Version"
 msgstr "Verzió"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:69
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:59
 msgid ""
 "Distributed under the terms of GNU Affero General Public License version 3"
 msgstr "Terjeszthető a GNU Affero General Public License v3 licenc szerint"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:84
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:93
 msgid "Use system language"
 msgstr "Op. rendszer nyelve"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:161
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:191
 msgid "Language"
 msgstr "Nyelv"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:177
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:207
 msgid "To apply new language you must restart the application"
 msgstr "A beállított nyelv érvénybe lépéséhez újraindítás szükséges"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:182
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
+msgid "Theme"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
+msgid "To apply new theme you must restart the application"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
 msgstr "Gép lépésének ideje (ezredmp)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:188
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:241
 msgid "Score display duration (sec)"
 msgstr "Szerzett pontok kijelzése (mp)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:289
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:344
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Preferences"
 msgstr "Egyéb beállítások"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Interface"
 msgstr "Felület"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:301
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Plugins"
 msgstr "Plugin"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:322
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:379
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
 msgid "Cancel"
 msgstr "Mégsem"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:28
 msgid "Game setup"
 msgstr "Beállítások"
 
-#: src/main/java/com/jcloisterzone/ui/GameController.java:165
+#: src/main/java/com/jcloisterzone/ui/GameController.java:162
 msgid "%d tiles left"
 msgstr "%d lap van hátra"
 
@@ -972,39 +980,55 @@ msgstr "Nem egyező verzió."
 msgid "Invalid password"
 msgstr "Nem megfelelő jelszó"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
 msgid "Skip"
 msgstr "Passzolás"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:408
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Skip Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Cancel and place Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
+msgid "Last chance to place the Abbey"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
 msgid "Pay ransom"
 msgstr "Váltságdíj kifizetése"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
 msgid "Do you really want to pay 3 points to release prisoner?"
 msgstr "Valóban fizetsz 3 pontot a fogoly kiszabadításáért?"
 
-#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:411
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:412
 msgid "Confirm ransom payment"
 msgstr "Megerősítés váltságdíj kifizetésekor"
 
-#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:121
+#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:125
 msgid "Type to chat"
 msgstr "Csevegés"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
 msgid "Confirm or undo a meeple placement."
 msgstr "Hagyd jóvá vagy vond vissza a lépésedet!"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
 msgid "Waiting for a confirmation by remote player."
 msgstr "Várakozás a távoli játákos válaszára"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:47
 msgid "No action available. Pass or undo a tile placement."
 msgstr "Nincs elvégezhető művelet. Passzolj vagy vond vissza a lépésedet!"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
@@ -1012,7 +1036,7 @@ msgstr ""
 "A játék még nem ért véget. Biztos, hogy megszakítod a játékot, és bontod a "
 "kapcsolatot a többi játékossal?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:307
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "A játék még nem ért véget. Biztosan meg kívánod szakítani?"
 

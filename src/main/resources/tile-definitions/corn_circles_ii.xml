@@ -21,22 +21,22 @@
         <corn-circle type="Farm"/>
         <city castle-base="true">N</city>
         <road>S</road>
-        <farm>WR WL SL SR EL ER</farm>
+        <farm city="N">WR WL SL SR EL ER</farm>
     </tile>
     <tile id="RCR">
         <corn-circle type="Farm"/>
         <city castle-base="true">N</city>
         <road>W</road>
         <road>E</road>
-        <farm>WR EL</farm>
+        <farm city="N">WR EL</farm>
         <farm>ER SL SR WL</farm>
     </tile>
     <tile id="CFC">
         <corn-circle type="City"/>
         <city castle-base="true">N</city>
         <city castle-base="true">S</city>
-        <farm>WL WR</farm>
-        <farm>EL ER</farm>
+        <farm city="N S">WL WR</farm>
+        <farm city="N S">EL ER</farm>
     </tile>
     <tile id="CcCc">
         <corn-circle type="City"/>

@@ -49,7 +49,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
 
     @Override
     protected Image createPreviewIcon() {
-        return getClient().getResourceManager().getTileImage(action.getTile());
+        return rm.getTileImage(action.getTile());
     }
 
     @Override

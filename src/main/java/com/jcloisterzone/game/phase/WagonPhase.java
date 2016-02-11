@@ -87,7 +87,7 @@ public class WagonPhase extends ServerAwarePhase {
             if (!wagonMoves.isEmpty()) {
                 Player activePlayer = getActivePlayer();
                 toggleClock(activePlayer);
-                game.post(new SelectActionEvent(activePlayer, new MeepleAction(Wagon.class).addAll(wagonMoves), true, false));
+                game.post(new SelectActionEvent(activePlayer, new MeepleAction(Wagon.class).addAll(wagonMoves), true));
                 return true;
             } else {
                 rw.remove(wagonPlayer);

@@ -33,7 +33,7 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
 
     @Override
     protected Image createPreviewIcon() {
-        return getClient().getResourceManager().getAbbeyImage();
+        return rm.getAbbeyImage();
     }
 
     @Override
