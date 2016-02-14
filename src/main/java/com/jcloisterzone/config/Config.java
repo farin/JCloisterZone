@@ -28,6 +28,8 @@ public class Config {
     protected transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private transient File origin;
+    /** flag used to construct proper player colors */
+    private transient boolean darkTheme;
 
     private String update;
     private Integer port;
@@ -35,6 +37,7 @@ public class Config {
 
     private Integer score_display_duration;
     private Integer ai_place_tile_delay;
+    private String theme;
 
     private Boolean beep_alert;
     private String client_name;
@@ -237,7 +240,8 @@ public class Config {
 
     public static class ColorConfig {
         private String meeple;
-        private String font;
+        private String fontLight;
+        private String fontDark;
 
         public ColorConfig() {
         }
@@ -246,22 +250,36 @@ public class Config {
             this.meeple = meeple;
         }
 
-        public ColorConfig(String meeple, String font) {
+        public ColorConfig(String meeple, String fontLight, String fontDark) {
             this.meeple = meeple;
-            this.font = font;
+            this.fontLight = fontLight;
+            this.fontDark = fontDark;
         }
+
         public String getMeeple() {
             return meeple;
         }
+
         public void setMeeple(String meeple) {
             this.meeple = meeple;
         }
-        public String getFont() {
-            return font;
+
+        public String getFontDark() {
+            return fontDark;
         }
-        public void setFont(String font) {
-            this.font = font;
+
+        public void setFontDark(String fontDark) {
+            this.fontDark = fontDark;
         }
+
+        public String getFontLight() {
+            return fontLight;
+        }
+
+        public void setFontLight(String fontLight) {
+            this.fontLight = fontLight;
+        }
+
     }
 
     public static class PlayersConfig {
@@ -292,7 +310,7 @@ public class Config {
     public PlayerColor getPlayerColor(PlayerSlot slot) {
         try {
             ColorConfig cfg = players.getColors().get(slot.getNumber());
-            return new PlayerColor(cfg);
+            return new PlayerColor(cfg, darkTheme);
         } catch (IndexOutOfBoundsException ex) {
             logger.warn("Too few player colors defined in config");
             return new PlayerColor();
@@ -349,6 +367,14 @@ public class Config {
 
     public void setAi_place_tile_delay(Integer ai_place_tile_delay) {
         this.ai_place_tile_delay = ai_place_tile_delay;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 
     public Boolean getBeep_alert() {
@@ -467,4 +493,14 @@ public class Config {
     public void setScreenshots(ScreenshotsConfig screenshots) {
         this.screenshots = screenshots;
     }
+
+    public boolean isDarkTheme() {
+        return darkTheme;
+    }
+
+    public void setDarkTheme(boolean darkTheme) {
+        this.darkTheme = darkTheme;
+    }
+
+
 }

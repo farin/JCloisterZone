@@ -27,6 +27,8 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 
 import static com.jcloisterzone.ui.I18nUtils._;
@@ -64,19 +66,18 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
        noAuction = gc.getGame().getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
        bcb = gc.getGame().getCapability(BazaarCapability.class);
 
-
        setOpaque(true);
-       setBackground(ControlPanel.PANEL_BG_COLOR);
+       setBackground(client.getTheme().getTransparentPanelBg());
        setLayout(new MigLayout("ins 0", "[grow]", ""));
 
        JLabel label;
 
-       label = new JLabel(_("Bazaar supply"));
+       label = new ThemedJLabel(_("Bazaar supply"));
        label.setFont(FONT_HEADER);
-       label.setForeground(ControlPanel.HEADER_FONT_COLOR);
+       label.setForeground(client.getTheme().getHeaderFontColor());
        add(label, "wrap, gap 20 20 10 5");
 
-       hint = new JLabel();
+       hint = new ThemedJLabel();
        hint.setFont(FONT_ACTION);
        add(hint, "wrap, gap 20 20 0 5");
 
@@ -91,7 +92,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
        overlay = new OverlayPanel();
     }
 
-    class BazaarItemPanel extends JPanel {
+    class BazaarItemPanel extends ThemedJPanel {
         final BazaarItem bi;
         final int idx;
 
@@ -124,7 +125,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
             Image img =  client.getResourceManager().getTileImage(bi.getTile()).getImage();
 
             if (selectedItem == idx) {
-                g2.setColor(ControlPanel.PLAYER_BG_COLOR);
+                g2.setColor(client.getTheme().getPlayerBoxBg());
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
@@ -159,7 +160,7 @@ public class BazaarPanel extends JPanel implements ForwardBackwardListener {
                 // bidAmount.setVisible(false);
                 add(bidAmount, "pos 20 15");
 
-                bidAmountLabel = new JLabel();
+                bidAmountLabel = new ThemedJLabel();
                 add(bidAmountLabel);
             }
 

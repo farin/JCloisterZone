@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -54,13 +56,14 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
+import com.jcloisterzone.ui.gtk.ThemedJCheckBox;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
-public class CreateGamePanel extends JPanel {
+public class CreateGamePanel extends ThemedJPanel {
 
     private static final long serialVersionUID = -8993000662700228625L;
 
@@ -134,8 +137,8 @@ public class CreateGamePanel extends JPanel {
         NameProvider nameProvider = new NameProvider(client.getConfig());
 
         setLayout(new MigLayout("", "[grow]", "[][grow]"));
-        add(header = new JPanel(), "cell 0 0, growx");
-
+        add(header = new ThemedJPanel(), "cell 0 0, growx");
+        header.setBackground(client.getTheme().getMainBg());
         header.setLayout(new MigLayout("", "[grow]"));
 
         startGameButton = new JButton(_("Start game"));
@@ -165,18 +168,21 @@ public class CreateGamePanel extends JPanel {
             header.add(createPresetPanel(), "west");
         }
 
-        JPanel scrolled = new JPanel();
+        JPanel scrolled = new ThemedJPanel();
+        scrolled.setBackground(client.getTheme().getMainBg());
         scrolled.setLayout(new MigLayout("", "[][grow][grow]", "[grow]"));
 
 
-        playersPanel = new JPanel();
-        playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        playersPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         playersPanel.setLayout(new MigLayout("", "[grow]", ""));
 
         if (mutableSlots) {
-            JLabel hint = new JLabel(_("Click twice on a slot button to add a computer player."));
+            JLabel hint = new ThemedJLabel(_("Click twice on a slot button to add a computer player."));
             hint.setFont(new Font(null, Font.ITALIC, 11));
-            hint.setForeground(Color.DARK_GRAY);
+            hint.setForeground(client.getTheme().getHintColor());
             playersPanel.add(hint, "aligny bottom, gapbottom 5, wrap");
         }
 
@@ -197,9 +203,11 @@ public class CreateGamePanel extends JPanel {
 
         scrolled.add(playersPanel, "cell 0 0, grow");
 
-        expansionPanel = new JPanel();
-        expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
+        expansionPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
 
         TilePackFactory tilePackFactory = new TilePackFactory();
         tilePackFactory.setConfig(client.getConfig());
@@ -211,9 +219,11 @@ public class CreateGamePanel extends JPanel {
         }
         scrolled.add(expansionPanel, "cell 1 0,grow");
 
-        rulesPanel = new JPanel();
-        rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
+        rulesPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
         scrolled.add(rulesPanel, "cell 2 0,grow");
 
@@ -222,7 +232,7 @@ public class CreateGamePanel extends JPanel {
             if (rule.getExpansion() == null) continue;
             if (prev != rule.getExpansion()) {
                 prev = rule.getExpansion();
-                JLabel label = new JLabel(prev.toString());
+                JLabel label = new ThemedJLabel(prev.toString());
                 label.setFont(FONT_RULE_SECTION);
                 rulesPanel.add(label, "wrap, growx, gaptop 10, gapbottom 7");
             }
@@ -241,12 +251,14 @@ public class CreateGamePanel extends JPanel {
     }
 
     private JPanel createClockPanel() {
-        JPanel clockPanel = new JPanel();
-        clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        JPanel clockPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         clockPanel.setLayout(new MigLayout("", "[][][]", ""));
 
         Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
-        timeLimitChbox = new JCheckBox(_("player time limit"), value != null);
+        timeLimitChbox = new ThemedJCheckBox(_("player time limit"), value != null);
         timeLimitChbox.setEnabled(mutableSlots);
         timeLimitSpinner = new JSpinner();
         timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value / 60, 0, 300, 1);
@@ -257,7 +269,7 @@ public class CreateGamePanel extends JPanel {
         }
         clockPanel.add(timeLimitChbox);
         clockPanel.add(timeLimitSpinner, "w 40");
-        clockPanel.add(new JLabel(_("minutes")), "gapleft 4");
+        clockPanel.add(new ThemedJLabel(_("minutes")), "gapleft 4");
         if (mutableSlots) {
             timeLimitChbox.addActionListener(new ActionListener() {
                 @Override
@@ -282,9 +294,11 @@ public class CreateGamePanel extends JPanel {
     }
 
     private JPanel createPresetPanel() {
-        JPanel presetPanel = new JPanel();
-        presetPanel.setBorder(new TitledBorder(null, _("Presets"),
+        JPanel presetPanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            presetPanel.setBorder(new TitledBorder(null, _("Presets"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
         presetPanel.setLayout(new MigLayout());
 
         presets = new JComboBox<Object>(getPresets());
@@ -413,12 +427,13 @@ public class CreateGamePanel extends JPanel {
         JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
         if (exp == Expansion.KING_AND_ROBBER_BARON
                 || exp == Expansion.INNS_AND_CATHEDRALS
-                || exp == Expansion.FLIER) {
+                || exp == Expansion.FLIER
+                || exp == Expansion.RUSSIAN_PROMOS) {
             expansionPanel.add(chbox, "gaptop 5");
         } else {
             expansionPanel.add(chbox, "");
         }
-        JLabel expansionSize = new JLabel(expSize + "");
+        JLabel expansionSize = new ThemedJLabel(expSize + "");
         expansionSize.setForeground(Color.GRAY);
         expansionPanel.add(expansionSize, "wrap");
         expansionComponents.put(exp, new JComponent[] { chbox, expansionSize });
@@ -474,7 +489,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createRuleCheckbox(final CustomRule rule,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(rule.getLabel(), game.getBooleanValue(rule));
+        JCheckBox chbox = new ThemedJCheckBox(rule.getLabel(), game.getBooleanValue(rule));
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
@@ -491,7 +506,7 @@ public class CreateGamePanel extends JPanel {
 
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
-        JCheckBox chbox = new JCheckBox(exp.toString(), game.hasExpansion(exp));
+        JCheckBox chbox = new ThemedJCheckBox(exp.toString(), game.hasExpansion(exp));
         if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {

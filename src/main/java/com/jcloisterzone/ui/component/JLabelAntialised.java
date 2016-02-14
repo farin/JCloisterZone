@@ -6,7 +6,9 @@ import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
 
-public class JLabelAntialised extends JLabel {
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+
+public class JLabelAntialised extends ThemedJLabel {
 
 	private static final long serialVersionUID = -619469286371707527L;
 

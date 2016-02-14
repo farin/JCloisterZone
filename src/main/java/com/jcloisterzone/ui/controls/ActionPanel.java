@@ -208,7 +208,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             return;
         }
 
-        g2.setColor(ControlPanel.PLAYER_BG_COLOR);
+        g2.setColor(client.getTheme().getPlayerBoxBg());
         g2.fillRoundRect(0, LINE_Y, getWidth()+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 
         int x = LEFT_MARGIN;

@@ -1,5 +1,14 @@
 # Version history
 
+## 3.4.2
+*2015-11-21*
+
+* Russian Promos "expansion"
+* dark theme (there is definitely place for many improvements, especially in create game view)
+* fixed: Impossible to undo Goldmine tile placement
+* fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
+* fixed BB.CFR.b tile definition - another missing city-farm link
+
 ## 3.4.1
 *2015-10-31*
 

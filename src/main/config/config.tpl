@@ -9,6 +9,7 @@ locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
 ai_place_tile_delay: ${ai_place_tile_delay} # miliseconds to wait before computer player place tile
+theme: ${theme}
 
 beep_alert: ${beep_alert}
 confirm: ${confirm}
@@ -43,6 +44,7 @@ plugins: ${plugins}
 #   KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT,
 #   GQ11, CULT, TUNNEL, CORN_CIRCLES, FESTIVAL, PHANTOM, WIND_ROSE,
 #   GERMAN_MONASTERIES, FLIER, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II, LITTLE_BUILDINGS
+#   RUSSIAN_PROMOS
 #
 # possible rules:
 #   RANDOM_SEATING_ORDER,

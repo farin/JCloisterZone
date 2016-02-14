@@ -66,6 +66,7 @@ import com.jcloisterzone.ui.gtk.MenuFix;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
+import com.jcloisterzone.ui.theme.Theme;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.ui.view.UiView;
@@ -88,6 +89,7 @@ public class Client extends JFrame {
     private final List<Plugin> plugins;
 
     private UiView view;
+    private Theme theme;
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
@@ -112,7 +114,6 @@ public class Client extends JFrame {
     public static Client getInstance() {
         return instance;
     }
-
 
     public boolean mountView(UiView view) {
         return mountView(view, null);
@@ -165,6 +166,14 @@ public class Client extends JFrame {
     public void init() {
         setLocale(config.getLocaleObject());
 
+        if ("dark".equalsIgnoreCase(config.getTheme())) {
+            theme = Theme.DARK;
+        } else {
+            theme = Theme.LIGHT;
+        }
+
+        config.setDarkTheme(theme.isDark());
+
         resetWindowIcon();
 
         try {
@@ -173,6 +182,7 @@ public class Client extends JFrame {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
+        theme.setUiMangerDefaults();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -226,6 +236,10 @@ public class Client extends JFrame {
 
     void resetWindowIcon() {
         this.setIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
     public Config getConfig() {
@@ -479,7 +493,7 @@ public class Client extends JFrame {
 
     public void showAboutDialog() {
         if (aboutDialog == null) {
-            aboutDialog = new AboutDialog(config.getOrigin());
+            aboutDialog = new AboutDialog(this, config.getOrigin());
             aboutDialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {

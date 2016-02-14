@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -35,7 +34,8 @@ public class TileLayer extends AbstractGridLayer {
     public void paint(Graphics2D g2) {
         //TODO nice shadow
         if (!getClient().getGridPanel().isLayerVisible(AbstractTilePlacementLayer.class)) {
-            g2.setColor(Color.WHITE);
+
+            g2.setColor(getClient().getTheme().getTileBorder());
             int xSize = getTileWidth(),
                 ySize = getTileHeight(),
                 thickness = xSize / 11;

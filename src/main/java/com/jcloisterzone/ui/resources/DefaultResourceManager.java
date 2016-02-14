@@ -23,50 +23,49 @@ import com.jcloisterzone.ui.ImmutablePoint;
 
 public class DefaultResourceManager implements ResourceManager {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final ImageLoader imgLoader;
+    private final ImageLoader imgLoader;
 
-	public DefaultResourceManager() {
-		ImageLoader imgLoader = null;
-		try {
-			URL defaults = getClass().getClassLoader().getResource("defaults/").toURI().toURL();
-			URLClassLoader loader = new URLClassLoader(new URL[] { defaults });
-			imgLoader = new ImageLoader(loader);
-		} catch (URISyntaxException | MalformedURLException e) {
-			//should never happen
-			logger.error(e.getMessage(), e);
-		}
-		this.imgLoader = imgLoader;
-	}
+    public DefaultResourceManager() {
+        ImageLoader imgLoader = null;
+        try {
+            URL defaults = getClass().getClassLoader().getResource("defaults/").toURI().toURL();
+            URLClassLoader loader = new URLClassLoader(new URL[] { defaults });
+            imgLoader = new ImageLoader(loader);
+        } catch (URISyntaxException | MalformedURLException e) {
+            //should never happen
+            logger.error(e.getMessage(), e);
+        }
+        this.imgLoader = imgLoader;
+    }
+
 
     @Override
     public TileImage getTileImage(Tile tile) {
-        //return (new TileImageFactory()).getTileImage(tile);
         return null;
+        //return (new TileImageFactory()).getTileImage(tile);
     }
 
     @Override
     public TileImage getTileImage(Tile tile, Rotation rot) {
-        //return (new TileImageFactory()).getTileImage(tile);
         return null;
     }
 
-
     @Override
     public TileImage getAbbeyImage(Rotation rot) {
-        //return (new TileImageFactory()).getAbbeyImage();
         return null;
+        //return (new TileImageFactory()).getAbbeyImage();
     }
 
     @Override
     public Image getImage(String path) {
-    	return imgLoader.getImage(path);
+        return imgLoader.getImage(path);
     }
 
     @Override
     public Image getLayeredImage(LayeredImageDescriptor lid) {
-    	return imgLoader.getLayeredImage(lid);
+        return imgLoader.getLayeredImage(lid);
     }
 
     private ImmutablePoint getBarnPlacement(Location loc) {

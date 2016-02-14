@@ -40,6 +40,7 @@ public class ConfigLoader {
     public static final int DEFAULT_PORT = 37447;
     public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
     public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
+    public static final String DEFAULT_THEME = "light";
     public static final int DEFAULT_SCREENSHOT_SCALE = 120;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
 
@@ -139,6 +140,7 @@ public class ConfigLoader {
         config.setPort(DEFAULT_PORT);
         config.setScore_display_duration(DEFAULT_SCORE_DISPLAY_DURATION);
         config.setAi_place_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
+        config.setTheme(DEFAULT_THEME);
         config.setClient_name("");
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
         config.setClient_id(KeyUtils.createRandomId());
@@ -148,11 +150,11 @@ public class ConfigLoader {
         config.getConfirm().setRansom_payment(true);
         config.getPlayers().setColors(Lists.newArrayList(
             new ColorConfig("RED"),
-            new ColorConfig("#008ffe"),
+            new ColorConfig("#008ffe", null, "#5bb7fe"),
             new ColorConfig("#FFED00"),
-            new ColorConfig("#009900"),
-            new ColorConfig("BLACK"),
-            new ColorConfig("#812EFF")
+            new ColorConfig("#009900", null, "#37a800"),
+            new ColorConfig("BLACK", null, "WHITE"),
+            new ColorConfig("#812EFF", null, "#ba92f8")
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
@@ -176,6 +178,7 @@ public class ConfigLoader {
         model.put("locale", config.getLocale());
         model.put("score_display_duration", config.getScore_display_duration());
         model.put("ai_place_tile_delay", config.getAi_place_tile_delay());
+        model.put("theme", config.getTheme());
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
         model.put("play_online_host", config.getPlay_online_host());

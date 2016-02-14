@@ -1,5 +1,7 @@
 package com.jcloisterzone.bugreport;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +13,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
@@ -20,9 +21,10 @@ import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 
-public class BugReportPanel extends JPanel {
+public class BugReportPanel extends ThemedJPanel {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private ReportingTool reportingTool;
@@ -31,10 +33,10 @@ public class BugReportPanel extends JPanel {
     public BugReportPanel() {
         setLayout(new MigLayout("insets dialog, gapy unrel", "[grow]", "[][][grow,fill][][]"));
 
-        JLabel headerLabel = new JLabel(_("<html>Bug report tool pack saved game, internal game log and system information to simplify debugging process.</html>"));
+        JLabel headerLabel = new ThemedJLabel(_("<html>Bug report tool pack saved game, internal game log and system information to simplify debugging process.</html>"));
         add(headerLabel, "cell 0 0");
 
-        JLabel describeLabel = new JLabel(_("Please describe bug..."));
+        JLabel describeLabel = new ThemedJLabel(_("Please describe bug..."));
         add(describeLabel, "cell 0 1,grow");
 
         final JTextArea textArea = new JTextArea();
@@ -44,12 +46,13 @@ public class BugReportPanel extends JPanel {
         JButton downloadButton = new JButton("Download report");
         downloadButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 selectFile(textArea.getText());
             }
         });
 
-        JLabel downloadLabel = new JLabel(_("...then download report archive and send via email to farin@farin.cz"));
+        JLabel downloadLabel = new ThemedJLabel(_("...then download report archive and send via email to farin@farin.cz"));
         add(downloadLabel, "cell 0 3");
         add(downloadButton, "cell 0 4");
     }

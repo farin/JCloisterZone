@@ -90,8 +90,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     @Override
     public void show(Container pane, Object ctx) {
         mainPanel = new MainPanel(client, this, chatPanel);
-        //DARK
-        //mainPanel.setBackground(new Color(40, 44, 52));
+        mainPanel.setBackground(client.getTheme().getMainBg());
 
         pane.add(mainPanel);
 
@@ -327,6 +326,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             if (result) e.consume();
             return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
+        	e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
             return dispatchKeyTyped(e);
         }
         return false;

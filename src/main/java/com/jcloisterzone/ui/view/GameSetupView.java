@@ -75,6 +75,7 @@ public class GameSetupView extends AbstractUiView {
 
     private void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {
         createGamePanel = new CreateGamePanel(client, gc, mutableSlots, slots);
+        createGamePanel.setBackground(client.getTheme().getMainBg());
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new MigLayout("align 50% 50%", "[]", "[]")); //to have centered inner panel
         envelope.add(createGamePanel, "grow");
@@ -88,8 +89,7 @@ public class GameSetupView extends AbstractUiView {
         chatColumn.setPreferredSize(new Dimension(250, panel.getHeight()));
         panel.add(chatColumn, BorderLayout.WEST);
 
-        chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(game.getName()), "cell 0 0, grow");
-
+        chatColumn.add(connectedClientsPanel = new ConnectedClientsPanel(client, game.getName()), "cell 0 0, grow");
 
         chatPanel = new GameChatPanel(client, game);
         chatColumn.add(chatPanel, "cell 0 1, grow");
@@ -147,7 +147,7 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Override
-	public void onWebsocketClose(int code, String reason, boolean remote) {
-		client.mountView(new StartView(client));
-	}
+    public void onWebsocketClose(int code, String reason, boolean remote) {
+        client.mountView(new StartView(client));
+    }
 }

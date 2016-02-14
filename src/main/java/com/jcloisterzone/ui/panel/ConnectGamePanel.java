@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +12,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -22,12 +23,12 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.StartView;
 
-import static com.jcloisterzone.ui.I18nUtils._;
 
-
-public class ConnectGamePanel extends JPanel {
+public class ConnectGamePanel extends ThemedJPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -59,14 +60,16 @@ public class ConnectGamePanel extends JPanel {
             }
         };
 
-        setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        if (!client.getTheme().isDark()) {
+        	setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
 
         setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
 
-        JLabel helpLabel = new JLabel("Enter remote host address.");
+        JLabel helpLabel = new ThemedJLabel("Enter remote host address.");
         add(helpLabel, "cell 0 0,spanx 3");
 
-        JLabel hostLabel = new JLabel(_("Host"));
+        JLabel hostLabel = new ThemedJLabel(_("Host"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
 
         String[] hostPost = getDefaultHostPort();
@@ -77,7 +80,7 @@ public class ConnectGamePanel extends JPanel {
         hostField.setColumns(10);
         hostField.setText(hostPost[0]);
 
-        JLabel portLabel = new JLabel(_("Port"));
+        JLabel portLabel = new ThemedJLabel(_("Port"));
         add(portLabel, "cell 0 2,alignx left, gaptop 5");
 
         portField = new JTextField();
@@ -99,7 +102,7 @@ public class ConnectGamePanel extends JPanel {
 		});
         add(btnBack, "cell 2 3");
 
-        message = new JLabel("");
+        message = new ThemedJLabel("");
         message.setForeground(Color.BLACK);
         add(message, "cell 1 4, spanx 2, height 20");
     }

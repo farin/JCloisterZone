@@ -66,6 +66,11 @@ public abstract class Phase implements RmiProxy {
     }
 
     public void enter() { }
+    /** enter caused eg by undo, can ommit some parts
+     */
+    public void reenter() {
+        enter();
+    }
 
     /**
      * Method is invoked on active phase when user buy back inprisoned follower

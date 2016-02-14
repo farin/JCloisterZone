@@ -1,7 +1,6 @@
 package com.jcloisterzone;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -37,8 +36,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
-
-import static com.jcloisterzone.ui.I18nUtils._;
+import com.jcloisterzone.game.capability.YagaCapability;
 
 @SuppressWarnings("unchecked")
 public enum Expansion {
@@ -100,7 +98,7 @@ public enum Expansion {
     //promo/one tile expansions
     SCHOOL("SC", _("The School"), false),
     LA_PORXADA("PX", _("La Porxada"), false),
-    RUSSIAN_PROMOS("RP", _("Russian Promos"), false),
+    RUSSIAN_PROMOS("RP", _("Russian Promos"), new Class[] { YagaCapability.class }),
     DARMSTADT_PROMO("DP", _("Darmstadt Promo"), false);
 
     String code;
