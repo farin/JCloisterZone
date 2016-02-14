@@ -31,7 +31,9 @@ public enum CustomRule {
 
     BULDINGS_DIFFERENT_VALUE(Expansion.LITTLE_BUILDINGS, Boolean.class, _("Add 3/2/1 points for tower/house/shed.")),
 
-    CLOCK_PLAYER_TIME(null, Integer.class, null);
+    CLOCK_PLAYER_TIME(null, Integer.class, null),
+
+    TABLETOP_MODE(null, Boolean.class, _("Tabletop mode"));
 
 
     String label;

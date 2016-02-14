@@ -24,6 +24,7 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
         this.action = action;
         setActive(active);
         setAvailablePositions(action == null ? null : action.getOptions());
+        setOccupiedPositions(action == null ? null : action.getOccupiedPositions());
     }
 
     @Override

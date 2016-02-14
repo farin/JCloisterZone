@@ -39,6 +39,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         } else {
         	action.setForwardBackwardDelegate(this);
             setAvailablePositions(action.groupByPosition().keySet());
+            setOccupiedPositions(action.getOccupiedPositions());
         };
     }
 
@@ -71,7 +72,9 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         if (allowedRotations.contains(previewRotation)) {
             allowedRotation = true;
         } else {
-            if (allowedRotations.size() == 1) {
+            if (!playersAid) {
+            	allowedRotation = false;
+            } else if (allowedRotations.size() == 1) {
                 previewRotation = allowedRotations.iterator().next();
                 allowedRotation = true;
             } else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
@@ -96,7 +99,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     private void rotate(Rotation spin) {
     	Rotation current = action.getTileRotation();
     	Rotation next = current.add(spin);
-    	if (getPreviewPosition() != null) {
+    	if (playersAid && getPreviewPosition() != null) {
     		Set<Rotation> rotations = action.getRotations(getPreviewPosition());
     		if (!rotations.isEmpty()) {
 	    		if (rotations.size() == 1) {

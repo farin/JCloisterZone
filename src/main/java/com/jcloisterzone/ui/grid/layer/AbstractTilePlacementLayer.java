@@ -6,6 +6,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.jcloisterzone.board.Position;
@@ -19,7 +20,9 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     protected static final Composite DISALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
 
     private boolean active;
+    protected boolean playersAid;
     private Set<Position> availablePositions;
+    private Set<Position> occupiedPositions;
 
     private Position previewPosition;
     private Image previewIcon;
@@ -32,6 +35,10 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     public void setAvailablePositions(Set<Position> availablePositions) {
         this.availablePositions = availablePositions;
     }
+    
+    void setOccupiedPositions(Set<Position> occupiedPositions) {
+    	this.occupiedPositions = occupiedPositions;
+    }
 
     public Position getPreviewPosition() {
         return previewPosition;
@@ -43,6 +50,10 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setPlayersAid(boolean playersAid) {
+    	this.playersAid = playersAid;
     }
 
 
@@ -64,7 +75,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
         if (availablePositions == null) return;
         int borderSize = getSquareSize() - 4,
             shift = 2,
-            thickness = borderSize/14;
+            thickness = playersAid ? borderSize/14 : 0;
 
         g2.setColor(getClient().getTheme().getTilePlacementColor());
         for (Position p : availablePositions) {
@@ -89,7 +100,7 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
 
     @Override
     public void squareEntered(MouseEvent e, Position p) {
-        if (availablePositions.contains(p)) {
+        if ((!playersAid && !occupiedPositions.contains(p)) || availablePositions.contains(p)) {
             previewPosition = p;
             gridPanel.repaint();
         }

@@ -30,6 +30,7 @@ public class Board {
     protected final Map<Position, EdgePattern> availMoves = new HashMap<>();
     protected final Map<Position, Set<Rotation>> currentAvailMoves = new HashMap<>();
     protected final Set<Position> holes = new HashSet<>();
+    protected final Set<Position> occupied = new HashSet<>();
 
     private int maxX, minX, maxY, minY;
 
@@ -84,6 +85,10 @@ public class Board {
         return availMoves.get(pos);
     }
 
+    public Set<Position> getOccupied() {
+        return occupied;
+    }
+
 
     /**
      * Place tile on given position. Check for correct placement (check if neigbours
@@ -113,6 +118,7 @@ public class Board {
         }
 
         tiles.put(p, tile);
+        occupied.add(p);
         availMovesRemove(p);
 
         for (Position offset: Position.ADJACENT.values()) {

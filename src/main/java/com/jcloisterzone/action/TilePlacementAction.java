@@ -25,7 +25,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> implements 
 
     private final Tile tile;
     private ForwardBackwardListener forwardBackwardDelegate;
-
+    private Set<Position> occupiedPositions = null;
     private Rotation tileRotation = Rotation.R0;
 
     public TilePlacementAction(Tile tile) {
@@ -66,6 +66,14 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> implements 
             rotations.add(tp.getRotation());
         }
         return map;
+    }
+
+    public void setOccupiedPositions(Set<Position> occupiedPositions) {
+    	this.occupiedPositions = occupiedPositions;
+    }
+
+    public Set<Position> getOccupiedPositions() {
+    	return occupiedPositions;
     }
 
     public Set<Rotation> getRotations(Position p) {

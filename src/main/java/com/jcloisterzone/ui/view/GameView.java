@@ -31,6 +31,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.BugReportDialog;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
+import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.ui.Client;
@@ -103,6 +104,10 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer = new Timer(true);
         timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
 
+        boolean tabletopMode = game.getBooleanValue(CustomRule.TABLETOP_MODE);
+        mainPanel.setPlayersAid(!tabletopMode);
+        mainPanel.getControlPanel().setHideTilePackSize(tabletopMode);
+
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
             @Override
@@ -152,7 +157,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.FARM_HINTS)) {
-        	mainPanel.setShowFarmHints(true);
+        	mainPanel.setShowFarmHints(!tabletopMode);
         }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
@@ -162,7 +167,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
-        	getControlPanel().setShowProjectedPoints(true);
+        	getControlPanel().setShowProjectedPoints(!tabletopMode);
         }
         menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
@@ -195,10 +200,10 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
 
-        menu.setItemEnabled(MenuItem.FARM_HINTS, true);
-        menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
-        menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
+	    menu.setItemEnabled(MenuItem.FARM_HINTS, !tabletopMode);
+	    menu.setItemEnabled(MenuItem.PROJECTED_POINTS, !tabletopMode);
 
+        menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
         menu.setItemEnabled(MenuItem.REPORT_BUG, true);
         menu.setItemEnabled(MenuItem.GAME_SETUP, true);
         menu.setItemEnabled(MenuItem.TAKE_SCREENSHOT, true);

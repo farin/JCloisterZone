@@ -1,6 +1,7 @@
 package com.jcloisterzone.action;
 
 import java.awt.Image;
+import java.util.Set;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
@@ -10,7 +11,8 @@ import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public class AbbeyPlacementAction extends SelectTileAction {
-
+	private Set<Position> occupiedPositions = null;
+	
     public AbbeyPlacementAction() {
         super("abbeyplacement");
     }
@@ -23,6 +25,14 @@ public class AbbeyPlacementAction extends SelectTileAction {
     @Override
     public void perform(RmiProxy server, Position p) {
         server.placeTile(Rotation.R0, p);
+    }
+
+    public void setOccupiedPositions(Set<Position> occupiedPositions) {
+    	this.occupiedPositions = occupiedPositions;
+    }
+
+    public Set<Position> getOccupiedPositions() {
+    	return occupiedPositions;
     }
 
     @Override

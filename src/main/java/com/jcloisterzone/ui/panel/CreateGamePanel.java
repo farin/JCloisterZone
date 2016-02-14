@@ -80,6 +80,7 @@ public class CreateGamePanel extends ThemedJPanel {
     private JButton presetSave, presetDelete;
 
     private JButton leaveGameButton, startGameButton;
+    private JPanel modePanel;
     private JPanel expansionPanel;
     private JPanel rulesPanel;
     private JPanel header;
@@ -198,7 +199,20 @@ public class CreateGamePanel extends ThemedJPanel {
             playersPanel.add(randomSeating, "wrap, gaptop 10");
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
+//////////////////////////////////////////////////////////////////
+        modePanel = new ThemedJPanel();
+        if (!client.getTheme().isDark()) {
+            modePanel.setBorder(new TitledBorder(null, _("Modes"),
+                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        }
+        modePanel.setLayout(new MigLayout("", "[][][]", ""));
 
+        JCheckBox tabletopModeChbox = createRuleCheckbox(CustomRule.TABLETOP_MODE, mutableSlots);///////////////////////
+        modePanel.add(tabletopModeChbox);
+        ruleCheckboxes.put(CustomRule.TABLETOP_MODE, tabletopModeChbox);//////////////////////////////////////////////
+
+        playersPanel.add(modePanel, "wrap, gaptop 10, grow");        
+////////////////////////////////////////////////////////////////////////////////        
         playersPanel.add(createClockPanel(), "wrap, gaptop 10, grow");
 
         scrolled.add(playersPanel, "cell 0 0, grow");

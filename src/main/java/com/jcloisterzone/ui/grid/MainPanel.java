@@ -89,6 +89,11 @@ public class MainPanel extends JPanel {
         }
     }
 
+    public void setPlayersAid(boolean playersAid) {
+    	TilePlacementLayer layer = getGridPanel().findLayer(TilePlacementLayer.class);
+        layer.setPlayersAid(playersAid);
+    }
+
     public void started(Snapshot snapshot) {
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel, snapshot);

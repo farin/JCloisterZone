@@ -70,6 +70,7 @@ public class ControlPanel extends JPanel {
     public static final int LEFT_MARGIN = 15;
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
+    public static final int LAST_TILES_SHOWN = 12;
 
     private static final String PASS_LABEL = _("Skip");
     private static final String CONFIRMATION_LABEL = _("Continue");
@@ -83,6 +84,7 @@ public class ControlPanel extends JPanel {
     private boolean showConfirmRequest;
     private boolean canPass;
     private boolean showProjectedPoints, projectedPointsValid = true;
+    private boolean hideTilePackSize;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
@@ -232,7 +234,7 @@ public class ControlPanel extends JPanel {
             g2.setFont(FONT_PACK_SIZE);
             g2.setColor(client.getTheme().getHeaderFontColor());
             int packSize = tilePack.totalSize();
-            g2.drawString("" + packSize, w - 42, 24);
+            g2.drawString(hideTilePackSize && packSize > LAST_TILES_SHOWN ? ">" + LAST_TILES_SHOWN : "" + packSize, w - 42, 24);
         }
 
         boolean doRevalidate = false;
@@ -354,6 +356,10 @@ public class ControlPanel extends JPanel {
                 }
             }
         });
+    }
+    
+    public void setHideTilePackSize(boolean hideTilePackSize) {
+        this.hideTilePackSize = hideTilePackSize;
     }
 
     public void setShowConfirmRequest(boolean showConfirmRequest) {

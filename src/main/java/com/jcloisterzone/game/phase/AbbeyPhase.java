@@ -38,7 +38,10 @@ public class AbbeyPhase extends ServerAwarePhase {
         if (builderSecondTurnPart || !baazaarInProgress) {
             if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && !getBoard().getHoles().isEmpty()) {
                 toggleClock(getActivePlayer());
-                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
+                AbbeyPlacementAction action = new AbbeyPlacementAction();
+                action.addAll(getBoard().getHoles());
+                action.setOccupiedPositions(getBoard().getOccupied());
+                game.post(new SelectActionEvent(getActivePlayer(), action, true));
                 return;
             }
         }
@@ -52,6 +55,9 @@ public class AbbeyPhase extends ServerAwarePhase {
 
     @Override
     public void placeTile(Rotation rotation, Position position) {
+    	if (!getBoard().getHoles().contains(position)) {
+    		return;
+    	}
         abbeyCap.useAbbey(getActivePlayer());
 
         Tile nextTile = game.getTilePack().drawTile("inactive", Tile.ABBEY_TILE_ID);
