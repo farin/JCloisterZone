@@ -140,6 +140,7 @@ public class Client extends JFrame {
     }
 
     private void initWindowSize() {
+    	
         String windowSize = config.getDebug() == null ? null : config.getDebug().getWindow_size();
         if (System.getProperty("windowSize") != null) {
             windowSize = System.getProperty("windowSize");
@@ -147,7 +148,7 @@ public class Client extends JFrame {
         if (windowSize == null || "fullscreen".equals(windowSize)) {
             this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         } else if ("L".equals(windowSize) || "R".equals(windowSize)) {
-            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             int dw = gd.getDisplayMode().getWidth();
             int dh = gd.getDisplayMode().getHeight();
             setSize(dw/2, dh-40);
@@ -162,6 +163,7 @@ public class Client extends JFrame {
             }
         }
     }
+    
 
     public void init() {
         setLocale(config.getLocaleObject());
@@ -201,11 +203,10 @@ public class Client extends JFrame {
         initWindowSize();
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
-
         if (Bootstrap.isMac()) {
             enableFullScreenMode();
         }
-
+        
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent ev) {
@@ -214,8 +215,10 @@ public class Client extends JFrame {
                 return view.dispatchKeyEvent(ev);
             }
         });
-    }
 
+    }
+    
+   
     private void enableFullScreenMode() {
         String className = "com.apple.eawt.FullScreenUtilities";
         String methodName = "setWindowCanFullScreen";
