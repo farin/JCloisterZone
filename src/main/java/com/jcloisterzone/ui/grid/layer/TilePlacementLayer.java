@@ -69,12 +69,12 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
         previewRotation = realRotation;
 
         Set<Rotation> allowedRotations = action.getRotations(p);
-        if (allowedRotations.contains(previewRotation)) {
+        if (allowedRotations.isEmpty()) {
+        	allowedRotation = false;
+        } else if (allowedRotations.contains(previewRotation)) {
             allowedRotation = true;
         } else {
-            if (!playersAid) {
-            	allowedRotation = false;
-            } else if (allowedRotations.size() == 1) {
+        	if (allowedRotations.size() == 1) {
                 previewRotation = allowedRotations.iterator().next();
                 allowedRotation = true;
             } else if (action.getTile().getSymmetry() == TileSymmetry.S2) {
@@ -99,7 +99,7 @@ public class TilePlacementLayer extends AbstractTilePlacementLayer implements Ac
     private void rotate(Rotation spin) {
     	Rotation current = action.getTileRotation();
     	Rotation next = current.add(spin);
-    	if (playersAid && getPreviewPosition() != null) {
+    	if (getPreviewPosition() != null) {
     		Set<Rotation> rotations = action.getRotations(getPreviewPosition());
     		if (!rotations.isEmpty()) {
 	    		if (rotations.size() == 1) {

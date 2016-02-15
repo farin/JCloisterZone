@@ -104,9 +104,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer = new Timer(true);
         timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
 
-        boolean tabletopMode = game.getBooleanValue(CustomRule.TABLETOP_MODE);
-        mainPanel.setPlayersAid(!tabletopMode);
-        mainPanel.getControlPanel().setHideTilePackSize(tabletopMode);
+        boolean puristMode = game.getBooleanValue(CustomRule.PURIST_MODE);
+        mainPanel.setPlayersAid(!puristMode);
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
@@ -157,7 +156,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.FARM_HINTS)) {
-        	mainPanel.setShowFarmHints(!tabletopMode);
+        	mainPanel.setShowFarmHints(!puristMode);
         }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
@@ -167,7 +166,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
-        	getControlPanel().setShowProjectedPoints(!tabletopMode);
+        	getControlPanel().setShowProjectedPoints(!puristMode);
         }
         menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
@@ -200,8 +199,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
 
-	    menu.setItemEnabled(MenuItem.FARM_HINTS, !tabletopMode);
-	    menu.setItemEnabled(MenuItem.PROJECTED_POINTS, !tabletopMode);
+	    menu.setItemEnabled(MenuItem.FARM_HINTS, !puristMode);
+	    menu.setItemEnabled(MenuItem.PROJECTED_POINTS, !puristMode);
 
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
         menu.setItemEnabled(MenuItem.REPORT_BUG, true);

@@ -33,7 +33,7 @@ public enum CustomRule {
 
     CLOCK_PLAYER_TIME(null, Integer.class, null),
 
-    TABLETOP_MODE(null, Boolean.class, _("Tabletop mode"));
+    PURIST_MODE(null, Boolean.class, _("Purist mode"));
 
 
     String label;

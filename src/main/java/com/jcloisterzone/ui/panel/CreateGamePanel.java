@@ -199,7 +199,7 @@ public class CreateGamePanel extends ThemedJPanel {
             playersPanel.add(randomSeating, "wrap, gaptop 10");
             ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
         }
-//////////////////////////////////////////////////////////////////
+
         modePanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
             modePanel.setBorder(new TitledBorder(null, _("Modes"),
@@ -207,12 +207,12 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         modePanel.setLayout(new MigLayout("", "[][][]", ""));
 
-        JCheckBox tabletopModeChbox = createRuleCheckbox(CustomRule.TABLETOP_MODE, mutableSlots);///////////////////////
-        modePanel.add(tabletopModeChbox);
-        ruleCheckboxes.put(CustomRule.TABLETOP_MODE, tabletopModeChbox);//////////////////////////////////////////////
+        JCheckBox puristModeChbox = createRuleCheckbox(CustomRule.PURIST_MODE, mutableSlots);
+        modePanel.add(puristModeChbox);
+        ruleCheckboxes.put(CustomRule.PURIST_MODE, puristModeChbox);
 
         playersPanel.add(modePanel, "wrap, gaptop 10, grow");        
-////////////////////////////////////////////////////////////////////////////////        
+      
         playersPanel.add(createClockPanel(), "wrap, gaptop 10, grow");
 
         scrolled.add(playersPanel, "cell 0 0, grow");
