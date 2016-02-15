@@ -215,6 +215,8 @@ public class Client extends JFrame {
                 return view.dispatchKeyEvent(ev);
             }
         });
+        
+        
 
     }
     

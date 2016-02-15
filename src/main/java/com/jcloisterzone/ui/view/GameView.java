@@ -322,7 +322,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                     mainPanel.getGridPanel().backward();
                 }
                 break;
-            case KeyEvent.VK_0:
+            case KeyEvent.VK_F11:
             	if (!isFullScreen) {
             		myDevice.setFullScreenWindow(client);
             		isFullScreen = true;
