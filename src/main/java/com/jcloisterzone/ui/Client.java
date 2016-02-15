@@ -90,6 +90,7 @@ public class Client extends JFrame {
 
     private UiView view;
     private Theme theme;
+    private boolean isFullScreen = false;
 
     //TODO move to GameView
     private DiscardedTilesDialog discardedTilesDialog;
@@ -212,7 +213,33 @@ public class Client extends JFrame {
             public boolean dispatchKeyEvent(KeyEvent ev) {
                 if (!Client.this.isActive()) return false; //AWT method on window (it not check if player is active)
                 if (view == null) return false;
-                return view.dispatchKeyEvent(ev);
+                GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                switch (ev.getKeyCode()) {
+	                case KeyEvent.VK_F11:
+	                	if (!isFullScreen) {
+	                		myDevice.setFullScreenWindow(Client.this);
+	                		isFullScreen = true;
+	                		setVisible(false);
+	                    	setVisible(true);
+	                	}
+	                	
+	                	//workaround for mac osx there was bug where keybindings dissapear if it wasn't called
+	                	//http://stackoverflow.com/questions/14317352/bug-java-swing-key-bindings-lose-function-with-jdk-7-in-osx-with-awt-setfullscr
+	                	
+	                	return true;
+	                case KeyEvent.VK_ESCAPE: 
+	                	if (isFullScreen) {
+	                		myDevice.setFullScreenWindow(null);
+	                		isFullScreen = false;
+	                		setVisible(false);
+	                    	setVisible(true);
+	                	}
+	                	return true;
+                		
+                	default:
+                		return view.dispatchKeyEvent(ev);
+                }
+                
             }
         });
         

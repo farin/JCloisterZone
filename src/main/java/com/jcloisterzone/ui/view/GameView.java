@@ -64,7 +64,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     private Timer timer;
     boolean repeatLeft, repeatRight, repeatUp, repeatDown;
     boolean repeatZoomIn, repeatZoomOut;
-    boolean isFullScreen = false;
+    
 
 
     public GameView(Client client, GameController gc) {
@@ -322,27 +322,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                     mainPanel.getGridPanel().backward();
                 }
                 break;
-            case KeyEvent.VK_F11:
-            	if (!isFullScreen) {
-            		myDevice.setFullScreenWindow(client);
-            		isFullScreen = true;
-            		client.setVisible(false);
-                	client.setVisible(true);
-            	}
-            	
-            	//workaround for mac osx there was bug where keybindings dissapear if it wasn't called
-            	//http://stackoverflow.com/questions/14317352/bug-java-swing-key-bindings-lose-function-with-jdk-7-in-osx-with-awt-setfullscr
-            	
-            	return true;
-            case KeyEvent.VK_ESCAPE: 
-            	if (isFullScreen) {
-            		myDevice.setFullScreenWindow(null);
-            		isFullScreen = false;
-            		client.setVisible(false);
-                	client.setVisible(true);
-            	}
-            	return true;
-            		
+            
             default:
                 return dispatchReptable(e, true);
             }
