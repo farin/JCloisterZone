@@ -207,6 +207,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
 //		gp.profile(" > create buffer");
 
+        getMouseRegions().clear();
+
         drawDelimiter(DELIMITER_Y);
 
         g2.setFont(FONT_POINTS);
@@ -274,7 +276,6 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
         if (towerCap != null) {
             drawMeepleBox(null, "towerpiece", towerCap.getTowerPieces(player), true);
-            getMouseRegions().clear();
         }
 
         if (bridgeCap != null) {
