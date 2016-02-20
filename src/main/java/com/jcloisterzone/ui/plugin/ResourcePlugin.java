@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -50,7 +51,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
-    private Insets imageOffset = new Insets(49, 0, 0, 0); //TODO load from xml
+    private Insets imageOffset =  new Insets(0, 0, 0, 0);
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
@@ -85,13 +86,22 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             supportedExpansions.add(exp.getCode());
         }
 
-//        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
-//        if (tiles != null) {
-//            String ext = XMLUtils.childValue(tiles, "image-type");
-//            if (ext != null) {
-//                tileImagesExt = "." + ext.trim();
-//            }
-//        }
+        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
+        if (tiles != null) {
+            String value = XMLUtils.childValue(tiles, "image-offset");
+            if (value != null) {
+                String[] tokens = value.split(",");
+                if (tokens.length != 4) {
+                    throw new Exception("Invalid value for image-offset " + value);
+                }
+                imageOffset = new Insets(
+                   Integer.parseInt(tokens[0]),
+                   Integer.parseInt(tokens[1]),
+                   Integer.parseInt(tokens[2]),
+                   Integer.parseInt(tokens[3])
+                );
+            }
+        }
     }
 
 
@@ -125,7 +135,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         fileName = baseName + "@" + rot.ordinal();
         img =  getImageLoader().getImage(fileName);
         if (img != null) {
-        	return new TileImage(img, imageOffset);
+            return new TileImage(img, imageOffset);
         }
         // if not found, load generic one and rotate manually
         fileName = baseName;
@@ -149,12 +159,12 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     @Override
     public Image getImage(String path) {
-    	return getImageLoader().getImage(path);
+        return getImageLoader().getImage(path);
     }
 
     @Override
     public Image getLayeredImage(LayeredImageDescriptor lid) {
-    	return getImageLoader().getLayeredImage(lid);
+        return getImageLoader().getLayeredImage(lid);
     }
 
     @Override

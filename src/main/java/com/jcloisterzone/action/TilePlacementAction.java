@@ -3,6 +3,7 @@ package com.jcloisterzone.action;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public class TilePlacementAction extends PlayerAction<TilePlacement> implements ForwardBackwardListener {
@@ -80,14 +82,18 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> implements 
 
     @Override
     public Image getImage(Player player, boolean active) {
-        Image img =  client.getResourceManager().getTileImage(tile).getImage();
-        int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage bi = UiUtils.newTransparentImage(w, h);
+        TileImage tileImg = client.getResourceManager().getTileImage(tile);
+        Insets ins = tileImg.getOffset();
+        Image img =  tileImg.getImage();
+        int w = img.getWidth(null);
+        int h = img.getHeight(null);
+        BufferedImage bi = UiUtils.newTransparentImage(w+2, h+2);
         AffineTransform at = tileRotation.getAffineTransform(w, h);
+        at.concatenate(AffineTransform.getTranslateInstance(1, 1));
         Graphics2D ig = bi.createGraphics();
-        ig.drawImage(img, at, null);
         ig.setColor(Color.BLACK);
-        ig.drawRect(0, 0, w-1, h-1);
+        ig.drawRect(ins.left, ins.top, w+1-ins.left-ins.right, h+1-ins.top-ins.bottom);
+        ig.drawImage(img, at, null);
         return bi;
     }
 

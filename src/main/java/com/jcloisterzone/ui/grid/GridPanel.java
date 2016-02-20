@@ -122,7 +122,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private void updateTileSize(int baseWidth) {
         tileWidth = baseWidth;
         //tileHeight = baseWidth;
-        tileHeight = (int)(240.0/340.0 * baseWidth);
+        tileHeight = (int)(24.0/34.0 * baseWidth);
     }
 
 
