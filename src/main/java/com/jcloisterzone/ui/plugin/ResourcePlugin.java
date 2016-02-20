@@ -52,6 +52,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
     private Insets imageOffset =  new Insets(0, 0, 0, 0);
+    private int imageRatioX = 0;
+    private int imageRatioY = 0;
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
@@ -101,6 +103,16 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                    Integer.parseInt(tokens[3])
                 );
             }
+            value = XMLUtils.childValue(tiles, "image-ratio-x");
+            if (value != null) {
+                imageRatioX = Integer.parseInt(value);
+                if (imageRatioX == 0) imageRatioX = 1;
+            }
+            value = XMLUtils.childValue(tiles, "image-ratio-y");
+            if (value != null) {
+                imageRatioY = Integer.parseInt(value);
+                if (imageRatioY == 0) imageRatioY = 1;
+            }
         }
     }
 
@@ -109,6 +121,14 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (!isEnabled()) return false;
         String expCode = tileId.substring(0, 2);
         return supportedExpansions.contains(expCode);
+    }
+
+    public boolean isExpansionSupported(Expansion exp) {
+        return supportedExpansions.contains(exp.getCode());
+    }
+
+    public double getImageSizeRatio() {
+        return imageRatioY/(double)imageRatioX;
     }
 
     @Override

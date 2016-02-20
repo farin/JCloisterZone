@@ -58,7 +58,6 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-
         gc.register(this);
     }
 
@@ -74,7 +73,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onMeepleEvent(MeepleEvent ev) {
-	gridPanel.clearActionDecorations();
+    gridPanel.clearActionDecorations();
 
         if (ev.getFrom() != null) {
             meepleUndeployed(ev);
@@ -371,9 +370,9 @@ public class MeepleLayer extends AbstractGridLayer {
         public ImageData getScaledImageData(int squareSize) {
             if (scaledImageData == null) {
 
-        	int boxSize = (int) (getTileWidth() * sizeRatio); //TODO no resize - direct image resize???
+            int boxSize = (int) (getTileWidth() * sizeRatio * gridPanel.getMeepleScaleFactor()); //TODO no resize - direct image resize???
 
-        	ImmutablePoint scaledOffset = getScaledOffset(boxSize);
+            ImmutablePoint scaledOffset = getScaledOffset(boxSize);
 
                 int width = (int) (boxSize * xScaleFactor);
                 int height = (int) (heightWidthRatio * width * yScaleFactor);
@@ -420,16 +419,16 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     private class ImageData {
-    	public final ImmutablePoint offset;
+        public final ImmutablePoint offset;
         public final Image image;
         public final int boxSize;
 
-    	public ImageData(Image image, ImmutablePoint offset, int boxSize) {
-    	    super();
-    	    this.image = image;
-    	    this.offset = offset;
-    	    this.boxSize = boxSize;
-    	}
+        public ImageData(Image image, ImmutablePoint offset, int boxSize) {
+            super();
+            this.image = image;
+            this.offset = offset;
+            this.boxSize = boxSize;
+        }
     }
 
     //TODO better use affine transform while drawing

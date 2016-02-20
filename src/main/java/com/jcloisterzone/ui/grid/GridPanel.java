@@ -28,6 +28,7 @@ import net.miginfocom.swing.MigLayout;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
@@ -45,6 +46,8 @@ import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.view.GameView;
 
 public class GridPanel extends JPanel implements ForwardBackwardListener {
@@ -69,6 +72,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private int left, right, top, bottom;
     private int tileWidth, tileHeight;
     private Rotation boardRotation = Rotation.R0;
+    private double meepleScaleFactor = 1.0;
 
     //focus
     private int offsetX, offsetY;
@@ -97,7 +101,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         this.chatPanel = networkGame ? chatPanel : null;
 
-        updateTileSize(INITIAL_TILE_WIDTH);
+        ResourcePlugin rp = getBaseExpansionResourcePlugin();
+        if (rp != null) {
+            //sqrt -> geometric average between width and height
+            meepleScaleFactor = Math.sqrt(rp.getImageSizeRatio());
+        }
+
+        updateTileSize((int)(INITIAL_TILE_WIDTH / rp.getImageSizeRatio()));
 
 
         if (snapshot != null) {
@@ -119,10 +129,27 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
     }
 
+    public double getMeepleScaleFactor() {
+        return meepleScaleFactor;
+    }
+
+    private ResourcePlugin getBaseExpansionResourcePlugin() {
+        for (Plugin plugin : client.getPlugins()) {
+            if (!plugin.isEnabled()) continue;
+            if (!(plugin instanceof ResourcePlugin)) continue;
+            ResourcePlugin rp = (ResourcePlugin) plugin;
+            if (rp.isExpansionSupported(Expansion.BASIC)) {
+                return rp;
+            }
+        }
+        return null;
+    }
+
     private void updateTileSize(int baseWidth) {
+        ResourcePlugin rp = getBaseExpansionResourcePlugin();
+        double ratio = rp == null ? 1.0 : rp.getImageSizeRatio();
         tileWidth = baseWidth;
-        //tileHeight = baseWidth;
-        tileHeight = (int)(24.0/34.0 * baseWidth);
+        tileHeight = (int)(ratio * baseWidth);
     }
 
 
