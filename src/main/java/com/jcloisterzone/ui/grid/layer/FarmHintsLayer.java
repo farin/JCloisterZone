@@ -94,7 +94,9 @@ public class FarmHintsLayer extends AbstractGridLayer {
                 }
             }
             if (farmLocations.isEmpty()) return;
-            Map<Location, FeatureArea> tAreas = rm.getFeatureAreas(tile, FULL_SIZE, FULL_SIZE, farmLocations);
+            int w = gridPanel.getTileWidth();
+            int h = gridPanel.getTileHeight();
+            Map<Location, FeatureArea> tAreas = rm.getFeatureAreas(tile, FULL_SIZE, FULL_SIZE * h / w, farmLocations);
             areas.put(tile, tAreas);
             refreshHints();
         }

@@ -1,3 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shapes xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,32 962,65 917,97 855,132 792,155 705,175 627,180 532,182 450,180 375,170 327,160 295,155 222,132 150,107 95,75 45,42"/>
+        <apply allRotations="1">* N</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,8 955,35 930,50 912,70 880,95 835,135 800,165 747,197 707,227 665,252 607,277 550,307 485,335 420,372 375,400 320,432 255,475 202,520 150,565 90,625 47,677 27,707 0,707"/>
+        <apply allRotations="1">* NW</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,707 0,707"/>
+        <apply>* NWSE</apply>
+    </shape>
+
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,35 985,67 965,87 940,110 902,135 857,155 825,167 770,177 727,177 680,177 625,175 560,167 492,157 425,147 360,135 307,120 245,107 190,92 132,72 80,50 37,25"/>
+        <apply>BA.CC.2 N</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 35,32 72,70 107,117 137,157 157,212 212,380 215,415 215,507 210,587 195,617 172,647 120,680 52,707 0,707"/>
+        <apply>BA.CC.2 W</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 999,707 962,682 932,660 887,635 832,607 772,587 717,567 657,557 585,550 520,542 445,542 372,545 300,555 245,567 177,590 130,620 80,650 45,685 27,707 0,707"/>
+        <apply>BA.Ccc _N</apply>
+        <apply>BA.Ccc+ _N</apply>
+    </shape>
+
 </shapes>

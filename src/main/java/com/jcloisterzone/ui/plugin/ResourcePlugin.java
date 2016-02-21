@@ -281,8 +281,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
         } else {
-            double ratioX = width/(double)NORMALIZED_SIZE;
-            double ratioY = height/(double)NORMALIZED_SIZE;
+            double ratioX = width / (double)NORMALIZED_SIZE;
+            double ratioY = height / (double)NORMALIZED_SIZE / getImageSizeRatio();
             transform1 = AffineTransform.getScaleInstance(ratioX, ratioY);
         }
         //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
@@ -320,8 +320,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
         } else {
-            double ratioX = width/(double)NORMALIZED_SIZE;
-            double ratioY = height/(double)NORMALIZED_SIZE;
+            double ratioX = width / (double)NORMALIZED_SIZE;
+            double ratioY = height / (double)NORMALIZED_SIZE / getImageSizeRatio();
             transform1 = AffineTransform.getScaleInstance(ratioX,ratioY);
         }
         Area a = pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
@@ -368,7 +368,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
         FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, NORMALIZED_SIZE-1));
+            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, (int) (NORMALIZED_SIZE * getImageSizeRatio()) - 1));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();
