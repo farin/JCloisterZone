@@ -161,6 +161,11 @@ public abstract class Phase implements RmiProxy {
     }
 
     @Override
+    public void exchangePrisoners(Class<? extends Follower> meepleType) {
+         logger.error(Application.ILLEGAL_STATE_MSG, "exchangePrisoners");
+    }    
+
+    @Override
     public void deployBridge(Position pos, Location loc) {
         logger.error(Application.ILLEGAL_STATE_MSG, "deployBridge");
 

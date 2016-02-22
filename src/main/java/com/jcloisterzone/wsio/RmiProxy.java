@@ -29,6 +29,8 @@ public interface RmiProxy {
 
     public void takePrisoner(MeeplePointer mp);
     public void payRansom(Integer playerIndexToPay, Class<? extends Follower> meepleType);
+    public void exchangePrisoners(Class<? extends Follower> meepleType);
+    
 
     public void deployBridge(Position pos, Location loc); //TODO use FeaturePointer
     public void deployCastle(Position pos, Location loc); //TODO use FeaturePointer

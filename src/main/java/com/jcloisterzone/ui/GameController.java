@@ -28,6 +28,8 @@ import com.jcloisterzone.event.GameStateChangeEvent;
 import com.jcloisterzone.event.MageWitchSelectRemoval;
 import com.jcloisterzone.event.MeeplePrisonEvent;
 import com.jcloisterzone.event.PlayerTurnEvent;
+import com.jcloisterzone.event.PrisonerExchangedEvent;
+import com.jcloisterzone.event.SelectPrisonerToExchangeEvent;
 import com.jcloisterzone.event.RequestConfirmEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.event.SelectDragonMoveEvent;
@@ -39,11 +41,13 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.ControlPanel;
+import com.jcloisterzone.ui.controls.PlayerPanelImageCache;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.grid.BazaarPanel;
 import com.jcloisterzone.ui.grid.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.grid.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.GridPanel;
+import com.jcloisterzone.ui.grid.PrisonerExchangePanel;
 import com.jcloisterzone.ui.grid.SelectMageWitchRemovalPanel;
 import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -195,6 +199,11 @@ public class GameController extends EventProxyUiController<Game> implements Invo
 
     @Subscribe
     public void handleMeeplePrisonEvent(MeeplePrisonEvent ev) {
+        PrisonerExchangePanel panel = gameView.getGridPanel().getPrisonerExchangePanel();
+        if (panel != null){
+            panel.updateChoices();
+        }
+
         gameView.getGridPanel().repaint();
     }
 
@@ -268,6 +277,16 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         return panel;
     }
 
+    public PrisonerExchangePanel showPrisonerExchangePanel() {
+        PrisonerExchangePanel panel = gameView.getGridPanel().getPrisonerExchangePanel();
+        if (panel == null) {
+            panel = new PrisonerExchangePanel(client, gameView.getGameController(), new PlayerPanelImageCache(client, game));
+            gameView.getGridPanel().add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+            gameView.getGridPanel().setPrisonerExchangePanel(panel);
+        }
+        return panel;
+    }
+
     @Subscribe
     public void handleSelectBazaarTile(BazaarSelectTileEvent ev) {
         clearActions();
@@ -325,6 +344,22 @@ public class GameController extends EventProxyUiController<Game> implements Invo
         if (panel != null) {
             gameView.getGridPanel().remove(panel);
             gameView.getGridPanel().setBazaarPanel(null);
+        }
+    }
+
+    @Subscribe
+    public void handleSelectPrisonerToExchange(SelectPrisonerToExchangeEvent ev) {
+        clearActions();
+        showPrisonerExchangePanel();
+        gameView.getGridPanel().repaint();
+    }
+
+    @Subscribe
+    public void handlePrisonerExchangedEvent(PrisonerExchangedEvent ev) {
+        PrisonerExchangePanel panel = gameView.getGridPanel().getPrisonerExchangePanel();
+        if (panel != null) {
+            gameView.getGridPanel().remove(panel);
+            gameView.getGridPanel().setPrisonerExchangePanel(null);
         }
     }
 

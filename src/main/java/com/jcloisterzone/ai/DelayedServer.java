@@ -78,6 +78,10 @@ public class DelayedServer implements RmiProxy {
         server.payRansom(playerIndexToPay, meepleType);
     }
 
+    public void exchangePrisoners(Class<? extends Follower> meepleType) {
+        server.exchangePrisoners(meepleType);
+    }
+
     @Override
     public void deployBridge(Position pos, Location loc) {
         server.deployBridge(pos, loc);
