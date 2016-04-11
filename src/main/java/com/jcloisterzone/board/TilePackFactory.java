@@ -259,7 +259,8 @@ public class TilePackFactory {
     }
 
     public Game getGame() {
-        return game;
+        
+    	return game;
     }
 
 }

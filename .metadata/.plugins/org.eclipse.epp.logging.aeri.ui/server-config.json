@@ -1,0 +1,57 @@
+{
+  "version": "v1",
+  "title": "Eclipse.org Error Reporting Server",
+  "description": "Automated Error Reporting for eclipse.org",
+  "timestamp": 1460344172440,
+  "ttl": 20160,
+  "helpUrl": "https://wiki.eclipse.org/EPP/Logging",
+  "feedbackUrl": "https://docs.google.com/a/codetrails.com/forms/d/1wd9AzydLv_TMa7ZBXHO7zQIhZjZCJRNMed-6J4fVNsc/viewform",
+  "aboutUrl": "https://dev.eclipse.org/recommenders/community/confess/#/about",
+  "submitUrl": "https://dev.eclipse.org/recommenders/community/confess/0.6/reports/",
+  "maxReportSize": 5242880,
+  "problemsUrl": "https://www.eclipse.org/downloads/download.php?r\u003d1\u0026file\u003d/technology/epp/logging/problems.zip",
+  "problemsTtl": 20160,
+  "queryUrl": "https://dev.eclipse.org/recommenders/community/confess/0.6/query/",
+  "connectTimeout": 10000,
+  "socketTimeout": 100000,
+  "acceptedProducts": [
+    "org.eclipse.*"
+  ],
+  "acceptedPlugins": [
+    "org.eclipse.*",
+    "org.apache.log4j.*",
+    "com.codetrails.*"
+  ],
+  "acceptedPackages": [
+    "org.eclipse.*",
+    "org.apache.*",
+    "java.*",
+    "javax.*",
+    "javafx.*",
+    "sun.*",
+    "com.sun.*",
+    "com.codetrails.*",
+    "com.google.*",
+    "org.osgi.*",
+    "ch.qos.*",
+    "org.slf4j.*"
+  ],
+  "acceptOtherPackages": true,
+  "acceptUiFreezes": true,
+  "ignoredStatuses": [
+    "org.eclipse.equinox.p2.*::",
+    "org.eclipse.epp.mpc.ui:java.io.IOException:",
+    "org.eclipse.epp.mpc.ui:java.net.SocketTimeoutException:",
+    "org.eclipse.oomph.setup.core:$org.apache.http.ConnectionClosedException:",
+    "org.eclipse.ui::Conflicting handlers for*",
+    "org.eclipse.jface:java.io.IOException:Unable to resolve plug-in*",
+    "org.eclipse.core.runtime::Invalid input url*",
+    "org.eclipse.core.filesystem::Could not move*",
+    "org.eclipse.core.filesystem::Could not delete*",
+    "org.eclipse.pde.core::The current target platform contains errors*",
+    ":org.eclipse.equinox.security.storage.StorageException:",
+    ":org.eclipse.ecf.filetransfer.*:",
+    ":java.net.*:"
+  ],
+  "problemsZipLastDownloadTimestamp": 1460344184144
+}

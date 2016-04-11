@@ -85,6 +85,7 @@ public class Tile /*implements Cloneable*/ {
     }
 
     public Expansion getOrigin() {
+    
         return origin;
     }
 
@@ -273,6 +274,7 @@ public class Tile /*implements Cloneable*/ {
                 locations.add(f.getLocation());
             }
         }
+        
         return locations;
     }
 

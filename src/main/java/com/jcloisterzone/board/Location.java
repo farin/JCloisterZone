@@ -1,11 +1,15 @@
 package com.jcloisterzone.board;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
 
 
 /**
@@ -225,6 +229,7 @@ public class Location implements Serializable {
     @Override
     public String toString() {
         if (name != null) return name;
+        System.out.println(name);
         StringBuilder str = new StringBuilder();
         for (Location atom : FARM_SIDES) {
             if (intersect(atom) != null) {
@@ -261,6 +266,7 @@ public class Location implements Serializable {
             Location i = this.intersect(loc);
             if (i != null) {
                 result.add(i);
+	
             }
         }
         return result.toArray(new Location[result.size()]);
@@ -274,6 +280,7 @@ public class Location implements Serializable {
 				result.add(part);
 			}
     	}
+    	
     	return result.toArray(new Location[result.size()]);
     }
 

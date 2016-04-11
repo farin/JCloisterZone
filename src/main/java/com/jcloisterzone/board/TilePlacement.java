@@ -36,12 +36,15 @@ public class TilePlacement implements Comparable<TilePlacement> {
                 + ((position == null) ? 0 : position.hashCode());
         result = prime * result
                 + ((rotation == null) ? 0 : rotation.hashCode());
+        
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+    	
+        	
+    	if (this == obj)
             return true;
         if (obj == null)
             return false;
