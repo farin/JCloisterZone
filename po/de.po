@@ -157,17 +157,16 @@ msgstr "Die Windrosen"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "The German Monasteries"
-msgstr " Die Klöster"
+msgstr "Die Klöster"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Castles in Germany"
-msgstr ""
+msgstr "Burgen in Deutschland"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 #: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Halfings"
-msgstr ""
-
+msgstr "Halb so wild"
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The Flier"
 msgstr "Die Fluggeräte"
@@ -762,7 +761,7 @@ msgstr "JCloisterZone "
 #: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:49
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "Tile Distribution"
-msgstr ""
+msgstr "Kartenverteilung"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
@@ -793,40 +792,40 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:93
 msgid "Use system language"
-msgstr ""
+msgstr "Systemsprache verwenden"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:191
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:207
 msgid "To apply new language you must restart the application"
-msgstr ""
+msgstr "Um die neue Sprache zu übernehmen, bitte Applikation neustarten"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
 msgid "Theme"
-msgstr ""
+msgstr "Schema"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
 msgid "To apply new theme you must restart the application"
-msgstr ""
+msgstr "Um das neue Schema zu übernehmen, bitte Applikation neustarten"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
-msgstr ""
+msgstr "KI Verzögerung (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:241
 msgid "Score display duration (sec)"
-msgstr ""
+msgstr "Anzeigedauer Punkte (sek)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:344
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Interface"
-msgstr ""
+msgstr "Oberfläche"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:357
 msgid "Plugins"
@@ -990,19 +989,21 @@ msgstr "Überspringen"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Skip Abbey"
-msgstr ""
+msgstr "Abtei überspringen"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Cancel and place Abbey"
-msgstr ""
+msgstr "Abbrechen und Abtei setzen"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
 msgstr ""
+"Das ist dein letzter Zug. Wenn du diesen überspringst, dann bleibt deine "
+"Abtei nicht gesetzt."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Last chance to place the Abbey"
-msgstr ""
+msgstr "Letzte Möglichkeit die Abtei zu setzen"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
 msgid "Pay ransom"
