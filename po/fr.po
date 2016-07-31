@@ -816,7 +816,7 @@ msgstr "Thème"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
 msgid "To apply new theme you must restart the application"
-msgstr "Pour appliquer le nouveau thème, vous devez redémarrer l'application"
+msgstr "Pour appliquer le nouveau thème, vous devez redémarrer l''application"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
@@ -1004,7 +1004,7 @@ msgstr "Annuler et placer l''Abbaye"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
-msgstr "C'est vôtre dernier tour. Si vous passez, votre Abbaye restera non-placée."
+msgstr "C''est vôtre dernier tour. Si vous passez, votre Abbaye restera non-placée."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Last chance to place the Abbey"
