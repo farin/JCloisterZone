@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-21 13:58+0100\n"
-"PO-Revision-Date: 2015-10-22 13:09+0100\n"
-"Last-Translator: Fazer <fazer.sb@gmail.com>\n"
-"Language-Team: fr-team <LL@li.org>\n"
+"PO-Revision-Date: 2016-07-31 23:00+0100\n"
+"Last-Translator: TexGG <tex@grosist.fr>\n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +123,7 @@ msgstr "Le comte de Carcassonne"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Mini Expansion (GQ11)"
-msgstr "La Mini-Extension du magazine Games Quarterly"
+msgstr "La Mini-Extension du magazine Games Quarterly (n°11)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "The Cult"
@@ -159,16 +159,16 @@ msgstr "La rose des vents"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "The German Monasteries"
-msgstr "Les monastères Allemands"
+msgstr "Les monastères allemands"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Castles in Germany"
-msgstr ""
+msgstr "Châteaux en Allemagne"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 #: src/main/java/com/jcloisterzone/Expansion.java:87
 msgid "Halfings"
-msgstr ""
+msgstr "Halfelins"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The Flier"
@@ -208,7 +208,7 @@ msgstr "La porxada"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Russian Promos"
-msgstr ""
+msgstr "Promos Russes"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "Darmstadt Promo"
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
 "L''église permettant de faire échapper des partisans peut être placé de "
-"façon adjacente sur n''importe quelle tuile d''une ville assiégée "
+"façon adjacente sur n''importe quelle tuile d''une ville assiégée."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:22
 msgid "The Pig herd is present on the farm tile."
@@ -288,7 +288,7 @@ msgstr "Utiliser la règle du Tunnel pour les tunnels des autres extensions."
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:28
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
-"Pas denchères après le placement dune tuile bazar. Chaque joueur choisit "
+"Pas d''enchères après le placement d''une tuile bazar. Chaque joueur choisit "
 "juste une tuile."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:30
@@ -297,7 +297,7 @@ msgstr "Garder les églises de base dans le jeu."
 
 #: src/main/java/com/jcloisterzone/game/CustomRule.java:32
 msgid "Add 3/2/1 points for tower/house/shed."
-msgstr "Ajouter 3/2/1 points par tour/maison/hangar"
+msgstr "Ajouter 3/2/1 points par tour/maison/hangar."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:75
 msgid "Bazaar supply"
@@ -309,15 +309,15 @@ msgstr "Choisissez votre tuile."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:217
 msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>Choisir une tuile bonus et faire<br> la première enchère.</html>"
+msgstr "<html>Choisir une tuile bonus et faire<br/> la première enchère.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
 msgid "Raise bid or pass."
-msgstr "Enchérir ou passer"
+msgstr "Enchérir ou passer."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:226
 msgid "Buy or sell tile from latest bidder."
-msgstr "<html>Acheter ou vendre la tuile au dernier enchérisseur.</html>"
+msgstr "Acheter ou vendre la tuile au dernier enchérisseur."
 
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:231
 #: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:234
@@ -355,7 +355,7 @@ msgstr "Placer comme un moine"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:92
 msgid "How do you want to place follower on monastery?"
-msgstr "Comment voulez vous placer le partisan sur le monastère?"
+msgstr "Comment voulez vous placer le partisan sur le monastère ?"
 
 #: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:93
 msgid "Monastery"
@@ -410,7 +410,7 @@ msgid ""
 "Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
 msgstr ""
 "<html>Utiliser les touches <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> ou les "
-"flèches du clavier pour se déplacer sur la zone de jeu.<br>Cliquer avec la "
+"flèches du clavier pour se déplacer sur la zone de jeu.<br/>Cliquer avec la "
 "touche milieu de la souris pour centrer la zone de jeu. Zoomer en utilisant "
 "les touches <b>+</b> ou <b>-</b> ou en utilisant la molette de la souris.</"
 "html>"
@@ -429,7 +429,7 @@ msgid ""
 "select appropriate action.</html>"
 msgstr ""
 "<html>Quand la tuile est posée, utilisez la touche <b>Tab</b> ou le <b>clic-"
-"droit</b> de nouveau pour sélectionner laction appropriée.</html>"
+"droit</b> de nouveau pour sélectionner l''action appropriée.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
 msgid ""
@@ -437,7 +437,7 @@ msgid ""
 "no action.</html>"
 msgstr ""
 "<html>Sinon, vous pouvez passer avec la touche <b>Entrée</b> ou la barre "
-"d<b>espace</b> pour ne pas effectuer d''action.</html>"
+"d''<b>espace</b> pour ne pas effectuer d''action.</html>"
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
@@ -694,12 +694,12 @@ msgstr "Joueur distant"
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:160
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:188
 msgid "Computer player"
-msgstr "Joueur géré par lordinateur"
+msgstr "Joueur géré par l''ordinateur"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:163
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:191
 msgid "Remote computer player"
-msgstr "Joueur distant géré par lordinateur"
+msgstr "Joueur distant géré par l''ordinateur"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
 msgid "Open player slot"
@@ -740,7 +740,7 @@ msgstr "Enlever la partie"
 
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
 msgid "Do you want to remove game permanently?"
-msgstr "Voulez vous enlever la partie de façon permanente"
+msgstr "Voulez vous enlever la partie de façon permanente ?"
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
 #: src/main/java/com/jcloisterzone/ui/Client.java:626
@@ -749,7 +749,7 @@ msgstr "Connexion perdue"
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:275
 msgid "Reconnecting..."
-msgstr "Reconnexion"
+msgstr "Reconnexion..."
 
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:424
 msgid "Save game"
@@ -770,7 +770,7 @@ msgstr "JCloisterZone "
 #: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:49
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
 msgid "Tile Distribution"
-msgstr ""
+msgstr "Distribution de tuile"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
@@ -812,15 +812,15 @@ msgstr "Pour activer une nouvelle langue vous devez redémarrer l''application"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
 msgid "Theme"
-msgstr ""
+msgstr "Thème"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
 msgid "To apply new theme you must restart the application"
-msgstr ""
+msgstr "Pour appliquer le nouveau thème, vous devez redémarrer l''application"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
-msgstr "Délai de placement d''un joueurcgére par l''ordinateur (ms)"
+msgstr "Délai de placement d''un joueur gére par l''ordinateur (ms)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:241
 msgid "Score display duration (sec)"
@@ -980,7 +980,7 @@ msgid ""
 "upgrade both applications to same version."
 msgstr ""
 "La version du serveur JCloisterZone n''est pas compatible avec la version du "
-"client. Veuillez mettre les logiciels dans la même version"
+"client. Veuillez mettre les logiciels dans la même version."
 
 #: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:532
 msgid "Incompatible versions"
@@ -996,19 +996,19 @@ msgstr "Passer"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Skip Abbey"
-msgstr ""
+msgstr "Passer l''Abbaye"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
 msgid "Cancel and place Abbey"
-msgstr ""
+msgstr "Annuler et placer l''Abbaye"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
-msgstr ""
+msgstr "C''est vôtre dernier tour. Si vous passez, votre Abbaye restera non-placée."
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Last chance to place the Abbey"
-msgstr ""
+msgstr "Dernière chance de placer l''Abbaye"
 
 #: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:409
 msgid "Pay ransom"
@@ -1044,8 +1044,8 @@ msgid ""
 "other players?"
 msgstr ""
 "La partie n''est pas terminée. Voulez vous vraiment arrêter le jeu et "
-"déconnecter tous les autres joueurs"
+"déconnecter tous les autres joueurs ?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:302
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr "La partie n''est pas terminée. Voulez vous vraiment quitter le jeu."
+msgstr "La partie n''est pas terminée. Voulez vous vraiment quitter le jeu ?"
