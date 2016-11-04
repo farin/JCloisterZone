@@ -202,7 +202,7 @@ public class Client extends JFrame {
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
-        if (Bootstrap.isMac()) {
+        if (JCloisterZone.isMac()) {
             enableFullScreenMode();
         }
 

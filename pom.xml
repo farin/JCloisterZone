@@ -125,7 +125,7 @@
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>com.jcloisterzone.ui.Bootstrap</Main-Class>
+                                        <Main-Class>com.jcloisterzone.ui.JCloisterZone</Main-Class>
                                         <SplashScreen-Image>sysimages/jcloisterzone.png</SplashScreen-Image>
                                         <Class-Path>.</Class-Path>
                                     </manifestEntries>
