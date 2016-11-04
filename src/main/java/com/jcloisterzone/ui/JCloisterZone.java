@@ -32,7 +32,7 @@ import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.plugin.PluginType;
 
-public class Bootstrap  {
+public class JCloisterZone  {
 
     private Path getDataDirectory(String basePath, String dirName) {
         if (basePath == null || basePath.length() == 0) return null;
@@ -204,7 +204,7 @@ public class Bootstrap  {
     }
 
     public static void main(String[] args) {
-        (new Bootstrap()).run();
+        (new JCloisterZone()).run();
     }
 
     static class MacApplicationAdapter extends ApplicationAdapter {
