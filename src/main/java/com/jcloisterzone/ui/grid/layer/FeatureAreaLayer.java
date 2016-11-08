@@ -73,7 +73,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         if (action instanceof BridgeAction) {
             locMap = rm.getBridgeAreas(tile, sizeX, sizeY, locations);
         } else {
-            locMap =  rm.getFeatureAreas(tile, sizeX, sizeY, locations);
+            locMap = rm.getFeatureAreas(tile, sizeX, sizeY, locations);
         }
         return locationMapToPointers(p, locMap);
     }

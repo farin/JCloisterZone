@@ -26,5 +26,18 @@
         <apply>BA.Ccc _N</apply>
         <apply>BA.Ccc+ _N</apply>
     </shape>
+    
+    <shape> <!-- center -->
+        <svg:rect x="400" y="282" width="200" height="141"/>
+        <substract>BA.RRR</substract>
+        <substract>BA.RRRR</substract>
+        <substract>BA.CRRR</substract>
+        <substract>DG.CRRR</substract>
+        <substract>DG.RRR.d</substract>
+        <substract>DG.RRR.g</substract>
+        <substract>CA.RFR</substract>
+        <substract>CA.RR</substract>
+        <substract>CC.RRR</substract>
+    </shape>
 
 </shapes>

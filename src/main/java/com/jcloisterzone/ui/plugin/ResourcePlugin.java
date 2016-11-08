@@ -52,8 +52,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
     private Insets imageOffset =  new Insets(0, 0, 0, 0);
-    private int imageRatioX = 0;
-    private int imageRatioY = 0;
+    private int imageRatioX = 1;
+    private int imageRatioY = 1;
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
@@ -210,7 +210,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
         if (area == null) {
-            area  = defaultGeometry.getArea(tile, featureClass, loc);
+            area = adaptDefaultGeometry(defaultGeometry.getArea(tile, featureClass, loc));
         }
         if (area == null) {
             logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
@@ -224,7 +224,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
              p = pluginGeometry.getSubstractionArea(tile, farm),
              area = new Area();
 
-        if (d != null) area.add(d);
+        if (d != null) area.add(adaptDefaultGeometry(d));
         if (p != null) area.add(p);
         return area;
     }
@@ -233,6 +233,25 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (pluginGeometry.isFarmComplement(tile, loc)) return true;
         if (defaultGeometry.isFarmComplement(tile, loc)) return true;
         return false;
+    }
+    
+    private FeatureArea adaptDefaultGeometry(FeatureArea fa) {
+    	if (fa == null) return null;
+    	return new FeatureArea(
+    		adaptDefaultGeometry(fa.getTrackingArea()),
+    		adaptDefaultGeometry(fa.getDisplayArea()),
+    		fa.getzIndex()
+    	);    		
+    }
+    
+    private Area adaptDefaultGeometry(Area a) {
+    	if (a == null) return null;
+    	if (imageRatioX != imageRatioY) {
+    		return a.createTransformedArea(
+    			AffineTransform.getScaleInstance(1.0, getImageSizeRatio())
+    		);
+    	} 
+    	return a;
     }
 
     @Override
@@ -385,7 +404,4 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         return result;
     }
-
-
-
 }
