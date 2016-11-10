@@ -49,6 +49,7 @@ public class ThemeGeometry {
         }
     }
 
+    private final double imageSizeRatio;
     private final Map<String, String> aliases = new HashMap<>();
     private final Map<FeatureDescriptor, FeatureArea> areas = new HashMap<>();
     private final Map<String, Area> substractionAll = new HashMap<>(); //key tile ID
@@ -66,7 +67,9 @@ public class ThemeGeometry {
         BRIDGE_AREA_WE = a;
     }
 
-    public ThemeGeometry(ClassLoader loader, String folder) throws IOException, SAXException, ParserConfigurationException {
+    public ThemeGeometry(ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
+    	this.imageSizeRatio = imageSizeRatio;
+    	
         NodeList nl;
         URL aliasesResource = loader.getResource(folder + "/aliases.xml");
         if (aliasesResource != null) {
@@ -127,7 +130,7 @@ public class ThemeGeometry {
     private void processShapeElement(Element shapeNode) {
         final AreaWithZIndex az = createArea(shapeNode);
 
-        SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode);
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode, imageSizeRatio);
         transformCollector.collect(new GeometryHandler() {
 
             @Override

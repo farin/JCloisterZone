@@ -21,10 +21,12 @@ public class SvgTransformationCollector {
     private final Element root;
 
     private final Location baseLocation;
+    private final double imageSizeRatio;
 
     private ArrayDeque<AffineTransform> transforms = new ArrayDeque<>();
 
-    public SvgTransformationCollector(Element root) {
+    public SvgTransformationCollector(Element root, double imageSizeRatio) {
+    	this.imageSizeRatio = imageSizeRatio;
         this.root = root;
         if (root.hasAttribute("baseLocation")) {
             baseLocation = Location.valueOf(root.getAttribute("baseLocation"));
@@ -57,7 +59,17 @@ public class SvgTransformationCollector {
                 AffineTransform af = getTransform();
                 if (baseLocation != null) {
                     Rotation rotate = fd.getLocation().getRotationOf(baseLocation);
-                    af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
+                    if (Math.abs(imageSizeRatio - 1.0) > 0.00001) {
+	                    af.concatenate(AffineTransform.getScaleInstance(1.0, imageSizeRatio));                    
+	                    af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
+	                    if (rotate.ordinal() % 2 == 0) {
+	                    	af.concatenate(AffineTransform.getScaleInstance(1.0, 1.0/imageSizeRatio));
+	                    } else {
+	                    	af.concatenate(AffineTransform.getScaleInstance(1.0/imageSizeRatio, 1.0));
+	                    }
+                    } else {
+                    	af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
+                    }
                 }
                 handler.processApply(child, fd, af);
                 if (XMLUtils.attributeBoolValue(child, "allRotations")) {
@@ -96,11 +108,19 @@ public class SvgTransformationCollector {
         return af;
     }
 
+    /* HACK hardcoded possible values */
     private AffineTransform createTransformation(String svg) {
         switch (svg) {
-        case "rotate(90 500 500)": return AffineTransform.getRotateInstance(Math.PI * 0.5, 500, 500);
-        case "rotate(180 500 500)": return AffineTransform.getRotateInstance(Math.PI, 500, 500);
-        case "rotate(270 500 500)": return AffineTransform.getRotateInstance(Math.PI * 1.5, 500, 500);
+        case "rotate(90 500 500)": 
+        	return AffineTransform.getRotateInstance(Math.PI * 0.5, 500, 500);
+        case "rotate(180 500 500)": 
+        	return AffineTransform.getRotateInstance(Math.PI, 500, 500);
+        case "rotate(270 500 500)": 
+        	return AffineTransform.getRotateInstance(Math.PI * 1.5, 500, 500);
+        case "translate(1000,0) scale(-1, 1)":
+        	AffineTransform af = AffineTransform.getTranslateInstance(1000, 0);
+        	af.concatenate(AffineTransform.getScaleInstance(-1.0, 1.0));
+        	return af;
         default: throw new IllegalArgumentException("Unsupported transform: "+svg);
         }
     }

@@ -9,10 +9,13 @@
         <apply allRotations="1">* NW</apply>
     </shape>
     <shape feature="CITY">
+    	<svg:polygon points="0,0 25,32 55,100 80,135 137,175 177,192 222,200 307,200 422,195 582,172 722,142 842,112 867,102 920,75 960,60 999,22 999,700 915,652 855,617 775,580 680,557 585,540 490,537 412,535 327,542 230,567 165,592 92,632 40,682 15,700 0,700"/>
+    	<apply>* WE</apply>
+    </shape>
+    <shape feature="CITY">
         <svg:polygon points="0,0 999,0 999,707 0,707"/>
         <apply>* NWSE</apply>
     </shape>
-
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 999,35 985,67 965,87 940,110 902,135 857,155 825,167 770,177 727,177 680,177 625,175 560,167 492,157 425,147 360,135 307,120 245,107 190,92 132,72 80,50 37,25"/>
         <apply>BA.CC.2 N</apply>
@@ -27,6 +30,27 @@
         <apply>BA.Ccc+ _N</apply>
     </shape>
     
+    
+    <shape feature="ROAD">
+    	<svg:polygon points="0,277 152,272 262,277 360,302 445,340 517,395 562,475 580,565 590,707 437,707 437,637 420,582 392,540 352,502 295,472 235,457 167,452 0,452"/>
+    	<apply>BA.Rr SW</apply>
+    	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CcRr SE</apply>
+    	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CcRr+ SE</apply>
+    	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CRr SE</apply>
+    	<apply>BA.RrC SW</apply>
+    </shape>
+    
+    <shape feature="FARM" baseLocation="NL.WR">
+        <title>under-road-NL,WR</title>
+        <svg:polygon points="0,0 500,0 500,175 250,350 0,350"/>   
+        <apply>BA.CcRr ER.SL</apply>
+        <apply>BA.CcRr+ ER.SL</apply>       
+        <apply>BA.CRr ER.SL</apply>
+        <apply>BA.CRRR ER.SL</apply>        
+        <apply>BA.CRRR SR.WL</apply>
+        <apply>BA.RrC SR.WL</apply>        
+    </shape>
+    
     <shape> <!-- center -->
         <svg:rect x="400" y="282" width="200" height="141"/>
         <substract>BA.RRR</substract>
@@ -39,5 +63,14 @@
         <substract>CA.RR</substract>
         <substract>CC.RRR</substract>
     </shape>
+    
+    <complement-farm>
+        <apply>BA.CcRr EL.SR</apply>
+        <apply>BA.CcRr+ EL.SR</apply>
+        <apply>BA.CRr EL.WL.WR.SR</apply>
+        <apply>BA.RrC WR.EL.ER.SL</apply>
+    </complement-farm>
+        
+        
 
 </shapes>

@@ -35,7 +35,7 @@ class PointsParser {
         int cy = Integer.parseInt(pointNode.getAttribute("cy"));
         final Point destPoint = new Point(), srcPoint = new Point(cx, cy);
 
-        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode);
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode, 1.0);
         transformCollector.collect(new GeometryHandler() {
 
             @Override

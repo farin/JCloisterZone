@@ -59,7 +59,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -71,7 +71,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     @Override
     protected void doLoad() throws IOException, SAXException, ParserConfigurationException {
-        pluginGeometry = new ThemeGeometry(getLoader(), "tiles");
+        pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
     }
 
     @Override
@@ -106,7 +106,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             value = XMLUtils.childValue(tiles, "image-ratio-x");
             if (value != null) {
                 imageRatioX = Integer.parseInt(value);
-                if (imageRatioX == 0) imageRatioX = 1;
+				if (imageRatioX == 0)
+					imageRatioX = 1;
             }
             value = XMLUtils.childValue(tiles, "image-ratio-y");
             if (value != null) {
