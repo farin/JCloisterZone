@@ -4,6 +4,10 @@
 		<svg:polygon points="322,207 518,118 670,395 472,495"/>
 		<apply>* CLOISTER</apply>
 	</shape>
+	<shape feature="CLOISTER">
+		<svg:polygon points="335,250 402,453 795,333 716,143"/>
+		<apply>BA.LR CLOISTER</apply>
+	</shape>
 
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 999,32 962,65 917,97 855,132 792,155 705,175 627,180 532,182 450,180 375,170 327,160 295,155 222,132 150,107 95,75 45,42"/>
@@ -43,9 +47,22 @@
     	<apply>BA.CFC.2 N</apply>
 	</shape>    	
     	
-    
+    <shape feature="ROAD" baseLocation="W">
+    	<svg:rect x="0" y="250" width="400" height="200"/>
+    	<apply>* W</apply>
+    	<apply>* E</apply>
+    </shape>
     <shape feature="ROAD">
-    	<svg:polygon points="0,277 152,272 262,277 360,302 445,340 517,395 562,475 580,565 590,707 437,707 437,637 420,582 392,540 352,502 295,472 235,457 167,452 0,452"/>
+    	<svg:rect x="0" y="250" width="1000" height="200"/>
+    	<apply>* WE</apply>    	
+    </shape>
+    <shape feature="ROAD" baseLocation="N">
+    	<svg:rect x="400" y="0" width="200" height="335"/>
+    	<apply>BA.CccR S</apply>
+    	<apply>BA.CccR+ S</apply>
+    </shape>    
+    <shape feature="ROAD">    	
+    	<svg:polygon points="0,250 152,262 262,277 360,296 445,335 517,395 565,475 590,565 600,630 600,700 400,700 400,637 395,582 380,540 352,502 295,472 235,457 167,452 0,450"/>
     	<apply>BA.Rr SW</apply>
     	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CcRr SE</apply>
     	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CcRr+ SE</apply>
@@ -66,16 +83,10 @@
     </shape>
     
     <shape> <!-- center -->
-        <svg:rect x="400" y="282" width="200" height="141"/>
+        <svg:rect x="400" y="250" width="200" height="200"/>
         <substract>BA.RRR</substract>
         <substract>BA.RRRR</substract>
-        <substract>BA.CRRR</substract>
-        <substract>DG.CRRR</substract>
-        <substract>DG.RRR.d</substract>
-        <substract>DG.RRR.g</substract>
-        <substract>CA.RFR</substract>
-        <substract>CA.RR</substract>
-        <substract>CC.RRR</substract>
+        <substract>BA.CRRR</substract>        
     </shape>
     
     <complement-farm>
