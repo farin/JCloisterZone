@@ -22,11 +22,13 @@ public class SvgTransformationCollector {
 
     private final Location baseLocation;
     private final double imageSizeRatio;
+    private final boolean isRectangular;
 
     private ArrayDeque<AffineTransform> transforms = new ArrayDeque<>();
 
     public SvgTransformationCollector(Element root, double imageSizeRatio) {
     	this.imageSizeRatio = imageSizeRatio;
+    	this.isRectangular = Math.abs(imageSizeRatio - 1.0) > 0.00001;
         this.root = root;
         if (root.hasAttribute("baseLocation")) {
             baseLocation = Location.valueOf(root.getAttribute("baseLocation"));
@@ -40,6 +42,16 @@ public class SvgTransformationCollector {
             collect(root, handler);
         } catch (Exception ex) {
             logger.error("Invalid geometry definition:\n" + XMLUtils.nodeToString(root), ex);
+        }
+    }
+    
+    private void concatenateRotation(AffineTransform af, Rotation rotate) {
+    	if (isRectangular) {
+            af.concatenate(AffineTransform.getScaleInstance(1.0, imageSizeRatio));                    
+            af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
+            af.concatenate(AffineTransform.getScaleInstance(1.0, 1.0/imageSizeRatio));            
+        } else {
+        	af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
         }
     }
 
@@ -59,26 +71,17 @@ public class SvgTransformationCollector {
                 AffineTransform af = getTransform();
                 if (baseLocation != null) {
                     Rotation rotate = fd.getLocation().getRotationOf(baseLocation);
-                    if (Math.abs(imageSizeRatio - 1.0) > 0.00001) {
-	                    af.concatenate(AffineTransform.getScaleInstance(1.0, imageSizeRatio));                    
-	                    af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
-	                    if (rotate.ordinal() % 2 == 0) {
-	                    	af.concatenate(AffineTransform.getScaleInstance(1.0, 1.0/imageSizeRatio));
-	                    } else {
-	                    	af.concatenate(AffineTransform.getScaleInstance(1.0/imageSizeRatio, 1.0));
-	                    }
-                    } else {
-                    	af.concatenate(rotate.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
-                    }
+                    concatenateRotation(af, rotate);
                 }
                 handler.processApply(child, fd, af);
                 if (XMLUtils.attributeBoolValue(child, "allRotations")) {
                     Rotation rot = Rotation.R90;
                     for (int ri = 0; ri < 3; ri++) {
+                    	AffineTransform afCpy = new AffineTransform(af);
                         Location rotatedLoc = fd.getLocation().rotateCW(rot);
                         FeatureDescriptor rotatedFd = new FeatureDescriptor(fd.getTileId(), fd.getFeatureType(), rotatedLoc);
-                        af.concatenate(Rotation.R90.getAffineTransform(ResourcePlugin.NORMALIZED_SIZE));
-                        handler.processApply(child, rotatedFd, af);
+                        concatenateRotation(afCpy, rot);                        
+                        handler.processApply(child, rotatedFd, afCpy);
                         rot = rot.next();
                     }
                 }
