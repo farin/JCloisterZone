@@ -235,17 +235,24 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
-        System.out.println(tile.getId() + "/" + featureClass.getSimpleName() + "/" + loc);
-        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
-        area = applyRotationScaling(tile, pluginGeometry, area);
+        ThemeGeometry source = null;
+        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);        
         if (area == null) {
             area = adaptDefaultGeometry(defaultGeometry.getArea(tile, featureClass, loc));
-            area = applyRotationScaling(tile, defaultGeometry, area);
+            if (area == null) {
+                logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
+                return new FeatureArea(new Area(), 0);
+            } else {
+            	source = defaultGeometry;
+            }            
+        } else {
+        	source = pluginGeometry;
         }
-        if (area == null) {
-            logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
-            area = new FeatureArea(new Area(), 0);
-        }        
+        
+        area = applyRotationScaling(tile, source, area);
+        AffineTransform t = new AffineTransform();         
+        t.concatenate(tile.getRotation().getAffineTransform(NORMALIZED_SIZE, (int) (NORMALIZED_SIZE * getImageSizeRatio())));
+        area = area.transform(t);               
         return area;
     }
 
@@ -256,6 +263,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
         if (d != null) area.add(adaptDefaultGeometry(d));
         if (p != null) area.add(p);
+        
+        AffineTransform t = new AffineTransform();         
+        t.concatenate(tile.getRotation().getAffineTransform(NORMALIZED_SIZE, (int) (NORMALIZED_SIZE * getImageSizeRatio())));
+        area.transform(t);        
         return area;
     }
 
@@ -267,11 +278,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     
     private FeatureArea adaptDefaultGeometry(FeatureArea fa) {
     	if (fa == null) return null;
-    	return new FeatureArea(
-    		adaptDefaultGeometry(fa.getTrackingArea()),
-    		adaptDefaultGeometry(fa.getDisplayArea()),
-    		fa.getzIndex()
-    	);    		
+    	return fa.transform(AffineTransform.getScaleInstance(1.0, getImageSizeRatio()));    		
     }
     
     private Area adaptDefaultGeometry(Area a) {
@@ -311,7 +318,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 continue;
             }
 
-            fa = new FeatureArea(getFeatureArea(tile, piece.getClass(), loc)); //copy to preserve original
+            fa = getFeatureArea(tile, piece.getClass(), loc);
             if (piece instanceof City || piece instanceof Road) {
                 Area subs = piece instanceof Bridge ? subsBridge : subsRoadCity;
                 if (!subs.isEmpty()) {
@@ -326,25 +333,25 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             areas.put(Location.FLIER, fa);
         }
 
-        AffineTransform transform1;
-        if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
-            transform1 = new AffineTransform();
+        double ratioX;
+        double ratioY;
+        Rotation rot = tile.getRotation();
+        if (rot == Rotation.R90 || rot  == Rotation.R270) {          	
+        	ratioX = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
+        	ratioY = (double) width / NORMALIZED_SIZE;
         } else {
-            double ratioX = width / (double)NORMALIZED_SIZE;
-            double ratioY = height / (double)NORMALIZED_SIZE / getImageSizeRatio();
-            transform1 = AffineTransform.getScaleInstance(ratioX, ratioY);
+        	ratioX = (double) width / NORMALIZED_SIZE;
+        	ratioY = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
         }
-        //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
-        AffineTransform transform2 = tile.getRotation().getAffineTransform(width, height);
-
-        for (FeatureArea fa : areas.values()) {
-            Area a = fa.getTrackingArea();
-            a = a.createTransformedArea(transform1);
-            a = a.createTransformedArea(transform2);
+        AffineTransform resize = AffineTransform.getScaleInstance(ratioX, ratioY);
+        
+        areas.forEach((key, fa) -> {
+        	Area a = fa.getTrackingArea();
+            a = a.createTransformedArea(resize);
             fa.setTrackingArea(a);
-        }
+        });        
 
-       return areas;
+        return areas;
     }
 
     @Override
@@ -412,12 +419,20 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         sub.add(getSubstractionArea(tile, true));
         return sub;
     }
-
+    
+    private Rectangle getFullRectangle(Tile tile) {
+    	Rotation rot = tile.getRotation();
+    	if (rot == Rotation.R90 || rot == Rotation.R270) {
+    		return new Rectangle(0,0, (int) (NORMALIZED_SIZE * getImageSizeRatio()), NORMALIZED_SIZE-1);
+    	} else {
+    		return new Rectangle(0,0, NORMALIZED_SIZE-1, (int) (NORMALIZED_SIZE * getImageSizeRatio()));
+    	}
+    }
 
     private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
         FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, (int) (NORMALIZED_SIZE * getImageSizeRatio()) - 1));
+            Area base = new Area(getFullRectangle(tile));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();
@@ -426,8 +441,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             }
             result = new FeatureArea(base, FeatureArea.DEFAULT_FARM_ZINDEX);
         } else {
-            //copy area to not substract from original
-            result = new FeatureArea(getFeatureArea(tile, Farm.class, farm));
+            result = getFeatureArea(tile, Farm.class, farm);
         }
         if (!sub.isEmpty()) {
             result.getTrackingArea().subtract(sub);
