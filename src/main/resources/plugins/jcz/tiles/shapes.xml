@@ -47,10 +47,19 @@
     	<apply>BA.CFC.2 N</apply>
 	</shape>    	
     	
-    <shape feature="ROAD" baseLocation="W">
-    	<svg:rect x="0" y="250" width="400" height="200"/>
-    	<apply>* W</apply>
-    	<apply>* E</apply>
+    <!-->shape feature="ROAD" noScale="width">
+        <svg:rect x="400" y="0" width="200" height="280"/>
+        <apply allRotations="1">* N</apply>               
+    </shape-->
+    <shape feature="ROAD" baseLocation="N" noScale="width">
+        <svg:rect x="400" y="0" width="200" height="280"/>
+        <apply>* N</apply>
+        <apply>* S</apply>               
+    </shape>
+    <shape feature="ROAD" baseLocation="W" noScale="height">
+        <svg:rect x="0" y="250" width="400" height="200"/>
+        <apply>* W</apply>
+        <apply>* E</apply>
     </shape>
     <shape feature="ROAD">
     	<svg:rect x="0" y="250" width="1000" height="200"/>

@@ -15,6 +15,7 @@ public class FeatureArea {
     private Area displayArea; //mouse tracking area
     private int zIndex;
     private Color forceAreaColor;
+    private AreaRotationScaling rotationScaling = AreaRotationScaling.NORMAL;
 
     public FeatureArea(Area trackingArea, int zIndex) {
         this.trackingArea = trackingArea;
@@ -65,8 +66,16 @@ public class FeatureArea {
     public void setForceAreaColor(Color forceAreaColor) {
         this.forceAreaColor = forceAreaColor;
     }
+    
+    public AreaRotationScaling getRotationScaling() {
+		return rotationScaling;
+	}
 
-    @Override
+	public void setRotationScaling(AreaRotationScaling rotationScaling) {
+		this.rotationScaling = rotationScaling;
+	}
+
+	@Override
     public String toString() {
         return zIndex + "/" + trackingArea.toString();
     }

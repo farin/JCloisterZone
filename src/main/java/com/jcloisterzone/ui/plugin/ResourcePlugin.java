@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.plugin;
 
+import static com.jcloisterzone.ui.plugin.ResourcePlugin.NORMALIZED_SIZE;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
@@ -37,6 +39,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.FeatureDescriptor;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -199,9 +202,32 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         if (point == null) {
             logger.warn("No point defined for <" + (new FeatureDescriptor(tile, piece.getClass(), loc)) + ">");
-            point =  new ImmutablePoint(0, 0);
+            point = new ImmutablePoint(0, 0);
         }
         return point;
+    }
+    
+    private FeatureArea applyRotationScaling(Tile tile, ThemeGeometry geom, FeatureArea area) {
+    	if (area == null) return null;
+    	/* rectangular tiles can have noScale direction to keep one dimension unchanged by rotation */
+//        AreaRotationScaling ars = area.getRotationScaling(); 
+//        if (ars != AreaRotationScaling.NORMAL)  {
+//        	System.out.println("ARS >> " + ars);
+//        	Rotation rot = tile.getRotation();
+//        	if (rot == Rotation.R90 || rot == Rotation.R270) {
+//        		AffineTransform af = new AffineTransform();
+//        		af.concatenate(rot.getAffineTransform(NORMALIZED_SIZE, NORMALIZED_SIZE));
+//        		ars.concatAffineTransform(af, geom.getImageSizeRatio());
+//        		af.concatenate(rot.inverse().getAffineTransform(NORMALIZED_SIZE, NORMALIZED_SIZE));
+//        		area = new FeatureArea(area);        		
+//        		area.getTrackingArea().transform(af);
+//        		if (area.getDisplayArea() != null) {
+//        			area.getDisplayArea().transform(af);
+//        		}
+//        	
+//        	}        	
+//        }
+        return area;
     }
 
     private FeatureArea getFeatureArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
@@ -209,14 +235,17 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
+        System.out.println(tile.getId() + "/" + featureClass.getSimpleName() + "/" + loc);
         FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
+        area = applyRotationScaling(tile, pluginGeometry, area);
         if (area == null) {
             area = adaptDefaultGeometry(defaultGeometry.getArea(tile, featureClass, loc));
+            area = applyRotationScaling(tile, defaultGeometry, area);
         }
         if (area == null) {
             logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
             area = new FeatureArea(new Area(), 0);
-        }
+        }        
         return area;
     }
 
