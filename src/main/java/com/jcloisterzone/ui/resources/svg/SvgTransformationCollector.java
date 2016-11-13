@@ -32,7 +32,7 @@ public class SvgTransformationCollector {
     public SvgTransformationCollector(Element root, double imageSizeRatio) {    	
     	this.imageSizeRatio = imageSizeRatio;
     	this.isRectangular = Math.abs(imageSizeRatio - 1.0) > 0.00001;
-    	this.rotationScaling = AreaRotationScaling.fromXmlAttr(root.getAttribute("noScale"));
+    	this.rotationScaling = AreaRotationScaling.fromXmlAttr(root.getAttribute("avoidRotationScaling"));
         this.root = root;
         if (root.hasAttribute("baseLocation")) {
             baseLocation = Location.valueOf(root.getAttribute("baseLocation"));

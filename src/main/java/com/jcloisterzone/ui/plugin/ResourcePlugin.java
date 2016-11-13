@@ -210,23 +210,19 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private FeatureArea applyRotationScaling(Tile tile, ThemeGeometry geom, FeatureArea area) {
     	if (area == null) return null;
     	/* rectangular tiles can have noScale direction to keep one dimension unchanged by rotation */
-//        AreaRotationScaling ars = area.getRotationScaling(); 
-//        if (ars != AreaRotationScaling.NORMAL)  {
-//        	System.out.println("ARS >> " + ars);
-//        	Rotation rot = tile.getRotation();
-//        	if (rot == Rotation.R90 || rot == Rotation.R270) {
-//        		AffineTransform af = new AffineTransform();
-//        		af.concatenate(rot.getAffineTransform(NORMALIZED_SIZE, NORMALIZED_SIZE));
-//        		ars.concatAffineTransform(af, geom.getImageSizeRatio());
-//        		af.concatenate(rot.inverse().getAffineTransform(NORMALIZED_SIZE, NORMALIZED_SIZE));
-//        		area = new FeatureArea(area);        		
-//        		area.getTrackingArea().transform(af);
-//        		if (area.getDisplayArea() != null) {
-//        			area.getDisplayArea().transform(af);
-//        		}
-//        	
-//        	}        	
-//        }
+        AreaRotationScaling ars = area.getRotationScaling(); 
+        if (ars != AreaRotationScaling.NORMAL)  {        	
+        	Rotation rot = tile.getRotation();
+        	if (rot == Rotation.R90 || rot == Rotation.R270) {
+        		AffineTransform t = new AffineTransform();        		
+        		if (ars == AreaRotationScaling.NO_SCALE_HEIGHT) {
+        			ars.concatAffineTransform(t, geom.getImageSizeRatio());
+        		} else {
+        			ars.concatAffineTransform(t, 1.0 / geom.getImageSizeRatio());
+        		}
+        		area = area.transform(t);     		        		        	
+        	}        	
+        }
         return area;
     }
 
@@ -261,8 +257,22 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
              p = pluginGeometry.getSubstractionArea(tile, farm),
              area = new Area();
 
-        if (d != null) area.add(adaptDefaultGeometry(d));
-        if (p != null) area.add(p);
+        if (d != null) {
+        	area.add(adaptDefaultGeometry(d));
+        }
+        if (p != null) {
+        	//HACK always area rotation scale as not scale in both width and height
+        	//it's what is required for ROAD subtraction but it's possible in future it will be needed scale area too.
+        	Rotation rot = tile.getRotation();
+        	if (rot == Rotation.R90 || rot == Rotation.R270) {
+        		AffineTransform t = new AffineTransform();        		        		
+        		AreaRotationScaling.NO_SCALE_HEIGHT.concatAffineTransform(t, getImageSizeRatio());        		
+        		AreaRotationScaling.NO_SCALE_WIDTH.concatAffineTransform(t, 1.0 / getImageSizeRatio());        		
+        		p = p.createTransformedArea(t);     		        		        	
+        	}       
+        	
+        	area.add(p);
+        }
         
         AffineTransform t = new AffineTransform();         
         t.concatenate(tile.getRotation().getAffineTransform(NORMALIZED_SIZE, (int) (NORMALIZED_SIZE * getImageSizeRatio())));

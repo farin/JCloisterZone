@@ -51,17 +51,17 @@
         <svg:rect x="400" y="0" width="200" height="280"/>
         <apply allRotations="1">* N</apply>               
     </shape-->
-    <shape feature="ROAD" baseLocation="N" noScale="width">
+    <shape feature="ROAD" baseLocation="N" avoidRotationScaling="width">
         <svg:rect x="400" y="0" width="200" height="280"/>
         <apply>* N</apply>
         <apply>* S</apply>               
     </shape>
-    <shape feature="ROAD" baseLocation="W" noScale="height">
+    <shape feature="ROAD" baseLocation="W" avoidRotationScaling="height">
         <svg:rect x="0" y="250" width="400" height="200"/>
         <apply>* W</apply>
         <apply>* E</apply>
     </shape>
-    <shape feature="ROAD">
+    <shape feature="ROAD" avoidRotationScaling="height">
     	<svg:rect x="0" y="250" width="1000" height="200"/>
     	<apply>* WE</apply>    	
     </shape>
@@ -70,7 +70,7 @@
     	<apply>BA.CccR S</apply>
     	<apply>BA.CccR+ S</apply>
     </shape>    
-    <shape feature="ROAD">    	
+    <shape feature="ROAD" avoidRotationScaling="all">    	
     	<svg:polygon points="0,250 152,262 262,277 360,296 445,335 517,395 565,475 590,565 600,630 600,700 400,700 400,637 395,582 380,540 352,502 295,472 235,457 167,452 0,450"/>
     	<apply>BA.Rr SW</apply>
     	<apply svg:transform="translate(1000,0) scale(-1, 1)">BA.CcRr SE</apply>
