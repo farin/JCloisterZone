@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="com.jcloisterzone.plugins.classic" version="3.5">
-    <title>JCZ artwork</title>
+    <title>JCZ 3D artwork</title>
     <description>JCloisterZone 3D</description>
     <type>FULL_GRF_SET</type>
     <tiles>

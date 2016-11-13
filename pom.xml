@@ -255,6 +255,27 @@
                             </tasks>
                         </configuration>
                     </execution>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/jcz3d.jar -C src/main/resources/plugins/jcz3d . -->
+                        <id>plugin-jcz3d</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/jcz3d.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/jcz3d" />
+                                    <arg value="." />
+                                </exec>
+                            </tasks>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
