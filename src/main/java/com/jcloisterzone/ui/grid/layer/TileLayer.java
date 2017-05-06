@@ -15,10 +15,13 @@ import com.jcloisterzone.ui.resources.TileImage;
 
 public class TileLayer extends AbstractGridLayer {
 
-    //keep own copy of tiles in Swing thread to prevent concurent modification ex. of tile list on game
+    //keep own copy of tiles in Swing thread to prevent concurrent modification ex. of tile list on game
     private SortedSet<Tile> placedTiles = new TreeSet<>(new Comparator<Tile>() {
         @Override
         public int compare(Tile o1, Tile o2) {
+        	if (o1.getPosition() == null) {
+        		return o2.getPosition() == null ? 0 : 1;
+        	}
             return o1.getPosition().compareTo(o2.getPosition());
 
         }
@@ -72,7 +75,4 @@ public class TileLayer extends AbstractGridLayer {
     private void tileRemoved(Tile tile) {
         placedTiles.remove(tile);
     }
-
-
-
 }
