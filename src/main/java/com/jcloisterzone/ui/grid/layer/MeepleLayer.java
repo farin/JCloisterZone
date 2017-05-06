@@ -100,7 +100,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onLittleBuildingEvent(LittleBuildingEvent ev) {
-        Image img = rm.getImage("lb-"+ev.getBuilding().name().toLowerCase());
+        Image img = rm.getImage("neutral/lb-"+ev.getBuilding().name().toLowerCase());
         ImmutablePoint offset = new ImmutablePoint(65, 35);
         double xScale = 1.15, yScale = 1.15;
         //TODO tightly coupled with current theme, todo change image size in theme

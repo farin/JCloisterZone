@@ -2,6 +2,7 @@
 
 * MacOS: application title is again JCloisterZone 
 * experimental support for "rectangular" tiles + plugin with 3D graphics tiles projected as rectangle.
+* fixed: Little Buildings (unable to place building)
 
 ## 3.4.2
 *2015-11-21*

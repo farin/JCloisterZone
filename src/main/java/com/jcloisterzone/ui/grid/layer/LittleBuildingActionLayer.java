@@ -40,7 +40,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         for (LittleBuilding lb : LittleBuilding.values()) {
-            Image img = rm.getImage("lb-"+lb.name().toLowerCase());
+            Image img = rm.getImage("neutral/lb-"+lb.name().toLowerCase());
             images.put(lb, img);
         }
         recomputeDimenensions(getTileWidth());
