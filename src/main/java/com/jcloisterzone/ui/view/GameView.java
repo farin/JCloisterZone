@@ -113,6 +113,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	menu.setItemEnabled(MenuItem.UNDO, false);
                 gc.getConnection().send(new UndoMessage(game.getGameId()));
             }
         });

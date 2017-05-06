@@ -172,6 +172,10 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public void undo() {
+    	if (!isUndoAllowed()) {
+    		logger.warn("Undo is not allowed");
+    		return;
+    	}
         for (int i = lastUndoable.size()-1; i >= 0; i--) {
             Undoable ev = lastUndoable.get(i);
             Event inverse = ev.getInverseEvent();
