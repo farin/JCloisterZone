@@ -4,7 +4,8 @@
 * MacOS: application title is again JCloisterZone 
 * experimental support for "rectangular" tiles + plugin with 3D graphics tiles projected as rectangle.
 * fixed: Little Buildings (unable to place building)
-* fixed: WindRose pts can be repeated by undo tile placement infinitely 
+* fixed: WindRose pts can be repeated by undo tile placement infinitely
+* fixed: added missing pennant to Tower tile (TO.CccC+) 
 
 ## 3.4.2
 *2015-11-21*
