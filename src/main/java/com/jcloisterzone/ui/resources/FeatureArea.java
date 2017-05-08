@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
 public class FeatureArea {
@@ -15,6 +16,7 @@ public class FeatureArea {
     private Area displayArea; //mouse tracking area
     private int zIndex;
     private Color forceAreaColor;
+    private AreaRotationScaling rotationScaling = AreaRotationScaling.NORMAL;
 
     public FeatureArea(Area trackingArea, int zIndex) {
         this.trackingArea = trackingArea;
@@ -32,6 +34,15 @@ public class FeatureArea {
             this.displayArea = new Area(copy.displayArea);
         }
         this.zIndex = copy.zIndex;
+    }
+    
+    public FeatureArea transform(AffineTransform t) {
+    	FeatureArea cp = new FeatureArea(this);
+    	cp.getTrackingArea().transform(t);
+    	if (cp.getDisplayArea() != null) {
+    		cp.getDisplayArea().transform(t);
+    	}
+    	return cp;
     }
 
     public Area getTrackingArea() {
@@ -65,8 +76,16 @@ public class FeatureArea {
     public void setForceAreaColor(Color forceAreaColor) {
         this.forceAreaColor = forceAreaColor;
     }
+    
+    public AreaRotationScaling getRotationScaling() {
+		return rotationScaling;
+	}
 
-    @Override
+	public void setRotationScaling(AreaRotationScaling rotationScaling) {
+		this.rotationScaling = rotationScaling;
+	}
+
+	@Override
     public String toString() {
         return zIndex + "/" + trackingArea.toString();
     }

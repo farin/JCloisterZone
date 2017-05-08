@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.Client;
@@ -36,9 +37,14 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Image getTileImage(Tile tile) {
+    public TileImage getTileImage(Tile tile) {
+        return getTileImage(tile, tile.getRotation());
+    }
+
+    @Override
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getTileImage(tile);
+            TileImage result = manager.getTileImage(tile, rot);
             if (result != null) return result;
         }
         logger.warn("Unable to load tile image for {}", tile.getId());
@@ -46,9 +52,9 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Image getAbbeyImage() {
+    public TileImage getAbbeyImage(Rotation rot) {
         for (ResourceManager manager : managers) {
-            Image result = manager.getAbbeyImage();
+            TileImage result = manager.getAbbeyImage(rot);
             if (result != null) return result;
         }
         logger.warn("Unable to load tile Abbey image");
@@ -86,18 +92,18 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getBarnTileAreas(tile, size, corners);
+            Map<Location, FeatureArea> result = manager.getBarnTileAreas(tile, width, height, corners);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, size, locations);
+            Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, width, height, locations);
             if (result != null) return result;
         }
         return null;
@@ -105,9 +111,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getFeatureAreas(tile, size, locations);
+            Map<Location, FeatureArea> result = manager.getFeatureAreas(tile, width, height, locations);
             if (result != null) return result;
         }
         return null;

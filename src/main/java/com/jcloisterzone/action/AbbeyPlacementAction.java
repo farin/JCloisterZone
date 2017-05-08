@@ -17,7 +17,7 @@ public class AbbeyPlacementAction extends SelectTileAction {
 
     @Override
     public Image getImage(Player player, boolean active) {
-        return client.getResourceManager().getAbbeyImage();
+        return client.getResourceManager().getAbbeyImage(Rotation.R0).getImage();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid.layer;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -11,17 +13,15 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<SelectFeatureAction> {
@@ -44,7 +44,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
         return action;
     }
 
-    protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
+    @Override
+	protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
         abbotOption = false;
         abbotOnlyOption = false;
         Set<Location> locations = action.getLocations(p);
@@ -59,13 +60,20 @@ public class FeatureAreaLayer extends AbstractAreaLayer implements ActionLayer<S
             }
             locations.remove(Location.ABBOT);
         }
+        int sizeX, sizeY;
+        if (tile.getRotation() == Rotation.R0 || tile.getRotation() == Rotation.R180) {
+        	sizeX = getTileWidth();
+        	sizeY = getTileHeight();
+        } else {
+        	sizeY = getTileWidth();
+        	sizeX = getTileHeight();
+        }
 
-        ConvenientResourceManager resMgr = getClient().getResourceManager();
         Map<Location, FeatureArea> locMap;
         if (action instanceof BridgeAction) {
-            locMap = resMgr.getBridgeAreas(tile, getSquareSize(), locations);
+            locMap = rm.getBridgeAreas(tile, sizeX, sizeY, locations);
         } else {
-            locMap =  resMgr.getFeatureAreas(tile, getSquareSize(), locations);
+            locMap = rm.getFeatureAreas(tile, sizeX, sizeY, locations);
         }
         return locationMapToPointers(p, locMap);
     }

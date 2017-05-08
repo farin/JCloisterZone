@@ -1,14 +1,11 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,11 @@ import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.WrapLayout;
 import com.jcloisterzone.ui.gtk.ThemedJList;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.theme.Theme;
+
+import static com.jcloisterzone.ui.I18nUtils._;
+
 
 public class TileDistributionWindow extends JFrame {
 
@@ -103,8 +104,8 @@ public class TileDistributionWindow extends JFrame {
     }
 
     private class TileLabel extends JPanel {
-    	private final Theme theme;
-        private final Image image;
+        private final TileImage image;
+        private final Theme theme;
         private String count;
 
         public TileLabel(Theme theme, Expansion exp, TileCount tc) {
@@ -118,7 +119,10 @@ public class TileDistributionWindow extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
-            g2.drawImage(image,0,0,SIZE,SIZE,this);
+
+            if (image != null) {
+                g2.drawImage(image.getImage(), 0, 0, SIZE, SIZE, this);
+            }
             Color bgColor = theme.getTileDistCountBg();
             g2.setColor(bgColor == null ? Color.WHITE : bgColor);
             g2.fillRect(0, SIZE, SIZE, BANNER);

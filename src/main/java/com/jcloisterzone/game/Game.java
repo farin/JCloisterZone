@@ -131,19 +131,18 @@ public class Game extends GameSettings implements EventProxy {
         if (event instanceof MeepleEvent && ((MeepleEvent) event).getTo() != null) return true;
         if (event instanceof BridgeEvent && event.getType() == BridgeEvent.DEPLOY) return true;
         if (event instanceof GoldChangeEvent) return true;
+        if (event instanceof ScoreEvent && ((ScoreEvent)event).getCategory() == PointCategory.WIND_ROSE) return true;
         return false;
     }
 
     @Override
     public void post(Event event) {
         eventQueue.add(event);
-        for (Capability capability: capabilities) {
-            capability.handleEvent(event);
-        }
         if (event instanceof PlayEvent && !event.isUndo()) {
             if (isUiSupportedUndo(event)) {
                 if ((event instanceof BridgeEvent && ((BridgeEvent)event).isForced()) ||
-                     event instanceof GoldChangeEvent && ((GoldChangeEvent)event).getPos().equals(getCurrentTile().getPosition())) {
+                     event instanceof GoldChangeEvent && ((GoldChangeEvent)event).getPos().equals(getCurrentTile().getPosition()) ||
+                     event instanceof ScoreEvent) {
                     //just add to chain after tile event
                     lastUndoable.add((Undoable) event);
                 } else {
@@ -157,6 +156,11 @@ public class Game extends GameSettings implements EventProxy {
                     lastUndoablePhase = null;
                 }
             }
+        }
+        // process capabilities after undo processing
+        // capability can trigger another event and order is important! (eg. windrose scoring)
+        for (Capability capability: capabilities) {
+            capability.handleEvent(event);
         }
     }
 
@@ -172,6 +176,10 @@ public class Game extends GameSettings implements EventProxy {
     }
 
     public void undo() {
+    	if (!isUndoAllowed()) {
+    		logger.warn("Undo is not allowed");
+    		return;
+    	}
         for (int i = lastUndoable.size()-1; i >= 0; i--) {
             Undoable ev = lastUndoable.get(i);
             Event inverse = ev.getInverseEvent();

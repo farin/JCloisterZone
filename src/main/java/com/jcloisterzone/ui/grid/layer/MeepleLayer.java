@@ -58,7 +58,6 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-
         gc.register(this);
     }
 
@@ -74,7 +73,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onMeepleEvent(MeepleEvent ev) {
-	gridPanel.clearActionDecorations();
+    gridPanel.clearActionDecorations();
 
         if (ev.getFrom() != null) {
             meepleUndeployed(ev);
@@ -101,7 +100,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Subscribe
     public void onLittleBuildingEvent(LittleBuildingEvent ev) {
-        Image img = rm.getImage("lb-"+ev.getBuilding().name().toLowerCase());
+        Image img = rm.getImage("neutral/lb-"+ev.getBuilding().name().toLowerCase());
         ImmutablePoint offset = new ImmutablePoint(65, 35);
         double xScale = 1.15, yScale = 1.15;
         //TODO tightly coupled with current theme, todo change image size in theme
@@ -129,7 +128,7 @@ public class MeepleLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g) {
-        int squareSize = getSquareSize();
+        int squareSize = getTileWidth();
 
         for (PositionedFigureImage mi : images) {
             if (!mi.bridgePlacement) {
@@ -145,7 +144,7 @@ public class MeepleLayer extends AbstractGridLayer {
     public void paintMeeplesOnBridges(Graphics2D g) {
         for (PositionedFigureImage mi : images) {
             if (mi.bridgePlacement) {
-                paintPositionedImage(g, mi, getSquareSize() );
+                paintPositionedImage(g, mi, getTileWidth() );
             }
         }
     }
@@ -365,15 +364,15 @@ public class MeepleLayer extends AbstractGridLayer {
         }
 
         public ImmutablePoint getScaledOffset(int boxSize) {
-            return offset.scale(getSquareSize(), boxSize);
+            return offset.scale(getTileWidth(), getTileHeight(), boxSize);
         }
 
         public ImageData getScaledImageData(int squareSize) {
             if (scaledImageData == null) {
 
-        	int boxSize = (int) (getSquareSize() * sizeRatio); //TODO no resize - direct image resize???
+            int boxSize = (int) (getTileWidth() * sizeRatio * gridPanel.getMeepleScaleFactor()); //TODO no resize - direct image resize???
 
-        	ImmutablePoint scaledOffset = getScaledOffset(boxSize);
+            ImmutablePoint scaledOffset = getScaledOffset(boxSize);
 
                 int width = (int) (boxSize * xScaleFactor);
                 int height = (int) (heightWidthRatio * width * yScaleFactor);
@@ -411,7 +410,7 @@ public class MeepleLayer extends AbstractGridLayer {
             if (order > 0) {
                 point = point.translate(10*order, 0);
             }
-            return point.scale(getSquareSize(), boxSize);
+            return point.scale(getTileWidth(), getTileHeight(), boxSize);
         }
 
         public Figure getFigure() {
@@ -420,16 +419,16 @@ public class MeepleLayer extends AbstractGridLayer {
     }
 
     private class ImageData {
-    	public final ImmutablePoint offset;
+        public final ImmutablePoint offset;
         public final Image image;
         public final int boxSize;
 
-    	public ImageData(Image image, ImmutablePoint offset, int boxSize) {
-    	    super();
-    	    this.image = image;
-    	    this.offset = offset;
-    	    this.boxSize = boxSize;
-    	}
+        public ImageData(Image image, ImmutablePoint offset, int boxSize) {
+            super();
+            this.image = image;
+            this.offset = offset;
+            this.boxSize = boxSize;
+        }
     }
 
     //TODO better use affine transform while drawing

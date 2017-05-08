@@ -21,7 +21,7 @@ public enum Rotation {
             return at;
         case R90:
             at = AffineTransform.getRotateInstance(Math.PI * 0.5);
-            at.translate(0, -sizeX);
+            at.translate(0, -sizeY);
             return at;
         case R180:
             at = AffineTransform.getRotateInstance(Math.PI);
@@ -29,7 +29,7 @@ public enum Rotation {
             return at;
         case R270:
             at = AffineTransform.getRotateInstance(Math.PI * 1.5);
-            at.translate(-sizeY, 0);
+            at.translate(-sizeX, 0);
             return at;
         }
         return null;

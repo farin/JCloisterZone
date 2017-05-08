@@ -1,9 +1,14 @@
 package com.jcloisterzone.ui.plugin;
 
+import static com.jcloisterzone.ui.plugin.ResourcePlugin.NORMALIZED_SIZE;
+
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -19,7 +24,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
@@ -31,11 +38,15 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.UiUtils;
+import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.FeatureDescriptor;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
+
 
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
@@ -43,12 +54,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
     private ThemeGeometry pluginGeometry;
+    private Insets imageOffset =  new Insets(0, 0, 0, 0);
+    private int imageRatioX = 1;
+    private int imageRatioY = 1;
 
     private Set<String> supportedExpansions = new HashSet<>(); //expansion codes
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -60,7 +74,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     @Override
     protected void doLoad() throws IOException, SAXException, ParserConfigurationException {
-        pluginGeometry = new ThemeGeometry(getLoader(), "tiles");
+        pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
     }
 
     @Override
@@ -76,6 +90,34 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             Expansion exp = Expansion.valueOf(expName);
             supportedExpansions.add(exp.getCode());
         }
+
+        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
+        if (tiles != null) {
+            String value = XMLUtils.childValue(tiles, "image-offset");
+            if (value != null) {
+                String[] tokens = value.split(",");
+                if (tokens.length != 4) {
+                    throw new Exception("Invalid value for image-offset " + value);
+                }
+                imageOffset = new Insets(
+                   Integer.parseInt(tokens[0]),
+                   Integer.parseInt(tokens[1]),
+                   Integer.parseInt(tokens[2]),
+                   Integer.parseInt(tokens[3])
+                );
+            }
+            value = XMLUtils.childValue(tiles, "image-ratio-x");
+            if (value != null) {
+                imageRatioX = Integer.parseInt(value);
+				if (imageRatioX == 0)
+					imageRatioX = 1;
+            }
+            value = XMLUtils.childValue(tiles, "image-ratio-y");
+            if (value != null) {
+                imageRatioY = Integer.parseInt(value);
+                if (imageRatioY == 0) imageRatioY = 1;
+            }
+        }
     }
 
 
@@ -85,30 +127,68 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return supportedExpansions.contains(expCode);
     }
 
-    @Override
-    public Image getTileImage(Tile tile) {
-        return getTileImage(tile.getId());
+    public boolean isExpansionSupported(Expansion exp) {
+        return supportedExpansions.contains(exp.getCode());
+    }
+
+    public double getImageSizeRatio() {
+        return imageRatioY/(double)imageRatioX;
     }
 
     @Override
-    public Image getAbbeyImage() {
-        return getTileImage(Tile.ABBEY_TILE_ID);
+    public TileImage getTileImage(Tile tile) {
+        return getTileImage(tile.getId(), tile.getRotation());
     }
 
-    private Image getTileImage(String tileId) {
+    @Override
+    public TileImage getTileImage(Tile tile, Rotation rot) {
+        return getTileImage(tile.getId(), rot);
+    }
+
+    @Override
+    public TileImage getAbbeyImage(Rotation rot) {
+        return getTileImage(Tile.ABBEY_TILE_ID, rot);
+    }
+
+    private TileImage getTileImage(String tileId, Rotation rot) {
         if (!containsTile(tileId)) return null;
-        String fileName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
-        return getImageLoader().getImage(fileName);
+        String baseName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
+        String fileName;
+        Image img;
+        // first try to find rotation specific image
+        fileName = baseName + "@" + rot.ordinal();
+        img =  getImageLoader().getImage(fileName);
+        if (img != null) {
+            return new TileImage(img, imageOffset);
+        }
+        // if not found, load generic one and rotate manually
+        fileName = baseName;
+        img =  getImageLoader().getImage(fileName);
+        if (img == null) return null;
+        if (rot == Rotation.R0) {
+            return new TileImage(img, imageOffset);
+        }
+        BufferedImage buf;
+        int w = img.getWidth(null);
+        int h = img.getHeight(null);
+        if (rot == Rotation.R180) {
+            buf = UiUtils.newTransparentImage(w, h);
+        } else {
+            buf = UiUtils.newTransparentImage(h, w);
+        }
+        Graphics2D g = (Graphics2D) buf.getGraphics();
+        g.drawImage(img, rot.getAffineTransform(w, h), null);
+        return new TileImage(buf, imageOffset);
     }
 
     @Override
     public Image getImage(String path) {
-    	return getImageLoader().getImage(path);
+        return getImageLoader().getImage(path);
     }
 
     @Override
     public Image getLayeredImage(LayeredImageDescriptor lid) {
-    	return getImageLoader().getLayeredImage(lid);
+        return getImageLoader().getLayeredImage(lid);
     }
 
     @Override
@@ -122,9 +202,28 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
         if (point == null) {
             logger.warn("No point defined for <" + (new FeatureDescriptor(tile, piece.getClass(), loc)) + ">");
-            point =  new ImmutablePoint(0, 0);
+            point = new ImmutablePoint(0, 0);
         }
         return point;
+    }
+    
+    private FeatureArea applyRotationScaling(Tile tile, ThemeGeometry geom, FeatureArea area) {
+    	if (area == null) return null;
+    	/* rectangular tiles can have noScale direction to keep one dimension unchanged by rotation */
+        AreaRotationScaling ars = area.getRotationScaling(); 
+        if (ars != AreaRotationScaling.NORMAL)  {        	
+        	Rotation rot = tile.getRotation();
+        	if (rot == Rotation.R90 || rot == Rotation.R270) {
+        		AffineTransform t = new AffineTransform();        		
+        		if (ars == AreaRotationScaling.NO_SCALE_HEIGHT) {
+        			ars.concatAffineTransform(t, geom.getImageSizeRatio());
+        		} else {
+        			ars.concatAffineTransform(t, 1.0 / geom.getImageSizeRatio());
+        		}
+        		area = area.transform(t);     		        		        	
+        	}        	
+        }
+        return area;
     }
 
     private FeatureArea getFeatureArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
@@ -132,14 +231,24 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
-        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
+        ThemeGeometry source = null;
+        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);        
         if (area == null) {
-            area  = defaultGeometry.getArea(tile, featureClass, loc);
+            area = adaptDefaultGeometry(defaultGeometry.getArea(tile, featureClass, loc));
+            if (area == null) {
+                logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
+                return new FeatureArea(new Area(), 0);
+            } else {
+            	source = defaultGeometry;
+            }            
+        } else {
+        	source = pluginGeometry;
         }
-        if (area == null) {
-            logger.error("No shape defined for <" + (new FeatureDescriptor(tile, featureClass, loc)) + ">");
-            area = new FeatureArea(new Area(), 0);
-        }
+        
+        area = applyRotationScaling(tile, source, area);
+        AffineTransform t = new AffineTransform();         
+        t.concatenate(tile.getRotation().getAffineTransform(NORMALIZED_SIZE, (int) (NORMALIZED_SIZE * getImageSizeRatio())));
+        area = area.transform(t);               
         return area;
     }
 
@@ -148,8 +257,26 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
              p = pluginGeometry.getSubstractionArea(tile, farm),
              area = new Area();
 
-        if (d != null) area.add(d);
-        if (p != null) area.add(p);
+        if (d != null) {
+        	area.add(adaptDefaultGeometry(d));
+        }
+        if (p != null) {
+        	//HACK always area rotation scale as not scale in both width and height
+        	//it's what is required for ROAD subtraction but it's possible in future it will be needed scale area too.
+        	Rotation rot = tile.getRotation();
+        	if (rot == Rotation.R90 || rot == Rotation.R270) {
+        		AffineTransform t = new AffineTransform();        		        		
+        		AreaRotationScaling.NO_SCALE_HEIGHT.concatAffineTransform(t, getImageSizeRatio());        		
+        		AreaRotationScaling.NO_SCALE_WIDTH.concatAffineTransform(t, 1.0 / getImageSizeRatio());        		
+        		p = p.createTransformedArea(t);     		        		        	
+        	}       
+        	
+        	area.add(p);
+        }
+        
+        AffineTransform t = new AffineTransform();         
+        t.concatenate(tile.getRotation().getAffineTransform(NORMALIZED_SIZE, (int) (NORMALIZED_SIZE * getImageSizeRatio())));
+        area.transform(t);        
         return area;
     }
 
@@ -158,9 +285,24 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         if (defaultGeometry.isFarmComplement(tile, loc)) return true;
         return false;
     }
+    
+    private FeatureArea adaptDefaultGeometry(FeatureArea fa) {
+    	if (fa == null) return null;
+    	return fa.transform(AffineTransform.getScaleInstance(1.0, getImageSizeRatio()));    		
+    }
+    
+    private Area adaptDefaultGeometry(Area a) {
+    	if (a == null) return null;
+    	if (imageRatioX != imageRatioY) {
+    		return a.createTransformedArea(
+    			AffineTransform.getScaleInstance(1.0, getImageSizeRatio())
+    		);
+    	} 
+    	return a;
+    }
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         if (!containsTile(tile.getId())) return null;
 
         Map<Location, FeatureArea> areas = new HashMap<>();
@@ -186,7 +328,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 continue;
             }
 
-            fa = new FeatureArea(getFeatureArea(tile, piece.getClass(), loc)); //copy to preserve original
+            fa = getFeatureArea(tile, piece.getClass(), loc);
             if (piece instanceof City || piece instanceof Road) {
                 Area subs = piece instanceof Bridge ? subsBridge : subsRoadCity;
                 if (!subs.isEmpty()) {
@@ -201,50 +343,52 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             areas.put(Location.FLIER, fa);
         }
 
-        AffineTransform transform1;
-        if (size == NORMALIZED_SIZE) {
-            transform1 = new AffineTransform();
+        double ratioX;
+        double ratioY;
+        Rotation rot = tile.getRotation();
+        if (rot == Rotation.R90 || rot  == Rotation.R270) {          	
+        	ratioX = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
+        	ratioY = (double) width / NORMALIZED_SIZE;
         } else {
-            double ratio = size/(double)NORMALIZED_SIZE;
-            transform1 = AffineTransform.getScaleInstance(ratio,ratio);
+        	ratioX = (double) width / NORMALIZED_SIZE;
+        	ratioY = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
         }
-        //TODO rotation - 3 rotations are done - Location rotation, getArea and this affine
-        AffineTransform transform2 = tile.getRotation().getAffineTransform(size);
-
-        for (FeatureArea fa : areas.values()) {
-            Area a = fa.getTrackingArea();
-            a = a.createTransformedArea(transform1);
-            a = a.createTransformedArea(transform2);
+        AffineTransform resize = AffineTransform.getScaleInstance(ratioX, ratioY);
+        
+        areas.forEach((key, fa) -> {
+        	Area a = fa.getTrackingArea();
+            a = a.createTransformedArea(resize);
             fa.setTrackingArea(a);
-        }
+        });        
 
-       return areas;
+        return areas;
     }
 
     @Override
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         return null;
     }
 
     //TODO Move to default provider ???
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
         if (!isEnabled()) return null;
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location loc : locations) {
-            result.put(loc, getBridgeArea(size, loc));
+            result.put(loc, getBridgeArea(width, height, loc));
         }
         return result;
     }
 
     //TODO move to Area Provider ???
-    private FeatureArea getBridgeArea(int size, Location loc) {
+    private FeatureArea getBridgeArea(int width, int height, Location loc) {
         AffineTransform transform1;
-        if (size == NORMALIZED_SIZE) {
+        if (width == NORMALIZED_SIZE && height == NORMALIZED_SIZE) {
             transform1 = new AffineTransform();
         } else {
-            double ratio = size/(double)NORMALIZED_SIZE;
-            transform1 = AffineTransform.getScaleInstance(ratio,ratio);
+            double ratioX = width / (double)NORMALIZED_SIZE;
+            double ratioY = height / (double)NORMALIZED_SIZE / getImageSizeRatio();
+            transform1 = AffineTransform.getScaleInstance(ratioX,ratioY);
         }
         Area a = pluginGeometry.getBridgeArea(loc).createTransformedArea(transform1);
         return new FeatureArea(a, FeatureArea.DEFAULT_BRIDGE_ZINDEX);
@@ -285,12 +429,20 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         sub.add(getSubstractionArea(tile, true));
         return sub;
     }
-
+    
+    private Rectangle getFullRectangle(Tile tile) {
+    	Rotation rot = tile.getRotation();
+    	if (rot == Rotation.R90 || rot == Rotation.R270) {
+    		return new Rectangle(0,0, (int) (NORMALIZED_SIZE * getImageSizeRatio()), NORMALIZED_SIZE-1);
+    	} else {
+    		return new Rectangle(0,0, NORMALIZED_SIZE-1, (int) (NORMALIZED_SIZE * getImageSizeRatio()));
+    	}
+    }
 
     private FeatureArea getFarmArea(Location farm, Tile tile, Area sub) {
         FeatureArea result;
         if (isFarmComplement(tile, farm)) { //is complement farm
-            Area base = new Area(new Rectangle(0,0, NORMALIZED_SIZE-1, NORMALIZED_SIZE-1));
+            Area base = new Area(getFullRectangle(tile));
             for (Feature piece : tile.getFeatures()) {
                 if (piece instanceof Farm && piece.getLocation() != farm) {
                     Area area = getFeatureArea(tile, Farm.class, piece.getLocation()).getTrackingArea();
@@ -299,15 +451,11 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             }
             result = new FeatureArea(base, FeatureArea.DEFAULT_FARM_ZINDEX);
         } else {
-            //copy area to not substract from original
-            result = new FeatureArea(getFeatureArea(tile, Farm.class, farm));
+            result = getFeatureArea(tile, Farm.class, farm);
         }
         if (!sub.isEmpty()) {
             result.getTrackingArea().subtract(sub);
         }
         return result;
     }
-
-
-
 }

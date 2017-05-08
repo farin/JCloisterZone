@@ -35,6 +35,7 @@ screenshots:
     scale: ${screenshot_scale}
 
 # plugins/classic.jar - Graphics from original board game
+# plugins/jcz3d.jar - 3D graphics
 # plugins/rgg_siege.jar - RGG's Siege tiles instead of original The Cathars tiles
 plugins: ${plugins}
 

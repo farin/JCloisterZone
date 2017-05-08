@@ -113,6 +113,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	menu.setItemEnabled(MenuItem.UNDO, false);
                 gc.getConnection().send(new UndoMessage(game.getGameId()));
             }
         });
@@ -326,6 +327,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             if (result) e.consume();
             return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
+        	e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
             return dispatchKeyTyped(e);
         }
         return false;

@@ -50,7 +50,7 @@ The special fork of WebSockets needs to be installed in Maven first.
 1. Clone the code from https://github.com/farin/JCloisterZone.git
 1. "Import..." the "JCloisterZone" project as an "Existing Maven project" from disk.
 1. Right click the project and select "Update project..." from the Maven menu.
-1. Run the project as a java application; select `Bootstrap` (`com.jcloisterzone.ui.Bootstrap`) as the main class.
+1. Run the project as a java application; select `JCloisterZone` (`com.jcloisterzone.ui.JCloisterZone`) as the main class.
 
 
 
@@ -202,7 +202,8 @@ chmod a+x JCloisterZone.jar
 mkdir JCloisterZone
 mv JCloisterZone.jar plugins JCloisterZone
 
-tar cvzf JCloisterZone-3.1.0.tgz JCloisterZone
-7z a JCloisterZone-3.3.0.7z JCloisterZone
-zip -r -9 JCloisterZone-3.1.0.zip JCloisterZone
+$JCZVER=3.4.3
+tar cvzf JCloisterZone-$JCZVER.tgz JCloisterZone
+7z a JCloisterZone-$JCZVER.7z JCloisterZone
+zip -r -9 JCloisterZone-$JCZVER.zip JCloisterZone
 ```

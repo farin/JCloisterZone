@@ -4,7 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
@@ -22,8 +21,6 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     private Set<Position> availablePositions;
 
     private Position previewPosition;
-    private Image previewIcon;
-
 
     public AbstractTilePlacementLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -46,14 +43,11 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     }
 
 
-    abstract protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position pos);
-    abstract protected Image createPreviewIcon();
-
+    abstract protected void drawPreviewIcon(Graphics2D g2, Position pos);
 
     @Override
     public void onHide() {
         super.onHide();
-        previewIcon = null;
         availablePositions = null;
         previewPosition = null;
     }
@@ -62,26 +56,24 @@ public abstract class AbstractTilePlacementLayer extends AbstractGridLayer imple
     @Override
     public void paint(Graphics2D g2) {
         if (availablePositions == null) return;
-        int borderSize = getSquareSize() - 4,
+        int xSize = getTileWidth() - 4,
+            ySize = getTileHeight() - 4,
             shift = 2,
-            thickness = borderSize/14;
+            thickness = xSize/14;
 
         g2.setColor(getClient().getTheme().getTilePlacementColor());
         for (Position p : availablePositions) {
             if (previewPosition == null || !previewPosition.equals(p)) {
                 int x = getOffsetX(p)+shift, y = getOffsetY(p)+shift;
-                g2.fillRect(x, y, borderSize, thickness);
-                g2.fillRect(x, y+borderSize-thickness, borderSize, thickness);
-                g2.fillRect(x, y, thickness, borderSize);
-                g2.fillRect(x+borderSize-thickness, y, thickness, borderSize);
+                g2.fillRect(x, y, xSize, thickness);
+                g2.fillRect(x, y+ySize-thickness, xSize, thickness);
+                g2.fillRect(x, y, thickness, ySize);
+                g2.fillRect(x+xSize-thickness, y, thickness, ySize);
             }
         }
 
         if (previewPosition != null) {
-            if (previewIcon == null) {
-                previewIcon = createPreviewIcon();
-            }
-            drawPreviewIcon(g2, previewIcon, previewPosition);
+            drawPreviewIcon(g2, previewPosition);
         }
         g2.setColor(active ? Color.BLACK : Color.GRAY);
 

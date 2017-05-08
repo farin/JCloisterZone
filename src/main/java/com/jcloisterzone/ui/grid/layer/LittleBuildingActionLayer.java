@@ -40,10 +40,10 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         for (LittleBuilding lb : LittleBuilding.values()) {
-            Image img = rm.getImage("lb-"+lb.name().toLowerCase());
+            Image img = rm.getImage("neutral/lb-"+lb.name().toLowerCase());
             images.put(lb, img);
         }
-        recomputeDimenensions(getSquareSize());
+        recomputeDimenensions(getTileWidth());
     }
 
     @Override
@@ -106,7 +106,6 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
                 Rectangle rect = new Rectangle(x-padding, y-padding, icoSize+2*padding, icoSize+2*padding);
                 areas.put(lb, at.createTransformedShape(rect).getBounds());
             }
-
         }
     }
 

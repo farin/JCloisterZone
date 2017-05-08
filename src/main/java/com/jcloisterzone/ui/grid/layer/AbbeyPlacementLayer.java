@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 
 import com.jcloisterzone.action.AbbeyPlacementAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -31,16 +32,15 @@ public class AbbeyPlacementLayer extends AbstractTilePlacementLayer implements A
         return action;
     }
 
-    @Override
-    protected Image createPreviewIcon() {
-        return rm.getAbbeyImage();
-    }
 
     @Override
-    protected void drawPreviewIcon(Graphics2D g2, Image previewIcon, Position previewPosition) {
+    protected void drawPreviewIcon(Graphics2D g2, Position previewPosition) {
+        //TODO offset
+        Image previewIcon = rm.getAbbeyImage(Rotation.R0).getImage();
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(ALLOWED_PREVIEW);
-        g2.drawImage(previewIcon, getAffineTransform(previewIcon.getWidth(null), previewPosition), null);
+        g2.drawImage(previewIcon,
+            getAffineTransform(previewIcon.getWidth(null), previewIcon.getHeight(null), previewPosition), null);
         g2.setComposite(compositeBackup);
     }
 

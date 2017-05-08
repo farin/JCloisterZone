@@ -27,6 +27,7 @@ public class RecentPlacement extends AbstractAnimation {
 		return new Color(0,0,0,alpha);
 	}
 
+	@Override
 	public boolean switchFrame() {
 		alpha -= ALPHA_STEP;
 		if (alpha <= 0) {
@@ -40,6 +41,6 @@ public class RecentPlacement extends AbstractAnimation {
 	@Override
 	public void paint(AnimationLayer l, Graphics2D g) {
 		g.setColor(color);
-		g.fillRect(l.getOffsetX(position), l.getOffsetY(position), l.getSquareSize(), l.getSquareSize());
+		g.fillRect(l.getOffsetX(position), l.getOffsetY(position), l.getTileWidth(), l.getTileHeight());
 	}
 }

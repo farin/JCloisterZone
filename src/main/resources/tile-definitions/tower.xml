@@ -122,7 +122,7 @@
 	</tile>
 	<tile id="CccC+">
 		<tower />
-		<city>N W E</city>
+		<city pennant="yes">N W E</city>
 		<city castle-base="true">S</city>
 		<farm city="W S">INNER_FARM</farm>
 	</tile>

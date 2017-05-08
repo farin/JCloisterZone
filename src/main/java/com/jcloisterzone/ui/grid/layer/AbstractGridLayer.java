@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
@@ -26,7 +27,7 @@ import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
-import com.jcloisterzone.ui.resources.ResourceManager;
+import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.wsio.RmiProxy;
 
 public abstract class AbstractGridLayer implements GridLayer {
@@ -95,29 +96,58 @@ public abstract class AbstractGridLayer implements GridLayer {
             mouseListener = null;
         }
     }
-    public AffineTransform getAffineTransform(int scaleFrom, Position pos) {
-        return getAffineTransform(scaleFrom, pos, Rotation.R0);
+
+    public AffineTransform getAffineTransform(TileImage tileImage, Position pos) {
+        Insets offset = tileImage.getOffset();
+        Image img = tileImage.getImage();
+        int w = img.getWidth(null) - offset.left - offset.right;
+        int h = img.getHeight(null) - offset.top - offset.bottom;
+        return getAffineTransform(w, h, pos, offset);
+    }
+
+    public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Insets offset) {
+        AffineTransform t = getAffineTransform(fromWidth, fromHeight, pos, Rotation.R0);
+        t.concatenate(AffineTransform.getTranslateInstance(-offset.left, -offset.top));
+        return t;
+    }
+
+    public AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos) {
+        return getAffineTransform(fromWidth, fromHeight, pos, Rotation.R0);
     }
 
     public AffineTransform getAffineTransform(Position pos) {
-        return AffineTransform.getTranslateInstance(pos.x * getSquareSize(), pos.y * getSquareSize());
+        return AffineTransform.getTranslateInstance(pos.x * getTileWidth(), pos.y * getTileHeight());
     }
 
     public AffineTransform getAffineTransform(Position pos, Rotation rotation) {
-        AffineTransform r =  rotation.getAffineTransform(getSquareSize());
+        AffineTransform r;
+        if (rotation == Rotation.R0 || rotation == Rotation.R180) {
+            r =  rotation.getAffineTransform(getTileWidth(), getTileHeight());
+        } else {
+            r =  rotation.getAffineTransform(getTileHeight(), getTileWidth());
+        }
         AffineTransform t =  AffineTransform.getTranslateInstance(getOffsetX(pos), getOffsetY(pos));
         t.concatenate(r);
         return t;
     }
 
-    public AffineTransform getAffineTransform(int scaleFrom, Position pos, Rotation rotation) {
-        double ratio =  getSquareSize() / (double) scaleFrom;
-        return getAffineTransform(scaleFrom, pos, rotation, ratio);
+    //called only with R0
+    @Deprecated
+    private AffineTransform getAffineTransform(int fromWidth, int fromHeight, Position pos, Rotation rotation) {
+        double ratioX, ratioY;
+        if (rotation == Rotation.R0 || rotation == Rotation.R180) {
+            ratioX =  getTileWidth() / (double) fromWidth;
+            ratioY =  getTileHeight() / (double) fromHeight;
+        } else {
+            ratioX =  getTileHeight() / (double) fromWidth;
+            ratioY =  getTileWidth() / (double) fromHeight;
+        }
+        return getAffineTransform(pos, rotation, ratioX, ratioY);
     }
 
-    public AffineTransform getAffineTransform(int scaleFrom, Position pos, Rotation rotation, double ratio) {
+    public AffineTransform getAffineTransform(Position pos, Rotation rotation, double ratioX, double ratioY) {
         AffineTransform t = getAffineTransform(pos, rotation);
-        AffineTransform scale =  AffineTransform.getScaleInstance(ratio, ratio);
+        AffineTransform scale =  AffineTransform.getScaleInstance(ratioX, ratioY);
         t.concatenate(scale);
         return t;
     }
@@ -126,7 +156,7 @@ public abstract class AbstractGridLayer implements GridLayer {
         int x = getOffsetX(pos);
         int y = getOffsetY(pos);
         AffineTransform at = AffineTransform.getTranslateInstance(x, y);
-        at.concatenate(gridPanel.getBoardRotation().inverse().getAffineTransform(getSquareSize()));
+        at.concatenate(gridPanel.getBoardRotation().inverse().getAffineTransform(getTileWidth(), getTileHeight()));
         return at;
     }
 
@@ -138,15 +168,19 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
     public int getOffsetX(Position pos) {
-        return getSquareSize() * pos.x;
+        return getTileWidth() * pos.x;
     }
 
     public int getOffsetY(Position pos) {
-        return getSquareSize() * pos.y;
+        return getTileHeight() * pos.y;
     }
 
-    public int getSquareSize() {
-        return gridPanel.getSquareSize();
+    public int getTileWidth() {
+        return gridPanel.getTileWidth();
+    }
+
+    public int getTileHeight() {
+        return gridPanel.getTileHeight();
     }
 
     protected Client getClient() {
@@ -167,8 +201,9 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     // LEGACY CODE - TODO REFACTOR
 
+    @Deprecated
     private int scale(int x) {
-        return (int) (getSquareSize() * (x / 100.0));
+        return (int) (getTileWidth() * (x / 100.0));
     }
 
     @Deprecated
@@ -179,7 +214,7 @@ public abstract class AbstractGridLayer implements GridLayer {
 
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
         //gridPanel.getBoardRotation().
-        ImmutablePoint center = centerNoScaled.scale(getSquareSize());
+        ImmutablePoint center = centerNoScaled.scale(getTileWidth(), getTileHeight());
         drawAntialiasedTextCenteredNoScale(g2, text, fontSize, pos, center, fgColor, bgColor);
     }
 
@@ -208,7 +243,6 @@ public abstract class AbstractGridLayer implements GridLayer {
         tl.draw(g2, x,  y+h);
         g2.setColor(original);
         g2.setTransform(orig);
-
     }
 
 }

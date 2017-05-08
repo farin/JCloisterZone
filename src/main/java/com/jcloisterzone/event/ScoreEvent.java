@@ -89,7 +89,11 @@ public class ScoreEvent extends PlayEvent implements Undoable {
 
     @Override
     public Event getInverseEvent() {
-        throw new UnsupportedOperationException();
+    	if (this.meepleType != null) {
+    		throw new UnsupportedOperationException();
+    	}
+    	// only non-meeple events are currently reversed
+    	return new ScoreEvent(position, getTargetPlayer(), -points, category);
     }
 
     @Override

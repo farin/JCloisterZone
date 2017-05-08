@@ -23,41 +23,49 @@ import com.jcloisterzone.ui.ImmutablePoint;
 
 public class DefaultResourceManager implements ResourceManager {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final ImageLoader imgLoader;
+    private final ImageLoader imgLoader;
 
-	public DefaultResourceManager() {
-		ImageLoader imgLoader = null;
-		try {
-			URL defaults = getClass().getClassLoader().getResource("defaults/").toURI().toURL();
-			URLClassLoader loader = new URLClassLoader(new URL[] { defaults });
-			imgLoader = new ImageLoader(loader);
-		} catch (URISyntaxException | MalformedURLException e) {
-			//should never happen
-			logger.error(e.getMessage(), e);
-		}
-		this.imgLoader = imgLoader;
-	}
+    public DefaultResourceManager() {
+        ImageLoader imgLoader = null;
+        try {
+            URL defaults = getClass().getClassLoader().getResource("defaults/").toURI().toURL();
+            URLClassLoader loader = new URLClassLoader(new URL[] { defaults });
+            imgLoader = new ImageLoader(loader);
+        } catch (URISyntaxException | MalformedURLException e) {
+            //should never happen
+            logger.error(e.getMessage(), e);
+        }
+        this.imgLoader = imgLoader;
+    }
+
 
     @Override
-    public Image getTileImage(Tile tile) {
-        return (new TileImageFactory()).getTileImage(tile);
+    public TileImage getTileImage(Tile tile) {
+        return null;
+        //return (new TileImageFactory()).getTileImage(tile);
     }
 
     @Override
-    public Image getAbbeyImage() {
-        return (new TileImageFactory()).getAbbeyImage();
+    public TileImage getTileImage(Tile tile, Rotation rot) {
+        return null;
+    }
+
+    @Override
+    public TileImage getAbbeyImage(Rotation rot) {
+        return null;
+        //return (new TileImageFactory()).getAbbeyImage();
     }
 
     @Override
     public Image getImage(String path) {
-    	return imgLoader.getImage(path);
+        return imgLoader.getImage(path);
     }
 
     @Override
     public Image getLayeredImage(LayeredImageDescriptor lid) {
-    	return imgLoader.getLayeredImage(lid);
+        return imgLoader.getLayeredImage(lid);
     }
 
     private ImmutablePoint getBarnPlacement(Location loc) {
@@ -77,14 +85,15 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-	public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int size, Set<Location> corners) {
+    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
         Map<Location, FeatureArea> result = new HashMap<>();
         for (Location corner : corners) {
-            int r = size/2;
-            Area a = new Area(new Ellipse2D.Double(-r,-r,2*r,2*r));
-            if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(size));
-            if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(size));
-            if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(size));
+            int rx = width/2;
+            int ry = height/2;
+            Area a = new Area(new Ellipse2D.Double(-rx,-ry,2*rx,2*ry));
+            if (corner.isPartOf(Location.NR.union(Location.EL))) a.transform(Rotation.R90.getAffineTransform(width, height));
+            if (corner.isPartOf(Location.SL.union(Location.ER))) a.transform(Rotation.R180.getAffineTransform(width, height));
+            if (corner.isPartOf(Location.SR.union(Location.WL))) a.transform(Rotation.R270.getAffineTransform(width, height));
             result.put(corner, new FeatureArea(a, FeatureArea.DEFAULT_FARM_ZINDEX));
         }
         return result;
@@ -92,15 +101,12 @@ public class DefaultResourceManager implements ResourceManager {
 
 
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
         return null;
     }
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int size, Set<Location> locations) {
+    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
         return null;
     }
-
-
-
 }

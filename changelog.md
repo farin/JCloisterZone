@@ -1,5 +1,14 @@
 # Version history
 
+## 3.4.3
+*2017-05-08
+
+* MacOS: application title is again JCloisterZone 
+* fixed: Little Buildings (unable to place building)
+* fixed: WindRose points can be repeated by undo tile placement infinitely
+* fixed TO.CccC+ definition (shield on one Tower tile is properly counted) 
+* experimental support for "rectangular" tiles - possibility to display 3d tiles projected as rectangle - currently no theme
+
 ## 3.4.2
 *2015-11-21*
 

@@ -29,7 +29,7 @@ import com.jcloisterzone.game.SnapshotCorruptedException;
 
 public class XMLUtils {
 
-	private XMLUtils() {}
+    private XMLUtils() {}
 
     public static Document parseDocument(URL url) {
         try (InputStream is = url.openStream()){
@@ -61,10 +61,15 @@ public class XMLUtils {
         }
     }
 
-    public static String childValue(Element parent, String childName) {
+    public static Element getElementByTagName(Element parent, String childName) {
         NodeList nl = parent.getElementsByTagName(childName);
         if (nl.getLength() == 0) return null;
-        return nl.item(0).getTextContent();
+        return (Element) nl.item(nl.getLength()-1);
+    }
+
+    public static String childValue(Element parent, String childName) {
+        Element child = XMLUtils.getElementByTagName(parent, childName);
+        return child == null ? null : child.getTextContent();
     }
 
     public static String nodeToString(Node node) {
@@ -150,17 +155,17 @@ public class XMLUtils {
     }
 
     public static void injectFeaturePoiner(Element el, FeaturePointer fp) {
-    	XMLUtils.injectPosition(el, fp.getPosition());
+        XMLUtils.injectPosition(el, fp.getPosition());
         if (fp.getLocation() != null) {
-			el.setAttribute("location", fp.getLocation().toString());
+            el.setAttribute("location", fp.getLocation().toString());
         }
     }
 
     public static FeaturePointer extractFeaturePointer(Element el) {
-    	Position pos = XMLUtils.extractPosition(el);
-    	Location loc = null;
+        Position pos = XMLUtils.extractPosition(el);
+        Location loc = null;
         if (el.hasAttribute("location")) {
-        	loc = Location.valueOf(el.getAttribute("location"));
+            loc = Location.valueOf(el.getAttribute("location"));
         }
         return new FeaturePointer(pos, loc);
     }

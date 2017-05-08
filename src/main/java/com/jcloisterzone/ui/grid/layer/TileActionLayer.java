@@ -49,7 +49,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
 	public void paint(Graphics2D g2) {
         int imgSize = gridDecoration.getWidth(null);
         for (Position pos : action.getOptions()) {
-            g2.drawImage(gridDecoration, getAffineTransform(imgSize, pos), null);
+            g2.drawImage(gridDecoration, getAffineTransform(imgSize, imgSize, pos), null);
         }
     }
 

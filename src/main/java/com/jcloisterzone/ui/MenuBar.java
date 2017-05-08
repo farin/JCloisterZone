@@ -49,7 +49,8 @@ public class MenuBar extends JMenuBar {
         CONFIRM_FARM_DEPLOYMENT(_("Confirm Meeple Deployment on a Farm")),
         CONFIRM_TOWER_DEPLOYMENT(_("Confirm Meeple Deployment on a Tower")),
         CONFIRM_RANSOM(_("Confirm Ransom Payment")),
-        PREFERENCES(_("Preferences")),
+        PREFERENCES(_("Preferences"), JCloisterZone.isMac() ? 
+        	KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) : null),
         //Help
         ABOUT(_("About")),
         TILE_DISTRIBUTION(_("Tile Distribution"), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0)),
@@ -78,7 +79,7 @@ public class MenuBar extends JMenuBar {
     public MenuBar(Client _client) {
         this.client = _client;
 
-        boolean isMac = Bootstrap.isMac();
+        boolean isMac = JCloisterZone.isMac();
 
         JMenu menu;
         JCheckBoxMenuItem chbox;

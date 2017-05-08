@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -88,7 +89,7 @@ public class PlayerPanelImageCache {
             scaledImages.put("wine", rm.getImage("neutral/wine"));
         }
         if (game.hasCapability(BarnCapability.class)) {
-            scaledImages.put("abbey", scaleImage(rm.getAbbeyImage()));
+            scaledImages.put("abbey", scaleImage(rm.getAbbeyImage(Rotation.R0).getImage()));
         }
         if (game.hasCapability(LittleBuildingsCapability.class)) {
             scaledImages.put("lb-tower", scaleImage(rm.getImage("neutral/lb-tower")));

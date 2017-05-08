@@ -10,7 +10,6 @@ import com.jcloisterzone.action.SelectFollowerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.BoardPointer;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.GameController;
@@ -45,9 +44,9 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
 
     @Override
     protected Map<BoardPointer, FeatureArea> prepareAreas(Tile tile, Position p) {
-        int r = (int) (getSquareSize() / 3.0);
-        int innerR = (int) (getSquareSize() / 4.2);
-        int boxSize = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO);
+        int r = (int) (getTileWidth() / 3.0);
+        int innerR = (int) (getTileWidth() / 4.2);
+        int boxSize = (int) (getTileWidth() * MeepleLayer.FIGURE_SIZE_RATIO);
 
         Map<BoardPointer, FeatureArea> areas = new HashMap<>();
         for (MeeplePointer pointer : action.getMeeplePointers(p)) {
@@ -65,7 +64,7 @@ public class FollowerAreaLayer extends AbstractAreaLayer implements ActionLayer<
                 ImmutablePoint offset = pfi.getScaledOffset(boxSize);
                 int x = offset.getX();
                 int y = offset.getY();
-                int width = (int) (getSquareSize() * MeepleLayer.FIGURE_SIZE_RATIO * pfi.xScaleFactor);
+                int width = (int) (getTileWidth() * MeepleLayer.FIGURE_SIZE_RATIO * pfi.xScaleFactor);
                 int height = (int) (pfi.heightWidthRatio * width * pfi.yScaleFactor);
                 int cx = x+(width/2);
                 int cy = y+(height/2);

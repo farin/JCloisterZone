@@ -30,6 +30,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.plugin.ResourcePlugin;
+import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.FeatureDescriptor;
 import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHandler;
@@ -37,7 +38,11 @@ import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHan
 
 public class ThemeGeometry {
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    public double getImageSizeRatio() {
+		return imageSizeRatio;
+	}
+
+	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private static class AreaWithZIndex {
         Area area;
@@ -49,6 +54,7 @@ public class ThemeGeometry {
         }
     }
 
+    private final double imageSizeRatio;
     private final Map<String, String> aliases = new HashMap<>();
     private final Map<FeatureDescriptor, FeatureArea> areas = new HashMap<>();
     private final Map<String, Area> substractionAll = new HashMap<>(); //key tile ID
@@ -66,7 +72,9 @@ public class ThemeGeometry {
         BRIDGE_AREA_WE = a;
     }
 
-    public ThemeGeometry(ClassLoader loader, String folder) throws IOException, SAXException, ParserConfigurationException {
+    public ThemeGeometry(ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
+    	this.imageSizeRatio = imageSizeRatio;
+    	
         NodeList nl;
         URL aliasesResource = loader.getResource(folder + "/aliases.xml");
         if (aliasesResource != null) {
@@ -125,15 +133,17 @@ public class ThemeGeometry {
     }
 
     private void processShapeElement(Element shapeNode) {
-        final AreaWithZIndex az = createArea(shapeNode);
+        final AreaWithZIndex az = createArea(shapeNode);        
 
-        SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode);
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(shapeNode, imageSizeRatio);
         transformCollector.collect(new GeometryHandler() {
 
             @Override
-            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
+            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform, AreaRotationScaling rotationScaling) {
                 assert !areas.containsKey(fd) : "Duplicate key " + fd;
-                areas.put(fd, new FeatureArea(az.area.createTransformedArea(transform), getZIndex(az.zIndex, fd)));
+                FeatureArea area = new FeatureArea(az.area.createTransformedArea(transform), getZIndex(az.zIndex, fd));
+                area.setRotationScaling(rotationScaling);                
+                areas.put(fd, area);
             }
 
             @Override

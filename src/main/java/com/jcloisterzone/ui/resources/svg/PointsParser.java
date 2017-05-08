@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureDescriptor;
 import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHandler;
 
@@ -35,11 +36,11 @@ class PointsParser {
         int cy = Integer.parseInt(pointNode.getAttribute("cy"));
         final Point destPoint = new Point(), srcPoint = new Point(cx, cy);
 
-        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode);
+        SvgTransformationCollector transformCollector = new SvgTransformationCollector(pointNode, 1.0);
         transformCollector.collect(new GeometryHandler() {
 
             @Override
-            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform) {
+            public void processApply(Element node, FeatureDescriptor fd, AffineTransform transform, AreaRotationScaling rotScaling) {
                 assert !points.containsKey(fd) : fd + " already defined";
                 transform.transform(srcPoint, destPoint);
                 //TODO use 1000-pixel standard

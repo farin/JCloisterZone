@@ -28,6 +28,7 @@ import net.miginfocom.swing.MigLayout;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
@@ -45,13 +46,15 @@ import com.jcloisterzone.ui.grid.layer.AbbeyPlacementLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.AbstractTilePlacementLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.ui.plugin.Plugin;
+import com.jcloisterzone.ui.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.view.GameView;
 
 public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     private static final long serialVersionUID = -7013723613801929324L;
 
-    public static int INITIAL_SQUARE_SIZE = 120;
+    public static int INITIAL_TILE_WIDTH = 120;
 
     private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
     private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
@@ -67,8 +70,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     /** current board size */
     private int left, right, top, bottom;
-    private int squareSize;
+    private int tileWidth, tileHeight;
     private Rotation boardRotation = Rotation.R0;
+    private double meepleScaleFactor = 1.0;
 
     //focus
     private int offsetX, offsetY;
@@ -97,7 +101,14 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         this.chatPanel = networkGame ? chatPanel : null;
 
-        squareSize = INITIAL_SQUARE_SIZE;
+        ResourcePlugin rp = getBaseExpansionResourcePlugin();
+        if (rp != null) {
+            //sqrt -> geometric average between width and height
+            meepleScaleFactor = Math.sqrt(rp.getImageSizeRatio());
+        }
+
+        updateTileSize((int)(INITIAL_TILE_WIDTH / rp.getImageSizeRatio()));
+
 
         if (snapshot != null) {
             NodeList nl = snapshot.getTileElements();
@@ -116,6 +127,29 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             chatPanel.initHidingMode();
             add(chatPanel, "pos 0 0 250 100%");
         }
+    }
+
+    public double getMeepleScaleFactor() {
+        return meepleScaleFactor;
+    }
+
+    private ResourcePlugin getBaseExpansionResourcePlugin() {
+        for (Plugin plugin : client.getPlugins()) {
+            if (!plugin.isEnabled()) continue;
+            if (!(plugin instanceof ResourcePlugin)) continue;
+            ResourcePlugin rp = (ResourcePlugin) plugin;
+            if (rp.isExpansionSupported(Expansion.BASIC)) {
+                return rp;
+            }
+        }
+        return null;
+    }
+
+    private void updateTileSize(int baseWidth) {
+        ResourcePlugin rp = getBaseExpansionResourcePlugin();
+        double ratio = rp == null ? 1.0 : rp.getImageSizeRatio();
+        tileWidth = baseWidth;
+        tileHeight = (int)(ratio * baseWidth);
     }
 
 
@@ -154,7 +188,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         private void moveTo(MouseEvent e) {
             int clickX = e.getX()-offsetX;
             int clickY = e.getY()-offsetY;
-            moveCenterToAnimated(clickX/(double)squareSize, clickY/(double)squareSize);
+            moveCenterToAnimated(clickX/(double)tileWidth, clickY/(double)tileHeight);
         }
 
         @Override
@@ -196,8 +230,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             int dx = e.getX() - dragSource.getX();
             int dy = e.getY() - dragSource.getY();
             //relative values
-            double rdx = dx/(double)squareSize;
-            double rdy = dy/(double)squareSize;
+            double rdx = dx/(double)tileWidth;
+            double rdy = dy/(double)tileHeight;
 
             moveCenterTo(sourceCx-rdx, sourceCy-rdy);
         }
@@ -223,10 +257,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return client;
     }
 
-    public int getSquareSize() {
-        return squareSize;
+    public int getTileWidth() {
+        return tileWidth;
     }
 
+    public int getTileHeight() {
+        return tileHeight;
+    }
 
     public int getOffsetX() {
         return offsetX;
@@ -234,14 +271,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public int getOffsetY() {
         return offsetY;
-    }
-
-    public int getSquareWidth() {
-        return right - left + 1;
-    }
-
-    public int getSquareHeight() {
-        return bottom - top + 1;
     }
 
     public ChatPanel getChatPanel() {
@@ -289,8 +318,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px
-        double dx = xSteps * 30.0f / getSquareSize();
-        double dy = ySteps * 30.0f / getSquareSize();
+        double dx = xSteps * 30.0f / tileWidth;
+        double dy = ySteps * 30.0f / tileHeight;
         moveCenterTo(cx + dx, cy + dy);
     }
 
@@ -314,19 +343,19 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void zoom(double steps) {
-        int size = (int) (squareSize * Math.pow(1.3, steps));
+        int size = (int) (tileWidth * Math.pow(1.3, steps));
         if (size < 25) size = 25;
         if (size > 300) size = 300;
         setZoomSize(size);
     }
 
     private void setZoomSize(int size) {
-        if (size == squareSize) return;
-        squareSize = size;
+        if (size == tileWidth) return;
 
+        updateTileSize(size);
         synchronized (layers) {
             for (GridLayer layer : layers) {
-                layer.zoomChanged(squareSize);
+                layer.zoomChanged(tileWidth);
             }
         }
         moveCenterTo(cx, cy); //re-check center constraints
@@ -414,11 +443,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     public void showErrorMessage(String errorMessage) {
-    	if (errorMsg != null) {
-    		remove(errorMsg);
-    	}
-    	errorMsg = new ErrorMessagePanel(errorMessage);
-    	errorMsg.setOpaque(true);
+        if (errorMsg != null) {
+            remove(errorMsg);
+        }
+        errorMsg = new ErrorMessagePanel(errorMessage);
+        errorMsg.setOpaque(true);
         add(errorMsg, "pos 0 0 (100%-242) 30");
         revalidate();
         repaint();
@@ -442,11 +471,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     }
 
     private int calculateCenterX() {
-        return (getWidth() - ControlPanel.PANEL_WIDTH - squareSize)/2;
+        return (getWidth() - ControlPanel.PANEL_WIDTH - tileWidth)/2;
     }
 
     private int calculateCenterY() {
-        return (getHeight() - squareSize)/2;
+        return (getHeight() - tileHeight)/2;
     }
 
 //    //TODO remove profile code
@@ -459,7 +488,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
 
     public Point2D getRelativePoint(Point2D point) {
-        AffineTransform af = boardRotation.inverse().getAffineTransform(getSquareSize());
+        AffineTransform af = boardRotation.inverse().getAffineTransform(tileWidth, tileHeight);
         af.translate(-offsetX, -offsetY);
         return af.transform(point, null);
     }
@@ -476,11 +505,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         int w = getWidth();
 
         AffineTransform origTransform = g2.getTransform();
-        offsetX = calculateCenterX() - (int)(cx * squareSize);
-        offsetY = calculateCenterY() - (int)(cy * squareSize);
+        offsetX = calculateCenterX() - (int)(cx * tileWidth);
+        offsetY = calculateCenterY() - (int)(cy * tileHeight);
         g2.translate(offsetX, offsetY);
         if (boardRotation != Rotation.R0) {
-            AffineTransform af = boardRotation.getAffineTransform(getSquareSize());
+            AffineTransform af = boardRotation.getAffineTransform(tileWidth, tileHeight);
             g2.transform(af);
         }
 
@@ -530,18 +559,18 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //Layers use squareSize for painting, make sure the squaresize (eg: zoom) is set
         //TODO is this dangerous if GridPanel is rendered while print screening?
 
-        int orig = squareSize;
-        squareSize = screenshotScale;
+        int origWidth = tileWidth;
+        updateTileSize(screenshotScale);
         for (GridLayer layer : layers) {
             if (layer.isVisible()) {
                 //TODO calling zoomChanged can broke something, don't do it
                 layer.zoomChanged(screenshotScale);
                 layer.paint(graphics);
-                layer.zoomChanged(orig);
+                layer.zoomChanged(origWidth);
             }
         }
         //set it back
-        squareSize = orig;
+        updateTileSize(origWidth);
 
         //reset translation
         graphics.translate(-transX, -transY);

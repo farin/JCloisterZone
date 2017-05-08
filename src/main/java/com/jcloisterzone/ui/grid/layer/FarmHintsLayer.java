@@ -29,7 +29,6 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.FeatureArea;
-import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class FarmHintsLayer extends AbstractGridLayer {
 
@@ -54,7 +53,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
         Composite old = g2.getComposite();
         g2.setComposite(HINT_ALPHA_COMPOSITE);
-        int sqSize = getSquareSize();
+        int sqSize = getTileWidth();
         Double scale = sqSize == FULL_SIZE ? null : (double) sqSize / FULL_SIZE;
         TextureFactory textures = new TextureFactory(sqSize);
 
@@ -95,7 +94,9 @@ public class FarmHintsLayer extends AbstractGridLayer {
                 }
             }
             if (farmLocations.isEmpty()) return;
-            Map<Location, FeatureArea> tAreas = rm.getFeatureAreas(tile, FULL_SIZE, farmLocations);
+            int w = gridPanel.getTileWidth();
+            int h = gridPanel.getTileHeight();
+            Map<Location, FeatureArea> tAreas = rm.getFeatureAreas(tile, FULL_SIZE, FULL_SIZE * h / w, farmLocations);
             areas.put(tile, tAreas);
             refreshHints();
         }
