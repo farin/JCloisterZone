@@ -202,7 +202,7 @@ chmod a+x JCloisterZone.jar
 mkdir JCloisterZone
 mv JCloisterZone.jar plugins JCloisterZone
 
-$JCZVER=3.4.3
+JCZVER=3.4.3
 tar cvzf JCloisterZone-$JCZVER.tgz JCloisterZone
 7z a JCloisterZone-$JCZVER.7z JCloisterZone
 zip -r -9 JCloisterZone-$JCZVER.zip JCloisterZone

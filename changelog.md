@@ -4,6 +4,7 @@
 *2017-05-08
 
 * MacOS: application title is again JCloisterZone 
+* fixed: crash caused by two "Undo"s triggered in short period 
 * fixed: Little Buildings (unable to place building)
 * fixed: WindRose points can be repeated by undo tile placement infinitely
 * fixed TO.CccC+ definition (shield on one Tower tile is properly counted) 
