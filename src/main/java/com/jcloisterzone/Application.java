@@ -9,8 +9,8 @@ public interface Application {
 	//use just for dev builds
     public String DEV_VERSION = "dev-snapshot";
 
-    public String VERSION = "3.4.2";
-    public String BUILD_DATE = "2015-11-21";
+    public String VERSION = "3.4.3";
+    public String BUILD_DATE = "2017-05-08";
 
     public String PROTCOL_VERSION = "3.4.2";
 
