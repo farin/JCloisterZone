@@ -2,10 +2,11 @@ package com.jcloisterzone.board;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import com.jcloisterzone.Immutable;
+
+import io.vavr.collection.List;
+import io.vavr.collection.Vector;
 
 
 /**
@@ -20,14 +21,15 @@ import java.util.Map;
  *  city & road locations are shifted by 8 bit left
  *  so farm and road location has no intersection
  */
+@Immutable
 public class Location implements Serializable {
 
-    private static final long serialVersionUID = -8348910171518350353L;
+    private static final long serialVersionUID = 1L;
 
     transient private String name;
     private int mask;
 
-    private static Map<Integer, Location> instances = new HashMap<>();
+    private static java.util.Map<Integer, Location> instances = new java.util.HashMap<>();
 
     /**
      * Obtains instance with given mask. For named location
@@ -35,7 +37,7 @@ public class Location implements Serializable {
      * @param mask	bite mask of demand instance
      */
     public static Location create(int mask) {
-    	if (mask == 0) return null;
+        if (mask == 0) return null;
         Location loc = instances.get(mask);
         if (loc != null) return loc;
         //TODO prepare name here
@@ -44,6 +46,10 @@ public class Location implements Serializable {
 
     private Object readResolve() throws ObjectStreamException {
         return create(mask);
+    }
+
+    public int getMask() {
+        return mask;
     }
 
     private Location(String name, int mask) {
@@ -95,6 +101,11 @@ public class Location implements Serializable {
     public static final Location TOWER = new Location("TOWER", 1 << 20);
     /** Flier location - follower can be placed here just for moment, before dice roll  */
     public static final Location FLIER = new Location("FLIER", 1 << 21);
+    /** City of Carcassonne specials (Count) */
+    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 1 << 22);
+    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 1 << 23);
+    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 1 << 24);
+    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 1 << 25);
 
     // --- farm locations ---
 
@@ -120,10 +131,10 @@ public class Location implements Serializable {
     /** West right farm */
     public static final Location WR = new Location("WR", 128);
 
-
-    private static final Location[] SIDES = {N, E, S, W};
-    private static final Location[] DIAGONAL_SIDES = {NE, SE, SW, NW};
-    private static final Location[] FARM_SIDES = {NL, NR, EL, ER, SL, SR, WL, WR};
+    public static final List<Location> SIDES = List.of(N, E, S, W);
+    public static final List<Location> FARM_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
+    public static final List<Location> BRIDGES = List.of(NS, WE);
+    public static final List<Location> QUARTERS = List.of(QUARTER_CASTLE, QUARTER_MARKET, QUARTER_BLACKSMITH, QUARTER_CATHEDRAL);
 
 
     @Override
@@ -148,7 +159,7 @@ public class Location implements Serializable {
         return shift(6);
     }
 
-    /** Returns opposite location, mirrored by axis */
+    /** Returns opposite location, mirrored by axes */
     public Location rev() {
         // odd bits shift by 5, even by 3;
         int mLo = mask & 255;
@@ -191,18 +202,6 @@ public class Location implements Serializable {
      */
     public Location rotateCW(Rotation rot) {
         return shift(rot.ordinal()*2);
-    }
-
-    public static Location[] sides() {
-        return SIDES;
-    }
-
-    public static Location[] sidesFarm() {
-        return FARM_SIDES;
-    }
-
-    public static Location[] sidesDiagonal() {
-        return DIAGONAL_SIDES;
     }
 
     public Location getLeftFarm() {
@@ -251,30 +250,12 @@ public class Location implements Serializable {
 
     public Location intersect(Location d) {
         if (d == null || (mask & d.mask) == 0) return null;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "interasect("+this+','+d+')';
+        assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "intersect("+this+','+d+')';
         return create(mask & d.mask);
     }
 
-    public Location[] intersectMulti(Location[] locs) {
-        List<Location> result = new ArrayList<>();
-        for (Location loc: locs) {
-            Location i = this.intersect(loc);
-            if (i != null) {
-                result.add(i);
-            }
-        }
-        return result.toArray(new Location[result.size()]);
-    }
-
-    public Location[] splitToSides() {
-    	ArrayList<Location> result = new ArrayList<Location>(4);
-    	for (Location side: Location.sides()) {
-			Location part = this.intersect(side);
-			if (part != null) {
-				result.add(part);
-			}
-    	}
-    	return result.toArray(new Location[result.size()]);
+    public List<Location> splitToSides() {
+        return Location.SIDES.filter(side -> intersect(side) != null);
     }
 
     /** Creates instance according to name */
@@ -306,6 +287,19 @@ public class Location implements Serializable {
         return getRotationOf(loc) != null;
     }
 
+    /* get included full farm coners */
+    public Vector<Corner> getCorners() {
+        if (!isFarmLocation()) {
+            return Vector.empty();
+        }
+        Vector<Corner> res = Vector.empty();
+        if (WR.isPartOf(this) && NL.isPartOf(this)) res = res.append(Corner.NW);
+        if (NR.isPartOf(this) && EL.isPartOf(this)) res = res.append(Corner.NE);
+        if (ER.isPartOf(this) && SL.isPartOf(this)) res = res.append(Corner.SE);
+        if (SR.isPartOf(this) && WL.isPartOf(this)) res = res.append(Corner.SW);
+        return res;
+    }
+
     //assertion methods
 
     public boolean isFarmLocation() {
@@ -318,5 +312,13 @@ public class Location implements Serializable {
 
     public boolean isSpecialLocation() {
         return (mask & ~0x3FFFF) > 0;
+    }
+
+    public boolean isBridgeLocation() {
+        return BRIDGES.contains(this);
+    }
+
+    public boolean isCityOfCarcassonneQuarter() {
+        return QUARTERS.contains(this);
     }
 }

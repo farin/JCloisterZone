@@ -1,13 +1,15 @@
 package com.jcloisterzone.figure.neutral;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.game.Game;
 
+@Immutable
 public class Dragon extends NeutralFigure<Position> {
 
-    private static final long serialVersionUID = -1813614595872478582L;
+    private static final long serialVersionUID = 1L;
 
-    public Dragon(Game game) {
-        super(game);
+    public Dragon(String id) {
+        super(id);
     }
+
 }

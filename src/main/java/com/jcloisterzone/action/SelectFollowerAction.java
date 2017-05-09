@@ -1,48 +1,26 @@
 package com.jcloisterzone.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
 
+import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 
+
+@LinkedGridLayer(FollowerAreaLayer.class)
 public abstract class SelectFollowerAction extends PlayerAction<MeeplePointer> {
 
-    public SelectFollowerAction(String name) {
-        super(name);
-    }
-
-    @Override
-    protected Class<? extends ActionLayer<?>> getActionLayerType() {
-        return FollowerAreaLayer.class;
+    public SelectFollowerAction(Set<MeeplePointer> options) {
+        super(options);
     }
 
     //temporary legacy, TODO direct meeple selection on client
 
-    public Map<Position, List<MeeplePointer>> groupByPosition() {
-        Map<Position, List<MeeplePointer>> map = new HashMap<>();
-        for (MeeplePointer mp: options) {
-            List<MeeplePointer> pointers = map.get(mp.getPosition());
-            if (pointers == null) {
-                pointers = new ArrayList<>();
-                map.put(mp.getPosition(), pointers);
-            }
-            pointers.add(mp);
-        }
-        return map;
+    public Map<FeaturePointer, Set<MeeplePointer>> groupByFeaturePointer() {
+        return Map.narrow(
+            getOptions().groupBy(mp -> mp.asFeaturePointer())
+        );
     }
-
-    //TODO direct implementation
-    public List<MeeplePointer> getMeeplePointers(Position p) {
-        List<MeeplePointer> pointers = groupByPosition().get(p);
-        if (pointers == null) return Collections.emptyList();
-        return pointers;
-    }
-
 }

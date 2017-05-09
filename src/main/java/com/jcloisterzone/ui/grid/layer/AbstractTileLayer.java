@@ -11,6 +11,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
 //PROBABLY TO DELETE
+@Deprecated
 public abstract class AbstractTileLayer extends AbstractGridLayer {
 
     private Position position;

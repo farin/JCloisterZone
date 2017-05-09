@@ -10,59 +10,31 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.score.ScoringStrategy;
 import com.jcloisterzone.feature.visitor.score.CloisterScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 
-public class GoldminesCapability  extends Capability {
+public class GoldminesCapability  extends Capability<Void> {
 
     private final Map<Position, Integer> boardGold = new HashMap<>();
     private final Map<Player, Integer> playerGold = new HashMap<>();
 
     private final Map<Position, Set<Player>> claimedGold = new HashMap<>();
 
-    public GoldminesCapability(Game game) {
-        super(game);
-    }
-
     @Override
-    public Object backup() {
-        Object[] a = new Object[2];
-        a[0] = new HashMap<>(boardGold);
-        a[1] = new HashMap<>(playerGold);
-        return a;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        Map<Position, Integer> boardBackup = (Map<Position, Integer>) a[0];
-        boardGold.clear();
-        boardGold.putAll(boardBackup);
-        Map<Player, Integer> playerBackup = (Map<Player, Integer>) a[1];
-        playerGold.clear();
-        playerGold.putAll(playerBackup);
-    }
-
-    @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("goldmine").getLength() > 0) {
             tile.setTrigger(TileTrigger.GOLDMINE);
         }
@@ -88,40 +60,6 @@ public class GoldminesCapability  extends Capability {
         }
     }
 
-    @Override
-    public void saveToSnapshot(Document doc, Element node) {
-        for (Entry<Position, Integer> entry : boardGold.entrySet()) {
-            Element el = doc.createElement("gold");
-            node.appendChild(el);
-            XMLUtils.injectPosition(el, entry.getKey());
-            el.setAttribute("count", "" + entry.getValue());
-        }
-        for (Player player: game.getAllPlayers()) {
-            Element el = doc.createElement("player");
-            node.appendChild(el);
-            el.setAttribute("index", "" + player.getIndex());
-            el.setAttribute("goldPieces", "" + playerGold.get(player));
-        }
-    }
-
-    @Override
-    public void loadFromSnapshot(Document doc, Element node) {
-        NodeList nl = node.getElementsByTagName("gold");
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element el = (Element) nl.item(i);
-            Position pos = XMLUtils.extractPosition(el);
-            int count = XMLUtils.attributeIntValue(el, "count");
-            boardGold.put(pos, count);
-            game.post(new GoldChangeEvent(null, pos, 0, count));
-        }
-        nl = node.getElementsByTagName("player");
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element playerEl = (Element) nl.item(i);
-            Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
-            int count = XMLUtils.attributeIntValue(playerEl, "goldPieces");
-            playerGold.put(player, count);
-        }
-    }
 
     @Override
     public void scoreCompleted(CompletableScoreContext ctx) {
@@ -131,7 +69,7 @@ public class GoldminesCapability  extends Capability {
             positions = new HashSet<>();
             Position cloisterPos = ((CloisterScoreContext) ctx).getMasterFeature().getTile().getPosition();
             positions.add(cloisterPos);
-            positions.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles(cloisterPos), new Function<Tile, Position>() {
+            positions.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles2(cloisterPos), new Function<Tile, Position>() {
                 @Override
                 public Position apply(Tile t) {
                     return t.getPosition();
@@ -213,7 +151,7 @@ public class GoldminesCapability  extends Capability {
     }
 
     @Override
-    public void finalScoring(ScoringStrategy strategy) {
+    public void finalScoring() {
         for (Player player: game.getAllPlayers()) {
             int pieces = getPlayerGoldPieces(player);
             if (pieces == 0) continue;
@@ -222,7 +160,7 @@ public class GoldminesCapability  extends Capability {
             else if (pieces < 7) points = 2 * pieces;
             else if (pieces < 10) points = 3 * pieces;
             else points = 4 * pieces;
-            strategy.addPoints(player, points, PointCategory.GOLD);
+            player.addPoints( points, PointCategory.GOLD);
         }
     }
 }

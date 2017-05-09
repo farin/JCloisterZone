@@ -2,18 +2,29 @@ package com.jcloisterzone;
 
 public enum PointCategory {
 
-    ROAD,
-    CITY,
-    FARM,
-    CLOISTER,
-    CASTLE,
+    ROAD(true),
+    CITY(true),
+    FARM(true),
+    CLOISTER(true),
+    CASTLE(true),
 
-    TRADE_GOODS,
-    GOLD,
-    FAIRY,
-    TOWER_RANSOM,
-    BIGGEST_CITY,
-    LONGEST_ROAD,
-    BAZAAR_AUCTION,
-    WIND_ROSE
+    TRADE_GOODS(true),
+    GOLD(true),
+    FAIRY(false),
+    TOWER_RANSOM(false),
+    BIGGEST_CITY(false),
+    LONGEST_ROAD(false),
+    BAZAAR_AUCTION(false),
+    WIND_ROSE(false);
+
+    /** flag for resolving The Count*/
+    boolean landscapeSource;
+
+    PointCategory(boolean landspaceSource) {
+        this.landscapeSource = landspaceSource;
+    }
+
+    public boolean hasLandscapeSource() {
+        return landscapeSource;
+    }
 }

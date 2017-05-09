@@ -1,13 +1,35 @@
 # Version history
 
+## 4.0
+* fall 2017
+
+* multiple undo steps are now supported (including eg. undoing paid ransom)
+* Princess and Dragon:
+    - PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way:
+      If enabled and there is option to remove princess no other action is allowed.
+* Tower:
+    - If players has several prisoners belonging to the other player
+      during prisoners exchange, the owner may decide which prisoner should be returned.
+* Bridges, Castles, and Bazaars:
+    - Bazaar auction is not triggered when tile is discarded.
+    - When tile can place only with bridge, player is allowed to pass and let the tile to be discarded.
+    - fix: When there is no legal placement for auctioned tile, tile is discarded and random tile is drawn instead.
+    - Display bridge preview if bridge placement is mandatory (and bridge must be placed as part of tile placement).
+* River
+    - Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
+      (changed according to New Carcassonne (C II) rules)
+* technical notes:
+    - Grand rewrite in favor of functional programming and immutable data structure.
+    - vavr.io library is awesome!
+
 ## 3.4.3
 *2017-05-08
 
-* MacOS: application title is again JCloisterZone 
-* fixed: crash caused by two "Undo"s triggered in short period 
+* MacOS: application title is again JCloisterZone
+* fixed: crash caused by two "Undo"s triggered in short period
 * fixed: Little Buildings (unable to place building)
 * fixed: WindRose points can be repeated by undo tile placement infinitely
-* fixed TO.CccC+ definition (shield on one Tower tile is properly counted) 
+* fixed TO.CccC+ definition (shield on one Tower tile is properly counted)
 * experimental support for "rectangular" tiles - possibility to display 3d tiles projected as rectangle - currently no theme
 
 ## 3.4.2

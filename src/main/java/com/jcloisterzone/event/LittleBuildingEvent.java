@@ -3,6 +3,7 @@ package com.jcloisterzone.event;
 import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.play.PlayEvent;
 
 public class LittleBuildingEvent extends PlayEvent {
 

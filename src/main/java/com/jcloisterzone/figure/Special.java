@@ -1,12 +1,13 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.game.Game;
 
 public abstract class Special extends Meeple {
 
-    public Special(Game game, Player player) {
-        super(game, null, player);
+    private static final long serialVersionUID = 1L;
+
+    public Special(String id, Player player) {
+        super(id, player);
     }
 
 }

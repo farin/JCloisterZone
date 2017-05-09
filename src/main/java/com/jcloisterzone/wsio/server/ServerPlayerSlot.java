@@ -2,7 +2,7 @@ package com.jcloisterzone.wsio.server;
 
 import com.jcloisterzone.Expansion;
 
-//TODO use slot messge directly
+//TODO use slot message directly
 public class ServerPlayerSlot {
 
     private final int number;
@@ -68,27 +68,27 @@ public class ServerPlayerSlot {
         this.supportedExpansions = supportedExpansions;
     }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public String getSecret() {
-		return secret;
-	}
+    public String getSecret() {
+        return secret;
+    }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
-	public String getAutoAssignClientId() {
-		return autoAssignClientId;
-	}
+    public String getAutoAssignClientId() {
+        return autoAssignClientId;
+    }
 
-	public void setAutoAssignClientId(String autoAssignClientId) {
-		this.autoAssignClientId = autoAssignClientId;
-	}
+    public void setAutoAssignClientId(String autoAssignClientId) {
+        this.autoAssignClientId = autoAssignClientId;
+    }
 }

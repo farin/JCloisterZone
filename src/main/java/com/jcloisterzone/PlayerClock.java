@@ -1,12 +1,29 @@
 package com.jcloisterzone;
 
+import java.io.Serializable;
 
-public class PlayerClock {
+@Immutable
+public class PlayerClock implements Serializable {
 
-    private long time;
-    private boolean running;
+    private static final long serialVersionUID = 1L;
 
-    private long runningSince;
+    private final long time;
+    private final boolean running;
+    private final long runningSince;
+
+    public PlayerClock(long time) {
+        this(time, false, 0);
+    }
+
+    public PlayerClock(long time, boolean running) {
+        this(time, running, running ? System.currentTimeMillis() : 0);
+    }
+
+    public PlayerClock(long time, boolean running, long runningSince) {
+        this.time = time;
+        this.running = running;
+        this.runningSince = runningSince;
+    }
 
 
     public long getTime() {
@@ -20,22 +37,20 @@ public class PlayerClock {
     /**
      * Returns time ignoring runningSince (which is reset to now)
      */
-    public long resetRunning() {
-        runningSince = System.currentTimeMillis();
-        return time;
+    public PlayerClock resetRunning() {
+        return new PlayerClock(time, running, System.currentTimeMillis());
     }
 
-    public void setTime(long time) {
-        this.time = time;
-        if (running) runningSince = System.currentTimeMillis();
+    public PlayerClock setTime(long time) {
+        return new PlayerClock(time, running,
+            running ? System.currentTimeMillis() : 0) ;
     }
 
     public boolean isRunning() {
         return running;
     }
 
-    public void setRunning(boolean running) {
-        this.running = running;
-        runningSince = System.currentTimeMillis();
+    public PlayerClock setRunning(boolean running) {
+        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
     }
 }

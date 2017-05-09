@@ -19,6 +19,4 @@ public class UndoMessage implements WsInGameMessage {
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
-
-
 }

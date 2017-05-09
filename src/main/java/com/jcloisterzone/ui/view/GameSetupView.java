@@ -9,14 +9,12 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ClientListChangedEvent;
-import com.jcloisterzone.event.GameStateChangeEvent;
+import com.jcloisterzone.event.Event;
+import com.jcloisterzone.event.GameStartedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.phase.CreateGamePhase;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
@@ -26,6 +24,8 @@ import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectedClientsPanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
+
+import net.miginfocom.swing.MigLayout;
 
 public class GameSetupView extends AbstractUiView {
 
@@ -55,13 +55,12 @@ public class GameSetupView extends AbstractUiView {
     @Override
     public void show(Container pane, Object ctx) {
         Game game = gc.getGame();
-        CreateGamePhase phase = (CreateGamePhase)game.getPhase();
 
         BackgroundPanel bg = new BackgroundPanel();
         bg.setLayout(new BorderLayout());
         pane.add(bg);
 
-        showCreateGamePanel(bg, mutableSlots, phase.getPlayerSlots());
+        showCreateGamePanel(bg, mutableSlots, game.getPlayerSlots());
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
@@ -132,13 +131,10 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Subscribe
-    public void started(GameStateChangeEvent ev) {
-        if (GameStateChangeEvent.GAME_START == ev.getType()) {
-            GameView view = new GameView(client, gc);
-            view.setChatPanel(chatPanel);
-            view.setSnapshot(ev.getSnapshot());
-            client.mountView(view, this);
-        }
+    public void onGameStarted(GameStartedEvent ev) {
+        GameView view = new GameView(client, gc);
+        view.setChatPanel(chatPanel);
+        client.mountView(view, this);
     }
 
     @Subscribe

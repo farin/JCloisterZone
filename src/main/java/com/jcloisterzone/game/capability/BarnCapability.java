@@ -1,76 +1,105 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.List;
-import java.util.Set;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.BarnAction;
-import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.board.Corner;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.visitor.IsOccupied;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.MeepleIdProvider;
+import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Predicates;
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
 
-public final class BarnCapability extends Capability {
+/**
+ * @model FeaturePointer: ptr to just placed Barn
+ */
+public final class BarnCapability extends Capability<FeaturePointer> {
 
-    public BarnCapability(Game game) {
-        super(game);
+    @Override
+    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
+        return List.of((Special) new Barn(idProvider.generateId(Pig.class), player));
     }
 
     @Override
-    public void initPlayer(Player player) {
-        /*if (game.hasCapability(Capability.FARM_PLACEMENT)) {
-            player.addMeeple(new Barn(game, player));
-        }*/
-        player.addMeeple(new Barn(game, player));
-    }
+    public GameState onActionPhaseEntered(GameState state) {
+        Player player = state.getPlayerActions().getPlayer();
 
-    @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        Position pos = getCurrentTile().getPosition();
+        Barn barn = player.getMeepleFromSupply(state, Barn.class);
+        if (barn == null) {
+            return state;
+        }
 
-        if (game.getActivePlayer().hasSpecialMeeple(Barn.class)) {
-            BarnAction barnAction = null;
-            Location corner = Location.WR.union(Location.NL);
-            Location positionChange = Location.W;
-            for (int i = 0; i < 4; i++) {
-                if (isBarnCorner(corner, positionChange)) {
-                    if (barnAction == null) {
-                        barnAction = new BarnAction();
-                        actions.add(barnAction);
-                    }
-                    barnAction.add(new FeaturePointer(pos, corner));
+        Position pos = state.getLastPlaced().getPosition();
+
+        // By convention barn action contains feature pointer which points to
+        // left top corner of tile intersection
+        //      |
+        //      |
+        //  ----+----
+        //      | XX
+        //      | XX
+        Set<FeaturePointer> options = Stream.of(
+            pos,
+            new Position(pos.x + 1, pos.y),
+            new Position(pos.x, pos.y + 1),
+            new Position(pos.x + 1, pos.y + 1)
+        )
+            .map(p -> getCornerFeature(state, p))
+            .filter(Predicates.isNotNull())
+            .filter(t -> {
+                if (state.getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
+                    return true;
                 }
-                corner = corner.next();
-                positionChange = positionChange.next();
-            }
+                return t._2.getSpecialMeeples(state)
+                    .find(Predicates.instanceOf(Barn.class))
+                    .isEmpty();
+            })
+            .map(Tuple2::_1)
+            .toSet();
+
+        if (options.isEmpty()) {
+            return state;
         }
+
+        return state.appendAction(new MeepleAction(Barn.class, options));
     }
 
-    private boolean isBarnCorner(Location corner, Location positionChange) {
-        Farm farm = null;
-        Position pos = getCurrentTile().getPosition();
-        for (int i = 0; i < 4; i++) {
-            Tile tile = getBoard().get(pos);
-            if (tile == null) return false;
-            farm = (Farm) tile.getFeaturePartOf(corner);
-            if (farm == null) return false;
-            corner = corner.next();
-            pos = pos.add(positionChange);
-            positionChange = positionChange.next();
-        }
+    @Override
+    public GameState onTurnPartCleanUp(GameState state) {
+        return setModel(state, null);
+    }
 
-        if (!game.getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
-            return !farm.walk(new IsOccupied().with(Barn.class));
-        }
+    private Tuple2<FeaturePointer, Feature> getFarmLocationPartOf(GameState state, FeaturePointer fp) {
+        return state.getFeatureMap()
+            .find(t -> fp.isPartOf(t._1))
+            .getOrNull();
+    }
 
-        return true;
+    private boolean containsCorner(Tuple2<FeaturePointer, Feature> t, Corner c) {
+        return t != null && t._1.getLocation().getCorners().contains(c);
+    }
+
+    private Tuple2<FeaturePointer, Feature> getCornerFeature(GameState state, Position pos) {
+        Tuple2<FeaturePointer, Feature> t;
+        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Location.SL));
+        if (!containsCorner(t, Corner.SE)) return null;
+        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Location.WL));
+        if (!containsCorner(t, Corner.SW)) return null;
+        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Location.EL));
+        if (!containsCorner(t, Corner.NE)) return null;
+        t = getFarmLocationPartOf(state, new FeaturePointer(pos, Location.NL));
+        if (!containsCorner(t, Corner.NW)) return null;
+        return t;
     }
 }

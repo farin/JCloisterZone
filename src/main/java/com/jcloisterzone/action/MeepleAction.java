@@ -1,49 +1,39 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.DeployMeepleMessage;
+
+import io.vavr.collection.Set;
 
 public class MeepleAction extends SelectFeatureAction {
 
+    private static final long serialVersionUID = 1L;
+
     private final Class<? extends Meeple> meepleType;
 
-    public MeepleAction(Class<? extends Meeple> meepleType) {
-        super(meepleType.getSimpleName().toLowerCase());
+    public MeepleAction(Class<? extends Meeple> meepleType, Set<FeaturePointer> options) {
+        super(options);
         this.meepleType = meepleType;
     }
-
 
     public Class<? extends Meeple> getMeepleType() {
         return meepleType;
     }
 
     @Override
-    public void perform(RmiProxy server, FeaturePointer bp) {
-        server.deployMeeple(bp, meepleType);
-    }
+    public void perform(GameController gc, FeaturePointer fp) {
+        GameState state = gc.getGame().getState();
+        String meepleId = state.getActivePlayer().getMeepleFromSupply(state, meepleType).getId();
+        gc.getConnection().send(
+            new DeployMeepleMessage(gc.getGame().getGameId(), fp, meepleId));
 
-    @Override
-    protected int getSortOrder() {
-        if (meepleType.equals(SmallFollower.class)) return 9;
-        if (meepleType.equals(BigFollower.class)) return 10;
-        if (meepleType.equals(Wagon.class)) return 12;
-        if (meepleType.equals(Mayor.class)) return 13;
-        if (meepleType.equals(Builder.class)) return 14;
-        if (meepleType.equals(Pig.class)) return 15;
-        if (meepleType.equals(Phantom.class)) return 16;
-        return 19;
     }
 
     @Override
     public String toString() {
-        return "place " + meepleType.getSimpleName() + " ? " + getOptions();
+        return "place " + meepleType.getSimpleName();
     }
 }

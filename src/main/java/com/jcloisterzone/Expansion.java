@@ -11,7 +11,6 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.CathedralCapability;
-import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
@@ -34,6 +33,7 @@ import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
@@ -53,7 +53,7 @@ public enum Expansion {
     INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
             new Class[] { BigFollowerCapability.class ,InnCapability.class, CathedralCapability.class}),
     TRADERS_AND_BUILDERS("TB", _("Traders & Builders"),
-            new Class[] { PigCapability.class, BuilderCapability.class, ClothWineGrainCapability.class, PigHerdCapability.class }),
+            new Class[] { PigCapability.class, BuilderCapability.class, TradeGoodsCapability.class, PigHerdCapability.class }),
     PRINCESS_AND_DRAGON("DG", _("The Princess & The Dragon"),
             new Class[] { FairyCapability.class, DragonCapability.class, PortalCapability.class, PrincessCapability.class }),
     TOWER("TO", _("The Tower"),
@@ -105,7 +105,7 @@ public enum Expansion {
     String code;
     String label;
     boolean implemented = true;
-    Class<? extends Capability>[] capabilities;
+    Class<? extends Capability<?>>[] capabilities;
 
     Expansion(String code, String label) {
         this(code, label, null);
@@ -116,7 +116,7 @@ public enum Expansion {
         this.implemented = implemented;
     }
 
-    Expansion(String code, String label, Class<? extends Capability>[] capabilities) {
+    Expansion(String code, String label, Class<? extends Capability<?>>[] capabilities) {
         this.code = code;
         this.label = label;
         this.capabilities = capabilities == null ? new Class[0] : capabilities;
@@ -130,7 +130,7 @@ public enum Expansion {
         return implemented;
     }
 
-    public Class<? extends Capability>[] getCapabilities() {
+    public Class<? extends Capability<?>>[] getCapabilities() {
         return capabilities;
     }
 

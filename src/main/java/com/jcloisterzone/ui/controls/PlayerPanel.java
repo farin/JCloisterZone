@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -10,39 +12,25 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.swing.JOptionPane;
-
-import com.google.common.collect.Iterables;
-import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.TradeResource;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.BridgeCapability;
-import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.game.capability.ClothWineGrainCapability;
-import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
-import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.state.Flag;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.view.GameView;
-
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import com.jcloisterzone.wsio.message.PayRansomMessage;
 
 public class PlayerPanel extends MouseTrackingComponent implements RegionMouseListener {
 
@@ -79,16 +67,6 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
     private String mouseOverKey = null;
 
-    private final AbbeyCapability abbeyCap;
-    private final TowerCapability towerCap;
-    private final BridgeCapability bridgeCap;
-    private final CastleCapability castleCap;
-    private final KingAndRobberBaronCapability kingRobberCap;
-    private final ClothWineGrainCapability cwgCap;
-    private final LittleBuildingsCapability lbCap;
-    private final TunnelCapability tunnelCap;
-    private final GoldminesCapability gldCap;
-
     private Integer timeLimit;
 
     public PlayerPanel(Client client, GameView gameView, Player player, PlayerPanelImageCache cache) {
@@ -100,17 +78,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         this.fontColor = player.getColors().getFontColor();
 
         Game game = gc.getGame();
-        abbeyCap = game.getCapability(AbbeyCapability.class);
-        towerCap = game.getCapability(TowerCapability.class);
-        bridgeCap = game.getCapability(BridgeCapability.class);
-        castleCap = game.getCapability(CastleCapability.class);
-        kingRobberCap = game.getCapability(KingAndRobberBaronCapability.class);
-        cwgCap = game.getCapability(ClothWineGrainCapability.class);
-        lbCap = game.getCapability(LittleBuildingsCapability.class);
-        tunnelCap = game.getCapability(TunnelCapability.class);
-        gldCap = game.getCapability(GoldminesCapability.class);
 
-        timeLimit = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
+        timeLimit = (Integer) game.getState().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull();
     }
 
     private void drawDelimiter(int y) {
@@ -212,7 +181,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         drawDelimiter(DELIMITER_Y);
 
         g2.setFont(FONT_POINTS);
-        drawTextShadow(""+player.getPoints(), PADDING_L, 27);
+        drawTextShadow(""+player.getPoints(game.getState()), PADDING_L, 27);
 
 
         //TODO cache ref (also would be fine to cache capabilities above)
@@ -236,8 +205,13 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         bx = PADDING_L;
         by = 43;
 
+        GameState state = game.getState();
+        PlayersState ps = state.getPlayers();
+        int index = player.getIndex();
+
         if (timeLimit != null) {
-            long remainingMs = timeLimit*1000 - player.getClock().getTime();
+            PlayerClock clock = game.getClocks().get(player.getIndex());
+            long remainingMs = timeLimit*1000 - clock.getTime();
             if (remainingMs <= 0) {
                 drawTimeTextBox("00.00", Color.RED);
             } else {
@@ -248,7 +222,8 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
         int small = 0;
         String smallImgKey = SmallFollower.class.getSimpleName();
-        for (Follower f : Iterables.filter(player.getFollowers(), MeeplePredicates.inSupply())) {
+
+        for (Follower f : player.getFollowers(state).filter(f -> f.isInSupply(state))) {
             //instanceof cannot be used because of Phantom
             if (f.getClass().equals(SmallFollower.class)) {
                 small++;
@@ -262,98 +237,81 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
 //		gp.profile(" > followers");
 
-        for (Special meeple : Iterables.filter(player.getSpecialMeeples(), MeeplePredicates.inSupply())) {
+        for (Special meeple : player.getSpecialMeeples(state).filter(f -> f.isInSupply(state))) {
             drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
         }
 
 //		gp.profile(" > special");
 
+//   TODO IMMUTABLE
 
+        drawMeepleBox(null, "abbey", ps.getPlayerTokenCount(index, Token.ABBEY_TILE), false);
+        drawMeepleBox(null, "towerpiece", ps.getPlayerTokenCount(index, Token.TOWER_PIECE), true);
+        drawMeepleBox(null, "bridge", ps.getPlayerTokenCount(index, Token.BRIDGE), true);
+        drawMeepleBox(null, "castle", ps.getPlayerTokenCount(index, Token.CASTLE), true);
 
-        if (abbeyCap != null) {
-            drawMeepleBox(null, "abbey", abbeyCap.hasUnusedAbbey(player) ? 1 : 0, false);
-        }
+//        if (tunnelCap != null) {
+//            drawMeepleBox(player, "tunnelA", tunnelCap.getTunnelTokens(player, false), true);
+//            drawMeepleBox(player, "tunnelB", tunnelCap.getTunnelTokens(player, true), true);
+//        }
+//
+//        if (lbCap != null) {
+//            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
+//            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
+//            drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
+//        }
 
-        if (towerCap != null) {
-            drawMeepleBox(null, "towerpiece", towerCap.getTowerPieces(player), true);
-        }
-
-        if (bridgeCap != null) {
-            drawMeepleBox(null, "bridge", bridgeCap.getPlayerBridges(player), true);
-        }
-        if (castleCap != null) {
-            drawMeepleBox(null, "castle", castleCap.getPlayerCastles(player), true);
-        }
-        if (tunnelCap != null) {
-            drawMeepleBox(player, "tunnelA", tunnelCap.getTunnelTokens(player, false), true);
-            drawMeepleBox(player, "tunnelB", tunnelCap.getTunnelTokens(player, true), true);
-        }
-
-        if (lbCap != null) {
-            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
-            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
-            drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
-        }
-
-        if (kingRobberCap != null) {
-            if (kingRobberCap.getKing() == player) {
-                Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
-                if ("king".equals(mouseOverKey)) {
-                    g2.setFont(FONT_KING_ROBBER_OVERLAY);
-                    g2.setColor(KING_ROBBER_OVERLAY);
-                    g2.fillRect(r.x, r.y, r.width, r.height);
-                    g2.setColor(Color.WHITE);
-                    int size = kingRobberCap.getBiggestCitySize();
-                    g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
-                    g2.setFont(FONT_MEEPLE);
-                }
-            }
-            if (kingRobberCap.getRobberBaron() == player) {
-                Rectangle r = drawMeepleBox(null, "robber", 1, false, "robber");
-                if ("robber".equals(mouseOverKey)) {
-                    g2.setFont(FONT_KING_ROBBER_OVERLAY);
-                    g2.setColor(KING_ROBBER_OVERLAY);
-                    g2.fillRect(r.x, r.y, r.width, r.height);
-                    g2.setColor(Color.WHITE);
-                    int size = kingRobberCap.getLongestRoadLength();
-                    g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
-                    g2.setFont(FONT_MEEPLE);
-                }
+        if (ps.getPlayerTokenCount(index, Token.KING) > 0) {
+            KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);
+            Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
+            if ("king".equals(mouseOverKey)) {
+                g2.setFont(FONT_KING_ROBBER_OVERLAY);
+                g2.setColor(KING_ROBBER_OVERLAY);
+                g2.fillRect(r.x, r.y, r.width, r.height);
+                g2.setColor(Color.WHITE);
+                int size = cap.getBiggestCitySize(state);
+                g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
+                g2.setFont(FONT_MEEPLE);
             }
         }
-        if (cwgCap != null) {
-            drawMeepleBox(null, "cloth", cwgCap.getTradeResources(player, TradeResource.CLOTH), true);
-            drawMeepleBox(null, "grain", cwgCap.getTradeResources(player, TradeResource.GRAIN), true);
-            drawMeepleBox(null, "wine", cwgCap.getTradeResources(player, TradeResource.WINE), true);
-        }
-        if (gldCap != null) {
-            drawMeepleBox(null, "gold", gldCap.getPlayerGoldPieces(player), true);
-        }
 
-        if (towerCap != null) {
-            List<Follower> capturedFigures = towerCap.getPrisoners().get(player);
-            Map<Class<? extends Follower>, Integer> groupedByType;
-            if (!capturedFigures.isEmpty()) {
-                groupedByType = new HashMap<>();
-                for (Player opponent : game.getAllPlayers()) {
-                    if (opponent == player) continue;
-                    boolean isOpponentActive = opponent.equals(game.getActivePlayer()) && opponent.isLocalHuman();
-                    boolean clickable = isOpponentActive && !towerCap.isRansomPaidThisTurn();
-                    for (Follower f : capturedFigures) {
-                        if (f.getPlayer() == opponent) {
-                            Integer prevVal = groupedByType.get(f.getClass());
-                            groupedByType.put(f.getClass(), prevVal == null ? 1 : prevVal+1);
-                        }
-                    }
-                    for (Entry<Class<? extends Follower>, Integer> entry : groupedByType.entrySet()) {
-                        drawMeepleBox(opponent, entry.getKey().getSimpleName(), entry.getValue(), false,
-                                clickable ? entry.getKey() : null, clickable
-                        );
-                    }
-                    groupedByType.clear();
-                }
+        if (ps.getPlayerTokenCount(index, Token.ROBBER) > 0) {
+            KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);
+            Rectangle r = drawMeepleBox(null, "robber", 1, false, "robber");
+            if ("robber".equals(mouseOverKey)) {
+                g2.setFont(FONT_KING_ROBBER_OVERLAY);
+                g2.setColor(KING_ROBBER_OVERLAY);
+                g2.fillRect(r.x, r.y, r.width, r.height);
+                g2.setColor(Color.WHITE);
+                int size = cap.getLongestRoadSize(state);
+                g2.drawString((size < 10 ? " " : "") + size, r.x+2, r.y+20);
+                g2.setFont(FONT_MEEPLE);
             }
         }
+
+
+        drawMeepleBox(null, "cloth", ps.getPlayerTokenCount(index, Token.CLOTH), true);
+        drawMeepleBox(null, "grain", ps.getPlayerTokenCount(index, Token.GRAIN), true);
+        drawMeepleBox(null, "wine", ps.getPlayerTokenCount(index, Token.WINE), true);
+
+//        if (gldCap != null) {
+//            drawMeepleBox(null, "gold", gldCap.getPlayerGoldPieces(player), true);
+//        }
+
+        io.vavr.collection.Array<io.vavr.collection.List<Follower>> towerModel = state.getCapabilityModel(TowerCapability.class);
+        if (towerModel != null) {
+            towerModel.get(player.getIndex()).groupBy(m -> m.getPlayer()).forEach((opponent, prisoners) -> {
+                boolean isOpponentActive = opponent.equals(state.getActivePlayer()) && opponent.isLocalHuman();
+                boolean clickable = isOpponentActive && !state.hasFlag(Flag.RANSOM_PAID);
+
+                prisoners.groupBy(f -> f.getClass()).forEach((cls, items) -> {
+                    drawMeepleBox(opponent, cls.getSimpleName(), items.length(), false,
+                            clickable ? items.get().getId() : null, clickable
+                    );
+                });
+            });
+        }
+
 
 //		gp.profile(" > expansions");
         int oldValue = realHeight;
@@ -399,23 +357,11 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         this.potentialPoints += potentialPoints;
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
-        if (!(origin.getData() instanceof Class)) return;
-        Class<? extends Follower> followerClass = (Class<? extends Follower>) origin.getData();
-        TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
-        if (!tg.isRansomPaidThisTurn()) {
-            if (client.getConfig().getConfirm().getRansom_payment()) {
-                String options[] = {_("Pay ransom"), _("Cancel") };
-                int result = JOptionPane.showOptionDialog(client,
-                        _("Do you really want to pay 3 points to release prisoner?"),
-                        _("Confirm ransom payment"),
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                if (JOptionPane.YES_OPTION != result) return;
-            }
-            gc.getRmiProxy().payRansom(player.getIndex(), followerClass);
-        }
+        String meepleId = (String) origin.getData();
+        gc.getConnection().send(new PayRansomMessage(gc.getGameId(), meepleId));
     }
 
     @Override
@@ -424,10 +370,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             mouseOverKey = (String) origin.getData();
             gameView.getGridPanel().repaint();
         } else {
-            TowerCapability tg = gameView.getGame().getCapability(TowerCapability.class);
-            if (!tg.isRansomPaidThisTurn()) {
-                gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
+            gameView.getGridPanel().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 

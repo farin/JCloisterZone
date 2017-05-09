@@ -354,6 +354,8 @@
     <point feature="FARM" cx="200" cy="800">
         <apply>TO.F NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>FL.Rr.d NL.NR.WL.WR.SR.EL</apply>
+        <apply>R1.I.e NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>R2.I.v NL.NR.EL.ER.SL.SR.WL.WR</apply>
     </point>
     <point feature="FARM" cx="250" cy="160" baseLocation="NL.NR">
         <apply>DG.CRcr.d NL.NR</apply>
@@ -548,5 +550,18 @@
     </point>
     <point feature="TOWER" cx="415" cy="415">
         <apply>TO.CFR TOWER</apply>
+    </point>
+
+    <point feature="QUARTER" cx="400" cy="-400">
+        <apply>CO.7 QUARTER_CASTLE</apply>
+    </point>
+    <point feature="QUARTER" cx="1000" cy="500">
+        <apply>CO.7 QUARTER_MARKET</apply>
+    </point>
+    <point feature="QUARTER" cx="600" cy="1300">
+        <apply>CO.7 QUARTER_BLACKSMITH</apply>
+    </point>
+    <point feature="QUARTER" cx="-800" cy="50">
+        <apply>CO.7 QUARTER_CATHEDRAL</apply>
     </point>
 </points>

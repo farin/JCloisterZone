@@ -8,21 +8,14 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.ui.GameController;
 
+@RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    private final GoldminesCapability gldCap;
-
-    public GoldPiecePhase(Game game) {
-        super(game);
-        gldCap = game.getCapability(GoldminesCapability.class);
-    }
-
-    @Override
-    public boolean isActive() {
-        return game.hasCapability(GoldminesCapability.class);
+    public GoldPiecePhase(GameController gc) {
+        super(gc);
     }
 
     @Override
@@ -40,7 +33,7 @@ public class GoldPiecePhase extends Phase {
         if (getTile().hasTrigger(TileTrigger.GOLDMINE)) {
             Position pos = getTile().getPosition();
             GoldPieceAction action = new GoldPieceAction();
-            action.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles(pos), new Function<Tile, Position>() {
+            action.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles2(pos), new Function<Tile, Position>() {
                 @Override
                 public Position apply(Tile t) {
                     return t.getPosition();

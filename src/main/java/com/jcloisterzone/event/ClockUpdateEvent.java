@@ -1,22 +1,28 @@
 package com.jcloisterzone.event;
 
-import com.jcloisterzone.Player;
+import com.jcloisterzone.PlayerClock;
 
+import io.vavr.collection.Array;
 
 public class ClockUpdateEvent extends Event {
 
-    final Player runningClockPlayer;
+    final Array<PlayerClock> clocks;
+    final Integer running;
 
-
-    public ClockUpdateEvent(Player runningClockPlayer) {
-        this.runningClockPlayer = runningClockPlayer;
+    public ClockUpdateEvent(Array<PlayerClock> clocks, Integer running) {
+        this.clocks = clocks;
+        this.running = running;
     }
 
     public boolean isClockRunning() {
-        return runningClockPlayer != null;
+        return running != null;
     }
 
-    public Player getRunningClockPlayer() {
-        return runningClockPlayer;
+    public Array<PlayerClock> getClocks() {
+        return clocks;
+    }
+
+    public Integer getRunning() {
+        return running;
     }
 }

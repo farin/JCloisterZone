@@ -39,12 +39,12 @@ public class GridMouseAdapter extends MouseAdapter implements MouseInputListener
     public void mouseMoved(MouseEvent e) {
         Position p = getGridPosition(e);
         if (currentPosition != null && ! currentPosition.equals(p)) {
-            listener.squareExited(e, currentPosition);
+            listener.tileExited(e, currentPosition);
             currentPosition = null;
         }
         if (p != null && ! p.equals(currentPosition)) {
             currentPosition = p;
-            listener.squareEntered(e, currentPosition);
+            listener.tileEntered(e, currentPosition);
         }
     }
 
@@ -68,7 +68,7 @@ public class GridMouseAdapter extends MouseAdapter implements MouseInputListener
     @Override
     public void mouseExited(MouseEvent e) {
         if (currentPosition != null) {
-            listener.squareExited(e, currentPosition);
+            listener.tileExited(e, currentPosition);
             currentPosition = null;
         }
 

@@ -1,36 +1,30 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.List;
-import java.util.Set;
-
 import org.w3c.dom.Element;
 
 import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 
-public class FestivalCapability extends Capability {
+public class FestivalCapability extends Capability<Void> {
 
     public final String UNDEPLOY_FESTIVAL = "festival";
 
-    public FestivalCapability(Game game) {
-        super(game);
-    }
 
     @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("festival").getLength() > 0) {
-            tile.setTrigger(TileTrigger.FESTIVAL);
+            tile = tile.setTileTrigger(TileTrigger.FESTIVAL);
         }
+        return tile;
     }
 
     @Override

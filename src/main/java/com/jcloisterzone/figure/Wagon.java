@@ -1,27 +1,29 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
 public class Wagon extends Follower {
 
-    private static final long serialVersionUID = 2585914429763599776L;
+    private static final long serialVersionUID = 1L;
 
-    public Wagon(Game game, Integer idSuffix, Player player) {
-        super(game, idSuffix, player);
+    public Wagon(String id, Player player) {
+        super(id, player);
     }
 
     @Override
-    public DeploymentCheckResult isDeploymentAllowed(Feature f) {
-        if (f instanceof Tower) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+        if (feature instanceof Tower) {
             return new DeploymentCheckResult("Cannot place wagon on the tower.");
         }
-        if (f instanceof Farm) {
+        if (feature instanceof Farm) {
             return new DeploymentCheckResult("Cannot place wagon on the farm.");
         }
-        return super.isDeploymentAllowed(f);
+        return super.isDeploymentAllowed(state, fp, feature);
     }
 }

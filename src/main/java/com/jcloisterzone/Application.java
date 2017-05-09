@@ -6,7 +6,7 @@ package com.jcloisterzone;
  */
 public interface Application {
 
-	//use just for dev builds
+    //use just for dev builds
     public String DEV_VERSION = "dev-snapshot";
 
 //    public String VERSION = "X.Y.Z";
@@ -15,7 +15,7 @@ public interface Application {
     public String VERSION = DEV_VERSION;
     public String BUILD_DATE = "";
 
-    public String PROTCOL_VERSION = "3.4.2";
+    public String PROTCOL_VERSION = "4.0.0";
 
     public static final String ILLEGAL_STATE_MSG = "Method '{}' called in invalid state";
 }

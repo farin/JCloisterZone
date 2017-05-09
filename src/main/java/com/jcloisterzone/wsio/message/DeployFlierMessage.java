@@ -7,18 +7,17 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("DEPLOY_FLIER")
-public class DeployFlierMessage implements WsInGameMessage {
+public class DeployFlierMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private String gameId;
     private String meepleType;
-    private long currentTime;
+    private long seed;
 
     public DeployFlierMessage(String gameId, Class<? extends Meeple> meepleType) {
         this.gameId = gameId;
         this.meepleType = meepleType.getSimpleName();
-        this.currentTime = System.currentTimeMillis();
     }
 
     public String getGameId() {
@@ -37,12 +36,12 @@ public class DeployFlierMessage implements WsInGameMessage {
         this.meepleType = meepleType;
     }
 
-    public long getCurrentTime() {
-        return currentTime;
+    public long getSeed() {
+        return seed;
     }
 
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 
     @SuppressWarnings("unchecked")

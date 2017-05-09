@@ -14,7 +14,6 @@ import javax.xml.transform.TransformerException;
 import com.google.common.collect.EvictingQueue;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
 
 public class ReportingTool {
 
@@ -61,11 +60,11 @@ public class ReportingTool {
         }
         zos.closeEntry();
 
-        ze = new ZipEntry("savegame.jcz");
-        zos.putNextEntry(ze);
-        Snapshot snapshot = new Snapshot(game);
-        snapshot.save(zos, false, false);
-        zos.closeEntry();
+//        ze = new ZipEntry("savegame.jcz");
+//        zos.putNextEntry(ze);
+//        Snapshot snapshot = new Snapshot(game);
+//        snapshot.save(zos, false, false);
+//        zos.closeEntry();
 
         if (container != null) {
             ze = new ZipEntry("board.png");
@@ -87,10 +86,10 @@ public class ReportingTool {
             out.println(s);
         }
 
-        out.println("---------- save ------------");
-        Snapshot snapshot = new Snapshot(game);
-        snapshot.setGzipOutput(false);
-        out.println(snapshot.saveToString());
+//        out.println("---------- save ------------");
+//        Snapshot snapshot = new Snapshot(game);
+//        snapshot.setGzipOutput(false);
+//        out.println(snapshot.saveToString());
 
         out.println("---------- system env ------------");
         out.println(System.getProperty("java.version"));

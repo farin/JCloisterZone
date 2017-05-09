@@ -1,115 +1,100 @@
 package com.jcloisterzone.board;
 
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.stream.Stream;
 
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.Immutable;
 
-public class EdgePattern {
+import io.vavr.collection.Map;
 
-    private Edge[] edges = new Edge[4];
+@Immutable
+public class EdgePattern implements Serializable {
 
-    private EdgePattern() { }
-    private EdgePattern(Edge[] edges) { this.edges = edges; }
+    private static final long serialVersionUID = 1L;
 
-    private static Edge getTileEdgePattern(Tile tile, Location loc) {
-        if (tile.getRiver() != null && loc.isPartOf(tile.getRiver())) {
-            return Edge.RIVER;
-        }
+    /** bit mask, concatenated edges W,S,E,N */
+    int mask;
 
-        Feature f = tile.getFeaturePartOf(loc);
-        if (f == null) {
-            return Edge.FARM;
-        }
-        if (f instanceof Road) {
-            return Edge.ROAD;
-        }
-        return Edge.CITY;
+    public EdgePattern(int mask) {
+        this.mask = mask;
     }
 
-    public static EdgePattern forTile(Tile tile) {
-        EdgePattern pattern = new EdgePattern();
-        for (Location loc : Location.sides()) {
-            pattern.edges[indexfor(loc)] = getTileEdgePattern(tile, loc);
-        }
-        return pattern;
+    public EdgePattern(EdgeType N, EdgeType E, EdgeType S, EdgeType W) {
+        this.mask = N.getMask() + (E.getMask() << 4) + (S.getMask() << 8) + + (W.getMask() << 12);
     }
 
-    private static int indexfor (Location loc) {
-        if (loc == Location.N) return 0;
-        if (loc == Location.W) return 1;
-        if (loc == Location.S) return 2;
-        if (loc == Location.E) return 3;
+    public EdgePattern(Map<Location, EdgeType> edges) {
+        this(
+            edges.get(Location.N).get(),
+            edges.get(Location.E).get(),
+            edges.get(Location.S).get(),
+            edges.get(Location.W).get()
+        );
+    }
+
+    public static EdgePattern fromString(String str) {
+        if (str.length() != 4) {
+            throw new IllegalArgumentException();
+        }
+        return new EdgePattern(
+            EdgeType.forChar(str.charAt(0)),
+            EdgeType.forChar(str.charAt(1)),
+            EdgeType.forChar(str.charAt(2)),
+            EdgeType.forChar(str.charAt(3))
+        );
+    }
+
+    public EdgeType[] getEdges() {
+        return new EdgeType[] {
+            EdgeType.forMask(mask & 15),
+            EdgeType.forMask((mask >> 4) & 15),
+            EdgeType.forMask((mask >> 8) & 15),
+            EdgeType.forMask((mask >> 12) & 15)
+        };
+    }
+
+    public TileSymmetry getSymmetry() {
+        EdgeType[] edges = getEdges();
+        if (edges[0] == edges[1] && edges[0] == edges[2] && edges[0] == edges[3]) return TileSymmetry.S4;
+        if (edges[0] == edges[2] && edges[1] == edges[3]) return TileSymmetry.S2;
+        return TileSymmetry.NONE;
+    }
+
+    public EdgeType at(Location loc) {
+        if (loc == Location.N) return EdgeType.forMask(mask & 15);
+        if (loc == Location.E) return EdgeType.forMask((mask >> 4) & 15);
+        if (loc == Location.S) return EdgeType.forMask((mask >> 8) & 15);
+        if (loc == Location.W) return EdgeType.forMask((mask >> 12) & 15);
         throw new IllegalArgumentException();
     }
 
-    public static EdgePattern forEmptyTile(Board board, Position pos) {
-        EdgePattern pattern = new EdgePattern();
-        for (Location loc : Location.sides()) {
-            Tile t = board.get(pos.add(loc));
-            int idx = indexfor(loc);
-            if (t == null) {
-                pattern.edges[idx] = Edge.UNKNOWN;
-            } else {
-                pattern.edges[idx] = getTileEdgePattern(t, loc.rev());
-            }
-        }
-        return pattern;
+    public EdgePattern rotate(Rotation rot) {
+        if (rot == Rotation.R0) return this;
+        java.util.List<EdgeType> l = Arrays.asList(getEdges());
+        Collections.rotate(l, rot.ordinal());
+        return new EdgePattern(l.get(0), l.get(1), l.get(2), l.get(3));
     }
 
-    public Edge at(Location loc) {
-        return edges[indexfor(loc)];
-    }
+     public EdgePattern replace(Location loc, EdgeType type) {
+        return new EdgePattern(
+            loc == Location.N ? type : at(Location.N),
+            loc == Location.E ? type : at(Location.E),
+            loc == Location.S ? type : at(Location.S),
+            loc == Location.W ? type : at(Location.W)
+        );
+     }
 
-    public Edge at(Location loc, Rotation rotation) {
+    @Deprecated //use rotate on EdgePattern instead
+    public EdgeType at(Location loc, Rotation rotation) {
         return at(loc.rotateCCW(rotation));
     }
 
     public int wildcardSize() {
-        int size = 0;
-        for (int i = 0; i < edges.length; i++) {
-            if (edges[i] == Edge.UNKNOWN) size++;
-        }
-        return size;
-    }
-
-    private EdgePattern switchEdge(int i, Edge edge) {
-        Edge[] switched = Arrays.copyOf(edges, edges.length);
-        switched[i] = edge;
-        return new EdgePattern(switched);
-    }
-
-    /**
-     * For EdgePatterns with wildcards generates all valid combinations (without wildcards)
-     * eg: RRC? -> RRCV, RRCR, RRCC, RRCF
-     */
-    public Collection<EdgePattern> fill() {
-        //TODO better impl
-        if (wildcardSize() == 0) return Collections.singleton(this);
-        Queue<EdgePattern> q = new LinkedList<EdgePattern>();
-        q.add(this);
-        while(q.peek().wildcardSize() > 0) {
-            EdgePattern p = q.poll();
-            int i = 0;
-            while(p.edges[i] != Edge.UNKNOWN) i++;
-            q.add(switchEdge(i, Edge.RIVER));
-            q.add(switchEdge(i, Edge.ROAD));
-            q.add(switchEdge(i, Edge.CITY));
-            q.add(switchEdge(i, Edge.FARM));
-        }
-        return q;
-    }
-
-    private Edge[] shift(int shift) {
-        Edge[] result = new Edge[4];
-        for (int i = 0; i < edges.length; i++) {
-            result[i] = edges[(i+shift)%edges.length];
-        }
-        return result;
+        return (int) Stream.of(getEdges())
+            .filter(edge -> edge == EdgeType.UNKNOWN)
+            .count();
     }
 
     /**
@@ -117,57 +102,66 @@ public class EdgePattern {
      * To avoid checking all tile rotation against all empty place pattern rotations this method return canonized form.
      * Canonized pattern is first one from ordering by Edge ordinals.
      */
-    private Edge[] canonize() {
-        Edge[] result = edges;
-        shiftLoop:
-        for (int shift = 1; shift < edges.length; shift++) {
-            Edge[] e = shift(shift);
-            for (int i = 0; i < edges.length; i++) {
-                if (e[i].ordinal() < result[i].ordinal()) {
-                    result = e;
-                    continue shiftLoop;
-                }
-                if (e[i].ordinal() > result[i].ordinal()) {
-                    break;
-                }
+    public EdgePattern canonize() {
+        EdgePattern min = this;
+        for (Rotation rot : Rotation.values()) {
+            EdgePattern ep = rotate(rot);
+            if (ep.mask < min.mask) {
+                min = ep;
             }
         }
-        return result;
+        return min;
     }
 
-    public boolean isBridgeAllowed(Location bridge, Rotation tileRotation) {
+    public boolean isMatchingExact(EdgePattern ep) {
+        int m = mask & ep.mask;
+        return ((m & 15) != 0) &&
+                ((m & (15 << 4)) != 0) &&
+                ((m & (15 << 8)) != 0) &&
+                ((m & (15 << 12)) != 0);
+
+    }
+
+    public boolean isMatchingAnyRotation(EdgePattern ep) {
+        for (Rotation rot : Rotation.values()) {
+            if (rotate(rot).isMatchingExact(ep)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBridgeAllowed(Location bridge) {
+        assert bridge == Location.NS || bridge == Location.WE;
         if (bridge == Location.NS) {
-            if (at(Location.N, tileRotation) != Edge.FARM) return false;
-            if (at(Location.S, tileRotation) != Edge.FARM) return false;
+            if (at(Location.N) != EdgeType.FARM) return false;
+            if (at(Location.S) != EdgeType.FARM) return false;
         } else {
-            if (at(Location.W, tileRotation) != Edge.FARM) return false;
-            if (at(Location.E, tileRotation) != Edge.FARM) return false;
+            if (at(Location.W) != EdgeType.FARM) return false;
+            if (at(Location.E) != EdgeType.FARM) return false;
         }
         return true;
     }
 
-    public EdgePattern getBridgePattern(Location bridge) {
-        Edge[] bridgeCode = Arrays.copyOf(edges, edges.length);
-        if (bridge == Location.NS) {
-            bridgeCode[0] = Edge.ROAD;
-            bridgeCode[2] = Edge.ROAD;
-        } else {
-            bridgeCode[1] = Edge.ROAD;
-            bridgeCode[3] = Edge.ROAD;
+    private EdgeType getBridgeReplacement(Location side) {
+        switch (at(side)) {
+        case FARM: return EdgeType.ROAD;
+        case UNKNOWN: return EdgeType.UNKNOWN;
+        default: throw new IllegalArgumentException();
         }
-        return new EdgePattern(bridgeCode);
     }
 
-    public EdgePattern removeBridgePattern(Location bridge) {
-        Edge[] bridgeCode = Arrays.copyOf(edges, edges.length);
-        if (bridge == Location.NS) {
-            bridgeCode[0] = Edge.FARM;
-            bridgeCode[2] = Edge.FARM;
-        } else {
-            bridgeCode[1] = Edge.FARM;
-            bridgeCode[3] = Edge.FARM;
+    public EdgePattern getBridgePattern(Location bridge) {
+        assert bridge == Location.NS || bridge == Location.WE;
+        try {
+            if (bridge == Location.NS) {
+                return new EdgePattern(getBridgeReplacement(Location.N), at(Location.E), getBridgeReplacement(Location.S), at(Location.W));
+            } else {
+                return new EdgePattern(at(Location.N), getBridgeReplacement(Location.E), at(Location.S), getBridgeReplacement(Location.W));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Pattern annot be extended with " + bridge + "bridge.");
         }
-        return new EdgePattern(bridgeCode);
     }
 
     @Override
@@ -175,25 +169,21 @@ public class EdgePattern {
         if (this == obj) return true;
         if (!(obj instanceof EdgePattern)) return false;
         EdgePattern that = (EdgePattern) obj;
-        return Arrays.equals(that.canonize(), canonize());
+        return that.canonize().mask == canonize().mask;
     }
 
     @Override
     public int hashCode() {
-        Edge[] edges = canonize();
-        int hash = 0;
-        for (int i = 0; i < edges.length; i++) {
-            hash = hash * 91 + edges[i].ordinal();
-        }
-        return hash;
+        return mask;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < edges.length; i++) {
-            sb.append(edges[i]);
-        }
-        return sb.toString();
+        return String.format("%s%s%s%s",
+            at(Location.N).asChar(),
+            at(Location.E).asChar(),
+            at(Location.S).asChar(),
+            at(Location.W).asChar()
+        );
     }
 }

@@ -12,7 +12,7 @@ public class AbandonGameMessage implements WsInGameMessage {
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 

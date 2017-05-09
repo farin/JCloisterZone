@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.Point;
@@ -10,14 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.miginfocom.swing.MigLayout;
-
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import io.vavr.collection.List;
+import net.miginfocom.swing.MigLayout;
 
 public class DiscardedTilesDialog extends JDialog {
 
@@ -52,10 +54,17 @@ public class DiscardedTilesDialog extends JDialog {
         pack();
     }
 
-    public void addTile(Tile tile) {
-        Image icon = client.getResourceManager().getTileImage(tile).getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_FAST);
-        panel.add(new JLabel(new ImageIcon(icon)), "");
-        scroll.getViewport().setViewPosition(new Point(panel.getWidth(), 0));
+    public void setDiscardedTiles(List<TileDefinition> tiles) {
+        int skip = panel.getComponentCount();
+        for (TileDefinition tile : tiles) {
+            if (skip > 0) {
+                skip--;
+                continue;
+            }
+            Image icon = client.getResourceManager().getTileImage(tile, Rotation.R0).getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_FAST);
+            panel.add(new JLabel(new ImageIcon(icon)), "");
+            scroll.getViewport().setViewPosition(new Point(panel.getWidth(), 0));
+        }
     }
 
 }

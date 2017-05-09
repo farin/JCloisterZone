@@ -14,7 +14,7 @@
         <farm city="N">WL WR</farm>
         <farm city="N">EL ER</farm>
     </tile>
-    <tile id="CFR" wind-rose="NWSE" group="wind-rose-initial">
+    <tile id="CFR" wind-rose="NWSE">
         <city castle-base="true">E</city>
         <road>W</road>
         <farm city="E">WR NL NR</farm>
@@ -22,7 +22,7 @@
         <wagon-move>
             <neighbouring>W E</neighbouring>
         </wagon-move>
-        <position x="0" y="0"/>
+        <position x="0" y="0" priority="2" />
     </tile>
     <tile id="Rr" wind-rose="NWSE">
         <road>S W</road>

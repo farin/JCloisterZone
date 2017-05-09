@@ -1,37 +1,37 @@
 package com.jcloisterzone.game.capability;
 
+import java.io.Serializable;
+
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 
-public class BazaarItem {
+@Immutable
+public class BazaarItem implements Serializable {
 
-    private final Tile tile;
-    private Player owner;
+    private static final long serialVersionUID = 1L;
 
-    private int currentPrice;
-    private Player currentBidder;
+    private final TileDefinition tile;
+    private final int currentPrice;
+    private final Player currentBidder;
+    private final Player owner;
 
-
-    public BazaarItem(Tile tile) {
+    public BazaarItem(TileDefinition tile, int currentPrice, Player currentBidder, Player owner) {
         this.tile = tile;
-    }
-
-    public BazaarItem(BazaarItem bi) {
-        tile = bi.tile;
-        owner = bi.owner;
-        currentPrice = bi.currentPrice;
-        currentBidder = bi.currentBidder;
+        this.currentPrice = currentPrice;
+        this.currentBidder = currentBidder;
+        this.owner = owner;
     }
 
     public Player getOwner() {
         return owner;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    public BazaarItem setOwner(Player owner) {
+        return new BazaarItem(tile, currentPrice, currentBidder, owner);
     }
 
-    public Tile getTile() {
+    public TileDefinition getTile() {
         return tile;
     }
 
@@ -39,16 +39,16 @@ public class BazaarItem {
         return currentPrice;
     }
 
-    public void setCurrentPrice(int currentPrice) {
-        this.currentPrice = currentPrice;
+    public BazaarItem setCurrentPrice(int currentPrice) {
+        return new BazaarItem(tile, currentPrice, currentBidder, owner);
     }
 
     public Player getCurrentBidder() {
         return currentBidder;
     }
 
-    public void setCurrentBidder(Player currentBidder) {
-        this.currentBidder = currentBidder;
+    public BazaarItem setCurrentBidder(Player currentBidder) {
+        return new BazaarItem(tile, currentPrice, currentBidder, owner);
     }
 
     @Override

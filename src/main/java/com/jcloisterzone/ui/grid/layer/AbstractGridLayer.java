@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Color;
+
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,12 +24,12 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
-import com.jcloisterzone.ui.grid.GridMouseAdapter;
-import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
+import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.resources.TileImage;
-import com.jcloisterzone.wsio.RmiProxy;
+
+import static com.jcloisterzone.ui.resources.ResourceManager.NORMALIZED_SIZE;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
@@ -67,28 +68,28 @@ public abstract class AbstractGridLayer implements GridLayer {
         }
     }
 
-    protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
-        return new GridMouseAdapter(gridPanel, listener);
-    }
-
     @Override
     public boolean isVisible() {
         return visible;
     }
 
+    public void attachMouseInputListener(MouseInputListener mouseListener) {
+        assert this.mouseListener == null;
+        this.mouseListener = new DragInsensitiveMouseClickListener(mouseListener);
+        gridPanel.addMouseListener(this.mouseListener);
+        gridPanel.addMouseMotionListener(this.mouseListener);
+        triggerFakeMouseEvent();
+    }
+
     @Override
     public void onShow() {
+        assert !visible;
         visible = true;
-        if (this instanceof GridMouseListener) {
-            mouseListener = new DragInsensitiveMouseClickListener(createGridMouserAdapter((GridMouseListener) this));
-            gridPanel.addMouseListener(mouseListener);
-            gridPanel.addMouseMotionListener(mouseListener);
-            triggerFakeMouseEvent();
-        }
     }
 
     @Override
     public void onHide() {
+        assert visible;
         visible = false;
         if (mouseListener != null) {
             gridPanel.removeMouseMotionListener(mouseListener);
@@ -175,6 +176,15 @@ public abstract class AbstractGridLayer implements GridLayer {
         return getTileHeight() * pos.y;
     }
 
+    public AffineTransform getZoomScale() {
+        //TODO move imple on gridPanel with caching
+        double ratioX = gridPanel.getTileWidth() / (double)NORMALIZED_SIZE;
+        //double ratioY = gridPanel.getTileHeight() / (double)ResourceManager.NORMALIZED_SIZE / getImageSizeRatio();
+        // TODO ignoring image image size ratio
+        double ratioY = gridPanel.getTileHeight() / (double)NORMALIZED_SIZE;
+        return AffineTransform.getScaleInstance(ratioX, ratioY);
+    }
+
     public int getTileWidth() {
         return gridPanel.getTileWidth();
     }
@@ -191,10 +201,7 @@ public abstract class AbstractGridLayer implements GridLayer {
         return gc.getGame();
     }
 
-    protected RmiProxy getRmiProxy() {
-        return gc.getRmiProxy();
-    }
-
+    @Deprecated //TODO use absolute coordinates instead
     protected Area transformArea(Area area, Position pos) {
         return area.createTransformedArea(getAffineTransform(pos));
     }
@@ -212,6 +219,7 @@ public abstract class AbstractGridLayer implements GridLayer {
         return new Font(null, Font.BOLD, realSize);
     }
 
+    // TODO don't use pos arg, use abs coords instead
     public void drawAntialiasedTextCentered(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint centerNoScaled, Color fgColor, Color bgColor) {
         //gridPanel.getBoardRotation().
         ImmutablePoint center = centerNoScaled.scale(getTileWidth(), getTileHeight());
@@ -219,7 +227,8 @@ public abstract class AbstractGridLayer implements GridLayer {
     }
 
 
-    //TODO misleading name - is centered around point and scaled font but not scale center point (probably :)
+    // TODO don't use pos arg, use abs coords instead
+    // TODO misleading name - is centered around point and scaled font but not scale center point (probably :)
     public void drawAntialiasedTextCenteredNoScale(Graphics2D g2, String text, int fontSize, Position pos, ImmutablePoint center, Color fgColor, Color bgColor) {
         Color original = g2.getColor();
         FontRenderContext frc = g2.getFontRenderContext();

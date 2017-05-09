@@ -12,41 +12,22 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
-public class FlierCapability extends Capability {
+public class FlierCapability extends Capability<Void> {
 
     boolean flierUsed = false; //prevent phantom use flier if flier used this turn
     private int flierDistance;
     private Class<? extends Meeple> meepleType;
 
-    public FlierCapability(Game game) {
-        super(game);
-    }
-
-    @Override
-    public Object backup() {
-        return new Object[] { flierDistance, meepleType, flierUsed };
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        flierDistance = (Integer) a[0];
-        meepleType = (Class<? extends Meeple>) a[1];
-        flierUsed = (Boolean) a[2];
-    }
 
     public int getFlierDistance() {
         return flierDistance;
@@ -63,11 +44,11 @@ public class FlierCapability extends Capability {
     }
 
     @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("flier");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            Location flier = XMLUtils.union(XMLUtils.asLocation((Element) nl.item(0)));
+            Location flier = XMLUtils.union(XMLUtils.contentAsLocations((Element) nl.item(0)));
             tile.setFlier(flier);
         }
     }
@@ -78,7 +59,7 @@ public class FlierCapability extends Capability {
         Position pos = getCurrentTile().getPosition();
         for (int i = 0; i < 3; i++) {
             pos = pos.add(direction);
-            Tile target = getBoard().get(pos);
+            Tile target = getBoard().getPlayer(pos);
             if (target != null) {
                 for (Feature f : target.getFeatures()) {
                     if (f instanceof Cloister) {

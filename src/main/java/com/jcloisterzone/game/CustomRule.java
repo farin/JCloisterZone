@@ -1,15 +1,15 @@
 package com.jcloisterzone.game;
 
-import java.util.EnumMap;
+import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.Expansion;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 
 public enum CustomRule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _("Randomize seating order")),
 
-    TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, _("Tiny city is scored only for 2 points.")),
     USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _("Use pig herds independently (without T&B expansion)")),
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
@@ -59,7 +59,7 @@ public enum CustomRule {
         if (type.equals(Boolean.class)) {
             return Boolean.valueOf(value);
         } else if (type.equals(Integer.class)) {
-            return Integer.valueOf(value);
+            return Double.valueOf(value).intValue();
         } else if (type.equals(String.class)) {
             return value;
         } else {
@@ -67,11 +67,11 @@ public enum CustomRule {
         }
     }
 
-    public static EnumMap<CustomRule, Object> getDefaultRules() {
-        EnumMap<CustomRule, Object> defaultRules = new EnumMap<>(CustomRule.class);
-        defaultRules.put(PIG_HERD_ON_GQ_FARM, true);
-        defaultRules.put(TUNNELIZE_ALL_EXPANSIONS, true);
-        return defaultRules;
+    public static Map<CustomRule, Object> getDefaultRules() {
+        return HashMap.of(
+            PIG_HERD_ON_GQ_FARM, true,
+            TUNNELIZE_ALL_EXPANSIONS, true
+        );
     }
 
 }

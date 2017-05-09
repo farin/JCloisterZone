@@ -1,66 +1,86 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.action.AbbeyPlacementAction;
+import java.util.Arrays;
+
+import com.jcloisterzone.Player;
+import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BazaarCapabilityModel;
+import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.BuilderCapability.BuilderState;
+import com.jcloisterzone.game.capability.BuilderState;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.PlaceTileMessage;
 
-public class AbbeyPhase extends ServerAwarePhase {
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.collection.Queue;
+import io.vavr.collection.Stream;
 
-    private AbbeyCapability abbeyCap;
-    private BazaarCapability bazaarCap;
-    private BuilderCapability builderCap;
+@RequiredCapability(AbbeyCapability.class)
+public class AbbeyPhase extends Phase {
 
-    public AbbeyPhase(Game game, GameController controller) {
-        super(game, controller);
-        abbeyCap = game.getCapability(AbbeyCapability.class);
-        bazaarCap = game.getCapability(BazaarCapability.class);
-        builderCap = game.getCapability(BuilderCapability.class);
+    public AbbeyPhase(GameController gc) {
+        super(gc);
     }
 
     @Override
-    public boolean isActive() {
-        return game.hasCapability(AbbeyCapability.class);
-    }
+    public StepResult enter(GameState state) {
+        BazaarCapabilityModel bazaarModel = state.getCapabilityModel(BazaarCapability.class);
+        BuilderState builderState = state.getCapabilityModel(BuilderCapability.class);
+        boolean baazaarInProgress = bazaarModel != null &&  bazaarModel.getSupply() != null;
+        boolean builderSecondTurnPart = builderState == BuilderState.SECOND_TURN;
+        boolean hasAbbey = state.getPlayers().getPlayerTokenCount(state.getPlayers().getTurnPlayerIndex(), Token.ABBEY_TILE) > 0;
+        if (hasAbbey && (builderSecondTurnPart || !baazaarInProgress)) {
+            Stream<Tuple2<Position, EdgePattern>> holes = state.getHoles();
+            if (!holes.isEmpty()) {
+                TileDefinition abbey = state.getTilePack().findTile(TileDefinition.ABBEY_TILE_ID).get();
 
-    @Override
-    public void enter() {
-        boolean baazaarInProgress = bazaarCap != null && bazaarCap.getBazaarSupply() != null;
-        boolean builderSecondTurnPart = builderCap != null && builderCap.getBuilderState() == BuilderState.BUILDER_TURN;
-        if (builderSecondTurnPart || !baazaarInProgress) {
-            if (abbeyCap.hasUnusedAbbey(getActivePlayer()) && !getBoard().getHoles().isEmpty()) {
-                toggleClock(getActivePlayer());
-                game.post(new SelectActionEvent(getActivePlayer(), new AbbeyPlacementAction().addAll(getBoard().getHoles()), true));
-                return;
+                TilePlacementAction action = new TilePlacementAction(
+                    abbey,
+                    holes.flatMap(t ->
+                        Array.ofAll(Arrays.asList(Rotation.values()))
+                            .map(r -> new TilePlacement(t._1, r, null))
+                    ).toSet()
+                );
+
+                state = state.setPlayerActions(new ActionsState(
+                    state.getTurnPlayer(),
+                    action,
+                    true
+                ));
+
+                return promote(state);
             }
         }
-        next();
+        return next(state);
     }
 
-    @Override
-    public void pass() {
-        next();
-    }
+    @PhaseMessageHandler
+    public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
+        if (!msg.getTileId().equals(TileDefinition.ABBEY_TILE_ID)) {
+            throw new IllegalArgumentException("Only abbey can be placed.");
+        }
 
-    @Override
-    public void placeTile(Rotation rotation, Position position) {
-        abbeyCap.useAbbey(getActivePlayer());
+        Player player = state.getActivePlayer();
+        state = state.mapPlayers(ps ->
+            ps.addTokenCount(player.getIndex(), Token.ABBEY_TILE, -1)
+        );
 
-        Tile nextTile = game.getTilePack().drawTile("inactive", Tile.ABBEY_TILE_ID);
-        game.setCurrentTile(nextTile);
-        nextTile.setRotation(rotation);
-        getBoard().add(nextTile, position);
-        getBoard().mergeFeatures(nextTile);
+        TileDefinition abbey = state.getTilePack().findTile(TileDefinition.ABBEY_TILE_ID).get();
+        state = (new PlaceTile(abbey, msg.getPosition(), msg.getRotation())).apply(state);
+        state = clearActions(state);
 
-        game.post(new TileEvent(TileEvent.PLACEMENT, getActivePlayer(), nextTile, position));
-        next(ActionPhase.class);
+        return next(state, ActionPhase.class);
     }
 }

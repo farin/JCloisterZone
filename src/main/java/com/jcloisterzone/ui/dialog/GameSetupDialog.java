@@ -1,14 +1,12 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Joiner;
 import com.jcloisterzone.game.CustomRule;
@@ -18,7 +16,8 @@ import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import io.vavr.Tuple2;
+import net.miginfocom.swing.MigLayout;
 
 public class GameSetupDialog extends JDialog {
 
@@ -36,20 +35,20 @@ public class GameSetupDialog extends JDialog {
 
         Joiner joiner = Joiner.on(", ").skipNulls();
         pane.add(new ThemedJLabel(_("Expansions")), "wrap, w 600, gaptop 5");
-        MultiLineLabel lExpansion = new MultiLineLabel(joiner.join(game.getExpansions()));
+        MultiLineLabel lExpansion = new MultiLineLabel(joiner.join(game.getSetup().getExpansions()));
         pane.add(lExpansion, "wrap, w 600");
 
         joiner = Joiner.on("\n").skipNulls();
         pane.add(new ThemedJLabel(_("Rules")), "wrap, w 600, gaptop 10");
         List<String> rules = new ArrayList<>();
-        for (Entry<CustomRule, Object> entry : game.getCustomRules().entrySet()) {
-            CustomRule rule = entry.getKey();
+        for (Tuple2<CustomRule, Object> t : game.getSetup().getRules()) {
+            CustomRule rule = t._1;
             if (rule.getType().equals(Boolean.class)) {
                 if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
-                if (entry.getValue().equals(Boolean.FALSE)) continue;
+                if (t._2.equals(Boolean.FALSE)) continue;
                 rules.add(rule.getLabel());
             } else {
-                rules.add(rule.getLabel() + " = " + entry.getValue());
+                rules.add(rule.getLabel() + " = " + t._2);
             }
         }
 

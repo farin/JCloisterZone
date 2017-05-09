@@ -3,15 +3,14 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("COMMIT")
-public class CommitMessage implements WsInGameMessage {
+public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
 
     private String gameId;
-    private long currentTime;
+    private long seed;
 
 
     public CommitMessage(String gameId) {
         this.gameId = gameId;
-        this.currentTime = System.currentTimeMillis();
     }
 
     public String getGameId() {
@@ -22,11 +21,11 @@ public class CommitMessage implements WsInGameMessage {
         this.gameId = gameId;
     }
 
-    public long getCurrentTime() {
-        return currentTime;
+    public long getSeed() {
+        return seed;
     }
 
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 }
