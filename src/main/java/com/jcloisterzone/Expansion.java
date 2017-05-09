@@ -27,6 +27,7 @@ import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.MayorCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.PigCapability;
+import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
@@ -52,7 +53,7 @@ public enum Expansion {
     INNS_AND_CATHEDRALS("IC", _("Inns & Cathedrals"),
             new Class[] { BigFollowerCapability.class ,InnCapability.class, CathedralCapability.class}),
     TRADERS_AND_BUILDERS("TB", _("Traders & Builders"),
-            new Class[] { PigCapability.class, BuilderCapability.class, ClothWineGrainCapability.class }),
+            new Class[] { PigCapability.class, BuilderCapability.class, ClothWineGrainCapability.class, PigHerdCapability.class }),
     PRINCESS_AND_DRAGON("DG", _("The Princess & The Dragon"),
             new Class[] { FairyCapability.class, DragonCapability.class, PortalCapability.class, PrincessCapability.class }),
     TOWER("TO", _("The Tower"),

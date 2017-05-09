@@ -28,6 +28,7 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -220,6 +221,10 @@ public class CreateGamePhase extends ServerAwarePhase {
     protected void prepareCapabilities() {
         for (Expansion exp : game.getExpansions()) {
             game.getCapabilityClasses().addAll(Arrays.asList(exp.getCapabilities()));
+        }
+
+        if (game.getBooleanValue(CustomRule.USE_PIG_HERDS_INDEPENDENTLY)) {
+            game.getCapabilityClasses().add(PigHerdCapability.class);
         }
 
         DebugConfig debugConfig = getDebugConfig();

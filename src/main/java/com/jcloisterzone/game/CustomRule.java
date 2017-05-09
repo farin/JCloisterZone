@@ -6,12 +6,11 @@ import com.jcloisterzone.Expansion;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-
-
 public enum CustomRule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _("Randomize seating order")),
 
     TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, _("Tiny city is scored only for 2 points.")),
+    USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _("Use pig herds independently (without T&B expansion)")),
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
     DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Dragon movement occurs after scoring.") + " (RGG)"),
