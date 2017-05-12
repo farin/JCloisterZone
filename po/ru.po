@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-21 13:58+0100\n"
 "PO-Revision-Date: 2015-10-22 13:11+0100\n"
-"Last-Translator: Roman <farin@farin.cz>\n"
+"Last-Translator: Andrew <MrNumbers@inbox.lv>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -811,11 +811,11 @@ msgstr "Перезапустите приложение для применен�
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:213
 msgid "Theme"
-msgstr ""
+msgstr "Тема"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:229
 msgid "To apply new theme you must restart the application"
-msgstr ""
+msgstr "Перезапустите приложение для изменения темы"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:235
 msgid "AI placement delay (ms)"
