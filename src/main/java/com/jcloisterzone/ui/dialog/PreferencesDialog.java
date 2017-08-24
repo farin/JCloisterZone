@@ -100,6 +100,7 @@ public class PreferencesDialog extends JDialog {
         result.add(new StringOption("fr", "français (fr)"));
         result.add(new StringOption("hu", "magyar (hu)"));
         result.add(new StringOption("it", "italiano (it)"));
+        result.add(new StringOption("ja", "日本語 (ja)"));
         result.add(new StringOption("nl", "nederlands (nl)"));
         result.add(new StringOption("pl", "polski (pl)"));
         result.add(new StringOption("ro", "român (ro)"));
