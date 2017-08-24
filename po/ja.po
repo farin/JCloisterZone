@@ -1,0 +1,1056 @@
+# Japanese Translation
+# Copyright (C) 2017
+# This file is distributed under the same license as the JCloisterZone package.
+# Alexis Jeandeau <alexis.jeandeau@gmail.com>, 2017
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-24 22:38+0900\n"
+"PO-Revision-Date: 2017-08-24 22:34+0900\n"
+"Last-Translator: Alexis Jeandeau <alexis.jeandeau@gmail.com>\n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.3\n"
+
+#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
+msgid "Report bug"
+msgstr "バグを報告"
+
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:36
+msgid ""
+"<html>Bug report tool pack saved game, internal game log and system "
+"information to simplify debugging process.</html>"
+msgstr ""
+"<html>デバッグプロセスを容易するために、バグ報告ツールがセーブデータ、内部"
+"ゲームログとシステム情報を含みます。</html>"
+
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:39
+msgid "Please describe bug..."
+msgstr "バグを説明し…"
+
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:55
+msgid "...then download report archive and send via email to farin@farin.cz"
+msgstr ""
+"…レポートアーカイブをダウンロードし、「farin@farin.cz」にメールで送信してくだ"
+"さい。"
+
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:80
+msgid "Bug report failed"
+msgstr "バグ報告に失敗しました"
+
+#: src/main/java/com/jcloisterzone/feature/Bridge.java:8
+msgid "Bridge"
+msgstr "橋"
+
+#: src/main/java/com/jcloisterzone/feature/Castle.java:58
+msgid "Castle"
+msgstr "城"
+
+#: src/main/java/com/jcloisterzone/feature/City.java:65
+msgid "City"
+msgstr "都市"
+
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:59
+msgid "Cloister"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/feature/Farm.java:56
+msgid "Farm"
+msgstr "草原"
+
+#: src/main/java/com/jcloisterzone/feature/Road.java:67
+msgid "Road"
+msgstr "道路"
+
+#: src/main/java/com/jcloisterzone/feature/Tower.java:33
+msgid "Tower"
+msgstr "塔"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:10
+msgid "Randomize seating order"
+msgstr "席順をランダム化する"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:12
+msgid "Tiny city is scored only for 2 points."
+msgstr "小さい街は2ポイントだけ得点されます。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:13
+msgid "Use pig herds independently (without T&B expansion)"
+msgstr "豚の群れを単独で使います。（「商人と建築士」を使わない場合。）"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:15
+msgid "Princess MUST remove a knight from city."
+msgstr "王女は都市から騎士を取り除かなければなりません。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:16
+msgid "Dragon movement occurs after scoring."
+msgstr "ドラゴンの動きは得点後に発生します。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:17
+msgid "Place fairy on the tile. (instead of next to a follower)"
+msgstr "妖精をタイルに置きます。（コマのそばより。）"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:19
+msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
+msgstr "攻囲された都市のタイルの隣に避難修道院の配置が可能です。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:21
+msgid "The Pig herd is present on the farm tile."
+msgstr "豚の群れが草原タイルに存在しています。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:23
+msgid ""
+"Allow direct barn placement on a farm where another barn is already placed."
+msgstr "別の納屋がすでに配置されている草原で直接納屋配置することを許可します。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:25
+msgid "Apply tunnel rule on tunnels from other expansions."
+msgstr "他の拡張セットのトンネルにトンネル・ルールを使う。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:27
+msgid "No bazaar bidding. Each player just chooses one tile."
+msgstr "バザーの入札は出来ません。 各プレイヤーはタイル１枚を選択します。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:29
+msgid "Keep basic cloisters in the game."
+msgstr "一般修道院を残します。"
+
+#: src/main/java/com/jcloisterzone/game/CustomRule.java:31
+msgid "Add 3/2/1 points for tower/house/shed."
+msgstr "各塔・家・小屋に３・２・１ポイントを追加します。"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:528
+msgid ""
+"Online play server is not compatible with your application. Please upgrade "
+"JCloisterZone to the latest version."
+msgstr ""
+"オンラインプレイサーバーはアプリケーションと互換性がありません。JCloisterZone"
+"の最新バージョンにアップデートしてください。"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:530
+msgid ""
+"Remote JCloisterZone is not compatible with local application. Please "
+"upgrade both applications to same version."
+msgstr ""
+"リモートアプリケーションはローカルアプリケーションと互換性がありません。同じ"
+"バージョンにアップグレードしてください。"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:532
+msgid "Incompatible versions"
+msgstr "バージョンの非互換性"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:535
+msgid "Invalid password"
+msgstr "無効なパスワード"
+
+#: src/main/java/com/jcloisterzone/ui/GameController.java:162
+msgid "%d tiles left"
+msgstr "残り%dタイル"
+
+#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
+msgid "JCloisterZone saved games"
+msgstr "JCloisterZoneの保存されたゲーム"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:45
+msgid "Confirm or undo a meeple placement."
+msgstr "コマの配置を確認するか、取り外します。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:46
+msgid "Waiting for a confirmation by remote player."
+msgstr "リモートプレイヤーによる確認を待っています。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:47
+msgid "No action available. Pass or undo a tile placement."
+msgstr ""
+"利用可能な行動はありません。タイルの配置を取り戻すかスキップしてください。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
+msgid "Pay ransom"
+msgstr "身代金を払う"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:410
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:380
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:412
+msgid "Do you really want to pay 3 points to release prisoner?"
+msgstr "本当に囚人を解放するためにポイントを3つ支払いしますか？"
+
+#: src/main/java/com/jcloisterzone/ui/controls/PlayerPanel.java:413
+msgid "Confirm ransom payment"
+msgstr "身代金の支払いを確認"
+
+#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:125
+msgid "Type to chat"
+msgstr "ここでチャットできます"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
+msgid "Skip"
+msgstr "スキップ"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:75
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
+msgid "Continue"
+msgstr "次へ"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Skip Abbey"
+msgstr "大修道院をスキップ"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:283
+msgid "Cancel and place Abbey"
+msgstr "キャンセルして大修道院を設置する"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr "最後のターンです。スキップすれば、大修道院は未配置のままになります。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
+msgid "Last chance to place the Abbey"
+msgstr "大修道院を配置するには最後のチャンスです"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:34
+msgid "About application"
+msgstr "ソフトウェアについて"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:55
+msgid "Version"
+msgstr "バージョン"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:59
+msgid ""
+"Distributed under the terms of GNU Affero General Public License version 3"
+msgstr ""
+"GNU Affero General Public Licenseバージョン3の条項に基づいて配布されています"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:28
+msgid "Game setup"
+msgstr "ゲームのセットアップ"
+
+# 追加セット？
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:38
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:241
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:208
+msgid "Expansions"
+msgstr "拡張セット"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:43
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:224
+msgid "Rules"
+msgstr "ルール"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
+msgid "Controls"
+msgstr "使い方"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:34
+msgid "Discarded tiles"
+msgstr "廃棄されたタイル"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:43
+msgid "These tiles have been discarded during the game"
+msgstr "これらのタイルはゲーム中に廃棄されました"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:50
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
+msgid "Tile Distribution"
+msgstr "タイル分布"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:93
+msgid "Use system language"
+msgstr "システムのデフォルト言語を使用"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:192
+msgid "Language"
+msgstr "言語"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:208
+msgid "To apply new language you must restart the application"
+msgstr "新しい言語を適用するには、アプリケーションを再起動する必要があります"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:214
+msgid "Theme"
+msgstr "テーマ"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:230
+msgid "To apply new theme you must restart the application"
+msgstr "新しいテーマを適用するには、アプリケーションを再起動する必要があります"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:236
+msgid "AI placement delay (ms)"
+msgstr "AIの配置遅延（ミリ秒）"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:242
+msgid "Score display duration (sec)"
+msgstr "スコア表示時間（秒）"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:345
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
+msgid "Preferences"
+msgstr "ユーザー設定"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:358
+msgid "Interface"
+msgstr "インターフェイス"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:358
+msgid "Plugins"
+msgstr "プラグイン"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:388
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:353
+msgid "Save"
+msgstr "保存"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:34
+msgid "Corn circle"
+msgstr "ミステリー・サークル"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:39
+msgid "Each player…"
+msgstr "各プレーヤーが…"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:45
+msgid "may deploy additional follower"
+msgstr "コマをもう一つ配置できます"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:56
+msgid "must remove follower"
+msgstr "コマを取り外さなければなりません"
+
+#: src/main/java/com/jcloisterzone/ui/grid/CornCirclesPanel.java:67
+#, java-format
+msgid "on/from a {0}."
+msgstr "{0}に。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:30
+msgid "Mage and Witch"
+msgstr "魔術師と魔女"
+
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:35
+msgid ""
+"It''s not possible to place mage or witch because there isn''t an unfinished "
+"feature. Select what figure do you want to remove from board."
+msgstr ""
+"未完成な地形が存在しないため、魔術師と魔女の配置ができません。取り外すコマを"
+"選んでください。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:41
+msgid "Remove the mage."
+msgstr "魔術師を取り外す。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/SelectMageWitchRemovalPanel.java:53
+msgid "Remove the witch."
+msgstr "魔女を取り外す。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:95
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:97
+msgid "Place as abbot"
+msgstr "修道院長として配置"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:97
+msgid "Place as monk"
+msgstr "修道僧として配置"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:100
+msgid "How do you want to place follower on monastery?"
+msgstr "コマをどのように修道院に配置しますか？"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:101
+msgid "Monastery"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:75
+msgid "Bazaar supply"
+msgstr "バザール供給"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:215
+msgid "Choose your tile."
+msgstr "タイルを選択してください。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:217
+msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
+msgstr ""
+"<html>次のオークションのためにタイルを選択して、<br>初期の申出をする。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:222
+msgid "Raise bid or pass."
+msgstr "入札価格を引き上げるか、スキップします。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:226
+msgid "Buy or sell tile from latest bidder."
+msgstr "最新入札者からタイルを購入したり、販売しています。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:231
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:234
+msgid "points"
+msgstr "ポイント"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:248
+msgid "Buy"
+msgstr "買う"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:249
+msgid "Sell"
+msgstr "売る"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:258
+msgid "Select"
+msgstr "選択する"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:267
+msgid "Bid"
+msgstr "入札する"
+
+#: src/main/java/com/jcloisterzone/ui/grid/BazaarPanel.java:268
+msgid "Pass"
+msgstr "スキップ"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:101
+msgid "Game title"
+msgstr "ゲーム名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:109
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
+msgid "Password"
+msgstr "パスワード"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:113
+msgid "If you leave password empty, anybody can connect to your game."
+msgstr "空のパスワードのままにすると、誰でもゲームに参加できます。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:117
+msgid "Create game"
+msgstr "ゲーム作成"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:188
+msgid "Join game"
+msgstr "ゲームに参加"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:202
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
+msgid "Remove game"
+msgstr "ゲーム削除"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:207
+msgid "Do you want to remove game permanently?"
+msgstr "本当にゲームを削除しますか？"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:235
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:178
+msgid "Players"
+msgstr "プレーヤー"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:52
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:48
+msgid "Connecting"
+msgstr "接続中"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:72
+msgid "Host"
+msgstr "ホスト"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
+msgid "Port"
+msgstr "ポート番号"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:73
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:98
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
+msgid "Connect"
+msgstr "接続する"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:96
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:77
+msgid "Back"
+msgstr "もどる"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:137
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:116
+msgid "Connection failed. Unknown host."
+msgstr "接続に失敗しました。ホストが不明です。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:118
+msgid "Connection refused."
+msgstr "接続が拒否されました。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:120
+msgid "Connection failed."
+msgstr "接続に失敗しました。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:131
+msgid "Invalid port number."
+msgstr "無効なポート番号。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:63
+msgid "Nickname"
+msgstr "あだ名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:49
+msgid "Connected clients"
+msgstr "接続しているクライアント"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:144
+msgid "Start game"
+msgstr "ゲーム開始"
+
+# リタイヤ？
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/Client.java:293
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:300
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
+msgid "Leave game"
+msgstr "ゲームをやめる"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:183
+msgid "Click twice on a slot button to add a computer player."
+msgstr "CPUを追加するには、コマアイコンを2回クリックしてください。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:256
+msgid "Clock"
+msgstr "時計"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:261
+msgid "player time limit"
+msgstr "プレイヤー制限時間"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:272
+msgid "minutes"
+msgstr "分"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:299
+msgid "Presets"
+msgstr "事前設定"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:320
+msgid "Preset name"
+msgstr "事前設定名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:381
+msgid "Delete"
+msgstr "削除"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:148
+msgid "Unassigned player"
+msgstr "割り当てられていないプレーヤー"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:178
+msgid "Local player"
+msgstr "ローカルプレーヤー"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:182
+msgid "Remote player"
+msgstr "リモートプレーヤー"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:160
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:188
+msgid "Computer player"
+msgstr "CPU"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:163
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:191
+msgid "Remote computer player"
+msgstr "リモートCPU"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:173
+msgid "Open player slot"
+msgstr "空いているプレイヤースロット"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
+msgid "Play again"
+msgstr "再プレイ"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:137
+msgid "Player"
+msgstr "プレイヤー"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:138
+msgid "Rank"
+msgstr "ランク"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+msgid "Total points"
+msgstr "合計ポイント"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+msgid "Roads"
+msgstr "道路"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
+msgid "Cities"
+msgstr "都市"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
+msgid "Cloisters"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+msgid "Farms"
+msgstr "草原"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+msgid "Castles"
+msgstr "城"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
+msgid "The biggest city"
+msgstr "最大の都市"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
+msgid "The longest road"
+msgstr "最長の道路"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:155
+msgid "Trade goods"
+msgstr "商品を取引"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
+msgid "Gold"
+msgstr "金"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
+msgid "Fairy"
+msgstr "妖精"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
+msgid "Tower ransom"
+msgstr "塔の身代金"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+msgid "Bazaars"
+msgstr "バザール"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
+msgid "Wind rose"
+msgstr "羅針図"
+
+# Middle mouse button?
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:18
+msgid ""
+"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
+"scroll the board. Click with <b>middle</b> mouse button to center the board. "
+"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr ""
+"<html><b>A</b>、<b>S</b>、<b>W</b>、<b>D</b>キーまたは<b>方向</b>キーを使って"
+"ボードを移動することができます。<b>中/ホイール</b>クリックでボードの真ん中に"
+"移動できます。<b>+</b>または<b>-</b>キーもしくはマウス<b>ホイール</b>で拡大で"
+"きます。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
+msgid ""
+"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
+"by <b>left</b> click.</html>"
+msgstr ""
+"<html><b>Tab</b>または<b>右</b>クリックでタイルを回します。<b>左</b>クリック"
+"で配置できます。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:26
+msgid ""
+"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
+"select appropriate action.</html>"
+msgstr ""
+"<html>タイルが配置されたら、<b>Tab</b>または<b>右</b>クリックで適切な行動を選"
+"択できます。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
+msgid ""
+"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
+"no action.</html>"
+msgstr ""
+"<html>代わりに<b>エンター</b>または<b>スペース</b>キーでスキップできます。</"
+"html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
+msgid ""
+"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"tiles.</html>"
+msgstr ""
+"<html><b>F</b>キーを押すと草原ヒント表示を切り替えます。<b>X</b>キーを押すと"
+"最後に配置されたタイルが表示されます。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
+msgid ""
+"Create a new game or continue a previously saved one. A game will be hosted "
+"on your computer and other players may connect during game set up. You can "
+"also play only against any number of computer players."
+msgstr ""
+"新しいゲームを作成するか、以前に保存されたゲームを再開します。ゲームは、お使"
+"いのコンピュータ上でホストされて、他のプレイヤーが設定中に接続することができ"
+"ます。また、CPUの任意の数とプレーできます。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
+msgid "New game"
+msgstr "新しいゲーム"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:82
+msgid "or"
+msgstr "または"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
+#: src/main/java/com/jcloisterzone/ui/Client.java:456
+msgid "Load game"
+msgstr "ゲームを開く"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:95
+msgid ""
+"You can also connect to remote JCloisterZone application hosting a game. "
+"Connect when game is created but not yet started."
+msgstr ""
+"また、リモートのJCloisterZoneアプリケーションに接続することができます。ゲーム"
+"が作成されて、まだ開始されていないときにしか接続できません。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:116
+msgid ""
+"Connect to other players and play with them using internet connection and "
+"public game server play.jcloisterzone.com."
+msgstr ""
+"インターネット接続と公共のゲームサーバ「play.jcloisterzone.com」を使用し、他"
+"のプレイヤーに接続します。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:118
+msgid "Play online"
+msgstr "オンラインプレイ"
+
+#: src/main/java/com/jcloisterzone/ui/view/StartView.java:62
+msgid "JCloisterZone "
+msgstr "JCloisterZone "
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:276
+#: src/main/java/com/jcloisterzone/ui/Client.java:626
+msgid "Connection lost"
+msgstr "接続は切断されました"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:276
+msgid "Reconnecting..."
+msgstr "再接続中…"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:426
+msgid "Save game"
+msgstr "ゲームを保存する"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:446
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:481
+#: src/main/java/com/jcloisterzone/ui/Client.java:425
+#: src/main/java/com/jcloisterzone/ui/Client.java:468
+#: src/main/java/com/jcloisterzone/ui/Client.java:634
+msgid "Error"
+msgstr "エラー"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+msgid ""
+"The game is not finished. Do you really want to stop game and disconnect all "
+"other players?"
+msgstr ""
+"ゲームが終了していません。本当にゲームを停止し、他のプレーヤーを切断します"
+"か？"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
+msgid "The game is not finished. Do you really want to leave it?"
+msgstr "ゲームが終了していません。本当にやめますか？"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
+msgid "Play Online"
+msgstr "オンラインプレイ"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
+msgid "Disconnect"
+msgstr "切断する"
+
+# リタイヤ？
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
+msgid "Leave Game"
+msgstr "ゲームをやめる"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
+msgid "Save Game"
+msgstr "ゲームを保存"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
+msgid "Load Game"
+msgstr "ゲームを開く"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
+msgid "Quit"
+msgstr "終了"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:36
+msgid "Undo"
+msgstr "取り消し"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
+msgid "Zoom In"
+msgstr "拡大する"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
+msgid "Zoom Out"
+msgstr "縮小する"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:39
+msgid "Rotate Board"
+msgstr "ボードを回す"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
+msgid "Show Last Placements"
+msgstr "敷設最新タイルを参照"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
+msgid "Show Farm Hints"
+msgstr "草原ヒントを表示"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
+msgid "Show Projected Points"
+msgstr "予想ポイントを表示"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
+msgid "Show Discarded Tiles"
+msgstr "廃棄されたタイルを参照"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
+msgid "Show Game Setup"
+msgstr "ゲームのセットアップを表示"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
+msgid "Take Screenshot"
+msgstr "スクリーン ショットを取る"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:47
+msgid "Beep Alert at Player Turn"
+msgstr "プレイヤーの順番に警告音を鳴らす"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
+msgid "Confirm Every Meeple Deployment"
+msgstr "各コマの配置を確認"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
+msgid "Confirm Meeple Deployment on a Farm"
+msgstr "草原にコマの配置を確認"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
+msgid "Confirm Meeple Deployment on a Tower"
+msgstr "塔にコマの配置を確認"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
+msgid "Confirm Ransom Payment"
+msgstr "身代金の支払いを確認"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:55
+msgid "About"
+msgstr "バージョン情報"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:58
+msgid "Report Bug"
+msgstr "バグを報告する"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:87
+msgid "Session"
+msgstr "セッション"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:132
+msgid "Game"
+msgstr "ゲーム"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:150
+msgid "Settings"
+msgstr "設定"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:209
+msgid "Help"
+msgstr "ヘルプ"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:45
+msgid "Basic game"
+msgstr "基本ゲーム"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:46
+msgid "Wheel of Fortune"
+msgstr "運命の輪"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:49
+msgid "Winter Edition"
+msgstr "カルカソンヌ冬"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:50
+msgid "The Gingerbread Man"
+msgstr "ジンジャーブレッドマン"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:53
+msgid "Inns & Cathedrals"
+msgstr "宿と大聖堂"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:55
+msgid "Traders & Builders"
+msgstr "商人と建築士"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:57
+msgid "The Princess & The Dragon"
+msgstr "王女とドラゴン"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:59
+msgid "The Tower"
+msgstr "塔"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:61
+msgid "Abbey & Mayor"
+msgstr "大修道院と市長"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:63
+msgid "The Catapult"
+msgstr "カタパルト"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:74
+msgid "tiles only"
+msgstr "タイルのみ"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:64
+msgid "Bridges, Castles and Bazaars"
+msgstr "橋・城・バザール"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:66
+msgid "Hills and Sheep"
+msgstr "丘と羊"
+
+# Used to be "King and Scout", but JCloisterZone only includes the "King and Robber Baron" (originally "König und Raubritter") part of the expansion (5 tiles).
+#: src/main/java/com/jcloisterzone/Expansion.java:69
+msgid "King and Robber Baron"
+msgstr "王と泥棒男爵"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:70
+msgid "The River"
+msgstr "川"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:71
+msgid "The River II"
+msgstr "川Ⅱ"
+
+# Used to be just "The Cathars".
+# 攻城 would be better for siege?
+#: src/main/java/com/jcloisterzone/Expansion.java:72
+msgid "The Cathars / Siege"
+msgstr "カタリ派/攻囲"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:73
+msgid "The Besiegers"
+msgstr "攻囲軍"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:74
+msgid "The Count of Carcassonne"
+msgstr "カルカソンヌの伯爵"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:75
+msgid "The Mini Expansion (GQ11)"
+msgstr "ミニ拡張（GQ11）"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:76
+msgid "The Cult"
+msgstr "崇拝"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:77
+msgid "The Tunnel"
+msgstr "トンネル"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:78
+msgid "The Corn Circles"
+msgstr "ミステリー・サークル"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:80
+msgid "The Plague"
+msgstr "ペスト"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:81
+msgid "The Phantom"
+msgstr "従者"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:82
+msgid "The Festival (10th an.)"
+msgstr "祭り（10周年記念）"
+
+# Original title: "Die Haüser" (The Houses)
+# Maybe 家 would be better?
+#: src/main/java/com/jcloisterzone/Expansion.java:83
+msgid "Little Buildings"
+msgstr "小さな建物"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:84
+msgid "The Wind Rose"
+msgstr "羅針図"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:85
+msgid "The German Monasteries"
+msgstr "ドイツの修道院"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:86
+msgid "Castles in Germany"
+msgstr "ドイツの城"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:88
+msgid "Halfings"
+msgstr "ハーフ"
+
+# Also called "The Flying Machines".
+# グライダー? 航空機 seems more appropriate considering the original name:
+# https://translate.google.com/#auto/ja/Die%20Flugger%C3%A4te
+#: src/main/java/com/jcloisterzone/Expansion.java:91
+msgid "The Flier"
+msgstr "航空機"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:92
+msgid "The Messages"
+msgstr "メッセージ"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:93
+msgid "The Ferries"
+msgstr "フェリー"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:94
+msgid "The Goldmines"
+msgstr "金鉱山"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:95
+msgid "Mage & Witch"
+msgstr "魔術師と魔女"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:96
+msgid "The Robbers"
+msgstr "強盗"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:97
+msgid "The Corn Circles II"
+msgstr "ミステリー・サークルII"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:100
+msgid "The School"
+msgstr "学校"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:101
+msgid "La Porxada"
+msgstr "ポルチャーダ"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:102
+msgid "Russian Promos"
+msgstr "ロシアのプロモーション"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:103
+msgid "Darmstadt Promo"
+msgstr "ダルムシュタットのプロモーション"
