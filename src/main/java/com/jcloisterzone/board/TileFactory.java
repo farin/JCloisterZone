@@ -16,7 +16,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 
 import static com.jcloisterzone.XMLUtils.asLocation;
