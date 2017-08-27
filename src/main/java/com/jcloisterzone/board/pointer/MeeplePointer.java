@@ -49,9 +49,7 @@ public class MeeplePointer implements BoardPointer {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("[x=").append(getPosition().x).append(",y=")
-                .append(getPosition().y).append(",").append(getLocation()).append(",")
-                .append(meepleId).append("]").toString();
+        return "[x=" + getPosition().x + ",y=" + getPosition().y + "," + getLocation() + "," + meepleId + "]";
     }
 
     @Override

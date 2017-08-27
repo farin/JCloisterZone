@@ -19,14 +19,14 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 
 
 /**
- * Board represent game board with any size, so <code>Tile</code> instances ale
+ * Board represent game board with any size, so <code>Tile</code> instances are
  * stored in <code>Map</code>. Board supplies proper merging of score objects
  * (<code>Road</code>, <code>City</code> or <code>Farm</code>)
  * and diagonal merge for <code>Cloister<code> instances.
 
  */
 public class Board {
-    protected final Map<Position,Tile> tiles = new LinkedHashMap<Position,Tile>();
+    protected final Map<Position,Tile> tiles = new LinkedHashMap<>();
     protected final Map<Position, EdgePattern> availMoves = new HashMap<>();
     protected final Map<Position, Set<Rotation>> currentAvailMoves = new HashMap<>();
     protected final Set<Position> holes = new HashSet<>();
@@ -86,11 +86,11 @@ public class Board {
 
 
     /**
-     * Place tile on given position. Check for correct placement (check if neigbours
+     * Place tile on given position. Check for correct placement (check if neighbours
      * edges match with tile edges according to Carcassonne rules
      * @param tile tile to place
      * @param p position to place
-     * @throws IllegalMoveException if placement is violate game rules
+     * @throws IllegalArgumentException if placement is violate game rules
      */
     public void add(Tile tile, Position p) {
         add(tile, p, false);
@@ -206,7 +206,7 @@ public class Board {
 
 
     /**
-     * Returns tile on position with cordinates <code>x</code>,<code>y</code>.
+     * Returns tile on position with coordinates <code>x</code>,<code>y</code>.
      * @param x x-coordinate
      * @param y y-coordinate
      * @return demand tile
@@ -229,7 +229,7 @@ public class Board {
     }
 
     /*
-     * Check if placement is legal against orthonogal neigbours. */
+     * Check if placement is legal against orthogonal neighbours. */
     public boolean isPlacementAllowed(Tile tile, Position p) {
         for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
             if (!tile.check(e.getValue(), e.getKey(), this)) {
@@ -267,7 +267,7 @@ public class Board {
     }
 
     public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
-        Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
+        Map<Location, Tile> tiles = new HashMap<>(4);
         for (Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
             Tile tile = get(e.getValue().add(pos));
             if (tile != null) {

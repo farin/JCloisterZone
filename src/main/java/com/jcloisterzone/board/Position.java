@@ -55,7 +55,7 @@ public class Position implements BoardPointer, Comparable<Position> {
     }
 
     public String toString() {
-        return new StringBuilder().append("[x=").append(x).append(",y=").append(y).append("]").toString();
+        return "[x=" + x + ",y=" + y + "]";
     }
 
     public Position add(Position p) {

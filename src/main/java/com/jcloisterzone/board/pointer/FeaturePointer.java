@@ -38,8 +38,7 @@ public class FeaturePointer implements BoardPointer {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("[x=").append(position.x).append(",y=")
-                .append(position.y).append(",").append(location).append("]").toString();
+        return "[x=" + position.x + ",y=" + position.y + "," + location + "]";
     }
 
     @Override

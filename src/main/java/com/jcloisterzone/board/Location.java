@@ -179,7 +179,7 @@ public class Location implements Serializable {
 
     /**
      * Relative rotations in counter-clockwise location
-     * @param d how much rotate
+     * @param rot how much rotate
      * @return rotated location
      */
     public Location rotateCCW(Rotation rot) {
@@ -238,20 +238,20 @@ public class Location implements Serializable {
     /** Merge two locations together */
     public Location union(Location d) {
         if (d == null) return this;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "union("+this+','+d+')';
+        assert !isSpecialLocation() && isEdgeLocation() == d.isEdgeLocation() & isFarmLocation() == d.isFarmLocation() : "union("+this+','+d+')';
         return create(mask | d.mask);
     }
 
     /** Subtract given location from this */
     public Location substract(Location d) {
         if (d == null) return this;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "substract("+this+','+d+')';
+        assert !isSpecialLocation() && isEdgeLocation() == d.isEdgeLocation() & isFarmLocation() == d.isFarmLocation() : "substract("+this+','+d+')';
         return create((~(mask & d.mask)) & mask);
     }
 
     public Location intersect(Location d) {
         if (d == null || (mask & d.mask) == 0) return null;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ d.isEdgeLocation()) & !(isFarmLocation() ^ d.isFarmLocation()) : "interasect("+this+','+d+')';
+        assert !isSpecialLocation() && isEdgeLocation() == d.isEdgeLocation() & isFarmLocation() == d.isFarmLocation() : "interasect("+this+','+d+')';
         return create(mask & d.mask);
     }
 
@@ -267,7 +267,7 @@ public class Location implements Serializable {
     }
 
     public Location[] splitToSides() {
-    	ArrayList<Location> result = new ArrayList<Location>(4);
+    	ArrayList<Location> result = new ArrayList<>(4);
     	for (Location side: Location.sides()) {
 			Location part = this.intersect(side);
 			if (part != null) {
