@@ -26,7 +26,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 
  */
 public class Board {
-    protected final Map<Position,Tile> tiles = new LinkedHashMap<Position,Tile>();
+    protected final Map<Position,Tile> tiles = new LinkedHashMap<>();
     protected final Map<Position, EdgePattern> availMoves = new HashMap<>();
     protected final Map<Position, Set<Rotation>> currentAvailMoves = new HashMap<>();
     protected final Set<Position> holes = new HashSet<>();
@@ -267,7 +267,7 @@ public class Board {
     }
 
     public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
-        Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
+        Map<Location, Tile> tiles = new HashMap<>(4);
         for (Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
             Tile tile = get(e.getValue().add(pos));
             if (tile != null) {

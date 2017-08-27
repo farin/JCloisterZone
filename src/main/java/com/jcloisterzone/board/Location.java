@@ -267,7 +267,7 @@ public class Location implements Serializable {
     }
 
     public Location[] splitToSides() {
-    	ArrayList<Location> result = new ArrayList<Location>(4);
+    	ArrayList<Location> result = new ArrayList<>(4);
     	for (Location side: Location.sides()) {
 			Location part = this.intersect(side);
 			if (part != null) {

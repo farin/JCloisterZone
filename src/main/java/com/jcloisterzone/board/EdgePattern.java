@@ -90,7 +90,7 @@ public class EdgePattern {
     public Collection<EdgePattern> fill() {
         //TODO better impl
         if (wildcardSize() == 0) return Collections.singleton(this);
-        Queue<EdgePattern> q = new LinkedList<EdgePattern>();
+        Queue<EdgePattern> q = new LinkedList<>();
         q.add(this);
         while(q.peek().wildcardSize() > 0) {
             EdgePattern p = q.poll();
