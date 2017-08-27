@@ -139,8 +139,8 @@ public class TileFactory {
         if (e.hasAttribute("city")) {
             List<City> cities = new ArrayList<>();
             String[] citiesLocs = asLocations(e, "city");
-            for (int j = 0; j < citiesLocs.length; j++) {
-                Location d = Location.valueOf(citiesLocs[j]);
+            for (String citiesLoc : citiesLocs) {
+                Location d = Location.valueOf(citiesLoc);
                 for (Feature p : features) {
                     if (p instanceof City) {
                         if (d.isPartOf(p.getLocation())) {
@@ -158,8 +158,8 @@ public class TileFactory {
 
     private void initFromDirList(TileFeature piece, String[] sides) {
         Location loc = null;
-        for (int i = 0; i < sides.length; i++) {
-            Location l = Location.valueOf(sides[i]);
+        for (String side : sides) {
+            Location l = Location.valueOf(side);
             assert piece instanceof Farm == l.isFarmLocation() : String.format("Invalid location %s kind for tile %s", l, tile.getId());
             assert l.intersect(loc) == null;
             loc = loc == null ? l : loc.union(l);
