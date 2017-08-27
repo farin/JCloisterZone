@@ -19,7 +19,7 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 
 
 /**
- * Board represent game board with any size, so <code>Tile</code> instances ale
+ * Board represent game board with any size, so <code>Tile</code> instances are
  * stored in <code>Map</code>. Board supplies proper merging of score objects
  * (<code>Road</code>, <code>City</code> or <code>Farm</code>)
  * and diagonal merge for <code>Cloister<code> instances.
