@@ -7,6 +7,6 @@ import com.jcloisterzone.board.Position;
 
 public interface BoardPointer extends Serializable {
 
-    public Position getPosition();
-    public FeaturePointer asFeaturePointer();
+    Position getPosition();
+    FeaturePointer asFeaturePointer();
 }
