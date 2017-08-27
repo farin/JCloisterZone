@@ -86,7 +86,7 @@ public class Board {
 
 
     /**
-     * Place tile on given position. Check for correct placement (check if neigbours
+     * Place tile on given position. Check for correct placement (check if neighbours
      * edges match with tile edges according to Carcassonne rules
      * @param tile tile to place
      * @param p position to place
@@ -206,7 +206,7 @@ public class Board {
 
 
     /**
-     * Returns tile on position with cordinates <code>x</code>,<code>y</code>.
+     * Returns tile on position with coordinates <code>x</code>,<code>y</code>.
      * @param x x-coordinate
      * @param y y-coordinate
      * @return demand tile
@@ -229,7 +229,7 @@ public class Board {
     }
 
     /*
-     * Check if placement is legal against orthonogal neigbours. */
+     * Check if placement is legal against orthogonal neighbours. */
     public boolean isPlacementAllowed(Tile tile, Position p) {
         for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
             if (!tile.check(e.getValue(), e.getKey(), this)) {
