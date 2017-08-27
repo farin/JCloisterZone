@@ -90,7 +90,7 @@ public class Board {
      * edges match with tile edges according to Carcassonne rules
      * @param tile tile to place
      * @param p position to place
-     * @throws IllegalMoveException if placement is violate game rules
+     * @throws IllegalArgumentException if placement is violate game rules
      */
     public void add(Tile tile, Position p) {
         add(tile, p, false);
