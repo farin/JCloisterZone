@@ -24,8 +24,7 @@ public class TilePlacement implements Comparable<TilePlacement> {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("[x=").append(position.x).append(",y=")
-                .append(position.y).append(",").append(rotation).append("]").toString();
+        return "[x=" + position.x + ",y=" + position.y + "," + rotation + "]";
     }
 
     @Override
