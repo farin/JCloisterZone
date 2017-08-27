@@ -46,8 +46,8 @@ public class Board {
     }
 
     /**
-     * Updates current avail moves for next turn
-     * @param tile next tile
+     * Updates current available moves for the next turn given a tile.
+     * @param tile the tile to be place in the next turn
      */
     public void refreshAvailablePlacements(Tile tile) {
         Rotation tileRotation = tile.getRotation();
@@ -71,31 +71,54 @@ public class Board {
         tile.setRotation(tileRotation); //reset rotation
     }
 
-
+    /**
+     * Adds {@code pos} to the list of unoccupied positions currently touching some tile.
+     * @param pos the position to add
+     */
     protected void availMovesAdd(Position pos) {
         availMoves.put(pos, EdgePattern.forEmptyTile(this, pos));
     }
 
+    /**
+     * Removes {@code pos} from the list of unoccupied positions currently touching some tile.
+     * @param pos the position to remove
+     */
     protected void availMovesRemove(Position pos) {
         availMoves.remove(pos);
     }
 
+    /**
+     * Gets the {@link EdgePattern}  of a given position. This represents the constraints that a tile
+     * needs to satisfy to be placed in {@code pos}.
+     *
+     * @param pos the position of interest
+     * @return the edge pattern of the position of interest
+     */
     public EdgePattern getAvailMoveEdgePattern(Position pos) {
         return availMoves.get(pos);
     }
 
-
     /**
-     * Place tile on given position. Check for correct placement (check if neigbours
-     * edges match with tile edges according to Carcassonne rules
-     * @param tile tile to place
-     * @param p position to place
-     * @throws IllegalMoveException if placement is violate game rules
+     * Places {@code tile} on position {@code p}. Prior to placing, checks if neighbours
+     * edges match with {@code tile} edges according to Carcassonne rules. If rules
+     * are violated, raises {@link IllegalArgumentException}.
+     * @param tile the tile to place
+     * @param p the position where to place the tile
+     * @throws IllegalArgumentException if placement is violate game rules
      */
     public void add(Tile tile, Position p) {
         add(tile, p, false);
     }
 
+    /**
+     * Places {@code tile} on {@code p}. If {@code unchecked} is false, prior to placing, checks if neighbours
+     * edges match with {@code tile} edges according to Carcassonne rules. If rules
+     * are violated, raises {@link IllegalArgumentException}. Otherwise, violations are ignored.
+     * @param tile the tile to place
+     * @param p the position where to place the tile
+     * @param unchecked whether to check game rules for violations
+     * @throws IllegalArgumentException if placement is violate game rules
+     */
     public void add(Tile tile, Position p, boolean unchecked) {
         if (!unchecked) {
             if (tile.isAbbeyTile()) {
