@@ -179,7 +179,7 @@ public class Location implements Serializable {
 
     /**
      * Relative rotations in counter-clockwise location
-     * @param d how much rotate
+     * @param rot how much rotate
      * @return rotated location
      */
     public Location rotateCCW(Rotation rot) {
