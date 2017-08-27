@@ -196,6 +196,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @Override
+    public void onStart() {
+
+    }
+
+    @Override
     public void onMessage(WebSocket ws, String payload) {
         //logger.info(payload);
         WsMessage msg = parser.fromJson(payload);
