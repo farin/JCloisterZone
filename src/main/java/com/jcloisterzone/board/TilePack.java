@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface TilePack {
 
-    static final String INACTIVE_GROUP = "inactive";
+    String INACTIVE_GROUP = "inactive";
 
     int totalSize();
     boolean isEmpty();
