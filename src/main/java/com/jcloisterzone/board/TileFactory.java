@@ -160,7 +160,7 @@ public class TileFactory {
         Location loc = null;
         for (int i = 0; i < sides.length; i++) {
             Location l = Location.valueOf(sides[i]);
-            assert !(piece instanceof Farm ^ l.isFarmLocation()) : String.format("Invalid location %s kind for tile %s", l, tile.getId());
+            assert piece instanceof Farm == l.isFarmLocation() : String.format("Invalid location %s kind for tile %s", l, tile.getId());
             assert l.intersect(loc) == null;
             loc = loc == null ? l : loc.union(l);
         }
