@@ -71,8 +71,8 @@ public class EdgePattern {
 
     public int wildcardSize() {
         int size = 0;
-        for (int i = 0; i < edges.length; i++) {
-            if (edges[i] == Edge.UNKNOWN) size++;
+        for (Edge edge : edges) {
+            if (edge == Edge.UNKNOWN) size++;
         }
         return size;
     }
@@ -90,7 +90,7 @@ public class EdgePattern {
     public Collection<EdgePattern> fill() {
         //TODO better impl
         if (wildcardSize() == 0) return Collections.singleton(this);
-        Queue<EdgePattern> q = new LinkedList<EdgePattern>();
+        Queue<EdgePattern> q = new LinkedList<>();
         q.add(this);
         while(q.peek().wildcardSize() > 0) {
             EdgePattern p = q.poll();
@@ -182,8 +182,8 @@ public class EdgePattern {
     public int hashCode() {
         Edge[] edges = canonize();
         int hash = 0;
-        for (int i = 0; i < edges.length; i++) {
-            hash = hash * 91 + edges[i].ordinal();
+        for (Edge edge : edges) {
+            hash = hash * 91 + edge.ordinal();
         }
         return hash;
     }
@@ -191,8 +191,8 @@ public class EdgePattern {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < edges.length; i++) {
-            sb.append(edges[i]);
+        for (Edge edge : edges) {
+            sb.append(edge);
         }
         return sb.toString();
     }

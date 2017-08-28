@@ -19,14 +19,14 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 
 
 /**
- * Board represent game board with any size, so <code>Tile</code> instances ale
+ * Board represent game board with any size, so <code>Tile</code> instances are
  * stored in <code>Map</code>. Board supplies proper merging of score objects
  * (<code>Road</code>, <code>City</code> or <code>Farm</code>)
  * and diagonal merge for <code>Cloister<code> instances.
 
  */
 public class Board {
-    protected final Map<Position,Tile> tiles = new LinkedHashMap<Position,Tile>();
+    protected final Map<Position,Tile> tiles = new LinkedHashMap<>();
     protected final Map<Position, EdgePattern> availMoves = new HashMap<>();
     protected final Map<Position, Set<Rotation>> currentAvailMoves = new HashMap<>();
     protected final Set<Position> holes = new HashSet<>();
@@ -383,7 +383,7 @@ public class Board {
      * @return the map of surrounding tiles
      */
     public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
-        Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
+        Map<Location, Tile> tiles = new HashMap<>(4);
         for (Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
             Tile tile = get(e.getValue().add(pos));
             if (tile != null) {

@@ -302,11 +302,9 @@ public class Location implements Serializable {
      */
     public Location union(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ loc.isEdgeLocation()) & !(isFarmLocation() ^ loc.isFarmLocation()) : "union("+this+','+loc+')';
+        assert !isSpecialLocation() && isEdgeLocation() == d.isEdgeLocation() & isFarmLocation() == d.isFarmLocation() : "union("+this+','+d+')';
         return create(mask | loc.mask);
     }
-
-    // TODO rename this
 
     /**
      * Subtracts two locations and returns a new one having as mask only the bits in the mask of {@code this} that are
@@ -352,7 +350,7 @@ public class Location implements Serializable {
      * @return the sides components of {@code this}
      */
     public Location[] splitToSides() {
-    	ArrayList<Location> result = new ArrayList<Location>(4);
+    	ArrayList<Location> result = new ArrayList<>(4);
     	for (Location side: Location.sides()) {
 			Location part = this.intersect(side);
 			if (part != null) {

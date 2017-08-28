@@ -11,5 +11,5 @@ public enum TileTrigger {
     PLAGUE,
     MAGE,
     FERRY,
-    GOLDMINE;
+    GOLDMINE
 }

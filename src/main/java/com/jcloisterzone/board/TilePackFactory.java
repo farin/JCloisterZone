@@ -179,7 +179,7 @@ public class TilePackFactory {
             }
         }
 
-        List<Tile> tiles = new ArrayList<Tile>(count);
+        List<Tile> tiles = new ArrayList<>(count);
         for (int j = 0; j < count; j++) {
             Tile tile = tileFactory.createTile(expansion, tileId, card, isTunnelActive(expansion));
             try {
@@ -200,7 +200,7 @@ public class TilePackFactory {
         NodeList nl = card.getElementsByTagName("position");
         if (nl.getLength() == 0) return null;
 
-        LinkedList<Position> result = new LinkedList<Position>();
+        LinkedList<Position> result = new LinkedList<>();
         for (int i = 0; i < nl.getLength(); i++) {
             Element posEl = (Element) nl.item(i);
             result.add(new Position(attributeIntValue(posEl, "x"), attributeIntValue(posEl, "y")));
