@@ -2,17 +2,18 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.capability.PhantomCapability;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
@@ -21,8 +22,8 @@ import com.jcloisterzone.wsio.message.PassMessage;
 @RequiredCapability(PhantomCapability.class)
 public class PhantomPhase extends Phase {
 
-    public PhantomPhase(GameController gc) {
-        super(gc);
+    public PhantomPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

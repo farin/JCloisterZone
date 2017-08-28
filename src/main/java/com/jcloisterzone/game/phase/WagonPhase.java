@@ -1,8 +1,11 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
@@ -10,7 +13,6 @@ import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PassMessage;
 
@@ -21,8 +23,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(WagonCapability.class)
 public class WagonPhase extends Phase {
 
-    public WagonPhase(GameController gc) {
-        super(gc);
+    public WagonPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

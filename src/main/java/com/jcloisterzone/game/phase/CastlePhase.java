@@ -1,9 +1,12 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.CastleCreated;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Castle;
@@ -15,7 +18,6 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 
 import io.vavr.Tuple2;
@@ -27,8 +29,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(CastleCapability.class)
 public class CastlePhase extends Phase {
 
-    public CastlePhase(GameController gc) {
-        super(gc);
+    public CastlePhase(Config config, Random random) {
+        super(config, random);
     }
 
     private Set<FeaturePointer> getPlayerOptions(GameState state, Player player) {

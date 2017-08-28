@@ -1,11 +1,14 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CaptureFollowerAction;
 import com.jcloisterzone.action.SelectPrisonerToExchangeAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
@@ -17,7 +20,6 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.CaptureMeeple;
 import com.jcloisterzone.reducers.PrisonersExchage;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
 import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
 
@@ -29,8 +31,8 @@ import io.vavr.collection.Stream;
 @RequiredCapability(TowerCapability.class)
 public class TowerCapturePhase extends Phase {
 
-    public TowerCapturePhase(GameController gc) {
-        super(gc);
+    public TowerCapturePhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

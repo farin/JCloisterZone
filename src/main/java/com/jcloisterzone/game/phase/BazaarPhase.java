@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.BazaarBidAction;
@@ -8,6 +10,7 @@ import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
@@ -16,7 +19,6 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.AddPoints;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.BazaarBidMessage;
 import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
 import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage.BuyOrSellOption;
@@ -28,8 +30,8 @@ import io.vavr.collection.Queue;
 @RequiredCapability(BazaarCapability.class)
 public class BazaarPhase extends Phase {
 
-    public BazaarPhase(GameController gc) {
-        super(gc);
+    public BazaarPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class BazaarPhase extends Phase {
         Queue<BazaarItem> supply = Queue.empty();
 
         for (int i = 0; i < size; i++) {
-            int rndIndex = game.getRandom().nextInt(tilePack.size());
+            int rndIndex = getRandom().nextInt(tilePack.size());
             Tuple2<TileDefinition, TilePack> t = tilePack.drawTile(rndIndex);
             state = state.setTilePack(t._2);
             supply = supply.append(new BazaarItem(t._1, 0, null, null));

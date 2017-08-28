@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -25,8 +27,8 @@ import com.jcloisterzone.wsio.message.PassMessage;
 @RequiredCapability(CountCapability.class)
 public class CocPreScorePhase extends Phase {
 
-    public CocPreScorePhase(GameController gc) {
-        super(gc);
+    public CocPreScorePhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

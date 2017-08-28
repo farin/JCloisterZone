@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -12,6 +13,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Mayor;
@@ -30,8 +32,8 @@ import com.jcloisterzone.wsio.message.PassMessage;
 @RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
 
-    public CocFollowerPhase(GameController gc) {
-        super(gc);
+    public CocFollowerPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

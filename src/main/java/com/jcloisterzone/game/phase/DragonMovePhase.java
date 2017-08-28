@@ -1,10 +1,13 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -15,7 +18,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
 import io.vavr.Tuple2;
@@ -26,8 +28,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(DragonCapability.class)
 public class DragonMovePhase extends Phase {
 
-    public DragonMovePhase(GameController gc) {
-        super(gc);
+    public DragonMovePhase(Config config, Random random) {
+        super(config, random);
     }
 
     private Vector<Position> getVisitedPositions(GameState state) {

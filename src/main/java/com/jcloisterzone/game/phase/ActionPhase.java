@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -10,6 +12,7 @@ import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Completable;
@@ -42,7 +45,6 @@ import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.reducers.PlaceBridge;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
@@ -58,8 +60,8 @@ import io.vavr.collection.Vector;
 
 public class ActionPhase extends Phase {
 
-    public ActionPhase(GameController gc) {
-        super(gc);
+    public ActionPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

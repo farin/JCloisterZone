@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
@@ -10,6 +11,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -23,12 +25,8 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
-import com.jcloisterzone.game.state.CapabilitiesState;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
@@ -36,8 +34,8 @@ import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 @RequiredCapability(CornCircleCapability.class)
 public class CornCirclePhase extends Phase {
 
-    public CornCirclePhase(GameController gc) {
-        super(gc);
+    public CornCirclePhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

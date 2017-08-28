@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
@@ -9,29 +10,27 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
-import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderState;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PlaceTile;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
-import io.vavr.collection.Queue;
 import io.vavr.collection.Stream;
 
 @RequiredCapability(AbbeyCapability.class)
 public class AbbeyPhase extends Phase {
 
-    public AbbeyPhase(GameController gc) {
-        super(gc);
+    public AbbeyPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -40,8 +43,8 @@ public class ScorePhase extends Phase {
 
     private java.util.Map<Completable, Integer> completedMutable = new java.util.HashMap<>();
 
-    public ScorePhase(GameController gc) {
-        super(gc);
+    public ScorePhase(Config config, Random random) {
+        super(config, random);
     }
 
     private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {

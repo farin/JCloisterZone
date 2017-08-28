@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,15 +19,16 @@ public abstract class Phase {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected final Game game;
-    protected final GameController gc;
+    private final Config config;
+    private final Random random;
+
 
     //TODO change to class ? but what about skipping phase in handlePass
     private Phase defaultNext;
 
-    public Phase(GameController gc) {
-        this.gc = gc;
-        this.game = gc.getGame();
+    public Phase(Config config, Random random) {
+        this.config = config;
+        this.random = random;
     }
 
     public Phase getDefaultNext() {
@@ -80,8 +83,11 @@ public abstract class Phase {
         return promote(state);
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
     public DebugConfig getDebugConfig() {
-        Config config = gc.getConfig();
         return config == null ? null : config.getDebug();
     }
 

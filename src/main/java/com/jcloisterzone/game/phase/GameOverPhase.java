@@ -1,14 +1,16 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.FinalScoring;
-import com.jcloisterzone.ui.GameController;
 
 
 public class GameOverPhase extends Phase {
 
-    public GameOverPhase(GameController gc) {
-        super(gc);
+    public GameOverPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

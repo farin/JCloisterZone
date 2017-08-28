@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
@@ -13,6 +14,7 @@ import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
@@ -45,8 +47,8 @@ public class TilePhase extends Phase {
 
     private List<String> debugTiles;
 
-    public TilePhase(GameController gc) {
-        super(gc);
+    public TilePhase(Config config, Random random) {
+        super(config, random);
         DebugConfig debugConfig = getDebugConfig();
         if (debugConfig != null) {
             List<String> draw = debugConfig.getDraw();
@@ -151,7 +153,7 @@ public class TilePhase extends Phase {
                 }
 
                 if (makeRegularDraw) {
-                    int rndIndex = game.getRandom().nextInt(tilePack.size());
+                    int rndIndex = getRandom().nextInt(tilePack.size());
                     state = drawTile(state, rndIndex);
                 }
             }

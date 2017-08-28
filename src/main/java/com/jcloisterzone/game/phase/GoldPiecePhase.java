@@ -1,21 +1,23 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.GoldChangeEvent;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.game.capability.GoldminesCapability;
-import com.jcloisterzone.ui.GameController;
 
 @RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    public GoldPiecePhase(GameController gc) {
-        super(gc);
+    public GoldPiecePhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override

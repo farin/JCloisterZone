@@ -37,19 +37,11 @@ and get it by one one instead of all per tile
 
 * add debug options to limit tile pack size
 
-* add function for applying reducer on state (reverse apply)
-* rename updateXYZ to mapXYX, add it for everything and move it from mixins to state
-
 * implement zoom by single affine transrom on grid layer? probably no - problems with area checking
 
 * remove feature/meeple methods with state arg, eg isOccupied(state), put them rather on state
 
 * Tower, place tile, use same circular ares as for selecting follower
 
-* extract config to global singleton repository, eg Client or Application
-
-* is GameController needed for phases? could be game sufficient? Or should be gc placed on Game?
-
 * put capabilities and number of tile sets into saved game
 
-* eventually remove game/gc from Phase

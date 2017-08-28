@@ -2,12 +2,14 @@ package com.jcloisterzone.game;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.phase.AbbeyPhase;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.BazaarPhase;
@@ -38,9 +40,7 @@ import com.jcloisterzone.game.phase.TowerCapturePhase;
 import com.jcloisterzone.game.phase.WagonPhase;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsMessage;
 
 import io.vavr.Function2;
 
@@ -105,7 +105,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         Phase phase;
         try {
-            phase = phaseClass.getConstructor(GameController.class).newInstance(gc);
+            phase = phaseClass.getConstructor(Config.class, Random.class).newInstance(gc.getConfig(), gc.getGame().getRandom());
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             throw new RuntimeException(e);

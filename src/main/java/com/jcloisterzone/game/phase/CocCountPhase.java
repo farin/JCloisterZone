@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
@@ -9,6 +10,7 @@ import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -23,8 +25,8 @@ import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 @RequiredCapability(CountCapability.class)
 public class CocCountPhase extends Phase {
 
-    public CocCountPhase(GameController gc) {
-        super(gc);
+    public CocCountPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
