@@ -90,7 +90,7 @@ public class PlayersState implements Serializable {
     public PlayersState setTokenCountForAllPlayers(Token token, int count) {
         PlayersState ps = this;
         for (Player p : getPlayers()) {
-           ps = ps.setTokenCount(p.getIndex(), token, 1);
+           ps = ps.setTokenCount(p.getIndex(), token, count);
         }
         return ps;
     }

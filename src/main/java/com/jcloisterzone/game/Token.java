@@ -11,5 +11,5 @@ public enum Token {
     CASTLE,
     FERRY,
     GOLD,
-
+    TUNNEL_A, TUNNEL_B, TUNNEL_C
 }

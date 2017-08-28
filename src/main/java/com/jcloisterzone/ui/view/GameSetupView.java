@@ -1,20 +1,24 @@
 package com.jcloisterzone.ui.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ClientListChangedEvent;
-import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.GameStartedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
@@ -25,6 +29,8 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectedClientsPanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 
+import io.vavr.collection.Array;
+import io.vavr.collection.Stream;
 import net.miginfocom.swing.MigLayout;
 
 public class GameSetupView extends AbstractUiView {
@@ -132,6 +138,26 @@ public class GameSetupView extends AbstractUiView {
 
     @Subscribe
     public void onGameStarted(GameStartedEvent ev) {
+        Stream<PlayerSlot> slots = Stream.ofAll(Arrays.asList(gc.getGame().getPlayerSlots()));
+        Array<PlayerSlot> occupiedSlots = slots.filter(slot -> slot.isOccupied()).toArray();
+        Array<PlayerSlot> freeSlots = slots.filter(slot -> !slot.isOccupied()).toArray();
+        int occupiedSize = occupiedSlots.size();
+        int freeSize = freeSlots.size();
+        int i = 0;
+        for (PlayerSlot slot : occupiedSlots) {
+            Map<Token, Color> tunnelColors = new HashMap<>();
+            tunnelColors.put(Token.TUNNEL_A, slot.getColors().getMeepleColor());
+            if (freeSize >= occupiedSize) {
+                tunnelColors.put(Token.TUNNEL_B, freeSlots.get(i).getColors().getMeepleColor());
+                i++;
+            }
+            if (freeSize >= 2 * occupiedSize) {
+                tunnelColors.put(Token.TUNNEL_C, freeSlots.get(i).getColors().getMeepleColor());
+                i++;
+            }
+            slot.getColors().setTunnelColors(tunnelColors);
+        }
+
         GameView view = new GameView(client, gc);
         view.setChatPanel(chatPanel);
         client.mountView(view, this);

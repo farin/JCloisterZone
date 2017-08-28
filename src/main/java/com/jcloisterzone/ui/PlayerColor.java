@@ -1,18 +1,20 @@
 package com.jcloisterzone.ui;
 
 import java.awt.Color;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config.ColorConfig;
+import com.jcloisterzone.game.Token;
 
 public class PlayerColor {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Color meeple, font;
-    private Color tunnelB;
+    private Map<Token, Color> tunnelColors;
 
     public PlayerColor() {
         meeple = Color.BLACK;
@@ -32,12 +34,12 @@ public class PlayerColor {
         return font;
     }
 
-    public Color getTunnelBColor() {
-        return tunnelB;
+    public Map<Token, Color> getTunnelColors() {
+        return tunnelColors;
     }
 
-    public void setTunnelBColor(Color tunnelB) {
-        this.tunnelB = tunnelB;
+    public void setTunnelColors(Map<Token, Color> tunnelColors) {
+        this.tunnelColors = tunnelColors;
     }
 
     private Color stringToColor(String s, Color defaultColor) {

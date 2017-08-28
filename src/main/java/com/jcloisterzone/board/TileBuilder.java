@@ -22,11 +22,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.River;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.feature.TunnelEnd;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 
-import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -152,23 +150,23 @@ public class TileBuilder {
     }
 
     private void processRoadElement(Stream<Location> sides, Element e, boolean isTunnelActive) {
-        FeaturePointer place = initPlaces(sides, Road.class);
+        FeaturePointer fp = initFeaturePointer(sides, Road.class);
         Road road = new Road(
-            List.of(place),
+            List.of(fp),
             initOpenEdges(sides)
         );
 
         if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
-            road = road.setTunnelEnds(HashMap.of(place, new TunnelEnd()));
+            road = road.setOpenTunnelEnds(HashSet.of(fp));
         }
 
         road = (Road) initFeature(tileId, road, e);
-        features.put(place.getLocation(), road);
+        features.put(fp.getLocation(), road);
     }
 
     private void processCityElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initPlaces(sides, City.class);
+        FeaturePointer place = initFeaturePointer(sides, City.class);
 
         City city = new City(
             List.of(place),
@@ -182,7 +180,7 @@ public class TileBuilder {
 
     private void processRiverElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initPlaces(sides, River.class);
+        FeaturePointer place = initFeaturePointer(sides, River.class);
 
         River river = new River(
             List.of(place)
@@ -195,7 +193,7 @@ public class TileBuilder {
     //TODO move expansion specific stuff
     private void processFarmElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initPlaces(sides, Farm.class);
+        FeaturePointer place = initFeaturePointer(sides, Farm.class);
         Set<FeaturePointer> adjoiningCities;
 
         if (e.hasAttribute("city")) {
@@ -228,7 +226,7 @@ public class TileBuilder {
         features.put(place.getLocation(), farm);
     }
 
-    private FeaturePointer initPlaces(Stream<Location> sides, Class<? extends Feature> clazz) {
+    private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {
         AtomicReference<Location> locRef = new AtomicReference<Location>();
         sides.forEach(l -> {
             assert !(clazz.equals(Farm.class) ^ l.isFarmLocation()) : String.format("Invalid location %s kind for tile %s", l, tileId);

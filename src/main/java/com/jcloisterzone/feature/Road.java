@@ -2,7 +2,6 @@ package com.jcloisterzone.feature;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
@@ -10,10 +9,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.state.GameState;
 
-import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 public class Road extends CompletableFeature<Road> {
@@ -21,10 +18,10 @@ public class Road extends CompletableFeature<Road> {
     private static final long serialVersionUID = 1L;
 
     private final boolean inn;
-    private final Map<FeaturePointer, TunnelEnd> tunnelEnds;
+    private final Set<FeaturePointer> openTunnelEnds;
 
     public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
-        this(places, openEdges, HashSet.empty(), false, HashMap.empty());
+        this(places, openEdges, HashSet.empty(), false, HashSet.empty());
     }
 
     public Road(
@@ -32,11 +29,16 @@ public class Road extends CompletableFeature<Road> {
             Set<Edge> openEdges,
             Set<FeaturePointer> neighboring,
             boolean inn,
-            Map<FeaturePointer, TunnelEnd> tunnelEnds
+            Set<FeaturePointer> openTunnelEnds
         ) {
         super(places, openEdges, neighboring);
         this.inn = inn;
-        this.tunnelEnds = tunnelEnds;
+        this.openTunnelEnds = openTunnelEnds;
+    }
+
+    @Override
+    public boolean isOpen(GameState state) {
+        return super.isOpen(state) || !openTunnelEnds.isEmpty();
     }
 
     @Override
@@ -58,7 +60,7 @@ public class Road extends CompletableFeature<Road> {
             openEdges.remove(edge),
             neighboring,
             inn,
-            tunnelEnds
+            openTunnelEnds
         );
     }
 
@@ -79,35 +81,22 @@ public class Road extends CompletableFeature<Road> {
 
     public Road setInn(boolean inn) {
         if (this.inn == inn) return this;
-        return new Road(places, openEdges, neighboring, inn, tunnelEnds);
+        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
     }
 
-    public Map<FeaturePointer, TunnelEnd> getTunnelEnds() {
-        return tunnelEnds;
+    public Set<FeaturePointer> getOpenTunnelEnds() {
+        return openTunnelEnds;
     }
 
-    public Road setTunnelEnds(Map<FeaturePointer, TunnelEnd> tunnelEnds) {
-        if (this.tunnelEnds == tunnelEnds) return this;
-        return new Road(places, openEdges, neighboring, inn, tunnelEnds);
+    public Road setOpenTunnelEnds(Set<FeaturePointer> openTunnelEnds) {
+        if (this.openTunnelEnds == openTunnelEnds) return this;
+        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
     }
 
     public Road setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Road(places, openEdges, neighboring, inn, tunnelEnds);
+        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
     }
-
-//
-//    public boolean isTunnelEnd() {
-//        return tunnelEnd != 0;
-//    }
-//
-//    public boolean isTunnelOpen() {
-//        return tunnelEnd == OPEN_TUNNEL;
-//    }
-//
-//    public void setTunnelEdge(MultiTileFeature f) {
-//        edges[edges.length - 1] = f;
-//    }
 
     @Override
     public int getPoints(GameState state) {
@@ -132,11 +121,11 @@ public class Road extends CompletableFeature<Road> {
 
     // immutable helpers
 
-    protected Map<FeaturePointer, TunnelEnd> mergeTunnelEnds(Road road) {
-        return tunnelEnds.merge(road.tunnelEnds);
+    protected Set<FeaturePointer> mergeTunnelEnds(Road road) {
+        return openTunnelEnds.union(road.openTunnelEnds);
     }
 
-    protected Map<FeaturePointer, TunnelEnd> placeOnBoardTunnelEnds(Position pos, Rotation rot) {
-        return tunnelEnds.mapKeys(fp -> fp.rotateCW(rot).translate(pos));
+    protected Set<FeaturePointer> placeOnBoardTunnelEnds(Position pos, Rotation rot) {
+        return openTunnelEnds.map(fp -> fp.rotateCW(rot).translate(pos));
     }
 }

@@ -12,7 +12,9 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.CompletableFeature;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 
@@ -20,6 +22,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
@@ -48,9 +51,17 @@ public class PlaceTile implements Reducer {
 
         GameState _state = state;
         java.util.Map<FeaturePointer, Feature> fpUpdate = new java.util.HashMap<>();
+        java.util.Set<FeaturePointer> newTunnels = new java.util.HashSet<>();
         Stream.ofAll(tile.getInitialFeatures().values())
             .map(f -> f.placeOnBoard(pos, rot))
             .forEach(feature -> {
+                // update TunnelCapability model
+                if (feature instanceof Road) {
+                    Road road = (Road) feature;
+                    newTunnels.addAll(road.getOpenTunnelEnds().toJavaSet());
+                }
+
+                // merge features
                 if (feature instanceof MultiTileFeature) {
                     java.util.Set<Feature> alreadyMerged = new java.util.HashSet<>();
                     Stream<FeaturePointer> adjacent = feature.getPlaces().get().getAdjacent(feature.getClass());
@@ -113,6 +124,13 @@ public class PlaceTile implements Reducer {
                 Cloister abbey = (Cloister) fpUpdate.get(abbeyFp);
                 fpUpdate.put(abbeyFp, abbey.setNeighboring(abbeyNeighboring));
             }
+        }
+
+        if (!newTunnels.isEmpty()) {
+            state = state.mapCapabilityModel(TunnelCapability.class, model -> {
+                Map<FeaturePointer, String> newTunnelsMap = HashSet.ofAll(newTunnels).toMap(fp -> new Tuple2<>(fp, null));
+                return model.merge(newTunnelsMap);
+            });
         }
 
         state = state.setFeatureMap(HashMap.ofAll(fpUpdate).merge(state.getFeatureMap()));

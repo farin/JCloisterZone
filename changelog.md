@@ -4,6 +4,7 @@
 * fall 2017
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
+* saved game format changed to json (and instead of game snapshot contains just action history)
 * Princess and Dragon:
     - PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way:
       If enabled and there is option to remove princess no other action is allowed.
@@ -18,6 +19,8 @@
 * River
     - Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
       (changed according to New Carcassonne (C II) rules)
+* Tunnel
+    - added MORE_TUNNEL_TOKENS rule
 * technical notes:
     - Grand rewrite in favor of functional programming and immutable data structure.
     - vavr.io library is awesome!

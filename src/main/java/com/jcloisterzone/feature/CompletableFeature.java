@@ -27,7 +27,7 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     @Override
     public boolean isOpen(GameState state) {
-        return !getOpenEdges().isEmpty();
+        return !openEdges.isEmpty();
     }
 
     public Set<Edge> getOpenEdges() {
