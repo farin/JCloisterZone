@@ -40,14 +40,17 @@ public class Board {
 
     protected List<Tile> discardedTiles = new ArrayList<>();
 
-
+    /**
+     * Constructs a new {@code Board}.
+     * @param game the game this board belongs to
+     */
     public Board(Game game) {
         this.game = game;
     }
 
     /**
-     * Updates current avail moves for next turn
-     * @param tile next tile
+     * Updates current available moves for the next turn given a tile.
+     * @param tile the tile to be place in the next turn
      */
     public void refreshAvailablePlacements(Tile tile) {
         Rotation tileRotation = tile.getRotation();
@@ -71,31 +74,54 @@ public class Board {
         tile.setRotation(tileRotation); //reset rotation
     }
 
-
+    /**
+     * Adds {@code pos} to the list of unoccupied positions currently touching some tile.
+     * @param pos the position to add
+     */
     protected void availMovesAdd(Position pos) {
         availMoves.put(pos, EdgePattern.forEmptyTile(this, pos));
     }
 
+    /**
+     * Removes {@code pos} from the list of unoccupied positions currently touching some tile.
+     * @param pos the position to remove
+     */
     protected void availMovesRemove(Position pos) {
         availMoves.remove(pos);
     }
 
+    /**
+     * Gets the {@link EdgePattern}  of a given position. This represents the constraints that a tile
+     * needs to satisfy to be placed in {@code pos}.
+     *
+     * @param pos the position of interest
+     * @return the edge pattern of the position of interest
+     */
     public EdgePattern getAvailMoveEdgePattern(Position pos) {
         return availMoves.get(pos);
     }
 
-
     /**
-     * Place tile on given position. Check for correct placement (check if neigbours
-     * edges match with tile edges according to Carcassonne rules
-     * @param tile tile to place
-     * @param p position to place
-     * @throws IllegalMoveException if placement is violate game rules
+     * Places {@code tile} on position {@code p}. Prior to placing, checks if neighbours
+     * edges match with {@code tile} edges according to Carcassonne rules. If rules
+     * are violated, raises {@link IllegalArgumentException}.
+     * @param tile the tile to place
+     * @param p the position where to place the tile
+     * @throws IllegalArgumentException if placement is violate game rules
      */
     public void add(Tile tile, Position p) {
         add(tile, p, false);
     }
 
+    /**
+     * Places {@code tile} on {@code p}. If {@code unchecked} is false, prior to placing, checks if neighbours
+     * edges match with {@code tile} edges according to Carcassonne rules. If rules
+     * are violated, raises {@link IllegalArgumentException}. Otherwise, violations are ignored.
+     * @param tile the tile to place
+     * @param p the position where to place the tile
+     * @param unchecked whether to check game rules for violations
+     * @throws IllegalArgumentException if placement is violate game rules
+     */
     public void add(Tile tile, Position p, boolean unchecked) {
         if (!unchecked) {
             if (tile.isAbbeyTile()) {
@@ -132,12 +158,20 @@ public class Board {
         if (p.y < minY) minY = p.y;
     }
 
+    /**
+     * Merges the features of {@code this} and {@code tile}, so that they reference each other.
+     * @param tile the tile to merge
+     */
     public void mergeFeatures(Tile tile) {
         for (Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
             tile.merge(e.getValue(), e.getKey());
         }
     }
 
+    /**
+     * Removes {@code tile} from the board.
+     * @param tile the tile to remove
+     */
     public void remove(Tile tile) {
         Position pos = tile.getPosition();
         assert pos != null;
@@ -154,6 +188,10 @@ public class Board {
         }
     }
 
+    /**
+     * Un-merges the features of {@code this} and {@code tile}, so that they do not reference each other any more.
+     * @param tile the tile to un-merge
+     */
     public void unmergeFeatures(Tile tile) {
         assert tile.getPosition() != null;
         for (Entry<Location, Tile> e : getAdjacentTilesMap(tile.getPosition()).entrySet()) {
@@ -161,16 +199,28 @@ public class Board {
         }
     }
 
+    /**
+     * Discards {@code tile}.
+     * @param tile the tile to be discarded
+     */
     public void discardTile(Tile tile) {
         discardedTiles.add(tile);
         game.post(new TileEvent(TileEvent.DISCARD, null, tile, null));
     }
 
-
+    /**
+     * Returns a {@link List} of all the tiles discarded so far in the game.
+     * @return a {@link List} of all the tiles discarded so far in the game
+     */
     public List<Tile> getDiscardedTiles() {
         return discardedTiles;
     }
 
+    /**
+     * Check if position {@code p} is a hole (i.e., is surrounded by tiles on all sides).
+     * @param p the position to check tiles around
+     * @return {@code true} if position {@code p} is a hole, {@code false} otherwise
+     */
     private boolean isHole(Position p) {
         for (Position offset: Position.ADJACENT.values()) {
             Position next = p.add(offset);
@@ -181,6 +231,11 @@ public class Board {
         return true;
     }
 
+    /**
+     * Counts the number of tiles adjacent to position {@code p}.
+     * @param p the position to count tiles around
+     * @return the number of tiles adjacent to position {@code p}
+     */
     private int getAdjacentCount(Position p) {
         int count = 0;
         for (Position offset: Position.ADJACENT.values()) {
@@ -192,44 +247,78 @@ public class Board {
         return count;
     }
 
+    /**
+     * Returns a {@link Set} containing all the legal placements. A placement includes both a {@link Position} and a
+     * {@link Rotation}. This method is intended to be called after {@link #refreshAvailablePlacements}.
+     * @return a {@link Set} all the positions where placement is legal
+     */
     public Map<Position, Set<Rotation>> getAvailablePlacements() {
         return currentAvailMoves;
     }
 
+    /**
+     * Returns a {@link Set} containing all the positions where a placement is legal. This method is intended to be called
+     * after {@link #refreshAvailablePlacements}.
+     * @return a {@link Set} all the positions where a placement is legal
+     */
     public Set<Position> getAvailablePlacementPositions() {
         return currentAvailMoves.keySet();
     }
 
+    /**
+     * Returns a {@link Set} containing the positions of all the holes in the map (i.e., locations surrounded by tiles
+     * on all sides).
+     * @return a {@link Set} containing the positions of all the holes in the map
+     */
     public Set<Position> getHoles() {
         return holes;
     }
 
-
     /**
-     * Returns tile on position with cordinates <code>x</code>,<code>y</code>.
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @return demand tile
+     * Returns tile in position with coordinates {@code x}, {@code y}.
+     * @param x the X coordinate
+     * @param y the Y coordinate
+     * @return the tile in position with coordinates {@code x}, {@code y}
      */
     public Tile get(int x, int y) {
         return tiles.get(new Position(x, y));
     }
 
+    /**
+     * Returns tile in position {@code p}.
+     * @param p the position to retrieve the tile from
+     * @return the tile in position {@code p}
+     */
     public Tile get(Position p) {
         return tiles.get(p);
     }
 
+    /**
+     * Returns the {@link Feature} pointed to by {@code fp}, or null if there is no tile in the pointed position or no
+     * feature in the specified location on the specified tile.
+     * @param fp the pointer to the feature of interest
+     * @return the {@link Feature} pointed to by {@code fp}, or null if there is no such {@link Feature}
+     */
     public Feature get(FeaturePointer fp) {
         Tile tile =  tiles.get(fp.getPosition());
         return tile == null ? null : tile.getFeaturePartOf(fp.getLocation());
     }
 
+    /**
+     * Returns a {@link Collection} with all the tiles on the board.
+     * @return a {@link Collection} with all the tiles on the board
+     */
     public Collection<Tile> getAllTiles() {
         return tiles.values();
     }
 
-    /*
-     * Check if placement is legal against orthonogal neigbours. */
+    /**
+     * Checks if the placement of {@code tile} in position {@code p} is legal.
+     *
+     * @param p the position to place the tile
+     * @param tile the tile to place
+     * @return {@code true} if the placement is legal, {@code false} otherwise
+     */
     public boolean isPlacementAllowed(Tile tile, Position p) {
         for (Entry<Location, Tile> e : getAdjacentTilesMap(p).entrySet()) {
             if (!tile.check(e.getValue(), e.getKey(), this)) {
@@ -239,22 +328,43 @@ public class Board {
         return true;
     }
 
+    /**
+     * Returns the X coordinate of the rightmost tile.
+     * @return the X coordinate of the rightmost tile
+     */
     public int getMaxX() {
         return maxX;
     }
 
+    /**
+     * Returns the X coordinate of the leftmost tile.
+     * @return the X coordinate of the leftmost tile
+     */
     public int getMinX() {
         return minX;
     }
 
+    /**
+     * Returns the Y coordinate of the topmost tile.
+     * @return the Y coordinate of the topmost tile
+     */
     public int getMaxY() {
         return maxY;
     }
 
+    /**
+     * Returns the Y coordinate of the bottommost tile.
+     * @return the Y coordinate of the bottommost tile
+     */
     public int getMinY() {
         return minY;
     }
 
+    /**
+     * Returns a {@link List} of the tiles in {@code positions} (positions without tiles are skipped).
+     * @param positions the positions to fetch the tiles from
+     * @return a {@link List} of tiles, one for each entry in {@code positions}, except for those with no tile
+     */
     public List<Tile> getMulti(Position[] positions) {
         List<Tile> tiles = new ArrayList<>();
         for (Position p : positions) {
@@ -266,6 +376,12 @@ public class Board {
         return tiles;
     }
 
+    /**
+     * Returns a {@link Map} of the tiles surrounding {@code pos}. The map has 4 or less keys, one for each
+     * {@link Position#ADJACENT} unless the location is empty.
+     * @param pos the position around which to search
+     * @return the map of surrounding tiles
+     */
     public Map<Location, Tile> getAdjacentTilesMap(Position pos) {
         Map<Location, Tile> tiles = new HashMap<Location, Tile>(4);
         for (Entry<Location, Position> e: Position.ADJACENT.entrySet()) {
@@ -277,10 +393,22 @@ public class Board {
         return tiles;
     }
 
+    /**
+     * Returns a {@link List} of the tiles surrounding {@code pos}, including diagonally. Positions without tiles are
+     * skipped
+     * @param pos the position around which to search
+     * @return the map of surrounding tiles
+     */
     public List<Tile> getAdjacentAndDiagonalTiles(Position pos) {
         return getMulti(pos.addMulti(Position.ADJACENT_AND_DIAGONAL.values()));
     }
 
+    /**
+     * Counts the number of tiles in a given {@code direction} starting from {@code start}.
+     * @param start the position to start from
+     * @param direction the direction to move
+     * @return the number of tiles in a given {@code direction} starting from {@code start}
+     */
     public int getContinuousRowSize(Position start, Location direction) {
         start = start.add(direction);
         int size = 0;
