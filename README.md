@@ -1,10 +1,8 @@
 # [JCloisterZone](http://jcloisterzone.com/)
 
-!!!
-Current master contains JCZ 4.0.0 "work in progress" code with some compilation error.
+**Current master contains JCZ 4.0.0 "work in progress" code with some compilation error.
 These compile errors are present in not refactored expansions yet. Other expansions should works
-as expected although bigger code changes are possible until JCZ 4.0.0 is released.
-!!!
+as expected although bigger code changes are possible until JCZ 4.0.0 is released.**
 
 
 JCloisterZone is a Java implementation of a popular board game [Carcassonne](https://en.wikipedia.org/wiki/Carcassonne_(board_game)).
