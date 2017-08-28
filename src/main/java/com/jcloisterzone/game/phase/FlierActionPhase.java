@@ -1,28 +1,28 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.Random;
+
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.IsCompleted;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.FlierCapability;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 
+
+@RequiredCapability(FlierCapability.class)
 public class FlierActionPhase extends Phase {
 
-    private final FlierCapability flierCap;
-
-    public FlierActionPhase(Game game) {
-        super(game);
-        flierCap = game.getCapability(FlierCapability.class);
+    public FlierActionPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
@@ -34,12 +34,12 @@ public class FlierActionPhase extends Phase {
         for (int i = 0; i < distance; i++) {
             pos = pos.add(direction);
         }
-        Tile target = getBoard().get(pos);
+        Tile target = getBoard().getPlayer(pos);
 
         Class<? extends Meeple> meepleType = flierCap.getMeepleType();
         Follower follower = (Follower) getActivePlayer().getMeepleFromSupply(meepleType);
 
-        if (target == null || !game.isDeployAllowed(target, meepleType)) {
+        if (target == null || !game.isMeepleDeploymentAllowed(target, meepleType)) {
             next();
             return;
         }
@@ -83,8 +83,8 @@ public class FlierActionPhase extends Phase {
         }
     }
 
-    @Override
-    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
+    @WsSubscribe
+    public void handleDeployMeeple(DeployMeepleMessage msg) {
         if (!meepleType.equals(flierCap.getMeepleType())) {
             throw new IllegalArgumentException("Invalid meeple type.");
         }

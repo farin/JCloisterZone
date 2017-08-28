@@ -30,7 +30,7 @@ public class MonasteryAbbotScoreContext extends CloisterScoreContext {
     public int getPoints() {
         int points = 1;
         Position monasteryPosition = cloister.getTile().getPosition();
-        for (Location loc : Location.sides()) {
+        for (Location loc : Location.SIDES) {
             points += game.getBoard().getContinuousRowSize(monasteryPosition, loc);
         }
         return points;

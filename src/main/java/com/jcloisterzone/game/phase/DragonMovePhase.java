@@ -1,73 +1,122 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Set;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.SelectDragonMoveEvent;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
-import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.MoveNeutralFigure;
+import com.jcloisterzone.reducers.UndeployMeeple;
+import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
+import io.vavr.collection.Vector;
 
-public class DragonMovePhase extends ServerAwarePhase {
+@RequiredCapability(DragonCapability.class)
+public class DragonMovePhase extends Phase {
 
-    private final DragonCapability dragonCap;
+    public DragonMovePhase(Config config, Random random) {
+        super(config, random);
+    }
 
-    public DragonMovePhase(Game game, GameController controller) {
-        super(game, controller);
-        dragonCap = game.getCapability(DragonCapability.class);
+    private Vector<Position> getVisitedPositions(GameState state) {
+        Vector<Position> visited = state.getCapabilityModel(DragonCapability.class);
+        return visited == null ? Vector.empty() : visited;
     }
 
     @Override
-    public boolean isActive() {
-        return game.hasCapability(DragonCapability.class);
+    public StepResult enter(GameState state) {
+        Vector<Position> visited = getVisitedPositions(state);
+
+        if (visited.size() == DragonCapability.DRAGON_MOVES) {
+            return next(endDragonMove(state));
+        }
+
+        Set<Position> availMoves =  getAvailDragonMoves(state, visited);
+        if (availMoves.isEmpty()) {
+            return next(endDragonMove(state));
+        }
+
+        Dragon dragon = state.getNeutralFigures().getDragon();
+        Player p = state.getTurnPlayer();
+        p = state.getPlayers().getPlayer((p.getIndex() + visited.length()) % state.getPlayers().getPlayers().length());
+
+        return promote(state.setPlayerActions(
+            new ActionsState(p, new MoveDragonAction(dragon.getId(), availMoves), false)
+        ));
     }
 
-    @Override
-    public Player getActivePlayer() {
-        return dragonCap.getDragonPlayer();
+    private GameState endDragonMove(GameState state) {
+        state = state.setCapabilityModel(DragonCapability.class, Vector.empty());
+        state = clearActions(state);
+        return state;
     }
 
-    @Override
-    public void enter() {
-        selectDragonMove();
+
+    public Set<Position> getAvailDragonMoves(GameState state, Vector<Position> visited) {
+        Set<Position> result = HashSet.empty();
+        BoardPointer fairyPtr = state.getNeutralFigures().getFairyDeployment();
+        Position fairyPosition = fairyPtr == null ? null : fairyPtr.getPosition();
+        Position dragonPosition = state.getNeutralFigures().getDragonDeployment();
+
+        for (Position offset: Position.ADJACENT.values()) {
+            Position pos = dragonPosition.add(offset);
+            PlacedTile pt = state.getPlacedTile(pos);
+
+            if (pt == null || CountCapability.isTileForbidden(pt.getTile())) continue;
+            if (visited.contains(pos)) continue;
+            if (pos.equals(fairyPosition)) continue;
+
+            result = result.add(pos);
+        }
+        return result;
     }
 
-    private void selectDragonMove() {
-        if (dragonCap.getDragonMovesLeft() > 0) {
-            Set<Position> moves = dragonCap.getAvailDragonMoves();
-            if (!moves.isEmpty()) {
-                toggleClock(getActivePlayer());
-                game.post(new SelectDragonMoveEvent(getActivePlayer(), moves, dragonCap.getDragonMovesLeft()));
-                return;
+    @PhaseMessageHandler
+    public StepResult handleMoveNeutralFigure(GameState state, MoveNeutralFigureMessage msg) {
+        BoardPointer ptr = msg.getTo();
+        NeutralFigure<?> fig = state.getNeutralFigures().getById(msg.getFigureId());
+
+        if (!(fig instanceof Dragon)) {
+            throw new IllegalArgumentException("Illegal neutral figure move");
+        }
+
+        Vector<Position> visited = getVisitedPositions(state);
+        Set<Position> availMoves =  getAvailDragonMoves(state, visited);
+
+        Position pos = ptr.getPosition();
+        if (!availMoves.contains(pos)) {
+            throw new IllegalArgumentException("Invalid dragon move.");
+        }
+
+        Position dragonPosition = state.getNeutralFigures().getDragonDeployment();
+
+        state = (
+            new MoveNeutralFigure<>((Dragon) fig, pos, state.getActivePlayer())
+        ).apply(state);
+        state = state.mapCapabilityModel(DragonCapability.class, moves -> moves.append(dragonPosition));
+
+        for (Tuple2<Meeple, FeaturePointer> t: state.getDeployedMeeples()) {
+            Meeple m = t._1;
+            FeaturePointer fp = t._2;
+            if (pos.equals(fp.getPosition()) && m.canBeEatenByDragon(state)) {
+                state = (new UndeployMeeple(m)).apply(state);
             }
         }
-        dragonCap.endDragonMove();
-        next();
-    }
 
-    @Override
-    public void moveNeutralFigure(BoardPointer ptr, Class<? extends NeutralFigure> figureType) {
-        if (Dragon.class.equals(figureType)) {
-            Position pos = ptr.getPosition();
-            if (!dragonCap.getAvailDragonMoves().contains(pos)) {
-                throw new IllegalArgumentException("Invalid dragon move.");
-            }
-            dragonCap.moveDragon(pos);
-            for (Meeple m : game.getDeployedMeeples()) {
-                if (m.at(pos) && m.canBeEatenByDragon()) {
-                    m.undeploy();
-                }
-            }
-            selectDragonMove();
-        } else {
-            super.moveNeutralFigure(ptr, figureType);
-        }
+        return enter(state);
     }
 }

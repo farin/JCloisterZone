@@ -1,248 +1,181 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.config.Config.ConfirmConfig;
-import com.jcloisterzone.event.FeatureCompletedEvent;
-import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.event.RequestConfirmEvent;
-import com.jcloisterzone.event.ScoreEvent;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.City;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.visitor.score.CityScoreContext;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
-import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
-import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.ScoreCompletable;
+import com.jcloisterzone.reducers.ScoreFarm;
+import com.jcloisterzone.reducers.ScoreFarmWhenBarnIsConnected;
+import com.jcloisterzone.reducers.UndeployMeeples;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.CommitMessage;
 
-public class ScorePhase extends ServerAwarePhase {
+import io.vavr.Predicates;
+import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.Map;
+import io.vavr.collection.Queue;
+import io.vavr.collection.Set;
+import io.vavr.control.Option;
 
-    private Set<Completable> alredyScored = new HashSet<>();
 
-    private final BarnCapability barnCap;
-    private final BuilderCapability builderCap;
-    private final CastleCapability castleCap;
-    private final TunnelCapability tunnelCap;
-    private final WagonCapability wagonCap;
-    private final MageAndWitchCapability mageWitchCap;
-    private final GoldminesCapability gldCap;
+public class ScorePhase extends Phase {
 
-    public ScorePhase(Game game, GameController gc) {
-        super(game, gc);
-        barnCap = game.getCapability(BarnCapability.class);
-        builderCap = game.getCapability(BuilderCapability.class);
-        tunnelCap = game.getCapability(TunnelCapability.class);
-        castleCap = game.getCapability(CastleCapability.class);
-        wagonCap = game.getCapability(WagonCapability.class);
-        mageWitchCap = game.getCapability(MageAndWitchCapability.class);
-        gldCap = game.getCapability(GoldminesCapability.class);
+    private java.util.Map<Completable, Integer> completedMutable = new java.util.HashMap<>();
+
+    public ScorePhase(Config config, Random random) {
+        super(config, random);
     }
 
-    private void scoreCompletedOnTile(Tile tile) {
-        for (Feature feature : tile.getFeatures()) {
+    private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {
+        for (Tuple2<Location, Completable> t : state.getTileFeatures2(tile.getPosition(), Completable.class)) {
+            state = scoreCompleted(state, t._2, tile);
+        }
+        return state;
+    }
+
+    private GameState scoreCompletedNearAbbey(GameState state, Position pos) {
+        for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(pos)) {
+            PlacedTile pt = t._2;
+            Feature feature = state.getFeaturePartOf(new FeaturePointer(pt.getPosition(), t._1.rev()));
             if (feature instanceof Completable) {
-                scoreCompleted((Completable) feature, true);
+                state = scoreCompleted(state, (Completable) feature, null);
             }
         }
-    }
-
-    private void scoreCompletedNearAbbey(Position pos) {
-        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(pos).entrySet()) {
-            Tile tile = e.getValue();
-            Feature feature = tile.getFeaturePartOf(e.getKey().rev());
-            if (feature instanceof Completable) {
-                scoreCompleted((Completable) feature, false);
-            }
-        }
-    }
-
-    private void scoreFollowersOnBarnFarm(Farm farm, Map<City, CityScoreContext> cityCache) {
-        FarmScoreContext ctx = farm.getScoreContext();
-        ctx.setCityCache(cityCache);
-        farm.walk(ctx);
-
-        boolean hasBarn = false;
-        for (Meeple m : ctx.getSpecialMeeples()) {
-            if (m instanceof Barn) {
-                hasBarn = true;
-                break;
-            }
-        }
-        if (hasBarn) {
-            for (Player p : ctx.getMajorOwners()) {
-                int points = ctx.getPointsWhenBarnIsConnected(p);
-                game.scoreFeature(points, ctx, p);
-            }
-            for (Meeple m : ctx.getMeeples()) {
-                if (!(m instanceof Barn)) {
-                    undeloyMeeple(m);
-                }
-            }
-        }
+        return state;
     }
 
     @Override
-    public void enter() {
-        if (isLocalPlayer(getActivePlayer())) {
-            boolean needsConfirm = false;
-            if (game.getLastUndoable() instanceof MeepleEvent) {
-                ConfirmConfig cfg =  getConfig().getConfirm();
-                MeepleEvent ev = (MeepleEvent) game.getLastUndoable();
-                if (cfg.getAny_deployment()) {
-                    needsConfirm = true;
-                } else if (cfg.getFarm_deployment() && ev.getTo().getLocation().isFarmLocation()) {
-                    needsConfirm = true;
-                } else if (cfg.getOn_tower_deployment() && ev.getTo().getLocation() == Location.TOWER) {
-                    needsConfirm = true;
-                }
+    public StepResult enter(GameState state) {
+        PlacedTile lastPlaced = state.getLastPlaced();
+        Position pos = lastPlaced.getPosition();
+
+        Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
+
+        if (state.getCapabilities().contains(BarnCapability.class)) {
+            FeaturePointer placedBarnPtr = state.getCapabilityModel(BarnCapability.class);
+            Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
+            if (placedBarnFarm != null) {
+                //ScoreFeature is scoring just followers!
+                state = (new ScoreFarm(placedBarnFarm)).apply(state);
+                state = (new UndeployMeeples(placedBarnFarm)).apply(state);
             }
-            if (needsConfirm) {
-                game.post(new RequestConfirmEvent(getActivePlayer()));
-            } else {
-                getConnection().send(new CommitMessage(game.getGameId()));
+
+            GameState _state = state;
+            for (Farm farm : state.getTileFeatures2(pos)
+                .map(Tuple2::_2)
+                .filter(f -> f != placedBarnFarm)
+                .filter(Predicates.instanceOf(Farm.class))
+                .map(f -> (Farm) f)
+                .filter(farm -> farm.getSpecialMeeples(_state)
+                    .find(Predicates.instanceOf(Barn.class))
+                    .isDefined()
+                )) {
+                state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
+                state = (new UndeployMeeples(farm)).apply(state);
             }
-        } else {
-            //if player is not active, always trigger event and wait for remote CommitMessage
-            game.post(new RequestConfirmEvent(getActivePlayer()));
         }
+
+        state = scoreCompletedOnTile(state, lastPlaced);
+        if (lastPlaced.getTile().isAbbeyTile()) {
+            state = scoreCompletedNearAbbey(state, pos);
+        }
+
+        if (state.getCapabilities().contains(TunnelCapability.class)) {
+//            Road r = tunnelCap.getPlacedTunnel();
+//            if (r != null) {
+//                state = scoreCompleted(state, r, tile);
+//            }
+        }
+
+        Set<Position> neighbourPositions = state.getAdjacentAndDiagonalTiles2(pos)
+            .map(pt -> pt._2.getPosition()).toSet();
+
+        for (Cloister cloister : state.getFeatures(Cloister.class)) {
+            if (neighbourPositions.contains(cloister.getPlace().getPosition())) {
+                state = scoreCompleted(state, cloister, null);
+            }
+        }
+
+        HashMap<Completable, Integer> completed = HashMap.ofAll(completedMutable);
+        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+            state = cap.onCompleted(state, completed);
+        }
+
+        if (state.getCapabilities().contains(GoldminesCapability.class)) {
+            //gldCap.awardGoldPieces();
+        }
+
+        if (!deployedWagonsBefore.isEmpty()) {
+            Set<Wagon> deployedWagonsAfter = getDeployedWagons(state).keySet();
+            Set<Wagon> returnedVagons = deployedWagonsBefore.keySet().diff(deployedWagonsAfter);
+
+            Queue<Tuple2<Wagon, FeaturePointer>> model = state.getPlayers()
+                .getPlayersBeginWith(state.getTurnPlayer())
+                .map(p -> returnedVagons.find(w -> w.getPlayer().equals(p)).getOrNull())
+                .filter(Predicates.isNotNull())
+                .map(w -> new Tuple2<>(w, deployedWagonsBefore.get(w).get()))
+                .toQueue();
+            state = state.setCapabilityModel(WagonCapability.class, model);
+        }
+
+        completedMutable.clear();
+        return next(state);
     }
 
-    @WsSubscribe
-    public void handleCommit(CommitMessage msg) {
-        game.updateRandomSeed(msg.getCurrentTime());
-
-        Position pos = getTile().getPosition();
-        //TODO separate event here ??? and move this code to abbey and mayor game
-        if (barnCap != null) {
-            Map<City, CityScoreContext> cityCache = new HashMap<>();
-            for (Feature feature : getTile().getFeatures()) {
-                if (feature instanceof Farm) {
-                    scoreFollowersOnBarnFarm((Farm) feature, cityCache);
-                }
-            }
-        }
-
-        scoreCompletedOnTile(getTile());
-        if (getTile().isAbbeyTile()) {
-            scoreCompletedNearAbbey(pos);
-        }
-
-        if (tunnelCap != null) {
-            Road r = tunnelCap.getPlacedTunnel();
-            if (r != null) {
-                scoreCompleted(r, true);
-            }
-        }
-
-        for (Tile neighbour : getBoard().getAdjacentAndDiagonalTiles(pos)) {
-            Cloister cloister = neighbour.getCloister();
-            if (cloister != null) {
-                scoreCompleted(cloister, false);
-            }
-        }
-
-        if (castleCap != null) {
-            for (Entry<Castle, Integer> entry : castleCap.getCastleScore().entrySet()) {
-                scoreCastle(entry.getKey(), entry.getValue());
-            }
-        }
-
-        if (gldCap != null) {
-            gldCap.awardGoldPieces();
-        }
-
-        alredyScored.clear();
-        next();
+    private Map<Wagon, FeaturePointer> getDeployedWagons(GameState state) {
+        return LinkedHashMap.narrow(
+         state.getDeployedMeeples()
+           .filter((m, fp) -> m instanceof Wagon)
+        );
     }
 
-    protected void undeployMeeples(CompletableScoreContext ctx) {
-        for (Meeple m : ctx.getMeeples()) {
-            undeloyMeeple(m);
-            //TODO decouple this hack
-            if (ctx instanceof PositionCollectingScoreContext) {
-                PositionCollectingScoreContext pctx = (PositionCollectingScoreContext) ctx;
-                if (pctx.containsMage()) {
-                    mageWitchCap.getMage().undeploy();
-                }
-                if (pctx.containsWitch()) {
-                    mageWitchCap.getWitch().undeploy();
-                }
+    private GameState scoreCompleted(GameState state, Completable completable, PlacedTile triggerBuilderForPlaced) {
+        if (triggerBuilderForPlaced != null && state.getCapabilities().contains(BuilderCapability.class)) {
+            Player player = state.getTurnPlayer();
+            GameState _state = state;
+            Option<Meeple> builder = completable
+                .getMeeples(state)
+                .find(m -> {
+                    return m instanceof Builder
+                        && m.getPlayer().equals(player)
+                        && !m.getPosition(_state).equals(triggerBuilderForPlaced.getPosition());
+                });
+            if (!builder.isEmpty()) {
+                state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
             }
         }
-    }
 
-    protected void undeloyMeeple(Meeple m) {
-        Feature feature = m.getFeature();
-        m.undeploy(false);
-        if (m instanceof Wagon && wagonCap != null) {
-            wagonCap.wagonScored((Wagon) m, feature);
-        }
-    }
+        if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
+            int points = completable.getPoints(state);
 
-    private void scoreCastle(Castle castle, int points) {
-        List<Meeple> meeples = castle.getMeeples();
-        if (meeples.isEmpty()) meeples = castle.getSecondFeature().getMeeples();
-        Meeple m = meeples.get(0); //all meeples must share same owner
-        m.getPlayer().addPoints(points, PointCategory.CASTLE);
-        if (gldCap != null) {
-            gldCap.castleCompleted(castle, m.getPlayer());
-        }
-        game.post(new ScoreEvent(m.getFeature(), points, PointCategory.CASTLE, m));
-        undeloyMeeple(m);
-    }
+            completedMutable.put(completable, points);
 
-    private void scoreCompleted(Completable completable, boolean triggerBuilder) {
-        CompletableScoreContext ctx = completable.getScoreContext();
-        completable.walk(ctx);
-        if (triggerBuilder && builderCap != null) {
-            for (Meeple m : ctx.getSpecialMeeples()) {
-                if (m instanceof Builder && m.getPlayer().equals(getActivePlayer())) {
-                    if (!m.at(getTile().getPosition())) {
-                        builderCap.useBuilder();
-                    }
-                    break;
-                }
-            }
+            state = (new ScoreCompletable(completable, points)).apply(state);
+            state = (new UndeployMeeples(completable)).apply(state);
         }
-        if (ctx.isCompleted()) {
-            Completable master = ctx.getMasterFeature();
-            if (!alredyScored.contains(master)) {
-                alredyScored.add(master);
-                game.scoreCompleted(ctx);
-                game.scoreCompletableFeature(ctx);
-                undeployMeeples(ctx);
-                game.post(new FeatureCompletedEvent(getActivePlayer(), master, ctx));
-            }
-        }
+
+        return state;
     }
 
 }

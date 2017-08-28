@@ -61,7 +61,6 @@ public class JCloisterZone  {
         if (path != null) return path;
         path = getDataDirectory(System.getProperty("user.home"), ".jcloisterzone");
         if (path != null) return path;
-        System.err.println(System.getProperty("user.home"));
         System.err.println("Could not locate writeable working dir");
         //returns user's working directory anyway //but configuration saving will not work
         return workingDir;
@@ -167,7 +166,7 @@ public class JCloisterZone  {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        logger.info("Date directory {}", dataDirectory.toString());
+        logger.info("Data directory {}", dataDirectory.toString());
 
         ConfigLoader configLoader = new ConfigLoader(dataDirectory);
         Config config = configLoader.load();

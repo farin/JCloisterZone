@@ -14,6 +14,7 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MageAndWitchAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
@@ -24,35 +25,35 @@ import com.jcloisterzone.feature.visitor.FeatureVisitor;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
-public class MageAndWitchCapability extends Capability {
+public class MageAndWitchCapability extends Capability<Void> {
 
-	private Mage mage;
-	private Witch witch;
 
-    public MageAndWitchCapability(Game game) {
-        super(game);
-        mage = new Mage(game);
-        witch = new Witch(game);
-        game.getNeutralFigures().add(mage);
-        game.getNeutralFigures().add(witch);
+    @Override
+    public GameState onStartGame(GameState state) {
+        return state.setNeutralFigures(
+            state.getNeutralFigures()
+                .setMage(new Mage("mage.1"))
+                .setWitch(new Witch("witch.1"))
+        );
     }
 
     @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("mage").getLength() > 0) {
-            tile.setTrigger(TileTrigger.MAGE);
+           tile = tile.setTileTrigger(TileTrigger.MAGE);
         }
+        return tile;
     }
 
     public List<PlayerAction<?>> prepareMageWitchActions() {
         Set<Feature> touchedFeatures = new HashSet<>();
         if (mage.isDeployed()) {
-            touchedFeatures.add(getBoard().get(mage.getFeaturePointer()));
+            touchedFeatures.add(getBoard().getPlayer(mage.getFeaturePointer()));
         }
         if (witch.getFeaturePointer() != null) {
-            touchedFeatures.add(getBoard().get(witch.getFeaturePointer()));
+            touchedFeatures.add(getBoard().getPlayer(witch.getFeaturePointer()));
         }
         Set<FeaturePointer> placements = new HashSet<>();
         for (Tile tile: getBoard().getAllTiles()) {
@@ -75,16 +76,16 @@ public class MageAndWitchCapability extends Capability {
 
     public boolean isMageAndWitchPlacedOnSameFeature() {
         if (mage.isInSupply() || witch.isInSupply()) return false;
-        return getBoard().get(mage.getFeaturePointer()).walk(new ContainsFeature(witch.getFeaturePointer()));
+        return getBoard().getPlayer(mage.getFeaturePointer()).walk(new ContainsFeature(witch.getFeaturePointer()));
     }
 
     public Mage getMage() {
-		return mage;
-	}
+        return mage;
+    }
 
     public Witch getWitch() {
-		return witch;
-	}
+        return witch;
+    }
 
     static class ContainsFeature implements FeatureVisitor<Boolean> {
 
@@ -141,21 +142,6 @@ public class MageAndWitchCapability extends Capability {
         }
     }
 
-
-    @Override
-    public Object backup() {
-        return new Object[] {
-            mage.getFeaturePointer(),
-            witch.getFeaturePointer()
-         };
-    }
-
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        mage.setFeaturePointer((FeaturePointer) a[0]);
-        witch.setFeaturePointer((FeaturePointer) a[1]);
-    }
 
     @Override
     public void saveToSnapshot(Document doc, Element node) {

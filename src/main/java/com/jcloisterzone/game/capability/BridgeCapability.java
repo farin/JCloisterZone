@@ -1,259 +1,60 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.BridgeAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.BridgeEvent;
+import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.state.GameState;
 
-public class BridgeCapability extends Capability {
+import io.vavr.Predicates;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 
-    private boolean bridgeUsed;
-    private final Map<Player, Integer> bridges = new HashMap<>();
 
-    public BridgeCapability(Game game) {
-        super(game);
+/**
+ * @model Set<FeaturePointer> : placed bridges
+ */
+public class BridgeCapability extends Capability<Set<FeaturePointer>> {
+
+    @Override
+    public GameState onStartGame(GameState state) {
+        int tokens = state.getPlayers().length() < 5 ? 3 : 2;
+        state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.BRIDGE, tokens));
+        state = setModel(state, HashSet.empty());
+        return state;
     }
 
     @Override
-    public Object backup() {
-        return new Object[] {
-            bridgeUsed,
-            new HashMap<>(bridges)
-        };
-    }
+    public GameState onActionPhaseEntered(GameState state) {
+        Player player = state.getPlayerActions().getPlayer();
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        bridgeUsed = (Boolean) a[0];
-        bridges.clear();
-        bridges.putAll((Map<Player, Integer>) a[1]);
-    }
+        boolean playerHasBridge = state.getPlayers().getPlayerTokenCount(
+            player.getIndex(), Token.BRIDGE) > 0;
 
-
-    @Override
-    public void initPlayer(Player player) {
-        int players = game.getAllPlayers().length;
-        if (players < 5) {
-            bridges.put(player, 3);
-        } else {
-            bridges.put(player, 2);
+        if (!playerHasBridge ||
+            state.getCurrentTurnEvents().find(Predicates.instanceOf(BridgePlaced.class)).isDefined()) {
+            return state;
         }
-    }
 
-    @Override
-    public void turnPartCleanUp() {
-        bridgeUsed = false;
-    }
+        Position pos = state.getLastPlaced().getPosition();
+        Set<FeaturePointer> options = HashSet.empty();
 
-    @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        if (!bridgeUsed && getPlayerBridges(game.getPhase().getActivePlayer()) > 0) {
-            BridgeAction action = prepareBridgeAction();
-            if (action != null) {
-                actions.add(action);
+        for (Location bridgeLoc : Location.BRIDGES) {
+            FeaturePointer ptr = new FeaturePointer(pos, bridgeLoc);
+            if (state.isBridgePlacementAllowed(ptr)) {
+                options = options.add(ptr);
             }
         }
-    }
 
-    public BridgeAction prepareMandatoryBridgeAction() {
-        Tile tile = game.getCurrentTile();
-        for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
-            Tile adjacent = entry.getValue();
-            Location rel = entry.getKey();
-
-            Edge adjacentSide = adjacent.getEdge(rel.rev());
-            Edge tileSide = tile.getEdge(rel);
-            if (tileSide != adjacentSide) {
-                Location bridgeLoc = getBridgeLocationForAdjacent(rel);
-                BridgeAction action = prepareTileBridgeAction(tile, null, bridgeLoc);
-                if (action != null) return action;
-                return prepareTileBridgeAction(adjacent, null, bridgeLoc);
-            }
+        if (options.isEmpty()) {
+            return state;
         }
-        throw new IllegalStateException();
+
+        return state.appendAction(new BridgeAction(options));
     }
-
-    private Location getBridgeLocationForAdjacent(Location rel) {
-        if (rel == Location.N || rel == Location.S) {
-            return Location.NS;
-        } else {
-            return Location.WE;
-        }
-    }
-
-    private BridgeAction prepareBridgeAction() {
-        BridgeAction action = null;
-        Tile tile = game.getCurrentTile();
-        action = prepareTileBridgeAction(tile, action, Location.NS);
-        action = prepareTileBridgeAction(tile, action, Location.WE);
-        for (Entry<Location, Tile> entry : getBoard().getAdjacentTilesMap(tile.getPosition()).entrySet()) {
-            Tile adjacent = entry.getValue();
-            Location rel = entry.getKey();
-            action = prepareTileBridgeAction(adjacent, action, getBridgeLocationForAdjacent(rel));
-        }
-        return action;
-    }
-
-    private BridgeAction prepareTileBridgeAction(Tile tile, BridgeAction action, Location bridgeLoc) {
-        if (isBridgePlacementAllowed(tile, tile.getPosition(), bridgeLoc)) {
-            if (action == null) action = new BridgeAction();
-            action.add(new FeaturePointer(tile.getPosition(), bridgeLoc));
-        }
-        return action;
-    }
-
-    private boolean isBridgePlacementAllowed(Tile tile, Position p, Location bridgeLoc) {
-        if (!tile.isBridgeAllowed(bridgeLoc)) return false;
-        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
-            Location rel = e.getKey();
-            if (rel.intersect(bridgeLoc) != null) {
-                Tile adjacent = e.getValue();
-                Edge adjacentSide = adjacent.getEdge(rel.rev());
-                if (adjacentSide != Edge.ROAD) return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isTilePlacementWithBridgePossible(Tile tile, Position p) {
-        if (getPlayerBridges(game.getActivePlayer()) > 0) {
-            if (isTilePlacementWithBridgeAllowed(tile, p, Location.NS)) return true;
-            if (isTilePlacementWithBridgeAllowed(tile, p, Location.WE)) return true;
-            if (isTilePlacementWithOneAdjacentBridgeAllowed(tile, p)) return true;
-        }
-        return false;
-    }
-
-    private boolean isTilePlacementWithBridgeAllowed(Tile tile, Position p, Location bridgeLoc) {
-        if (!tile.isBridgeAllowed(bridgeLoc)) return false;
-
-        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
-            Tile adjacent = e.getValue();
-            Location rel = e.getKey();
-
-            Edge adjacentSide = adjacent.getEdge(rel.rev());
-            Edge tileSide = tile.getEdge(rel);
-            if (rel.intersect(bridgeLoc) != null) {
-                if (adjacentSide != Edge.ROAD) return false;
-            } else {
-                if (adjacentSide != tileSide) return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isTilePlacementWithOneAdjacentBridgeAllowed(Tile tile, Position p) {
-        boolean bridgeUsed = false;
-        for (Entry<Location, Tile> e : getBoard().getAdjacentTilesMap(p).entrySet()) {
-            Tile adjacent = e.getValue();
-            Location rel = e.getKey();
-
-            Edge tileSide = tile.getEdge(rel);
-            Edge adjacentSide = adjacent.getEdge(rel.rev());
-
-            if (tileSide != adjacentSide) {
-                if (bridgeUsed) return false;
-                if (tileSide != Edge.ROAD) return false;
-
-                Location bridgeLoc = getBridgeLocationForAdjacent(rel);
-                if (!isBridgePlacementAllowed(adjacent, adjacent.getPosition(), bridgeLoc)) return false;
-                bridgeUsed = true;
-            }
-        }
-        return bridgeUsed; //ok if exactly one bridge is used
-    }
-
-    public int getPlayerBridges(Player pl) {
-        return bridges.get(pl);
-    }
-
-    public void decreaseBridges(Player player) {
-        int n = getPlayerBridges(player);
-        if (n == 0) throw new IllegalStateException("Player has no bridges");
-        bridges.put(player, n-1);
-    }
-
-    public void increaseBridges(Player player) {
-        int n = getPlayerBridges(player);
-        bridges.put(player, n+1);
-    }
-
-    public void deployBridge(Position pos, Location loc, boolean forced) {
-        Tile tile = getBoard().get(pos);
-        if (!tile.isBridgeAllowed(loc)) {
-            throw new IllegalArgumentException("Cannot deploy " + loc + " bridge on " + pos);
-        }
-        bridgeUsed = true;
-        tile.placeBridge(loc);
-        BridgeEvent ev = new BridgeEvent(BridgeEvent.DEPLOY, game.getActivePlayer(), pos, loc);
-        ev.setForced(forced);
-        game.post(ev);
-    }
-
-    public void undoDeployBridge(Position pos, Location loc) {
-        Tile tile = getBoard().get(pos);
-        bridgeUsed = false;
-        tile.removeBridge(loc);
-    }
-
-
-
-    @Override
-    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
-        if (tile.getBridge() != null) {
-            Location realLoc = tile.getBridge().getRawLocation();
-            tileNode.setAttribute("bridge", realLoc.toString());
-        }
-    }
-
-    @Override
-    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
-        if (tileNode.hasAttribute("bridge")) {
-            Location loc =  Location.valueOf(tileNode.getAttribute("bridge"));
-            tile.placeBridge(loc);
-        }
-    }
-
-    @Override
-    public void saveToSnapshot(Document doc, Element node) {
-        node.setAttribute("bridgeUsed", bridgeUsed + "");
-        for (Player player: game.getAllPlayers()) {
-            Element el = doc.createElement("player");
-            node.appendChild(el);
-            el.setAttribute("index", "" + player.getIndex());
-            el.setAttribute("bridges", "" + getPlayerBridges(player));
-        }
-    }
-
-    @Override
-    public void loadFromSnapshot(Document doc, Element node) {
-        bridgeUsed = Boolean.parseBoolean(node.getAttribute("bridgeUsed"));
-        NodeList nl = node.getElementsByTagName("player");
-        for (int i = 0; i < nl.getLength(); i++) {
-            Element playerEl = (Element) nl.item(i);
-            Player player = game.getPlayer(Integer.parseInt(playerEl.getAttribute("index")));
-            bridges.put(player, Integer.parseInt(playerEl.getAttribute("bridges")));
-        }
-    }
-
 
 }

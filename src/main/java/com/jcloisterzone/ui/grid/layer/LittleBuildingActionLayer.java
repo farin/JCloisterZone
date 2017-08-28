@@ -19,18 +19,20 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.controls.action.ActionWrapper;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class LittleBuildingActionLayer extends AbstractTileLayer implements ActionLayer<LittleBuildingAction>, GridMouseListener {
+public class LittleBuildingActionLayer extends AbstractTileLayer implements ActionLayer, GridMouseListener {
 
     protected static final Composite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
     private static final double PADDING_RATIO = 0.10;
 
     private Map<LittleBuilding, Image> images = new HashMap<>();
-    private LittleBuildingAction action;
+    private ActionWrapper actionWrapper;
+    //private LittleBuildingAction action;
     private LittleBuilding selected = null;
 
     private HashMap<LittleBuilding, Rectangle> areas = new HashMap<>();
@@ -47,9 +49,9 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
-    public void setAction(boolean active, LittleBuildingAction action) {
-        this.action = action;
-        setPosition(action == null ? null : getGame().getCurrentTile().getPosition());
+    public void setActionWrapper(boolean active, ActionWrapper actionWrapper) {
+        this.actionWrapper = actionWrapper;
+        setPosition(getAction() == null ? null : getGame().getCurrentTile().getPosition());
         if (active) {
             prepareAreas();
         } else {
@@ -59,8 +61,13 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
+    public ActionWrapper getActionWrapper() {
+        return actionWrapper;
+    }
+
+    @Override
     public LittleBuildingAction getAction() {
-        return action;
+        return actionWrapper == null ? null : (LittleBuildingAction) actionWrapper.getAction();
     }
 
     private void recomputeDimenensions(int squareSize) {
@@ -96,12 +103,12 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
 
 
     private void prepareAreas() {
-        if (action == null) return;
+        if (getAction() == null) return;
 
         AffineTransform at = getAffineTransformIgnoringRotation(getPosition());
 
         for (LittleBuilding lb : LittleBuilding.values()) {
-            if (action.getOptions().contains(lb)) {
+            if (getAction().getOptions().contains(lb)) {
                 int x = getIconX(lb), y = getIconY(lb);
                 Rectangle rect = new Rectangle(x-padding, y-padding, icoSize+2*padding, icoSize+2*padding);
                 areas.put(lb, at.createTransformedShape(rect).getBounds());
@@ -115,7 +122,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
         ImmutablePoint shadowOffset = new ImmutablePoint(3, 3);
         shadowOffset = shadowOffset.rotate(gridPanel.getBoardRotation().inverse());
 
-        for (LittleBuilding lb : action.getOptions()) {
+        for (LittleBuilding lb : getAction().getOptions()) {
             Rectangle r = areas.get(lb);
             if (r == null) continue;
             g2.setComposite(SHADOW_COMPOSITE);
@@ -163,16 +170,18 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
-    protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
-        return new MoveTrackingGridMouseAdapter(gridPanel, listener);
+    public void onShow() {
+        super.onShow();
+        //TODO extract listenr from this
+        attachMouseInputListener(new MoveTrackingGridMouseAdapter(gridPanel, this));
     }
 
     @Override
-    public void squareEntered(MouseEvent e, Position p) {
+    public void tileEntered(MouseEvent e, Position p) {
     }
 
     @Override
-    public void squareExited(MouseEvent e, Position p) {
+    public void tileExited(MouseEvent e, Position p) {
 
     }
 
@@ -180,7 +189,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selected != null) {
-                action.perform(getRmiProxy(), selected);
+                getAction().perform(getRmiProxy(), selected);
                 e.consume();
             }
         }

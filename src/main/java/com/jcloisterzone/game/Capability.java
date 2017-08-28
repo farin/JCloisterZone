@@ -1,152 +1,116 @@
 package com.jcloisterzone.game;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Board;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.Event;
+import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.score.ScoringStrategy;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.MeepleIdProvider;
+import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
 
-public abstract class Capability {
+@Immutable
+public abstract class Capability<T> implements Serializable {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected final Game game;
 
-    public Capability(Game game) {
-        this.game = game;
-    }
-
-    public Object backup() {
-        return null;
-    }
-    public void restore(Object data) {
-        //unpack data created by backup and fill itself
+    @SuppressWarnings("unchecked")
+    private Class<? extends Capability<T>> narrowClass() {
+        return (Class<? extends Capability<T>>) getClass();
     }
 
-    protected TilePack getTilePack() {
-        return game.getTilePack();
-    }
-    protected Board getBoard() {
-        return game.getBoard();
-    }
-    protected Tile getCurrentTile() {
-        return game.getCurrentTile();
+    public final T getModel(GameState state) {
+        return state.getCapabilityModel(narrowClass());
     }
 
-    /* no @Subscribe for Capabilities
-     * it cause post from another event handler and makes trouble with AI tasks
-     * */
-    public void handleEvent(Event event) {
+    public final GameState updateModel(GameState state, Function<T, T> fn) {
+        return state.mapCapabilityModel(narrowClass(), fn);
     }
 
-    public void saveToSnapshot(Document doc, Element node) {
+    public final GameState setModel(GameState state, T model) {
+        return state.setCapabilityModel(narrowClass(), model);
     }
 
-    public void saveTileToSnapshot(Tile tile, Document doc, Element tileNode) {
+
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
+        return tile;
     }
 
-    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
+    //TODO use only settings state linked from whole state?
+    public Feature initFeature(GameState settings, String tileId, Feature feature, Element xml) {
+        return feature;
     }
 
-    public void loadTileFromSnapshot(Tile tile, Element tileNode) {
-    }
+//    public List<Feature> extendFeatures(String tileId) {
+//        return List.empty();
+//    }
 
-    public void initTile(Tile tile, Element xml) {
-    }
-
-    public void initFeature(Tile tile, Feature feature, Element xml) {
-    }
-
-    public String getTileGroup(Tile tile) {
+    public String getTileGroup(TileDefinition tile) {
         return null;
     }
 
-    public void initPlayer(Player player) {
+    public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
+        return List.empty();
     }
 
-    public void begin() {
+    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
+        return List.empty();
     }
 
-    /** convenient method to find follower action in all actions */
-    protected List<MeepleAction> findFollowerActions(List<PlayerAction<?>> actions) {
-        List<MeepleAction> followerActions = new ArrayList<>();
-        for (PlayerAction<?> a : actions) {
-            if (a instanceof MeepleAction) {
-                MeepleAction ma = (MeepleAction) a;
-                if (Follower.class.isAssignableFrom(ma.getMeepleType())) {
-                    followerActions.add(ma);
-                }
-            }
-        }
-        return followerActions;
+    @Deprecated
+    public Set<FeaturePointer> extendFollowOptions(Set<FeaturePointer> locations) {
+        return locations;
     }
 
-    /** convenient method to find follower action in all actions, or create new if player has follower and action doesn't exists*/
-    protected List<MeepleAction> findAndFillFollowerActions(List<PlayerAction<?>> actions) {
-        List<MeepleAction> followerActions = findFollowerActions(actions);
-        Set<Class<? extends Meeple>> hasAction = new HashSet<>();
-        for (MeepleAction ma : followerActions) {
-            hasAction.add(ma.getMeepleType());
-        }
-
-        for (Follower f : game.getActivePlayer().getFollowers()) {
-            if (f.isInSupply() && !hasAction.contains(f.getClass())) {
-                MeepleAction ma = new MeepleAction(f.getClass());
-                actions.add(ma);
-                followerActions.add(ma);
-                hasAction.add(f.getClass());
-            }
-        }
-        return followerActions;
+    public GameState onStartGame(GameState state) {
+        return state;
     }
 
-    public void extendFollowOptions(Set<FeaturePointer> followerOptions) {
+    public GameState onTilePlaced(GameState state) {
+        return state;
     }
 
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
+    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
+        return state;
     }
 
-    public void postPrepareActions(List<PlayerAction<?>> actions) {
+    public GameState onActionPhaseEntered(GameState state) {
+        return state;
     }
 
-    public boolean isDeployAllowed(Tile tile, Class<? extends Meeple> meepleType) {
+    public GameState onTurnCleanUp(GameState state) {
+        return state;
+    }
+
+    public GameState onTurnPartCleanUp(GameState state) {
+        return state;
+    }
+
+    public GameState finalScoring(GameState state) {
+        return state;
+    }
+
+    public boolean isTilePlacementAllowed(GameState state, TileDefinition tile, TilePlacement placement) {
         return true;
     }
 
-    public void scoreCompleted(CompletableScoreContext ctx) {
-    }
-
-    public void turnCleanUp() {
-    }
-
-    public void turnPartCleanUp() {
-    }
-
-
-    public void finalScoring(ScoringStrategy strategy) {
-    }
-
-    public boolean isTilePlacementAllowed(Tile tile, Position p) {
+    public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
         return true;
     }
 

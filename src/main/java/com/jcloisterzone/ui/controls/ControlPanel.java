@@ -10,51 +10,48 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerClock;
-import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.action.AbbeyPlacementAction;
+import com.jcloisterzone.action.ConfirmAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
+import com.jcloisterzone.config.Config.ConfirmConfig;
 import com.jcloisterzone.event.ClockUpdateEvent;
-import com.jcloisterzone.event.FeatureCompletedEvent;
-import com.jcloisterzone.event.FeatureEvent;
-import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.event.RequestConfirmEvent;
-import com.jcloisterzone.event.ScoreEvent;
-import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.score.ScoreAllCallback;
-import com.jcloisterzone.feature.score.ScoreAllFeatureFinder;
-import com.jcloisterzone.feature.score.ScoringStrategy;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.feature.visitor.score.FarmScoreContext;
-import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.MeepleDeployed;
+import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BazaarCapabilityModel;
+import com.jcloisterzone.game.capability.BazaarItem;
+import com.jcloisterzone.game.phase.BazaarPhase;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.reducers.FinalScoring;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.message.CommitMessage;
+import com.jcloisterzone.wsio.message.PassMessage;
+
+import io.vavr.collection.Array;
+import io.vavr.collection.Queue;
+import io.vavr.collection.Vector;
+import net.miginfocom.swing.MigLayout;
 
 public class ControlPanel extends JPanel {
 
@@ -81,8 +78,8 @@ public class ControlPanel extends JPanel {
 
     private JButton passButton;
     private boolean showConfirmRequest;
-    private boolean canPass;
-    private boolean showProjectedPoints, projectedPointsValid = true;
+    private boolean showProjectedPoints;
+    private GameState projectedPointsSource = null;
 
     private ActionPanel actionPanel;
     private PlayerPanel[] playerPanels;
@@ -99,8 +96,6 @@ public class ControlPanel extends JPanel {
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
         gc.register(this);
-
-        bcb = game.getCapability(BazaarCapability.class);
 
         setOpaque(false);
         setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));
@@ -119,18 +114,18 @@ public class ControlPanel extends JPanel {
         actionPanel = new ActionPanel(gameView);
         add(actionPanel, "wrap, growx, gapleft 35, h 106");
 
-        if (bcb != null) {
+        if (game.getState().getCapabilities().contains(BazaarCapability.class)) {
             bazaarSupplyPanel = new BazaarSupplyPanel();
             bazaarSupplyPanel.setVisible(false);
             add(bazaarSupplyPanel, "wrap, growx, gapbottom 12, h 40, hidemode 3");
         }
 
-        Player[] players = game.getAllPlayers();
+        Array<Player> players = game.getState().getPlayers().getPlayers();
         PlayerPanelImageCache cache = new PlayerPanelImageCache(client, game);
-        playerPanels = new PlayerPanel[players.length];
+        playerPanels = new PlayerPanel[players.length()];
 
-        for (int i = 0; i < players.length; i++) {
-            playerPanels[i] = new PlayerPanel(client, gameView, players[i], cache);
+        for (int i = 0; i < players.length(); i++) {
+            playerPanels[i] = new PlayerPanel(client, gameView, players.get(i), cache);
             add(playerPanels[i], "wrap, growx, gapleft 35, gapbottom 12, h pref");
         }
 
@@ -148,13 +143,6 @@ public class ControlPanel extends JPanel {
         });
     }
 
-
-    private void setCanPass(boolean canPass) {
-        this.canPass = canPass;
-        passButton.setVisible(canPass);
-    }
-
-
     private void paintBackgroundBody(Graphics2D g2) {
         g2.setColor(client.getTheme().getTransparentPanelBg());
         g2.fillRect(LEFT_MARGIN+LEFT_PADDING , 0, getWidth()-LEFT_MARGIN-LEFT_PADDING, getHeight());
@@ -164,7 +152,9 @@ public class ControlPanel extends JPanel {
         int h = getHeight();
         g2.translate(LEFT_MARGIN+LEFT_PADDING, 0); //adpat to old legacy code
 
-        Player player = game.getTurnPlayer();
+        GameState state = game.getState();
+
+        Player player = state.getTurnPlayer();
         if (player == null) {
             g2.setColor(client.getTheme().getTransparentPanelBg());
             g2.fillRect(-LEFT_PADDING , 0, LEFT_PADDING, h);
@@ -199,7 +189,7 @@ public class ControlPanel extends JPanel {
             );
         }
 
-        player = game.getActivePlayer();
+        player = state.getActivePlayer();
         if (player != null) {
             PlayerPanel pp = playerPanels[player.getIndex()];
             int y = pp.getY() + pp.getRealHeight() / 2;
@@ -227,18 +217,19 @@ public class ControlPanel extends JPanel {
 
         paintBackgroundBody(g2);
 
-        TilePack tilePack = game.getTilePack();
-        if (tilePack != null) { //null is possible for just loaded game
-            g2.setFont(FONT_PACK_SIZE);
-            g2.setColor(client.getTheme().getHeaderFontColor());
-            int packSize = tilePack.totalSize();
-            g2.drawString("" + packSize, w - 42, 24);
-        }
+        TilePack tilePack = game.getState().getTilePack();
+        g2.setFont(FONT_PACK_SIZE);
+        g2.setColor(client.getTheme().getHeaderFontColor());
+        int packSize = tilePack.totalSize();
+        g2.drawString("" + packSize, w - 42, 24);
+
 
         boolean doRevalidate = false;
 
         if (bazaarSupplyPanel != null) {
-            boolean showSupply = gameView.getGridPanel().getBazaarPanel() == null && bcb.getBazaarSupply() != null;
+            //TODO Immutable - change bazaarSupplyPanel state base on gameChangeEvent !!!
+            BazaarCapabilityModel model = gc.getGame().getState().getCapabilityModel(BazaarCapability.class);
+            boolean showSupply = model.getSupply() != null;
             if (showSupply ^ bazaarSupplyPanel.isVisible()) {
                 doRevalidate = true;
                 bazaarSupplyPanel.setVisible(showSupply);
@@ -264,33 +255,44 @@ public class ControlPanel extends JPanel {
         paintBackgroundShadow((Graphics2D) g);
     }
 
-    private boolean isLastAbbeyPlacement() {
-        PlayerAction<?>[] actions = actionPanel.getActions();
-        if (actions == null) return false;
-        if (actions.length == 0) return false;
-        if (!(actions[0] instanceof AbbeyPlacementAction)) return false;
-        return game.getTilePack().size() == 0;
+    private boolean isLastAbbeyPlacement(GameState state) {
+        ActionsState as = state.getPlayerActions();
+        if (as == null || as.getActions().isEmpty()) return false;
+        PlayerAction<?> action = as.getActions().get();
+        if (!(action instanceof TilePlacementAction)) return false;
+        TilePlacementAction tpa = (TilePlacementAction) action;
+        if (!tpa.getTile().getId().equals(TileDefinition.ABBEY_TILE_ID)) return false;
+        return state.getTilePack().size() == 0;
     }
 
     public void pass() {
-        if (game.getActivePlayer().isLocalHuman()) {
-            if (showConfirmRequest) {
-                setShowConfirmRequest(false);
-                gc.getConnection().send(new CommitMessage(game.getGameId()));
-                repaint();
-            } else {
-                if (isLastAbbeyPlacement()) {
-                    String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
-                    int result = JOptionPane.showOptionDialog(client,
-                        _("This is your last turn. If you skip it your Abbey remain unplaced."),
-                        _("Last chance to place the Abbey"),
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    if (result == -1 || result == 1) { //closed dialog
-                        return;
-                    }
-                }
-                gc.getRmiProxy().pass();
+        GameState state = game.getState();
+        Player player = state.getActivePlayer();
+        if (player == null || !player.isLocalHuman()) {
+            return;
+        }
+
+        if (showConfirmRequest) {
+            setShowConfirmRequest(false);
+            gc.getConnection().send(new CommitMessage(game.getGameId()));
+            repaint();
+        } else {
+            ActionsState actions = state.getPlayerActions();
+            if (!actions.isPassAllowed()) {
+                return;
             }
+
+            if (isLastAbbeyPlacement(state)) {
+                String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
+                int result = JOptionPane.showOptionDialog(client,
+                    _("This is your last turn. If you skip it your Abbey remain unplaced."),
+                    _("Last chance to place the Abbey"),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result == -1 || result == 1) { //closed dialog
+                    return;
+                }
+            }
+            gc.getConnection().send(new PassMessage(game.getGameId()));
         }
     }
 
@@ -298,24 +300,10 @@ public class ControlPanel extends JPanel {
         return actionPanel;
     }
 
-
-    public void selectAction(Player targetPlayer, List<? extends PlayerAction<?>> actions, boolean canPass) {
-        // direct collection sort can be unsupported - so copy to array first!
-        int i = 0;
-        PlayerAction<?>[] arr = new PlayerAction[actions.size()];
-        for (PlayerAction<?> pa : actions) {
-            pa.setClient(client);
-            arr[i++] = pa;
-        }
-        Arrays.sort(arr);
-        actionPanel.setActions(targetPlayer.isLocalHuman(), arr);
-        setCanPass(targetPlayer.isLocalHuman() ? canPass : false);
-    }
-
     public void clearActions() {
         actionPanel.clearActions();
-        actionPanel.setFakeAction(null);
-        setCanPass(false);
+        passButton.setVisible(false);
+        setShowConfirmRequest(false);
     }
 
     public boolean isShowPotentialPoints() {
@@ -333,27 +321,18 @@ public class ControlPanel extends JPanel {
 
     private void refreshPotentialPoints() {
         if (!showProjectedPoints) return;
-        projectedPointsValid = false;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                //run only once in one time - refreshPotentialPoints can be triggered by more events
-                if (!projectedPointsValid) {
-                    projectedPointsValid = true;
 
-                    for (PlayerPanel playerPanel : playerPanels) {
-                        playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints());
-                    }
+        GameState state = game.getState();
+        if (projectedPointsSource != state) {
+            projectedPointsSource = state;
+            GameState scored = (new FinalScoring()).apply(state);
 
-                    PotentialPointScoringStrategy strategy = new PotentialPointScoringStrategy();
-                    ScoreAllFeatureFinder scoreAll = new ScoreAllFeatureFinder();
-                    scoreAll.scoreAll(game, strategy);
-                    game.finalScoring(strategy);
-
-                    repaint();
-                }
+            for (PlayerPanel playerPanel : playerPanels) {
+                playerPanel.setPotentialPoints(playerPanel.getPlayer().getPoints(scored));
             }
-        });
+        }
+
+        repaint();
     }
 
     public void setShowConfirmRequest(boolean showConfirmRequest) {
@@ -365,105 +344,68 @@ public class ControlPanel extends JPanel {
     }
 
     @Subscribe
-    public void handleRequestConfirm(RequestConfirmEvent ev) {
-        clearActions();
-        if (ev.getTargetPlayer().isLocalHuman()) {
-            setShowConfirmRequest(true);
+    public void handleGameChanged(GameChangedEvent ev) {
+        if (ev.hasPlayerActionsChanged()) {
+            GameState state = ev.getCurrentState();
+            ActionsState actionsState = state.getPlayerActions();
+            clearActions();
+            if (actionsState != null) {
+                boolean isLocal = actionsState.getPlayer().isLocalHuman();
+                Vector<PlayerAction<?>> actions = actionsState.getActions();
+                PlayerAction<?> first = actions.getOrNull();
+
+                if (first instanceof ConfirmAction) {
+                    handleConfirmAction(state, isLocal);
+                } else if (
+                    first.getClass().isAnnotationPresent(LinkedPanel.class)
+                ) {
+                    //ignore actions managed by panels
+                    //TOOD show image anyway on control/action panel
+                } else {
+                    actionPanel.onPlayerActionsChanged(actionsState);
+                    passButton.setVisible(isLocal && actionsState.isPassAllowed());
+                }
+            }
+        }
+        refreshPotentialPoints();
+    }
+
+    public void handleConfirmAction(GameState state, boolean isLocal) {
+        if (isLocal) {
+            boolean needsConfirm = false;
+            // IMMUTABLE TODO
+            PlayEvent last = state.getEvents().last();
+            if (last instanceof MeepleDeployed) {
+                ConfirmConfig cfg =  gc.getConfig().getConfirm();
+                MeepleDeployed ev = (MeepleDeployed) last;
+                if (cfg.getAny_deployment()) {
+                    needsConfirm = true;
+                } else if (cfg.getFarm_deployment() && ev.getLocation().isFarmLocation()) {
+                    needsConfirm = true;
+                } else if (cfg.getOn_tower_deployment() && ev.getLocation() == Location.TOWER) {
+                    needsConfirm = true;
+                }
+            }
+            if (needsConfirm) {
+                setShowConfirmRequest(true);
+            } else {
+                gc.getConnection().send(new CommitMessage(game.getGameId()));
+            }
         } else {
             actionPanel.setShowConfirmRequest(true, true);
             repaint();
         }
     }
 
-
     @Subscribe
     public void handleClockUpdateEvent(ClockUpdateEvent ev) {
         timer.stop();
-        if (ev.isClockRunning() && game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME) != null) {
-            PlayerClock runningClock = ev.getRunningClockPlayer().getClock();
+        if (ev.isClockRunning() && game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).isDefined()) {
+            PlayerClock runningClock = ev.getClocks().get(ev.getRunning());
             //this solution is not much accurate - TODO fix
-            //+clean time from roundtrip!!!
+            //+clean time from round trip!!!
             timer.setInitialDelay((int) runningClock.getTime() % 1000);
             timer.start();
-        }
-    }
-
-    @Subscribe
-    public void handleScoreEvent(ScoreEvent ev) {
-        refreshPotentialPoints();
-    }
-
-    @Subscribe
-    public void handleTileEvent(TileEvent ev) {
-        if (ev.getType() == TileEvent.PLACEMENT || ev.getType() == TileEvent.REMOVE) {
-            refreshPotentialPoints();
-        }
-    }
-
-    @Subscribe
-    public void handleMeepleEvent(MeepleEvent ev) {
-        refreshPotentialPoints();
-    }
-
-    @Subscribe
-    public void handleBazaarSelectBuyOrSellEvent(BazaarSelectBuyOrSellEvent ev) {
-        refreshPotentialPoints();
-    }
-
-    @Subscribe
-    public void handleFeatureCompletedEvent(FeatureCompletedEvent ev) { //needs eg for King score
-        refreshPotentialPoints();
-    }
-
-    @Subscribe
-    public void handleFeatureEvent(FeatureEvent ev) {
-        refreshPotentialPoints();
-    }
-
-    @Subscribe
-    public void handleMeeplePrisonEvent(FeatureEvent ev) {
-        refreshPotentialPoints();
-    }
-
-    class PotentialPointScoringStrategy implements ScoringStrategy, ScoreAllCallback {
-
-        @Override
-        public void addPoints(Player player, int points, PointCategory category) {
-            playerPanels[player.getIndex()].addPotentialPoints(points);
-        }
-
-        @Override
-        public void scoreCompletableFeature(CompletableScoreContext ctx) {
-            int points = ctx.getPoints();
-            for (Player p : ctx.getMajorOwners()) {
-                addPoints(p, points, null);
-            }
-        }
-
-        @Override
-        public void scoreFarm(FarmScoreContext ctx, Player player) {
-            addPoints(player, ctx.getPoints(player), null);
-
-        }
-
-        @Override
-        public void scoreBarn(FarmScoreContext ctx, Barn meeple) {
-            addPoints(meeple.getPlayer(), ctx.getBarnPoints(), null);
-        }
-
-        @Override
-        public void scoreCastle(Meeple meeple, Castle castle) {
-            //empty
-        }
-
-        @Override
-        public CompletableScoreContext getCompletableScoreContext(Completable completable) {
-            return completable.getScoreContext();
-        }
-
-        @Override
-        public FarmScoreContext getFarmScoreContext(Farm farm) {
-            return farm.getScoreContext();
         }
     }
 
@@ -477,11 +419,14 @@ public class ControlPanel extends JPanel {
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D)g;
             super.paintComponent(g);
-            List<Tile> queue = bcb.getDrawQueue();
-            if (!queue.isEmpty()) {
+            GameState state = game.getState();
+            BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
+            Queue<BazaarItem> supply = model.getSupply();
+            if (supply != null && !state.getPhase().equals(BazaarPhase.class)) {
                 int x = LEFT_MARGIN+LEFT_PADDING;
-                for (Tile tile : queue) {
-                    Image img = client.getResourceManager().getTileImage(tile).getImage();
+                for (BazaarItem bi : supply) {
+                    TileDefinition tile = bi.getTile();
+                    Image img = client.getResourceManager().getTileImage(tile, Rotation.R0).getImage();
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;
                 }

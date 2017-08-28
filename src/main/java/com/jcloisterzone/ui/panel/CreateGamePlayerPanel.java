@@ -19,13 +19,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.ai.legacyplayer.LegacyAiPlayer;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
@@ -35,6 +32,8 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
+
+import net.miginfocom.swing.MigLayout;
 
 public class CreateGamePlayerPanel extends ThemedJPanel {
 
@@ -134,8 +133,8 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     }
 
     private void updateIcon(String iconType, Color color, boolean state) {
-    	Image imgRes = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("player-slot/" + iconType, color));
-    	imgRes = imgRes.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        Image imgRes = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("player-slot/" + iconType, color));
+        imgRes = imgRes.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         ImageIcon img = new ImageIcon(imgRes);
         icon.setIcon(img);
         icon.setDisabledIcon(img);
@@ -225,15 +224,16 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
                 nickname.setText(nick);
                 slot.setState(SlotState.OWN);
                 sendTakeSlotMessage(slot);
-            } else if (!slot.isAi()) { //player --> ai
-                nameProvider.releaseName(false, slot.getNumber());
-                //TODO get out hardcoded AI class
-                slot.setAiClassName(LegacyAiPlayer.class.getName());
-                nick = nameProvider.reserveName(true, slot.getNumber());
-                slot.setNickname(nick);
-                nickname.setText(nick);
-                slot.setState(SlotState.OWN);
-                sendTakeSlotMessage(slot);
+// IMMUTABLE TODO return AI
+//            } else if (!slot.isAi()) { //player --> ai
+//                nameProvider.releaseName(false, slot.getNumber());
+//                //TODO get out hardcoded AI class
+//                slot.setAiClassName(LegacyAiPlayer.class.getName());
+//                nick = nameProvider.reserveName(true, slot.getNumber());
+//                slot.setNickname(nick);
+//                nickname.setText(nick);
+//                slot.setState(SlotState.OWN);
+//                sendTakeSlotMessage(slot);
             } else { //ai --> open
                 nameProvider.releaseName(true, slot.getNumber());
                 slot.setNickname(null);
@@ -258,7 +258,7 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     }
 
     @SuppressWarnings("unchecked")
-	private void sendTakeSlotMessage(PlayerSlot slot) {
+    private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {

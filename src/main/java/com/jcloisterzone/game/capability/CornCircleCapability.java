@@ -5,15 +5,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 
-public class CornCircleCapability extends Capability {
+public class CornCircleCapability extends Capability<Void> {
 
     public static enum CornCicleOption {
         DEPLOYMENT,
@@ -23,25 +22,9 @@ public class CornCircleCapability extends Capability {
     private Player cornCirclePlayer;
     private CornCicleOption cornCircleOption;
 
-    public CornCircleCapability(Game game) {
-        super(game);
-    }
 
     @Override
-    public Object backup() {
-        return new Object[] { cornCirclePlayer, cornCircleOption };
-    }
-
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        cornCirclePlayer = (Player) a[0];
-        cornCircleOption = (CornCicleOption) a[1];
-    }
-
-
-    @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("corn-circle");
         if (nl.getLength() > 0) {
             String type = ((Element)nl.item(0)).getAttribute("type");

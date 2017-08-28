@@ -1,195 +1,225 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.ArrayList;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.BazaarAuctionEndEvent;
-import com.jcloisterzone.event.BazaarMakeBidEvent;
-import com.jcloisterzone.event.BazaarSelectBuyOrSellEvent;
-import com.jcloisterzone.event.BazaarSelectTileEvent;
-import com.jcloisterzone.event.BazaarTileSelectedEvent;
+import com.jcloisterzone.action.BazaarBidAction;
+import com.jcloisterzone.action.BazaarSelectBuyOrSellAction;
+import com.jcloisterzone.action.BazaarSelectTileAction;
+import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.Flag;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.reducers.AddPoints;
+import com.jcloisterzone.wsio.message.BazaarBidMessage;
+import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
+import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage.BuyOrSellOption;
+import com.jcloisterzone.wsio.message.PassMessage;
 
-public class BazaarPhase extends ServerAwarePhase {
+import io.vavr.Tuple2;
+import io.vavr.collection.Queue;
 
-    private final BazaarCapability bazaarCap;
+@RequiredCapability(BazaarCapability.class)
+public class BazaarPhase extends Phase {
 
-    public BazaarPhase(Game game, GameController controller) {
-        super(game, controller);
-        bazaarCap = game.getCapability(BazaarCapability.class);
-    }
-
-
-    @Override
-    public boolean isActive() {
-        return game.hasCapability(BazaarCapability.class);
-    }
-
-    @Override
-    public Player getActivePlayer() {
-        Player bidding =  bazaarCap.getBazaarBiddingPlayer();
-        return bidding == null ? bazaarCap.getBazaarTileSelectingPlayer() : bidding;
+    public BazaarPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
-    public void enter() {
-        if (!isBazaarTriggered()) {
-            next();
-            return;
+    public StepResult enter(GameState state) {
+        if (!state.hasFlag(Flag.BAZAAR_AUCTION)) {
+            return next(state);
         }
-        Player p = game.getNextPlayer();
-        bazaarCap.setBazaarTileSelectingPlayer(p);
-        int size = game.getAllPlayers().length;
-        ArrayList<BazaarItem> supply = new ArrayList<BazaarItem>(size);
+
+        int size = state.getPlayers().length();
+        TilePack tilePack = state.getTilePack();
+
+        if (tilePack.size() < size) {
+            return next(state);
+        }
+
+        Queue<BazaarItem> supply = Queue.empty();
+
         for (int i = 0; i < size; i++) {
-            Tile t = getTilePack().drawTile(game.getRandom().nextInt(getTilePack().size()));
-            supply.add(new BazaarItem(t));
+            int rndIndex = getRandom().nextInt(tilePack.size());
+            Tuple2<TileDefinition, TilePack> t = tilePack.drawTile(rndIndex);
+            state = state.setTilePack(t._2);
+            supply = supply.append(new BazaarItem(t._1, 0, null, null));
         }
-        bazaarCap.setBazaarSupply(supply);
-        toggleClock(getActivePlayer());
-        game.post(new BazaarSelectTileEvent(getActivePlayer(), supply));
+
+        Player player = state.getTurnPlayer().getNextPlayer(state);
+        BazaarCapabilityModel model = new BazaarCapabilityModel(supply, null, player);
+
+        state = state.setCapabilityModel(BazaarCapability.class, model);
+
+        BazaarSelectTileAction action = new BazaarSelectTileAction(supply.toLinkedSet());
+        state = state.setPlayerActions(
+            new ActionsState(player, action, false)
+        );
+        return promote(state);
     }
 
-
-    @Override
-    public void loadGame(Snapshot snapshot) {
-        setEntered(true); //avoid call enter on load phase to this phase switch
-        Player selecting = bazaarCap.getBazaarTileSelectingPlayer();
-        if (selecting != null) {
-            Player bidding = bazaarCap.getBazaarBiddingPlayer();
-            BazaarItem currentItem = bazaarCap.getCurrentBazaarAuction();
-            int supplyIdx = bazaarCap.getBazaarSupply().indexOf(currentItem);
-
-            if (bidding == null) {
-                toggleClock(getActivePlayer());
-                game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
-            } else if (selecting == bidding) {
-                toggleClock(bidding);
-                game.post(new BazaarSelectBuyOrSellEvent(bidding, currentItem, supplyIdx));
-            } else {
-                toggleClock(bidding);
-                game.post(new BazaarMakeBidEvent(bidding, currentItem, supplyIdx));
-            }
+    private boolean hasTileAssigned(BazaarCapabilityModel model, Player p) {
+        for (BazaarItem bi : model.getSupply()) {
+            if (p.equals(bi.getOwner())) return true;
         }
+        return false;
     }
 
-    private boolean isBazaarTriggered() {
-        if (!bazaarCap.isBazaarTriggered()) return false;
-        if (getTilePack().size() < game.getAllPlayers().length) return false; //there isn't one tile for each player available
-        if (bazaarCap.getBazaarSupply() != null) return false;
-        return true;
-    }
+    @PhaseMessageHandler
+    public StepResult bazaarBid(GameState state, BazaarBidMessage msg) {
+        int supplyIndex = msg.getSupplyIndex();
+        int price = msg.getPrice();
 
-    private boolean canPlayerBid(Player p) {
-        for (BazaarItem bi : bazaarCap.getBazaarSupply()) {
-            if (bi.getOwner() == p) return false;
-        }
-        return true;
-    }
+        boolean noAuction = state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
 
-    @Override
-    public void bazaarBid(Integer supplyIndex, Integer price) {
-        BazaarItem bi = bazaarCap.getCurrentBazaarAuction();
-        boolean isTileSelection = bi == null;
-        if (bi == null) {
-            bi = bazaarCap.getBazaarSupply().get(supplyIndex);
-            bazaarCap.setCurrentBazaarAuction(bi);
+        Player player = state.getActivePlayer();
+        PlayerAction<?> action = state.getPlayerActions().getActions().get();
+        boolean isTileSelection = action instanceof BazaarSelectTileAction;
 
-            if (game.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION)) {
-                bi.setOwner(getActivePlayer());
-                nextSelectingPlayer();
-                return;
-            }
-        }
-        bi.setCurrentPrice(price);
-        bi.setCurrentBidder(getActivePlayer());
+        state = state.mapCapabilityModel(BazaarCapability.class, model -> {
+            BazaarItem item = model.getAuctionedItem();
 
-        if (isTileSelection) {
-            toggleClock(getActivePlayer());
-            game.post(new BazaarTileSelectedEvent(getActivePlayer(), bi, supplyIndex));
-        }
-        nextBidder();
-    }
+            if (isTileSelection) {
+                assert item == null;
 
-    private void nextBidder() {
-        Player nextBidder = getActivePlayer();
-        BazaarItem currentItem = bazaarCap.getCurrentBazaarAuction();
-        int supplyIdx = bazaarCap.getBazaarSupply().indexOf(currentItem);
-        do {
-            nextBidder = game.getNextPlayer(nextBidder);
-            if (nextBidder == bazaarCap.getBazaarTileSelectingPlayer()) {
-                //all players makes bid
-                BazaarItem bi = bazaarCap.getCurrentBazaarAuction();
-                if (bazaarCap.getBazaarTileSelectingPlayer() == bi.getCurrentBidder()) {
-                    bazaarBuyOrSell(true);
-                } else {
-                    bazaarCap.setBazaarBiddingPlayer(bazaarCap.getBazaarTileSelectingPlayer()); //need for correct save&load
-                    toggleClock(getActivePlayer());
-                    game.post(new BazaarSelectBuyOrSellEvent(getActivePlayer(), currentItem, supplyIdx));
+                item = model.getSupply().get(supplyIndex);
+                model = model.setAuctionedItemIndex(supplyIndex);
+                if (noAuction) {
+                    assert item.getCurrentPrice() == 0;
+                    item = item.setOwner(player);
+                    model = model.updateSupplyItem(supplyIndex, item);
+                    return model;
                 }
-                return;
             }
-        } while (!canPlayerBid(nextBidder));
 
-        bazaarCap.setBazaarBiddingPlayer(nextBidder);
-        toggleClock(getActivePlayer());
-        game.post(new BazaarMakeBidEvent(getActivePlayer(), currentItem, supplyIdx));
+            item = item.setCurrentPrice(price);
+            item = item.setCurrentBidder(player);
+            model = model.updateSupplyItem(supplyIndex, item);
+
+            return model;
+        });
+
+        if (noAuction) {
+            return nextSelectingPlayer(state);
+        } else {
+            return nextBidder(state);
+        }
     }
 
-    private void nextSelectingPlayer() {
-        bazaarCap.setCurrentBazaarAuction(null);
-        bazaarCap.setBazaarBiddingPlayer(null);
-        Player currentSelectingPlayer = bazaarCap.getBazaarTileSelectingPlayer();
-        Player player = currentSelectingPlayer;
+    private StepResult nextBidder(GameState state) {
+        Player nextBidder = state.getActivePlayer();
+        BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
+        BazaarItem item = model.getAuctionedItem();
+        Player tileSelectingPlayer = model.getTileSelectingPlayer();
+
         do {
-            player = game.getNextPlayer(player);
-            if (!bazaarCap.hasTileAuctioned(player)) {
-                bazaarCap.setBazaarTileSelectingPlayer(player);
-                toggleClock(getActivePlayer());
-                game.post(new BazaarSelectTileEvent(getActivePlayer(), bazaarCap.getBazaarSupply()));
-                return;
+            nextBidder = nextBidder.getNextPlayer(state);
+            if (nextBidder.equals(tileSelectingPlayer)) {
+                //all players makes bid
+                if (tileSelectingPlayer.equals(item.getCurrentBidder())) {
+                    return buyOrSell(state, BuyOrSellOption.BUY);
+                } else {
+                    BazaarSelectBuyOrSellAction action = new BazaarSelectBuyOrSellAction();
+                    ActionsState as = new ActionsState(nextBidder, action, false);
+                    return promote(state.setPlayerActions(as));
+                }
+            }
+        } while (hasTileAssigned(model, nextBidder));
+
+        BazaarBidAction action = new BazaarBidAction();
+        ActionsState as = new ActionsState(nextBidder, action, false);
+        return promote(state.setPlayerActions(as));
+    }
+
+    private StepResult nextSelectingPlayer(GameState state) {
+        BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
+        Player currentSelectingPlayer = model.getTileSelectingPlayer();
+        Player player = currentSelectingPlayer;
+
+        model = model.setAuctionedItemIndex(null);
+
+        do {
+            player = player.getNextPlayer(state);
+            if (!hasTileAssigned(model, player)) {
+                model = model.setTileSelectingPlayer(player);
+
+                state = state.setCapabilityModel(BazaarCapability.class, model);
+
+                BazaarSelectTileAction action = new BazaarSelectTileAction(model.getSupply().toLinkedSet());
+                state = state.setPlayerActions(
+                    new ActionsState(player, action, false)
+                );
+                return promote(state);
             }
         } while (player != currentSelectingPlayer);
+
         //all tiles has been auctioned
-        bazaarCap.setBazaarTileSelectingPlayer(null);
-        game.post(new BazaarAuctionEndEvent());
-        next();
+        Queue<BazaarItem> supply =  model.getSupply();
+
+        model = model.setSupply(
+            state.getPlayers().getPlayersBeginWith(
+                state.getTurnPlayer().getNextPlayer(state)
+            )
+            .map(p ->
+                supply.find(bi -> bi.getOwner().equals(p)).get()
+            )
+            .toQueue()
+        );
+        model = model.setAuctionedItemIndex(null);
+        model = model.setTileSelectingPlayer(null);
+
+        state = state.setCapabilityModel(BazaarCapability.class, model);
+        return next(state);
     }
 
-    @Override
-    public void pass() {
-        if (bazaarCap.getBazaarBiddingPlayer() == bazaarCap.getBazaarTileSelectingPlayer()) {
-            logger.error("Tile selecting player is not allowed to pass");
-            return;
+    @PhaseMessageHandler
+    public StepResult handlePass(GameState state, PassMessage msg) {
+        BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
+        Player p = state.getActivePlayer();
+
+        if (p.equals(model.getTileSelectingPlayer())) {
+            throw new IllegalStateException("Tile selecting player is not allowed to pass");
         }
-        nextBidder();
+        return nextBidder(state);
     }
 
-    @Override
-    public void bazaarBuyOrSell(boolean buy) {
-        BazaarItem bi = bazaarCap.getCurrentBazaarAuction();
+    @PhaseMessageHandler
+    public StepResult handleBazaarBuyOrSellMessage(GameState state, BazaarBuyOrSellMessage msg) {
+        return buyOrSell(state, msg.getValue());
+    }
+
+    private StepResult buyOrSell(GameState state, BuyOrSellOption option) {
+        BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
+
+        BazaarItem bi = model.getAuctionedItem();
         int points = bi.getCurrentPrice();
-        Player pSelecting = bazaarCap.getBazaarTileSelectingPlayer();
+        Player pSelecting = model.getTileSelectingPlayer();
         Player pBidding = bi.getCurrentBidder();
 
-        assert pSelecting != pBidding || buy; //if same, buy is flag expected
-        if (!buy) points *= -1;
-        pSelecting.addPoints(-points, PointCategory.BAZAAR_AUCTION);
-        if (pSelecting != pBidding) {
-            pBidding.addPoints(points, PointCategory.BAZAAR_AUCTION);
+        assert !pSelecting.equals(pBidding) || option == BuyOrSellOption.BUY; //if same, buy is flag expected
+        if (option == BuyOrSellOption.SELL) points *= -1;
+
+        state = (new AddPoints(pSelecting, -points, PointCategory.BAZAAR_AUCTION)).apply(state);
+        if (!pSelecting.equals(pBidding)) {
+            state = (new AddPoints(pBidding, points, PointCategory.BAZAAR_AUCTION)).apply(state);
         }
 
-        bi.setOwner(buy ? pSelecting : pBidding);
-        bi.setCurrentBidder(null);
-        nextSelectingPlayer();
+        bi = bi.setOwner(option == BuyOrSellOption.BUY ? pSelecting : pBidding);
+        bi = bi.setCurrentBidder(null);
+
+        model = model.updateSupplyItem(model.getAuctionedItemIndex(), bi);
+        state = state.setCapabilityModel(BazaarCapability.class, model);
+
+        return nextSelectingPlayer(state);
     }
-
-
 }

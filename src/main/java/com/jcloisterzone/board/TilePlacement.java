@@ -1,5 +1,8 @@
 package com.jcloisterzone.board;
 
+import java.util.Objects;
+
+import com.jcloisterzone.board.pointer.FeaturePointer;
 
 /**
  * Represents allowed tile placement on particular board position.
@@ -9,9 +12,13 @@ public class TilePlacement implements Comparable<TilePlacement> {
     private final Position position;
     private final Rotation rotation;
 
-    public TilePlacement(Position position, Rotation rotation) {
+    /** not null if bridge must be places to get legal placement */
+    private final FeaturePointer mandatoryBridge;
+
+    public TilePlacement(Position position, Rotation rotation, FeaturePointer mandatoryBridge) {
         this.position = position;
         this.rotation = rotation;
+        this.mandatoryBridge = mandatoryBridge;
     }
 
     public Position getPosition() {
@@ -22,38 +29,37 @@ public class TilePlacement implements Comparable<TilePlacement> {
         return rotation;
     }
 
+    public FeaturePointer getMandatoryBridge() {
+        return mandatoryBridge;
+    }
+
     @Override
     public String toString() {
-        return "[x=" + position.x + ",y=" + position.y + "," + rotation + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append(position).append(",").append(rotation);
+        if (mandatoryBridge != null) {
+            sb.append(",bridge=");
+            sb.append(mandatoryBridge);
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((position == null) ? 0 : position.hashCode());
-        result = prime * result
-                + ((rotation == null) ? 0 : rotation.hashCode());
-        return result;
+        return Objects.hash(position, rotation, mandatoryBridge);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         TilePlacement other = (TilePlacement) obj;
-        if (position == null) {
-            if (other.position != null)
-                return false;
-        } else if (!position.equals(other.position))
-            return false;
-        if (rotation != other.rotation)
-            return false;
+        if (!Objects.equals(position, other.position)) return false;
+        if (!Objects.equals(rotation, other.rotation)) return false;
+        if (!Objects.equals(mandatoryBridge, other.mandatoryBridge)) return false;
         return true;
     }
 

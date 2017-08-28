@@ -10,26 +10,22 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.play.PlayEvent;
+import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
-public class WindRoseCapability extends Capability {
+public class WindRoseCapability extends Capability<Void> {
 
     public static final int WIND_ROSE_POINTS = 3;
 
     private Rotation roseRotation;
     private Position rosePosition;
 
-    public WindRoseCapability(final Game game) {
-        super(game);
-    }
-
     @Override
-    public void handleEvent(Event event) {
+    public void handleEvent(PlayEvent event) {
        if (event instanceof TileEvent) {
            tilePlaced((TileEvent) event);
        }
@@ -66,7 +62,7 @@ public class WindRoseCapability extends Capability {
     }
 
     @Override
-    public void initTile(Tile tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) {
         if (xml.hasAttribute("wind-rose")) {
             Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
             tile.setWindRose(loc);

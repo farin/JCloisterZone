@@ -9,11 +9,11 @@ import java.awt.image.BufferedImage;
 
 public class TextureFactory {
 
-    private final int squareSize;
+    private final int tileWidth;
     private int seq;
 
-    public TextureFactory(int squareSize) {
-        this.squareSize = squareSize;
+    public TextureFactory(int tileWidth) {
+        this.tileWidth = tileWidth;
     }
 
     public TexturePaint create(Color c) {
@@ -32,7 +32,7 @@ public class TextureFactory {
     }
 
     public TexturePaint createMultiColor(Color[] c) {
-        int a = squareSize/12;
+        int a = tileWidth/12;
         BufferedImage bi = new BufferedImage(a, a*(c.length+1), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
         for (int i = 0; i < c.length; i++) {
@@ -43,7 +43,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createDiagonalUp(Color c) {
-        int a = squareSize/4;
+        int a = tileWidth/4;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -54,7 +54,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createDiagonalDown(Color c) {
-        int a = squareSize/4;
+        int a = tileWidth/4;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -65,7 +65,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createVertical(Color c) {
-        int a = squareSize/6;
+        int a = tileWidth/6;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -75,7 +75,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createHorizontal(Color c) {
-        int a = squareSize/6;
+        int a = tileWidth/6;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -85,7 +85,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createDiagonalCheck(Color c) {
-        int a = squareSize/6;
+        int a = tileWidth/6;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -95,7 +95,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createCheck(Color c) {
-        int a = squareSize/6;
+        int a = tileWidth/6;
         if (a % 2 == 1) a++;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -106,7 +106,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createZigZagDown(Color c) {
-        int a = squareSize/4;
+        int a = tileWidth/4;
         if (a % 4 != 0) a = ((a/4)+1)*4;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -119,7 +119,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createZigZagUp(Color c) {
-        int a = squareSize/4;
+        int a = tileWidth/4;
         if (a % 4 != 0) a = ((a/4)+1)*4;
         BufferedImage bi = new BufferedImage(a, a, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
@@ -132,7 +132,7 @@ public class TextureFactory {
     }
 
     private TexturePaint createTriangles(Color c) {
-        int a = squareSize/6;
+        int a = tileWidth/6;
         if (a % 2 == 1) a++;
         int b = (int) (a * Math.sqrt(3.0));
         BufferedImage bi = new BufferedImage(a, b, BufferedImage.TYPE_INT_ARGB);

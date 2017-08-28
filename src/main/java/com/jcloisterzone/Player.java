@@ -2,44 +2,29 @@ package com.jcloisterzone;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.PlayerColor;
 
+import io.vavr.Predicates;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
+import io.vavr.control.Option;
 
-/**
- * Represents one player in game. Contains information about figures, points and
- * control informations.<br>
- *
- * @author Roman Krejcik
- */
+@Immutable
 public class Player implements Serializable {
-
-    private static final long serialVersionUID = -7276471952562769832L;
-
-    private int points;
-    private final Map<PointCategory, Integer> pointStats = new HashMap<>();
-
-    private final List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
-    private final List<Special> specialMeeples = new ArrayList<Special>(3);
-    private final Iterable<Meeple> meeples = Iterables.<Meeple>concat(followers, specialMeeples);
+    private static final long serialVersionUID = 1L;
 
     final private String nick;
     final private int index;
-    private PlayerSlot slot;
-    private final PlayerClock clock = new PlayerClock();
+    final private PlayerSlot slot;
 
     public Player(String nick, int index, PlayerSlot slot) {
         this.nick = nick;
@@ -47,97 +32,24 @@ public class Player implements Serializable {
         this.slot = slot;
     }
 
-    public void addMeeple(Meeple meeple) {
-        if (meeple instanceof Follower) {
-            followers.add((Follower) meeple);
-        } else {
-            specialMeeples.add((Special) meeple);
-        }
-    }
-
-    public List<Follower> getFollowers() {
-        return followers;
-    }
-
-    public List<Special> getSpecialMeeples() {
-        return specialMeeples;
-    }
-
-    public Iterable<Meeple> getMeeples() {
-        return meeples;
-    }
-
-    public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        return Iterables.any(specialMeeples, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public boolean hasFollower() {
-        return Iterables.any(followers, MeeplePredicates.inSupply());
-    }
-
-    public boolean hasFollower(Class<? extends Follower> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        //chcek equality not instanceOf - phantom is subclass of small follower
-        return Iterables.any(followers, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public Meeple getMeepleFromSupply(Class<? extends Meeple> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        Iterable<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? followers : specialMeeples);
-        return Iterables.find(collection, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public void addPoints(int points, PointCategory category) {
-        this.points += points;
-        if (pointStats.containsKey(category)) {
-            pointStats.put(category, pointStats.get(category) + points);
-        } else {
-            pointStats.put(category, points);
-        }
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
     public String getNick() {
         return nick;
-    }
-
-    @Override
-    public String toString() {
-        return nick + " " + points;
     }
 
     public int getIndex() {
         return index;
     }
 
+    public PlayerSlot getSlot() {
+        return slot;
+    }
+
     public PlayerColor getColors() {
         return slot.getColors();
     }
 
-    public PlayerSlot getSlot() {
-        return slot;
-    }
-    public void setSlot(PlayerSlot slot) {
-        this.slot = slot;
-    }
-
-    public PlayerClock getClock() {
-        return clock;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o instanceof Player) {
-            if (((Player) o).index == index && index != -1)
-                return true;
-        }
-        return false;
+    public boolean isLocalHuman() {
+        return slot.isOwn() && !slot.isAi();
     }
 
     @Override
@@ -145,22 +57,98 @@ public class Player implements Serializable {
         return Objects.hash(index, nick);
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o instanceof Player) {
+            return index == ((Player)o).index;
+        }
+        return false;
     }
 
-
-    public int getPointsInCategory(PointCategory cat) {
-        Integer points = pointStats.get(cat);
-        return points == null ? 0 : points;
+    public Player getNextPlayer(GameState state) {
+        int nextPlayerIndex = index == (state.getPlayers().length() - 1) ? 0 : index + 1;
+        return state.getPlayers().getPlayer(nextPlayerIndex);
     }
 
-    public void setPointsInCategory(PointCategory category, int points) {
-        pointStats.put(category, points);
+    public Player getPrevPlayer(GameState state) {
+        int prevPlayerIndex = index == 0 ? state.getPlayers().length() - 1 : index - 1;
+        return state.getPlayers().getPlayer(prevPlayerIndex);
     }
 
-    public boolean isLocalHuman() {
-        return getSlot().isOwn() && !getSlot().isAi();
+    public int getPoints(GameState state) {
+        return state.getPlayers().getScore().get(index).getPoints();
     }
 
+    public int getPointsInCategory(GameState state, PointCategory cat) {
+        HashMap<PointCategory, Integer> pointStats = state.getPlayers().getScore().get(getIndex()).getStats();
+        Option<Integer> points = pointStats.get(cat);
+        return points.getOrElse(0);
+    }
+
+    public Seq<Follower> getFollowers(GameState state) {
+        return state.getPlayers().getFollowers().get(index);
+    }
+
+    public Seq<Special> getSpecialMeeples(GameState state) {
+        return state.getPlayers().getSpecialMeeples().get(index);
+    }
+
+    public Stream<Meeple> getMeeples(GameState state) {
+        return Stream.concat(getFollowers(state), getSpecialMeeples(state));
+    }
+
+    public boolean hasSpecialMeeple(GameState state, Class<? extends Special> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        return !Stream.ofAll(getSpecialMeeples(state))
+            .filter(m -> m.getClass().equals(clazz))
+            .filter(m -> m.isInSupply(state))
+            .isEmpty();
+    }
+
+    public boolean hasFollower(GameState state) {
+        return !Stream.ofAll(getFollowers(state))
+            .filter(m -> m.isInSupply(state))
+            .isEmpty();
+    }
+
+    public boolean hasFollower(GameState state, Class<? extends Follower> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        //check equality not instanceOf - phantom is subclass of small follower
+        return !Stream.ofAll(getFollowers(state))
+                .filter(m -> m.getClass().equals(clazz))
+                .filter(m -> m.isInSupply(state))
+                .isEmpty();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Meeple> T getMeepleFromSupply(GameState state, Class<T> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        Seq<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? getFollowers(state) : getSpecialMeeples(state));
+        return (T) Stream.ofAll(collection)
+            .filter(m -> m.getClass().equals(clazz))
+            .find(m -> m.isInSupply(state))
+            .getOrNull();
+    }
+
+    public Meeple getMeepleFromSupply(GameState state, String meepleId) {
+        return Stream.ofAll(getMeeples(state))
+            .find(m -> m.getId().equals(meepleId))
+            .filter(m -> m.isInSupply(state))
+            .getOrNull();
+    }
+
+    public Vector<Meeple> getMeeplesFromSupply(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
+        return meepleTypes.map(cls -> (Meeple) getMeepleFromSupply(state, cls))
+            .filter(Predicates.isNotNull());
+    }
+
+//    public int getTokens(GameState state, Token token) {
+//        return state.getPlayers().getPlayerTokenCount(index, token);
+//    }
+
+    @Override
+    public String toString() {
+        return nick;
+    }
 }

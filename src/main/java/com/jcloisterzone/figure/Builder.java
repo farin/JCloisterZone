@@ -1,29 +1,34 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.visitor.IsOccupiedAndUncompleted;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
 public class Builder extends Special {
 
-    private static final long serialVersionUID = 1189566966196473830L;
+    private static final long serialVersionUID = 1L;
 
-    public Builder(Game game, Player player) {
-        super(game, player);
+    public Builder(String id, Player player) {
+        super(id, player);
     }
 
     @Override
-    public DeploymentCheckResult isDeploymentAllowed(Feature f) {
-        if (!(f instanceof City || f instanceof Road) ) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+        if (!(feature instanceof City || feature instanceof Road) ) {
             return new DeploymentCheckResult("Builder must be placed in city or on road only.");
         }
-        if (!f.walk(new IsOccupiedAndUncompleted().with(Follower.class))) {
-            return new DeploymentCheckResult("Feature is not occupied by follower or completed.");
+        Completable cf = (Completable) feature;
+        if (cf.isCompleted(state)) {
+            return new DeploymentCheckResult("Feature is completed.");
         }
-        return super.isDeploymentAllowed(f);
+        if (!feature.isOccupiedBy(state, getPlayer())) {
+            return new DeploymentCheckResult("Feature is not occupied by follower.");
+        }
+        return super.isDeploymentAllowed(state, fp, feature);
     }
 
 }

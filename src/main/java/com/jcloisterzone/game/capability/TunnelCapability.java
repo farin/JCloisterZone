@@ -16,18 +16,17 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.TunnelPiecePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.Client;
 
 
-public final class TunnelCapability extends Capability {
+public final class TunnelCapability extends Capability<Void> {
 
     private Road placedTunnelCurrentTurn;
 
@@ -36,8 +35,7 @@ public final class TunnelCapability extends Capability {
 
     private final List<Road> tunnels = new ArrayList<>();
 
-    public TunnelCapability(Game game) {
-        super(game);
+    public TunnelCapability() {
         for (PlayerSlot slot : game.getPlayerSlots()) {
             if (!slot.isOccupied()) continue;
             int slotNumber = (slot.getNumber() + 2) % PlayerSlot.COUNT;
@@ -52,34 +50,15 @@ public final class TunnelCapability extends Capability {
         }
     }
 
-    @Override
-    public Object backup() {
-        return new Object[] {
-            placedTunnelCurrentTurn,
-            new HashMap<>(tunnelTokensA),
-            new HashMap<>(tunnelTokensB)
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        placedTunnelCurrentTurn = (Road) a[0];
-        tunnelTokensA.clear();
-        tunnelTokensA.putAll((Map<Player, Integer>)a[1]);
-        tunnelTokensA.clear();
-        tunnelTokensA.putAll((Map<Player, Integer>)a[2]);
-    }
 
     @Override
     public void initPlayer(Player player) {
         tunnelTokensA.put(player, 2);
-        tunnelTokensB.put(player, game.getAllPlayers().length <= 2 ? 2 : 0);
+        tunnelTokensB.put(player, game.getAllPlayers().length() <= 2 ? 2 : 0);
     }
 
     @Override
-    public void initFeature(Tile tile, Feature feature, Element xml) {
+    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (!(feature instanceof Road)) return;
         Road road = (Road) feature;
         if (road.isTunnelEnd()) {
@@ -147,7 +126,7 @@ public final class TunnelCapability extends Capability {
     }
 
     public void placeTunnelPiece(FeaturePointer fp, boolean isB) {
-        Road road = (Road) getBoard().get(fp);
+        Road road = (Road) getBoard().getPlayer(fp);
         if (!road.isTunnelOpen()) {
             throw new IllegalStateException("No open tunnel here.");
         }
@@ -194,13 +173,13 @@ public final class TunnelCapability extends Capability {
         NodeList nl = node.getElementsByTagName("placed-tunnel");
         if (nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
-            placedTunnelCurrentTurn = (Road) getBoard().get(XMLUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
+            placedTunnelCurrentTurn = (Road) getBoard().getPlayer(XMLUtils.extractPosition(el)).getFeature(Location.valueOf(el.getAttribute("location")));
         }
         nl = node.getElementsByTagName("tunnel");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             FeaturePointer fp = XMLUtils.extractFeaturePointer(el);
-            Road road = (Road) getBoard().get(fp);
+            Road road = (Road) getBoard().getPlayer(fp);
             if (!road.isTunnelEnd()) {
                 logger.error("Tunnel end does not exist.");
                 continue;

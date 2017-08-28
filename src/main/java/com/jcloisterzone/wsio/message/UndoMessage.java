@@ -6,10 +6,14 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class UndoMessage implements WsInGameMessage {
 
     private String gameId;
+    /** notifies server hot to cut replay history,
+     *  because server doesn't understand game rules */
+    private int replaySize;
 
-    public UndoMessage(String gameId) {
+    public UndoMessage(String gameId, int replaySize) {
         super();
         this.gameId = gameId;
+        this.replaySize = replaySize;
     }
 
     public String getGameId() {
@@ -20,5 +24,11 @@ public class UndoMessage implements WsInGameMessage {
         this.gameId = gameId;
     }
 
+    public int getReplaySize() {
+        return replaySize;
+    }
 
+    public void setReplaySize(int replaySize) {
+        this.replaySize = replaySize;
+    }
 }

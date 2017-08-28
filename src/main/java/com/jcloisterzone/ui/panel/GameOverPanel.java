@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.figure.SmallFollower;
@@ -31,16 +27,20 @@ import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.game.capability.ClothWineGrainCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
+import com.jcloisterzone.game.state.CapabilitiesState;
+import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
+
+import net.miginfocom.swing.MigLayout;
 
 public class GameOverPanel extends JPanel {
 
@@ -115,20 +115,22 @@ public class GameOverPanel extends JPanel {
     class PointStatsPanel extends JPanel {
 
         public PointStatsPanel() {
+            GameState state = game.getState();
+            CapabilitiesState capabilities = state.getCapabilities();
 
             //setTitle(_("Game overview"));
-            boolean hasBazaars = game.hasCapability(BazaarCapability.class) && !game.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
+            boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
 
             StringBuilder rowSpec = new StringBuilder("[][]10[]10[]20[][][][]");
-            if (game.hasCapability(CastleCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(CastleCapability.class)) rowSpec.append("[]");
             rowSpec.append("20"); //gap
-            if (game.hasCapability(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
-            if (game.hasCapability(ClothWineGrainCapability.class)) rowSpec.append("[]");
-            if (game.hasCapability(GoldminesCapability.class)) rowSpec.append("[]");
-            if (game.hasCapability(FairyCapability.class)) rowSpec.append("[]");
-            if (game.hasCapability(TowerCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
+            if (capabilities.contains(TradeGoodsCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(GoldminesCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(FairyCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(TowerCapability.class)) rowSpec.append("[]");
             if (hasBazaars) rowSpec.append("[]");
-            if (game.hasCapability(WindRoseCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(WindRoseCapability.class)) rowSpec.append("[]");
 
             setOpaque(false);
             setLayout(new MigLayout("ins 0", "", rowSpec.toString()));
@@ -142,35 +144,35 @@ public class GameOverPanel extends JPanel {
             add(new JLabel(_("Cities")), getLegendSpec(0, gridy++));
             add(new JLabel(_("Cloisters")), getLegendSpec(0, gridy++));
             add(new JLabel(_("Farms")), getLegendSpec(0, gridy++));
-            if (game.hasCapability(CastleCapability.class)) {
+            if (capabilities.contains(CastleCapability.class)) {
                 add(new JLabel(_("Castles")), getLegendSpec(0, gridy++));
             }
 
-            if (game.hasCapability(KingAndRobberBaronCapability.class)) {
+            if (capabilities.contains(KingAndRobberBaronCapability.class)) {
                 add(new JLabel(_("The biggest city")), getLegendSpec(0, gridy++));
                 add(new JLabel(_("The longest road")), getLegendSpec(0, gridy++));
             }
 
-            if (game.hasCapability(ClothWineGrainCapability.class)) {
+            if (capabilities.contains(TradeGoodsCapability.class)) {
                 add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
             }
-            if (game.hasCapability(GoldminesCapability.class)) {
+            if (capabilities.contains(GoldminesCapability.class)) {
                 add(new JLabel(_("Gold")), getLegendSpec(0, gridy++));
             }
-            if (game.hasCapability(FairyCapability.class)) {
+            if (capabilities.contains(FairyCapability.class)) {
                 add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
             }
-            if (game.hasCapability(TowerCapability.class)) {
+            if (capabilities.contains(TowerCapability.class)) {
                 add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
             }
             if (hasBazaars) {
                 add(new JLabel(_("Bazaars")), getLegendSpec(0, gridy++));
             }
-            if (game.hasCapability(WindRoseCapability.class)) {
+            if (capabilities.contains(WindRoseCapability.class)) {
                 add(new JLabel(_("Wind rose")), getLegendSpec(0, gridy++));
             }
 
-            Player[] players = getSortedPlayers().toArray(new Player[game.getAllPlayers().length]);
+            Player[] players = getSortedPlayers().toArray(new Player[state.getPlayers().length()]);
             for (Player player : players) {
                 gridy = 0;
                 Color color = player.getColors().getMeepleColor();
@@ -180,48 +182,49 @@ public class GameOverPanel extends JPanel {
                 add(new JLabel(player.getNick(), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
                 add(new JLabel(getRank(players, gridx), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                add(new JLabel("" +player.getPoints(), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel("" +player.getPoints(state), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-                add(new JLabel("" +player.getPointsInCategory(PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                add(new JLabel("" +player.getPointsInCategory(PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                add(new JLabel("" +player.getPointsInCategory(PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                add(new JLabel("" +player.getPointsInCategory(PointCategory.FARM), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                if (game.hasCapability(CastleCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.CASTLE), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                }
-
-                if (game.hasCapability(KingAndRobberBaronCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.BIGGEST_CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.LONGEST_ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel("" +player.getPointsInCategory(state, PointCategory.FARM), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                if (capabilities.contains(CastleCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CASTLE), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
 
-                if (game.hasCapability(ClothWineGrainCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.TRADE_GOODS), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                if (capabilities.contains(KingAndRobberBaronCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.BIGGEST_CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.LONGEST_ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
-                if (game.hasCapability(GoldminesCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.GOLD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+
+                if (capabilities.contains(TradeGoodsCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.TRADE_GOODS), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
-                if (game.hasCapability(FairyCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                if (capabilities.contains(GoldminesCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.GOLD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
-                if (game.hasCapability(TowerCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.TOWER_RANSOM), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                if (capabilities.contains(FairyCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                }
+                if (capabilities.contains(TowerCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.TOWER_RANSOM), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
                 if (hasBazaars) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.BAZAAR_AUCTION), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.BAZAAR_AUCTION), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
-                if (game.hasCapability(WindRoseCapability.class)) {
-                    add(new JLabel("" +player.getPointsInCategory(PointCategory.WIND_ROSE), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                if (capabilities.contains(WindRoseCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.WIND_ROSE), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
                 gridx++;
             }
         }
 
         private String getRank(Player[] players, int i) {
+            GameState state = game.getState();
             int endrank = i+1;
-            while(i > 0 && players[i-1].getPoints() == players[i].getPoints()) i--; //find start of group
+            while(i > 0 && players[i-1].getPoints(state) == players[i].getPoints(state)) i--; //find start of group
             while(endrank < players.length) {
-                if (players[endrank].getPoints() != players[i].getPoints()) break;
+                if (players[endrank].getPoints(state) != players[i].getPoints(state)) break;
                 endrank++;
             }
             if (endrank == i+1) {
@@ -239,12 +242,13 @@ public class GameOverPanel extends JPanel {
         }
 
         private List<Player> getSortedPlayers() {
-            List<Player> players = new ArrayList<>(Arrays.asList(game.getAllPlayers()));
+            GameState state = game.getState();
+            List<Player> players = state.getPlayers().getPlayers().toJavaList();
             Collections.sort(players, new Comparator<Player>() {
                 @Override
                 public int compare(Player o1, Player o2) {
-                    if (o1.getPoints() < o2.getPoints()) return 1;
-                    if (o1.getPoints() > o2.getPoints()) return -1;
+                    if (o1.getPoints(state) < o2.getPoints(state)) return 1;
+                    if (o1.getPoints(state) > o2.getPoints(state)) return -1;
                     return o1.getNick().compareToIgnoreCase(o2.getNick());
                 }
             });

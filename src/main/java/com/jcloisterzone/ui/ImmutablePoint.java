@@ -1,9 +1,12 @@
 package com.jcloisterzone.ui;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Rotation;
 
-
+@Immutable
 public class ImmutablePoint {
+
+    public static final ImmutablePoint ZERO = new ImmutablePoint(0, 0);
 
     private final int x;
     private final int y;
@@ -19,6 +22,10 @@ public class ImmutablePoint {
 
     public int getY() {
         return y;
+    }
+
+    public ImmutablePoint add(int tx, int ty) {
+        return new ImmutablePoint(x + tx, y + ty);
     }
 
     public ImmutablePoint scale(int tileWidth, int tileHeight) {
@@ -92,7 +99,7 @@ public class ImmutablePoint {
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         return getClass().getName() + "[x=" + x + ",y=" + y + "]";
     }
 }

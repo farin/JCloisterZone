@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +18,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -42,9 +39,11 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
-import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class ChannelPanel extends ThemedJPanel {
@@ -74,9 +73,9 @@ public class ChannelPanel extends ThemedJPanel {
         gameListPanel.setLayout(new MigLayout("ins rel 0, gap 0 rel", "[grow]", ""));
         //HACK
         if (client.getTheme().isDark()) {
-        	gameListPanel.setBackground(client.getTheme().getMainBg());
+            gameListPanel.setBackground(client.getTheme().getMainBg());
         } else {
-        	gameListPanel.setBackground(new Color(180, 180, 180));
+            gameListPanel.setBackground(new Color(180, 180, 180));
         }
 
 
@@ -165,7 +164,7 @@ public class ChannelPanel extends ThemedJPanel {
         public GameItemPanel(final GameController gc) {
             final Game game = gc.getGame();
             setLayout(new MigLayout());
-            expansions = new HashSet<Expansion>(game.getExpansions());
+            expansions = game.getSetup().getExpansions().toJavaSet();
             expansions.remove(Expansion.BASIC);
 
             name = new ThemedJLabel(game.getName());
@@ -185,7 +184,7 @@ public class ChannelPanel extends ThemedJPanel {
                 buttons.add(password, "width 160");
             }
 
-            joinButton = new JButton(gc.getGameState() == GameState.OPEN ? _("Join game") : _("Continue"));
+            joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _("Join game") : _("Continue"));
             joinButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -198,7 +197,7 @@ public class ChannelPanel extends ThemedJPanel {
             });
             buttons.add(joinButton);
 
-            if (gc.getGameState() != GameState.OPEN) {
+            if (gc.getGameStatus() != GameStatus.OPEN) {
                 abandonButton = new JButton(_("Remove game"));
                 abandonButton.addActionListener(new ActionListener() {
                     @Override

@@ -1,26 +1,33 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.figure.neutral.Mage;
-import com.jcloisterzone.figure.neutral.Witch;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
-//todo generic NeutralMeepleAction
+import io.vavr.collection.Set;
+
+//TODO generic NeutralMeepleAction
 public class MageAndWitchAction extends SelectFeatureAction {
 
-    private final boolean mage;
+    private final String figureId;
 
-    public MageAndWitchAction(boolean mage) {
-        super(mage ? "mage": "witch");
-        this.mage = mage;
+    public MageAndWitchAction(String figureId, Set<FeaturePointer> options) {
+        super(options);
+        this.figureId = figureId;
     }
 
     @Override
-    public void perform(RmiProxy server, FeaturePointer target) {
-        if (mage) {
-            server.moveNeutralFigure(target, Mage.class);
-        } else {
-            server.moveNeutralFigure(target, Witch.class);
-        }
+    public void perform(GameController gc, FeaturePointer target) {
+        gc.getConnection().send(
+            new MoveNeutralFigureMessage(gc.getGameId(), figureId, target));
+    }
+
+    public String getFigureId() {
+        return figureId;
+    }
+
+    @Override
+    public String toString() {
+        return "move " + figureId;
     }
 }

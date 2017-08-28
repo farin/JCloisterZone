@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <discard tile="R1.I.s"/>
-    <discard tile="R2.I.s"/>
-
-    <tile id="RFI" group="river-start">
+    <tile id="RFI" if-capability="com.jcloisterzone.game.capability.RiverCapability">
         <river>E</river>
         <road>W</road>
         <farm>WR NL NR EL</farm>
         <farm>ER SL SR WL</farm>
-        <position x="0" y="0"/>
+        <position x="0" y="0" priority="4"/>
     </tile>
-    <tile id="CICI" group="river">
+    <tile id="CICI" group="river" if-capability="com.jcloisterzone.game.capability.RiverCapability">
         <river>W E</river>
         <city castle-base="true">N</city>
         <city castle-base="true">S</city>

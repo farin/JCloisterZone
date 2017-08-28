@@ -1,27 +1,29 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.visitor.IsOccupied;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
+
+import io.vavr.control.Option;
 
 public class Pig extends Special {
 
-    private static final long serialVersionUID = -6315956811639409025L;
+    private static final long serialVersionUID = 1L;
 
-    public Pig(Game game, Player player) {
-        super(game, player);
+    public Pig(String id, Player player) {
+        super(id, player);
     }
 
     @Override
-    public DeploymentCheckResult isDeploymentAllowed(Feature farm) {
-        if (!(farm instanceof Farm)) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+        if (!(feature instanceof Farm)) {
             return new DeploymentCheckResult("Pig must be placed on a farm only.");
         }
-        if (!farm.walk(new IsOccupied().with(Follower.class))) {
-            return new DeploymentCheckResult("Feature is not occupied by follower.");
+        if (!feature.isOccupiedBy(state, getPlayer())) {
+            return new DeploymentCheckResult("Farm is not occupied by follower.");
         }
-        return super.isDeploymentAllowed(farm);
+        return super.isDeploymentAllowed(state, fp, feature);
     }
 }

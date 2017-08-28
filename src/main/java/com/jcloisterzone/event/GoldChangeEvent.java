@@ -2,10 +2,11 @@ package com.jcloisterzone.event;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 
-public class GoldChangeEvent extends PlayEvent implements Undoable {
+public class GoldChangeEvent extends PlayEvent {
 
     private final Position pos;
     private final int prevCount;
@@ -28,16 +29,5 @@ public class GoldChangeEvent extends PlayEvent implements Undoable {
 
     public int getPrevCount() {
         return prevCount;
-    }
-
-    @Override
-    public void undo(Game game) {
-        GoldminesCapability goCap = game.getCapability(GoldminesCapability.class);
-        goCap.setGoldCount(pos, prevCount);
-    }
-
-    @Override
-    public Event getInverseEvent() {
-        return new GoldChangeEvent(null, pos, currCount, prevCount);
     }
 }

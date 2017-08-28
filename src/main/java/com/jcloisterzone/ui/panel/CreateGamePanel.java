@@ -34,14 +34,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.board.TilePackFactory;
+import com.jcloisterzone.board.TilePackBuilder;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
@@ -62,6 +60,8 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
+
+import net.miginfocom.swing.MigLayout;
 
 public class CreateGamePanel extends ThemedJPanel {
 
@@ -209,13 +209,13 @@ public class CreateGamePanel extends ThemedJPanel {
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
 
-        TilePackFactory tilePackFactory = new TilePackFactory();
-        tilePackFactory.setConfig(client.getConfig());
+        TilePackBuilder tilePackBuilder = new TilePackBuilder();
+        tilePackBuilder.setConfig(client.getConfig());
 
         expansionPanel.setLayout(new MigLayout("gapy 1", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
-            createExpansionLine(exp, tilePackFactory.getExpansionSize(exp));
+            createExpansionLine(exp, tilePackBuilder.getExpansionSize(exp));
         }
         scrolled.add(expansionPanel, "cell 1 0,grow");
 
@@ -257,7 +257,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         clockPanel.setLayout(new MigLayout("", "[][][]", ""));
 
-        Integer value = (Integer) game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME);
+        Integer value = (Integer) game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull();
         timeLimitChbox = new ThemedJCheckBox(_("player time limit"), value != null);
         timeLimitChbox.setEnabled(mutableSlots);
         timeLimitSpinner = new JSpinner();
@@ -283,7 +283,7 @@ public class CreateGamePanel extends ThemedJPanel {
                 public void stateChanged(ChangeEvent e) {
                     if (timeLimitChbox.isSelected()) {
                         Integer value = timeLimitModel.getNumber().intValue() * 60;
-                        if (value != game.getCustomRules().get(CustomRule.CLOCK_PLAYER_TIME)) {
+                        if (value != game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull()) {
                             client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, value));
                         }
                     }
@@ -456,13 +456,13 @@ public class CreateGamePanel extends ThemedJPanel {
 
     private PresetConfig createCurrentConfig() {
         List<String> expansions = new ArrayList<>();
-        for (Expansion exp : game.getExpansions()) {
+        for (Expansion exp : game.getSetup().getExpansions()) {
             if (exp == Expansion.BASIC) continue;
             expansions.add(exp.name());
         }
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
-        config.setRules(game.getCustomRules());
+        config.setRules(game.getSetup().getRules().toJavaMap());
         return config;
     }
 
@@ -489,7 +489,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
     private JCheckBox createRuleCheckbox(final CustomRule rule,
             boolean mutableSlots) {
-        JCheckBox chbox = new ThemedJCheckBox(rule.getLabel(), game.getBooleanValue(rule));
+        JCheckBox chbox = new ThemedJCheckBox(rule.getLabel(), game.getSetup().getBooleanValue(rule));
         if (mutableSlots) {
             chbox.addActionListener(new ActionListener() {
                 @Override
@@ -506,7 +506,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
-        JCheckBox chbox = new ThemedJCheckBox(exp.toString(), game.hasExpansion(exp));
+        JCheckBox chbox = new ThemedJCheckBox(exp.toString(), game.getSetup().hasExpansion(exp));
         if (!exp.isImplemented() || !mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
@@ -606,7 +606,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
-            boolean randomSeating = game.getBooleanValue(CustomRule.RANDOM_SEATING_ORDER);
+            boolean randomSeating = game.getSetup().getBooleanValue(CustomRule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
                 if (!(c instanceof CreateGamePlayerPanel)) continue;
                 CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;

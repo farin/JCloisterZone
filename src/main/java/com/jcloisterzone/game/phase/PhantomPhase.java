@@ -2,42 +2,28 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.SelectActionEvent;
 import com.jcloisterzone.feature.visitor.IsOccupied;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.FlierCapability;
-import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.PhantomCapability;
-import com.jcloisterzone.game.capability.PrincessCapability;
-import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
+import com.jcloisterzone.wsio.message.DeployMeepleMessage;
+import com.jcloisterzone.wsio.message.PassMessage;
 
+@RequiredCapability(PhantomCapability.class)
 public class PhantomPhase extends Phase {
 
-    private final TowerCapability towerCap;
-    private final FlierCapability flierCap;
-    private final PrincessCapability princessCap;
-    private final GermanMonasteriesCapability gmCap;
-
-    public PhantomPhase(Game game) {
-        super(game);
-        towerCap = game.getCapability(TowerCapability.class);
-        flierCap = game.getCapability(FlierCapability.class);
-        princessCap = game.getCapability(PrincessCapability.class);
-        gmCap = game.getCapability(GermanMonasteriesCapability.class);
-    }
-
-    @Override
-    public boolean isActive() {
-        return game.hasCapability(PhantomCapability.class);
+    public PhantomPhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
@@ -76,14 +62,14 @@ public class PhantomPhase extends Phase {
         }
     }
 
-    @Override
-    public void deployMeeple(FeaturePointer fp, Class<? extends Meeple> meepleType) {
+    @WsSubscribe
+    public void handleDeployMeeple(DeployMeepleMessage msg) {
         if (!meepleType.equals(Phantom.class)) {
             throw new IllegalArgumentException("Only phantom can be placed as second follower.");
         }
         Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
         if (m instanceof Follower) {
-            if (getBoard().get(fp).walk(new IsOccupied())) {
+            if (getBoard().getPlayer(fp).walk(new IsOccupied())) {
                 throw new IllegalArgumentException("Feature is occupied.");
             }
         }
@@ -91,8 +77,8 @@ public class PhantomPhase extends Phase {
         next();
     }
 
-    @Override
-    public void pass() {
+    @WsSubscribe
+    public void handlePass(PassMessage msg) {
         game.clearLastUndoable();
         next();
     }

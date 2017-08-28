@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
@@ -10,6 +11,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.UndeployAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.CornCircleSelectOptionEvent;
 import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.event.SelectActionEvent;
@@ -23,24 +25,17 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCicleOption;
-import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.PassMessage;
+import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 
-public class CornCirclePhase extends ServerAwarePhase {
+@RequiredCapability(CornCircleCapability.class)
+public class CornCirclePhase extends Phase {
 
-    private final CornCircleCapability cornCircleCap;
-
-    public CornCirclePhase(Game game, GameController controller) {
-        super(game, controller);
-        cornCircleCap = game.getCapability(CornCircleCapability.class);
-    }
-
-    @Override
-    public boolean isActive() {
-        return game.hasCapability(CornCircleCapability.class);
+    public CornCirclePhase(Config config, Random random) {
+        super(config, random);
     }
 
     @Override
@@ -160,8 +155,8 @@ public class CornCirclePhase extends ServerAwarePhase {
         return Collections.<PlayerAction<?>>singletonList(action);
     }
 
-    @Override
-    public void undeployMeeple(MeeplePointer mp) {
+    @WsSubscribe
+    public void handleReturnMeeple(ReturnMeepleMessage msg) {
         if (cornCircleCap.getCornCircleOption() != CornCicleOption.REMOVAL) {
             logger.error("Removal not selected as corn options.");
             return;
@@ -182,7 +177,7 @@ public class CornCirclePhase extends ServerAwarePhase {
             logger.error("Deployment wasn't selected as corn options.");
             return;
         }
-        List<Meeple> meeples = getBoard().get(fp).getMeeples();
+        List<Meeple> meeples = getBoard().getPlayer(fp).getMeeples();
         if (meeples.isEmpty()) {
             logger.error("Feature must be occupied");
             return;
@@ -197,22 +192,12 @@ public class CornCirclePhase extends ServerAwarePhase {
         nextCornPlayer();
     }
 
-    @Override
-    public void pass() {
+    @WsSubscribe
+    public void handlePass(PassMessage msg) {
         if (cornCircleCap.getCornCircleOption() == CornCicleOption.REMOVAL) {
             logger.error("Removal cannot be passed");
             return;
         }
         nextCornPlayer();
-    }
-
-    @Override
-    public void loadGame(Snapshot snapshot) {
-        setEntered(true); //avoid call enter on load phase to this phase switch
-        if (cornCircleCap.getCornCircleOption() == null) {
-            game.post(new CornCircleSelectOptionEvent(game.getActivePlayer(), getTile().getPosition()));
-        } else {
-            prepareCornAction();
-        }
     }
 }

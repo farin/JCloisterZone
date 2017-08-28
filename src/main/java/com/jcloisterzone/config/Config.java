@@ -98,7 +98,7 @@ public class Config {
                     LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
                 }
             }
-            conn.send(new GameSetupMessage(gameId, rules, expansionSet, null));
+            conn.send(new GameSetupMessage(gameId, rules, expansionSet));
         }
     }
 

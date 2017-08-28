@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,14 +12,21 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
+import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.figure.neutral.Fairy;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.NeutralFiguresState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import io.vavr.collection.Seq;
 
 public class NeutralFigurePanel extends JComponent {
 
@@ -37,17 +46,10 @@ public class NeutralFigurePanel extends JComponent {
     private int realHeight = 1;
     private int bx = 0, by = 0;
 
-    private final DragonCapability dragonCap;
-    private final FairyCapability fairyCap;
-    private final MageAndWitchCapability mwCap;
-
     public NeutralFigurePanel(Client client, Game game, PlayerPanelImageCache cache) {
-    	this.client = client;
+        this.client = client;
         this.game = game;
         this.cache = cache;
-        dragonCap = game.getCapability(DragonCapability.class);
-        fairyCap = game.getCapability(FairyCapability.class);
-        mwCap = game.getCapability(MageAndWitchCapability.class);
     }
 
     private Rectangle drawMeepleBox(Graphics2D g2, String imgKey) {
@@ -85,19 +87,21 @@ public class NeutralFigurePanel extends JComponent {
         bx = PADDING_L;
         by = PADDING_L;
 
-        if (dragonCap != null && dragonCap.getDragon().isInSupply()) {
+        GameState state = game.getState();
+
+        NeutralFiguresState nfState = state.getNeutralFigures();
+
+        if (nfState.getDragon() != null && nfState.getDragonDeployment() == null) {
             drawMeepleBox(g2, "dragon", -7, -6);
         }
-        if (fairyCap != null && fairyCap.getFairy().isInSupply()) {
+        if (nfState.getFairy() != null && nfState.getFairyDeployment() == null) {
             drawMeepleBox(g2, "fairy");
         }
-        if (mwCap != null) {
-            if (mwCap.getMage().isInSupply()) {
-                drawMeepleBox(g2, "mage");
-            }
-            if (mwCap.getWitch().isInSupply()) {
-                drawMeepleBox(g2, "witch");
-            }
+        if (nfState.getMage() != null && nfState.getMageDeployment() == null) {
+            drawMeepleBox(g2, "mage");
+        }
+        if (nfState.getWitch() != null && nfState.getWitchDeployment() == null) {
+            drawMeepleBox(g2, "witch");
         }
 
         //TODO show unassigned gold mines

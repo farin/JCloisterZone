@@ -11,7 +11,9 @@ import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
@@ -21,7 +23,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +30,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.bugreport.BugReportDialog;
-import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.save.SavedGame;
+import com.jcloisterzone.game.save.SavedGameParser;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
@@ -55,7 +56,6 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     private boolean gameRunning = true; //is it needed, what about use game state (but force close don't change it)
 
     private ChatPanel chatPanel;
-    private Snapshot snapshot;
 
     private MainPanel mainPanel;
 
@@ -95,7 +95,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         pane.add(mainPanel);
 
         gc.getReportingTool().setContainer(mainPanel);
-        mainPanel.started(snapshot);
+        mainPanel.started();
 
         gc.register(chatPanel);
         gc.register(this);
@@ -113,8 +113,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	menu.setItemEnabled(MenuItem.UNDO, false);
-                gc.getConnection().send(new UndoMessage(game.getGameId()));
+                menu.setItemEnabled(MenuItem.UNDO, false);
+                int replaySize = game.getUndoHistory().head().getReplay().size();
+                gc.getConnection().send(new UndoMessage(game.getGameId(), replaySize));
             }
         });
         menu.setItemActionListener(MenuItem.ZOOM_IN, new ActionListener() {
@@ -143,7 +144,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
-        	mainPanel.toggleRecentHistory(true);
+            mainPanel.toggleRecentHistory(true);
         }
         menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
             @Override
@@ -153,7 +154,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.FARM_HINTS)) {
-        	mainPanel.setShowFarmHints(true);
+            mainPanel.setShowFarmHints(true);
         }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
             @Override
@@ -163,7 +164,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             }
         });
         if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
-        	getControlPanel().setShowProjectedPoints(true);
+            getControlPanel().setShowProjectedPoints(true);
         }
         menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
             @Override
@@ -273,18 +274,18 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
-    	String message = _("Connection lost") + ". " + _("Reconnecting...");
+        String message = _("Connection lost") + ". " + _("Reconnecting...");
         if (remote) {
-        	if (gc.getChannel() == null) {
-        		if (!game.isOver()) {
-        			//simple server sends game message automatically, send game id for online server only
-        			gc.getConnection().reconnect(null);
-        			getGridPanel().showErrorMessage(message);
-        		}
-        	} else {
-        		gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
-        		getGridPanel().showErrorMessage(message);
-        	}
+            if (gc.getChannel() == null) {
+                if (!game.isOver()) {
+                    //simple server sends game message automatically, send game id for online server only
+                    gc.getConnection().reconnect(null);
+                    getGridPanel().showErrorMessage(message);
+                }
+            } else {
+                gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
+                getGridPanel().showErrorMessage(message);
+            }
         }
     }
 
@@ -327,7 +328,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             if (result) e.consume();
             return result;
         } else if (e.getID() == KeyEvent.KEY_TYPED) {
-        	e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
+            e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
             return dispatchKeyTyped(e);
         }
         return false;
@@ -385,14 +386,6 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         this.chatPanel = chatPanel;
     }
 
-    public Snapshot getSnapshot() {
-        return snapshot;
-    }
-
-    public void setSnapshot(Snapshot snapshot) {
-        this.snapshot = snapshot;
-    }
-
     //helpers
 
     public GridPanel getGridPanel() {
@@ -421,6 +414,14 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     public void handleSave() {
+//        SavedGame save = new SavedGame(game);
+//        SavedGameParser parser = new SavedGameParser();
+//        String content = parser.toJson(save);
+//
+//        System.err.println(content);
+//
+//        save = parser.fromJson(content);
+//
         JFileChooser fc = new JFileChooser(client.getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Save game"));
@@ -434,14 +435,18 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 if (!file.getName().endsWith(".jcz")) {
                     file = new File(file.getAbsolutePath() + ".jcz");
                 }
-                try {
-                    Snapshot snapshot = new Snapshot(game);
-                    DebugConfig debugConfig = client.getConfig().getDebug();
-                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
-                        snapshot.setGzipOutput(false);
-                    }
-                    snapshot.save(new FileOutputStream(file));
-                } catch (IOException | TransformerException ex) {
+                try (Writer writer = new FileWriter(file)) {
+                    SavedGame save = new SavedGame(game);
+                    SavedGameParser parser = new SavedGameParser();
+                    parser.toJson(save, writer);
+
+//                    Snapshot snapshot = new Snapshot(game);
+//                    DebugConfig debugConfig = client.getConfig().getDebug();
+//                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
+//                        snapshot.setGzipOutput(false);
+//                    }
+//                    snapshot.save(new FileOutputStream(file));
+                } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 }
@@ -460,7 +465,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
          //player names:
          StringBuilder players = new StringBuilder();
          boolean hasAi = false;
-         for (Player p : game.getAllPlayers()) {
+         for (Player p : game.getState().getPlayers().getPlayers()) {
              if (p.getSlot().isAi()) {
                  hasAi = true;
              } else {
