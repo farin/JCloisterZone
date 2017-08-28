@@ -286,10 +286,15 @@ public class TilePackBuilder {
             });
         });
 
+
+        /* sort groups and tiles to getdeterministic item order
+         * This required for stable behavior when game is loaded with same seed, tiles must return same tile for same index
+         */
         LinkedHashMap<String, TileGroup> groups = LinkedHashMap.empty();
-        for (Entry<String, java.util.List<TileDefinition>> entry : tiles.entrySet()) {
-            String name = entry.getKey();
-            groups = groups.put(name, new TileGroup(name, Vector.ofAll(entry.getValue()), true));
+        Vector<String> groupNames = Vector.ofAll(tiles.keySet()).sorted();
+        for (String name : groupNames) {
+            java.util.List<TileDefinition> groupTiles = tiles.get(name);
+            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(t -> t.getId()), true));
         }
 
         return new Tiles(

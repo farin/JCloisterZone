@@ -30,8 +30,6 @@ import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PlaceBridge;
 import com.jcloisterzone.reducers.PlaceTile;
-import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 
