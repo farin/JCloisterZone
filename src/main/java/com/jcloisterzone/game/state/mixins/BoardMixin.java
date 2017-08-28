@@ -116,4 +116,13 @@ public interface BoardMixin {
             .map(Tuple2::_2)
             .getOrNull();
     }
+
+    /** Returns Tuple2 with feature and "full" feature pointer.
+     */
+    default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(FeaturePointer fp) {
+        FeaturePointer normFp = fp.getLocation() == Location.ABBOT ? fp.setLocation(Location.CLOISTER) : fp;
+        return getFeatureMap()
+            .find(t -> normFp.isPartOf(t._1))
+            .getOrNull();
+    }
 }

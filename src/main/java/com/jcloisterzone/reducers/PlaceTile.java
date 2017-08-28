@@ -16,6 +16,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashMap;
@@ -54,10 +55,34 @@ public class PlaceTile implements Reducer {
                     java.util.Set<Feature> alreadyMerged = new java.util.HashSet<>();
                     Stream<FeaturePointer> adjacent = feature.getPlaces().get().getAdjacent(feature.getClass());
                     feature = adjacent.foldLeft((MultiTileFeature) feature, (f, adjFp) -> {
-                        MultiTileFeature adj = (MultiTileFeature) _state.getFeaturePartOf(adjFp);
-                        if (adj == null || alreadyMerged.contains(adj)) return f;
-                        alreadyMerged.add(adj);
-                        return f.merge(adj);
+                        // find adjacent feature part (already placed)
+                        Tuple2<FeaturePointer, Feature> adjTuple = _state.getFeaturePartOf2(adjFp);
+                        MultiTileFeature adj = adjTuple == null ? null : (MultiTileFeature) adjTuple._2;
+
+                        if (adj == null || alreadyMerged.contains(adj)) {
+                            // adjacent tile is empty or adjacent feature is same as feature adjacent (already processed) to other side
+                            return f;
+                        }
+
+                        // if needs merge, check if state contains recent feature version
+                        MultiTileFeature recentAdj = adj;
+                        if (fpUpdate.containsKey(adjTuple._1)) { // "full" feature pointer from adjTuple must be used instead of "part of" adjFp
+                            // not recent - adj is going to be replaced by previous iteration of forEach
+                            // (separated feature on the placed tile is merging to same adjacent feature
+                            // Eg. road crossing is closing road ring
+                            //         |
+                            //     ....|....+....
+                            //    .    |    .      <<< just placed
+                            //    .    |    .
+                            // --------+---------
+                            //    .    |    .
+                            //    .    |    .
+                            //     ....|....
+                            //         |
+                            recentAdj = (MultiTileFeature) fpUpdate.get(adjTuple._1);
+                        }
+                        alreadyMerged.add(adj); //still track original adj, because it is compared at the begining of condition
+                        return f.merge(recentAdj);
                     });
                 }
                 for (FeaturePointer fp : feature.getPlaces()) {
