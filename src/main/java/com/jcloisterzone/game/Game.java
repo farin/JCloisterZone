@@ -209,6 +209,10 @@ public class Game implements EventProxy {
         undoHistory = List.empty();
     }
 
+    public List<UndoHistoryItem> getUndoHistory() {
+        return undoHistory;
+    }
+
     public boolean isUndoAllowed() {
         return !undoHistory.isEmpty();
     }
