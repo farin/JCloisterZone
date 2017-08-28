@@ -69,7 +69,6 @@ public class WagonPhase extends Phase {
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
         FeaturePointer fp = msg.getPointer();
-        game.markUndo();
         Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         if (!(m instanceof Wagon)) {
             throw new IllegalArgumentException("Invalid follower");

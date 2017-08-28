@@ -85,7 +85,6 @@ public class EscapePhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleReturnMeeple(GameState state, ReturnMeepleMessage msg) {
-        game.markUndo();
         MeeplePointer ptr = msg.getPointer();
 
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)

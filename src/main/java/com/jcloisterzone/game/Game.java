@@ -200,12 +200,11 @@ public class Game implements EventProxy {
         return eventBus;
     }
 
-    @Deprecated // move from phases
-    public void markUndo() {
+    private void markUndo() {
         undoState = undoState.prepend(state);
     }
 
-    public void clearUndo() {
+    private void clearUndo() {
         undoState = List.empty();
     }
 
@@ -230,11 +229,17 @@ public class Game implements EventProxy {
 
     @WsSubscribe
     public void handleInGameMessage(WsReplayableMessage msg) {
+        markUndo();
         replay = replay.prepend(msg);
         if (msg instanceof WsSeedMeesage) {
             updateRandomSeed(((WsSeedMeesage)msg).getSeed());
         }
-        replaceState(phaseReducer.apply(state, msg));
+        GameState newState = phaseReducer.apply(state, msg);
+        Player activePlayer = newState.getActivePlayer();
+        if (activePlayer == null || !activePlayer.equals(undoState.get().getActivePlayer())) {
+            clearUndo();
+        }
+        replaceState(newState);
     }
 
     @WsSubscribe

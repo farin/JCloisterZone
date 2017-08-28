@@ -24,7 +24,6 @@ public class CommitActionPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleCommit(GameState state, CommitMessage msg) {
-        game.clearUndo();
         state = clearActions(state);
         return next(state);
     }

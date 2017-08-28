@@ -194,7 +194,6 @@ public class TilePhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
-        game.markUndo();
         TileDefinition tile = state.getDrawnTile();
         Position pos = msg.getPosition();
         Rotation rot = msg.getRotation();

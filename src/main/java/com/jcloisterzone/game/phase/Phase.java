@@ -76,7 +76,6 @@ public abstract class Phase {
 
     @PhaseMessageHandler
     public StepResult handlePayRansom(GameState state, PayRansomMessage msg) {
-        game.markUndo();
         state = (new PayRansom(msg.getMeepleId())).apply(state);
         return promote(state);
     }

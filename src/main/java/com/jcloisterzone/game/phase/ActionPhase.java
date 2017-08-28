@@ -150,14 +150,12 @@ public class ActionPhase extends Phase {
     @Override
     @PhaseMessageHandler
     public StepResult handlePayRansom(GameState state, PayRansomMessage msg) {
-        game.markUndo();
         state = (new PayRansom(msg.getMeepleId())).apply(state);
         return enter(state); //recompute actions with returned followers
     }
 
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        game.markUndo();
         FeaturePointer fp = msg.getPointer();
         Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         //TODO validate against players actions instead
@@ -186,7 +184,6 @@ public class ActionPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleMoveNeutralFigure(GameState state, MoveNeutralFigureMessage msg) {
-        game.markUndo();
         BoardPointer ptr = msg.getTo();
         NeutralFigure<?> fig = state.getNeutralFigures().getById(msg.getFigureId());
         if (fig instanceof Fairy) {
@@ -204,7 +201,6 @@ public class ActionPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleReturnMeeple(GameState state, ReturnMeepleMessage msg) {
-        game.markUndo();
         MeeplePointer ptr = msg.getPointer();
 
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
@@ -232,7 +228,6 @@ public class ActionPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceToken(GameState state, PlaceTokenMessage msg) {
-        game.markUndo();
         Player player = state.getActivePlayer();
 
         FeaturePointer ptr = msg.getPointer();

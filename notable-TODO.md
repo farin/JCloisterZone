@@ -52,4 +52,4 @@ and get it by one one instead of all per tile
 
 * put capabilities and number of tile sets into saved game
 
-* move markUndo from phase to Game and eventually remove game/gc from Phase
+* eventually remove game/gc from Phase

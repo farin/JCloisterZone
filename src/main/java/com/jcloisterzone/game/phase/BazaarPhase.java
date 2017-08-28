@@ -78,7 +78,6 @@ public class BazaarPhase extends Phase {
         int supplyIndex = msg.getSupplyIndex();
         int price = msg.getPrice();
 
-        game.clearUndo();
         boolean noAuction = state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
 
         Player player = state.getActivePlayer();
