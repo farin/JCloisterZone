@@ -124,6 +124,7 @@ public class CreateGamePhase extends ServerAwarePhase {
         }
 
         next = addPhase(next, new PhantomPhase(game));
+               addPhase(next, new PrisonerExchangePhase(game));
                addPhase(next, new TowerCapturePhase(game));
                addPhase(next, new FlierActionPhase(game));
         next = addPhase(next, new ActionPhase(game));

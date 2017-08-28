@@ -63,24 +63,34 @@ public class TowerCapturePhase extends Phase {
             TowerCapability towerCap = game.getCapability(TowerCapability.class);
             List<Follower> prisoners = towerCap.getPrisoners().get(m.getPlayer());
             List<Follower> myCapturedFollowers = new ArrayList<>();
+            boolean moreThanOneKind = false;
             for (Follower f : prisoners) {
                 if (f.getPlayer() == me) {
                     myCapturedFollowers.add(f);
+                    if (f.getClass() != myCapturedFollowers.get(0).getClass()) {
+                        moreThanOneKind = true;
+                    }
                 }
             }
 
             if (myCapturedFollowers.isEmpty()) {
                 towerCap.inprison(m, me);
+                next();
             } else {
                 //opponent has my prisoner - figure exchange
-                Follower exchanged = myCapturedFollowers.get(0); //TODO same type?
-                boolean removeOk = prisoners.remove(exchanged);
-                assert removeOk;
-                exchanged.setInPrison(false);
-                game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
+                if (moreThanOneKind) {
+                    towerCap.inprison(m, me);
+                    next(PrisonerExchangePhase.class);
+                } else {
+                    Follower exchanged = myCapturedFollowers.get(0);
+                    boolean removeOk = prisoners.remove(exchanged);
+                    assert removeOk;
+                    exchanged.setInPrison(false);
+                    game.post(new MeeplePrisonEvent(exchanged, m.getPlayer(), null));
+                    next();
+                }
             }
-        }
-        next();
+        } 
     }
 
     @Override

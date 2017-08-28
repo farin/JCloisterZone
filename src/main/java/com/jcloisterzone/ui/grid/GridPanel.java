@@ -67,6 +67,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ChatPanel chatPanel;
     private BazaarPanel bazaarPanel;
     private SelectMageWitchRemovalPanel mageWitchPanel;
+    private PrisonerExchangePanel prisonerExchangePanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -315,6 +316,13 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         this.mageWitchPanel = mageWitchPanel;
     }
 
+    public PrisonerExchangePanel getPrisonerExchangePanel() {
+        return prisonerExchangePanel;
+    }
+
+    public void setPrisonerExchangePanel(PrisonerExchangePanel prisonerReleasePanel) {
+        this.prisonerExchangePanel = prisonerReleasePanel;
+    }
 
     public void moveCenter(int xSteps, int ySteps) {
         //step should be 30px

@@ -237,7 +237,7 @@ public final class TowerCapability extends Capability {
         Iterator<Follower> i = prisoners.get(opponent).iterator();
         while (i.hasNext()) {
             Follower meeple = i.next();
-            if (meepleType.isInstance(meeple)) {
+            if (meeple.getClass() == meepleType && meeple.getPlayer() == game.getActivePlayer()) {
                 i.remove();
                 meeple.setInPrison(false);
                 opponent.addPoints(RANSOM_POINTS, PointCategory.TOWER_RANSOM);
