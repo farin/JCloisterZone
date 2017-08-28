@@ -68,11 +68,10 @@ public class Game implements EventProxy {
     private GameStatePhaseReducer phaseReducer;
     private List<WsReplayableMessage> replay; // game messages (in reversed order because of List performance)
 
-
     protected PlayerSlot[] slots;
     protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
 
-    private List<GameState> undoState = List.empty();
+    private List<UndoHistoryItem> undoHistory = List.empty();
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
     //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before switch is done
@@ -185,7 +184,7 @@ public class Game implements EventProxy {
                 for (PlayerAction<?> action : as.getActions()) {
                     sb.append("\n  - ");
                     sb.append(action.toString());
-                    if (action.getOptions() != null) { // bazaar actions can be empty, handled in differente way
+                    if (action.getOptions() != null) { // bazaar actions can be empty, handled in different way
                         sb.append("\n    ");
                         sb.append(String.join(", " , action.getOptions().map(Object::toString)));
                     }
@@ -201,24 +200,29 @@ public class Game implements EventProxy {
     }
 
     private void markUndo() {
-        undoState = undoState.prepend(state);
+        undoHistory = undoHistory.prepend(
+            new UndoHistoryItem(state, replay)
+        );
     }
 
     private void clearUndo() {
-        undoState = List.empty();
+        undoHistory = List.empty();
     }
 
     public boolean isUndoAllowed() {
-        return !undoState.isEmpty();
+        return !undoHistory.isEmpty();
     }
 
     public void undo() {
-        if (undoState.isEmpty()) {
+        if (undoHistory.isEmpty()) {
             throw new IllegalStateException();
         }
-        Tuple2<GameState, List<GameState>> head = undoState.pop2();
-        undoState = head._2;
-        replaceState(head._1);
+        Tuple2<UndoHistoryItem, List<UndoHistoryItem>> head = undoHistory.pop2();
+        undoHistory = head._2;
+        replay = head._1.getReplay();
+        // note: seed should be unchanged for current usage
+        // when seed is changed undo history is cleared
+        replaceState(head._1.getState());
     }
 
     @WsSubscribe
@@ -236,7 +240,10 @@ public class Game implements EventProxy {
         }
         GameState newState = phaseReducer.apply(state, msg);
         Player activePlayer = newState.getActivePlayer();
-        if (activePlayer == null || !activePlayer.equals(undoState.get().getActivePlayer())) {
+        if (msg instanceof WsSeedMeesage
+            || activePlayer == null
+            || !activePlayer.equals(undoHistory.get().getState().getActivePlayer())
+        ) {
             clearUndo();
         }
         replaceState(newState);

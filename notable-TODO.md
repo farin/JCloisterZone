@@ -45,3 +45,5 @@ and get it by one one instead of all per tile
 
 * put capabilities and number of tile sets into saved game
 
+* seed part of state? no put it rather into phaseReducer
+
