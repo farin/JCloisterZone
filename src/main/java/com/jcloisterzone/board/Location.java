@@ -199,13 +199,13 @@ public class Location implements Serializable {
      */
     public Location rev() {
         // odd bits shift by 5, even by 3;
-        int mLo = mask & 255;
-        mLo = ((mLo & 85) << 5) | ((mLo & 170) << 3);
-        mLo = (mLo | (mLo >> 8)) & 255;
+        int mLo = mask & 0xff;
+        mLo = ((mLo & 0b1010101) << 5) | ((mLo & 0b10101010) << 3);
+        mLo = (mLo | (mLo >> 8)) & 0xff;
 
-        int mHi =  (mask & 65280) >> 8;
-        mHi = ((mHi & 85) << 5) | ((mHi & 170) << 3);
-        mHi = (mHi | (mHi >> 8)) & 255;
+        int mHi =  (mask & 0xff00) >> 8;
+        mHi = ((mHi & 0b1010101) << 5) | ((mHi & 0b10101010) << 3);
+        mHi = (mHi | (mHi >> 8)) & 0xff;
 
         return create((mask & ~65535) | (mHi << 8) | mLo);
     }
@@ -216,13 +216,13 @@ public class Location implements Serializable {
      * @return rotated instance
      */
     private Location shift(int i) {
-        int mLo = (mask & 255) << i;
-        mLo = (mLo | mLo >> 8) & 255;
+        int mLo = (mask & 0xff) << i;
+        mLo = (mLo | mLo >> 8) & 0xff;
 
-        int mHi = (mask & 65280) << i;
-        mHi = (mHi | mHi >> 8) & 65280;
+        int mHi = (mask & 0xff00) << i;
+        mHi = (mHi | mHi >> 8) & 0xff00;
 
-        return create((mask & ~65535) | mHi | mLo);
+        return create((mask & ~0xffff) | mHi | mLo);
     }
 
     /**
@@ -245,12 +245,12 @@ public class Location implements Serializable {
 
     public Location getLeftFarm() {
         assert isEdgeLocation();
-        return create((mask >> 8) & 85);
+        return create((mask >> 8) & 0b1010101);
     }
 
     public Location getRightFarm() {
         assert isEdgeLocation();
-        return create((mask >> 8) & 170);
+        return create((mask >> 8) & 0b10101010);
     }
 
 
@@ -381,7 +381,7 @@ public class Location implements Serializable {
         return res;
     }
 
-    //assertion methods
+
     /**
      * Checks if {@code this} is a farm location.
      * @return {@code true} if {@code this} is a farm location, {@code false} otherwise
