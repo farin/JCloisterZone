@@ -12,6 +12,6 @@ public class PhantomCapability extends Capability<Void> {
 
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.of((Follower) new Phantom(idProvider.generateId(Phantom.class), player));
+        return List.of(new Phantom(idProvider.generateId(Phantom.class), player));
     }
 }

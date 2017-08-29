@@ -14,7 +14,7 @@ import com.jcloisterzone.game.Capability;
 
 public class CornCircleCapability extends Capability<Void> {
 
-    public static enum CornCicleOption {
+    public enum CornCicleOption {
         DEPLOYMENT,
         REMOVAL;
     }

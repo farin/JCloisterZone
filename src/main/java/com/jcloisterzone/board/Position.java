@@ -74,9 +74,9 @@ public class Position implements BoardPointer, Comparable<Position> {
     public Position rotateCW(Rotation rot) {
         switch (rot) {
         case R0: return this;
-        case R90: return new Position(-y, x);
+        case R90: return new Position(-y, +x);
         case R180: return new Position(-x, -y);
-        case R270: return new Position(y, -x);
+        case R270: return new Position(+y, -x);
         }
         throw new IllegalArgumentException();
     }

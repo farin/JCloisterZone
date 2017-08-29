@@ -141,9 +141,7 @@ public class TileBuilder {
         Stream<Location> sides = contentAsLocations(e);
         //using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.length distinguish it
         if (sides.size() > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
-            sides.forEach(loc -> {
-                processRoadElement(Stream.of(loc), e, true);
-            });
+            sides.forEach(loc -> processRoadElement(Stream.of(loc), e, true));
         } else {
             processRoadElement(sides, e, isTunnelActive);
         }
@@ -227,9 +225,9 @@ public class TileBuilder {
     }
 
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {
-        AtomicReference<Location> locRef = new AtomicReference<Location>();
+        AtomicReference<Location> locRef = new AtomicReference<>();
         sides.forEach(l -> {
-            assert !(clazz.equals(Farm.class) ^ l.isFarmLocation()) : String.format("Invalid location %s kind for tile %s", l, tileId);
+            assert clazz.equals(Farm.class) == l.isFarmLocation() : String.format("Invalid location %s kind for tile %s", l, tileId);
             assert l.intersect(locRef.get()) == null;
             locRef.set(locRef.get() == null ? l : locRef.get().union(l));
         });
@@ -239,7 +237,7 @@ public class TileBuilder {
 
     public static Set<Edge> initOpenEdges(Stream<Location> sides) {
         return HashSet.ofAll(
-            sides.filter(loc -> loc.isEdgeLocation()).map(loc -> new Edge(Position.ZERO, loc))
+            sides.filter(Location::isEdgeLocation).map(loc -> new Edge(Position.ZERO, loc))
         );
     }
 }

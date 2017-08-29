@@ -8,6 +8,7 @@ import com.jcloisterzone.Immutable;
 import io.vavr.collection.List;
 import io.vavr.collection.Vector;
 
+
 /**
  * Represents locations on a tile. A location is any "space" where tile features, such as rivers, roads, farms, abbots,
  * etc. can be located.
@@ -79,84 +80,80 @@ public class Location implements Serializable {
     }
 
     /** North */
-    public static final Location N = new Location("N", 3 << 8);
+    public static final Location N = new Location("N", 0b00000011 << 8);
     /** West */
-    public static final Location W = new Location("W", 192 << 8);
+    public static final Location W = new Location("W", 0b11000000 << 8);
     /** South */
-    public static final Location S = new Location("S", 48 << 8);
+    public static final Location S = new Location("S", 0b00110000 << 8);
     /** East */
-    public static final Location E = new Location("E", 12 << 8);
+    public static final Location E = new Location("E", 0b00001100 << 8);
 
     /** North-west */
-    public static final Location NW = new Location("NW", 195 << 8);
+    public static final Location NW = new Location("NW", 0b11000011 << 8);
     /** South-west */
-    public static final Location SW = new Location("SW", 240 << 8);
+    public static final Location SW = new Location("SW", 0b11110000 << 8);
     /** South-east */
-    public static final Location SE = new Location("SE", 60 << 8);
+    public static final Location SE = new Location("SE", 0b00111100 << 8);
     /** North-east */
-    public static final Location NE = new Location("NE", 15 << 8);
+    public static final Location NE = new Location("NE", 0b00001111 << 8);
 
     /** Horizontal location - W + E */
-    public static final Location WE = new Location("WE", 204 << 8);
+    public static final Location WE = new Location("WE", 0b11001100 << 8);
     /** Vertical location -  N + S */
-    public static final Location NS = new Location("NS", 51 << 8);
+    public static final Location NS = new Location("NS", 0b00110011 << 8);
     /** All edge locations */
-    public static final Location NWSE = new Location("NWSE", 255 << 8);
+    public static final Location NWSE = new Location("NWSE", 0b11111111 << 8);
 
     /** Instance used to express the cardinal direction of north (as opposed to a feature-space facing north */
-    public static final Location _N = new Location("_N", 252 << 8);
+    public static final Location _N = new Location("_N", 0b11111100 << 8);
     /** Instance used to express the cardinal direction of west (as opposed to a feature-space facing west */
-    public static final Location _W = new Location("_W", 63 << 8);
+    public static final Location _W = new Location("_W", 0b00111111 << 8);
     /** Instance used to express the cardinal direction of south (as opposed to a feature-space facing south */
-    public static final Location _S = new Location("_S", 207 << 8);
+    public static final Location _S = new Location("_S", 0b11001111 << 8);
     /** Instance used to express the cardinal direction of east (as opposed to a feature-space facing east */
-    public static final Location _E = new Location("_E", 243 << 8);
+    public static final Location _E = new Location("_E", 0b11110011 << 8);
 
     /** A cloister space */
-    public static final Location CLOISTER = new Location("CLOISTER", 1 << 18);
+    public static final Location CLOISTER = new Location("CLOISTER", 0b00000100 << 16);
     /** An abbot space */
-    public static final Location ABBOT = new Location("ABBOT", 1 << 19);
+    public static final Location ABBOT = new Location("ABBOT", 0b00001000 << 16);
     /** A tower space */
-    public static final Location TOWER = new Location("TOWER", 1 << 20);
+    public static final Location TOWER = new Location("TOWER", 0b00010000 << 16);
     /** A flier space (a follower can be placed here just for moment, before a dice roll) */
-    public static final Location FLIER = new Location("FLIER", 1 << 21);
+    public static final Location FLIER = new Location("FLIER", 0b00100000 << 16);
     /** City of Carcassonne specials (Count) */
-    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 1 << 22);
-    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 1 << 23);
-    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 1 << 24);
-    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 1 << 25);
+    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 0b01000000 << 16);
+    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 0b10000000 << 16);
+    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 0b00000001 << 24);
+    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 0b00000010 << 24);
 
     // --- farm locations ---
 
-    /** Inner farm space */
-    public static final Location INNER_FARM = new Location("INNER_FARM", 1 << 16);
-    /** Second inner farm space (for tiles with two inner farms) */
-    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 1 << 17);
+    /** Inner farm*/
+    public static final Location INNER_FARM = new Location("INNER_FARM", 0b00000001 << 16);
+    /** for tiles with two inner farms */
+    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 0b00000010 << 16);
 
     /** North left farm */
-    public static final Location NL = new Location("NL", 1);
+    public static final Location NL = new Location("NL", 0b00000001);
     /** North right farm */
-    public static final Location NR = new Location("NR", 2);
+    public static final Location NR = new Location("NR", 0b00000010);
     /** East left farm */
-    public static final Location EL = new Location("EL", 4);
+    public static final Location EL = new Location("EL", 0b00000100);
     /** East right farm */
-    public static final Location ER = new Location("ER", 8);
+    public static final Location ER = new Location("ER", 0b00001000);
     /** South left farm */
-    public static final Location SL = new Location("SL", 16);
+    public static final Location SL = new Location("SL", 0b00010000);
     /** South right farm */
-    public static final Location SR = new Location("SR", 32);
+    public static final Location SR = new Location("SR", 0b00100000);
     /** West left farm */
-    public static final Location WL = new Location("WL", 64);
+    public static final Location WL = new Location("WL", 0b01000000);
     /** West right farm */
-    public static final Location WR = new Location("WR", 128);
+    public static final Location WR = new Location("WR", 0b10000000);
 
-    /** List of Locations for {@code City}/{@code Road} sides (N, S, E, W) */
     public static final List<Location> SIDES = List.of(N, E, S, W);
-    /** List of Locations for {@code Farm} sides (NL, NR, EL, ER, SL, SR, WL, WR) */
     public static final List<Location> FARM_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
-    /** List of valid Locations for {@code Bridges} (NS, WE) */
     public static final List<Location> BRIDGES = List.of(NS, WE);
-    /** List of Location for the City of Carcassonne quarters */
     public static final List<Location> QUARTERS = List.of(QUARTER_CASTLE, QUARTER_MARKET, QUARTER_BLACKSMITH, QUARTER_CATHEDRAL);
 
     /**
@@ -197,17 +194,17 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns opposite location, mirrored by axes.
-     * @return the mirrored instance
+     * Returns an instance that is the mirror of {@code this}.
+     * @return an instance that is the mirror of {@code this}
      */
     public Location rev() {
         // odd bits shift by 5, even by 3;
         int mLo = mask & 0xff;
-        mLo = ((mLo & 0b1010101) << 5) | ((mLo & 0b10101010) << 3);
+        mLo = ((mLo & 0b01010101) << 5) | ((mLo & 0b10101010) << 3);
         mLo = (mLo | (mLo >> 8)) & 0xff;
 
         int mHi =  (mask & 0xff00) >> 8;
-        mHi = ((mHi & 0b1010101) << 5) | ((mHi & 0b10101010) << 3);
+        mHi = ((mHi & 0b01010101) << 5) | ((mHi & 0b10101010) << 3);
         mHi = (mHi | (mHi >> 8)) & 0xff;
 
         return create((mask & ~0xffff) | (mHi << 8) | mLo);
@@ -219,8 +216,8 @@ public class Location implements Serializable {
      * @return rotated instance
      */
     private Location shift(int i) {
-        int mLo = (mask & 0xff) << i; // shift lower bits
-        mLo = (mLo | mLo >> 8) & 0xff; // recover bits lost in the shift
+        int mLo = (mask & 0x00ff) << i; // shift lower bits
+        mLo = (mLo | mLo >> 8) & 0x00ff; // recover bits lost in the shift
 
         int mHi = (mask & 0xff00) << i; // shift higher bits
         mHi = (mHi | mHi >> 8) & 0xff00; // recover bits lost in the shift
@@ -229,21 +226,21 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance rotated by {@code rot} counter-clockwise.
+     * Returns an instance with the same mask as {@code this} but rotated by {@code rot} counter-clockwise.
      * @param rot how much rotation to apply
      * @return the rotated instance
      */
     public Location rotateCCW(Rotation rot) {
-        return shift((rot.ordinal()*6)%8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
+        return shift((rot.ordinal() * 6) % 8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
     }
 
     /**
-     * Returns an instance rotated by {@code rot} clockwise.
+     * Returns an instance with the same mask as {@code this} but rotated by {@code rot} clockwise.
      * @param rot how much rotation to apply
      * @return the rotated instance
      */
     public Location rotateCW(Rotation rot) {
-        return shift(rot.ordinal()*2);
+        return shift(rot.ordinal() * 2);
     }
 
     public Location getLeftFarm() {
@@ -253,7 +250,7 @@ public class Location implements Serializable {
 
     public Location getRightFarm() {
         assert isEdgeLocation();
-        return create((mask >> 8) & 0b10101010);
+        return create((mask >> 8) & 0b010101010);
     }
 
 
@@ -292,7 +289,7 @@ public class Location implements Serializable {
      */
     public Location union(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "union("+this+','+loc+')';
+        assert !isSpecialLocation() && ((isEdgeLocation() == loc.isEdgeLocation()) & isFarmLocation() == loc.isFarmLocation()) : "union("+this+','+loc+')';
         return create(mask | loc.mask);
     }
 
@@ -304,7 +301,7 @@ public class Location implements Serializable {
      */
     public Location substract(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ loc.isEdgeLocation()) & !(isFarmLocation() ^ loc.isFarmLocation()) : "substract("+this+','+loc+')';
+        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "substract("+this+','+loc+')';
         return create((~(mask & loc.mask)) & mask);
     }
 
@@ -315,7 +312,7 @@ public class Location implements Serializable {
      */
     public Location intersect(Location loc) {
         if (loc == null || (mask & loc.mask) == 0) return null;
-        assert !isSpecialLocation() && !(isEdgeLocation() ^ loc.isEdgeLocation()) & !(isFarmLocation() ^ loc.isFarmLocation()) : "intersect("+this+','+loc+')';
+        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "intersect("+this+','+loc+')';
         return create(mask & loc.mask);
     }
 
@@ -371,9 +368,7 @@ public class Location implements Serializable {
         return getRotationOf(loc) != null;
     }
 
-    /**
-     * Splits {@code this} to valid barn corners (it means farm corner)
-     */
+    /* get included full farm coners */
     public Vector<Corner> getCorners() {
         if (!isFarmLocation()) {
             return Vector.empty();
@@ -385,6 +380,7 @@ public class Location implements Serializable {
         if (SR.isPartOf(this) && WL.isPartOf(this)) res = res.append(Corner.SW);
         return res;
     }
+
 
     /**
      * Checks if {@code this} is a farm location.
@@ -411,16 +407,16 @@ public class Location implements Serializable {
     }
 
     /**
-     * Checks if {@code this} is valid bridge location.
-     * @return {@code true} if {@code this} is valid bridge location, {@code false} otherwise
+     * Checks if {@code this} is a bridge location.
+     * @return {@code true} if {@code this} is a bridge location, {@code false} otherwise
      */
     public boolean isBridgeLocation() {
         return BRIDGES.contains(this);
     }
 
     /**
-     * Checks if {@code this} is city of carcassonne quarter.
-     * @return {@code true} if {@code this} is city of carcassonne quarter, {@code false} otherwise
+     * Checks if {@code this} is a city quarter location (i.e., bridge, castle, market or cathedral).
+     * @return {@code true} if {@code this} is a city quarter location, {@code false} otherwise
      */
     public boolean isCityOfCarcassonneQuarter() {
         return QUARTERS.contains(this);

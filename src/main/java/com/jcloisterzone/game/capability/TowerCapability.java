@@ -48,7 +48,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
     public GameState onStartGame(GameState state) {
         int pieces = getInitialPiecesCount(state);
         state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.TOWER_PIECE, pieces));
-        state = setModel(state, Array.fill(state.getPlayers().length(), () -> List.empty()));
+        state = setModel(state, Array.fill(state.getPlayers().length(), List::empty));
         return state;
     }
 
@@ -76,7 +76,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
 
         if (!openTowersForPiece.isEmpty()) {
             if (state.getPlayers().getPlayerTokenCount(player.getIndex(), Token.TOWER_PIECE) > 0) {
-                as = as.appendAction(new TowerPieceAction(openTowersForPiece.map(fp -> fp.getPosition())));
+                as = as.appendAction(new TowerPieceAction(openTowersForPiece.map(FeaturePointer::getPosition)));
             }
         }
 
@@ -88,7 +88,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
             Vector<PlayerAction<?>> actions = availMeeples.map(meeple ->
                 new MeepleAction(meeple.getClass(), openTowersForFollower)
             );
-            as = as.appendActions(actions).mergeMeppleActions();
+            as = as.appendActions(actions).mergeMeepleActions();
         }
 
         return state.setPlayerActions(as);

@@ -39,7 +39,7 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
 
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.of((Follower) new Wagon(idProvider.generateId(Wagon.class), player));
+        return List.of(new Wagon(idProvider.generateId(Wagon.class), player));
     }
 
     @Override

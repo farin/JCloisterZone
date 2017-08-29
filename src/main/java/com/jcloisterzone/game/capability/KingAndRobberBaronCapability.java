@@ -8,7 +8,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.MemloizedValue;
+import com.jcloisterzone.game.state.MemoizedValue;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
 
@@ -74,9 +74,7 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
             .getOrElse(0);
     }
 
-    private MemloizedValue<Integer> _getBiggestCitySize = new MemloizedValue<>(state -> {
-        return getMaxSize(state, City.class, HashSet.empty());
-    });
+    private MemoizedValue<Integer> _getBiggestCitySize = new MemoizedValue<>(state -> getMaxSize(state, City.class, HashSet.empty()));
 
     public int getBiggestCitySize(GameState state) {
         return _getBiggestCitySize.apply(state);
@@ -100,9 +98,7 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
             .size();
     }
 
-    private MemloizedValue<Integer> _getLongestRoadSize = new MemloizedValue<>(state -> {
-        return getMaxSize(state, Road.class, HashSet.empty());
-    });
+    private MemoizedValue<Integer> _getLongestRoadSize = new MemoizedValue<>(state -> getMaxSize(state, Road.class, HashSet.empty()));
 
     public int getLongestRoadSize(GameState state) {
         return _getLongestRoadSize.apply(state);
