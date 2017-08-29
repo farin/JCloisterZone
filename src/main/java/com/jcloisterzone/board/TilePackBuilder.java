@@ -5,7 +5,6 @@ import static com.jcloisterzone.XMLUtils.attributeStringValue;
 import static com.jcloisterzone.XMLUtils.getTileId;
 
 import java.net.URL;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +103,7 @@ public class TilePackBuilder {
     public void setExpansions(Set<Expansion> expansions) {
         this.expansions = expansions;
         defs = Stream.ofAll(expansions).map(
-            exp -> new Tuple2<Expansion, Element>(exp, getExpansionDefinition(exp))
+            exp -> new Tuple2<>(exp, getExpansionDefinition(exp))
         ).collect(LinkedHashMap.collector());
     }
 
@@ -294,7 +293,7 @@ public class TilePackBuilder {
         Vector<String> groupNames = Vector.ofAll(tiles.keySet()).sorted();
         for (String name : groupNames) {
             java.util.List<TileDefinition> groupTiles = tiles.get(name);
-            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(t -> t.getId()), true));
+            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(TileDefinition::getId), true));
         }
 
         return new Tiles(
