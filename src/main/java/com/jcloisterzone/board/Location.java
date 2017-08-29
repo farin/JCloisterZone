@@ -80,76 +80,76 @@ public class Location implements Serializable {
     }
 
     /** North */
-    public static final Location N = new Location("N", 3 << 8);
+    public static final Location N = new Location("N", 0b00000011 << 8);
     /** West */
-    public static final Location W = new Location("W", 192 << 8);
+    public static final Location W = new Location("W", 0b11000000 << 8);
     /** South */
-    public static final Location S = new Location("S", 48 << 8);
+    public static final Location S = new Location("S", 0b00110000 << 8);
     /** East */
-    public static final Location E = new Location("E", 12 << 8);
+    public static final Location E = new Location("E", 0b00001100 << 8);
 
     /** North-west */
-    public static final Location NW = new Location("NW", 195 << 8);
+    public static final Location NW = new Location("NW", 0b11000011 << 8);
     /** South-west */
-    public static final Location SW = new Location("SW", 240 << 8);
+    public static final Location SW = new Location("SW", 0b11110000 << 8);
     /** South-east */
-    public static final Location SE = new Location("SE", 60 << 8);
+    public static final Location SE = new Location("SE", 0b00111100 << 8);
     /** North-east */
-    public static final Location NE = new Location("NE", 15 << 8);
+    public static final Location NE = new Location("NE", 0b00001111 << 8);
 
     /** Horizontal location - W + E */
-    public static final Location WE = new Location("WE", 204 << 8);
+    public static final Location WE = new Location("WE", 0b11001100 << 8);
     /** Vertical location -  N + S */
-    public static final Location NS = new Location("NS", 51 << 8);
+    public static final Location NS = new Location("NS", 0b00110011 << 8);
     /** All edge locations */
-    public static final Location NWSE = new Location("NWSE", 255 << 8);
+    public static final Location NWSE = new Location("NWSE", 0b11111111 << 8);
 
-    /** Supplement to the north */
-    public static final Location _N = new Location("_N", 252 << 8);
-    /** Supplement to the west  */
-    public static final Location _W = new Location("_W", 63 << 8);
-    /** Supplement to the south */
-    public static final Location _S = new Location("_S", 207 << 8);
-    /** Supplement to the east */
-    public static final Location _E = new Location("_E", 243 << 8);
+    /** Instance used to express the cardinal direction of north (as opposed to a feature-space facing north */
+    public static final Location _N = new Location("_N", 0b11111100 << 8);
+    /** Instance used to express the cardinal direction of west (as opposed to a feature-space facing west */
+    public static final Location _W = new Location("_W", 0b00111111 << 8);
+    /** Instance used to express the cardinal direction of south (as opposed to a feature-space facing south */
+    public static final Location _S = new Location("_S", 0b11001111 << 8);
+    /** Instance used to express the cardinal direction of east (as opposed to a feature-space facing east */
+    public static final Location _E = new Location("_E", 0b11110011 << 8);
 
-    /** Cloister on tile */
-    public static final Location CLOISTER = new Location("CLOISTER", 1 << 18);
-    /** on monastery as Abbot */
-    public static final Location ABBOT = new Location("ABBOT", 1 << 19);
-    /** Tower on tile */
-    public static final Location TOWER = new Location("TOWER", 1 << 20);
-    /** Flier location - follower can be placed here just for moment, before dice roll  */
-    public static final Location FLIER = new Location("FLIER", 1 << 21);
+    /** A cloister space */
+    public static final Location CLOISTER = new Location("CLOISTER", 0b00000100 << 16);
+    /** An abbot space */
+    public static final Location ABBOT = new Location("ABBOT", 0b00001000 << 16);
+    /** A tower space */
+    public static final Location TOWER = new Location("TOWER", 0b00010000 << 16);
+    /** A flier space (a follower can be placed here just for moment, before a dice roll) */
+    public static final Location FLIER = new Location("FLIER", 0b00100000 << 16);
     /** City of Carcassonne specials (Count) */
-    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 1 << 22);
-    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 1 << 23);
-    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 1 << 24);
-    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 1 << 25);
+    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 0b01000000 << 16);
+    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 0b10000000 << 16);
+    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 0b00000001 << 24);
+    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 0b00000010 << 24);
 
     // --- farm locations ---
 
     /** Inner farm*/
-    public static final Location INNER_FARM = new Location("INNER_FARM", 1 << 16);
+    public static final Location INNER_FARM = new Location("INNER_FARM", 0b00000001 << 16);
     /** for tiles with two inner farms */
-    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 1 << 17);
+    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 0b00000010 << 16);
 
     /** North left farm */
-    public static final Location NL = new Location("NL", 1);
+    public static final Location NL = new Location("NL", 0b00000001);
     /** North right farm */
-    public static final Location NR = new Location("NR", 2);
+    public static final Location NR = new Location("NR", 0b00000010);
     /** East left farm */
-    public static final Location EL = new Location("EL", 4);
+    public static final Location EL = new Location("EL", 0b00000100);
     /** East right farm */
-    public static final Location ER = new Location("ER", 8);
+    public static final Location ER = new Location("ER", 0b00001000);
     /** South left farm */
-    public static final Location SL = new Location("SL", 16);
+    public static final Location SL = new Location("SL", 0b00010000);
     /** South right farm */
-    public static final Location SR = new Location("SR", 32);
+    public static final Location SR = new Location("SR", 0b00100000);
     /** West left farm */
-    public static final Location WL = new Location("WL", 64);
+    public static final Location WL = new Location("WL", 0b01000000);
     /** West right farm */
-    public static final Location WR = new Location("WR", 128);
+    public static final Location WR = new Location("WR", 0b10000000);
 
     public static final List<Location> SIDES = List.of(N, E, S, W);
     public static final List<Location> FARM_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
