@@ -74,14 +74,14 @@ public final class ShrineCapability extends Capability<Void> {
             return true;
         }
         Array<Cloister> cloisters = getAdjacentCloisters(state, placement.getPosition());
-        Array<Cloister> oppositeCloiters = cloisters.filter(c -> c.isShrine() ^ cloister.isShrine());
-        if (oppositeCloiters.size() > 1) {
+        Array<Cloister> oppositeCloisters = cloisters.filter(c -> c.isShrine() ^ cloister.isShrine());
+        if (oppositeCloisters.size() > 1) {
             // Disallow placement next to more than one Cloister of opposite type.
             return false;
         }
-        if (oppositeCloiters.size() == 1) {
+        if (oppositeCloisters.size() == 1) {
             // Also there must be check if this cloister is not the second one for opposite cloister.
-            Cloister opposite = oppositeCloiters.get();
+            Cloister opposite = oppositeCloisters.get();
             Position oppositePos = opposite.getPlace().getPosition();
             if (!getAdjacentCloisters(state, oppositePos)
                 .filter(c -> c.isShrine() == cloister.isShrine())
@@ -97,7 +97,7 @@ public final class ShrineCapability extends Capability<Void> {
     private Cloister getCloister(TileDefinition tile) {
         return (Cloister) tile.getInitialFeatures()
             .map(Tuple2::_2)
-            .filter(Predicates.instanceOf(Cloister.class)) // filter out YagaHut
+            .filter(Predicates.instanceOf(Cloister.class)) // filter out Yaga hut
             .getOrNull();
     }
 

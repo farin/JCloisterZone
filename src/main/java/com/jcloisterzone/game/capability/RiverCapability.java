@@ -72,9 +72,6 @@ public class RiverCapability extends Capability<Void> {
             return false;
         }
 
-        if (openSides.find(side -> !isContinuationFree(state, pos, side)).isDefined()) {
-            return false;
-        }
-        return true;
+        return !openSides.find(side -> !isContinuationFree(state, pos, side)).isDefined();
     }
 }

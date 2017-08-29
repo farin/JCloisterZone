@@ -28,7 +28,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
 
     @Override
     public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of((Special) new Barn(idProvider.generateId(Pig.class), player));
+        return List.of(new Barn(idProvider.generateId(Pig.class), player));
     }
 
     @Override

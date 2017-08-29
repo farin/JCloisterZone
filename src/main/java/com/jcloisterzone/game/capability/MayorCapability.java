@@ -12,6 +12,6 @@ public class MayorCapability extends Capability<Void> {
 
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.of((Follower) new Mayor(idProvider.generateId(Mayor.class), player));
+        return List.of(new Mayor(idProvider.generateId(Mayor.class), player));
     }
 }

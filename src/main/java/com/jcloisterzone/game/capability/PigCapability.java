@@ -12,6 +12,6 @@ public class PigCapability extends Capability<Void> {
 
     @Override
     public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of((Special) new Pig(idProvider.generateId(Pig.class), player));
+        return List.of(new Pig(idProvider.generateId(Pig.class), player));
     }
 }

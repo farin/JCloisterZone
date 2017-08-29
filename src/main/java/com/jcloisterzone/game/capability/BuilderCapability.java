@@ -19,14 +19,12 @@ public class BuilderCapability extends Capability<BuilderState> {
     }
 
     public GameState useBuilder(GameState state) {
-        return updateModel(state, builderState -> {
-            return builderState == BuilderState.UNUSED ? BuilderState.USED : builderState;
-        });
+        return updateModel(state, builderState -> builderState == BuilderState.UNUSED ? BuilderState.USED : builderState);
     }
 
     @Override
     public List<Special> createPlayerSpecialMeeples(Player p, MeepleIdProvider idProvider) {
-        return List.of((Special) new Builder(idProvider.generateId(Builder.class), p));
+        return List.of(new Builder(idProvider.generateId(Builder.class), p));
     }
 
     @Override

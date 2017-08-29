@@ -14,6 +14,6 @@ public class BigFollowerCapability extends Capability<Void> {
 
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.of((Follower) new BigFollower(idProvider.generateId(BigFollower.class), player));
+        return List.of(new BigFollower(idProvider.generateId(BigFollower.class), player));
     }
 }
