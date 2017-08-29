@@ -75,7 +75,9 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
         ActionsState as = state.getPlayerActions();
 
         if (!openTowersForPiece.isEmpty()) {
-            as = as.appendAction(new TowerPieceAction(openTowersForPiece.map(FeaturePointer::getPosition)));
+            if (state.getPlayers().getPlayerTokenCount(player.getIndex(), Token.TOWER_PIECE) > 0) {
+                as = as.appendAction(new TowerPieceAction(openTowersForPiece.map(FeaturePointer::getPosition)));
+            }
         }
 
         if (!openTowersForFollower.isEmpty()) {
