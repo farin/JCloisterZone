@@ -239,9 +239,9 @@ public class EdgePattern implements Serializable {
      */
     private EdgeType getBridgeReplacement(Location side) {
         switch (at(side)) {
-            case FARM: return EdgeType.ROAD;
-            case UNKNOWN: return EdgeType.UNKNOWN;
-            default: throw new IllegalArgumentException();
+        case FARM: return EdgeType.ROAD;
+        case UNKNOWN: return EdgeType.UNKNOWN;
+        default: throw new IllegalArgumentException();
         }
     }
 

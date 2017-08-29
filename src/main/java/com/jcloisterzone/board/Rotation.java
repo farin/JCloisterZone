@@ -96,10 +96,10 @@ public enum Rotation {
      */
     public Rotation inverse() {
         switch (this) {
-            case R0: return R0;
-            case R90: return R270;
-            case R180: return R180;
-            case R270: return R90;
+        case R0: return R0;
+        case R90: return R270;
+        case R180: return R180;
+        case R270: return R90;
         }
         throw new IllegalStateException();
     }
