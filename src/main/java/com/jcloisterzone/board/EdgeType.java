@@ -5,9 +5,9 @@ package com.jcloisterzone.board;
  * provided.
  */
 public enum EdgeType {
-    ROAD(0b1, 'R'),
-    CITY(0b10, 'C'),
-    FARM(0b100, 'F'),
+    ROAD(0b0001, 'R'),
+    CITY(0b0010, 'C'),
+    FARM(0b0100, 'F'),
     RIVER(0b1000, 'I'),
     UNKNOWN(0b1111, '?');
 

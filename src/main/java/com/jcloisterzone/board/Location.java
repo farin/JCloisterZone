@@ -200,11 +200,11 @@ public class Location implements Serializable {
     public Location rev() {
         // odd bits shift by 5, even by 3;
         int mLo = mask & 0xff;
-        mLo = ((mLo & 0b1010101) << 5) | ((mLo & 0b10101010) << 3);
+        mLo = ((mLo & 0b01010101) << 5) | ((mLo & 0b10101010) << 3);
         mLo = (mLo | (mLo >> 8)) & 0xff;
 
         int mHi =  (mask & 0xff00) >> 8;
-        mHi = ((mHi & 0b1010101) << 5) | ((mHi & 0b10101010) << 3);
+        mHi = ((mHi & 0b01010101) << 5) | ((mHi & 0b10101010) << 3);
         mHi = (mHi | (mHi >> 8)) & 0xff;
 
         return create((mask & ~0xffff) | (mHi << 8) | mLo);
@@ -216,8 +216,8 @@ public class Location implements Serializable {
      * @return rotated instance
      */
     private Location shift(int i) {
-        int mLo = (mask & 0xff) << i; // shift lower bits
-        mLo = (mLo | mLo >> 8) & 0xff; // recover bits lost in the shift
+        int mLo = (mask & 0x00ff) << i; // shift lower bits
+        mLo = (mLo | mLo >> 8) & 0x00ff; // recover bits lost in the shift
 
         int mHi = (mask & 0xff00) << i; // shift higher bits
         mHi = (mHi | mHi >> 8) & 0xff00; // recover bits lost in the shift
@@ -231,7 +231,7 @@ public class Location implements Serializable {
      * @return the rotated instance
      */
     public Location rotateCCW(Rotation rot) {
-        return shift((rot.ordinal()*6)%8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
+        return shift((rot.ordinal() * 6) % 8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
     }
 
     /**
@@ -240,7 +240,7 @@ public class Location implements Serializable {
      * @return the rotated instance
      */
     public Location rotateCW(Rotation rot) {
-        return shift(rot.ordinal()*2);
+        return shift(rot.ordinal() * 2);
     }
 
     public Location getLeftFarm() {
@@ -250,7 +250,7 @@ public class Location implements Serializable {
 
     public Location getRightFarm() {
         assert isEdgeLocation();
-        return create((mask >> 8) & 0b10101010);
+        return create((mask >> 8) & 0b010101010);
     }
 
 
