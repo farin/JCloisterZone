@@ -308,8 +308,12 @@ public class Config {
     }
 
     public PlayerColor getPlayerColor(PlayerSlot slot) {
+        return getPlayerColor(slot.getNumber());
+    }
+
+    public PlayerColor getPlayerColor(int slotNumber) {
         try {
-            ColorConfig cfg = players.getColors().get(slot.getNumber());
+            ColorConfig cfg = players.getColors().get(slotNumber);
             return new PlayerColor(cfg, darkTheme);
         } catch (IndexOutOfBoundsException ex) {
             logger.warn("Too few player colors defined in config");

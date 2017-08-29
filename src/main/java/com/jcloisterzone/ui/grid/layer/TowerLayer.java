@@ -82,6 +82,7 @@ public class TowerLayer extends AbstractGridLayer {
         for (Tuple2<PlacedTile, Tower> t: model.towers) {
             PlacedTile pt = t._1;
             Tower tower = t._2;
+            //TODO generate are in create model
             Area ra = rm.getFeatureArea(pt.getTile(), pt.getRotation(), Location.TOWER)
                 .translateTo(pt.getPosition())
                 .getDisplayArea()

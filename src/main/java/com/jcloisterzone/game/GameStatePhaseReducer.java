@@ -132,7 +132,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
             try {
                 return (StepResult) m.invoke(phase, state, message);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                logger.error(String.format("Error invoking %s", m) , e);
+                throw new RuntimeException(e.getCause() == null ? e : e.getCause());
             }
         }
         throw new IllegalArgumentException(String.format("Message %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));

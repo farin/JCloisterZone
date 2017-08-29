@@ -4,6 +4,7 @@ import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 
 public interface EventsStateMixin {
@@ -15,10 +16,10 @@ public interface EventsStateMixin {
         return setEvents(getEvents().append(ev));
     }
 
-    default Queue<PlayEvent> getCurrentTurnEvents() {
-        Queue<PlayEvent> res = Queue.empty();
+    default List<PlayEvent> getCurrentTurnEvents() {
+        List<PlayEvent> res = List.empty();
         for (PlayEvent ev : getEvents().reverseIterator()) {
-            res.prepend(ev);
+            res = res.prepend(ev);
             if (ev instanceof PlayerTurnEvent) {
                 break;
             }

@@ -1,7 +1,9 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.Color;
+import static com.jcloisterzone.ui.resources.ResourceManager.NORMALIZED_SIZE;
+import static com.jcloisterzone.ui.resources.ResourceManager.POINT_NORMALIZED_SIZE;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -26,10 +28,7 @@ import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
-import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.resources.TileImage;
-
-import static com.jcloisterzone.ui.resources.ResourceManager.NORMALIZED_SIZE;
 
 public abstract class AbstractGridLayer implements GridLayer {
 
@@ -182,6 +181,16 @@ public abstract class AbstractGridLayer implements GridLayer {
         //double ratioY = gridPanel.getTileHeight() / (double)ResourceManager.NORMALIZED_SIZE / getImageSizeRatio();
         // TODO ignoring image image size ratio
         double ratioY = gridPanel.getTileHeight() / (double)NORMALIZED_SIZE;
+        return AffineTransform.getScaleInstance(ratioX, ratioY);
+    }
+
+    @Deprecated
+    public AffineTransform getPointZoomScale() {
+        //TODO move imple on gridPanel with caching
+        double ratioX = gridPanel.getTileWidth() / (double)POINT_NORMALIZED_SIZE;
+        //double ratioY = gridPanel.getTileHeight() / (double)ResourceManager.NORMALIZED_SIZE / getImageSizeRatio();
+        // TODO ignoring image image size ratio
+        double ratioY = gridPanel.getTileHeight() / (double)POINT_NORMALIZED_SIZE;
         return AffineTransform.getScaleInstance(ratioX, ratioY);
     }
 

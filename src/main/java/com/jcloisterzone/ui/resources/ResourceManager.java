@@ -10,6 +10,7 @@ import com.jcloisterzone.ui.ImmutablePoint;
 public interface ResourceManager {
 
     static final int NORMALIZED_SIZE = 1000;
+    static final int POINT_NORMALIZED_SIZE = 100; // TODO merge with NORMALIZED_SIZE
 
     TileImage getTileImage(TileDefinition tile, Rotation rot); //use custom rotation
     TileImage getAbbeyImage(Rotation rot);

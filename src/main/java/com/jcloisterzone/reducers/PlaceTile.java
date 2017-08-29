@@ -17,6 +17,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.game.state.PlacedTunnelToken;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
@@ -128,7 +129,7 @@ public class PlaceTile implements Reducer {
 
         if (!newTunnels.isEmpty()) {
             state = state.mapCapabilityModel(TunnelCapability.class, model -> {
-                Map<FeaturePointer, String> newTunnelsMap = HashSet.ofAll(newTunnels).toMap(fp -> new Tuple2<>(fp, null));
+                Map<FeaturePointer, PlacedTunnelToken> newTunnelsMap = HashSet.ofAll(newTunnels).toMap(fp -> new Tuple2<>(fp, null));
                 return model.merge(newTunnelsMap);
             });
         }

@@ -44,6 +44,7 @@ import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.reducers.PlaceBridge;
+import com.jcloisterzone.reducers.PlaceTunnel;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
@@ -256,6 +257,12 @@ public class ActionPhase extends Phase {
             state = (new PlaceBridge(msg.getPointer())).apply(state);
             state = clearActions(state);
             return enter(state);
+        case TUNNEL_A:
+        case TUNNEL_B:
+        case TUNNEL_C:
+            state = (new PlaceTunnel(token, msg.getPointer())).apply(state);
+            state = clearActions(state);
+            return enter(state);
         default:
             throw new IllegalArgumentException(String.format("%s placement is not allowed", token));
         }
@@ -273,12 +280,6 @@ public class ActionPhase extends Phase {
 //        next(state);
 //    }
 //
-//
-//    @Override
-//    public void placeTunnelPiece(FeaturePointer fp, boolean isB) {
-//        game.get(TunnelCapability.class).placeTunnelPiece(fp, isB);
-//        next(ActionPhase.class);
-//    }
 //
 //    @PhaseMessageHandler
 //    public void handleDeployFlier(DeployFlierMessage msg) {

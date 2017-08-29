@@ -20,7 +20,7 @@
     - Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
       (changed according to New Carcassonne (C II) rules)
 * Tunnel
-    - added MORE_TUNNEL_TOKENS rule
+    - added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players game or two token sets for 3 player game)
 * technical notes:
     - Grand rewrite in favor of functional programming and immutable data structure.
     - vavr.io library is awesome!

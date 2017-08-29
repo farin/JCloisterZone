@@ -27,6 +27,8 @@ import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class ActionWrapper implements Comparable<ActionWrapper> {
 
+    public static final Color INACTIVE_COLOR = Color.GRAY;
+
     private final PlayerAction<?> action;
 
     public ActionWrapper(PlayerAction<?> action) {
@@ -39,7 +41,7 @@ public class ActionWrapper implements Comparable<ActionWrapper> {
     }
 
     public Image getImage(ResourceManager rm, Player player, boolean active) {
-        return getImage(rm, player != null && active ? player.getColors().getMeepleColor() : Color.GRAY);
+        return getImage(rm, player != null && active ? player.getColors().getMeepleColor() : INACTIVE_COLOR);
     }
 
     protected Image getImage(ResourceManager rm, Color color) {
@@ -72,7 +74,7 @@ public class ActionWrapper implements Comparable<ActionWrapper> {
         if (action instanceof FairyNextToAction) return 30;
         if (action instanceof FairyOnTileAction) return 30;
         if (action instanceof TunnelAction) {
-            return ((TunnelAction)action).isSecondTunnelPiece() ? 41 : 40;
+            return ((TunnelAction)action).getToken().ordinal() + 40;
         }
         return 50;
     }

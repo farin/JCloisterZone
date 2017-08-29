@@ -64,6 +64,20 @@ public class Road extends CompletableFeature<Road> {
         );
     }
 
+    /** Merge roads through connecting tunnel ends. */
+    public Road connectTunnels(Road road, FeaturePointer tunnelEnd1, FeaturePointer tunnelEnd2) {
+        Road merged;
+        if (this == road) {
+            // just remove openTunnelEnds
+            merged = this;
+        } else {
+            merged = merge(road);
+        }
+        return merged.setOpenTunnelEnds(
+            merged.openTunnelEnds.remove(tunnelEnd1).remove(tunnelEnd2)
+        );
+    }
+
     @Override
     public Road placeOnBoard(Position pos, Rotation rot) {
         return new Road(

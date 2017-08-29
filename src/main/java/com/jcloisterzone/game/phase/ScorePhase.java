@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
@@ -27,12 +28,12 @@ import com.jcloisterzone.reducers.ScoreCompletable;
 import com.jcloisterzone.reducers.ScoreFarm;
 import com.jcloisterzone.reducers.ScoreFarmWhenBarnIsConnected;
 import com.jcloisterzone.reducers.UndeployMeeples;
-import com.jcloisterzone.ui.GameController;
 
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
@@ -102,10 +103,17 @@ public class ScorePhase extends Phase {
         }
 
         if (state.getCapabilities().contains(TunnelCapability.class)) {
-//            Road r = tunnelCap.getPlacedTunnel();
-//            if (r != null) {
-//                state = scoreCompleted(state, r, tile);
-//            }
+            GameState _state = state;
+            List<Feature> tunnelModified = state.getCurrentTurnEvents()
+                .filter(Predicates.instanceOf(TokenPlacedEvent.class))
+                .map(ev -> (TokenPlacedEvent) ev)
+                .filter(ev -> ev.getToken().isTunnel())
+                .map(ev -> _state.getFeature(ev.getPointer()));
+            assert tunnelModified.size() <= 1;
+
+            for (Feature road : tunnelModified) {
+                state = scoreCompleted(state, (Completable) road, null);
+            }
         }
 
         Set<Position> neighbourPositions = state.getAdjacentAndDiagonalTiles2(pos)

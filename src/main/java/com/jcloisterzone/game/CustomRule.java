@@ -23,7 +23,7 @@ public enum CustomRule {
     MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, Boolean.class, _("Allow direct barn placement on a farm where another barn is already placed.")),
 
     TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, Boolean.class, _("Apply tunnel rule on tunnels from other expansions.")),
-    MORE_TUNNEL_TOKENS(Expansion.TUNNEL, Boolean.class, _("Assign 3/2 tunnel set in game of two/three players")),
+    MORE_TUNNEL_TOKENS(Expansion.TUNNEL, Boolean.class, _("Assign 3/2 tunnel set in game of two/three players.")),
 
     BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _("No bazaar bidding. Each player just chooses one tile.")),
 

@@ -105,12 +105,8 @@ public class MainPanel extends JPanel {
             gridPanel.addLayer(new TowerLayer(gridPanel, gc));
         }
 
+        gridPanel.addLayer(new TokenLayer(gridPanel, gc));
         gridPanel.addLayer(meepleLayer);
-        //TODO add always
-        if (capabs.contains(LittleBuildingsCapability.class) ||
-            capabs.contains(TunnelCapability.class) ) {
-            //gridPanel.addLayer(new TokenLayer(gridPanel, gc));
-        }
 
         if (capabs.contains(BridgeCapability.class)) {
             BridgeLayer bridgeLayer = new BridgeLayer(gridPanel, gc);

@@ -1,9 +1,11 @@
 package com.jcloisterzone.ui.controls.action;
 
+import java.awt.Color;
 import java.awt.Image;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TunnelAction;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.ui.resources.ResourceManager;
 
 public class TunnelActionWrapper extends ActionWrapper {
@@ -19,11 +21,8 @@ public class TunnelActionWrapper extends ActionWrapper {
 
     @Override
     public Image getImage(ResourceManager rm, Player player, boolean active) {
-        if (active && getAction().isSecondTunnelPiece()) {
-            return getImage(rm, player.getColors().getTunnelBColor());
-        } else {
-            return super.getImage(rm, player, active);
-        }
+        Token token = getAction().getToken();
+        return getImage(rm, active ? player.getColors().getTunnelColors().get(token) : INACTIVE_COLOR);
     }
 
 }
