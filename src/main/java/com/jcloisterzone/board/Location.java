@@ -207,7 +207,7 @@ public class Location implements Serializable {
         mHi = ((mHi & 0b1010101) << 5) | ((mHi & 0b10101010) << 3);
         mHi = (mHi | (mHi >> 8)) & 0xff;
 
-        return create((mask & ~65535) | (mHi << 8) | mLo);
+        return create((mask & ~0xffff) | (mHi << 8) | mLo);
     }
 
     /**
@@ -216,13 +216,13 @@ public class Location implements Serializable {
      * @return rotated instance
      */
     private Location shift(int i) {
-        int mLo = (mask & 0xff) << i;
-        mLo = (mLo | mLo >> 8) & 0xff;
+        int mLo = (mask & 0xff) << i; // shift lower bits
+        mLo = (mLo | mLo >> 8) & 0xff; // recover bits lost in the shift
 
-        int mHi = (mask & 0xff00) << i;
-        mHi = (mHi | mHi >> 8) & 0xff00;
+        int mHi = (mask & 0xff00) << i; // shift higher bits
+        mHi = (mHi | mHi >> 8) & 0xff00; // recover bits lost in the shift
 
-        return create((mask & ~0xffff) | mHi | mLo);
+        return create((mask & ~0xffff) | mHi | mLo); // add all other bits (e.g., abbot, tower etc.) and return
     }
 
     /**
@@ -231,7 +231,7 @@ public class Location implements Serializable {
      * @return the rotated instance
      */
     public Location rotateCCW(Rotation rot) {
-        return shift((rot.ordinal()*6)%8);
+        return shift((rot.ordinal()*6)%8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
     }
 
     /**
@@ -245,7 +245,7 @@ public class Location implements Serializable {
 
     public Location getLeftFarm() {
         assert isEdgeLocation();
-        return create((mask >> 8) & 0b1010101);
+        return create((mask >> 8) & 0b01010101);
     }
 
     public Location getRightFarm() {
