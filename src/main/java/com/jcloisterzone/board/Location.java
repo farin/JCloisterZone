@@ -194,8 +194,8 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance with the same mask as {@code this} but mirrored.
-     * @return the mirrored instance
+     * Returns an instance that is the mirror of {@code this}.
+     * @return an instance that is the mirror of {@code this}
      */
     public Location rev() {
         // odd bits shift by 5, even by 3;
