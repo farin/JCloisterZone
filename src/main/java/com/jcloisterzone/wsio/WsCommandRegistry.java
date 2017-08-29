@@ -9,6 +9,7 @@ import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CommitMessage;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
@@ -89,7 +90,8 @@ public class WsCommandRegistry {
             .put(t(PayRansomMessage.class))
             .put(t(ExchangeFollowerChoiceMessage.class))
             .put(t(BazaarBidMessage.class))
-            .put(t(BazaarBuyOrSellMessage.class));
+            .put(t(BazaarBuyOrSellMessage.class))
+            .put(t(CornCircleRemoveOrDeployMessage.class));
     }
 
     private static Tuple2<String, Class<? extends WsMessage>> t(Class<? extends WsMessage> msgType) {

@@ -10,10 +10,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.feature.TileFeature;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -48,7 +51,9 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
         deploymentOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gc.getRmiProxy().cornCiclesRemoveOrDeploy(false);
+                gc.getConnection().send(
+                    new CornCircleRemoveOrDeployMessage(gc.getGameId(), CornCicleOption.DEPLOY)
+                );
             }
         });
         add(deploymentOption, "wrap, growx, h 40, gapbottom 5");
@@ -59,12 +64,15 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
         removalOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gc.getRmiProxy().cornCiclesRemoveOrDeploy(true);
+                gc.getConnection().send(
+                    new CornCircleRemoveOrDeployMessage(gc.getGameId(), CornCicleOption.REMOVE)
+                );
             }
         });
         add(removalOption, "wrap, growx, h 40, gapbottom 5");
 
-        String feature = TileFeature.getLocalizedNamefor (gc.getGame().getCurrentTile().getCornCircle());
+        TileDefinition tile = gc.getGame().getState().getLastPlaced().getTile();
+        String feature = TileFeature.getLocalizedNamefor(tile.getCornCircle());
         label = new ThemedJLabel(_("on/from a {0}.", feature.toLowerCase()));
         add(label, "wrap");
     }

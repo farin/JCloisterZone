@@ -1,25 +1,20 @@
 package com.jcloisterzone.ui.grid;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 
 import javax.swing.JPanel;
 
-import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.event.CornCirclesOptionEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.CapabilitiesState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
-import com.jcloisterzone.ui.grid.actionpanel.CornCirclesPanel;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
@@ -157,14 +152,4 @@ public class MainPanel extends JPanel {
 //            gridPanel.revalidate();
 //        }
 //    }
-
-    @Subscribe
-    public void cornOptionSelected(CornCirclesOptionEvent ev) {
-        for (Component comp : gridPanel.getComponents()) {
-            if (comp instanceof CornCirclesPanel) {
-                gridPanel.remove(comp);
-                gridPanel.revalidate();
-            }
-        }
-    }
 }
