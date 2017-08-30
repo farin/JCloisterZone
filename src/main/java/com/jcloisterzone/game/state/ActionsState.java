@@ -48,7 +48,7 @@ public class ActionsState implements Serializable {
     /**
      * Merge all MeepleActions with same meepleType to single action.
      */
-    public ActionsState mergeMeppleActions() {
+    public ActionsState mergeMeepleActions() {
         Seq<Vector<MeepleAction>> groupped = this.actions
             .filter(Predicates.instanceOf(MeepleAction.class))
             .map(a -> (MeepleAction) a)

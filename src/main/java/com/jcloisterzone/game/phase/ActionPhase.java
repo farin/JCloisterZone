@@ -18,11 +18,9 @@ import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.DeploymentCheckResult;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
@@ -34,21 +32,16 @@ import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Token;
-import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.reducers.PlaceBridge;
 import com.jcloisterzone.reducers.PlaceTunnel;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.PayRansomMessage;
 import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 
@@ -59,7 +52,7 @@ import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
 
-public class ActionPhase extends Phase {
+public class ActionPhase extends AbstractActionPhase {
 
     public ActionPhase(Config config, Random random) {
         super(config, random);
@@ -69,68 +62,12 @@ public class ActionPhase extends Phase {
     public StepResult enter(GameState state) {
         Player player = state.getTurnPlayer();
 
-        Vector<Meeple> availMeeples = player.getMeeplesFromSupply(
-            state,
-            Vector.of(SmallFollower.class, BigFollower.class, Phantom.class,
-                Wagon.class, Mayor.class, Builder.class, Pig.class)
+        Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
+            SmallFollower.class, BigFollower.class, Phantom.class,
+            Wagon.class, Mayor.class, Builder.class, Pig.class
         );
-
-        PlacedTile lastPlaced = state.getLastPlaced();
-        Position currentTilePos = lastPlaced.getPosition();
-        Stream<PlacedTile> tiles;
-
-        if (lastPlaced.getTile().getTrigger() == TileTrigger.PORTAL && !state.getFlags().contains(Flag.PORTAL_USED)) {
-            tiles = Stream.ofAll(state.getPlacedTiles().values());
-        } else {
-            tiles = Stream.of(lastPlaced);
-        }
-
-        Stream<Tuple2<FeaturePointer, Scoreable>> placesFp = tiles.flatMap(tile -> {
-            Position pos = tile.getPosition();
-            boolean isCurrentTile = pos.equals(currentTilePos);
-
-            boolean placementAllowed = true;
-            for (Capability<?> cap : state.getCapabilities().toSeq()) {
-                if (!cap.isMeepleDeploymentAllowed(state, pos)) {
-                    placementAllowed = false;
-                    break;
-                }
-            }
-
-            Stream<Tuple2<Location, Scoreable>> places;
-            if (placementAllowed) {
-                places = state.getTileFeatures2(pos, Scoreable.class);
-                //places = tile.getScoreables(!isCurrentTile);
-            } else {
-                places = Stream.empty();
-            }
-
-            if (!isCurrentTile) {
-                //exclude completed
-                places = places.filter(t -> {
-                    if (t._2 instanceof Completable) {
-                        return !((Completable)t._2).isCompleted(state);
-                    } else {
-                        return true;
-                    }
-                });
-            }
-
-            return places.map(t -> t.map1(loc -> new FeaturePointer(pos, loc)));
-        });
-
-        Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
-            Set<FeaturePointer> locations = placesFp
-                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
-                .filter(t -> !t._2.isOccupied(state))
-                .map(t -> t._1)
-                .toSet();
-
-            PlayerAction<?> action = new MeepleAction(meeple.getClass(), locations);
-            return action;
-        });
-
-        actions = actions.filter(action -> !action.isEmpty());
+;
+        Vector<PlayerAction<?>> actions = prepareMeepleActions(state, meepleTypes);
 
         GameState nextState = state.setPlayerActions(
             new ActionsState(player, actions, true)
@@ -149,41 +86,6 @@ public class ActionPhase extends Phase {
         }
 
         return promote(nextState);
-    }
-
-    @Override
-    @PhaseMessageHandler
-    public StepResult handlePayRansom(GameState state, PayRansomMessage msg) {
-        state = (new PayRansom(msg.getMeepleId())).apply(state);
-        return enter(state); //recompute actions with returned followers
-    }
-
-    @PhaseMessageHandler
-    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        FeaturePointer fp = msg.getPointer();
-        Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
-        //TODO validate against players actions instead
-        if (m instanceof Follower) {
-            if (state.getFeature(fp).isOccupied(state)) {
-                throw new IllegalArgumentException("Feature is occupied.");
-            }
-        }
-        PlacedTile placedTile = state.getLastPlaced();
-
-        state = (new DeployMeeple(m, fp)).apply(state);
-
-        if (fp.getLocation() != Location.TOWER
-            && placedTile.getTile().getTrigger() == TileTrigger.PORTAL
-            && !fp.getPosition().equals(placedTile.getPosition())
-        ) {
-            state = state.addFlag(Flag.PORTAL_USED);
-        }
-        if (m instanceof Barn) {
-            state = state.setCapabilityModel(BarnCapability.class, fp);
-        }
-
-        state = clearActions(state);
-        return next(state);
     }
 
     @PhaseMessageHandler
@@ -283,6 +185,7 @@ public class ActionPhase extends Phase {
 //
 //
 //    @PhaseMessageHandler
+//	  // TODO move into AbstactActionPhase!!!
 //    public void handleDeployFlier(DeployFlierMessage msg) {
 //        game.updateRandomSeed(msg.getCurrentTime());
 //        int distance = game.getRandom().nextInt(3) + 1;

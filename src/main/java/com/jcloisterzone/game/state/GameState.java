@@ -253,6 +253,10 @@ public class GameState implements ActionsStateMixin, BoardMixin,
         );
     }
 
+    public GameState mapPlayerActions(Function<ActionsState, ActionsState> fn) {
+        return setPlayerActions(fn.apply(playerActions));
+    }
+
     @Override
     public GameState setFlags(Set<Flag> flags) {
         if (flags == this.flags) return this;
