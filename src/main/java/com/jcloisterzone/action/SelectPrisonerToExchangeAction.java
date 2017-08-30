@@ -1,10 +1,10 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.grid.actionpanel.PrisonersExchangePanel;
 import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
@@ -27,9 +27,8 @@ public class SelectPrisonerToExchangeAction extends PlayerAction<Follower> {
     }
 
     @Override
-    public void perform(GameController gc, Follower follower) {
-        gc.getConnection().send(new ExchangeFollowerChoiceMessage(follower.getId())
-        );
+    public WsInGameMessage select(Follower follower) {
+        return new ExchangeFollowerChoiceMessage(follower.getId());
     }
 
     public Follower getJustCapturedFollower() {

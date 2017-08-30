@@ -99,7 +99,7 @@ public abstract class AbstractActionPhase extends Phase {
                 .map(t -> t._1)
                 .toSet();
 
-            PlayerAction<?> action = new MeepleAction(meeple.getClass(), locations);
+            PlayerAction<?> action = new MeepleAction(meeple, locations);
             return action;
         });
 

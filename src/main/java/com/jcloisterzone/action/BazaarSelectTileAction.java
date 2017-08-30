@@ -1,9 +1,9 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
@@ -15,7 +15,7 @@ public class BazaarSelectTileAction extends PlayerAction<BazaarItem> {
     }
 
     @Override
-    public void perform(GameController gc, BazaarItem target) {
+    public WsInGameMessage select(BazaarItem target) {
         // server is invoked directly from BazaarPanel
         throw new UnsupportedOperationException();
     }

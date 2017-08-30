@@ -52,7 +52,7 @@ public class ActionsState implements Serializable {
         Seq<Vector<MeepleAction>> groupped = this.actions
             .filter(Predicates.instanceOf(MeepleAction.class))
             .map(a -> (MeepleAction) a)
-            .groupBy(a -> ((MeepleAction)a).getMeepleType())
+            .groupBy(a -> a.getMeepleType())
             .values();
 
         if (groupped.find(v -> v.length() > 1).isEmpty()) {
@@ -64,7 +64,8 @@ public class ActionsState implements Serializable {
                 Set<FeaturePointer> mergedOptions = v.map(a ->
                     a.getOptions()).reduce((o1, o2) -> o1.addAll(o2)
                 );
-                return new MeepleAction(v.get().getMeepleType(), mergedOptions);
+                MeepleAction sample = v.get();
+                return new MeepleAction(sample.getMeepleId(), sample.getMeepleType(), mergedOptions);
             })
         );
         actions = actions.appendAll(

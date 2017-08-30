@@ -120,7 +120,7 @@ public class CornCirclePhase extends Phase {
 
             Set<FeaturePointer> deployOptions = meeples.map(Tuple2::_2).toSet();
             actions = availMeeples.map(meeple ->
-                new MeepleAction(meeple.getClass(), deployOptions)
+                new MeepleAction(meeple, deployOptions)
             );
             break;
         case REMOVE:

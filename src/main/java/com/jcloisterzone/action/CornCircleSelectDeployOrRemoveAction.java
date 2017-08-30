@@ -2,11 +2,11 @@ package com.jcloisterzone.action;
 
 import java.util.Arrays;
 
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.grid.actionpanel.CornCirclesPanel;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.HashSet;
 
@@ -18,10 +18,8 @@ public class CornCircleSelectDeployOrRemoveAction extends PlayerAction<CornCicle
     }
 
     @Override
-    public void perform(GameController gc, CornCicleOption option) {
-        gc.getConnection().send(
-            new CornCircleRemoveOrDeployMessage(option)
-        );
+    public WsInGameMessage select(CornCicleOption option) {
+        return new CornCircleRemoveOrDeployMessage(option);
     }
 
     @Override

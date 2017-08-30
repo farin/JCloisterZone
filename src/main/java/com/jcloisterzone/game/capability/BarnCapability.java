@@ -72,7 +72,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
             return state;
         }
 
-        return state.appendAction(new MeepleAction(Barn.class, options));
+        return state.appendAction(new MeepleAction(barn, options));
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
@@ -22,8 +23,8 @@ public class MoveDragonAction extends SelectTileAction {
     }
 
     @Override
-    public void perform(GameController gc, Position target) {
-        gc.getConnection().send(new MoveNeutralFigureMessage(figureId, target));
+    public WsInGameMessage select(Position target) {
+        return new MoveNeutralFigureMessage(figureId, target);
     }
 
     @Override

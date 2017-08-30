@@ -1,8 +1,8 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 @LinkedPanel(BazaarPanel.class)
 public class BazaarBidAction extends PlayerAction<Void> {
@@ -12,7 +12,7 @@ public class BazaarBidAction extends PlayerAction<Void> {
     }
 
     @Override
-    public void perform(GameController gc, Void target) {
+    public WsInGameMessage select(Void target) {
         // server is invoked directly from BazaarPanel
         throw new UnsupportedOperationException();
     }

@@ -84,7 +84,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
 //                }
 //            }
         }
-        action.perform(gc, fp);
+        gc.getConnection().send(action.select(fp));
         return;
     }
 

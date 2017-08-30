@@ -1,9 +1,9 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
@@ -15,8 +15,8 @@ public class CaptureFollowerAction extends SelectFollowerAction {
     }
 
     @Override
-    public void perform(GameController gc, MeeplePointer mp) {
-        gc.getConnection().send(new CaptureFollowerMessage(mp));
+    public WsInGameMessage select(MeeplePointer mp) {
+        return new CaptureFollowerMessage(mp);
     }
 
     @Override

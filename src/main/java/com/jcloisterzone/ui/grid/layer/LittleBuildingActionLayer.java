@@ -189,7 +189,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selected != null) {
-                getAction().perform(getRmiProxy(), selected);
+                gc.getConnection().send(getAction().select(selected));
                 e.consume();
             }
         }

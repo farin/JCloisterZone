@@ -77,7 +77,7 @@ public class TileActionLayer extends AbstractGridLayer implements GridMouseListe
             SelectTileAction action = getAction();
             if (action.getOptions().contains(p)) {
                 e.consume();
-                action.perform(gc, p);
+                gc.getConnection().send(action.select(p));
             }
         }
     }

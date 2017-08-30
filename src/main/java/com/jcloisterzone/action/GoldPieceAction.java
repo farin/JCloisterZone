@@ -5,6 +5,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
@@ -19,9 +20,9 @@ public class GoldPieceAction extends SelectTileAction {
     }
 
     @Override
-    public void perform(GameController gc, Position p) {
+    public WsInGameMessage select(Position p) {
+        throw new UnsupportedOperationException("TODO");
         //server.placeGoldPiece(p);
-    	//TODO
     }
 
     @Override

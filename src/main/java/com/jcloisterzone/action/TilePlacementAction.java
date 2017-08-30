@@ -8,6 +8,7 @@ import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
@@ -39,8 +40,8 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     @Override
-    public void perform(GameController gc, TilePlacement tp) {
-        gc.getConnection().send(new PlaceTileMessage(tile.getId(), tp.getRotation(), tp.getPosition()));
+    public WsInGameMessage select(TilePlacement tp) {
+        return new PlaceTileMessage(tile.getId(), tp.getRotation(), tp.getPosition());
     }
 
     @Override

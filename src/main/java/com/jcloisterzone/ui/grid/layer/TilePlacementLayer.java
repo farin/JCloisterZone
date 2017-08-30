@@ -226,7 +226,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null && isActive() && allowedRotation) {
                 e.consume();
-                getAction().perform(gc, new TilePlacement(p, previewRotation, null));
+                gc.getConnection().send(getAction().select(new TilePlacement(p, previewRotation, null)));
             }
         }
     }

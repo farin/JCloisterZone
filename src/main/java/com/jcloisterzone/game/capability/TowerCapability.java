@@ -86,7 +86,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
                 Vector.of(SmallFollower.class, BigFollower.class, Phantom.class)
             );
             Vector<PlayerAction<?>> actions = availMeeples.map(meeple ->
-                new MeepleAction(meeple.getClass(), openTowersForFollower)
+                new MeepleAction(meeple, openTowersForFollower)
             );
             as = as.appendActions(actions).mergeMeepleActions();
         }

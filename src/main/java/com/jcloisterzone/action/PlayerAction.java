@@ -2,7 +2,7 @@ package com.jcloisterzone.action;
 
 import java.io.Serializable;
 
-import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Set;
@@ -17,7 +17,7 @@ public abstract class PlayerAction<T> implements Iterable<T>, Serializable {
        this.options = options;
     }
 
-    public abstract void perform(GameController gc, T option);
+    public abstract WsInGameMessage select(T option);
 
     @Override
     public Iterator<T> iterator() {

@@ -46,7 +46,7 @@ public class WagonPhase extends Phase {
                 });
 
             if (!options.isEmpty()) {
-                PlayerAction<?> action = new MeepleAction(Wagon.class, options);
+                PlayerAction<?> action = new MeepleAction(wagon, options);
                 state = state.setPlayerActions(
                     new ActionsState(wagon.getPlayer(), action, true)
                 );
