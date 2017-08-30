@@ -8,6 +8,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
 
@@ -46,6 +47,7 @@ public class PlaceTunnel implements Reducer {
             state = state.setFeatureMap(featureMapUpdate.merge(state.getFeatureMap()));
         }
 
+        state = state.addFlag(Flag.TUNNEL_PLACED);
         state = state.setCapabilityModel(TunnelCapability.class, tunnels.put(ptr, placedToken));
         state = state.appendEvent(new TokenPlacedEvent(PlayEventMeta.createWithActivePlayer(state), token, ptr));
         return state;
