@@ -16,7 +16,7 @@ public class CaptureFollowerAction extends SelectFollowerAction {
 
     @Override
     public void perform(GameController gc, MeeplePointer mp) {
-        gc.getConnection().send(new CaptureFollowerMessage(gc.getGameId(), mp));
+        gc.getConnection().send(new CaptureFollowerMessage(mp));
     }
 
     @Override

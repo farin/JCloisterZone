@@ -20,8 +20,7 @@ public class ReturnMeepleAction extends SelectFollowerAction {
 
     @Override
     public void perform(GameController gc, MeeplePointer ptr) {
-        gc.getConnection().send(new ReturnMeepleMessage(
-            gc.getGame().getGameId(), ptr, source));
+        gc.getConnection().send(new ReturnMeepleMessage(ptr, source));
     }
 
     @Override

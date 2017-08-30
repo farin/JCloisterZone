@@ -274,7 +274,7 @@ public class ControlPanel extends JPanel {
 
         if (showConfirmRequest) {
             setShowConfirmRequest(false);
-            gc.getConnection().send(new CommitMessage(game.getGameId()));
+            gc.getConnection().send(new CommitMessage());
             repaint();
         } else {
             ActionsState actions = state.getPlayerActions();
@@ -292,7 +292,7 @@ public class ControlPanel extends JPanel {
                     return;
                 }
             }
-            gc.getConnection().send(new PassMessage(game.getGameId()));
+            gc.getConnection().send(new PassMessage());
         }
     }
 
@@ -389,7 +389,7 @@ public class ControlPanel extends JPanel {
             if (needsConfirm) {
                 setShowConfirmRequest(true);
             } else {
-                gc.getConnection().send(new CommitMessage(game.getGameId()));
+                gc.getConnection().send(new CommitMessage());
             }
         } else {
             actionPanel.setShowConfirmRequest(true, true);

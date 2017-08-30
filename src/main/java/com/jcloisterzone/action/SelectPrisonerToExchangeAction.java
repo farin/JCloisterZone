@@ -27,9 +27,8 @@ public class SelectPrisonerToExchangeAction extends PlayerAction<Follower> {
     }
 
     @Override
-    public void perform(GameController gc, Follower f) {
-        gc.getConnection().send(
-            new ExchangeFollowerChoiceMessage(gc.getGameId(), f.getId())
+    public void perform(GameController gc, Follower follower) {
+        gc.getConnection().send(new ExchangeFollowerChoiceMessage(follower.getId())
         );
     }
 

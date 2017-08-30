@@ -26,7 +26,7 @@ public class TunnelAction extends SelectFeatureAction {
 
     @Override
     public void perform(GameController gc, FeaturePointer ptr) {
-        gc.getConnection().send(new PlaceTokenMessage(gc.getGameId(), token, ptr));
+        gc.getConnection().send(new PlaceTokenMessage(token, ptr));
     }
 
     @Override

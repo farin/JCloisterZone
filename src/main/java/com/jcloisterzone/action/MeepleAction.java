@@ -27,9 +27,7 @@ public class MeepleAction extends SelectFeatureAction {
     public void perform(GameController gc, FeaturePointer fp) {
         GameState state = gc.getGame().getState();
         String meepleId = state.getActivePlayer().getMeepleFromSupply(state, meepleType).getId();
-        gc.getConnection().send(
-            new DeployMeepleMessage(gc.getGame().getGameId(), fp, meepleId));
-
+        gc.getConnection().send(new DeployMeepleMessage(fp, meepleId));
     }
 
     @Override

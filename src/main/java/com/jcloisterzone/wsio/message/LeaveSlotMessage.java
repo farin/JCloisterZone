@@ -8,8 +8,10 @@ public class LeaveSlotMessage implements WsInGameMessage {
     private String gameId;
     private int number;
 
-    public LeaveSlotMessage(String gameId, int number) {
-        this.gameId = gameId;
+    public LeaveSlotMessage() {
+    }
+
+    public LeaveSlotMessage(int number) {
         this.number = number;
     }
 

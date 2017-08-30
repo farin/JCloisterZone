@@ -31,7 +31,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WebSocketConnection;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.GameOverMessage;
@@ -56,7 +56,7 @@ public class Game implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private WebSocketConnection connection;
+    private Connection connection;
 
     private final String gameId;
     private String name;
@@ -95,11 +95,11 @@ public class Game implements EventProxy {
         return gameId;
     }
 
-    public WebSocketConnection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 
-    public void setConnection(WebSocketConnection connection) {
+    public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
@@ -145,14 +145,14 @@ public class Game implements EventProxy {
 
         Player player = state.getActivePlayer();
         if (player != null && !player.equals(prev.getActivePlayer()) && player.getSlot().isOwn()) {
-            connection.send(new ToggleClockMessage(gameId, player.getIndex()));
+            connection.send(new ToggleClockMessage(player.getIndex()));
         }
 
         boolean gameIsOver = isOver();
         if (gameIsOver) {
             if (state.getTurnPlayer().getSlot().isOwn()) { // send messages only from one client
-                connection.send(new ToggleClockMessage(gameId, null));
-                connection.send(new GameOverMessage(gameId));
+                connection.send(new ToggleClockMessage(null));
+                connection.send(new GameOverMessage());
             }
         }
 

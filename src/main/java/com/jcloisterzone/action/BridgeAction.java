@@ -21,7 +21,7 @@ public class BridgeAction extends SelectFeatureAction {
     @Override
     public void perform(GameController gc, FeaturePointer ptr) {
         gc.getConnection().send(
-            new PlaceTokenMessage(gc.getGameId(), Token.BRIDGE, ptr)
+            new PlaceTokenMessage(Token.BRIDGE, ptr)
         );
     }
 

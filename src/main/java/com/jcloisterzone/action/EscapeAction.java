@@ -17,8 +17,7 @@ public class EscapeAction extends SelectFollowerAction {
 
     @Override
     public void perform(GameController gc, MeeplePointer ptr) {
-        gc.getConnection().send(new ReturnMeepleMessage(
-            gc.getGame().getGameId(), ptr, ReturnMeepleSource.SIEGE_ESCAPE));
+        gc.getConnection().send(new ReturnMeepleMessage(ptr, ReturnMeepleSource.SIEGE_ESCAPE));
     }
 
     @Override

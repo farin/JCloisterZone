@@ -10,16 +10,19 @@ public class UndoMessage implements WsInGameMessage {
      *  because server doesn't understand game rules */
     private int replaySize;
 
-    public UndoMessage(String gameId, int replaySize) {
-        super();
-        this.gameId = gameId;
+    public UndoMessage() {
+    }
+
+    public UndoMessage(int replaySize) {
         this.replaySize = replaySize;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

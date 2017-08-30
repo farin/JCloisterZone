@@ -5,6 +5,7 @@
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
 * saved game format changed to json (and instead of game snapshot contains just action history)
+* removed Catapult tiles, with many other expansion this extra tiles makes not much sense
 * Princess and Dragon:
     - PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way:
       If enabled and there is option to remove princess no other action is allowed.

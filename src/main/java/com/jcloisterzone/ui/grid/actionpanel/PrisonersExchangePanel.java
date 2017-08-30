@@ -70,7 +70,7 @@ public class PrisonersExchangePanel extends ActionInteractionPanel<SelectPrisone
                 public void actionPerformed(ActionEvent e) {
                     ((JButton)e.getSource()).setEnabled(false);
                     gc.getConnection().send(
-                        new ExchangeFollowerChoiceMessage(gc.getGameId(), f.getId())
+                        new ExchangeFollowerChoiceMessage(f.getId())
                     );
                 }
             });

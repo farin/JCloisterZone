@@ -5,20 +5,25 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SET_RULE")
 public class SetRuleMessage implements WsInGameMessage {
+
     private String gameId;
     private CustomRule rule;
     private Object value;
 
-    public SetRuleMessage(String gameId, CustomRule rule, Object value) {
-        this.gameId = gameId;
+    public SetRuleMessage() {
+    }
+
+    public SetRuleMessage(CustomRule rule, Object value) {
         this.rule = rule;
         this.value = value;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

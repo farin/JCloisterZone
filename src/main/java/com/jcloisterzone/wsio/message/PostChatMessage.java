@@ -9,16 +9,20 @@ public class PostChatMessage implements WsInGameMessage, WsInChannelMessage {
     private String channel;
     private String text;
 
+    public PostChatMessage() {
+    }
+
     public PostChatMessage(String text) {
         super();
         this.text = text;
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
@@ -31,12 +35,12 @@ public class PostChatMessage implements WsInGameMessage, WsInChannelMessage {
         this.text = text;
     }
 
-	@Override
-	public String getChannel() {
-		return channel;
-	}
+    @Override
+    public String getChannel() {
+        return channel;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 }

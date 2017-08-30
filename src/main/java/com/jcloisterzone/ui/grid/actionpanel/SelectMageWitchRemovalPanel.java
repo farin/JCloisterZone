@@ -53,7 +53,7 @@ public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAc
                 ((JButton)e.getSource()).setEnabled(false);
                 Mage mage = state.getNeutralFigures().getMage();
                 gc.getConnection().send(
-                    new MoveNeutralFigureMessage(gc.getGameId(), mage.getId(), null));
+                    new MoveNeutralFigureMessage(mage.getId(), null));
             }
         });
         add(btn, "wrap, growx, h 40, gapbottom 5");
@@ -67,7 +67,7 @@ public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAc
                 ((JButton)e.getSource()).setEnabled(false);
                 Witch witch = state.getNeutralFigures().getWitch();
                 gc.getConnection().send(
-                    new MoveNeutralFigureMessage(gc.getGameId(), witch.getId(), null));
+                    new MoveNeutralFigureMessage(witch.getId(), null));
             }
         });
         add(btn, "wrap, growx, h 40, gapbottom 5");

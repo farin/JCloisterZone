@@ -25,7 +25,7 @@ public class BazaarSelectBuyOrSellAction extends PlayerAction<BuyOrSellOption>{
     @Override
     public void perform(GameController gc, BuyOrSellOption option) {
         gc.getConnection().send(
-            new BazaarBuyOrSellMessage(gc.getGameId(), option)
+            new BazaarBuyOrSellMessage(option)
         );
     }
 

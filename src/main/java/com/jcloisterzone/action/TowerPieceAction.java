@@ -24,11 +24,7 @@ public class TowerPieceAction extends SelectTileAction {
     @Override
     public void perform(GameController gc, Position pos) {
         gc.getConnection().send(
-            new PlaceTokenMessage(
-                gc.getGameId(),
-                Token.TOWER_PIECE,
-                new FeaturePointer(pos, Location.TOWER)
-            )
+            new PlaceTokenMessage(Token.TOWER_PIECE, new FeaturePointer(pos, Location.TOWER))
         );
     }
 

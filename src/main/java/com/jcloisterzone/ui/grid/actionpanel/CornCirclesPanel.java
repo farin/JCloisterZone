@@ -52,7 +52,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getConnection().send(
-                    new CornCircleRemoveOrDeployMessage(gc.getGameId(), CornCicleOption.DEPLOY)
+                    new CornCircleRemoveOrDeployMessage(CornCicleOption.DEPLOY)
                 );
             }
         });
@@ -65,7 +65,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getConnection().send(
-                    new CornCircleRemoveOrDeployMessage(gc.getGameId(), CornCicleOption.REMOVE)
+                    new CornCircleRemoveOrDeployMessage(CornCicleOption.REMOVE)
                 );
             }
         });

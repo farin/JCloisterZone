@@ -10,10 +10,10 @@ public class MoveNeutralFigureMessage implements WsInGameMessage, WsReplayableMe
     private String figureId;
     private BoardPointer to;
 
+    public MoveNeutralFigureMessage() {
+    }
 
-    public MoveNeutralFigureMessage(String gameId, String figureId, BoardPointer to) {
-        super();
-        this.gameId = gameId;
+    public MoveNeutralFigureMessage(String figureId, BoardPointer to) {
         this.figureId = figureId;
         this.to = to;
     }

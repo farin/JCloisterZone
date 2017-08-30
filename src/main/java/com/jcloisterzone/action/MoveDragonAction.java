@@ -23,8 +23,7 @@ public class MoveDragonAction extends SelectTileAction {
 
     @Override
     public void perform(GameController gc, Position target) {
-        gc.getConnection().send(
-            new MoveNeutralFigureMessage(gc.getGameId(), figureId, target));
+        gc.getConnection().send(new MoveNeutralFigureMessage(figureId, target));
     }
 
     @Override

@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.EventBusExceptionHandler;
 import com.jcloisterzone.EventProxy;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.event.Event;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
@@ -22,7 +20,6 @@ public class EventProxyUiController<T extends EventProxy> {
     protected final Client client;
     private final EventBus eventBus;
     private final T eventProxy;
-    private Connection connection;
 
     private InvokeInSwingUiAdapter invokeInSwingUiAdapter;
 
@@ -73,14 +70,6 @@ public class EventProxyUiController<T extends EventProxy> {
     }
 
     public Connection getConnection() {
-        //TODO fix this hack
-        if (this.connection == null) {
-            return client.getConnection();
-        }
-        return connection;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+        return client.getConnection();
     }
 }

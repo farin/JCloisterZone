@@ -4,11 +4,15 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("WELCOME")
 public class WelcomeMessage implements WsMessage {
+
     private String sessionId;
     private String nickname;
     private Integer pingInterval;
     private String maintenance;
     private Long currentTime;
+
+    public WelcomeMessage() {
+    }
 
     public WelcomeMessage(String sessionId, String nickname, Integer pingInterval, Long currentTime) {
         this.sessionId = sessionId;

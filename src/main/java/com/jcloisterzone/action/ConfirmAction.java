@@ -17,7 +17,7 @@ public class ConfirmAction extends PlayerAction<Boolean> {
     @Override
     public void perform(GameController gc, Boolean target) {
         Game game = gc.getGame();
-        gc.getConnection().send(new CommitMessage(game.getGameId()));
+        gc.getConnection().send(new CommitMessage());
     }
 
     @Override

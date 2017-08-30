@@ -17,9 +17,7 @@ public class CastleAction extends SelectFeatureAction {
 
     public void perform(GameController gc, FeaturePointer ptr) {
         gc.getConnection().send(
-            new PlaceTokenMessage(
-                gc.getGameId(), Token.CASTLE, ptr
-            )
+            new PlaceTokenMessage(Token.CASTLE, ptr)
         );
     }
 

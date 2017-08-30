@@ -40,8 +40,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
 
     @Override
     public void perform(GameController gc, TilePlacement tp) {
-        gc.getConnection().send(new PlaceTileMessage(
-            gc.getGame().getGameId(), tile.getId(), tp.getRotation(), tp.getPosition()));
+        gc.getConnection().send(new PlaceTileMessage(tile.getId(), tp.getRotation(), tp.getPosition()));
     }
 
     @Override

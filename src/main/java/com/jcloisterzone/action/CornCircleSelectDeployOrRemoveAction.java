@@ -20,7 +20,7 @@ public class CornCircleSelectDeployOrRemoveAction extends PlayerAction<CornCicle
     @Override
     public void perform(GameController gc, CornCicleOption option) {
         gc.getConnection().send(
-            new CornCircleRemoveOrDeployMessage(gc.getGameId(), option)
+            new CornCircleRemoveOrDeployMessage(option)
         );
     }
 

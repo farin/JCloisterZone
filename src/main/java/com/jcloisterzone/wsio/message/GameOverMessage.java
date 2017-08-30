@@ -7,9 +7,7 @@ public class GameOverMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
 
-    public GameOverMessage(String gameId) {
-        super();
-        this.gameId = gameId;
+    public GameOverMessage() {
     }
 
     @Override

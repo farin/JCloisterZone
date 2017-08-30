@@ -9,14 +9,15 @@ public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSe
     private long seed;
 
 
-    public CommitMessage(String gameId) {
-        this.gameId = gameId;
+    public CommitMessage() {
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

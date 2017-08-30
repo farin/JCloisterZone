@@ -7,14 +7,15 @@ public class PassMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
 
-    public PassMessage(String gameId) {
-        this.gameId = gameId;
+    public PassMessage() {
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

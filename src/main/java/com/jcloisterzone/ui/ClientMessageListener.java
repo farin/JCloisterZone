@@ -201,7 +201,9 @@ public class ClientMessageListener implements MessageListener {
         game = new Game(msg.getGameId(), msg.getInitialSeed());
         game.setName(msg.getName());
         gc = new GameController(client, game);
-        game.setConnection(conn);
+        // don't set conn instance on game directly!
+        // instead use proxy created by GameController -> gc.getConnection()
+        game.setConnection(gc.getConnection());
         gc.setReportingTool(conn.getReportingTool());
         gc.setChannel(msg.getChannel());
         gc.setPasswordProtected(msg.isPasswordProtected());
@@ -483,7 +485,8 @@ public class ClientMessageListener implements MessageListener {
               } catch (ClassNotFoundException e) {
                   //empty
               }
-              TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), i, name);
+              TakeSlotMessage msg = new TakeSlotMessage(i, name);
+              msg.setGameId(game.getGameId());
               if (slot.getAiClassName() != null) {
                   msg.setAiClassName(slot.getAiClassName());
               }
@@ -492,7 +495,10 @@ public class ClientMessageListener implements MessageListener {
           }
 
           presetCfg.updateGameSetup(conn, game.getGameId());
-          conn.send(new StartGameMessage(game.getGameId()));
+
+          StartGameMessage msg = new StartGameMessage();
+          msg.setGameId(game.getGameId());
+          conn.send(msg);
       }
   }
 

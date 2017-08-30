@@ -27,6 +27,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -49,7 +50,7 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     private boolean ownSlot = false;
 
     private final Client client;
-    private final Game game;
+    private final GameController gc;
     private boolean mutableSlots;
     private boolean channel;
 
@@ -66,13 +67,13 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     /**
      * Create the panel.
      */
-    public CreateGamePlayerPanel(final Client client, final Game game, boolean channel, boolean mutableSlots, PlayerSlot slot, PlayerSlot[] slots) {
+    public CreateGamePlayerPanel(Client client, GameController gc, boolean mutableSlots, PlayerSlot slot, PlayerSlot[] slots) {
         this.slot = slot;
         this.slots = slots;
         this.client = client;
-        this.game = game;
+        this.gc = gc;
         this.mutableSlots = mutableSlots;
-        this.channel = channel;
+        this.channel = gc.getChannel() != null;
 
         setLayout(new MigLayout("", "[][][10px][grow]", "[][]"));
 
@@ -216,7 +217,7 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
 
             if (!slot.isOccupied() && !skipPlayer) {  // open --> player
                 if (channel) {
-                    nick = client.getConnection().getNickname();
+                    nick = gc.getConnection().getNickname();
                 } else {
                     nick = nameProvider.reserveName(false, slot.getNumber());
                 }
@@ -259,7 +260,7 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
 
     @SuppressWarnings("unchecked")
     private void sendTakeSlotMessage(PlayerSlot slot) {
-        TakeSlotMessage msg = new TakeSlotMessage(game.getGameId(), slot.getNumber(), slot.getNickname());
+        TakeSlotMessage msg = new TakeSlotMessage(slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {
             try {
@@ -269,12 +270,12 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
                 logger.error(e.getMessage(), e);
             }
         }
-        client.getConnection().send(msg);
+        gc.getConnection().send(msg);
     }
 
     private void sendLeaveSlotMessage(PlayerSlot slot) {
-        LeaveSlotMessage msg = new LeaveSlotMessage(game.getGameId(), slot.getNumber());
-        client.getConnection().send(msg);
+        LeaveSlotMessage msg = new LeaveSlotMessage(slot.getNumber());
+        gc.getConnection().send(msg);
     }
 
 

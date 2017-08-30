@@ -11,16 +11,20 @@ public class PlaceTokenMessage implements WsInGameMessage, WsReplayableMessage {
     private Token token;
     private FeaturePointer pointer;
 
-    public PlaceTokenMessage(String gameId, Token token, FeaturePointer pointer) {
-        this.gameId = gameId;
+    public PlaceTokenMessage() {
+    }
+
+    public PlaceTokenMessage(Token token, FeaturePointer pointer) {
         this.token = token;
         this.pointer = pointer;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

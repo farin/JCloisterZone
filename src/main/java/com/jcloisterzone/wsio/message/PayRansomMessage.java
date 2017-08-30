@@ -8,16 +8,20 @@ public class PayRansomMessage implements WsInGameMessage, WsReplayableMessage {
     private String gameId;
     private String meepleId;
 
-    public PayRansomMessage(String gameId, String meepleId) {
+    public PayRansomMessage() {
+    }
+
+    public PayRansomMessage(String meepleId) {
         super();
-        this.gameId = gameId;
         this.meepleId = meepleId;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

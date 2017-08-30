@@ -9,16 +9,19 @@ public class CaptureFollowerMessage implements WsInGameMessage, WsReplayableMess
     private String gameId;
     private MeeplePointer pointer;
 
-    public CaptureFollowerMessage(String gameId, MeeplePointer pointer) {
-        super();
-        this.gameId = gameId;
+    public CaptureFollowerMessage() {
+    }
+
+    public CaptureFollowerMessage(MeeplePointer pointer) {
         this.pointer = pointer;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

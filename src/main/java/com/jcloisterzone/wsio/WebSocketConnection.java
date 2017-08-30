@@ -95,7 +95,9 @@ public class WebSocketConnection implements Connection {
         public void onOpen(ServerHandshake arg0) {
             WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             if (reconnectGameId != null) {
-                WebSocketConnection.this.send(new JoinGameMessage(reconnectGameId));
+                JoinGameMessage msg = new JoinGameMessage();
+                msg.setGameId(reconnectGameId);
+                WebSocketConnection.this.send(msg);
             }
         }
     }

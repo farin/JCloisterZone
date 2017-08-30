@@ -59,7 +59,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
             MeepleAction ma = (MeepleAction) action;
 
             if (fp.getLocation() == Location.FLIER) {
-                getClient().getConnection().send(new DeployFlierMessage(getGame().getGameId(), ma.getMeepleType()));
+                gc.getConnection().send(new DeployFlierMessage(ma.getMeepleType()));
                 return;
             }
             //TODO id CLOISTER or ABBOT, check if action contians both for give pos and display dialog if needed

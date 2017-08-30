@@ -10,6 +10,9 @@ public class ChannelMessage implements WsMessage {
     private RemoteClient[] clients;
     private ChannelMessageGame[] games;
 
+    public ChannelMessage() {
+    }
+
     public String getName() {
         return name;
     }
@@ -18,33 +21,31 @@ public class ChannelMessage implements WsMessage {
         this.name = name;
     }
 
-	public RemoteClient[] getClients() {
-		return clients;
-	}
+    public RemoteClient[] getClients() {
+        return clients;
+    }
 
-	public void setClients(RemoteClient[] clients) {
-		this.clients = clients;
-	}
+    public void setClients(RemoteClient[] clients) {
+        this.clients = clients;
+    }
 
-	public ChannelMessageGame[] getGames() {
-		return games;
-	}
+    public ChannelMessageGame[] getGames() {
+        return games;
+    }
 
-	public void setGames(ChannelMessageGame[] games) {
-		this.games = games;
-	}
+    public void setGames(ChannelMessageGame[] games) {
+        this.games = games;
+    }
 
+    public static class ChannelMessageGame extends GameMessage {
+        private RemoteClient[] clients;
 
+        public RemoteClient[] getClients() {
+            return clients;
+        }
 
-	public static class ChannelMessageGame extends GameMessage {
-		private RemoteClient[] clients;
-
-		public RemoteClient[] getClients() {
-			return clients;
-		}
-
-		public void setClients(RemoteClient[] clients) {
-			this.clients = clients;
-		}
-	}
+        public void setClients(RemoteClient[] clients) {
+            this.clients = clients;
+        }
+    }
 }

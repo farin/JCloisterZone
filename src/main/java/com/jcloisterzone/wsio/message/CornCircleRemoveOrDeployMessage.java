@@ -13,8 +13,7 @@ public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsRepla
     public CornCircleRemoveOrDeployMessage() {
     }
 
-    public CornCircleRemoveOrDeployMessage(String gameId, CornCicleOption value) {
-        this.gameId = gameId;
+    public CornCircleRemoveOrDeployMessage(CornCicleOption value) {
         this.value = value;
     }
 
@@ -35,6 +34,4 @@ public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsRepla
     public void setValue(CornCicleOption value) {
         this.value = value;
     }
-
-
 }

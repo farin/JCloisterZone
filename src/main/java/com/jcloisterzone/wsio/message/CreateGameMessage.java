@@ -5,38 +5,42 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 @WsMessageCommand("CREATE_GAME")
 public class CreateGameMessage implements WsMessage, WsInChannelMessage {
 
-	private String name;
-	private String channel;
-	private String password;
+    private String name;
+    private String channel;
+    private String password;
 
-	public CreateGameMessage(String name, String channel, String password) {
-		this.name = name;
-		this.channel = channel;
-		this.password = password;
-	}
+    public CreateGameMessage() {
+    }
 
-	@Override
-	public String getChannel() {
-		return channel;
-	}
+    public CreateGameMessage(String name, String channel, String password) {
+        this.name = name;
+        this.channel = channel;
+        this.password = password;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    @Override
+    public String getChannel() {
+        return channel;
+    }
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

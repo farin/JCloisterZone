@@ -11,16 +11,19 @@ public class BazaarBuyOrSellMessage implements WsInGameMessage, WsReplayableMess
     private String gameId;
     private BuyOrSellOption value;
 
-    public BazaarBuyOrSellMessage(String gameId, BuyOrSellOption value) {
-        super();
-        this.gameId = gameId;
+    public BazaarBuyOrSellMessage() {
+    }
+
+    public BazaarBuyOrSellMessage(BuyOrSellOption value) {
         this.value = value;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

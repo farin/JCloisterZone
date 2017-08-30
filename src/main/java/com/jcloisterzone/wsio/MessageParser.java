@@ -40,10 +40,12 @@ public final class MessageParser {
             public SetRuleMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject obj = json.getAsJsonObject();
                 CustomRule rule = CustomRule.valueOf(obj.get("rule").getAsString());
-                return new SetRuleMessage(
-                        obj.get("gameId").getAsString(), rule,
-                        obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
+                SetRuleMessage msg = new SetRuleMessage(
+                    rule,
+                    obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
                 );
+                msg.setGameId(obj.get("gameId").getAsString());
+                return msg;
             }
         });
         builder.registerTypeAdapter(Position.class, new JsonSerializer<Position>() {

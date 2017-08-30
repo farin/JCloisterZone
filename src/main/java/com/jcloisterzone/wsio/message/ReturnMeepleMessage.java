@@ -14,18 +14,20 @@ public class ReturnMeepleMessage implements WsInGameMessage, WsReplayableMessage
     private MeeplePointer pointer;
     private ReturnMeepleSource source;
 
+    public ReturnMeepleMessage() {
+    }
 
-    public ReturnMeepleMessage(String gameId, MeeplePointer pointer, ReturnMeepleSource source) {
-        super();
-        this.gameId = gameId;
+    public ReturnMeepleMessage(MeeplePointer pointer, ReturnMeepleSource source) {
         this.pointer = pointer;
         this.source = source;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

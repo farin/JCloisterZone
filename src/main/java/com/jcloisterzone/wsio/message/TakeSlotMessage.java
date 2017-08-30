@@ -5,23 +5,27 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("TAKE_SLOT")
 public class TakeSlotMessage implements WsInGameMessage {
+
     private String gameId;
     private int number;
     private String nickname;
     private String aiClassName;
     private Expansion[] supportedExpansions;
 
-    public TakeSlotMessage(String gameId, int number, String nickname) {
-        super();
-        this.gameId = gameId;
+    public TakeSlotMessage() {
+    }
+
+    public TakeSlotMessage(int number, String nickname) {
         this.number = number;
         this.nickname = nickname;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

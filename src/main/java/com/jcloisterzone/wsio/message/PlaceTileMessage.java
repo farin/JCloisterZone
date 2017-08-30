@@ -13,17 +13,21 @@ public class PlaceTileMessage implements WsInGameMessage, WsReplayableMessage {
     private Rotation rotation;
     private Position position;
 
-    public PlaceTileMessage(String gameId, String tileId, Rotation rotation, Position position) {
-        this.gameId = gameId;
+    public PlaceTileMessage() {
+    }
+
+    public PlaceTileMessage(String tileId, Rotation rotation, Position position) {
         this.tileId = tileId;
         this.rotation = rotation;
         this.position = position;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

@@ -8,8 +8,10 @@ public class ToggleClockMessage implements WsInGameMessage {
     private String gameId;
     private Integer run;
 
-    public ToggleClockMessage(String gameId, Integer run) {
-        this.gameId = gameId;
+    public ToggleClockMessage() {
+    }
+
+    public ToggleClockMessage(Integer run) {
         this.run = run;
     }
 
@@ -18,6 +20,7 @@ public class ToggleClockMessage implements WsInGameMessage {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

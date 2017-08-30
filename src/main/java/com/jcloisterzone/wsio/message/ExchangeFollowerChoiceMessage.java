@@ -8,16 +8,19 @@ public class ExchangeFollowerChoiceMessage implements WsInGameMessage, WsReplaya
     private String gameId;
     private String meepleId;
 
-    public ExchangeFollowerChoiceMessage(String gameId, String meepleId) {
-        super();
-        this.gameId = gameId;
+    public ExchangeFollowerChoiceMessage() {
+    }
+
+    public ExchangeFollowerChoiceMessage(String meepleId) {
         this.meepleId = meepleId;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

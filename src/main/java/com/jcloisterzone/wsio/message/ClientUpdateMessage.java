@@ -18,8 +18,7 @@ public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage 
     public ClientUpdateMessage() {
     }
 
-    public ClientUpdateMessage(String gameId, String sessionId, String name, ClientState state) {
-        this.gameId = gameId;
+    public ClientUpdateMessage(String sessionId, String name, ClientState state) {
         this.sessionId = sessionId;
         this.name = name;
         this.state = state;
@@ -30,6 +29,7 @@ public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage 
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
@@ -39,6 +39,7 @@ public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage 
         return channel;
     }
 
+    @Override
     public void setChannel(String channel) {
         this.channel = channel;
     }

@@ -15,15 +15,19 @@ public class DeployFlierMessage implements WsInGameMessage, WsReplayableMessage,
     private String meepleType;
     private long seed;
 
-    public DeployFlierMessage(String gameId, Class<? extends Meeple> meepleType) {
-        this.gameId = gameId;
+    public DeployFlierMessage() {
+    }
+
+    public DeployFlierMessage(Class<? extends Meeple> meepleType) {
         this.meepleType = meepleType.getSimpleName();
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

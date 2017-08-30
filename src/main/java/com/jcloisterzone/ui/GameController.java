@@ -17,7 +17,6 @@ import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.GameOverEvent;
-import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.state.GameState;
@@ -28,8 +27,11 @@ import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
+import com.jcloisterzone.wsio.message.WsMessage;
 
 public class GameController extends EventProxyUiController<Game> {
 
@@ -43,11 +45,13 @@ public class GameController extends EventProxyUiController<Game> {
     private ReportingTool reportingTool;
 
     private GameView gameView;
+    private Connection connProxy;
 
     public GameController(Client client, Game game) {
         super(client, game);
         this.game = game;
         getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
+        connProxy = new ConnectionProxy();
     }
 
     public Game getGame() {
@@ -142,14 +146,6 @@ public class GameController extends EventProxyUiController<Game> {
     }
 
 //    @Subscribe
-//    public void handleSelectCornCircleOption(CornCircleSelectOptionEvent ev) {
-//        CornCirclesPanel panel = new CornCirclesPanel(this);
-//        GridPanel gridPanel = gameView.getGridPanel();
-//        gridPanel.add(panel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
-//        gridPanel.revalidate();
-//    }
-//
-//    @Subscribe
 //    public void handleSelectMageAndWitchRemoval(MageWitchSelectRemoval ev) {
 //        SelectMageWitchRemovalPanel panel = new SelectMageWitchRemovalPanel(this);
 //        GridPanel gridPanel = gameView.getGridPanel();
@@ -168,7 +164,7 @@ public class GameController extends EventProxyUiController<Game> {
                 client.mountView(new StartView(client));
             } else {
                 ClientMessageListener cml = client.getClientMessageListener();
-                getConnection().send(new LeaveGameMessage(game.getGameId()));
+                getConnection().send(new LeaveGameMessage());
                 ChannelController ctrl = cml.getChannelControllers().get(channel);
                 client.mountView(new ChannelView(client, ctrl));
 
@@ -210,5 +206,54 @@ public class GameController extends EventProxyUiController<Game> {
 
     public void setPasswordProtected(boolean passwordProtected) {
         this.passwordProtected = passwordProtected;
+    }
+
+    @Override
+    public Connection getConnection() {
+        return connProxy;
+    }
+
+    /**
+     * Connection proxy sets gameId field for every sent WsInGameMessage
+     */
+    class ConnectionProxy implements Connection {
+
+        @Override
+        public void send(WsMessage msg) {
+            if (msg instanceof WsInGameMessage) {
+                ((WsInGameMessage) msg).setGameId(game.getGameId());
+            }
+            client.getConnection().send(msg);
+        }
+
+        @Override
+        public boolean isClosed() {
+            return client.getConnection().isClosed();
+        }
+
+        @Override
+        public void close() {
+            client.getConnection().close();
+        }
+
+        @Override
+        public void reconnect(String gameId) {
+            client.getConnection().reconnect(gameId);
+        }
+
+        @Override
+        public void stopReconnecting() {
+            client.getConnection().stopReconnecting();
+        }
+
+        @Override
+        public String getSessionId() {
+            return client.getConnection().getSessionId();
+        }
+
+        @Override
+        public String getNickname() {
+            return client.getConnection().getNickname();
+        }
     }
 }

@@ -20,8 +20,7 @@ public class FairyNextToAction extends SelectFollowerAction {
 
     @Override
     public void perform(GameController gc, MeeplePointer target) {
-        gc.getConnection().send(
-            new MoveNeutralFigureMessage(gc.getGameId(), figureId, target));
+        gc.getConnection().send(new MoveNeutralFigureMessage(figureId, target));
     }
 
     @Override

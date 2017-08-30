@@ -160,7 +160,8 @@ public class CreateGamePanel extends ThemedJPanel {
         startGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.getConnection().send(new StartGameMessage(game.getGameId()));
+                StartGameMessage msg = new StartGameMessage();
+                gc.getConnection().send(msg);
             }
         });
 
@@ -188,7 +189,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
         for (PlayerSlot slot : slots) {
             if (slot != null) {
-                CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, game, gc.getChannel() != null, mutableSlots, slot, slots);
+                CreateGamePlayerPanel panel = new CreateGamePlayerPanel(client, gc, mutableSlots, slot, slots);
                 panel.setNameProvider(nameProvider);
                 playersPanel.add(panel, "wrap");
             }
@@ -275,7 +276,11 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
-                    client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, timeLimitChbox.isSelected() ? 60 * timeLimitModel.getNumber().intValue() : null));
+                    int value = timeLimitChbox.isSelected()
+                        ? 60 * timeLimitModel.getNumber().intValue()
+                        : null;
+                    SetRuleMessage msg = new SetRuleMessage(CustomRule.CLOCK_PLAYER_TIME, value);
+                    gc.getConnection().send(msg);
                 }
             });
             timeLimitSpinner.addChangeListener(new ChangeListener() {
@@ -284,7 +289,8 @@ public class CreateGamePanel extends ThemedJPanel {
                     if (timeLimitChbox.isSelected()) {
                         Integer value = timeLimitModel.getNumber().intValue() * 60;
                         if (value != game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull()) {
-                            client.getConnection().send(new SetRuleMessage(game.getGameId(), CustomRule.CLOCK_PLAYER_TIME, value));
+                            SetRuleMessage msg = new SetRuleMessage(CustomRule.CLOCK_PLAYER_TIME, value);
+                            gc.getConnection().send(msg);
                         }
                     }
                 }
@@ -309,7 +315,7 @@ public class CreateGamePanel extends ThemedJPanel {
             public void actionPerformed(ActionEvent e) {
                 if (presets.getSelectedItem() instanceof Preset) {
                     Preset profile = (Preset) presets.getSelectedItem();
-                    profile.getConfig().updateGameSetup(client.getConnection(), game.getGameId());
+                    profile.getConfig().updateGameSetup(gc.getConnection(), game.getGameId());
                 }
             }
         });
@@ -495,7 +501,8 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send(new SetRuleMessage(game.getGameId(), rule, chbox.isSelected()));
+                    SetRuleMessage msg = new SetRuleMessage(rule, chbox.isSelected());
+                    gc.getConnection().send(msg);
                 }
             });
         } else {
@@ -517,7 +524,8 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
-                    client.getConnection().send(new SetExpansionMessage(game.getGameId(), exp, chbox.isSelected()));
+                    SetExpansionMessage msg = new SetExpansionMessage(exp, chbox.isSelected());
+                    gc.getConnection().send(msg);
                 }
             });
         }

@@ -24,9 +24,11 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private Set<Expansion> expansions;
     //private Set<Class<? extends Capability<?>>> capabilityClasses;
 
-    public GameSetupMessage(String gameId, Map<CustomRule, Object> rules, Set<Expansion> expansions
+    public GameSetupMessage() {
+    }
+
+    public GameSetupMessage(Map<CustomRule, Object> rules, Set<Expansion> expansions
             /*Set<Class<? extends Capability<?>>> capabilityClasses*/) {
-        this.gameId = gameId;
         this.rules = rules;
         this.expansions = expansions;
         //this.capabilityClasses = capabilityClasses;

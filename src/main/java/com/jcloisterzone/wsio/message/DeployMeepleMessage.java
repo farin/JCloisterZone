@@ -10,16 +10,20 @@ public class DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage
     private FeaturePointer pointer;
     private String meepleId;
 
-    public DeployMeepleMessage(String gameId, FeaturePointer pointer, String meepleId) {
-        this.gameId = gameId;
+    public DeployMeepleMessage() {
+    }
+
+    public DeployMeepleMessage(FeaturePointer pointer, String meepleId) {
         this.pointer = pointer;
         this.meepleId = meepleId;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

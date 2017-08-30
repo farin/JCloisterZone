@@ -40,6 +40,7 @@ public class GameMessage implements WsMessage, WsInGameMessage {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

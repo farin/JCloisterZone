@@ -217,7 +217,6 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                     case MAKE_BID:
                         gc.getConnection().send(
                             new BazaarBidMessage(
-                                gc.getGameId(),
                                 selectedItem,
                                 bidAmountModel.getNumber().intValue()
                             )
@@ -225,10 +224,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                         break;
                     case BUY_OR_SELL:
                         gc.getConnection().send(
-                            new BazaarBuyOrSellMessage(
-                                gc.getGameId(),
-                                BuyOrSellOption.BUY
-                            )
+                            new BazaarBuyOrSellMessage(BuyOrSellOption.BUY)
                         );
                         break;
                     }
@@ -245,14 +241,11 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                     switch (panelState) {
                     case SELECT_TILE:
                     case MAKE_BID:
-                        gc.getConnection().send(new PassMessage(gc.getGameId()));
+                        gc.getConnection().send(new PassMessage());
                         break;
                     case BUY_OR_SELL:
                         gc.getConnection().send(
-                            new BazaarBuyOrSellMessage(
-                                gc.getGameId(),
-                                BuyOrSellOption.SELL
-                            )
+                            new BazaarBuyOrSellMessage(BuyOrSellOption.SELL)
                         );
                         break;
                     }

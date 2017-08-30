@@ -18,8 +18,7 @@ public class MageAndWitchAction extends SelectFeatureAction {
 
     @Override
     public void perform(GameController gc, FeaturePointer target) {
-        gc.getConnection().send(
-            new MoveNeutralFigureMessage(gc.getGameId(), figureId, target));
+        gc.getConnection().send(new MoveNeutralFigureMessage(figureId, target));
     }
 
     public String getFigureId() {

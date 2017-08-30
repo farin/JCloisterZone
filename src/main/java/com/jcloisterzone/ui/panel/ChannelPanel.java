@@ -188,7 +188,8 @@ public class ChannelPanel extends ThemedJPanel {
             joinButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JoinGameMessage msg = new JoinGameMessage(game.getGameId());
+                    JoinGameMessage msg = new JoinGameMessage();
+                    msg.setGameId(game.getGameId());
                     if (gc.isPasswordProtected()) {
                         msg.setPassword(password.getText().toString());
                     }

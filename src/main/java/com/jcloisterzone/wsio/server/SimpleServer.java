@@ -216,7 +216,9 @@ public class SimpleServer extends WebSocketServer  {
                 }
             }
         }
-        broadcast(new ClientUpdateMessage(gameId, conn.getSessionId(), null, ClientState.OFFLINE));
+        ClientUpdateMessage msg = new ClientUpdateMessage(conn.getSessionId(), null, ClientState.OFFLINE);
+        msg.setGameId(gameId);
+        broadcast(msg);
     }
 
     @Override
@@ -245,7 +247,8 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
-        SlotMessage msg = new SlotMessage(gameId, slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
+        SlotMessage msg = new SlotMessage(slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
+        msg.setGameId(gameId);
         msg.setAiClassName(slot.getAiClassName());
         msg.setSupportedExpansions(slot.getSupportedExpansions());
         return msg;
@@ -253,10 +256,11 @@ public class SimpleServer extends WebSocketServer  {
 
     private GameMessage newGameMessage(boolean includeReplay) {
         GameSetupMessage setupMessage = new GameSetupMessage(
-            gameId,
             gameSetup.getRules().toJavaMap(),
             gameSetup.getExpansions().toJavaSet()
         );
+        setupMessage.setGameId(gameId);
+
         GameStatus status;
         if (gameStarted) {
             status = GameStatus.RUNNING;
@@ -350,17 +354,22 @@ public class SimpleServer extends WebSocketServer  {
         send(ws, newGameMessage(gameStarted));
         for (ServerRemoteClient rc : connections.values()) {
             if (!rc.getSessionId().equals(sessionId)) {
-                send(ws, new ClientUpdateMessage(gameId, rc.getSessionId(), rc.getName(), ClientState.ACTIVE));
+                ClientUpdateMessage updateMsg = new ClientUpdateMessage(rc.getSessionId(), rc.getName(), ClientState.ACTIVE);
+                updateMsg.setGameId(gameId);
+                send(ws, updateMsg);
             }
         }
-        broadcast(new ClientUpdateMessage(gameId, sessionId, nickname, ClientState.ACTIVE));
+        ClientUpdateMessage updateMsg = new ClientUpdateMessage(sessionId, nickname, ClientState.ACTIVE);
+        updateMsg.setGameId(gameId);
+        broadcast(updateMsg);
         if (gameStarted) {
             long ts = System.currentTimeMillis();
             long[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
             if (runningClock != -1) {
                 clocksCopy[runningClock] += ts-runningSince;
              }
-            ClockMessage clockMsg = new ClockMessage(gameId, runningClock == -1 ? null : runningClock, clocksCopy, ts);
+            ClockMessage clockMsg = new ClockMessage(runningClock == -1 ? null : runningClock, clocksCopy, ts);
+            clockMsg.setGameId(gameId);
             send(ws, clockMsg);
         }
     }
@@ -505,7 +514,8 @@ public class SimpleServer extends WebSocketServer  {
         runningSince = ts;
         runningClock = msg.getRun() == null ? -1 : msg.getRun();
         long[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
-        ClockMessage clockMsg = new ClockMessage(msg.getGameId(), msg.getRun(), clocksCopy, ts);
+        ClockMessage clockMsg = new ClockMessage(msg.getRun(), clocksCopy, ts);
+        clockMsg.setGameId(msg.getGameId());
         broadcast(clockMsg);
     }
 
