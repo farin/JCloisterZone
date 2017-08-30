@@ -4,13 +4,13 @@ import java.util.function.Function;
 
 import io.vavr.Function1;
 
-public class MemloizedValue<T> implements Function1<GameState, T> {
+public class MemoizedValue<T> implements Function1<GameState, T> {
 
     private final Function<GameState, T> fn;
     private T cachedValue;
     private GameState cachedState;
 
-    public MemloizedValue(Function<GameState, T> fn) {
+    public MemoizedValue(Function<GameState, T> fn) {
         this.fn = fn;
     }
 

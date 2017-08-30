@@ -122,6 +122,7 @@ public class ActionPhase extends Phase {
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = placesFp
                 .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
+                .filter(t -> !t._2.isOccupied(state))
                 .map(t -> t._1)
                 .toSet();
 

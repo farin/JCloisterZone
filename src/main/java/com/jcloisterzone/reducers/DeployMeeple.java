@@ -29,7 +29,7 @@ public class DeployMeeple implements Reducer {
 
         DeploymentCheckResult check = meeple.isDeploymentAllowed(state, fp, feature);
         if (!check.result) {
-          throw new IllegalArgumentException(check.error);
+            throw new IllegalArgumentException(check.error);
         }
 
         LinkedHashMap<Meeple, FeaturePointer> deployedMeeples = state.getDeployedMeeples();

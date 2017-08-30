@@ -5,7 +5,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.state.GameState;
 
 public class Wagon extends Follower {

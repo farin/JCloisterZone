@@ -42,7 +42,7 @@ public class WagonPhase extends Phase {
             Set<FeaturePointer> options = feature.getNeighboring()
                 .filter(fp -> {
                     Completable nei = (Completable) _state.getFeature(fp);
-                    return !nei.isCompleted(_state) && nei.getFollowers(_state).isEmpty();
+                    return !nei.isCompleted(_state) && !nei.isOccupied(_state);
                 });
 
             if (!options.isEmpty()) {

@@ -36,6 +36,7 @@ import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CommitMessage;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
@@ -579,6 +580,11 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleBazaarBuyOrSellMessage(WebSocket ws, BazaarBuyOrSellMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleCornCircleRemoveOrDeployMessage(WebSocket ws, CornCircleRemoveOrDeployMessage msg) {
         handleInGameMessage(msg);
     }
 

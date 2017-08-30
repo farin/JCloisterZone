@@ -40,12 +40,4 @@ public abstract class Follower extends Meeple {
     public boolean isInSupply(GameState state) {
         return super.isInSupply(state) && !isCaptured(state);
     }
-
-    @Override
-    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
-        if (feature.isOccupied(state)) {
-            return new DeploymentCheckResult("Feature is occupied");
-        }
-        return super.isDeploymentAllowed(state, fp, feature);
-    }
 }
