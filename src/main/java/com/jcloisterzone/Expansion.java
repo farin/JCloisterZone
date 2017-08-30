@@ -40,6 +40,9 @@ import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.game.capability.YagaCapability;
 
 @SuppressWarnings("unchecked")
+/**
+ * See https://boardgamegeek.com/wiki/page/Carcassonne_series
+ */
 public enum Expansion {
     //Basic sets
     BASIC("BA", _("Basic game")),
@@ -64,6 +67,7 @@ public enum Expansion {
     BRIDGES_CASTLES_AND_BAZAARS("BB", _("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }),
     HILLS_AND_SHEEP("HS", _("Hills and Sheep"), false),
+    UNDER_THE_BIG_TOP("UN", _("Under the Big Top "), false),
 
     //Small expansion
     KING_AND_ROBBER_BARON("KR", _("King and Robber Baron"), new Class[] { KingAndRobberBaronCapability.class }),
@@ -86,6 +90,7 @@ public enum Expansion {
     CASTLES("CA", _("Castles in Germany"), false),
     HALFINGS_I("H1", _("Halfings") + " I" , false),
     HALFINGS_II("H2", _("Halfings") + " ÏI", false),
+    WATCHTOWER("WT", _("The Watchtower"), false),
 
     //minis expansion line
     FLIER("FL", "#1 - " + _("The Flier"), new Class[] { FlierCapability.class }),
@@ -100,7 +105,8 @@ public enum Expansion {
     SCHOOL("SC", _("The School"), false),
     LA_PORXADA("PX", _("La Porxada"), false),
     RUSSIAN_PROMOS("RP", _("Russian Promos"), new Class[] { YagaCapability.class }),
-    DARMSTADT_PROMO("DP", _("Darmstadt Promo"), false);
+    DARMSTADT_PROMO("DP", _("Darmstadt Promo"), false),
+    LABYRINTH("LA", _("Labyrinth"), false);
 
     String code;
     String label;
