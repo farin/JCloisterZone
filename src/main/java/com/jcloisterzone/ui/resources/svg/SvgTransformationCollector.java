@@ -107,8 +107,8 @@ public class SvgTransformationCollector {
                     }
                 }
                 break;
-            case "substract":
-                assert baseLocation == null : "baseLocation is not allowed together with substraction element";
+            case "subtract":
+                assert baseLocation == null : "baseLocation is not allowed together with subtraction element";
                 String feature = root.getAttribute("feature");
                 assert feature.equals("") || feature.equals("FARM") : "Substraction area can be declared only generic or for FARM";
                 handler.processSubstract(child, child.getTextContent(), getTransform(), feature.equals("FARM"));

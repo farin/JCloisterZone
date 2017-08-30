@@ -299,9 +299,9 @@ public class Location implements Serializable {
      * @param loc the location to subtract from {@code this}
      * @return the location resulting from the subtraction
      */
-    public Location substract(Location loc) {
+    public Location subtract(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "substract("+this+','+loc+')';
+        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "subtract("+this+','+loc+')';
         return create((~(mask & loc.mask)) & mask);
     }
 

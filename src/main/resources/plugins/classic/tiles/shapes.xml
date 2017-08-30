@@ -1038,123 +1038,123 @@
 
     <shape> <!-- center -->
         <svg:rect x="400" y="400" width="200" height="200"/>
-        <substract>BA.RRR</substract>
-        <substract>BA.RRRR</substract>
-        <substract>DG.CRRR</substract>
-        <substract>DG.RRR.d</substract>
-        <substract>DG.RRR.g</substract>
-        <substract>CA.RFR</substract>
-        <substract>CA.RR</substract>
-        <substract>CC.RRR</substract>
+        <subtract>BA.RRR</subtract>
+        <subtract>BA.RRRR</subtract>
+        <subtract>DG.CRRR</subtract>
+        <subtract>DG.RRR.d</subtract>
+        <subtract>DG.RRR.g</subtract>
+        <subtract>CA.RFR</subtract>
+        <subtract>CA.RR</subtract>
+        <subtract>CC.RRR</subtract>
     </shape>
     <shape feature="FARM">
         <svg:rect x="0" y="400" width="1000" height="200"/>
-        <substract>C2.RRr</substract>
-        <substract>C2.RCR</substract>
+        <subtract>C2.RRr</subtract>
+        <subtract>C2.RCR</subtract>
     </shape>
     <shape>
         <svg:rect x="400" y="360" width="200" height="350"/>
-        <substract>IC.CRCR</substract>
+        <subtract>IC.CRCR</subtract>
     </shape>
     <shape>
         <svg:polygon points="342,202 342,470 490,635 752,642 757,195"/>
-        <substract>C2.RRRr</substract>
+        <subtract>C2.RRRr</subtract>
     </shape>
     <!-- River areas -->
     <shape feature="FARM">
         <svg:polygon points="0,380 999,380 999,620 580,900 420,900 0,620"/>
-        <substract>R1.LIRI</substract>
-        <substract>R2.LIFI</substract>
+        <subtract>R1.LIRI</subtract>
+        <subtract>R2.LIFI</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,380 500,480 999,380 999,620 500,720 0,620"/>
-        <substract>R1.CIRI</substract>
-        <substract svg:transform="rotate(270 500 500)">R2.CIcI</substract>
+        <subtract>R1.CIRI</subtract>
+        <subtract svg:transform="rotate(270 500 500)">R2.CIcI</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,380 999,380 999,620 0,620"/>
-        <substract>R1.CICI</substract>
-        <substract>R1.IFI</substract>
-        <substract svg:transform="rotate(90 500 500)">R1.RIrI</substract>
+        <subtract>R1.CICI</subtract>
+        <subtract>R1.IFI</subtract>
+        <subtract svg:transform="rotate(90 500 500)">R1.RIrI</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,380 340,470 570,680 620,999 380,999 320,930 70,680 0,620"/>
-        <substract>R1.RrII</substract>
-        <substract>R1.II</substract>
-        <substract svg:transform="rotate(90 500 500)">R2.II+</substract>
-        <substract svg:transform="rotate(270 500 500)">R1.CcII</substract>
+        <subtract>R1.RrII</subtract>
+        <subtract>R1.II</subtract>
+        <subtract svg:transform="rotate(90 500 500)">R2.II+</subtract>
+        <subtract svg:transform="rotate(270 500 500)">R1.CcII</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,602 592,712 999,592 999,350 727,325 650,267 635,0 395,0 375,217 247,335 0,332"/>
-        <substract>R2.III</substract>
+        <subtract>R2.III</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,627 80,647 137,610 165,607 210,630 215,677 260,687 282,735 305,750 352,737 387,737 400,802 430,835 455,830 462,845 455,880 582,915 657,880 820,870 820,840 675,627 637,600 635,572 645,555 645,417 635,395 635,367 757,317 752,285 667,217 667,195 685,170 660,112 602,142 537,225 515,227 467,172 432,160 392,182 402,222 447,307 445,340 487,370 427,402 375,375 340,350 305,357 290,405 242,412 185,365 152,355 110,370 80,385 65,370 37,367 0,385"/>
-        <substract>R2.IFC</substract>
+        <subtract>R2.IFC</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,387 175,350 205,350 277,370 422,280 422,252 417,200 440,182 487,187 532,237 572,235 612,172 675,142 697,165 700,205 750,232 795,195 815,197 892,285 865,360 877,420 897,460 892,502 867,532 867,577 897,637 897,685 915,725 917,797 910,840 912,885 890,922 877,942 845,942 782,952 752,910 692,922 675,922 477,897 485,845 480,840 427,840 410,810 412,770 380,745 345,757 302,747 277,705 237,700 232,660 182,622 0,640"/>
-        <substract>R1.I.e</substract>
-        <substract>R2.I.v</substract>
+        <subtract>R1.I.e</subtract>
+        <subtract>R2.I.v</subtract>
     </shape>
 
     <!--  Tunnel substractions -->
     <shape feature="FARM">
         <svg:polygon points="77,422 150,320 590,250 730,270 867,430 672,595 802,700 617,805 380,832 160,790 120,690 207,600"/>
-        <substract>TU.CRRR</substract>
+        <subtract>TU.CRRR</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="77,420 27,590 75,637 275,675 592,607 645,572 695,562 915,395 910,322 842,212 777,185 592,192 500,217 385,357 227,322"/>
-        <substract>TU.RR</substract>
+        <subtract>TU.RR</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="335,277 470,365 607,350 722,352 790,372 795,415 872,492 867,535 682,667 677,710 650,735 652,802 332,900 232,865 127,855 87,800 105,722 187,652 187,592 100,487 70,432 130,367 132,312 195,325"/>
-        <substract>TU.RRRR</substract>
+        <subtract>TU.RRRR</subtract>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="75,505 80,482 95,477 107,427 172,377 180,317 225,327 285,317 300,302 332,300 362,280 377,280 402,297 437,295 500,312 522,330 562,332 647,410 667,410 777,450 797,450 805,465 847,512 890,565 897,597 870,627 792,642 577,697 530,720 512,707 480,702 465,680 442,680 435,670 390,670 342,675 337,652 297,642 272,610 147,510 115,522"/>
-        <substract>TU.RCR</substract>
+        <subtract>TU.RCR</subtract>
     </shape>
 
     <!-- City od Carcassonne -->
     <shape>
         <svg:polygon points="999,302 999,999 290,999 305,937 232,647 177,625 175,472 222,392 282,460 485,355 510,307 527,335 642,275 642,245 682,172 725,225 727,257 797,257 835,215 880,277"/>
-        <substract>CO.1</substract>
+        <subtract>CO.1</subtract>
     </shape>
     <shape>
         <svg:polygon points="999,467 999,999 0,999 0,300 87,312 92,260 102,227 115,227 137,180 160,227 172,230 175,257 175,325 307,345 350,342 355,327 340,297 407,205 462,300 455,325 475,325 517,255 555,307 555,325 715,402 787,435 897,457 950,352 999,447"/>
-        <substract>CO.2</substract>
+        <subtract>CO.2</subtract>
     </shape>
     <shape>
         <svg:polygon points="999,230 999,999 0,999 2,435 155,415 152,380 165,340 212,340 255,365 320,255 355,290 387,367 425,360 450,342 477,350 615,317 622,342"/>
-        <substract>CO.3</substract>
+        <subtract>CO.3</subtract>
     </shape>
     <shape>
         <svg:polygon points="622,999 0,999 0,227 37,207 55,182 80,165 135,165 155,197 155,222 172,220 255,267 370,355 397,345 450,367 457,392 455,497 490,525 575,682 575,705 607,700 645,720 667,737 672,767 665,787 665,867 650,890 622,905"/>
-        <substract>CO.4</substract>
+        <subtract>CO.4</subtract>
     </shape>
     <shape>
         <svg:polygon points="290,0 267,70 242,75 232,102 240,132 232,227 262,250 280,250 277,310 292,440 305,527 322,570 297,602 287,627 295,665 280,782 302,815 337,827 377,830 395,915 442,999 999,999 999,0"/>
-        <substract>CO.5</substract>
+        <subtract>CO.5</subtract>
     </shape>
     <shape>
         <svg:polygon points="667,999 0,999 0,0 627,0 645,97 667,95 715,110 732,130 735,165 722,187 720,282 705,295 685,307 697,332 705,400 722,687 755,702 772,717 785,740 787,770 775,812 777,912 762,942 722,962 687,965"/>
-        <substract>CO.8</substract>
+        <subtract>CO.8</subtract>
     </shape>
     <shape>
         <svg:polygon points="437,0 999,0 999,657 637,400 597,407 555,380 550,315"/>
-        <substract>CO.9</substract>
+        <subtract>CO.9</subtract>
     </shape>
     <shape>
         <svg:polygon points="0,685 0,0 999,5 999,710 560,725 535,767 505,780 455,777 415,752 412,730 342,692 270,770 120,717 102,727 60,727 40,717 35,695"/>
-        <substract>CO.10</substract>
+        <subtract>CO.10</subtract>
     </shape>
     <shape>
         <svg:polygon points="0,717 0,0 999,0 999,705 842,715 812,765 745,792 692,792 615,760 565,800 492,795 495,732 515,732 517,662 452,682 367,695 72,707 55,720 15,720"/>
-        <substract>CO.11</substract>
+        <subtract>CO.11</subtract>
     </shape>
     <shape>
         <svg:polygon points="0,700 0,0 675,0 607,202 602,332 565,362 507,372 265,672 255,672 255,690 220,715 155,717 130,697"/>
-        <substract>CO.12</substract>
+        <subtract>CO.12</subtract>
     </shape>
 </shapes>
