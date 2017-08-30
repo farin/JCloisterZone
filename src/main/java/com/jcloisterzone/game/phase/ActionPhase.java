@@ -123,6 +123,11 @@ public class ActionPhase extends AbstractActionPhase {
                 throw new IllegalArgumentException("Pointer doesn't match princess action");
             }
             break;
+        case FESTIVAL:
+            if (state.getLastPlaced().getTile().getTrigger() != TileTrigger.FESTIVAL) {
+                throw new IllegalArgumentException("Festival return is not allowed");
+            }
+            break;
         default:
             throw new IllegalArgumentException("Return meeple is not allowed");
         }

@@ -44,7 +44,7 @@ public class PrincessCapability extends Capability<Void> {
         })
         .flatMap(featureTuple -> {
             City cityWithPrincess = (City) featureTuple._2;
-            return cityWithPrincess.getFollowers2(state).map(t -> new MeeplePointer(t._2, t._1.getId()));
+            return cityWithPrincess.getFollowers2(state).map(MeeplePointer::new);
         })
         .toSet();
 

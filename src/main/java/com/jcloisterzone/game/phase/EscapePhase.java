@@ -43,7 +43,7 @@ public class EscapePhase extends Phase {
         Function<City, Stream<MeeplePointer>> getCityFollowers = city -> {
             return city.getFollowers2(state)
                 .filter(t -> t._1.getPlayer().equals(player))
-                .map(t -> new MeeplePointer(t._2, t._1.getId()));
+                .map(MeeplePointer::new);
         };
 
         Predicate<Position> cloisterExists = pos -> {

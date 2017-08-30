@@ -16,16 +16,18 @@ public enum CustomRule {
     DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Dragon movement occurs after scoring.") + " (RGG)"),
     FAIRY_ON_TILE(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _("Place fairy on the tile. (instead of next to a follower)") + " (RGG, ZMG)"),
 
+    MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, Boolean.class, _("Allow direct barn placement on a farm where another barn is already placed.")),
+
+    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _("No bazaar bidding. Each player just chooses one tile.")),
+
     ESCAPE_RGG(Expansion.CATHARS, Boolean.class, _("Escape cloister can be placed adjacent to any tile of a besieged city.") + " (RGG)"),
 
     PIG_HERD_ON_GQ_FARM(Expansion.GQ11, Boolean.class, _("The Pig herd is present on the farm tile.")),
 
-    MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, Boolean.class, _("Allow direct barn placement on a farm where another barn is already placed.")),
-
     TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, Boolean.class, _("Apply tunnel rule on tunnels from other expansions.")),
     MORE_TUNNEL_TOKENS(Expansion.TUNNEL, Boolean.class, _("Assign 3/2 tunnel set in game of two/three players.")),
 
-    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _("No bazaar bidding. Each player just chooses one tile.")),
+    FESTIVAL_FOLLOWER_ONLY(Expansion.FESTIVAL, Boolean.class, _("Only follower can be returned by festival (instead of any figure)") + " (RGG)"),
 
     KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, _("Keep basic cloisters in the game.")),
 

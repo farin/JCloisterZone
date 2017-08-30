@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.state;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.function.Function;
 
 import com.jcloisterzone.Immutable;

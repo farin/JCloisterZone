@@ -5,6 +5,8 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Meeple;
 
+import io.vavr.Tuple2;
+
 /**
  * Points on feature on board or placed meeple.
  */
@@ -23,6 +25,10 @@ public class MeeplePointer implements BoardPointer {
 
     public MeeplePointer(Position position, Location location, String meepleId) {
         this(new FeaturePointer(position, location), meepleId);
+    }
+
+    public MeeplePointer(Tuple2<? extends Meeple, FeaturePointer> t) {
+        this(t._2, t._1.getId());
     }
 
     public FeaturePointer asFeaturePointer() {

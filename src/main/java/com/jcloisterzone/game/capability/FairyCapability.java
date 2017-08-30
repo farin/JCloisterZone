@@ -49,9 +49,7 @@ public class FairyCapability extends Capability<Void> {
             }
             return state.appendAction(new FairyOnTileAction(fairy.getId(), options));
         } else {
-            Set<MeeplePointer> options = followers
-                .map(t -> new MeeplePointer(t._2, t._1.getId()))
-                .toSet();
+            Set<MeeplePointer> options = followers.map(t -> new MeeplePointer(t)).toSet();
             if (options.isEmpty()) {
                 return state;
             }

@@ -124,7 +124,7 @@ public class CornCirclePhase extends Phase {
             );
             break;
         case REMOVE:
-            Set<MeeplePointer> removeOptions = meeples.map(t -> new MeeplePointer(t._2, t._1.getId())).toSet();
+            Set<MeeplePointer> removeOptions = meeples.map(MeeplePointer::new).toSet();
             actions = Vector.of(
                 new ReturnMeepleAction(removeOptions, ReturnMeepleSource.CORN_CIRCLE)
             );

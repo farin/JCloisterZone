@@ -251,6 +251,7 @@ public class TilePhase extends Phase {
     private GameState discardTile(GameState state) {
         TileDefinition tile = state.getDrawnTile();
         return state
+            .setDrawnTile(null)
             .setDiscardedTiles(state.getDiscardedTiles().append(tile))
             .appendEvent(new TileDiscardedEvent(tile));
     }

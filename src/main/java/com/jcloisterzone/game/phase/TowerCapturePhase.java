@@ -55,7 +55,7 @@ public class TowerCapturePhase extends Phase {
                     (pos.squareDistance(towerPosition) <= towerHeight);
             })
             .filter(t -> !(features.get(t._2).get() instanceof Castle))
-            .map(t -> new MeeplePointer(t._2, t._1.getId()))
+            .map(MeeplePointer::new)
             .toSet();
 
         if (options.isEmpty()) {
