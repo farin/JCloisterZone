@@ -290,7 +290,7 @@ public class Game implements EventProxy {
 
     //TODO decouple from GameController ?
     public void start(GameController gc, List<WsReplayableMessage> replay) {
-        this.replay = replay;
+        this.replay = replay.reverse();
         phaseReducer = new GameStatePhaseReducer(setup, gc);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
 
