@@ -21,11 +21,11 @@ public class RiverCapability extends Capability<Void> {
         state = state.mapTilePack(pack -> {
             pack = pack.deactivateGroup("default");
             pack = pack.deactivateGroup("river-lake");
-            pack = pack.mapGroup("river", g -> g.setSuccesiveGroup("river-lake"));
-            pack = pack.mapGroup("river-lake", g -> g.setSuccesiveGroup("default"));
+            pack = pack.mapGroup("river", g -> g.setSuccessiveGroup("river-lake"));
+            pack = pack.mapGroup("river-lake", g -> g.setSuccessiveGroup("default"));
             if (pack.hasGroup("river-fork")) {
                 pack = pack.removeTilesById("R1.I.e"); //remove original lake if River II is enabled
-                pack = pack.mapGroup("river-fork", g -> g.setSuccesiveGroup("river"));
+                pack = pack.mapGroup("river-fork", g -> g.setSuccessiveGroup("river"));
                 pack = pack.deactivateGroup("river");
             }
             return pack;

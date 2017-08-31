@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 
+//TODO rename PlacementOption
 /**
  * Represents allowed tile placement on particular board position.
  */
@@ -15,20 +16,42 @@ public class TilePlacement implements Comparable<TilePlacement> {
     /** not null if bridge must be places to get legal placement */
     private final FeaturePointer mandatoryBridge;
 
+    /**
+     * Instantiates a new {@code TilePlacement}.
+     *
+     * @param position        the position of the placement
+     * @param rotation        the rotation of the placement
+     * @param mandatoryBridge the position and location of the bridge, if mandatory
+     */
     public TilePlacement(Position position, Rotation rotation, FeaturePointer mandatoryBridge) {
         this.position = position;
         this.rotation = rotation;
         this.mandatoryBridge = mandatoryBridge;
     }
 
+    /**
+     * Gets the position of this placement.
+     *
+     * @return the position  of this placement
+     */
     public Position getPosition() {
         return position;
     }
 
+    /**
+     * Gets rotation  of this placement.
+     *
+     * @return the rotation  of this placement
+     */
     public Rotation getRotation() {
         return rotation;
     }
 
+    /**
+     * Gets the position and location of the eventual mandatory bridge.
+     *
+     * @return the position and location of the eventual mandatory bridge
+     */
     public FeaturePointer getMandatoryBridge() {
         return mandatoryBridge;
     }

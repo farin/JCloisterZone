@@ -14,7 +14,7 @@ public enum Rotation {
     R270;
 
     /**
-     * Returns the affine transform associated with {@code this} rotation and scaled by {@code size}.
+     * Gets the affine transform associated with {@code this} rotation and scaled by {@code size}.
      *
      * @param size the scaling magnitude of the affine transform
      * @return the affine transform associated with {@code this} rotation and scaled by {@code size}
@@ -24,7 +24,7 @@ public enum Rotation {
     }
 
     /**
-     * Returns the affine transform associated with {@code this} rotation and scaled by {@code sizeX} and {@code sizeY}.
+     * Gets the affine transform associated with {@code this} rotation and scaled by {@code sizeX} and {@code sizeY}.
      *
      * @param sizeX the scaling magnitude of the affine transform in the X direction
      * @param sizeY the scaling magnitude of the affine transform in the Y direction
@@ -53,7 +53,7 @@ public enum Rotation {
     }
 
     /**
-     * Returns the next rotation clockwise (+90 degrees).
+     * Gets the next rotation clockwise (+90 degrees).
      *
      * @return the next rotation clockwise
      */
@@ -63,7 +63,7 @@ public enum Rotation {
 
 
     /**
-     * Returns the previous rotation clockwise (-90 degrees).
+     * Gets the previous rotation clockwise (-90 degrees).
      *
      * @return the previous rotation clockwise
      */
@@ -72,7 +72,7 @@ public enum Rotation {
     }
 
     /**
-     * Returns the angle in radians associated with {@code this} rotation.
+     * Gets the angle in radians associated with {@code this} rotation.
      *
      * @return the angle in radians associated with {@code this} rotation
      */
@@ -91,7 +91,7 @@ public enum Rotation {
     }
 
     /**
-     * Returns the inverse of {@code this} rotation (+180 degrees).
+     * Gets the inverse of {@code this} rotation (+180 degrees).
      * @return  the inverse of {@code this} rotation
      */
     public Rotation inverse() {

@@ -15,7 +15,7 @@ public enum EdgeType {
     private char ch;
 
     /**
-     * Constructs a new instance.
+     * Instantiates a new {@code EdgeType}.
      *
      * @param mask the mask for the new instance
      * @param ch an id for the new instance
@@ -26,7 +26,7 @@ public enum EdgeType {
     }
 
     /**
-     * Returns the {@code mask} of the instance.
+     * Gets the {@code mask} of the instance.
      * @return the {@code mask} of the instance
      */
     public int getMask() {
@@ -34,7 +34,7 @@ public enum EdgeType {
     }
 
     /**
-     * Returns the {@code ch} (identifier) of the instance.
+     * Gets the {@code ch} (identifier) of the instance.
      * @return the {@code ch} (identifier) of the instance
      */
     public char asChar() {
@@ -42,7 +42,7 @@ public enum EdgeType {
     }
 
     /**
-     * Returns the instance with the given {@code mask}.
+     * Gets the instance with the given {@code mask}.
      * @param mask the mask to search
      * @return the instance with the given {@code mask}
      * @throws IllegalArgumentException if {@code mask} does not match any instance
@@ -55,7 +55,7 @@ public enum EdgeType {
     }
 
     /**
-     * Returns the instance with the given {@code ch} (identifier).
+     * Gets the instance with the given {@code ch} (identifier).
      * @param ch the ch to search
      * @return the instance with the given {@code ch} (identifier)
      * @throws IllegalArgumentException if {@code ch} does not match any instance

@@ -14,11 +14,18 @@ import com.jcloisterzone.feature.Road;
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 
+/**
+ * The type Tile definition.
+ */
+// TODO rename to Tile
 @Immutable
 public class TileDefinition implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The constant ABBEY_TILE_ID.
+     */
     public static final String ABBEY_TILE_ID = "AM.A";
 
     private final Expansion origin;
@@ -34,10 +41,28 @@ public class TileDefinition implements Serializable {
     private final Location windRose;
     private final Class<? extends Feature> cornCircle;
 
+    /**
+     * Instantiates a new {@code TileDefinition}
+     *
+     * @param origin          the {@link Expansion} this tile belongs to
+     * @param id              the identifier of the tile
+     * @param initialFeatures the {@link Feature}s of the tile
+     */
     public TileDefinition(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
         this(origin, id, initialFeatures, null, null, null, null);
     }
 
+    /**
+     * Instantiates a new {@code TileDefinition}.
+     *
+     * @param origin          the {@link Expansion} this tile belongs to
+     * @param id              the identifier of the tile
+     * @param initialFeatures the {@link Feature}s of the tile
+     * @param trigger         the tile trigger (a tag for some special behaviour)
+     * @param flier           the direction pointed by of the flier ({@see FlierCapability})
+     * @param windRose        the direction pointed by the wind rose ({@see WindRoseCapability})
+     * @param cornCircle      the feature on the corn circle, if any ({@see CornCircleCapability})
+     */
     public TileDefinition(Expansion origin, String id,
         Map<Location, Feature> initialFeatures,
         TileTrigger trigger, Location flier, Location windRose,
@@ -55,33 +80,78 @@ public class TileDefinition implements Serializable {
         this.symmetry = this.edgePattern.getSymmetry();
     }
 
+    /**
+     * Sets the tile trigger
+     *
+     * @param trigger the trigger to set
+     * @return a new instance with the trigger set
+     */
     public TileDefinition setTileTrigger(TileTrigger trigger) {
         assert this.trigger == null;
         return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
     }
 
+    /**
+     * Sets the direction pointed by the flier.
+     * {@see FlierCapability}
+     *
+     * @param flier the direction to set
+     * @return a new instance with the direction pointed by the flier set
+     */
     public TileDefinition setFlier(Location flier) {
         return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
     }
 
+    /**
+     * Sets the direction pointed by the wind rose.
+     * {@see WindRoseCapability}
+     *
+     * @param windRose the direction to set
+     * @return a new instance with the direction pointed by the wind rose set
+     */
     public TileDefinition setWindRose(Location windRose) {
         return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
     }
 
+    /**
+     * Sets the feature on the corn circle (if any).
+     * {@see CornCircleCapability}
+     *
+     * @param cornCircle the feature to set
+     * @return a new instance with the corn circle feature set
+     */
     public TileDefinition setCornCircle(Class<? extends Feature> cornCircle) {
         return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
     }
 
+    /**
+     * Sets the tile features
+     *
+     * @param initialFeatures the features to set
+     * @return a new instance with the features set
+     */
     public TileDefinition setInitialFeatures(Map<Location, Feature> initialFeatures) {
         return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
     }
 
+    /**
+     * Adds a bridge to the instance
+     *
+     * @param bridgeLoc the location where the bridge spans
+     * @return a new instance with the bridge added
+     */
     public TileDefinition addBridge(Location bridgeLoc) {
         assert bridgeLoc == Location.NS || bridgeLoc == Location.WE;
         Bridge bridge = new Bridge(bridgeLoc);
         return setInitialFeatures(initialFeatures.put(bridgeLoc, bridge));
     }
 
+    /**
+     * Checks if {@code this} is an abbey tile.
+     * {@see AbbeyCapability}
+     *
+     * @return {@code true} if {@code this} is an abbey tile., {@code false} otherwise
+     */
     public boolean isAbbeyTile() {
         return id.equals(ABBEY_TILE_ID);
     }
@@ -91,46 +161,103 @@ public class TileDefinition implements Serializable {
         return Objects.hashCode(id, initialFeatures);
     }
 
+    /**
+     * Gets the {@link Expansion} this tile belongs to.
+     *
+     * @return the {@link Expansion} this tile belongs to
+     */
     public Expansion getOrigin() {
         return origin;
     }
 
+    /**
+     * Gets the id of this tile.
+     *
+     * @return the id of this tile
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Gets the edge pattern of this tile.
+     *
+     * @return the edge pattern of this tile
+     */
     public EdgePattern getEdgePattern() {
         return edgePattern;
     }
 
+    /**
+     * Gets the symmetry of this tile.
+     *
+     * @return the symmetry of this tile
+     */
     public TileSymmetry getSymmetry() {
         return symmetry;
     }
 
+    /**
+     * Gets the features of this tile.
+     *
+     * @return the features of this tile
+     */
     public Map<Location, Feature> getInitialFeatures() {
         return initialFeatures;
     }
 
+    /**
+     * Gets the trigger of this tile.
+     *
+     * @return the trigger of this tile
+     */
     public TileTrigger getTrigger() {
         return trigger;
     }
 
+    /**
+     * Gets the direction pointed by the flier.
+     *
+     * @return the direction pointed by the flier
+     */
     public Location getFlier() {
         return flier;
     }
 
+    /**
+     * Gets the direction pointed by the wind rose.
+     *
+     * @return the direction pointed by the wind rose
+     */
     public Location getWindRose() {
         return windRose;
     }
 
+    /**
+     * Gets the feature on the corn circle (if any).
+     * {@see CornCircleCapability}
+     *
+     * @return the feature on the corn circle, if any
+     */
     public Class<? extends Feature> getCornCircle() {
         return cornCircle;
     }
 
+    /**
+     * Checks whether this tile has a tower place on it
+     *
+     * @return {@code true} it this tile has a tower place on it, {@code false} otherwise
+     */
     public boolean hasTower() {
         return initialFeatures.containsKey(Location.TOWER);
     }
 
+    /**
+     * Calculates and returns the type of the edge pointed by {@code loc}.
+     *
+     * @param loc the location indicating the edge of interest
+     * @return the edge type
+     */
     private EdgeType computeSideEdge(Location loc) {
         Tuple2<Location, Feature> tuple = initialFeatures.find(item -> loc.isPartOf(item._1)).getOrNull();
 
@@ -142,6 +269,11 @@ public class TileDefinition implements Serializable {
         throw new IllegalArgumentException();
     }
 
+    /**
+     * Calculates and returns the edge pattern of this tile.
+     *
+     * @return the edge pattern of this tile.
+     */
     private EdgePattern computeEdgePattern() {
         return new EdgePattern(
             computeSideEdge(Location.N),

@@ -46,7 +46,7 @@ public class Location implements Serializable {
     private static java.util.Map<Integer, Location> instances = new java.util.HashMap<>();
 
     /**
-     * Returns an instance with the given {@code mask}. Multiple calls with the same mask will return the same instance.
+     * Gets an instance with the given {@code mask}. Multiple calls with the same mask will return the same instance.
      * This includes named instances (e.g. {@link #SW}.
      * @param mask bit mask of the instance required
      * @return an instance with the given {@code mask}
@@ -68,7 +68,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Constructs an instance with the given {@code name} and {@code mask}.
+     * Instantiates a new {@code Location} with the given {@code name} and {@code mask}.
      * @param name the name for the instance
      * @param mask the mask for the instance
      */
@@ -157,7 +157,7 @@ public class Location implements Serializable {
     public static final List<Location> QUARTERS = List.of(QUARTER_CASTLE, QUARTER_MARKET, QUARTER_BLACKSMITH, QUARTER_CATHEDRAL);
 
     /**
-     * Returns {@code true} if {@code this} instance and {@code obj} have the same mask, {@code false} otherwise.
+     * Gets {@code true} if {@code this} instance and {@code obj} have the same mask, {@code false} otherwise.
      * @param obj the instance to compare
      * @return {@code true} if {@code this} instance and {@code obj} have the same mask, {@code false} otherwise
      */
@@ -169,7 +169,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns the mask of {@code this} instance.
+     * Gets the mask of {@code this} instance.
      * @return the mask of {@code this} instance
      */
     @Override
@@ -178,7 +178,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance with the same mask as {@code this} but rotated by 90 degrees clockwise.
+     * Gets an instance with the same mask as {@code this} but rotated by 90 degrees clockwise.
      * @return the rotated instance
      */
     public Location next() {
@@ -186,7 +186,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance with the same mask as {@code this} but rotated by 90 degrees counter-clockwise.
+     * Gets an instance with the same mask as {@code this} but rotated by 90 degrees counter-clockwise.
      * @return the rotated instance
      */
     public Location prev() {
@@ -194,7 +194,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance that is the mirror of {@code this}.
+     * Gets an instance that is the mirror of {@code this}.
      * @return an instance that is the mirror of {@code this}
      */
     public Location rev() {
@@ -226,7 +226,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance with the same mask as {@code this} but rotated by {@code rot} counter-clockwise.
+     * Gets an instance with the same mask as {@code this} but rotated by {@code rot} counter-clockwise.
      * @param rot how much rotation to apply
      * @return the rotated instance
      */
@@ -235,7 +235,7 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns an instance with the same mask as {@code this} but rotated by {@code rot} clockwise.
+     * Gets an instance with the same mask as {@code this} but rotated by {@code rot} clockwise.
      * @param rot how much rotation to apply
      * @return the rotated instance
      */
