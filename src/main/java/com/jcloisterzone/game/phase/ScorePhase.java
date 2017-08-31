@@ -108,7 +108,7 @@ public class ScorePhase extends Phase {
                 .filter(Predicates.instanceOf(TokenPlacedEvent.class))
                 .map(ev -> (TokenPlacedEvent) ev)
                 .filter(ev -> ev.getToken().isTunnel())
-                .map(ev -> _state.getFeature(ev.getPointer()));
+                .map(ev -> _state.getFeature((FeaturePointer) ev.getPointer()));
             assert tunnelModified.size() <= 1;
 
             for (Feature road : tunnelModified) {

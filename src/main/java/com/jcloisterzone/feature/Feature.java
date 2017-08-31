@@ -12,6 +12,7 @@ import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
 public interface Feature {
@@ -19,6 +20,10 @@ public interface Feature {
     List<FeaturePointer> getPlaces();
     Feature placeOnBoard(Position pos, Rotation rot);
     Stream<Tuple2<Meeple, FeaturePointer>> getMeeples2(GameState state);
+
+    default Set<Position> getTilePositions() {
+        return getPlaces().map(fp -> fp.getPosition()).toSet();
+    }
 
     default Stream<Meeple> getMeeples(GameState state) {
         return getMeeples2(state).map(t -> t._1);

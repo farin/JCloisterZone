@@ -99,6 +99,7 @@ public class Config {
                 }
             }
             GameSetupMessage msg = new GameSetupMessage(rules, expansionSet);
+            msg.setGameId(gameId);
             conn.send(msg);
         }
     }

@@ -1,14 +1,12 @@
 package com.jcloisterzone.game;
 
-import io.vavr.collection.List;
-
 public enum Token {
 
     WINE, GRAIN, CLOTH,
-    KING, ROBBER,
+    KING, ROBBER, // awarded bonuses
     LB_SHED, LB_HOUSE, LB_TOWER,
     TOWER_PIECE,
-    ABBEY_TILE,
+    ABBEY_TILE, // represent Abbey tile in player's supply
     BRIDGE,
     CASTLE,
     FERRY,
@@ -20,6 +18,14 @@ public enum Token {
     }
 
     public static Token[] tunnelValues() {
-        return new Token[] {Token.TUNNEL_A, Token.TUNNEL_B, Token.TUNNEL_C};
+        return new Token[] {TUNNEL_A, TUNNEL_B, TUNNEL_C};
+    }
+
+    public boolean isLittleBuilding() {
+        return this == LB_SHED || this == LB_HOUSE || this == LB_TOWER;
+    }
+
+    public static Token[] littleBuildingValues() {
+        return new Token[] {LB_SHED, LB_HOUSE, LB_TOWER};
     }
 }

@@ -1,6 +1,6 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
@@ -9,12 +9,12 @@ public class PlaceTokenMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private Token token;
-    private FeaturePointer pointer;
+    private BoardPointer pointer;
 
     public PlaceTokenMessage() {
     }
 
-    public PlaceTokenMessage(Token token, FeaturePointer pointer) {
+    public PlaceTokenMessage(Token token, BoardPointer pointer) {
         this.token = token;
         this.pointer = pointer;
     }
@@ -29,11 +29,11 @@ public class PlaceTokenMessage implements WsInGameMessage, WsReplayableMessage {
         this.gameId = gameId;
     }
 
-    public FeaturePointer getPointer() {
+    public BoardPointer getPointer() {
         return pointer;
     }
 
-    public void setPointer(FeaturePointer pointer) {
+    public void setPointer(BoardPointer pointer) {
         this.pointer = pointer;
     }
 

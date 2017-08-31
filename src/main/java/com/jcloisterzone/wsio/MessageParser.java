@@ -88,6 +88,9 @@ public final class MessageParser {
             @Override
             public BoardPointer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                     throws JsonParseException {
+                if (json.isJsonArray()) {
+                    return context.deserialize(json, Position.class);
+                }
                 JsonObject obj = json.getAsJsonObject();
                 if (obj.has("meepleId")) {
                     return context.deserialize(json, MeeplePointer.class);

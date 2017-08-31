@@ -1,17 +1,22 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
+import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Predicates;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
@@ -65,21 +70,25 @@ public abstract class ScoreableFeature extends TileFeature implements Scoreable 
     }
 
     protected int getLittleBuildingPoints(GameState state) {
-        //if (!state.hasCapability(LittleBuildingsCapability.class)) return 0;
-        int points = 0;
-        // IMMUTABLE TODO
-//        for (Entry<LittleBuilding, Integer> entry : littleBuildings.entrySet()) {
-//            if (game.getBooleanValue(CustomRule.BULDINGS_DIFFERENT_VALUE)) {
-//                LittleBuilding lb = entry.getKey();
-//                switch (lb) {
-//                    case SHED: points += entry.getValue(); break;
-//                    case HOUSE: points += 2*entry.getValue(); break;
-//                    case TOWER: points += 3*entry.getValue(); break;
-//                }
-//            } else {
-//                points += entry.getValue();
-//            }
-//        }
-        return points;
+        Map<Position, Token> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
+        if (buildings == null) {
+            return 0;
+        }
+        Set<Position> position = getTilePositions();
+        buildings = buildings.filterKeys(pos -> position.contains(pos));
+
+        if (state.getBooleanValue(CustomRule.BULDINGS_DIFFERENT_VALUE)) {
+            return buildings
+                .values()
+                .map(token -> {
+                    if (token == Token.LB_SHED) return 1;
+                    if (token == Token.LB_HOUSE) return 2;
+                    if (token == Token.LB_TOWER) return 3;
+                    throw new IllegalArgumentException();
+                })
+                .sum().intValue();
+        } else {
+            return buildings.size();
+        }
     }
 }

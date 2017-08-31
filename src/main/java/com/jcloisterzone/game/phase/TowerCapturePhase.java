@@ -40,7 +40,7 @@ public class TowerCapturePhase extends Phase {
         TokenPlacedEvent event = (TokenPlacedEvent) state.getEvents().last();
         assert event.getToken() == Token.TOWER_PIECE;
 
-        FeaturePointer ptr = event.getPointer();
+        FeaturePointer ptr = (FeaturePointer) event.getPointer();
         Tower tower = (Tower) state.getFeatureMap().get(ptr).get();
         int towerHeight = tower.getHeight();
         Position towerPosition = ptr.getPosition();

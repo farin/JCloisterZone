@@ -7,10 +7,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 
+import javax.swing.ImageIcon;
+
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -25,11 +29,13 @@ import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
 
 public class TokenLayer extends AbstractGridLayer {
 
     public static class TokenLayerModel {
         Seq<Tuple2<ImmutablePoint, Image>> tunnels = List.empty();
+        Seq<Tuple2<ImmutablePoint, Image>> buildings = List.empty();
     }
 
     private TokenLayerModel model = new TokenLayerModel();
@@ -49,6 +55,42 @@ public class TokenLayer extends AbstractGridLayer {
                  model.tunnels = createTunnelsViewModel(ev.getCurrentState(), currTunnelModel);
             }
         }
+
+        Map<Position, Token> currLbModel = ev.getCurrentState().getCapabilityModel(LittleBuildingsCapability.class);
+        if (currLbModel != null) {
+            Map<Position, Token> prevLbModel = ev.getPrevState().getCapabilityModel(LittleBuildingsCapability.class);
+            if (prevLbModel != currLbModel) {
+                model.buildings = createLbViewModel(ev.getCurrentState(), currLbModel);
+            }
+        }
+    }
+
+    private Seq<Tuple2<ImmutablePoint, Image>> createLbViewModel(GameState state, Map<Position, Token> lbState) {
+        ImmutablePoint point = new ImmutablePoint(65, 35);
+        return lbState.map(t -> {
+            Position pos = t._1;
+            Token lb = t._2;
+            String imgName = lb.name().toLowerCase().replace("_", "-");
+            Image img = rm.getImage("neutral/" + imgName);
+            int w = img.getWidth(null);
+            int h = img.getHeight(null);
+            if (lb == Token.LB_TOWER) {
+                img = img.getScaledInstance(w, (int) (h * 0.7), Image.SCALE_SMOOTH);
+            }
+            return new Tuple2<>(
+                point.translate(pos.x * POINT_NORMALIZED_SIZE, pos.y * POINT_NORMALIZED_SIZE),
+                img
+            );
+        });
+//            ImmutablePoint offset = new ImmutablePoint(65, 35);
+//        double xScale = 1.15, yScale = 1.15;
+//        //TODO tightly coupled with current theme, todo change image size in theme
+//        if (ev.getBuilding() == LittleBuilding.TOWER) {
+//            xScale = 1.0;
+//            yScale = 0.7;
+//        }
+//        });
+
     }
 
     private Seq<Tuple2<ImmutablePoint, Image>> createTunnelsViewModel(GameState state, Map<FeaturePointer, PlacedTunnelToken> tunnelsState) {
@@ -80,16 +122,17 @@ public class TokenLayer extends AbstractGridLayer {
         AffineTransform originalTransform = g2.getTransform();
         int baseSize = getTileWidth();
         AffineTransform scaleTx = getPointZoomScale();
-        for (Tuple2<ImmutablePoint, Image> tunnel : model.tunnels) {
+        for (Tuple2<ImmutablePoint, Image> tunnel : Stream.concat(model.tunnels, model.buildings)) {
             ImmutablePoint scaledOffset = tunnel._1.transform(scaleTx);
             Image scaled = tunnel._2.getScaledInstance((int) (baseSize / 2.1), (int) (baseSize / 2.1), Image.SCALE_SMOOTH);
-            int width = scaled.getWidth(null);
-            int height = scaled.getHeight(null);
+            ImageIcon ico = new ImageIcon(scaled);
+            int width = ico.getIconWidth();
+            int height = ico.getIconHeight();
             int x = scaledOffset.getX();
             int y = scaledOffset.getY();
 
             g2.rotate(-gridPanel.getBoardRotation().getTheta(), x, y);
-            g2.drawImage(scaled, x - width / 2, y - height / 2, gridPanel);
+            g2.drawImage(ico.getImage(), x - width / 2, y - height / 2, gridPanel);
             g2.setTransform(originalTransform);
         }
     }

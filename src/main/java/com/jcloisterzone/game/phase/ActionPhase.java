@@ -39,6 +39,7 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.PlaceBridge;
+import com.jcloisterzone.reducers.PlaceLittleBuilding;
 import com.jcloisterzone.reducers.PlaceTunnel;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
@@ -137,11 +138,46 @@ public class ActionPhase extends AbstractActionPhase {
         return next(state);
     }
 
+    private StepResult handlePlaceTower(GameState state, PlaceTokenMessage msg) {
+        FeaturePointer ptr = (FeaturePointer) msg.getPointer();
+        Tower tower = (Tower) state.getFeatureMap().get(ptr).getOrElseThrow(() -> new IllegalArgumentException("No tower"));
+        tower = tower.increaseHeight();
+
+        state = state.setFeatureMap(state.getFeatureMap().put(ptr, tower));
+        state = state.appendEvent(new TokenPlacedEvent(
+            PlayEventMeta.createWithActivePlayer(state), Token.TOWER_PIECE, ptr)
+        );
+
+        state = clearActions(state);
+        return next(state, TowerCapturePhase.class);
+    }
+
+    private StepResult handlePlaceBridge(GameState state, PlaceTokenMessage msg) {
+        FeaturePointer ptr = (FeaturePointer) msg.getPointer();
+        state = (new PlaceBridge(ptr)).apply(state);
+        state = clearActions(state);
+        return enter(state);
+    }
+
+    private StepResult handlePlaceTunnel(GameState state, PlaceTokenMessage msg) {
+        Token token = msg.getToken();
+        FeaturePointer ptr = (FeaturePointer) msg.getPointer();
+        state = (new PlaceTunnel(token, ptr)).apply(state);
+        state = clearActions(state);
+        return enter(state);
+    }
+
+    private StepResult handlePlaceLittleBuilding(GameState state, PlaceTokenMessage msg) {
+        Token token = msg.getToken();
+        Position pos = (Position) msg.getPointer();
+        state = (new PlaceLittleBuilding(token, pos)).apply(state);
+        state = clearActions(state);
+        return next(state);
+    }
+
     @PhaseMessageHandler
     public StepResult handlePlaceToken(GameState state, PlaceTokenMessage msg) {
         Player player = state.getActivePlayer();
-
-        FeaturePointer ptr = msg.getPointer();
         Token token = msg.getToken();
 
         state = state.mapPlayers(ps ->
@@ -151,43 +187,22 @@ public class ActionPhase extends AbstractActionPhase {
         switch (token) {
         case TOWER_PIECE:
             // TODO validation against ActionState
-            Tower tower = (Tower) state.getFeatureMap().get(ptr).getOrElseThrow(() -> new IllegalArgumentException("No tower"));
-            tower = tower.increaseHeight();
-
-            state = state.setFeatureMap(state.getFeatureMap().put(ptr, tower));
-            state = state.appendEvent(new TokenPlacedEvent(
-                PlayEventMeta.createWithActivePlayer(state), token, ptr)
-            );
-
-            state = clearActions(state);
-            return next(state, TowerCapturePhase.class);
+            return handlePlaceTower(state, msg);
         case BRIDGE:
-            state = (new PlaceBridge(msg.getPointer())).apply(state);
-            state = clearActions(state);
-            return enter(state);
+            return handlePlaceBridge(state, msg);
         case TUNNEL_A:
         case TUNNEL_B:
         case TUNNEL_C:
-            state = (new PlaceTunnel(token, msg.getPointer())).apply(state);
-            state = clearActions(state);
-            return enter(state);
+            return handlePlaceTunnel(state, msg);
+        case LB_SHED:
+        case LB_HOUSE:
+        case LB_TOWER:
+            return handlePlaceLittleBuilding(state, msg);
         default:
             throw new IllegalArgumentException(String.format("%s placement is not allowed", token));
         }
     }
 
-
-//    @Override
-//    public void placeLittleBuilding(LittleBuilding lbType) {
-//        GameState state = game.getState();
-//        //TODO
-//        LittleBuildingsCapability lbCap = game.get(LittleBuildingsCapability.class);
-//        lbCap.placeLittleBuilding(getActivePlayer(), lbType);
-//
-//        state = clearActions(state);
-//        next(state);
-//    }
-//
 //
 //    @PhaseMessageHandler
 //	  // TODO move into AbstactActionPhase!!!

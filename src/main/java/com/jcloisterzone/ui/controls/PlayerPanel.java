@@ -254,12 +254,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         drawMeepleBox(player, "tunnel.B", ps.getPlayerTokenCount(index, Token.TUNNEL_B), true);
         drawMeepleBox(player, "tunnel.C", ps.getPlayerTokenCount(index, Token.TUNNEL_C), true);
 
-//
-//        if (lbCap != null) {
-//            drawMeepleBox(null, "lb-shed", lbCap.getBuildingsCount(player, LittleBuilding.SHED), true);
-//            drawMeepleBox(null, "lb-house", lbCap.getBuildingsCount(player, LittleBuilding.HOUSE), true);
-//            drawMeepleBox(null, "lb-tower", lbCap.getBuildingsCount(player, LittleBuilding.TOWER), true);
-//        }
+        drawMeepleBox(null, "lb-shed", ps.getPlayerTokenCount(index, Token.LB_SHED), true);
+        drawMeepleBox(null, "lb-house", ps.getPlayerTokenCount(index, Token.LB_HOUSE), true);
+        drawMeepleBox(null, "lb-tower", ps.getPlayerTokenCount(index, Token.LB_TOWER), true);
 
         if (ps.getPlayerTokenCount(index, Token.KING) > 0) {
             KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);

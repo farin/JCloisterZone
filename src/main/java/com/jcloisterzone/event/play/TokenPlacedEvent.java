@@ -1,6 +1,6 @@
 package com.jcloisterzone.event.play;
 
-import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.game.Token;
 
 public class TokenPlacedEvent extends PlayEvent {
@@ -8,9 +8,9 @@ public class TokenPlacedEvent extends PlayEvent {
     private static final long serialVersionUID = 1L;
 
     private final Token token;
-    private final FeaturePointer pointer;
+    private final BoardPointer pointer;
 
-    public TokenPlacedEvent(PlayEventMeta metadata, Token token, FeaturePointer pointer) {
+    public TokenPlacedEvent(PlayEventMeta metadata, Token token, BoardPointer pointer) {
         super(metadata);
         this.token = token;
         this.pointer = pointer;
@@ -20,7 +20,7 @@ public class TokenPlacedEvent extends PlayEvent {
         return token;
     }
 
-    public FeaturePointer getPointer() {
+    public BoardPointer getPointer() {
         return pointer;
     }
 }
