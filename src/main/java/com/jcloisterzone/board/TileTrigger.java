@@ -1,7 +1,10 @@
 package com.jcloisterzone.board;
 
+/**
+ * Represents a tag that can be attached to {@link TileDefinition}s. A tag is usually associated with a special
+ * behaviour.
+ */
 public enum TileTrigger {
-
     VOLCANO,
     DRAGON,
     PORTAL,

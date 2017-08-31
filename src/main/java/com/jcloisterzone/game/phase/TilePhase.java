@@ -51,7 +51,7 @@ public class TilePhase extends Phase {
         if (debugConfig != null) {
             List<String> draw = debugConfig.getDraw();
             if (draw != null && !draw.isEmpty()) {
-                debugTiles = new ArrayList<String>(draw);
+                debugTiles = new ArrayList<>(draw);
             }
         }
     }
@@ -162,7 +162,7 @@ public class TilePhase extends Phase {
             if (placements.isEmpty()) {
                 state = discardTile(state);
 
-                //if (riverCap != null) riverCap.turnPartCleanUp(); //force group activation if neeeded
+                //if (riverCap != null) riverCap.turnPartCleanUp(); //force group activation if needed
             } else {
                 TilePlacementAction action = new TilePlacementAction(tile, placements);
 

@@ -234,7 +234,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             return null;
         }
         Class<? extends ActionLayer> layerType = action.getClass().getAnnotation(LinkedGridLayer.class).value();
-        return (ActionLayer) gameView.getGridPanel().findLayer(layerType);
+        return gameView.getGridPanel().findLayer(layerType);
     }
 
     private void setSelectedActionIndex(int selectedActionIndex) {
@@ -256,7 +256,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     }
 
     public Option<PlayerAction<?>> getSelectedAction() {
-        return getSelectedActionWrapper().map(w -> w.getAction());
+        return getSelectedActionWrapper().map(ActionWrapper::getAction);
     }
 
     @Override

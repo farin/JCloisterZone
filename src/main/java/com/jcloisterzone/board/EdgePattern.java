@@ -18,7 +18,7 @@ public class EdgePattern implements Serializable {
     int mask;
 
     /**
-     * Constructs a new instance with the given {@code mask}. The {@code mask} is intended to be constructed as a
+     * Instantiates a new {@code EdgePattern} with the given {@code mask}. The {@code mask} is intended to be constructed as a
      * sequence of 4 bits sequences defining the {@link EdgeType}, for the 4 directions West, South, East, and North,
      * left-to-right, in this order.
      *
@@ -29,7 +29,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Constructs a new instance given the {@link EdgeType}s for the four sides.
+     * Instantiates a new {@code EdgePattern} given the {@link EdgeType}s for the four sides.
      *
      * @param N the {@link EdgeType} for the north face
      * @param E the {@link EdgeType} for the east face
@@ -41,7 +41,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Constructs a new instance given the {@link EdgeType}s for the four sides encoded in a {@link Map}.
+     * Instantiates a new {@code EdgePattern} given the {@link EdgeType}s for the four sides encoded in a {@link Map}.
      *
      * @param edges the {@link EdgeType}s for the four sides encoded in a {@link Map}
      */
@@ -55,7 +55,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns an instance constructed according to {@code str}. The format for {@code str} is a string exactly four
+     * Gets an instance constructed according to {@code str}. The format for {@code str} is a string exactly four
      * characters long, each of which is one of the {@link EdgeType}s: 'R' for road, 'C' for city, 'F' for farm and
      * 'I' for river. In order, each character describe the type of the North, East, South, and West edges.
      *
@@ -75,7 +75,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns the {@link EdgeType} of the four edges in order North, East, South, and West.
+     * Gets the {@link EdgeType} of the four edges in order North, East, South, and West.
      *
      * @return the {@link EdgeType} of the four edges
      */
@@ -89,7 +89,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns the symmetry property for {@code this}.
+     * Gets the symmetry property for {@code this}.
      *
      * @return the symmetry property for {@code this}
      * @see TileSymmetry
@@ -102,7 +102,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns the {@link EdgeType} at location {@code loc}.
+     * Gets the {@link EdgeType} at location {@code loc}.
      *
      * @param loc the location to retrieve
      * @return the {@link EdgeType} at location {@code loc}
@@ -116,7 +116,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns a new instance matching {@code this} but rotated clockwise by {@code rot}.
+     * Gets a new instance matching {@code this} but rotated clockwise by {@code rot}.
      *
      * @param rot the rotation magnitude
      * @return a new instance matching {@code this} but rotated clockwise by {@code rot}
@@ -129,7 +129,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns a new instance matching {@code this} but with the {@link EdgeType} at location {@code loc} replaced by
+     * Gets a new instance matching {@code this} but with the {@link EdgeType} at location {@code loc} replaced by
      * {@code type}.
      *
      * @param loc the location to replace
@@ -168,7 +168,7 @@ public class EdgePattern implements Serializable {
      * Canonized pattern is first one from ordering by Edge ordinals.
      */
     /**
-     * Returns the canonized version of {@code this}. This is rotation-independent and can be used for matching.
+     * Gets the canonized version of {@code this}. This is rotation-independent and can be used for matching.
      *
      * @return the canonized version of {@code this}
      */
@@ -232,7 +232,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns the appropriate {@link EdgeType} to replace the one currently on the given {@code side}.
+     * Gets the appropriate {@link EdgeType} to replace the one currently on the given {@code side}.
      *
      * @param side the side of interest
      * @return the appropriate {@link EdgeType} to replace the one currently on the given {@code side}
@@ -246,7 +246,7 @@ public class EdgePattern implements Serializable {
     }
 
     /**
-     * Returns a new instance that matches {@code this} but where a bridge is placed on the given location.
+     * Gets a new instance that matches {@code this} but where a bridge is placed on the given location.
      *
      * @param bridge the location for the bridge
      * @return a new instance that matches {@code this} but where a bridge is placed on the given location

@@ -17,7 +17,7 @@ public class Edge implements Serializable {
     final Position p1, p2;
 
     /**
-     * Constructs a new instance given two positions.
+     * Instantiates a new {@code Edge} given two positions.
      *
      * @param p1 one position
      * @param p2 the other position
@@ -34,7 +34,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Constructs a new instance given a position and a location pointing in a direction.
+     * Instantiates a new {@code Edge} given a position and a location pointing in a direction.
      *
      * @param pos a position
      * @param loc a location pointing in a direction
@@ -44,7 +44,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns a new instance that is translated from {@code this} by {@code pos}.
+     * Gets a new instance that is translated from {@code this} by {@code pos}.
      *
      * @param pos a position indicating a translation
      * @return a new instance that is translated from {@code this} by {@code pos}
@@ -54,7 +54,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns a new instance that is rotated clockwise by {@code rot} around {@code origin}.
+     * Gets a new instance that is rotated clockwise by {@code rot} around {@code origin}.
      *
      * @param origin the center for the rotation
      * @param rot the rotation magnitude
@@ -68,7 +68,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns a new instance that is rotated counter-clockwise by {@code rot} around {@code origin}.
+     * Gets a new instance that is rotated counter-clockwise by {@code rot} around {@code origin}.
      *
      * @param origin the center for the rotation
      * @param rot the rotation magnitude
@@ -102,7 +102,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns the right/bottom position among the two forming this edge.
+     * Gets the right/bottom position among the two forming this edge.
      * @return the right/bottom position among the two forming this edge
      */
     public Position getP1() {
@@ -110,7 +110,7 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns the left/top position among the two forming this edge.
+     * Gets the left/top position among the two forming this edge.
      * @return the left/top position among the two forming this edge
      */
     public Position getP2() {
