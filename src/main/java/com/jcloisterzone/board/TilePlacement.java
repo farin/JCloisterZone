@@ -17,7 +17,7 @@ public class TilePlacement implements Comparable<TilePlacement> {
     private final FeaturePointer mandatoryBridge;
 
     /**
-     * Instantiates a new TilePlacement.
+     * Instantiates a new {@code TilePlacement}.
      *
      * @param position        the position of the placement
      * @param rotation        the rotation of the placement
