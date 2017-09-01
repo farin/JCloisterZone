@@ -45,7 +45,7 @@ public class ThemedJCheckBox extends JCheckBox {
 	}
 
 	{
-		//setForeground(UIManager.getColor("CheckBox.foreground"));
+		//setForeground(UIManager.getColors("CheckBox.foreground"));
 		setBackground(UIManager.getColor("CheckBox.background"));
 		Color c = UIManager.getColor("CheckBox.foreground");
 		if (c != null) {

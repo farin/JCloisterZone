@@ -113,7 +113,7 @@
 *2015-03-04*
 
 * online play - password protected games support
-* tile color adjustment (Jozsef T)
+* tile colors adjustment (Jozsef T)
 * updated es translation (outdated in 3.1.0)
 * error message bar can be dismissed
 * rotate board (/ key)
@@ -386,7 +386,7 @@ Remarkable points:
 ## 1.6.10
 *2011-03-17*
 
-* fix: 5/6 six players, color exception
+* fix: 5/6 six players, colors exception
 * backport from 2.0; mouse wheel scroll, scroll bar in control panel
 
 ## 1.6.9
@@ -433,7 +433,7 @@ Remarkable points:
 
 * beep notification is played also for dragon move
 * fixed: vagon move on cards from other expansions
-* fixed: black decoration on bright player color (e.g. yellow)
+* fixed: black decoration on bright player colors (e.g. yellow)
 * fixed: tower placement icon, correct display on "just placed" tile
 * fixed: proper meeple position on particular "strange" card from expansions.
 

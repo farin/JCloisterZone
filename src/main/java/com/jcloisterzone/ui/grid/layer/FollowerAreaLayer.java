@@ -48,7 +48,7 @@ public class FollowerAreaLayer extends AbstractAreaLayer {
         Map<BoardPointer, FeatureArea> result = HashMap.empty();
         Map<String, Stream<FigureImage>> images = meepleLayer.getAllFigureImages()
             .filter(fi -> fi.getFigure() instanceof Meeple)
-            .groupBy(fi -> ((Meeple) fi.getFigure()).getId());
+            .groupBy(fi -> fi.getFigure().getId());
 
         for (Tuple2<FeaturePointer, Set<MeeplePointer>> t : action.groupByFeaturePointer()) {
             int order = 0;
@@ -61,8 +61,8 @@ public class FollowerAreaLayer extends AbstractAreaLayer {
                     int cy = offset.getY();
 
                     Area trackingArea = new Area(new Ellipse2D.Double(cx-r, cy-r, 2*r, 2*r));
-                    Area displyArea = new Area(trackingArea);
-                    displyArea.subtract(new Area(new Ellipse2D.Double(cx-innerR, cy-innerR, 2*innerR, 2*innerR)));
+                    Area displayArea = new Area(trackingArea);
+                    displayArea.subtract(new Area(new Ellipse2D.Double(cx-innerR, cy-innerR, 2*innerR, 2*innerR)));
 
                     //TODO IMMUTABLE
                     if (order > 0) {
@@ -71,7 +71,7 @@ public class FollowerAreaLayer extends AbstractAreaLayer {
                         trackingArea.subtract(new Area(new Rectangle(cx-r, cy-r, subWidth, 2*r)));
                     }
 
-                    FeatureArea fa = new FeatureArea(trackingArea, displyArea, order);
+                    FeatureArea fa = new FeatureArea(trackingArea, displayArea, order);
                     fa = fa.setForceAreaColor(((Meeple) pfi.getFigure()).getPlayer().getColors().getMeepleColor());
 
                     int scale = ResourceManager.NORMALIZED_SIZE / REF_SIZE;

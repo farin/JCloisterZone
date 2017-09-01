@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 
@@ -309,17 +309,17 @@ public class Config {
         }
     }
 
-    public PlayerColor getPlayerColor(PlayerSlot slot) {
+    public PlayerColors getPlayerColor(PlayerSlot slot) {
         return getPlayerColor(slot.getNumber());
     }
 
-    public PlayerColor getPlayerColor(int slotNumber) {
+    public PlayerColors getPlayerColor(int slotNumber) {
         try {
             ColorConfig cfg = players.getColors().get(slotNumber);
-            return new PlayerColor(cfg, darkTheme);
+            return new PlayerColors(cfg, darkTheme);
         } catch (IndexOutOfBoundsException ex) {
             logger.warn("Too few player colors defined in config");
-            return new PlayerColor();
+            return new PlayerColors();
         }
     }
 

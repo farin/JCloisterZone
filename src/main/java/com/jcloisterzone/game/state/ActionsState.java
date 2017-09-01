@@ -49,21 +49,19 @@ public class ActionsState implements Serializable {
      * Merge all MeepleActions with same meepleType to single action.
      */
     public ActionsState mergeMeepleActions() {
-        Seq<Vector<MeepleAction>> groupped = this.actions
+        Seq<Vector<MeepleAction>> grouped = this.actions
             .filter(Predicates.instanceOf(MeepleAction.class))
             .map(a -> (MeepleAction) a)
-            .groupBy(a -> a.getMeepleType())
+            .groupBy(MeepleAction::getMeepleType)
             .values();
 
-        if (groupped.find(v -> v.length() > 1).isEmpty()) {
+        if (grouped.find(v -> v.length() > 1).isEmpty()) {
             return this; // nothing to merge
         }
 
         Vector<PlayerAction<?>> actions = Vector.ofAll(
-            groupped.map(v -> {
-                Set<FeaturePointer> mergedOptions = v.map(a ->
-                    a.getOptions()).reduce((o1, o2) -> o1.addAll(o2)
-                );
+            grouped.map(v -> {
+                Set<FeaturePointer> mergedOptions = v.map(PlayerAction::getOptions).reduce(Set::addAll);
                 MeepleAction sample = v.get();
                 return new MeepleAction(sample.getMeepleId(), sample.getMeepleType(), mergedOptions);
             })
