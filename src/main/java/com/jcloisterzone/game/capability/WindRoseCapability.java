@@ -47,7 +47,7 @@ public class WindRoseCapability extends Capability<PlacedTile> {
     }
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         if (xml.hasAttribute("wind-rose")) {
             Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
             return tile.setWindRose(loc);

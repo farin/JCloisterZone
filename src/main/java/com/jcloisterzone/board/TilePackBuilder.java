@@ -179,27 +179,21 @@ public class TilePackBuilder {
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
 
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(TileDefinition tile, Element xml) throws RemoveTileException {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
-            tile = cap.initTile(tile, xml);
+            tile = cap.initTile(state, tile, xml);
         }
         return tile;
     }
 
-    public TileDefinition createTile(Expansion expansion, String tileId, Element tileElement) {
+    public TileDefinition createTile(Expansion expansion, String tileId, Element tileElement) throws RemoveTileException {
         if (usedIds.contains(tileId)) {
             throw new IllegalArgumentException("Multiple occurences of id " + tileId + " in tile definition xml.");
         }
         usedIds.add(tileId);
 
-        TileDefinition tileDef = tileBuilder.createTile(expansion, tileId, tileElement, isTunnelActive(expansion));
-        try {
-            tileDef = initTile(tileDef, tileElement);
-        } catch (RemoveTileException ex) {
-            return null;
-        }
-
-        return tileDef;
+        TileDefinition tile = tileBuilder.createTile(expansion, tileId, tileElement, isTunnelActive(expansion));
+        return initTile(tile, tileElement);
     }
 
     public Stream<Preplaced> getPreplacedPositions(String tileId, Element card) {
@@ -233,8 +227,10 @@ public class TilePackBuilder {
                 List<Preplaced> positions = getPreplacedPositions(tileId, tileElement).toList();
                 int count = getTileCount(tileElement, tileId);
 
-                TileDefinition tile = createTile(expansion, tileId, tileElement);
-                if (tile == null) {
+                TileDefinition tile;
+                try {
+                    tile = createTile(expansion, tileId, tileElement);
+                } catch (RemoveTileException ex) {
                     return;
                 }
 

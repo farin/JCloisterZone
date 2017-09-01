@@ -13,7 +13,7 @@ import io.vavr.collection.Queue;
 public class BazaarCapability extends Capability<BazaarCapabilityModel> {
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("bazaar").getLength() > 0) {
             tile = tile.setTileTrigger(TileTrigger.BAZAAR);
         }

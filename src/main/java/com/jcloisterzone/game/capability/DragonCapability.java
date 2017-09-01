@@ -26,7 +26,7 @@ public class DragonCapability extends Capability<Vector<Position>> {
     public static final String TILE_GROUP_DRAGON = "dragon";
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("volcano").getLength() > 0) {
             tile = tile.setTileTrigger(TileTrigger.VOLCANO);
         }

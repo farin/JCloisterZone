@@ -25,6 +25,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.visitor.score.CloisterScoreContext;
 import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.state.GameState;
 
 public class GoldminesCapability  extends Capability<Void> {
 
@@ -34,7 +35,7 @@ public class GoldminesCapability  extends Capability<Void> {
     private final Map<Position, Set<Player>> claimedGold = new HashMap<>();
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("goldmine").getLength() > 0) {
             tile.setTrigger(TileTrigger.GOLDMINE);
         }

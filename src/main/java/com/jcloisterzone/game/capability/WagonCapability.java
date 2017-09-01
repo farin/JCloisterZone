@@ -43,7 +43,7 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
     }
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("wagon-move");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {

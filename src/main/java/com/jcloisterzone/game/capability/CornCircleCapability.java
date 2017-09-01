@@ -10,11 +10,12 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
+import com.jcloisterzone.game.state.GameState;
 
 public class CornCircleCapability extends Capability<CornCircleOption> {
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("corn-circle");
         if (nl.getLength() > 0) {
             String type = ((Element)nl.item(0)).getAttribute("type");

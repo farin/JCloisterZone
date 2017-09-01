@@ -40,7 +40,7 @@ public class MageAndWitchCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         if (xml.getElementsByTagName("mage").getLength() > 0) {
            tile = tile.setTileTrigger(TileTrigger.MAGE);
         }

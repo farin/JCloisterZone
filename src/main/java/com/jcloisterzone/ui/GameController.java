@@ -218,37 +218,49 @@ public class GameController extends EventProxyUiController<Game> {
      */
     class ConnectionProxy implements Connection {
 
+        private Connection getConnection() {
+            return client.getConnection();
+        }
+
         @Override
         public void send(WsMessage msg) {
             if (msg instanceof WsInGameMessage) {
                 ((WsInGameMessage) msg).setGameId(game.getGameId());
             }
-            client.getConnection().send(msg);
+            getConnection().send(msg);
         }
 
         @Override
         public boolean isClosed() {
-            return client.getConnection().isClosed();
+            if (getConnection() != null) {
+                return getConnection().isClosed();
+            } else {
+                return false;
+            }
         }
 
         @Override
         public void close() {
-            client.getConnection().close();
+            if (getConnection() != null) {
+                getConnection().close();
+            }
         }
 
         @Override
         public void reconnect(String gameId) {
-            client.getConnection().reconnect(gameId);
+            getConnection().reconnect(gameId);
         }
 
         @Override
         public void stopReconnecting() {
-            client.getConnection().stopReconnecting();
+            if (getConnection() != null) {
+                getConnection().stopReconnecting();
+            }
         }
 
         @Override
         public String getSessionId() {
-            return client.getConnection().getSessionId();
+            return getConnection().getSessionId();
         }
 
         @Override

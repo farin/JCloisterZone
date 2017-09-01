@@ -112,6 +112,10 @@ public class FeatureArea {
         return new FeatureArea(trackingArea, displayArea, zIndex, forceAreaColor, rotationScaling, fixed);
     }
 
+    public FeatureArea setZIndex(int zIndex) {
+        return new FeatureArea(trackingArea, displayArea, zIndex, forceAreaColor, rotationScaling, fixed);
+    }
+
     @Override
     public String toString() {
         return zIndex + "/" + trackingArea.toString();

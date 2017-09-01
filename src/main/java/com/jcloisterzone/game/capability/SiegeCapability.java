@@ -25,7 +25,7 @@ public final class SiegeCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("city");
         boolean besieged = false;
         for (int i = 0; i < nl.getLength(); i++) {

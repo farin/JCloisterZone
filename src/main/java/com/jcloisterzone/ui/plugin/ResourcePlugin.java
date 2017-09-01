@@ -25,6 +25,7 @@ import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.capability.CountCapability;
@@ -39,6 +40,7 @@ import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -185,6 +187,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     @Override
     public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
         if (!containsTile(tile.getId())) return null;
+        if (loc == Location.ABBOT) loc = Location.CLOISTER;
 
         Location iniLoc = loc.rotateCCW(rot);
         Feature feature = tile.getInitialFeatures().get(iniLoc).get();
@@ -225,7 +228,11 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 //    }
 
     private FeatureArea getFeatureArea(TileDefinition tile, Class<? extends Feature> featureClass, Location loc) {
-        if (loc == Location.ABBOT) loc = Location.CLOISTER;
+        boolean monasteryShading = false;
+        if (loc == Location.ABBOT) {
+            loc = Location.CLOISTER;
+            monasteryShading = true;
+        }
         if (Castle.class.equals(featureClass)) {
             featureClass = City.class;
         }
@@ -241,6 +248,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             }
         } else {
             source = pluginGeometry;
+        }
+
+        if (monasteryShading) {
+            area = area.setZIndex(area.getzIndex() - 1);
         }
 
 //        area = applyRotationScaling(tile, source, area);
@@ -333,9 +344,21 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         allSubtraction.transform(txRot);
 
         // get base areas for all features
-        Map<Location, FeatureArea> baseAreas = features
+        Map<Location, FeatureArea> baseAreas = Stream.ofAll(features)
             .filter(t -> t._1 != complementFarm)
-            .map((loc, feature) -> {
+            .flatMap(t -> {
+                if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
+                    return List.of(
+                        t,
+                        t.update1(Location.ABBOT)
+                    );
+                } else {
+                    return List.of(t);
+                }
+            })
+            .toMap(t -> {
+                Location loc = t._1;
+                Feature feature = t._2;
                 FeatureArea fa;
                 if (bridgeLoc == loc) {
                     fa = getBridgeArea(loc.rotateCCW(rot));
@@ -347,6 +370,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 }
                 return new Tuple2<>(loc, fa);
             });
+
 
         FeatureArea towerArea = baseAreas.get(Location.TOWER).getOrNull();
 

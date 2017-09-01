@@ -10,19 +10,13 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.state.Flag;
@@ -34,6 +28,7 @@ import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
@@ -94,8 +89,18 @@ public abstract class AbstractActionPhase extends Phase {
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = placesFp
-                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .filter(t -> !t._2.isOccupied(state))
+                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
+                .flatMap(t -> {
+                    if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
+                        return List.of(
+                            t,
+                            t.update1(new FeaturePointer(t._1.getPosition(), Location.ABBOT))
+                        );
+                    } else {
+                        return List.of(t);
+                    }
+                })
                 .map(t -> t._1)
                 .toSet();
 

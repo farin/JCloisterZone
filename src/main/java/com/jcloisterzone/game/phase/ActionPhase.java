@@ -3,10 +3,8 @@ package com.jcloisterzone.game.phase;
 import java.util.Random;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.BoardPointer;
@@ -15,12 +13,9 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
@@ -36,7 +31,6 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.PlaceBridge;
 import com.jcloisterzone.reducers.PlaceLittleBuilding;
@@ -47,9 +41,6 @@ import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 
 import io.vavr.Predicates;
-import io.vavr.Tuple2;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
 

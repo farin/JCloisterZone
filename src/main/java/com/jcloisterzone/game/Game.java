@@ -140,6 +140,10 @@ public class Game implements EventProxy {
     }
 
     public void replaceState(GameState state) {
+        if (this.state == state) {
+            return;
+        }
+
         GameState prev = this.state;
         this.state = state;
 

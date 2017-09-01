@@ -1,9 +1,14 @@
 package com.jcloisterzone.ui.grid.layer;
 
+import static com.jcloisterzone.ui.I18nUtils._;
+
+import javax.swing.JOptionPane;
+
 import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.SelectFeatureAction;
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Barn;
@@ -15,6 +20,7 @@ import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 
 
 public class FeatureAreaLayer extends AbstractAreaLayer {
@@ -50,11 +56,19 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         });
     }
 
+    private Set<Location> getMonasteryOptions(Position pos) {
+        return getAction().getOptions()
+            .filter(fp -> fp.getPosition() == pos)
+            .map(FeaturePointer::getLocation)
+            .filter(loc -> loc ==  Location.CLOISTER || loc == Location.ABBOT);
+    }
 
     @Override
     protected void performAction(BoardPointer ptr) {
         SelectFeatureAction action = getAction();
         FeaturePointer fp = (FeaturePointer) ptr;
+        Position pos = fp.getPosition();
+
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
 
@@ -62,27 +76,31 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 gc.getConnection().send(new DeployFlierMessage(ma.getMeepleType()));
                 return;
             }
-            //TODO id CLOISTER or ABBOT, check if action contians both for give pos and display dialog if needed
 
-//            if (fp.getLocation() == Location.CLOISTER && abbotOption.contains(fp.getPosition())) {
-//                String[] options;
-//                boolean abbotOnlyOptionValue = abbotOption.contains(fp.getPosition());
-//                if (abbotOnlyOptionValue) {
-//                    options = new String[] {_("Place as abbot")};
-//                } else {
-//                    options = new String[] {_("Place as monk"), _("Place as abbot") };
-//                }
-//                int result = JOptionPane.showOptionDialog(getClient(),
-//                    _("How do you want to place follower on monastery?"),
-//                    _("Monastery"),
-//                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-//                if (result == -1) { //closed dialog
-//                    return;
-//                }
-//                if (abbotOnlyOptionValue || result == JOptionPane.NO_OPTION) {
-//                    fp = new FeaturePointer(fp.getPosition(), Location.ABBOT);
-//                }
-//            }
+            boolean isMonasteryLocataion = fp.getLocation() == Location.CLOISTER || fp.getLocation() == Location.ABBOT;
+
+            if (isMonasteryLocataion) {
+                Set<Location> monasteryOptions = getMonasteryOptions(pos);
+                if (monasteryOptions.contains(Location.ABBOT)) {
+                    String[] dialogOptions;
+                    boolean abbotOnly = !monasteryOptions.contains(Location.CLOISTER);
+                    if (abbotOnly) {
+                        dialogOptions = new String[] {_("Place as abbot")};
+                    } else {
+                        dialogOptions = new String[] {_("Place as monk"), _("Place as abbot") };
+                    }
+                    int result = JOptionPane.showOptionDialog(getClient(),
+                        _("How do you want to place follower on monastery?"),
+                        _("Monastery"),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, dialogOptions, dialogOptions[0]);
+                    if (result == -1) { //closed dialog
+                        return;
+                    }
+                    if (abbotOnly || result == JOptionPane.NO_OPTION) {
+                        fp = new FeaturePointer(pos, Location.ABBOT);
+                    }
+                }
+            }
         }
         gc.getConnection().send(action.select(fp));
         return;

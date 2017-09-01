@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -48,7 +49,7 @@ public abstract class Capability<T> implements Serializable {
     }
 
 
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) throws RemoveTileException {
         return tile;
     }
 

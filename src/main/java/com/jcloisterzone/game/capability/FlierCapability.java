@@ -21,6 +21,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.SnapshotCorruptedException;
+import com.jcloisterzone.game.state.GameState;
 
 public class FlierCapability extends Capability<Void> {
 
@@ -44,7 +45,7 @@ public class FlierCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(TileDefinition tile, Element xml) {
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("flier");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
