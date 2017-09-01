@@ -9,9 +9,9 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
 
-public class CornCircleCapability extends Capability<CornCicleOption> {
+public class CornCircleCapability extends Capability<CornCircleOption> {
 
     @Override
     public TileDefinition initTile(TileDefinition tile, Element xml) {

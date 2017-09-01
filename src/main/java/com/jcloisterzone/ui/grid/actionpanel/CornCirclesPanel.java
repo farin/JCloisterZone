@@ -16,7 +16,7 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -52,7 +52,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getConnection().send(
-                    new CornCircleRemoveOrDeployMessage(CornCicleOption.DEPLOY)
+                    new CornCircleRemoveOrDeployMessage(CornCircleOption.DEPLOY)
                 );
             }
         });
@@ -65,7 +65,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gc.getConnection().send(
-                    new CornCircleRemoveOrDeployMessage(CornCicleOption.REMOVE)
+                    new CornCircleRemoveOrDeployMessage(CornCircleOption.REMOVE)
                 );
             }
         });

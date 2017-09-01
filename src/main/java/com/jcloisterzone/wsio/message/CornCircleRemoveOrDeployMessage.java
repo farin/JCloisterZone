@@ -5,15 +5,15 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 @WsMessageCommand("CIRCLE_REMOVE_OR_DEPLOY")
 public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsReplayableMessage {
 
-    public enum CornCicleOption { DEPLOY, REMOVE }
+    public enum CornCircleOption { DEPLOY, REMOVE }
 
     private String gameId;
-    private CornCicleOption value;
+    private CornCircleOption value;
 
     public CornCircleRemoveOrDeployMessage() {
     }
 
-    public CornCircleRemoveOrDeployMessage(CornCicleOption value) {
+    public CornCircleRemoveOrDeployMessage(CornCircleOption value) {
         this.value = value;
     }
 
@@ -27,11 +27,11 @@ public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsRepla
         this.gameId = gameId;
     }
 
-    public CornCicleOption getValue() {
+    public CornCircleOption getValue() {
         return value;
     }
 
-    public void setValue(CornCicleOption value) {
+    public void setValue(CornCircleOption value) {
         this.value = value;
     }
 }
