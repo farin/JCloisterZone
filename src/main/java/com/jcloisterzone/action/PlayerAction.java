@@ -2,17 +2,19 @@ package com.jcloisterzone.action;
 
 import java.io.Serializable;
 
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Set;
 
+// TODO rename to PlayerChoice?
 /**
- * Represents a set of options a player can choose from. These can be of various types, such as
- * {@link com.jcloisterzone.board.TilePlacement}, {@link MeepleAction},
- * {@link com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption} etc.
+ * Represents a set of options a player can choose from.
  *
- * @param <T> the type of options the player can choose from
+ * @param <T> the type of options the player can choose from; examples are {@link com.jcloisterzone.board.Position},
+ *            {@link com.jcloisterzone.board.Location}, {@link com.jcloisterzone.board.TilePlacement},
+ *            {@link CornCircleRemoveOrDeployMessage.CornCircleOption}, etc.
  */
 public abstract class PlayerAction<T> implements Iterable<T>, Serializable {
 

@@ -26,7 +26,7 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCicleOption;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
@@ -90,7 +90,7 @@ public class CornCirclePhase extends Phase {
     }
 
     private StepResult createAction(GameState state, Player player) {
-        CornCicleOption option = state.getCapabilityModel(CornCircleCapability.class);
+        CornCircleOption option = state.getCapabilityModel(CornCircleCapability.class);
         Class<? extends Feature> cornType = getCornType(state);
 
         Stream<Tuple2<Meeple, FeaturePointer>> meeples = Stream.ofAll(state.getDeployedMeeples())
@@ -132,14 +132,14 @@ public class CornCirclePhase extends Phase {
         }
 
         return promote(state.setPlayerActions(
-            new ActionsState(player, actions, option == CornCicleOption.DEPLOY)
+            new ActionsState(player, actions, option == CornCircleOption.DEPLOY)
         ));
     }
 
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        CornCicleOption option = state.getCapabilityModel(CornCircleCapability.class);
-        if (option != CornCicleOption.DEPLOY) {
+        CornCircleOption option = state.getCapabilityModel(CornCircleCapability.class);
+        if (option != CornCircleOption.DEPLOY) {
             throw new IllegalStateException();
         }
 
@@ -153,8 +153,8 @@ public class CornCirclePhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleReturnMeeple(GameState state, ReturnMeepleMessage msg) {
-        CornCicleOption option = state.getCapabilityModel(CornCircleCapability.class);
-        if (option != CornCicleOption.REMOVE) {
+        CornCircleOption option = state.getCapabilityModel(CornCircleCapability.class);
+        if (option != CornCircleOption.REMOVE) {
             throw new IllegalStateException();
         }
 
@@ -173,8 +173,8 @@ public class CornCirclePhase extends Phase {
     @PhaseMessageHandler
     @Override
     public StepResult handlePass(GameState state, PassMessage msg) {
-        CornCicleOption option = state.getCapabilityModel(CornCircleCapability.class);
-        if (option != CornCicleOption.DEPLOY) {
+        CornCircleOption option = state.getCapabilityModel(CornCircleCapability.class);
+        if (option != CornCircleOption.DEPLOY) {
             throw new IllegalStateException();
         }
 
