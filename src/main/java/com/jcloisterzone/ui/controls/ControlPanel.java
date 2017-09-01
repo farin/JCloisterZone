@@ -176,7 +176,7 @@ public class ControlPanel extends JPanel {
                 new int[] { y+ACTIVE_MARKER_SIZE, y+ACTIVE_MARKER_SIZE, y, y}, 4
             );
             g2.setColor(client.getTheme().getPanelShadow());
-            //g2.setColor(Color.RED);
+            //g2.setColors(Color.RED);
             g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, 0, PANEL_SHADOW_WIDTH, y-ACTIVE_MARKER_SIZE);
             g2.fillRect(-LEFT_PADDING-PANEL_SHADOW_WIDTH, y+ACTIVE_MARKER_SIZE, PANEL_SHADOW_WIDTH, h-y+ACTIVE_MARKER_SIZE);
             g2.fillPolygon(

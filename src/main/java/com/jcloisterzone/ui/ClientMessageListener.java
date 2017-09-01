@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui;
 
+// TODO underscore is deprecated as an identifier, from Java 9 it will be a reserved word
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,14 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
-import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
@@ -35,7 +33,6 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
-import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameSetupView;
@@ -49,7 +46,6 @@ import com.jcloisterzone.wsio.message.ChannelMessage.ChannelMessageGame;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
-import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
@@ -67,7 +63,6 @@ import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
-import io.vavr.collection.Array;
 import io.vavr.collection.HashSet;
 
 
@@ -225,13 +220,10 @@ public class ClientMessageListener implements MessageListener {
     }
 
     private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                client.mountView(new GameSetupView(client, gc, msg.getStatus() == GameStatus.OPEN));
-                performAutostart(gc.getGame()); //must wait for panel is created
-            }
-        });
+        SwingUtilities.invokeAndWait(() -> {
+			client.mountView(new GameSetupView(client, gc, msg.getStatus() == GameStatus.OPEN));
+			performAutostart(gc.getGame()); //must wait for panel is created
+		});
     }
 
     @WsSubscribe
@@ -295,12 +287,7 @@ public class ClientMessageListener implements MessageListener {
         channelController.getRemoteClients().addAll(Arrays.asList(msg.getClients()));
         channelControllers.clear();
         channelControllers.put(channel.getName(), channelController);
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                client.mountView(new ChannelView(client, channelController));
-            }
-        });
+        SwingUtilities.invokeAndWait(() -> client.mountView(new ChannelView(client, channelController)));
         GameController[] gameControllers = new GameController[msg.getGames().length];
         int i = 0;
         for (ChannelMessageGame game : msg.getGames()) {
@@ -358,7 +345,7 @@ public class ClientMessageListener implements MessageListener {
                     clients.set(idx, rc);
                 }
             }
-            ArrayList<RemoteClient> frozenList = new ArrayList<RemoteClient>(clients);
+            ArrayList<RemoteClient> frozenList = new ArrayList<>(clients);
             controller.getEventProxy().post(new ClientListChangedEvent(frozenList));
         } else {
             logger.warn("No controller for message {}", msg);

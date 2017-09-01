@@ -9,19 +9,19 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.game.Token;
 
-public class PlayerColor {
+public class PlayerColors {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Color meeple, font;
     private Map<Token, Color> tunnelColors;
 
-    public PlayerColor() {
+    public PlayerColors() {
         meeple = Color.BLACK;
         font = Color.BLACK;
     }
 
-    public PlayerColor(ColorConfig cfg, boolean darkTheme) {
+    public PlayerColors(ColorConfig cfg, boolean darkTheme) {
         this.meeple = stringToColor(cfg.getMeeple(), Color.BLACK);
         this.font = stringToColor(darkTheme ? cfg.getFontDark() : cfg.getFontLight(), meeple);
     }

@@ -160,7 +160,7 @@
 
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
-* fix: wrong colors of chat nicknames
+* fix: wrong color of chat nicknames
 
 ## 3.0
 *2014-08-27*
@@ -207,7 +207,7 @@
 * volcano rule updated according to latest FAQs: no follower deployment except barn, fairy movement allowed, so removed CANNOT_PLACE_BUILDER_ON_VOLCANO custom rule
 * FARM_CITY_SCORED_ONCE custom rule removed - 2nd edition scoring is obsolete and may leads to confusion together with some expansions
 * builder can be placed on uncompleted feature only (makes no sense to places on just finshed feature and return immediatelly)
-* default player colors changed
+* default player color changed
 * chat is hidden in single player game
 * submit connect dialog with enter
 * connect dialog: last remote host is remembered
@@ -386,7 +386,7 @@ Remarkable points:
 ## 1.6.10
 *2011-03-17*
 
-* fix: 5/6 six players, color exception
+* fix: 5/6 six players, colors exception
 * backport from 2.0; mouse wheel scroll, scroll bar in control panel
 
 ## 1.6.9
@@ -433,7 +433,7 @@ Remarkable points:
 
 * beep notification is played also for dragon move
 * fixed: vagon move on cards from other expansions
-* fixed: black decoration on bright player color (e.g. yellow)
+* fixed: black decoration on bright player colors (e.g. yellow)
 * fixed: tower placement icon, correct display on "just placed" tile
 * fixed: proper meeple position on particular "strange" card from expansions.
 

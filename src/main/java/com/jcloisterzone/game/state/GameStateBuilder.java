@@ -105,8 +105,8 @@ public class GameStateBuilder {
     private void createPlayers() {
         this.players = Stream.ofAll(Arrays.asList(slots))
             .filter(Predicates.isNotNull())
-            .filter(slot -> slot.isOccupied())
-            .sortBy(slot -> slot.getSerial())
+            .filter(PlayerSlot::isOccupied)
+            .sortBy(PlayerSlot::getSerial)
             .foldLeft(Array.empty(), (arr, slot) ->
                arr.append(new Player(slot.getNickname(), arr.size(), slot))
             );
