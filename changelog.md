@@ -113,7 +113,7 @@
 *2015-03-04*
 
 * online play - password protected games support
-* tile colors adjustment (Jozsef T)
+* tile color adjustment (Jozsef T)
 * updated es translation (outdated in 3.1.0)
 * error message bar can be dismissed
 * rotate board (/ key)
@@ -160,7 +160,7 @@
 
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
-* fix: wrong colors of chat nicknames
+* fix: wrong color of chat nicknames
 
 ## 3.0
 *2014-08-27*
@@ -207,7 +207,7 @@
 * volcano rule updated according to latest FAQs: no follower deployment except barn, fairy movement allowed, so removed CANNOT_PLACE_BUILDER_ON_VOLCANO custom rule
 * FARM_CITY_SCORED_ONCE custom rule removed - 2nd edition scoring is obsolete and may leads to confusion together with some expansions
 * builder can be placed on uncompleted feature only (makes no sense to places on just finshed feature and return immediatelly)
-* default player colors changed
+* default player color changed
 * chat is hidden in single player game
 * submit connect dialog with enter
 * connect dialog: last remote host is remembered

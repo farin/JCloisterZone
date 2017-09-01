@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui;
 
+// TODO underscore is deprecated as an identifier, from Java 9 it will be a reserved word
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.lang.reflect.InvocationTargetException;
