@@ -13,7 +13,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-public class Farm extends ScoreableFeature implements MultiTileFeature<Farm> {
+public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm> {
 
     // for unplaced features, references is to (0, 0)
     protected final Set<FeaturePointer> adjoiningCities; //or castles

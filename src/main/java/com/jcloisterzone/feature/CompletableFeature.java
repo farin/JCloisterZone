@@ -4,12 +4,17 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Predicates;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
 
-public abstract class CompletableFeature<T extends CompletableFeature<?>> extends ScoreableFeature implements Completable, MultiTileFeature<T> {
+public abstract class CompletableFeature<T extends CompletableFeature<?>> extends TileFeature implements Completable, MultiTileFeature<T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +43,19 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
         return neighboring;
     }
 
-    // immutable helpers
+    // helpers
+
+    protected int getMageAndWitchPoints(GameState state, int points) {
+        Stream<Special> specials = getSpecialMeeples(state);
+        if (!specials.find(Predicates.instanceOf(Mage.class)).isEmpty()) {
+            points += getPlaces().size();
+        }
+        if (!specials.find(Predicates.instanceOf(Witch.class)).isEmpty()) {
+            if (points % 2 == 1) points++;
+            points /= 2;
+        }
+        return points;
+    }
 
     protected Set<Edge> mergeEdges(T obj) {
         Set<Edge> connectedEdges = openEdges.intersect(obj.openEdges);

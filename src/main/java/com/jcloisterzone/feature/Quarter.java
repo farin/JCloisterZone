@@ -6,7 +6,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 
 import io.vavr.collection.List;
 
-public class Quarter extends TileFeature {
+public class Quarter extends TileFeature implements Structure {
 
     private static final long serialVersionUID = 1L;
 

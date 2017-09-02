@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.feature.TileFeature;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
@@ -72,7 +72,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
         add(removalOption, "wrap, growx, h 40, gapbottom 5");
 
         TileDefinition tile = gc.getGame().getState().getLastPlaced().getTile();
-        String feature = TileFeature.getLocalizedNamefor(tile.getCornCircle());
+        String feature = Feature.getLocalizedNamefor(tile.getCornCircle());
         label = new ThemedJLabel(_("on/from a {0}.", feature.toLowerCase()));
         add(label, "wrap");
     }

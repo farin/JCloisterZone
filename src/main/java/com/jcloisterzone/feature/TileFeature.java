@@ -1,7 +1,6 @@
 package com.jcloisterzone.feature;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
@@ -34,16 +33,6 @@ public abstract class TileFeature implements Feature, Serializable {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    public static String getLocalizedNamefor(Class<? extends Feature> feature) {
-        try {
-            Method m = feature.getMethod("name");
-            return (String) m.invoke(null);
-        } catch (Exception e) {
-            return feature.getSimpleName();
-        }
-    }
-
 
     // immutable helpers
 

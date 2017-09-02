@@ -120,18 +120,14 @@ public class TileBuilder {
 //    }
 
     private void processCloisterElement(Element e) {
-        Cloister cloister = new Cloister(
-            List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER))
-        );
+        Cloister cloister = new Cloister();
         cloister = (Cloister) initFeature(tileId, cloister, e);
         features.put(Location.CLOISTER, cloister);
 
     }
 
     private void processTowerElement(Element e) {
-        Tower tower = new Tower(
-            List.of(new FeaturePointer(Position.ZERO, Location.TOWER))
-        );
+        Tower tower = new Tower();
         tower = (Tower) initFeature(tileId, tower, e);
         features.put(Location.TOWER, tower);
     }

@@ -13,7 +13,7 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-public class Castle extends ScoreableFeature {
+public class Castle extends TileFeature implements Scoreable {
 
     private static final long serialVersionUID = 1L;
 

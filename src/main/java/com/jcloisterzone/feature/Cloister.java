@@ -3,6 +3,7 @@ package com.jcloisterzone.feature;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -13,17 +14,18 @@ import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
 
-public class Cloister extends ScoreableFeature implements Completable, CloisterLike {
+public class Cloister extends TileFeature implements Scoreable, CloisterLike {
 
     private static final long serialVersionUID = 1L;
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
     protected final boolean shrine;
     protected final boolean monastery;
 
-    public Cloister(List<FeaturePointer> places) {
-        this(places, HashSet.empty(), false, false);
+    public Cloister() {
+        this(INITIAL_PLACE, HashSet.empty(), false, false);
     }
 
     public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, boolean shrine, boolean monastery) {

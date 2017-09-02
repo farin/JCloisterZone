@@ -3,6 +3,7 @@ package com.jcloisterzone.feature;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -17,14 +18,15 @@ import io.vavr.collection.Set;
  *
  * Implemented as separate feature type to be not involved in Cult shrine-cloister challenges.
  */
-public class YagaHut extends ScoreableFeature implements Completable, CloisterLike {
+public class YagaHut extends TileFeature implements Completable, CloisterLike {
 
     private static final long serialVersionUID = 1L;
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
-    public YagaHut(List<FeaturePointer> places) {
-        this(places, HashSet.empty());
+    public YagaHut() {
+        this(INITIAL_PLACE, HashSet.empty());
     }
 
     public YagaHut(List<FeaturePointer> places, Set<FeaturePointer> neighboring) {

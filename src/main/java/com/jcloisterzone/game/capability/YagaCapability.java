@@ -20,9 +20,7 @@ public class YagaCapability extends Capability<Void> {
         NodeList nl = xml.getElementsByTagName("yaga-hut");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {
-            YagaHut feature =  new YagaHut(
-                List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER))
-            );
+            YagaHut feature =  new YagaHut();
             return tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, feature));
         }
         return tile;

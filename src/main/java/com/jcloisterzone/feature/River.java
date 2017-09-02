@@ -13,7 +13,7 @@ public class River extends TileFeature {
     }
 
     @Override
-    public Feature placeOnBoard(Position pos, Rotation rot) {
+    public River placeOnBoard(Position pos, Rotation rot) {
         return new River(
             placeOnBoardPlaces(pos, rot)
         );

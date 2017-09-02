@@ -2,6 +2,7 @@ package com.jcloisterzone.feature;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -9,12 +10,13 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
 
 
-public class Tower extends TileStructure {
+public class Tower extends TileFeature implements Structure {
 
     private final int height;
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.TOWER));
 
-    public Tower(List<FeaturePointer> places) {
-        this(places, 0);
+    public Tower() {
+        this(INITIAL_PLACE, 0);
     }
 
     public Tower(List<FeaturePointer> places, int height) {

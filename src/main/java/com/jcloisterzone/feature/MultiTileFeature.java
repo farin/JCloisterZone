@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-public interface MultiTileFeature<T extends MultiTileFeature<?>> extends Scoreable {
+public interface MultiTileFeature<T extends MultiTileFeature<?>> extends Feature {
 
     T merge(T f);
 }
