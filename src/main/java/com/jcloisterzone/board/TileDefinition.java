@@ -35,9 +35,7 @@ public class TileDefinition implements Serializable {
 
     private final Map<Location, Feature> initialFeatures;
 
-    //expansions data - maybe some map instead ? but still it is only few tiles
     private final TileTrigger trigger;
-    private final Location flier;
     private final Location windRose;
     private final Class<? extends Feature> cornCircle;
 
@@ -49,7 +47,7 @@ public class TileDefinition implements Serializable {
      * @param initialFeatures the {@link Feature}s of the tile
      */
     public TileDefinition(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
-        this(origin, id, initialFeatures, null, null, null, null);
+        this(origin, id, initialFeatures, null, null, null);
     }
 
     /**
@@ -65,14 +63,13 @@ public class TileDefinition implements Serializable {
      */
     public TileDefinition(Expansion origin, String id,
         Map<Location, Feature> initialFeatures,
-        TileTrigger trigger, Location flier, Location windRose,
+        TileTrigger trigger, Location windRose,
         Class<? extends Feature> cornCircle) {
         this.origin = origin;
         this.id = id;
         this.initialFeatures = initialFeatures;
 
         this.trigger = trigger;
-        this.flier = flier;
         this.windRose = windRose;
         this.cornCircle = cornCircle;
 
@@ -88,18 +85,7 @@ public class TileDefinition implements Serializable {
      */
     public TileDefinition setTileTrigger(TileTrigger trigger) {
         assert this.trigger == null;
-        return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
-    }
-
-    /**
-     * Sets the direction pointed by the flier.
-     * {@see FlierCapability}
-     *
-     * @param flier the direction to set
-     * @return a new instance with the direction pointed by the flier set
-     */
-    public TileDefinition setFlier(Location flier) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
+        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -110,7 +96,7 @@ public class TileDefinition implements Serializable {
      * @return a new instance with the direction pointed by the wind rose set
      */
     public TileDefinition setWindRose(Location windRose) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
+        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -121,7 +107,7 @@ public class TileDefinition implements Serializable {
      * @return a new instance with the corn circle feature set
      */
     public TileDefinition setCornCircle(Class<? extends Feature> cornCircle) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
+        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -131,7 +117,7 @@ public class TileDefinition implements Serializable {
      * @return a new instance with the features set
      */
     public TileDefinition setInitialFeatures(Map<Location, Feature> initialFeatures) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, flier, windRose, cornCircle);
+        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -213,15 +199,6 @@ public class TileDefinition implements Serializable {
      */
     public TileTrigger getTrigger() {
         return trigger;
-    }
-
-    /**
-     * Gets the direction pointed by the flier.
-     *
-     * @return the direction pointed by the flier
-     */
-    public Location getFlier() {
-        return flier;
     }
 
     /**

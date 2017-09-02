@@ -9,6 +9,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 
 @Immutable
@@ -58,7 +59,7 @@ public abstract class Figure<T extends BoardPointer> implements Serializable {
         return Objects.equals(fp, at == null ? null : at.asFeaturePointer());
     }
 
-    public abstract boolean at(GameState state, Feature feature);
+    public abstract boolean at(GameState state, Structure feature);
 
     /** true if meeple is deployed on board */
     public boolean isDeployed(GameState state) {

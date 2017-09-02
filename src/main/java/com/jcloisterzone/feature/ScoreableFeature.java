@@ -20,7 +20,7 @@ import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
-public abstract class ScoreableFeature extends TileFeature implements Scoreable {
+public abstract class ScoreableFeature extends TileStructure implements Scoreable {
 
     private static final long serialVersionUID = 1L;
 

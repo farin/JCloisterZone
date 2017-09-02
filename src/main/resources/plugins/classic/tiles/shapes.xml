@@ -944,34 +944,34 @@
         <apply>TO.CFR TOWER</apply>
     </shape>
 
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="315" cy="300" r="200"/>
-        <apply>FL.F.d FLIER</apply>
+        <apply>FL.F.d FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="282" cy="392" r="200"/>
-        <apply>FL.F.o FLIER</apply>
+        <apply>FL.F.o FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="220" cy="200" r="200"/>
-        <apply>FL.RFr.d FLIER</apply>
-        <apply>FL.Rr.d FLIER</apply>
+        <apply>FL.RFr.d FLYING_MACHINE</apply>
+        <apply>FL.Rr.d FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="222" cy="222" r="200"/>
-        <apply>FL.RFr.WE.o FLIER</apply>
+        <apply>FL.RFr.WE.o FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="222" cy="555" r="200"/>
-        <apply>FL.RFr.NS.o FLIER</apply>
+        <apply>FL.RFr.NS.o FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="471" cy="695" r="200"/>
-        <apply>FL.Rr.NW.o FLIER</apply>
+        <apply>FL.Rr.NW.o FLYING_MACHINE</apply>
     </shape>
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="412" cy="272" r="200"/>
-        <apply>FL.Rr.SW.o FLIER</apply>
+        <apply>FL.Rr.SW.o FLYING_MACHINE</apply>
     </shape>
 
     <complement-farm>

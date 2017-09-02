@@ -9,7 +9,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
 
 
-public class Tower extends TileFeature {
+public class Tower extends TileStructure {
 
     private final int height;
 

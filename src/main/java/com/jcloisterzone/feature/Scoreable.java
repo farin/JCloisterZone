@@ -7,7 +7,7 @@ import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.Set;
 
-public interface Scoreable extends Feature {
+public interface Scoreable extends Structure {
 
     PointCategory getPointCategory();
 

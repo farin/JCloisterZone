@@ -3,7 +3,7 @@ package com.jcloisterzone.reducers;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.GameState;
@@ -22,7 +22,7 @@ public class DeployMeeple implements Reducer {
 
     @Override
     public GameState apply(GameState state) {
-        Feature feature = state.getFeature(fp);
+        Structure feature = state.getStructure(fp);
         if (feature == null) {
             throw new IllegalArgumentException("There is no feature on " + fp);
         }

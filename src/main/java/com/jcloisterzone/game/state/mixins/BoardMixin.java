@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 
@@ -109,12 +110,22 @@ public interface BoardMixin {
         return getFeatureMap().get(fp).getOrNull();
     }
 
+    default Structure getStructure(FeaturePointer fp) {
+        Feature f = getFeature(fp);
+        return f instanceof Structure ? (Structure) f : null;
+    }
+
     default Feature getFeaturePartOf(FeaturePointer fp) {
         FeaturePointer normFp = fp.getLocation() == Location.MONASTERY ? fp.setLocation(Location.CLOISTER) : fp;
         return getFeatureMap()
             .find(t -> normFp.isPartOf(t._1))
             .map(Tuple2::_2)
             .getOrNull();
+    }
+
+    default Structure getStructurePartOf(FeaturePointer fp) {
+        Feature f = getFeaturePartOf(fp);
+        return f instanceof Structure ? (Structure) f : null;
     }
 
     /** Returns Tuple2 with feature and "full" feature pointer.

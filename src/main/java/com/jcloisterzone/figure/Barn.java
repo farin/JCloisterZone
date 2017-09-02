@@ -3,7 +3,7 @@ package com.jcloisterzone.figure;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 
 public class Barn extends Special {
@@ -20,7 +20,7 @@ public class Barn extends Special {
     }
 
     @Override
-    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (!(feature instanceof Farm)) {
             return new DeploymentCheckResult("The barn must be placed only on a farm.");
         }

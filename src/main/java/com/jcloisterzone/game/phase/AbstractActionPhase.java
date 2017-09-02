@@ -13,6 +13,7 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Follower;
@@ -53,7 +54,7 @@ public abstract class AbstractActionPhase extends Phase {
             tiles = Stream.of(lastPlaced);
         }
 
-        Stream<Tuple2<FeaturePointer, Scoreable>> placesFp = tiles.flatMap(tile -> {
+        Stream<Tuple2<FeaturePointer, Structure>> placesFp = tiles.flatMap(tile -> {
             Position pos = tile.getPosition();
             boolean isCurrentTile = pos.equals(currentTilePos);
 
@@ -65,10 +66,9 @@ public abstract class AbstractActionPhase extends Phase {
                 }
             }
 
-            Stream<Tuple2<Location, Scoreable>> places;
+            Stream<Tuple2<Location, Structure>> places;
             if (placementAllowed) {
-                places = state.getTileFeatures2(pos, Scoreable.class);
-                //places = tile.getScoreables(!isCurrentTile);
+                places = state.getTileFeatures2(pos, Structure.class);
             } else {
                 places = Stream.empty();
             }
@@ -124,7 +124,7 @@ public abstract class AbstractActionPhase extends Phase {
         Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         //TODO validate against players actions instead
         if (m instanceof Follower) {
-            if (state.getFeature(fp).isOccupied(state)) {
+            if (state.getStructure(fp).isOccupied(state)) {
                 throw new IllegalArgumentException("Feature is occupied.");
             }
         }

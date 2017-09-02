@@ -6,7 +6,7 @@ import com.jcloisterzone.board.Corner;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Pig;
@@ -80,18 +80,19 @@ public final class BarnCapability extends Capability<FeaturePointer> {
         return setModel(state, null);
     }
 
-    private Tuple2<FeaturePointer, Feature> getFarmLocationPartOf(GameState state, FeaturePointer fp) {
+    private Tuple2<FeaturePointer, Farm> getFarmLocationPartOf(GameState state, FeaturePointer fp) {
         return state.getFeatureMap()
             .find(t -> fp.isPartOf(t._1))
+            .map(t -> t.map2(f -> (Farm) f))
             .getOrNull();
     }
 
-    private boolean containsCorner(Tuple2<FeaturePointer, Feature> t, Corner c) {
+    private boolean containsCorner(Tuple2<FeaturePointer, Farm> t, Corner c) {
         return t != null && t._1.getLocation().getCorners().contains(c);
     }
 
-    private Tuple2<FeaturePointer, Feature> getCornerFeature(GameState state, Position pos) {
-        Tuple2<FeaturePointer, Feature> t;
+    private Tuple2<FeaturePointer, Farm> getCornerFeature(GameState state, Position pos) {
+        Tuple2<FeaturePointer, Farm> t;
         t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Location.SL));
         if (!containsCorner(t, Corner.SE)) return null;
         t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Location.WL));

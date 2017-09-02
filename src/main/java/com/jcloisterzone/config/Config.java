@@ -91,11 +91,13 @@ public class Config {
         public void updateGameSetup(Connection conn, String gameId) {
             EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
             expansionSet.add(Expansion.BASIC);
-            for (String expName : expansions) {
-                try {
-                    expansionSet.add(Expansion.valueOf(expName));
-                } catch (IllegalArgumentException ex) {
-                    LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+            if (expansions != null) {
+                for (String expName : expansions) {
+                    try {
+                        expansionSet.add(Expansion.valueOf(expName));
+                    } catch (IllegalArgumentException ex) {
+                        LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+                    }
                 }
             }
             GameSetupMessage msg = new GameSetupMessage(rules, expansionSet);

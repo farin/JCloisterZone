@@ -4,7 +4,7 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Predicates;
@@ -27,7 +27,7 @@ public abstract class Meeple extends Figure<FeaturePointer> {
     }
 
     @Override
-    public boolean at(GameState state, Feature feature) {
+    public boolean at(GameState state, Structure feature) {
         return feature.getMeeples(state).find(Predicates.is(this)).isDefined();
     }
 
@@ -41,7 +41,7 @@ public abstract class Meeple extends Figure<FeaturePointer> {
         return true;
     }
 
-    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         return DeploymentCheckResult.OK;
     }
 

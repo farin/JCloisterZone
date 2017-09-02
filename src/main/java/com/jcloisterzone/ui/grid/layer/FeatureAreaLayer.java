@@ -72,8 +72,8 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         if (action instanceof MeepleAction) {
             MeepleAction ma = (MeepleAction) action;
 
-            if (fp.getLocation() == Location.FLIER) {
-                gc.getConnection().send(new DeployFlierMessage(ma.getMeepleType()));
+            if (fp.getLocation() == Location.FLYING_MACHINE) {
+                gc.getConnection().send(new DeployFlierMessage(pos, ma.getMeepleId()));
                 return;
             }
 

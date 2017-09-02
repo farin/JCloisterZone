@@ -3,7 +3,7 @@ package com.jcloisterzone.figure;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 
 public abstract class Special extends Meeple {
@@ -15,7 +15,7 @@ public abstract class Special extends Meeple {
     }
 
     @Override
-    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (fp.getLocation() == Location.MONASTERY) {
             return new DeploymentCheckResult("only follower is allowed");
         }

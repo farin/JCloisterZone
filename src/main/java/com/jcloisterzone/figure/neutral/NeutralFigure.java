@@ -2,7 +2,7 @@ package com.jcloisterzone.figure.neutral;
 
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.Figure;
 import com.jcloisterzone.game.state.GameState;
 
@@ -20,7 +20,7 @@ public class NeutralFigure<T extends BoardPointer> extends Figure<T> {
     }
 
     @Override
-    public boolean at(GameState state, Feature feature) {
+    public boolean at(GameState state, Structure feature) {
         BoardPointer ptr = getDeployment(state);
         if (ptr == null) {
             return false;

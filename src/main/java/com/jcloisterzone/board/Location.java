@@ -122,7 +122,7 @@ public class Location implements Serializable {
     /** A tower space */
     public static final Location TOWER = new Location("TOWER", 0b00010000 << 16);
     /** A flier space (a follower can be placed here just for moment, before a dice roll) */
-    public static final Location FLIER = new Location("FLIER", 0b00100000 << 16);
+    public static final Location FLYING_MACHINE = new Location("FLYING_MACHINE", 0b00100000 << 16);
     /** City of Carcassonne specials (Count) */
     public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 0b01000000 << 16);
     public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 0b10000000 << 16);
