@@ -2,9 +2,7 @@ package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.GameState;

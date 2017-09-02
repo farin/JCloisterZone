@@ -25,7 +25,6 @@ import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.DragonPhase;
 import com.jcloisterzone.game.phase.EscapePhase;
 import com.jcloisterzone.game.phase.FairyPhase;
-import com.jcloisterzone.game.phase.FlierActionPhase;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.GoldPiecePhase;
 import com.jcloisterzone.game.phase.MageAndWitchPhase;
@@ -84,7 +83,6 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         next = addPhase(setup, gc, next, PhantomPhase.class);
                addPhase(setup, gc, next, TowerCapturePhase.class);
-               addPhase(setup, gc, next, FlierActionPhase.class);
         next = addPhase(setup, gc, next, ActionPhase.class);
         next = addPhase(setup, gc, next, MageAndWitchPhase.class);
         next = addPhase(setup, gc, next, GoldPiecePhase.class);

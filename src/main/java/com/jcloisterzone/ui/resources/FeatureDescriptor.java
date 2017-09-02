@@ -12,6 +12,7 @@ import com.jcloisterzone.feature.FlyingMachine;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Tower;
+import com.jcloisterzone.feature.YagaHut;
 
 public class FeatureDescriptor {
 
@@ -57,6 +58,7 @@ public class FeatureDescriptor {
         case "BRIDGE": featureType = Bridge.class; break;
         case "QUARTER": featureType = Quarter.class; break;
         case "FLYING_MACHINE": featureType = FlyingMachine.class; break;
+        case "YAGA_HUT": featureType = YagaHut.class; break;
         default: throw new IllegalArgumentException("Unsupported feature "+featureName);
         }
         Location location = Location.valueOf(locationName);

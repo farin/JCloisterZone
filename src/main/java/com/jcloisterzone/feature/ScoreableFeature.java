@@ -28,16 +28,12 @@ public abstract class ScoreableFeature extends TileStructure implements Scoreabl
         super(places);
     }
 
-    protected int getPower(GameState state, Follower f) {
-        return f.getPower(state, this);
-    }
-
     @Override
     public Set<Player> getOwners(GameState state) {
         HashMap<Player, Integer> powers = getFollowers(state)
             .foldLeft(HashMap.<Player, Integer>empty(), (acc, m) -> {
                 Player player = m.getPlayer();
-                int power = getPower(state, m);
+                int power = m.getPower(state, this);
                 return acc.put(player, acc.get(player).getOrElse(0) + power);
             });
 

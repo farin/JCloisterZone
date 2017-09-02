@@ -9,6 +9,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -119,8 +120,9 @@ public class ScorePhase extends Phase {
         Set<Position> neighbourPositions = state.getAdjacentAndDiagonalTiles2(pos)
             .map(pt -> pt._2.getPosition()).toSet();
 
-        for (Cloister cloister : state.getFeatures(Cloister.class)) {
-            if (neighbourPositions.contains(cloister.getPlace().getPosition())) {
+
+        for (CloisterLike cloister : state.getFeatures(CloisterLike.class)) {
+            if (neighbourPositions.contains(cloister.getPlaces().get().getPosition())) {
                 state = scoreCompleted(state, cloister, null);
             }
         }

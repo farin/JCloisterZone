@@ -1,22 +1,30 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.YagaHut;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
+
+import io.vavr.collection.List;
 
 public class YagaCapability extends Capability<Void> {
 
     @Override
-    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof Cloister) {
-            feature = ((Cloister)feature).setYagaHut(attributeBoolValue(xml, "yaga"));
+    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+        NodeList nl = xml.getElementsByTagName("yaga-hut");
+        assert nl.getLength() <= 1;
+        if (nl.getLength() == 1) {
+            YagaHut feature =  new YagaHut(
+                List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER))
+            );
+            return tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, feature));
         }
-        return feature;
+        return tile;
     }
-
 }

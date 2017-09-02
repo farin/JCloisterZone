@@ -17,11 +17,13 @@
     - When tile can place only with bridge, player is allowed to pass and let the tile to be discarded.
     - fix: When there is no legal placement for auctioned tile, tile is discarded and random tile is drawn instead.
     - Display bridge preview if bridge placement is mandatory (and bridge must be placed as part of tile placement).
-* River
+* River:
     - Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
       (changed according to New Carcassonne (C II) rules)
-* Tunnel
+* Tunnel:
     - added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players game or two token sets for 3 player game)
+* Russion promos:
+    - Baba Yaga's hut is now not involved in shrine-cloister challenges (when player together with The Cult expansion)
 * technical notes:
     - Grand rewrite in favor of functional programming and immutable data structure.
     - vavr.io library is awesome!

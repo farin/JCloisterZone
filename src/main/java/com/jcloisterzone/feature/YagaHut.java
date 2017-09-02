@@ -12,31 +12,30 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-
-public class Cloister extends ScoreableFeature implements Completable, CloisterLike {
+/**
+ * Baba Yaga's hut from Russion Promos expansion.
+ *
+ * Implemented as separate feature type to be not involved in Cult shrine-cloister challenges.
+ */
+public class YagaHut extends ScoreableFeature implements Completable, CloisterLike {
 
     private static final long serialVersionUID = 1L;
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
-    protected final boolean shrine;
-    protected final boolean monastery;
-
-    public Cloister(List<FeaturePointer> places) {
-        this(places, HashSet.empty(), false, false);
+    public YagaHut(List<FeaturePointer> places) {
+        this(places, HashSet.empty());
     }
 
-    public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, boolean shrine, boolean monastery) {
+    public YagaHut(List<FeaturePointer> places, Set<FeaturePointer> neighboring) {
         super(places);
         this.neighboring = neighboring;
-        this.shrine = shrine;
-        this.monastery = monastery;
     }
 
     @Override
-    public Cloister setNeighboring(Set<FeaturePointer> neighboring) {
+    public YagaHut setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Cloister(places, neighboring, shrine, monastery);
+        return new YagaHut(places, neighboring);
     }
 
     @Override
@@ -46,31 +45,16 @@ public class Cloister extends ScoreableFeature implements Completable, CloisterL
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new Cloister(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), shrine, monastery);
-    }
-
-    public boolean isShrine() {
-        return shrine;
-    }
-
-    public Cloister setShrine(boolean shrine) {
-        if (this.shrine == shrine) return this;
-        return new Cloister(places, neighboring, shrine, monastery);
-    }
-
-    public boolean isMonastery() {
-        return monastery;
-    }
-
-    public Cloister setMonastery(boolean monastery) {
-        if (this.monastery == monastery) return this;
-        return new Cloister(places, neighboring, shrine, monastery);
+        return new YagaHut(
+            placeOnBoardPlaces(pos, rot),
+            placeOnBoardNeighboring(pos, rot)
+        );
     }
 
     @Override
     public int getPoints(GameState state) {
         Position p = places.get().getPosition();
-        return state.getAdjacentAndDiagonalTiles2(p).size() + 1;
+        return 9 - state.getAdjacentAndDiagonalTiles2(p).size();
     }
 
     @Override
@@ -84,7 +68,7 @@ public class Cloister extends ScoreableFeature implements Completable, CloisterL
     }
 
     public static String name() {
-        return _("Cloister");
+        return _("Yaga's Hut");
     }
 
     protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
