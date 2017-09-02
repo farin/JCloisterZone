@@ -60,7 +60,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         return getAction().getOptions()
             .filter(fp -> fp.getPosition() == pos)
             .map(FeaturePointer::getLocation)
-            .filter(loc -> loc ==  Location.CLOISTER || loc == Location.ABBOT);
+            .filter(loc -> loc ==  Location.CLOISTER || loc == Location.MONASTERY);
     }
 
     @Override
@@ -77,11 +77,11 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 return;
             }
 
-            boolean isMonasteryLocataion = fp.getLocation() == Location.CLOISTER || fp.getLocation() == Location.ABBOT;
+            boolean isMonasteryLocataion = fp.getLocation() == Location.CLOISTER || fp.getLocation() == Location.MONASTERY;
 
             if (isMonasteryLocataion) {
                 Set<Location> monasteryOptions = getMonasteryOptions(pos);
-                if (monasteryOptions.contains(Location.ABBOT)) {
+                if (monasteryOptions.contains(Location.MONASTERY)) {
                     String[] dialogOptions;
                     boolean abbotOnly = !monasteryOptions.contains(Location.CLOISTER);
                     if (abbotOnly) {
@@ -97,7 +97,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                         return;
                     }
                     if (abbotOnly || result == JOptionPane.NO_OPTION) {
-                        fp = new FeaturePointer(pos, Location.ABBOT);
+                        fp = new FeaturePointer(pos, Location.MONASTERY);
                     }
                 }
             }

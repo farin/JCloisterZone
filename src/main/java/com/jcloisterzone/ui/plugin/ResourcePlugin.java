@@ -187,7 +187,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     @Override
     public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
         if (!containsTile(tile.getId())) return null;
-        if (loc == Location.ABBOT) loc = Location.CLOISTER;
+        if (loc == Location.MONASTERY) loc = Location.CLOISTER;
 
         Location iniLoc = loc.rotateCCW(rot);
         Feature feature = tile.getInitialFeatures().get(iniLoc).get();
@@ -229,7 +229,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private FeatureArea getFeatureArea(TileDefinition tile, Class<? extends Feature> featureClass, Location loc) {
         boolean monasteryShading = false;
-        if (loc == Location.ABBOT) {
+        if (loc == Location.MONASTERY) {
             loc = Location.CLOISTER;
             monasteryShading = true;
         }
@@ -350,7 +350,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
                     return List.of(
                         t,
-                        t.update1(Location.ABBOT)
+                        t.update1(Location.MONASTERY)
                     );
                 } else {
                     return List.of(t);

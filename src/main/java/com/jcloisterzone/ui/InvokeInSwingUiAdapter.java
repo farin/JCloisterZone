@@ -9,8 +9,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.GameChangedEvent;
-import com.jcloisterzone.event.play.PlayEvent;
 
 
 public class InvokeInSwingUiAdapter {

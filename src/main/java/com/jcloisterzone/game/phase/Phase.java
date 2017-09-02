@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PayRansom;
-import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
 

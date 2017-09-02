@@ -16,7 +16,7 @@ public abstract class Special extends Meeple {
 
     @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Feature feature) {
-        if (fp.getLocation() == Location.ABBOT) {
+        if (fp.getLocation() == Location.MONASTERY) {
             return new DeploymentCheckResult("only follower is allowed");
         }
         return super.isDeploymentAllowed(state, fp, feature);

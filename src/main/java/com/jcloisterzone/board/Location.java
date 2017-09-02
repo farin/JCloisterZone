@@ -16,7 +16,7 @@ import io.vavr.collection.Vector;
  * - a south-to-east feature-space (e.g., a river, a road, a city)
  * - a south-to-north feature-space (e.g., a river, a road, a city)
  * - a city space spanning in all directions
- * - an abbot space
+ * - an abbot space (monasteries)
  * - a cloister space
  * - a flier space
  * - a tower space
@@ -27,11 +27,13 @@ import io.vavr.collection.Vector;
  *
  *   Bit order                 Constants for farm locations            Constants for roads/rivers/cities
  *
- *
- *     0  1                               1  2                                   256 512
- *   7      2                          128     4                             32768     1024
- *   6      3                          64      8                             16384     2048
- *     5  4                              32  16                                 8192 4096
+ *   +---------+                    +------------+                       +-----------------+
+ *   |  0   1  |                    |    1    2  |                       |    256    512   |
+ *   |7       2|                    |128        4|                       |32768        1024|
+ *   |         |                    |            |                       |                 |
+ *   |6       3|                    | 64        8|                       |16384        2048|
+ *   |  5   4  |                    |   32   16  |                       |    8192   4096  |
+ *   +---------+                    +------------+                       +-----------------+
  *
  *  City/road/river locations are shifted by 8 bit so they can coexist with farm locations.
  */
@@ -115,8 +117,8 @@ public class Location implements Serializable {
 
     /** A cloister space */
     public static final Location CLOISTER = new Location("CLOISTER", 0b00000100 << 16);
-    /** An abbot space */
-    public static final Location ABBOT = new Location("ABBOT", 0b00001000 << 16);
+    /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
+    public static final Location MONASTERY = new Location("MONASTERY", 0b00001000 << 16);
     /** A tower space */
     public static final Location TOWER = new Location("TOWER", 0b00010000 << 16);
     /** A flier space (a follower can be placed here just for moment, before a dice roll) */

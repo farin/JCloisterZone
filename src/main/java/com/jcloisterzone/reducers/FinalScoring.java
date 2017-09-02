@@ -56,7 +56,7 @@ public class FinalScoring implements Reducer {
         }
 
         LinkedHashMap<Meeple, FeaturePointer> abbots = state.getDeployedMeeples()
-                .filterValues(fp -> fp.getLocation() == Location.ABBOT);
+                .filterValues(fp -> fp.getLocation() == Location.MONASTERY);
         for (Tuple2<Meeple, FeaturePointer> t : abbots) {
             Follower follower = (Follower) t._1;
             Position pos = t._2.getPosition();

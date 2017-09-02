@@ -50,7 +50,7 @@ public class FlierActionPhase extends Phase {
             if (f instanceof Cloister) {
                 Cloister cloister = (Cloister) f;
                 if (cloister.isMonastery()) {
-                    action.add(new FeaturePointer(pos, Location.ABBOT));
+                    action.add(new FeaturePointer(pos, Location.MONASTERY));
                 }
             }
 

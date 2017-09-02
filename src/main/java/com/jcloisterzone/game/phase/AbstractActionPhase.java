@@ -95,7 +95,7 @@ public abstract class AbstractActionPhase extends Phase {
                     if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
                         return List.of(
                             t,
-                            t.update1(new FeaturePointer(t._1.getPosition(), Location.ABBOT))
+                            t.update1(new FeaturePointer(t._1.getPosition(), Location.MONASTERY))
                         );
                     } else {
                         return List.of(t);

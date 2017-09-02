@@ -83,7 +83,7 @@ public class CastlePhase extends Phase {
             throw new IllegalArgumentException();
         }
         Player player = state.getActivePlayer();
-        City city = (City) state.getFeature(msg.getPointer());
+        City city = (City) state.getFeature((FeaturePointer) msg.getPointer());
         Castle castle = new Castle(city.getPlaces());
 
         Map<FeaturePointer, Feature> update = city.getPlaces().toMap(ptr -> new Tuple2<>(ptr, castle));

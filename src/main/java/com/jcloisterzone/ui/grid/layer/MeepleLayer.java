@@ -184,7 +184,7 @@ public class MeepleLayer extends AbstractGridLayer {
             LayeredImageDescriptor lid = new LayeredImageDescriptor(m.getClass(), color);
             lid.setAdditionalLayer(getExtraDecoration(m.getClass(), fp));
             Image image = rm.getLayeredImage(lid);
-            if (fp.getLocation() == Location.ABBOT) {
+            if (fp.getLocation() == Location.MONASTERY) {
                 image = rotate(image, 90);
             }
             fi.img = image;
