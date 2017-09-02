@@ -12,10 +12,11 @@ import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.UndeployMeeples;
 
@@ -37,7 +38,7 @@ public final class ShrineCapability extends Capability<Void> {
     }
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
+    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         Set<Cloister> completedCloisters = completed.keySet()
             .filter(Predicates.instanceOf(Cloister.class))
             .map(f -> (Cloister) f);

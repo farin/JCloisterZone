@@ -5,7 +5,9 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.MemoizedValue;
@@ -19,14 +21,14 @@ import io.vavr.collection.Set;
 public final class KingAndRobberBaronCapability extends Capability<Void> {
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
-        Set<Completable> completedFeatures = completed.keySet();
+    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+        Set<Scoreable> completedFeatures = completed.keySet();
         int maxCitySize = getMaxSize(state, City.class, completedFeatures);
         int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);
         boolean biggestCityCompleted = false;
         boolean longestRoadCompleted = false;
 
-        for (Completable c : completed.keySet()) {
+        for (Scoreable c : completed.keySet()) {
             if (!biggestCityCompleted && c instanceof City) {
                 biggestCityCompleted = c.getTilePositions().size() > maxCitySize;
             }
@@ -65,7 +67,7 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         return state;
     }
 
-    private int getMaxSize(GameState state, Class<? extends Completable> cls, Set<Completable> exclude) {
+    private int getMaxSize(GameState state, Class<? extends Completable> cls, Set<Scoreable> exclude) {
         return state.getFeatures(cls)
             .filter(c -> !exclude.contains(c))
             .filter(c -> c.isCompleted(state))

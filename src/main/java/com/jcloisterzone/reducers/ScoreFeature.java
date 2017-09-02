@@ -24,11 +24,15 @@ public abstract class ScoreFeature implements Reducer {
 
     private final Scoreable feature;
 
+    // "out" variable - computed owners are store to instance
+    // to be available to reducer caller
+    private Set<Player> owners;
+
     public ScoreFeature(Scoreable feature) {
         this.feature = feature;
     }
 
-    abstract int getFeaturePoints(GameState state, Player player);
+    abstract protected int getFeaturePoints(GameState state, Player player);
 
     private GameState scorePlayer(GameState state, Player p, Follower nextToFairy, boolean finalScoring) {
         int points = getFeaturePoints(state, p);
@@ -71,8 +75,8 @@ public abstract class ScoreFeature implements Reducer {
     public GameState apply(GameState state) {
         boolean finalScoring = GameOverPhase.class.equals(state.getPhase());
 
-        Set<Player> players = feature.getOwners(state);
-        if (players.isEmpty()) {
+        owners = feature.getOwners(state);
+        if (owners.isEmpty()) {
             Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
             if (!followers.isEmpty()) {
                 for (Seq<Tuple2<Follower, FeaturePointer>> l : followers.groupBy(t -> t._1.getPlayer()).values()) {
@@ -103,12 +107,12 @@ public abstract class ScoreFeature implements Reducer {
             }
         }
 
-        for (Player pl : players) {
+        for (Player pl : owners) {
             Follower nextToFairy = playersWithFairyBonus.get(pl).getOrNull();
             state = scorePlayer(state, pl, nextToFairy, finalScoring);
         }
 
-        for (Player pl : playersWithFairyBonus.keySet().removeAll(players)) {
+        for (Player pl : playersWithFairyBonus.keySet().removeAll(owners)) {
             // player is not owner but next to fairy -> add just fairy points
             Follower nextToFairy = playersWithFairyBonus.get(pl).getOrNull();
 
@@ -131,6 +135,10 @@ public abstract class ScoreFeature implements Reducer {
 
     public Scoreable getFeature() {
         return feature;
+    }
+
+    public Set<Player> getOwners() {
+        return owners;
     }
 
 }

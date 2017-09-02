@@ -9,7 +9,9 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.ScoreCastle;
@@ -42,42 +44,45 @@ public class CastleCapability extends Capability<Void> {
         return state.getFeatures(Castle.class).filter(c -> c.isOccupied(state));
     }
 
-    @Override
-    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
-        java.util.Map<Castle, Integer> scoredCastles = new java.util.HashMap<>();
-        Array<Tuple2<Completable, Integer>> scored = Array.ofAll(completed).sortBy(t -> -t._2);
+    public Tuple2<GameState, Map<Castle, ScoringResult>> scoreCastles(GameState state, HashMap<Completable, ScoringResult> completed) {
+        java.util.Map<Castle, ScoringResult> scoredCastles = new java.util.HashMap<>();
+        Array<Tuple2<Completable, ScoringResult>> scored = Array.ofAll(completed).sortBy(t -> -t._2.getPoints());
+        HashMap<Castle, ScoringResult> allScoredCastled = HashMap.empty();
 
         for (Castle castle : getOccupiedCastles(state)) {
             Set<Position> vicinity = castle.getVicinity();
-            for (Tuple2<Completable, Integer> t : scored) {
+            for (Tuple2<Completable, ScoringResult> t : scored) {
                 if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {
-                    state = (new ScoreCastle(castle, t._2)).apply(state);
+                    ScoreCastle scoreReducer = new ScoreCastle(castle, t._2.getPoints());
+                    state = scoreReducer.apply(state);
                     state = (new UndeployMeeples(castle)).apply(state);
-                    scoredCastles.put(castle, t._2);
+                    scoredCastles.put(castle, scoreReducer);
                     break;
                 }
             }
         }
 
         while (!scoredCastles.isEmpty()) {
-            Map<Castle, Integer> scoredCastlesCpy = HashMap.ofAll(scoredCastles);
+            Map<Castle, ScoringResult> scoredCastlesCpy = HashMap.ofAll(scoredCastles);
+            allScoredCastled = allScoredCastled.merge(scoredCastlesCpy);
             scoredCastles.clear();
 
             //must call getOccupiedCastles each iteration to get fresh castles
             for (Castle castle : getOccupiedCastles(state)) {
                 Set<Position> vicinity = castle.getVicinity();
-                for (Tuple2<Castle, Integer> t : scoredCastlesCpy) {
+                for (Tuple2<Castle, ScoringResult> t : scoredCastlesCpy) {
                     if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {
-                        state = (new ScoreCastle(castle, t._2)).apply(state);
+                        ScoreCastle scoreReducer = new ScoreCastle(castle, t._2.getPoints());
+                        state = scoreReducer.apply(state);
                         state = (new UndeployMeeples(castle)).apply(state);
-                        scoredCastles.put(castle, t._2);
+                        scoredCastles.put(castle, scoreReducer);
                         break;
                     }
                 }
             }
         }
 
-        return state;
+        return new Tuple2<>(state, allScoredCastled);
     }
 
 }

@@ -2,24 +2,20 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.state.GameState;
 
-public class ScoreCompletable extends ScoreFeature {
+public class ScoreCompletable extends ScoreFeature implements ScoringResult {
 
-    private int points = Integer.MIN_VALUE;
+    // points is store to instance and can be accesed after reduce
+    private int points;
 
     public ScoreCompletable(Completable feature) {
         super(feature);
     }
 
-    /* don't recompute points if they are already known */
-    public ScoreCompletable(Completable feature, int points) {
-        super(feature);
-        this.points = points;
-    }
-
     @Override
-    int getFeaturePoints(GameState state, Player player) {
+    protected int getFeaturePoints(GameState state, Player player) {
         return points;
     }
 
@@ -30,10 +26,11 @@ public class ScoreCompletable extends ScoreFeature {
 
     @Override
     public GameState apply(GameState state) {
-        if (points == Integer.MIN_VALUE) {
-            points = getFeature().getPoints(state);
-        }
+        points = getFeature().getPoints(state);
         return super.apply(state);
     }
 
+    public int getPoints() {
+        return points;
+    }
 }

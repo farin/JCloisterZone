@@ -6,9 +6,10 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeGoods;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
@@ -24,7 +25,7 @@ public class TradeGoodsCapability extends Capability<Void> {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
+    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         for (Feature feature : completed.keySet()) {
             if (!(feature instanceof City)) continue;
 

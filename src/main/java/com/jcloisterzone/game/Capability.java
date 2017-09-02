@@ -14,8 +14,8 @@ import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Special;
@@ -87,7 +87,9 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public GameState onCompleted(GameState state, HashMap<Completable, Integer> completed) {
+    // TODO rename to onScored ? (but only in game )
+    /** completed Completables + Castles */
+    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         return state;
     }
 

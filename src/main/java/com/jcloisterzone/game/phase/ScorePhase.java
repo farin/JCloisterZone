@@ -8,19 +8,21 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
-import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -43,7 +45,7 @@ import io.vavr.control.Option;
 
 public class ScorePhase extends Phase {
 
-    private java.util.Map<Completable, Integer> completedMutable = new java.util.HashMap<>();
+    private java.util.Map<Completable, ScoringResult> completedMutable = new java.util.HashMap<>();
 
     public ScorePhase(Config config, Random random) {
         super(config, random);
@@ -127,13 +129,18 @@ public class ScorePhase extends Phase {
             }
         }
 
-        HashMap<Completable, Integer> completed = HashMap.ofAll(completedMutable);
-        for (Capability<?> cap : state.getCapabilities().toSeq()) {
-            state = cap.onCompleted(state, completed);
+
+        CastleCapability castleCap = state.getCapabilities().get(CastleCapability.class);
+        HashMap<Completable, ScoringResult> completed = HashMap.ofAll(completedMutable);
+        HashMap<Scoreable, ScoringResult> scored = HashMap.narrow(completed);
+        if (castleCap != null) {
+            Tuple2<GameState, Map<Castle, ScoringResult>> castleRes = castleCap.scoreCastles(state, completed);
+            state = castleRes._1;
+            scored = scored.merge(castleRes._2);
         }
 
-        if (state.getCapabilities().contains(GoldminesCapability.class)) {
-            //gldCap.awardGoldPieces();
+        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+            state = cap.onCompleted(state, scored);
         }
 
         if (!deployedWagonsBefore.isEmpty()) {
@@ -177,12 +184,11 @@ public class ScorePhase extends Phase {
         }
 
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
-            int points = completable.getPoints(state);
-
-            completedMutable.put(completable, points);
-
-            state = (new ScoreCompletable(completable, points)).apply(state);
+            ScoreCompletable scoreReducer = new ScoreCompletable(completable);
+            state = scoreReducer.apply(state);
             state = (new UndeployMeeples(completable)).apply(state);
+
+            completedMutable.put(completable, scoreReducer);
         }
 
         return state;

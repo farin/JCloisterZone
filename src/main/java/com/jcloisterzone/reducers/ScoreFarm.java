@@ -11,7 +11,7 @@ public class ScoreFarm extends ScoreFeature {
     }
 
     @Override
-    int getFeaturePoints(GameState state, Player player) {
+    protected int getFeaturePoints(GameState state, Player player) {
         return getFeature().getPoints(state, player);
     }
 

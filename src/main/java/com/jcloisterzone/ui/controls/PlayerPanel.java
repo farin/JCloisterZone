@@ -291,9 +291,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         drawMeepleBox(null, "grain", ps.getPlayerTokenCount(index, Token.GRAIN), true);
         drawMeepleBox(null, "wine", ps.getPlayerTokenCount(index, Token.WINE), true);
 
-//        if (gldCap != null) {
-//            drawMeepleBox(null, "gold", gldCap.getPlayerGoldPieces(player), true);
-//        }
+        drawMeepleBox(null, "gold", ps.getPlayerTokenCount(index, Token.GOLD), true);
 
         io.vavr.collection.Array<io.vavr.collection.List<Follower>> towerModel = state.getCapabilityModel(TowerCapability.class);
         if (towerModel != null) {
