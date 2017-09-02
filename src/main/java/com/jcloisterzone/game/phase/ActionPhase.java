@@ -193,16 +193,4 @@ public class ActionPhase extends AbstractActionPhase {
             throw new IllegalArgumentException(String.format("%s placement is not allowed", token));
         }
     }
-
-//
-//    @PhaseMessageHandler
-//	  // TODO move into AbstactActionPhase!!!
-//    public void handleDeployFlier(DeployFlierMessage msg) {
-//        game.updateRandomSeed(msg.getCurrentTime());
-//        int distance = game.getRandom().nextInt(3) + 1;
-//        flierCap.setFlierUsed(true);
-//        flierCap.setFlierDistance(msg.getMeepleTypeClass(), distance);
-//        game.post(new FlierRollEvent(getActivePlayer(), getTile().getPosition(), distance));
-//        next(FlierActionPhase.class);
-//    }
 }

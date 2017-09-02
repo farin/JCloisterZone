@@ -7,6 +7,13 @@ import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.Set;
 
+/**
+ * Feature which can be scored.
+ *
+ * Counterintuitive {@code getPoints()} is not present on the interface because of different nature
+ * of {@code Completable}, {@code Farm} and {@code Castle} scoring
+ *
+ */
 public interface Scoreable extends Structure {
 
     PointCategory getPointCategory();
@@ -15,6 +22,5 @@ public interface Scoreable extends Structure {
 
     Follower getSampleFollower(GameState state, Player player);
 
-    // getPoints is not present on this interface because of different nature
-    // of Completable, Farm and Castle scoring
+
 }

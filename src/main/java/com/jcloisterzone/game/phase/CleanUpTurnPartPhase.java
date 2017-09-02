@@ -32,6 +32,7 @@ public class CleanUpTurnPartPhase extends Phase {
             state = state.setFlags(state.getFlags()
                 .remove(Flag.PORTAL_USED)
                 .remove(Flag.PRINCESS_USED)
+                .remove(Flag.FLYING_MACHINE_USED)
             );
         }
 

@@ -11,7 +11,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Stream;
 
 /**
- * A feature on which can be meeple deployed.
+ * A feature on which can be meeple deployed (this includes also Farm feature).
  */
 public interface Structure extends Feature {
 

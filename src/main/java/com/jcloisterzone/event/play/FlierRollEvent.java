@@ -1,16 +1,14 @@
-package com.jcloisterzone.event;
+package com.jcloisterzone.event.play;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.play.PlayEvent;
 
 public class FlierRollEvent extends PlayEvent {
 
     private Position position;
     private final int distance;
 
-    public FlierRollEvent(Player player, Position position, int distance) {
-        super(player, player);
+    public FlierRollEvent(PlayEventMeta metadata, Position position, int distance) {
+        super(metadata);
         this.position = position;
         this.distance = distance;
     }

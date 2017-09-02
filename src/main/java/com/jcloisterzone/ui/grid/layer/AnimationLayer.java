@@ -6,8 +6,8 @@ import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.FlierRollEvent;
 import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.FlierRollEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
@@ -45,6 +45,9 @@ public class AnimationLayer extends AbstractGridLayer {
             if (pe instanceof TilePlacedEvent) {
                 onTilePlacedEvent((TilePlacedEvent) pe);
             }
+            if (pe instanceof FlierRollEvent) {
+                onFlierRollEvent((FlierRollEvent) pe);
+            }
         }
     }
 
@@ -60,7 +63,6 @@ public class AnimationLayer extends AbstractGridLayer {
     }
 
     public void onFlierRollEvent(FlierRollEvent ev) {
-        //TODO IMMUTABLE
         service.registerAnimation(new FlierDiceRollAnimation(ev.getPosition(), ev.getDistance()));
     }
 

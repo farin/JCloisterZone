@@ -18,7 +18,8 @@ import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 
 
-@RequiredCapability(FlierCapability.class)
+//@RequiredCapability(FlierCapability.class)
+// TODO delete, use abstract action phase to handle it
 public class FlierActionPhase extends Phase {
 
     public FlierActionPhase(Config config, Random random) {

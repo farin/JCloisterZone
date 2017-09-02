@@ -3,49 +3,29 @@ package com.jcloisterzone.wsio.message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
+/**
+ * Because random dice is following deploy on flying machine seed should be also update.
+ * For this reason just DeployMeepleMessage is not sufficient.
+ * (DeployMeepleMessage would work but result of dice would be known before tile placement)
+ */
 @WsMessageCommand("DEPLOY_FLIER")
-public class DeployFlierMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
+public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String gameId;
-    private Position position;
-    private String meepleId;
     private long seed;
 
     public DeployFlierMessage() {
     }
 
-    public DeployFlierMessage(Position position, String meepleId) {
-        this.position = position;
-        this.meepleId = meepleId;
-    }
+    public DeployFlierMessage(FeaturePointer pointer, String meepleId) {
+        super(pointer, meepleId);
+        assert pointer.getLocation() == Location.FLYING_MACHINE;
 
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public String getMeepleId() {
-        return meepleId;
-    }
-
-    public void setMeepleId(String meepleId) {
-        this.meepleId = meepleId;
     }
 
     public long getSeed() {
