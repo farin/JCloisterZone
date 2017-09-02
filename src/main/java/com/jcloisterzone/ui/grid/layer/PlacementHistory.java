@@ -58,7 +58,7 @@ public class PlacementHistory extends AbstractGridLayer {
                     placedCurrentTurn = false;
                 }
 
-                Player player = getTriggeringPlayer(state, ev);
+                Player player = ((PlayerTurnEvent)ev).getPlayer();
                 if (player != null && player.getPrevPlayer(state).equals(turnPlayer)) {
                     if (placedCurrentTurn) {
                         break;

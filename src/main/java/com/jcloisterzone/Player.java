@@ -120,7 +120,8 @@ public class Player implements Serializable {
      * @return the previous player
      */
     public Player getPrevPlayer(GameState state) {
-        int prevPlayerIndex = (index - 1) % state.getPlayers().length();
+        // mod (% operator) on negative numbers is also negative! don't use it for prev player
+        int prevPlayerIndex = index == 0 ? state.getPlayers().length() - 1 : index - 1;
         return state.getPlayers().getPlayer(prevPlayerIndex);
     }
 
