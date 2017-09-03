@@ -43,6 +43,7 @@ public class ConfigLoader {
     public static final String DEFAULT_THEME = "light";
     public static final int DEFAULT_SCREENSHOT_SCALE = 120;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
+    public static final String DEFAULT_SAVED_GAMES_FORMAT = "compact";
 
     private final Path dataDirectory;
     private final Yaml yaml;
@@ -159,6 +160,7 @@ public class ConfigLoader {
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
         config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
         config.getScreenshots().setScale(DEFAULT_SCREENSHOT_SCALE);
+        config.getSaved_games().setFormat(DEFAULT_SAVED_GAMES_FORMAT);
         return config;
     }
 
@@ -186,6 +188,8 @@ public class ConfigLoader {
         model.put("secret", config.getSecret());
         model.put("screenshot_folder", config.getScreenshots().getFolder());
         model.put("screenshot_scale", config.getScreenshots().getScale());
+        model.put("saved_games_folder", config.getSaved_games().getFolder());
+        model.put("saved_games_format", config.getSaved_games().getFormat());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));
@@ -221,7 +225,6 @@ public class ConfigLoader {
         DebugConfig dc = config.getDebug();
         model.put("hasDebug", dc != null);
         if (dc != null) {
-            model.put("save_format", dc.getSave_format());
             model.put("window_size", dc.getWindow_size());
             model.put("autosave", dc.getAutosave());
             if (dc.getAutostart() != null) {

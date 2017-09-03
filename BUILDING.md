@@ -108,10 +108,9 @@ debug:
   # use some keys described below ...
 ```
 
-Don't compress saves, autosave before each AI play.
+Autosave before each AI play.
 
 ```yaml
-save_format: plain
 autosave: saves/_prerank.jcz
 ```
 

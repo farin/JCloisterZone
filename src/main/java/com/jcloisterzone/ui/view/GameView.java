@@ -414,14 +414,6 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     public void handleSave() {
-//        SavedGame save = new SavedGame(game);
-//        SavedGameParser parser = new SavedGameParser();
-//        String content = parser.toJson(save);
-//
-//        System.err.println(content);
-//
-//        save = parser.fromJson(content);
-//
         JFileChooser fc = new JFileChooser(client.getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle(_("Save game"));
@@ -437,15 +429,8 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 }
                 try (Writer writer = new FileWriter(file)) {
                     SavedGame save = new SavedGame(game);
-                    SavedGameParser parser = new SavedGameParser();
+                    SavedGameParser parser = new SavedGameParser(getClient().getConfig());
                     parser.toJson(save, writer);
-
-//                    Snapshot snapshot = new Snapshot(game);
-//                    DebugConfig debugConfig = client.getConfig().getDebug();
-//                    if (debugConfig != null && "plain".equals(debugConfig.getSave_format())) {
-//                        snapshot.setGzipOutput(false);
-//                    }
-//                    snapshot.save(new FileOutputStream(file));
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

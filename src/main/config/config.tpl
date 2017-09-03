@@ -34,6 +34,12 @@ screenshots:
     # Specifies the size of the tiles when a screenshot is taken;
     scale: ${screenshot_scale}
 
+saved_games:
+    # Specifies a default folder for saved games. If leaved empty the JCloisterZone $workdir/saves will be used.
+    folder: ${saved_games_folder}
+    # Specifies how JSON file is stored. Possible values: compact (no white spaces), pretty (human readable pretty print)
+    format: ${saved_games_format}
+
 # plugins/classic.jar - Graphics from original board game
 # plugins/jcz3d.jar - 3D graphics
 # plugins/rgg_siege.jar - RGG's Siege tiles instead of original The Cathars tiles

@@ -49,6 +49,7 @@ public class Config {
     private ConfirmConfig confirm;
     private PlayersConfig players;
     private ScreenshotsConfig screenshots;
+    private SavedGamesConfig saved_games;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
@@ -68,6 +69,24 @@ public class Config {
         }
         public void setScale(Integer scale) {
             this.scale = scale;
+        }
+    }
+
+    public static class SavedGamesConfig {
+        private String folder;
+        private String format;
+
+        public String getFolder() {
+            return folder;
+        }
+        public void setFolder(String folder) {
+            this.folder = folder;
+        }
+        public String getFormat() {
+            return format;
+        }
+        public void setFormat(String format) {
+            this.format = format;
         }
     }
 
@@ -133,7 +152,6 @@ public class Config {
     }
 
     public static class DebugConfig {
-        private String save_format;
         private String window_size;
         private String autosave;
         private AutostartConfig autostart;
@@ -144,13 +162,6 @@ public class Config {
 
         public boolean isAutostartEnabled() {
             return autostart != null && (autostart.getPreset() != null || Boolean.TRUE.equals(autostart.getOnline()));
-        }
-
-        public String getSave_format() {
-            return save_format;
-        }
-        public void setSave_format(String save_format) {
-            this.save_format = save_format;
         }
 
         public String getWindow_size() {
@@ -221,18 +232,6 @@ public class Config {
         }
         public void setOn_tower_deployment(Boolean on_tower_deployment) {
             this.on_tower_deployment = on_tower_deployment;
-        }
-        @Deprecated
-        public void setFarm_place(Boolean farm_place) {
-            this.farm_deployment = farm_place;
-        }
-        @Deprecated
-        public void setTower_place(Boolean tower_place) {
-            this.on_tower_deployment = tower_place;
-        }
-        @Deprecated
-        public void setGame_close(Boolean game_close) {
-            //ignore - keep for backward compatibility
         }
         public Boolean getRansom_payment() {
             return ransom_payment == null ? Boolean.FALSE : ransom_payment;
@@ -500,6 +499,18 @@ public class Config {
 
     public void setScreenshots(ScreenshotsConfig screenshots) {
         this.screenshots = screenshots;
+    }
+
+
+    public SavedGamesConfig getSaved_games() {
+        if (saved_games == null) {
+            saved_games = new SavedGamesConfig();
+        }
+        return saved_games;
+    }
+
+    public void setSaved_games(SavedGamesConfig saved_games) {
+        this.saved_games = saved_games;
     }
 
     public boolean isDarkTheme() {

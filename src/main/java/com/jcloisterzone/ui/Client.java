@@ -431,11 +431,17 @@ public class Client extends JFrame {
     }
 
     public File getSavesDirectory() {
-        File savesDir = dataDirectory.resolve("saves").toFile();
-        if (!savesDir.exists()) {
-            savesDir.mkdir();
+        String savesFolderValue = getConfig().getSaved_games().getFolder();
+        File savesFolder;
+        if (savesFolderValue == null || savesFolderValue.isEmpty()) {
+            savesFolder = dataDirectory.resolve("saves").toFile();
+        } else {
+            savesFolder = new File(savesFolderValue);
         }
-        return savesDir;
+        if (!savesFolder.exists()) {
+            savesFolder.mkdir();
+        }
+        return savesFolder;
     }
 
     public File getScreenshotDirectory() {
@@ -464,7 +470,7 @@ public class Client extends JFrame {
             File file = fc.getSelectedFile();
             if (file != null) {
                 try {
-                    SavedGameParser parser = new SavedGameParser();
+                    SavedGameParser parser = new SavedGameParser(getConfig());
                     JsonReader reader = new JsonReader(new FileReader(file));
                     SavedGame sg = parser.fromJson(reader);
                     createGame(sg);

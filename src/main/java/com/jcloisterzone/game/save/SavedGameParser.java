@@ -16,6 +16,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonReader;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsCommandRegistry;
 import com.jcloisterzone.wsio.WsMessageCommand;
@@ -26,14 +27,18 @@ public class SavedGameParser {
 
     private Gson gson;
 
-    public SavedGameParser() {
+    public SavedGameParser(Config config) {
         GsonBuilder builder = MessageParser.createGsonBuilder();
 
-        gson = builder
+         builder
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            .setExclusionStrategies(new SavedGameExclStrat())
-            .setPrettyPrinting()
-            .create();
+            .setExclusionStrategies(new SavedGameExclStrat());
+
+         if ("pretty".equals(config.getSaved_games().getFormat())) {
+            builder.setPrettyPrinting();
+         }
+
+         gson = builder.create();
     }
 
     public String toJson(SavedGame src) {
