@@ -74,21 +74,14 @@ public class Game implements EventProxy {
     private List<UndoHistoryItem> undoHistory = List.empty();
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
-    //events are delayed and fired after phase is handled (and eventually switched to the new one) - important especially for AI handlers to not start before switch is done
-    //private final java.util.Deque<Event> eventQueue = new java.util.ArrayDeque<>();
 
     private int idSequenceCurrVal = 0;
 
-    private final Random random;
 
-//    public Game(String gameId) {
-//        this(gameId, HashCode.fromBytes(gameId.getBytes()).asLong());
-//    }
 
     public Game(String gameId, long randomSeed) {
         this.gameId = gameId;
         this.initialSeed = randomSeed;
-        this.random = new Random(randomSeed);
     }
 
     public String getGameId() {
@@ -244,7 +237,7 @@ public class Game implements EventProxy {
         markUndo();
         replay = replay.prepend(msg);
         if (msg instanceof WsSeedMeesage) {
-            updateRandomSeed(((WsSeedMeesage)msg).getSeed());
+            phaseReducer.updateRandomSeed(((WsSeedMeesage)msg).getSeed());
         }
         GameState newState = phaseReducer.apply(state, msg);
         Player activePlayer = newState.getActivePlayer();
@@ -295,7 +288,7 @@ public class Game implements EventProxy {
     //TODO decouple from GameController ?
     public void start(GameController gc, List<WsReplayableMessage> replay) {
         this.replay = replay.reverse();
-        phaseReducer = new GameStatePhaseReducer(setup, gc);
+        phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
 
         // 1. create state with basic config
@@ -313,7 +306,7 @@ public class Game implements EventProxy {
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
             if (msg instanceof WsSeedMeesage) {
-                updateRandomSeed(((WsSeedMeesage) msg).getSeed());
+                phaseReducer.updateRandomSeed(((WsSeedMeesage) msg).getSeed());
             }
             state = phaseReducer.apply(state, msg);
         }
@@ -337,14 +330,6 @@ public class Game implements EventProxy {
 
     public LinkedHashMap<Meeple, FeaturePointer> getDeployedMeeples() {
         return state.getDeployedMeeples();
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public void updateRandomSeed(long seed) {
-        random.setSeed(seed);
     }
 
     public Meeple getMeeple(MeeplePointer mp) {

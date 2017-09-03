@@ -134,57 +134,7 @@ public class SimpleServer extends WebSocketServer  {
                 slots[i] = new ServerPlayerSlot(i);
             }
         }
-
-//        gameSetup = new GameSetup();
-//        if (snapshot != null) {
-//            this.snapshot =  snapshot;
-//            game.getExpansions().addAll(snapshot.getExpansions());
-//            game.getCustomRules().putAll(snapshot.getCustomRules());
-//            loadSlotsFromSnapshot();
-//        } else if (settings != null) {
-//            game.getExpansions().addAll(settings.getExpansions());
-//            game.getCustomRules().putAll(settings.getCustomRules());
-//            loadSlotsFromGame(settings);
-//        } else {
-
-//        }
     }
-
-//    @SuppressWarnings("unchecked")
-//    private void loadSlotsFromGame(Game settings) {
-//        //Game is game from client since, so we can use isLocalHuman
-//        int maxSerial = 0;
-//        for (Player player : settings.getAllPlayers()) {
-//            int slotNumber = player.getSlot().getNumber();
-//            ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
-//            slots[slotNumber] = slot;
-//            boolean isAi = player.getSlot().isAi();
-//            if (player.isLocalHuman() || isAi) {
-//                if (isAi) {
-//                    String className = player.getSlot().getAiClassName();
-//                    try {
-//                        EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(className).getMethod("supportedExpansions").invoke(null);
-//                        slot.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
-//                        slot.setAiClassName(className);
-//                    } catch (Exception e) {
-//                        logger.warn("AI class is not present " + className);
-//                        continue;
-//                    }
-//                }
-//                slot.setNickname(player.getNick());
-//                slot.setAutoAssignClientId(player.getSlot().getClientId());
-//                int serial = player.getSlot().getSerial() == null ? player.getIndex() : player.getSlot().getSerial();
-//                maxSerial = Math.max(maxSerial, serial);
-//                slot.setSerial(serial);
-//            }
-//        }
-//        for (int i = 0; i < slots.length; i++) {
-//            if (slots[i] == null) {
-//                slots[i] = new ServerPlayerSlot(i);
-//            }
-//        }
-//        slotSerial = maxSerial + 1;
-//    }
 
     private void loadSlotsFromSavedGame(SavedGame savedGame) {
         int maxSerial = 0;

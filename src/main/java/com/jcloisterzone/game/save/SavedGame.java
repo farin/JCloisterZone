@@ -3,6 +3,7 @@ package com.jcloisterzone.game.save;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ public class SavedGame implements Serializable {
     private long[] clocks;
     private SavedGameSetup setup;
     private List<WsReplayableMessage> replay;
+    private HashMap<String, Object> annotations;
 
     public SavedGame() {
     }
@@ -130,6 +132,16 @@ public class SavedGame implements Serializable {
     public void setClocks(long[] clocks) {
         this.clocks = clocks;
     }
+
+    public HashMap<String, Object> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(HashMap<String, Object> annotations) {
+        this.annotations = annotations;
+    }
+
+
 
     public static class SavedGamePlayerSlot {
         private final int number;

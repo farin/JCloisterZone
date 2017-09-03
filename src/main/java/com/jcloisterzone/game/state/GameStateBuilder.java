@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.state;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -21,7 +20,6 @@ import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.reducers.PlaceTile;
 
 import io.vavr.Predicates;
@@ -32,23 +30,20 @@ import io.vavr.collection.Stream;
 
 public class GameStateBuilder {
 
-    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
-        @Override
-        public int compare(PlayerSlot o1, PlayerSlot o2) {
-            if (o1.getSerial() == null) {
-                return o2.getSerial() == null ? 0 : 1;
-            }
-            if (o2.getSerial() == null) return -1;
-            if (o1.getSerial() < o2.getSerial()) return -1;
-            if (o1.getSerial() > o2.getSerial()) return 1;
-            return 0;
-        }
-    }
+//    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
+//        @Override
+//        public int compare(PlayerSlot o1, PlayerSlot o2) {
+//            if (o1.getSerial() == null) {
+//                return o2.getSerial() == null ? 0 : 1;
+//            }
+//            if (o2.getSerial() == null) return -1;
+//            if (o1.getSerial() < o2.getSerial()) return -1;
+//            if (o1.getSerial() > o2.getSerial()) return 1;
+//            return 0;
+//        }
+//    }
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-
-//    private final Game game;
-//    private final GameController gc;
 
     private final GameSetup setup;
     private final PlayerSlot[] slots;
