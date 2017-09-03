@@ -269,7 +269,6 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             menu.setItemEnabled(MenuItem.PLAY_ONLINE, true);
             menu.setItemEnabled(MenuItem.LOAD, true);
         }
-        menu.setItemEnabled(MenuItem.SAVE, false); //TODO allow saving finished games
     }
 
     @Override

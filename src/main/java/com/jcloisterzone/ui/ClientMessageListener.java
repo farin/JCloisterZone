@@ -216,14 +216,14 @@ public class ClientMessageListener implements MessageListener {
 
     private void handleGameStarted(final GameController gc, io.vavr.collection.List<WsReplayableMessage> replay) throws InvocationTargetException, InterruptedException {
         conn.getReportingTool().setGame(gc.getGame());
-        gc.getGame().start(gc, replay);
+        gc.getGame().start(gc, replay, gc.getClient().getSavedGameAnnotations());
     }
 
     private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {
         SwingUtilities.invokeAndWait(() -> {
-			client.mountView(new GameSetupView(client, gc, msg.getStatus() == GameStatus.OPEN));
-			performAutostart(gc.getGame()); //must wait for panel is created
-		});
+            client.mountView(new GameSetupView(client, gc, msg.getStatus() == GameStatus.OPEN));
+            performAutostart(gc.getGame()); //must wait for panel is created
+        });
     }
 
     @WsSubscribe

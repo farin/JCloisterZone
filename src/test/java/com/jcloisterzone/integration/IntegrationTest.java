@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.board.TilePack;
@@ -40,6 +42,7 @@ public class IntegrationTest {
         return slots;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected GameState createGameState(String savedGameFile) {
         Config config = new Config();
         SavedGameParser parser = new SavedGameParser(config);
@@ -57,10 +60,13 @@ public class IntegrationTest {
         GameStateBuilder builder = new GameStateBuilder(setup, slots, config);
 
         GameState state = builder.createInitialState();
-        String tilePackClass = (String) sg.getAnnotations().get("tilePackClass");
-        if (tilePackClass != null) {
+        //TODO reuse Game.processSavedGameAnnotations
+        Map<String, Object> tilePackAnnotation = (Map) sg.getAnnotations().get("tilePack");
+        if (tilePackAnnotation != null) {
             try {
-                TilePack replacement = (TilePack) Class.forName(tilePackClass).getConstructor(LinkedHashMap.class).newInstance(state.getTilePack().getGroups());
+                String clsName = (String) tilePackAnnotation.get("className");
+                Object params = tilePackAnnotation.get("params");
+                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, params.getClass()).newInstance(state.getTilePack().getGroups(), params);
                 state = state.setTilePack(replacement);
             } catch (Exception e) {
                 throw new RuntimeException(e);

@@ -102,6 +102,10 @@ public class Client extends JFrame {
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
 
+    // little bit HACK, just easy way how to be able load integration test games in UI
+    // works only for local games
+    private HashMap<String, Object> savedGameAnnotations;
+
     private static Client instance;
 
     public Client(Path dataDirectory, ConfigLoader configLoader, Config config, List<Plugin> plugins) {
@@ -388,6 +392,12 @@ public class Client extends JFrame {
 
     private void createGame(SavedGame savedGame, Game game) {
         if (closeGame()) {
+            if (savedGame != null) {
+                savedGameAnnotations = savedGame.getAnnotations();
+            } else {
+                savedGameAnnotations = null;
+            }
+
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
             SimpleServer server = new SimpleServer(new InetSocketAddress(port), new SimpleServerErrorHandler() {
                 @Override
@@ -643,6 +653,10 @@ public class Client extends JFrame {
             logger.error(message, ex);
         }
         JOptionPane.showMessageDialog(this, message, _("Error"), JOptionPane.ERROR_MESSAGE);
+    }
+
+    public HashMap<String, Object> getSavedGameAnnotations() {
+        return savedGameAnnotations;
     }
 
     //------------------- LEGACY: TODO refactor ---------------
