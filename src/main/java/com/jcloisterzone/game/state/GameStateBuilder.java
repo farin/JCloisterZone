@@ -2,6 +2,8 @@ package com.jcloisterzone.game.state;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import com.jcloisterzone.reducers.PlaceTile;
 
 import io.vavr.Predicates;
 import io.vavr.collection.Array;
+import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 
@@ -51,6 +54,7 @@ public class GameStateBuilder {
 
     private Array<Player> players;
     private Seq<PlacedTile> preplacedTiles;
+    private Map<String, Object> gameAnnotations;
 
     private GameState state;
 
@@ -84,8 +88,9 @@ public class GameStateBuilder {
             state = cap.onStartGame(state);
         }
 
-         //prepareAiPlayers(muteAi);
+        //prepareAiPlayers(muteAi);
 
+        state = processGameAnnotations(state);
         return state;
     }
 
@@ -94,6 +99,28 @@ public class GameStateBuilder {
             state = (new PlaceTile(pt.getTile(), pt.getPosition(), pt.getRotation())).apply(state);
         }
         state = state.appendEvent(new PlayerTurnEvent(PlayEventMeta.createWithoutPlayer(), state.getTurnPlayer()));
+        return state;
+    }
+
+    /**
+     *	Debug helper, allows loading integration tests in UI
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private GameState processGameAnnotations(GameState state) {
+        if (gameAnnotations == null) {
+            return state;
+        }
+        Map<String, Object> tilePackAnnotation = (Map) gameAnnotations.get("tilePack");
+        if (tilePackAnnotation != null) {
+            try {
+                String clsName = (String) tilePackAnnotation.get("className");
+                Object params = tilePackAnnotation.get("params");
+                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, params.getClass()).newInstance(state.getTilePack().getGroups(), params);
+                state = state.setTilePack(replacement);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
         return state;
     }
 
@@ -175,6 +202,11 @@ public class GameStateBuilder {
         return capabilities.flatMap(c -> c.createPlayerSpecialMeeples(p, idProvider));
     }
 
+    public Map<String, Object> getGameAnnotations() {
+        return gameAnnotations;
+    }
 
-
+    public void setGameAnnotations(Map<String, Object> gameAnnotations) {
+        this.gameAnnotations = gameAnnotations;
+    }
 }

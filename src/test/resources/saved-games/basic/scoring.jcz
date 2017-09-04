@@ -1,0 +1,25 @@
+{
+  "gameId": "1",
+  "name": "Test scoring when city/road has multiple parts on same tile",
+  "appVersion": "4.0.0",
+  "initialSeed": 1,
+  "created": "2017-01-01T00:00:00.000Z",
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": ["BA.CC.2", "BA.RRR"]
+    }
+  },
+  "slots": [
+    {"number": 0, "serial": 1, "clientId": "1", "nickname": "Alice"},
+    {"number": 1, "serial": 2, "clientId": "2", "nickname": "Bob"}
+  ],
+  "clocks": [0, 0],
+  "setup": {
+    "expansions": [
+      "BASIC"
+    ],
+    "rules": {}
+  },
+  "replay": []
+}

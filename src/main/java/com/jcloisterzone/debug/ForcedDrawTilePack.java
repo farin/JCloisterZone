@@ -1,4 +1,4 @@
-package com.jcloisterzone.integration;
+package com.jcloisterzone.debug;
 
 import java.util.ArrayList;
 
@@ -10,27 +10,34 @@ import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Queue;
 
-public class IntegrationTestTilePack extends TilePack {
+/**
+ * Tile pack with predefined draw order.
+ * Intended for debugging and integration test.
+ * It can replace default tile pack using {@code annotations} property in saved
+ * game. Mind that it works only for local games because annotations are not
+ * propagated to remote clients.
+ */
+public class ForcedDrawTilePack extends TilePack {
 
     private final Queue<String> drawList;
 
-    public IntegrationTestTilePack(LinkedHashMap<String, TileGroup> groups, ArrayList<String> draw) {
+    public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, ArrayList<String> draw) {
         this(groups, Queue.ofAll(draw));
     }
 
-    private IntegrationTestTilePack(LinkedHashMap<String, TileGroup> groups, Queue<String> drawList) {
+    private ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, Queue<String> drawList) {
         super(groups);
         this.drawList = drawList;
     }
 
-    public IntegrationTestTilePack setGroups(LinkedHashMap<String, TileGroup> groups) {
+    public ForcedDrawTilePack setGroups(LinkedHashMap<String, TileGroup> groups) {
         if (getGroups() == groups) return this;
-        return new IntegrationTestTilePack(groups, drawList);
+        return new ForcedDrawTilePack(groups, drawList);
     }
 
-    private IntegrationTestTilePack setDrawList(Queue<String> drawList) {
+    private ForcedDrawTilePack setDrawList(Queue<String> drawList) {
         if (this.drawList == drawList) return this;
-        return new IntegrationTestTilePack(getGroups(), drawList);
+        return new ForcedDrawTilePack(getGroups(), drawList);
     }
 
     @Override
@@ -38,7 +45,7 @@ public class IntegrationTestTilePack extends TilePack {
         if (!drawList.isEmpty()) {
             Tuple2<String, Queue<String>> q = drawList.dequeue();
             Tuple2<TileDefinition, TilePack> res = drawTile(q._1);
-            return res.map2(pack -> ((IntegrationTestTilePack)pack).setDrawList(q._2));
+            return res.map2(pack -> ((ForcedDrawTilePack)pack).setDrawList(q._2));
         }
         return super.drawTile(index);
     }

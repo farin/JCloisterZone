@@ -288,37 +288,15 @@ public class Game implements EventProxy {
         eventBus.post(event);
     }
 
-    /**
-     *	Debug helper, allows loading integration tests in UI
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private GameState processSavedGameAnnotations(GameState state, HashMap<String, Object> savedGameAnnotations) {
-        if (savedGameAnnotations == null) {
-            return state;
-        }
-        Map<String, Object> tilePackAnnotation = (Map) savedGameAnnotations.get("tilePack");
-        if (tilePackAnnotation != null) {
-            try {
-                String clsName = (String) tilePackAnnotation.get("className");
-                Object params = tilePackAnnotation.get("params");
-                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, params.getClass()).newInstance(state.getTilePack().getGroups(), params);
-                state = state.setTilePack(replacement);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return state;
-    }
-
     //TODO decouple from GameController ?
     public void start(GameController gc, List<WsReplayableMessage> replay, HashMap<String, Object> savedGameAnnotations) {
         this.replay = replay.reverse();
         phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
+        builder.setGameAnnotations(savedGameAnnotations);
 
         // 1. create state with basic config
         GameState state = builder.createInitialState();
-        state = processSavedGameAnnotations(state, savedGameAnnotations);
         this.state = state; // set state to get proper state diff against empty state later (in replacedState)
         clocks = state.getPlayers().getPlayers().map(p -> new PlayerClock(0));
 

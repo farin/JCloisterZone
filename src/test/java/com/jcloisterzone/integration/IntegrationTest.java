@@ -58,20 +58,9 @@ public class IntegrationTest {
         PlayerSlot[] slots = createPlayerSlots(sg);
         GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(config, setup, sg.getInitialSeed());
         GameStateBuilder builder = new GameStateBuilder(setup, slots, config);
+        builder.setGameAnnotations((Map) sg.getAnnotations());
 
         GameState state = builder.createInitialState();
-        //TODO reuse Game.processSavedGameAnnotations
-        Map<String, Object> tilePackAnnotation = (Map) sg.getAnnotations().get("tilePack");
-        if (tilePackAnnotation != null) {
-            try {
-                String clsName = (String) tilePackAnnotation.get("className");
-                Object params = tilePackAnnotation.get("params");
-                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, params.getClass()).newInstance(state.getTilePack().getGroups(), params);
-                state = state.setTilePack(replacement);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         Phase firstPhase = phaseReducer.getFirstPhase();
         state = builder.createReadyState(state);
