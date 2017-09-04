@@ -7,7 +7,7 @@
   "annotations": {
     "tilePack": {
       "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
-      "params": ["BA.CC.2", "BA.RRR"]
+      "params": ["BA.Rr", "BA.CcRr+", "BA.CcRr", "BA.C", "BA.RRRR", "BA.C", "BA.LR", "."]
     }
   },
   "slots": [
@@ -21,5 +21,211 @@
     ],
     "rules": {}
   },
-  "replay": []
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Rr",
+        "rotation": "R90",
+        "position": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            0
+          ],
+          "location": "NW"
+        },
+        "meepleId": "0.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CcRr+",
+        "rotation": "R180",
+        "position": [
+          0,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            0,
+            -1
+          ],
+          "location": "SE"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CcRr",
+        "rotation": "R0",
+        "position": [
+          1,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            -1
+          ],
+          "location": "EL.SR"
+        },
+        "meepleId": "0.small.2"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R180",
+        "position": [
+          1,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.RRRR",
+        "rotation": "R0",
+        "position": [
+          2,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            2,
+            -1
+          ],
+          "location": "N"
+        },
+        "meepleId": "0.small.3"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R0",
+        "position": [
+          1,
+          -3
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            -3
+          ],
+          "location": "N"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.LR",
+        "rotation": "R0",
+        "position": [
+          2,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            2,
+            -2
+          ],
+          "location": "CLOISTER"
+        },
+        "meepleId": "0.small.4"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "GAME_OVER",
+      "payload": {}
+    }
+  ]
 }
