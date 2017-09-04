@@ -20,6 +20,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
@@ -53,14 +54,9 @@ public abstract class Capability<T> implements Serializable {
         return tile;
     }
 
-    //TODO use only settings state linked from whole state?
     public Feature initFeature(GameState settings, String tileId, Feature feature, Element xml) {
         return feature;
     }
-
-//    public List<Feature> extendFeatures(String tileId) {
-//        return List.empty();
-//    }
 
     public String getTileGroup(TileDefinition tile) {
         return null;
@@ -83,7 +79,7 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public GameState onTilePlaced(GameState state) {
+    public GameState onTilePlaced(GameState state, PlacedTile placedTile) {
         return state;
     }
 

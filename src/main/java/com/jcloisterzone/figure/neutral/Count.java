@@ -11,13 +11,4 @@ public class Count extends NeutralFigure<FeaturePointer> {
     public Count(String id) {
         super(id);
     }
-
-//    @Override
-//    public void deploy(FeaturePointer at) {
-//        if (at != null && !at.getLocation().isCityOfCarcassonneQuarter()) {
-//            throw new IllegalArgumentException("Must be deployed on Quarter");
-//        }
-//        super.deploy(at);
-//    }
-
 }

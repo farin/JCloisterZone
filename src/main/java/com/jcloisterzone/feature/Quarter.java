@@ -12,12 +12,16 @@ public class Quarter extends TileFeature implements Structure {
 
     //final Class<? extends Feature> targetFeature;
 
+    public Quarter(FeaturePointer place) {
+        this(List.of(place));
+    }
+
     public Quarter(List<FeaturePointer> places) {
         super(places);
     }
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        throw new UnsupportedOperationException();
+        return new Quarter(placeOnBoardPlaces(pos, rot));
     }
 }

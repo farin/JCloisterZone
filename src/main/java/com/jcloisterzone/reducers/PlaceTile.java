@@ -46,8 +46,9 @@ public class PlaceTile implements Reducer {
         assert !placedTiles.containsKey(pos);
         boolean abbeyPlacement = TileDefinition.ABBEY_TILE_ID.equals(tile.getId());
 
+        PlacedTile placedTile = new PlacedTile(tile, pos, rot);
         state = state.setPlacedTiles(
-            placedTiles.put(pos, new PlacedTile(tile, pos, rot))
+            placedTiles.put(pos, placedTile)
         );
 
         GameState _state = state;
@@ -139,7 +140,7 @@ public class PlaceTile implements Reducer {
             new TilePlacedEvent(PlayEventMeta.createWithActivePlayer(state), tile, pos, rot)
         );
         for (Capability cap : state.getCapabilities().toSeq()) {
-            state = cap.onTilePlaced(state);
+            state = cap.onTilePlaced(state, placedTile);
         }
         return state;
     }

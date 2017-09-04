@@ -19,8 +19,7 @@ public class WindRoseCapability extends Capability<PlacedTile> {
     public static final int WIND_ROSE_POINTS = 3;
 
     @Override
-    public GameState onTilePlaced(GameState state) {
-        PlacedTile pt = state.getLastPlaced();
+    public GameState onTilePlaced(GameState state, PlacedTile pt) {
         Location rose = pt.getTile().getWindRose();
         if (rose == null) {
             return state;

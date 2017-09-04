@@ -51,8 +51,7 @@ public class DragonCapability extends Capability<Vector<Position>> {
     }
 
     @Override
-    public GameState onTilePlaced(GameState state) {
-        PlacedTile pt = state.getLastPlaced();
+    public GameState onTilePlaced(GameState state, PlacedTile pt) {
         if (pt.getTile().getTrigger() == TileTrigger.VOLCANO) {
             state = state.mapTilePack(pack -> pack.activateGroup(TILE_GROUP_DRAGON));
             state = (

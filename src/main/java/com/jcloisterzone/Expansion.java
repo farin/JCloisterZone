@@ -76,7 +76,7 @@ public enum Expansion {
     RIVER_II("R2", _("The River II"), new Class[] { RiverCapability.class }),
     CATHARS("SI", _("The Cathars / Siege"), new Class[] { SiegeCapability.class }),
     BESIEGERS("BE", _("The Besiegers"), new Class[] { SiegeCapability.class }),
-    COUNT("CO", _("The Count of Carcassonne") + " (" + _("tiles only") + ")", new Class[] { CountCapability.class }),
+    COUNT("CO", _("The Count of Carcassonne"), new Class[] { CountCapability.class }),
     GQ11("GQ", _("The Mini Expansion (GQ11)")),
     CULT("CU", _("The Cult"),  new Class[] { ShrineCapability.class }),
     TUNNEL("TU", _("The Tunnel"), new Class[] { TunnelCapability.class }),

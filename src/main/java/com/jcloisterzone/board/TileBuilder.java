@@ -82,15 +82,6 @@ public class TileBuilder {
             processRiverElement((Element) nl.item(i));
         }
 
-        //IMMUTABLE TODO
-        //TODO Count
-//        for (Feature f : extendFeatures(tile)) {
-//            TileFeature tileFeature = (TileFeature) f;
-//            tileFeature.setId(game.idSequnceNextVal());
-//            tileFeature.setTile(tile);
-//            features.add(tileFeature);
-//        }
-
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
         TileDefinition tileDef = new TileDefinition(expansion, tileId, _features);
 
