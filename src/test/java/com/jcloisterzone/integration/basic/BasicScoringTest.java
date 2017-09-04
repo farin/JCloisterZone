@@ -14,10 +14,11 @@ import io.vavr.collection.Array;
 public class BasicScoringTest extends IntegrationTest {
 
     /**
-     * Covers basic road / city / farm scoring
+     * Covers
+     * 	- basic road / city / farm scoring
      */
     @Test
-    public void basicScoring() {
+    public void testBasicScoring() {
         GameState state = createGameState("saved-games/basic/scoring.jcz");
 
         Array<PlayerScore> score = state.getPlayers().getScore();
@@ -35,6 +36,59 @@ public class BasicScoringTest extends IntegrationTest {
         assertEquals(11, bob.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
         assertEquals(0, bob.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
         assertEquals(0, bob.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+    }
+
+    /**
+     * Covers
+     * 	- features (road and city)with two parts on same tiles (should be score for one points only)
+     *  - completed cloister
+     *  - if two followers are on one feature - player still gets points once
+     */
+    @Test
+    public void testScoringMultitileFeatures() {
+        GameState state = createGameState("saved-games/basic/scoringMultiTiles.jcz");
+
+        Array<PlayerScore> score = state.getPlayers().getScore();
+        PlayerScore alice = score.get(0);
+        PlayerScore bob = score.get(1);
+
+        assertEquals(28, alice.getPoints());
+        assertEquals(0, alice.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
+        assertEquals(28, alice.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
+        assertEquals(0, alice.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
+        assertEquals(0, alice.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+
+        assertEquals(13, bob.getPoints());
+        assertEquals(4, bob.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
+        assertEquals(0, bob.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
+        assertEquals(9, bob.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
+        assertEquals(0, bob.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+    }
+
+    /**
+     * Covers
+     * 	- farm scoring, one city on multiple farms
+     *  - follower count tie on one farm
+     */
+    @Test
+    public void testFarmScoring() {
+        GameState state = createGameState("saved-games/basic/scoringFarms.jcz");
+
+        Array<PlayerScore> score = state.getPlayers().getScore();
+        PlayerScore alice = score.get(0);
+        PlayerScore bob = score.get(1);
+
+        assertEquals(9, alice.getPoints());
+        assertEquals(0, alice.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
+        assertEquals(0, alice.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
+        assertEquals(0, alice.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
+        assertEquals(9, alice.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+
+        assertEquals(15, bob.getPoints());
+        assertEquals(0, bob.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
+        assertEquals(0, bob.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
+        assertEquals(0, bob.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
+        assertEquals(15, bob.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
     }
 
 }

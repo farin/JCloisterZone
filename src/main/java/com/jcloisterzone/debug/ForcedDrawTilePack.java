@@ -53,7 +53,7 @@ public class ForcedDrawTilePack extends TilePack {
     @Override
     public int size() {
         // if "." is at the end, quit game on that element
-        if (!drawList.isEmpty() && drawList.last().equals(".")) {
+        if (!drawList.isEmpty() && drawList.last().equals("#END")) {
             return drawList.size() - 1;
         }
         return super.size();

@@ -1,0 +1,359 @@
+{
+  "gameId": "1",
+  "name": "Test scoring when city/road has multiple parts on same tile",
+  "appVersion": "4.0.0",
+  "initialSeed": 1,
+  "created": "2017-01-01T00:00:00.000Z",
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": [
+        "BA.CC.2", "BA.RRR", "BA.CFc.1", "BA.Rr", "BA.Cc+", "BA.Rr", "BA.CFc+",
+        "BA.Rr", "BA.Cc+", "BA.L", "BA.CFc+", "BA.CcRr+", "BA.Ccc", "BA.C"
+      ]
+    }
+  },
+  "slots": [
+    {"number": 0, "serial": 1, "clientId": "1", "nickname": "Alice"},
+    {"number": 1, "serial": 2, "clientId": "2", "nickname": "Bob"}
+  ],
+  "clocks": [0, 0],
+  "setup": {
+    "expansions": [
+      "BASIC"
+    ],
+    "rules": {}
+  },
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CC.2",
+        "rotation": "R180",
+        "position": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            0,
+            1
+          ],
+          "location": "E"
+        },
+        "meepleId": "0.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 2010968943090286199
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.RRR",
+        "rotation": "R180",
+        "position": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            -1,
+            0
+          ],
+          "location": "N"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -5034286322062475830
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CFc.1",
+        "rotation": "R0",
+        "position": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 5235692220528777487
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Rr",
+        "rotation": "R180",
+        "position": [
+          -2,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            -2,
+            0
+          ],
+          "location": "NE"
+        },
+        "meepleId": "1.small.2"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 5173816055025545627
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Cc+",
+        "rotation": "R270",
+        "position": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -5331115278852252461
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Rr",
+        "rotation": "R270",
+        "position": [
+          -2,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 739074212969356032
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CFc+",
+        "rotation": "R90",
+        "position": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 8239306827944360609
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Rr",
+        "rotation": "R0",
+        "position": [
+          -1,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 8072390463455096137
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Cc+",
+        "rotation": "R90",
+        "position": [
+          0,
+          3
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 296755571141370125
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.L",
+        "rotation": "R0",
+        "position": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            2
+          ],
+          "location": "CLOISTER"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -5078302348296795641
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CFc+",
+        "rotation": "R0",
+        "position": [
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 3686494453446621573
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CcRr+",
+        "rotation": "R0",
+        "position": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -7017364662445884209
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Ccc",
+        "rotation": "R90",
+        "position": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -4127833834348375115
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R270",
+        "position": [
+          3,
+          2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -7843205783097446595
+      }
+    }
+  ]
+}
