@@ -1,6 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
@@ -9,24 +10,24 @@ import io.vavr.collection.Set;
 //TODO generic NeutralMeepleAction ?
 public class MageAndWitchAction extends SelectFeatureAction {
 
-    private final String figureId;
+    private final NeutralFigure<FeaturePointer> figure;
 
-    public MageAndWitchAction(String figureId, Set<FeaturePointer> options) {
+    public MageAndWitchAction(NeutralFigure<FeaturePointer> figure, Set<FeaturePointer> options) {
         super(options);
-        this.figureId = figureId;
+        this.figure = figure;
     }
 
     @Override
     public WsInGameMessage select(FeaturePointer target) {
-        return new MoveNeutralFigureMessage(figureId, target);
+        return new MoveNeutralFigureMessage(figure.getId(), target);
     }
 
-    public String getFigureId() {
-        return figureId;
+    public NeutralFigure<FeaturePointer> getFigure() {
+        return figure;
     }
 
     @Override
     public String toString() {
-        return "move " + figureId;
+        return "move " + figure;
     }
 }

@@ -71,6 +71,7 @@ public class Game implements EventProxy {
     private Array<PlayerClock> clocks;
     private GameStatePhaseReducer phaseReducer;
     private List<WsReplayableMessage> replay; // game messages (in reversed order because of List performance)
+    private java.util.HashMap<String, Object> gameAnnotations;
 
     protected PlayerSlot[] slots;
     protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
@@ -295,13 +296,14 @@ public class Game implements EventProxy {
         phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
         if (savedGameAnnotations != null) {
-            builder.setGameAnnotations(savedGameAnnotations);
+            gameAnnotations = savedGameAnnotations;
         } else {
             DebugConfig debugConfig = gc.getConfig().getDebug();
             if (debugConfig != null) {
-                builder.setGameAnnotations(debugConfig.getGame_annotation());
+                gameAnnotations = debugConfig.getGame_annotation();
             }
         }
+        builder.setGameAnnotations(gameAnnotations);
 
         // 1. create state with basic config
         GameState state = builder.createInitialState();
@@ -360,5 +362,9 @@ public class Game implements EventProxy {
 
     public int idSequnceNextVal() {
         return ++idSequenceCurrVal;
+    }
+
+    public java.util.HashMap<String, Object> getGameAnnotations() {
+        return gameAnnotations;
     }
 }

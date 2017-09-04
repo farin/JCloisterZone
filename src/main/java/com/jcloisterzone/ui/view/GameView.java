@@ -429,6 +429,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                 try (Writer writer = new FileWriter(file)) {
                     SavedGame save = new SavedGame(game);
                     SavedGameParser parser = new SavedGameParser(getClient().getConfig());
+                    save.setAnnotations(game.getGameAnnotations());
                     parser.toJson(save, writer);
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
