@@ -82,7 +82,7 @@ debug:
 
   tile_definitions: ${tile_definitions}
 
-  draw: ${draw}
+  game_annotation: ${game_annotation}
 
   off_capabilities: ${off_capabilities}
 

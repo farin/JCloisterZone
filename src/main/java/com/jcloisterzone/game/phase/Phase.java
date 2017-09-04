@@ -85,10 +85,6 @@ public abstract class Phase {
         return random;
     }
 
-    public DebugConfig getDebugConfig() {
-        return config == null ? null : config.getDebug();
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName();

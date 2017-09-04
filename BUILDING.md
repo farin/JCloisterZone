@@ -137,12 +137,13 @@ tile_definitions:
 Force drawn tiles.
 
 ```yaml
-draw:
-  - BA.C
-  - BA.Cccc+
+game_annotation:
+  tilePack:
+    className: "com.jcloisterzone.debug.ForcedDrawTilePack"
+    params: ["BA.C", "BA.C", "BA.C"]
 ```
 
-And then force final scoring with dot item.
+Final scoring can be forced by `#END` at end of the params list.
 
 ```yaml
 draw:

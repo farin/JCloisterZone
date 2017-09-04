@@ -20,6 +20,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.GameChangedEvent;
@@ -293,7 +294,14 @@ public class Game implements EventProxy {
         this.replay = replay.reverse();
         phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
-        builder.setGameAnnotations(savedGameAnnotations);
+        if (savedGameAnnotations != null) {
+            builder.setGameAnnotations(savedGameAnnotations);
+        } else {
+            DebugConfig debugConfig = gc.getConfig().getDebug();
+            if (debugConfig != null) {
+                builder.setGameAnnotations(debugConfig.getGame_annotation());
+            }
+        }
 
         // 1. create state with basic config
         GameState state = builder.createInitialState();

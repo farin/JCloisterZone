@@ -233,8 +233,8 @@ public class ConfigLoader {
             if (dc.getTile_definitions() != null && !dc.getTile_definitions().isEmpty()) {
                 model.put("tile_definitions", indent(2, yaml.dumpAs(dc.getTile_definitions(), Tag.MAP, FlowStyle.BLOCK)));
             }
-            if (dc.getDraw() != null && !dc.getDraw().isEmpty()) {
-                model.put("draw", indent(2, yaml.dumpAs(dc.getDraw(), Tag.SEQ, FlowStyle.BLOCK)));
+            if (dc.getGame_annotation() != null && !dc.getGame_annotation().isEmpty()) {
+                model.put("game_annotation", indent(2, yaml.dumpAs(dc.getGame_annotation(), Tag.MAP, FlowStyle.BLOCK)));
             }
             if (dc.getOff_capabilities() != null && !dc.getOff_capabilities().isEmpty()) {
                 model.put("off_capabilities", indent(2, yaml.dumpAs(dc.getOff_capabilities(), Tag.SEQ, FlowStyle.BLOCK)));

@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import com.jcloisterzone.Player;
@@ -15,7 +13,6 @@ import com.jcloisterzone.board.TilePlacement;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
@@ -41,19 +38,8 @@ import io.vavr.collection.Vector;
 
 public class TilePhase extends Phase {
 
-    private static final String DEBUG_END_OF_PACK = ".";
-
-    private List<String> debugTiles;
-
     public TilePhase(Config config, Random random) {
         super(config, random);
-        DebugConfig debugConfig = getDebugConfig();
-        if (debugConfig != null) {
-            List<String> draw = debugConfig.getDraw();
-            if (draw != null && !draw.isEmpty()) {
-                debugTiles = new ArrayList<>(draw);
-            }
-        }
     }
 
     public GameState drawTile(GameState state, int index) {
@@ -66,24 +52,6 @@ public class TilePhase extends Phase {
         TilePack tps = state.getTilePack();
         Tuple2<TileDefinition, TilePack> t = tps.drawTile(tileId);
         return state.setTilePack(t._2).setDrawnTile(t._1);
-    }
-
-    private String pullDebugDrawTileId() {
-//        boolean riverActive = tilePack.getGroupState("river-start") == TileGroupState.ACTIVE || tilePack.getGroupState("river") == TileGroupState.ACTIVE;
-//        if (game.hasCapability(RiverCapability.class) && tile.getRiver() == null && riverActive) {
-//            game.getCapability(RiverCapability.class).activateNonRiverTiles();
-//            tilePack.setGroupState("river-start", TileGroupState.RETIRED);
-//            game.setCurrentTile(tile); //recovery from lake placement
-//        }
-        if (debugTiles != null && debugTiles.size() > 0) { //for debug purposes only
-            return debugTiles.remove(0);
-        }
-        return null;
-    }
-
-
-    private boolean isDebugForcedEnd() {
-        return debugTiles != null && !debugTiles.isEmpty() && debugTiles.get(0).equals(DEBUG_END_OF_PACK);
     }
 
     @Override
@@ -110,7 +78,7 @@ public class TilePhase extends Phase {
             if (state.getDrawnTile() == null) {
                 // regular flow (not tile from Bazaar supply
                 TilePack tilePack = state.getTilePack();
-                boolean packIsEmpty = tilePack.isEmpty() || isDebugForcedEnd();
+                boolean packIsEmpty = tilePack.isEmpty();
 
                 if (packIsEmpty && bazaarSupply != null) {
                     // Very edge case: no match for bazaar tile + no remaining tile in pack.
@@ -138,22 +106,8 @@ public class TilePhase extends Phase {
                     return next(state, GameOverPhase.class);
                 }
 
-                // Handle forced debug draw
-                String debugDrawTileId = pullDebugDrawTileId();
-                boolean makeRegularDraw = true;
-                if (debugDrawTileId != null) {
-                    try {
-                        state = drawTile(state, debugDrawTileId);
-                        makeRegularDraw = false;
-                    } catch (IllegalArgumentException e) {
-                        logger.warn("Invalid debug draw id: " + debugDrawTileId);
-                    }
-                }
-
-                if (makeRegularDraw) {
-                    int rndIndex = getRandom().nextInt(tilePack.size());
-                    state = drawTile(state, rndIndex);
-                }
+                int rndIndex = getRandom().nextInt(tilePack.size());
+                state = drawTile(state, rndIndex);
             }
 
             TileDefinition tile = state.getDrawnTile();
@@ -161,8 +115,6 @@ public class TilePhase extends Phase {
 
             if (placements.isEmpty()) {
                 state = discardTile(state);
-
-                //if (riverCap != null) riverCap.turnPartCleanUp(); //force group activation if needed
             } else {
                 TilePlacementAction action = new TilePlacementAction(tile, placements);
 

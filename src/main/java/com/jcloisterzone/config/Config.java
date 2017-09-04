@@ -156,7 +156,7 @@ public class Config {
         private String autosave;
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
-        private List<String> draw;
+        private HashMap<String, Object> game_annotation;
         private List<String> off_capabilities;
         private String area_highlight;
 
@@ -189,11 +189,11 @@ public class Config {
         public void setTile_definitions(Map<String, String> tile_definitions) {
             this.tile_definitions = tile_definitions;
         }
-        public List<String> getDraw() {
-            return draw;
+        public HashMap<String, Object> getGame_annotation() {
+            return game_annotation;
         }
-        public void setDraw(List<String> draw) {
-            this.draw = draw;
+        public void setGame_annotation(HashMap<String, Object> game_annotation) {
+            this.game_annotation = game_annotation;
         }
         public List<String> getOff_capabilities() {
             return off_capabilities;
