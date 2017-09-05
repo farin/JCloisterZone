@@ -3,8 +3,6 @@ package com.jcloisterzone.ui.view;
 import static com.jcloisterzone.ui.I18nUtils._;
 
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
@@ -104,98 +102,41 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
 
         MenuBar menu = client.getJMenuBar();
-        menu.setItemActionListener(MenuItem.SAVE, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSave();
-            }
-        });
-        menu.setItemActionListener(MenuItem.UNDO, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                menu.setItemEnabled(MenuItem.UNDO, false);
-                int replaySize = game.getUndoHistory().head().getReplay().size();
-                gc.getConnection().send(new UndoMessage(replaySize));
-            }
-        });
-        menu.setItemActionListener(MenuItem.ZOOM_IN, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                zoom(2.0);
-            }
-        });
-        menu.setItemActionListener(MenuItem.ZOOM_OUT, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                zoom(-2.0);
-            }
-        });
-        menu.setItemActionListener(MenuItem.ROTATE_BOARD, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rotateBoard();
-            }
-        });
-        menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                mainPanel.toggleRecentHistory(ch.isSelected());
-            }
-        });
+        menu.setItemActionListener(MenuItem.SAVE, e -> handleSave());
+        menu.setItemActionListener(MenuItem.UNDO, e -> {
+			menu.setItemEnabled(MenuItem.UNDO, false);
+			int replaySize = game.getUndoHistory().head().getReplay().size();
+			gc.getConnection().send(new UndoMessage(replaySize));
+		});
+        menu.setItemActionListener(MenuItem.ZOOM_IN, e -> zoom(2.0));
+        menu.setItemActionListener(MenuItem.ZOOM_OUT, e -> zoom(-2.0));
+        menu.setItemActionListener(MenuItem.ROTATE_BOARD, e -> rotateBoard());
+        menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, e -> {
+			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+			mainPanel.toggleRecentHistory(ch.isSelected());
+		});
         if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
             mainPanel.toggleRecentHistory(true);
         }
-        menu.setItemActionListener(MenuItem.FARM_HINTS, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                mainPanel.setShowFarmHints(ch.isSelected());
-            }
-        });
+        menu.setItemActionListener(MenuItem.FARM_HINTS, e -> {
+			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+			mainPanel.setShowFarmHints(ch.isSelected());
+		});
         if (menu.isSelected(MenuItem.FARM_HINTS)) {
             mainPanel.setShowFarmHints(true);
         }
-        menu.setItemActionListener(MenuItem.PROJECTED_POINTS, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-                getControlPanel().setShowProjectedPoints(ch.isSelected());
-            }
-        });
+        menu.setItemActionListener(MenuItem.PROJECTED_POINTS, e -> {
+			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+			getControlPanel().setShowProjectedPoints(ch.isSelected());
+		});
         if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
             getControlPanel().setShowProjectedPoints(true);
         }
-        menu.setItemActionListener(MenuItem.DISCARDED_TILES, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                client.getDiscardedTilesDialog().setVisible(true);
-            }
-        });
-        menu.setItemActionListener(MenuItem.GAME_SETUP, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showGameSetupDialog();
-            }
-        });
-        menu.setItemActionListener(MenuItem.TAKE_SCREENSHOT, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                takeScreenshot();
-            }
-        });
-        menu.setItemActionListener(MenuItem.REPORT_BUG, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new BugReportDialog(gc.getReportingTool());
-            }
-        });
-        menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gc.leaveGame();
-            }
-        });
+        menu.setItemActionListener(MenuItem.DISCARDED_TILES, e -> client.getDiscardedTilesDialog().setVisible(true));
+        menu.setItemActionListener(MenuItem.GAME_SETUP, e -> showGameSetupDialog());
+        menu.setItemActionListener(MenuItem.TAKE_SCREENSHOT, e -> takeScreenshot());
+        menu.setItemActionListener(MenuItem.REPORT_BUG, e -> new BugReportDialog(gc.getReportingTool()));
+        menu.setItemActionListener(MenuItem.LEAVE_GAME, e -> gc.leaveGame());
 
         menu.setItemEnabled(MenuItem.FARM_HINTS, true);
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);

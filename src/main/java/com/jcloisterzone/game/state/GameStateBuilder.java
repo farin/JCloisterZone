@@ -1,8 +1,6 @@
 package com.jcloisterzone.game.state;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -184,7 +182,7 @@ public class GameStateBuilder {
 
     public io.vavr.collection.List<Capability<?>> createCapabilities(io.vavr.collection.Set<Class<? extends Capability<?>>> classes) {
         return io.vavr.collection.List.narrow(
-            classes.map(cls -> createCapabilityInstance(cls)).toList()
+            classes.map(this::createCapabilityInstance).toList()
         );
     }
 
