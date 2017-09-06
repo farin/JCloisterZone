@@ -16,6 +16,9 @@ import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 
+/**
+ * Represents the state of all players in a game.
+ */
 @Immutable
 public class PlayersState implements Serializable {
 
@@ -29,6 +32,13 @@ public class PlayersState implements Serializable {
     private final Array<Seq<Follower>> followers;
     private final Array<Seq<Special>> specialMeeples;
 
+    /**
+     * Create the initial players state.
+     *
+     * @param players         the players
+     * @param turnPlayerIndex the turn player index
+     * @return the players state
+     */
     public static PlayersState createInitial(Array<Player> players, int turnPlayerIndex) {
         return new PlayersState(
             players,
@@ -40,6 +50,16 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Instantiates a new {@code PlayersState}.
+     *
+     * @param players         the players
+     * @param score           the score
+     * @param tokens          the tokens
+     * @param turnPlayerIndex the turn player index
+     * @param followers       the followers
+     * @param specialMeeples  the special meeples
+     */
     public PlayersState(
             Array<Player> players,
             Array<PlayerScore> score,
@@ -56,6 +76,12 @@ public class PlayersState implements Serializable {
         this.specialMeeples = specialMeeples;
     }
 
+    /**
+     * Sets the scores of all players.
+     *
+     * @param score the scores
+     * @return a new instance with the scores updated
+     */
     public PlayersState setScore(Array<PlayerScore> score) {
         if (this.score == score) return this;
         return new PlayersState(
@@ -64,6 +90,12 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Sets the tokens of all players (i.e., the pieces in their supply, such as bridges, castles, abbey tiles etc.).
+     *
+     * @param tokens the tokens
+     * @return a new instance with the tokens updated
+     */
     public PlayersState setTokens(Array<Map<Token, Integer>> tokens) {
         if (this.tokens == tokens) return this;
         return new PlayersState(
@@ -72,6 +104,14 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Sets the token count for a specified player.
+     *
+     * @param index the index of the player
+     * @param token the token type to update
+     * @param count the new amount
+     * @return a new instance with the token count updated
+     */
     public PlayersState setTokenCount(int index, Token token, int count) {
         if (count < 0) {
             throw new IllegalArgumentException(String.format("Token %s count can't be %s", token, count));
@@ -87,6 +127,13 @@ public class PlayersState implements Serializable {
         }
     }
 
+    /**
+     * Sets the count of a specific token for all players.
+     *
+     * @param token the token type of interest
+     * @param count the amount
+     * @return a new instance with the token counts updated
+     */
     public PlayersState setTokenCountForAllPlayers(Token token, int count) {
         PlayersState ps = this;
         for (Player p : getPlayers()) {
@@ -95,12 +142,26 @@ public class PlayersState implements Serializable {
         return ps;
     }
 
+    /**
+     * Adds tokens of a specified type to a given player.
+     *
+     * @param index the index of the player
+     * @param token the token type to update
+     * @param count the amount to add
+     * @return a new instance with the token count updated
+     */
     public PlayersState addTokenCount(int index, Token token, int count) {
         if (count == 0) return this;
         int newValue = getPlayerTokenCount(index, token) + count;
         return setTokenCount(index, token, newValue);
     }
 
+    /**
+     * Sets the turn player index.
+     *
+     * @param turnPlayerIndex the turn player index
+     * @return a new instance with the turn player index updated
+     */
     public PlayersState setTurnPlayerIndex(int turnPlayerIndex) {
         if (this.turnPlayerIndex == turnPlayerIndex) return this;
         return new PlayersState(
@@ -109,6 +170,12 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Sets followers for all players.
+     *
+     * @param followers the followers for all players
+     * @return a new instance with the followers updated
+     */
     public PlayersState setFollowers(Array<Seq<Follower>> followers) {
         if (this.followers == followers) return this;
         return new PlayersState(
@@ -117,6 +184,12 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Sets special meeples for all players.
+     *
+     * @param specialMeeples the special meeples
+     * @return a new instance with the special meeples updated
+     */
     public PlayersState setSpecialMeeples(Array<Seq<Special>> specialMeeples) {
         if (this.specialMeeples == specialMeeples) return this;
         return new PlayersState(
@@ -125,48 +198,108 @@ public class PlayersState implements Serializable {
         );
     }
 
+    /**
+     * Gets the players data.
+     *
+     * @return the players data
+     */
     public Array<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Gets players data in sequence starting by player {@code p}.
+     *
+     * @param p the player to start with
+     * @return the players data
+     */
     public Array<Player> getPlayersBeginWith(Player p) {
         return players.slice(p.getIndex(), players.length())
             .appendAll(players.slice(0, p.getIndex()));
     }
 
+    /**
+     * Gets a player data by its index.
+     *
+     * @param idx the index
+     * @return the player data
+     */
     public Player getPlayer(int idx) {
         return players.get(idx);
     }
 
+    /**
+     * Gets the number of players.
+     *
+     * @return the number of players
+     */
     public int length() {
         return players.length();
     }
 
+    /**
+     * Gets the scores of all players.
+     *
+     * @return the scores of all players
+     */
     public Array<PlayerScore> getScore() {
         return score;
     }
 
+    /**
+     * Gets the tokens data of all players.
+     *
+     * @return the tokens data
+     */
     public Array<Map<Token, Integer>> getTokens() {
         return tokens;
     }
 
+    /**
+     * Gets the token count of a specific type of token for a given player.
+     *
+     * @param index the index of the player
+     * @param token the token type of interest
+     * @return the token count
+     */
     public int getPlayerTokenCount(int index, Token token) {
         Map<Token, Integer> playerTokens = tokens.get(index);
         return playerTokens.get(token).getOrElse(0);
     }
 
+    /**
+     * Gets the turn player index.
+     *
+     * @return the turn player index
+     */
     public int getTurnPlayerIndex() {
         return turnPlayerIndex;
     }
 
+    /**
+     * Gets the followers of all players.
+     *
+     * @return the followers
+     */
     public Array<Seq<Follower>> getFollowers() {
         return followers;
     }
 
+    /**
+     * Gets the special meeples of all players.
+     *
+     * @return the special meeples
+     */
     public Array<Seq<Special>> getSpecialMeeples() {
         return specialMeeples;
     }
 
+    /**
+     * Finds a follower by id.
+     *
+     * @param meepleId the meeple id
+     * @return {@code Some} if the follower is found, {@code None} otherwise
+     */
     public Option<Follower> findFollower(String meepleId) {
         Predicate<Follower> pred = f -> f.getId().equals(meepleId);
         for (Seq<Follower> l : followers) {
@@ -178,12 +311,17 @@ public class PlayersState implements Serializable {
         return Option.none();
     }
 
+    /**
+     * Gets the turn player.
+     *
+     * @return the turn player
+     */
     public Player getTurnPlayer() {
         return getPlayer(turnPlayerIndex);
     }
 
     @Override
     public String toString() {
-        return String.join(",", players.map(p -> p.getNick()));
+        return String.join(",", players.map(Player::getNick));
     }
 }

@@ -3,13 +3,10 @@ package com.jcloisterzone.integration;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
 
 import com.google.gson.stream.JsonReader;
-import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
@@ -24,7 +21,6 @@ import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.WsSeedMeesage;
 
-import io.vavr.collection.LinkedHashMap;
 
 public class IntegrationTest {
 
@@ -48,7 +44,13 @@ public class IntegrationTest {
         SavedGameParser parser = new SavedGameParser(config);
         JsonReader reader;
         try {
-            reader = new JsonReader(new FileReader(new File(getClass().getClassLoader().getResource(savedGameFile).toURI())));
+            URL resource = getClass().getClassLoader().getResource(savedGameFile);
+            if (resource == null) {
+                return null;
+            }
+            else {
+                reader = new JsonReader(new FileReader(new File(resource.toURI())));
+            }
         } catch (FileNotFoundException | URISyntaxException e1) {
             throw new RuntimeException(e1);
         }
@@ -58,7 +60,7 @@ public class IntegrationTest {
         PlayerSlot[] slots = createPlayerSlots(sg);
         GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(config, setup, sg.getInitialSeed());
         GameStateBuilder builder = new GameStateBuilder(setup, slots, config);
-        builder.setGameAnnotations((Map) sg.getAnnotations());
+        builder.setGameAnnotations(sg.getAnnotations());
 
         GameState state = builder.createInitialState();
 

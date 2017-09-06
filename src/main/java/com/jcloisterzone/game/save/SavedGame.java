@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.game.CustomRule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
@@ -17,6 +18,9 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 
+/**
+ * Represents a saved game. This includes information of all players as well as replay data.
+ */
 public class SavedGame implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,9 +36,17 @@ public class SavedGame implements Serializable {
     private List<WsReplayableMessage> replay;
     private HashMap<String, Object> annotations;
 
+    /**
+     * Instantiates an empty {@code SavedGame}.
+     */
     public SavedGame() {
     }
 
+    /**
+     * Instantiates a {@code SavedGame} with the data of {@code game}.
+     *
+     * @param game the game to store
+     */
     public SavedGame(Game game) {
         gameId = game.getGameId();
         name = game.getName();
@@ -53,96 +65,198 @@ public class SavedGame implements Serializable {
                 ));
             }
         }
-        clocks = game.getClocks().map(c -> c.getTime()).toJavaStream().mapToLong(Long::longValue).toArray();
+        clocks = game.getClocks().map(PlayerClock::getTime).toJavaStream().mapToLong(Long::longValue).toArray();
         setup = new SavedGameSetup();
         setup.setExpansions(game.getSetup().getExpansions().toJavaSet());
         setup.setRules(game.getSetup().getRules().toJavaMap());
         replay = game.getReplay().reverse().toJavaList();
     }
 
+    /**
+     * Gets setup data. This includes rules, expansions and map.
+     *
+     * @return the setup data
+     */
     public SavedGameSetup getSetup() {
         return setup;
     }
 
+    /**
+     * Sets setup data.
+     *
+     * @param setup the setup data
+     */
     public void setSetup(SavedGameSetup setup) {
         this.setup = setup;
     }
 
+    /**
+     * Gets replay data.
+     *
+     * @return the replay data
+     */
     public List<WsReplayableMessage> getReplay() {
         return replay;
     }
 
+    /**
+     * Sets replay data.
+     *
+     * @param replay the replay data
+     */
     public void setReplay(List<WsReplayableMessage> replay) {
         this.replay = replay;
     }
 
+    /**
+     * Gets the game id.
+     *
+     * @return the game id
+     */
     public String getGameId() {
         return gameId;
     }
 
+    /**
+     * Sets the game id.
+     *
+     * @param gameId the game id
+     */
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 
+    /**
+     * Gets game name.
+     *
+     * @return the game name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets game name.
+     *
+     * @param name the game name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the app version.
+     *
+     * @return the app version
+     */
     public String getAppVersion() {
         return appVersion;
     }
 
+    /**
+     * Sets the app version.
+     *
+     * @param appVersion the app version
+     */
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
     }
 
+    /**
+     * Gets the date of creation.
+     *
+     * @return the date of creation
+     */
     public Date getCreated() {
         return created;
     }
 
+    /**
+     * Sets the date of creation.
+     *
+     * @param created the date of creation
+     */
     public void setCreated(Date created) {
         this.created = created;
     }
 
+    /**
+     * Gets the initial randomness seed.
+     *
+     * @return the initial randomness seed
+     */
     public long getInitialSeed() {
         return initialSeed;
     }
 
+    /**
+     * Sets the initial randomness seed.
+     *
+     * @param initialSeed the initial randomness seed
+     */
     public void setInitialSeed(long initialSeed) {
         this.initialSeed = initialSeed;
     }
 
+    /**
+     * Gets players slots data.
+     *
+     * @return the players slots data
+     */
     public List<SavedGamePlayerSlot> getSlots() {
         return slots;
     }
 
+    /**
+     * Sets players slots data.
+     *
+     * @param slots the players slots data
+     */
     public void setSlots(List<SavedGamePlayerSlot> slots) {
         this.slots = slots;
     }
 
 
+    /**
+     * Gets the clocks of players.
+     *
+     * @return the clocks of players
+     */
     public long[] getClocks() {
         return clocks;
     }
 
+    /**
+     * Sets the clocks of players.
+     *
+     * @param clocks the the clocks of players
+     */
     public void setClocks(long[] clocks) {
         this.clocks = clocks;
     }
 
+    /**
+     * Gets the annotations.
+     *
+     * @return the annotations
+     */
     public HashMap<String, Object> getAnnotations() {
         return annotations;
     }
 
+    /**
+     * Sets the annotations.
+     *
+     * @param annotations the annotations
+     */
     public void setAnnotations(HashMap<String, Object> annotations) {
         this.annotations = annotations;
     }
 
 
-
+    /**
+     * Represents a save player slot
+     */
     public static class SavedGamePlayerSlot {
         private final int number;
         private Integer serial;
@@ -150,6 +264,15 @@ public class SavedGame implements Serializable {
         private String nickname;
         private String aiClassName;
 
+        /**
+         * Instantiates a new {@code SavedGamePlayerSlot} given the necessary data.
+         *
+         * @param number      the number
+         * @param serial      the serial
+         * @param clientId    the client id
+         * @param nickname    the nickname
+         * @param aiClassName the ai class name
+         */
         public SavedGamePlayerSlot(int number, Integer serial, String clientId, String nickname, String aiClassName) {
             this.number = number;
             this.serial = serial;
@@ -158,63 +281,136 @@ public class SavedGame implements Serializable {
             this.aiClassName = aiClassName;
         }
 
+        /**
+         * Gets the serial.
+         *
+         * @return the serial
+         */
         public Integer getSerial() {
             return serial;
         }
 
+        /**
+         * Sets the serial.
+         *
+         * @param serial the serial
+         */
         public void setSerial(Integer serial) {
             this.serial = serial;
         }
 
+        /**
+         * Gets the player client id.
+         *
+         * @return the client id
+         */
         public String getClientId() {
             return clientId;
         }
 
+        /**
+         * Sets the player client id.
+         *
+         * @param clientId the client id
+         */
         public void setClientId(String clientId) {
             this.clientId = clientId;
         }
 
+        /**
+         * Gets the player nickname.
+         *
+         * @return the player nickname
+         */
         public String getNickname() {
             return nickname;
         }
 
+        /**
+         * Sets the player nickname.
+         *
+         * @param nickname the player nickname
+         */
         public void setNickname(String nickname) {
             this.nickname = nickname;
         }
 
+        /**
+         * Gets the class name of the AI.
+         *
+         * @return the AI class name, if any, {@code null} otherwise
+         */
         public String getAiClassName() {
             return aiClassName;
         }
 
+        /**
+         * Sets the class name of the AI.
+         *
+         * @param aiClassName the AI class name
+         */
         public void setAiClassName(String aiClassName) {
             this.aiClassName = aiClassName;
         }
 
+        /**
+         * Gets the slot number.
+         *
+         * @return the slot number
+         */
         public int getNumber() {
             return number;
         }
     }
 
+    /**
+     * Represents a saved game setup.
+     */
     public static class SavedGameSetup {
         private Set<Expansion> expansions;
         private Map<CustomRule, Object> rules;
 
+        /**
+         * Gets the expansions.
+         *
+         * @return the expansions
+         */
         public Set<Expansion> getExpansions() {
             return expansions;
         }
 
+        /**
+         * Sets the expansions.
+         *
+         * @param expansions the expansions
+         */
         public void setExpansions(Set<Expansion> expansions) {
             this.expansions = expansions;
         }
 
+        /**
+         * Gets the rules.
+         *
+         * @return the rules
+         */
         public Map<CustomRule, Object> getRules() {
             return rules;
         }
 
+        /**
+         * Sets the rules.
+         *
+         * @param rules the rules
+         */
         public void setRules(Map<CustomRule, Object> rules) {
             this.rules = rules;
         }
 
+        /**
+         * Returns a {@link GameSetup} instance based on {@code this}.
+         *
+         * @return the game setup instance
+         */
         public GameSetup asGameSetup() {
             return new GameSetup(
                 io.vavr.collection.HashSet.ofAll(expansions),
