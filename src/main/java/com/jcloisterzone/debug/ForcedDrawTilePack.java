@@ -5,6 +5,7 @@ import java.util.Random;
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.phase.GameOverPhase;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
@@ -24,13 +25,24 @@ public class ForcedDrawTilePack extends TilePack {
 
 
     public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, java.util.Map<String, Object> params) {
-        this(groups, 0, paramsToDrawQueue(params), (Integer) params.get("drawLimit"));
+        this(groups, 0, paramsToDrawQueue(params), paramsToDrawLimit(params));
     }
 
     @SuppressWarnings("unchecked")
     private static Queue<String> paramsToDrawQueue(java.util.Map<String, Object> params) {
         java.util.List<String> drawOrder = (java.util.List<String>) params.get("drawOrder");
         return drawOrder == null ? Queue.empty() : Queue.ofAll(drawOrder);
+    }
+
+    private static Integer paramsToDrawLimit(java.util.Map<String, Object> params) {
+        Object value = params.get("drawLimit");
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Double) {
+            return ((Double) value).intValue();
+        }
+        return (Integer) value;
     }
 
     private ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, int hiddenUnderHills, Queue<String> drawQueue, Integer drawLimit) {

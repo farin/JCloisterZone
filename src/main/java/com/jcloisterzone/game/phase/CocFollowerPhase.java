@@ -1,33 +1,33 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.event.SelectActionEvent;
+import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.CountCapability;
-import com.jcloisterzone.game.state.CapabilitiesState;
-import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-import com.jcloisterzone.wsio.message.PassMessage;
+
+import io.vavr.Predicates;
+import io.vavr.Tuple2;
+import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 @RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
@@ -37,80 +37,72 @@ public class CocFollowerPhase extends Phase {
     }
 
     @Override
-    public void enter() {
-        Player activePlayer = game.getActivePlayer();
-        boolean canMove = false;
-        for (Player p : game.getAllPlayers()) {
-            if (activePlayer == p) {
-                if (countCap.didReceivePoints(p)) {
-                    canMove = false;
-                    break;
-                }
+    public StepResult enter(GameState state) {
+        Stream<ScoreEvent> events = Stream.ofAll(state.getCurrentTurnEvents())
+            .filter(Predicates.instanceOf(ScoreEvent.class))
+            .map(ev -> (ScoreEvent) ev)
+            .filter(ev -> ev.getCategory().hasLandscapeSource())
+            .filter(ev -> ev.getPoints() > 0);
+
+        Player player = state.getTurnPlayer();
+        boolean didReceived = false;
+        boolean didCauseOpponentScoring = false;
+        for (ScoreEvent ev : events) {
+            if (ev.getReceiver().equals(player)) {
+                didReceived = true;
+                break;
             } else {
-                canMove = canMove || countCap.didReceivePoints(p);
+                didCauseOpponentScoring = true;
             }
         }
-        if (!canMove) {
-            next();
-            return;
+
+        if (didReceived || !didCauseOpponentScoring) {
+            return next(state);
         }
 
-        Position pos = countCap.getQuarterPosition();
+        Position pos = state.getCapabilityModel(CountCapability.class);
 
-        List<PlayerAction<?>> actions = new ArrayList<>();
-        Set<FeaturePointer> fullSet = new ImmutableSet.Builder<FeaturePointer>()
-            .add(new FeaturePointer(pos, Location.QUARTER_CASTLE))
-            .add(new FeaturePointer(pos, Location.QUARTER_MARKET))
-            .add(new FeaturePointer(pos, Location.QUARTER_BLACKSMITH))
-            .add(new FeaturePointer(pos, Location.QUARTER_CATHEDRAL))
-            .build();
+        Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
+            SmallFollower.class, BigFollower.class, Phantom.class,
+            Wagon.class, Mayor.class
+        );
+        Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
+        Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(pos)
+            .filter(t -> t._1.isCityOfCarcassonneQuarter())
+            .map(t -> new Tuple2<>(new FeaturePointer(pos, t._1), (Quarter) t._2));
 
-        if (activePlayer.hasFollower(SmallFollower.class)) {
-            actions.add(new MeepleAction(SmallFollower.class).addAll(fullSet));
-        }
-        if (activePlayer.hasFollower(BigFollower.class)) {
-            actions.add(new MeepleAction(BigFollower.class).addAll(fullSet));
-        }
-        if (activePlayer.hasFollower(Phantom.class)) {
-            actions.add(new MeepleAction(Phantom.class).addAll(fullSet));
-        }
-        if (activePlayer.hasFollower(Mayor.class)) {
-            actions.add(new MeepleAction(Mayor.class).addAll(
-                Collections.singleton(new FeaturePointer(pos, Location.QUARTER_CASTLE))
-            ));
-        }
-        if (activePlayer.hasFollower(Wagon.class)) {
-            actions.add(new MeepleAction(Mayor.class).addAll(
-                new ImmutableSet.Builder<FeaturePointer>()
-                .add(new FeaturePointer(pos, Location.QUARTER_CASTLE))
-                .add(new FeaturePointer(pos, Location.QUARTER_BLACKSMITH))
-                .add(new FeaturePointer(pos, Location.QUARTER_CATHEDRAL))
-                .build()
-            ));
-        }
+        GameState _state = state;
+        Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
+            Set<FeaturePointer> locations = quarters
+                .filter(t -> meeple.isDeploymentAllowed(_state, t._1, t._2) == DeploymentCheckResult.OK)
+                .map(t -> t._1)
+                .toSet();
+
+            PlayerAction<?> action = new MeepleAction(meeple, locations);
+            return action;
+        });
+
+        actions = actions.filter(action -> !action.isEmpty());
 
         if (actions.isEmpty()) {
-            next();
-        } else {
-            game.post(new SelectActionEvent(activePlayer, actions, true));
+            return next(state);
         }
+
+        state = state.setPlayerActions(new ActionsState(player, actions, true));
+        return promote(state);
     }
 
-    @WsSubscribe
-    public void handlePass(PassMessage msg) {
-        next();
-    }
+    @PhaseMessageHandler
+    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
+        FeaturePointer fp = msg.getPointer();
+        Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
-    @WsSubscribe
-    public void handleDeployMeeple(DeployMeepleMessage msg) {
         if (!fp.getLocation().isCityOfCarcassonneQuarter()) {
             throw new IllegalArgumentException("Only deplpy to the City of Carcassone is allowed");
         }
-        if (!fp.getPosition().equals(countCap.getQuarterPosition())) {
-            throw new IllegalArgumentException("Illegal position");
-        }
-        Meeple m = getActivePlayer().getMeepleFromSupply(meepleType);
-        m.deploy(fp);
-        next(CocCountPhase.class);
+
+        state = (new DeployMeeple(m, fp)).apply(state);
+        state = clearActions(state);
+        return next(state, CocCountPhase.class);
     }
 }

@@ -39,6 +39,7 @@ import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
@@ -318,14 +319,12 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             areas = getTileFeatureAreas(tile, rot);
             areaCache.put(key, areas);
         }
-        return areas.get(loc).get();
+        return areas.get(loc).getOrNull();
     }
 
 
-    public Map<Location, FeatureArea> getTileFeatureAreas(TileDefinition tile, Rotation rot) {
-        if (!containsTile(tile.getId())) return null;
-        // dirty hack to not handle quarter locations
-        if (tile.getId().equals(CountCapability.QUARTER_ACTION_TILE_ID)) return null;
+    private Map<Location, FeatureArea> getTileFeatureAreas(TileDefinition tile, Rotation rot) {
+        if (!containsTile(tile.getId())) return HashMap.empty();
 
         Map<Location, Feature> features = tile.getInitialFeatures();
 

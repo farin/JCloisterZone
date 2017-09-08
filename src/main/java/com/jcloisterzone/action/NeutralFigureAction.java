@@ -7,12 +7,12 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
-//TODO generic NeutralMeepleAction ?
-public class MageAndWitchAction extends SelectFeatureAction {
+
+public class NeutralFigureAction extends SelectFeatureAction {
 
     private final NeutralFigure<FeaturePointer> figure;
 
-    public MageAndWitchAction(NeutralFigure<FeaturePointer> figure, Set<FeaturePointer> options) {
+    public NeutralFigureAction(NeutralFigure<FeaturePointer> figure, Set<FeaturePointer> options) {
         super(options);
         this.figure = figure;
     }

@@ -1,6 +1,7 @@
 package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Structure;
@@ -17,6 +18,9 @@ public class Wagon extends Follower {
 
     @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
+        if (fp.getLocation() == Location.QUARTER_MARKET) {
+            return new DeploymentCheckResult("Cannot place wagon on the market quarter.");
+        }
         if (feature instanceof Tower) {
             return new DeploymentCheckResult("Cannot place wagon on the tower.");
         }

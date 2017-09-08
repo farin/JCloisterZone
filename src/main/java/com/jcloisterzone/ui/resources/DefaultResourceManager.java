@@ -25,18 +25,6 @@ public class DefaultResourceManager implements ResourceManager {
 
     private final ImageLoader imgLoader;
 
-    public static final Map<Location, ImmutablePoint> COUNT_OFFSETS;
-
-    //TODO use point def instead
-    static {
-        COUNT_OFFSETS = HashMap.of(
-           Location.QUARTER_CASTLE, new ImmutablePoint(40, -40),
-           Location.QUARTER_MARKET, new ImmutablePoint(100, 50),
-           Location.QUARTER_BLACKSMITH, new ImmutablePoint(60, 130),
-           Location.QUARTER_CATHEDRAL, new ImmutablePoint(-80, 5)
-        );
-    }
-
     public DefaultResourceManager() {
         ImageLoader imgLoader = null;
         try {
@@ -58,7 +46,6 @@ public class DefaultResourceManager implements ResourceManager {
     @Override
     public TileImage getAbbeyImage(Rotation rot) {
         return null;
-        //return (new TileImageFactory()).getAbbeyImage();
     }
 
     @Override
@@ -97,13 +84,13 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public FeatureArea getFeatureArea(TileDefinition tile, Rotation rotation, Location loc) {
-        if (loc.isCityOfCarcassonneQuarter()) {
-            double rx = NORMALIZED_SIZE * 0.6;
-            double ry = NORMALIZED_SIZE * 0.6;
-            ImmutablePoint offset = COUNT_OFFSETS.get(loc).get();
-            Area a = new Area(new Ellipse2D.Double(-rx+offset.getX(),-ry+offset.getY(),2*rx,2*ry));
-            return new FeatureArea(a, FeatureArea.DEFAULT_STRUCTURE_ZINDEX);
-        }
+//        if (loc.isCityOfCarcassonneQuarter()) {
+//            double rx = NORMALIZED_SIZE * 0.6;
+//            double ry = NORMALIZED_SIZE * 0.6;
+//            ImmutablePoint offset = COUNT_OFFSETS.get(loc).get();
+//            Area a = new Area(new Ellipse2D.Double(-rx+offset.getX(),-ry+offset.getY(),2*rx,2*ry));
+//            return new FeatureArea(a, FeatureArea.DEFAULT_STRUCTURE_ZINDEX);
+//        }
         return null;
     }
 }

@@ -15,8 +15,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.MageAndWitchAction;
 import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.action.TunnelAction;
@@ -25,8 +25,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.controls.action.ActionWrapper;
-import com.jcloisterzone.ui.controls.action.MageAndWitchActionWrapper;
 import com.jcloisterzone.ui.controls.action.MeepleActionWrapper;
+import com.jcloisterzone.ui.controls.action.NeutralFigureActionWrapper;
 import com.jcloisterzone.ui.controls.action.TilePlacementActionWrapper;
 import com.jcloisterzone.ui.controls.action.TunnelActionWrapper;
 import com.jcloisterzone.ui.grid.ActionLayer;
@@ -107,8 +107,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             if (a instanceof TunnelAction) {
                 return new TunnelActionWrapper((TunnelAction) a);
             }
-            if (a instanceof MageAndWitchAction) {
-                return new MageAndWitchActionWrapper((MageAndWitchAction) a);
+            if (a instanceof NeutralFigureAction) {
+                return new NeutralFigureActionWrapper((NeutralFigureAction) a);
             }
             return new ActionWrapper(a);
         });

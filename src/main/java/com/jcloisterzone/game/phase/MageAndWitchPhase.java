@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Random;
 
-import com.jcloisterzone.action.MageAndWitchAction;
+import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.RemovMageOrWithAction;
 import com.jcloisterzone.board.TileDefinition;
@@ -76,8 +76,8 @@ public class MageAndWitchPhase extends Phase {
 
         Set<FeaturePointer> options = targetFeatures.flatMap(Completable::getPlaces).toSet();
         Vector<PlayerAction<?>> actions = Vector.of(
-            new MageAndWitchAction(ns.getMage(), options),
-            new MageAndWitchAction(ns.getWitch(), options)
+            new NeutralFigureAction(ns.getMage(), options),
+            new NeutralFigureAction(ns.getWitch(), options)
         );
         return promote(state.setPlayerActions(
             new ActionsState(state.getTurnPlayer(), actions, false)

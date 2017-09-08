@@ -17,8 +17,9 @@ import com.jcloisterzone.game.phase.CastlePhase;
 import com.jcloisterzone.game.phase.CleanUpTurnPartPhase;
 import com.jcloisterzone.game.phase.CleanUpTurnPhase;
 import com.jcloisterzone.game.phase.CocCountPhase;
+import com.jcloisterzone.game.phase.CocFinalScoringPhase;
 import com.jcloisterzone.game.phase.CocFollowerPhase;
-import com.jcloisterzone.game.phase.CocPreScorePhase;
+import com.jcloisterzone.game.phase.CocScoringPhase;
 import com.jcloisterzone.game.phase.CommitActionPhase;
 import com.jcloisterzone.game.phase.CornCirclePhase;
 import com.jcloisterzone.game.phase.DragonMovePhase;
@@ -57,9 +58,11 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
     public GameStatePhaseReducer(Config config, GameSetup setup, long initialSeed) {
         random = new Random(initialSeed);
 
-        Phase last, next = null;
+        Phase over, last, next = null;
         //if there isn't assignment - phase is out of standard flow
-               addPhase(config, setup, next, GameOverPhase.class);
+        over = addPhase(config, setup, next, GameOverPhase.class);
+               addPhase(config, setup, over, CocFinalScoringPhase.class);
+
         next = last = addPhase(config, setup, next, CleanUpTurnPhase.class);
         next = addPhase(config, setup, next, BazaarPhase.class);
         next = addPhase(config, setup, next, EscapePhase.class);
@@ -75,7 +78,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(config, setup, next, CocFollowerPhase.class);
         next = addPhase(config, setup, next, WagonPhase.class);
         next = addPhase(config, setup, next, ScorePhase.class);
-        next = addPhase(config, setup, next, CocPreScorePhase.class);
+        next = addPhase(config, setup, next, CocScoringPhase.class);
         next = addPhase(config, setup, next, CommitActionPhase.class);
         next = addPhase(config, setup, next, CastlePhase.class);
 
@@ -135,6 +138,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
                 continue;
             }
             try {
+                assert m.getReturnType().equals(StepResult.class) : String.format("Bad return type %s.%s()", phase.getClass().getSimpleName(), m.getName());
                 return (StepResult) m.invoke(phase, state, message);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e.getCause() == null ? e : e.getCause());

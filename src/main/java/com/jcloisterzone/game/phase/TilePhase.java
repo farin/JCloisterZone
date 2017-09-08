@@ -22,6 +22,7 @@ import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -103,7 +104,11 @@ public class TilePhase extends Phase {
 
                 // Tile Pack is empty
                 if (packIsEmpty) {
-                    return next(state, GameOverPhase.class);
+                    if (state.hasCapability(CountCapability.class)) {
+                        return next(state, CocFinalScoringPhase.class);
+                    } else {
+                        return next(state, GameOverPhase.class);
+                    }
                 }
 
                 state = drawTile(state);

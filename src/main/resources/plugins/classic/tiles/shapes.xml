@@ -109,6 +109,22 @@
         <apply>CU.SRCR CLOISTER</apply>
     </shape>
 
+    <shape feature="QUARTER">
+        <svg:circle cx="400" cy="-400" r="600" />
+        <apply>CO.7 QUARTER_CASTLE</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="1000" cy="500" r="600" />
+        <apply>CO.7 QUARTER_MARKET</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="600" cy="1300" r="600" />
+        <apply>CO.7 QUARTER_BLACKSMITH</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="-800" cy="50" r="600" />
+        <apply>CO.7 QUARTER_CATHEDRAL</apply>
+    </shape>
 
     <!-- Road shapes -->
 

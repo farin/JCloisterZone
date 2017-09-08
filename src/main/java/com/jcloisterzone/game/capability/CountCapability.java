@@ -9,22 +9,24 @@ import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Quarter;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoringResult;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 
-public class CountCapability extends Capability<Void> {
+/** model is Position od CO.7 tile */
+public class CountCapability extends Capability<Position> {
 
     public static String QUARTER_ACTION_TILE_ID = "CO.7";
     private static final String[] FORBIDDEN_TILES = new String[] { "CO.6", "CO.7" };
 
-//    private final Map<Player, Integer> receivedPoints = new HashMap<>();
-    private Position quarterPosition;
 //
 //    // active player for pre score phase
 //    private Player moveOutPlayer;
@@ -67,7 +69,8 @@ public class CountCapability extends Capability<Void> {
             return state;
         }
 
-        quarterPosition = pt.getPosition();
+        Position quarterPosition = pt.getPosition();
+        state = setModel(state, quarterPosition);
         Count count = state.getNeutralFigures().getCount();
         state = (new MoveNeutralFigure<>(
             count,
@@ -75,54 +78,6 @@ public class CountCapability extends Capability<Void> {
         )).apply(state);
         return state;
     }
-
-//    @Override
-//    public void handleEvent(Event event) {
-//       if (event instanceof ScoreEvent) {
-//           scoreAssigned((ScoreEvent) event);
-//       }
-//    }
-//
-//    private void tilePlaced(TileEvent ev) {
-//        Tile tile = ev.getTile();
-//        if (ev.getType() == TileEvent.PLACEMENT && QUARTER_ACTION_TILE_ID.equals(tile.getId())) {
-//            quarterPosition = tile.getPosition();
-//            count.deploy(new FeaturePointer(quarterPosition, Location.QUARTER_CASTLE));
-//        }
-//    }
-//
-//    private void scoreAssigned(ScoreEvent ev) {
-//        if (ev.getCategory().hasLandscapeSource()) {
-//            Player p = ev.getTargetPlayer();
-//            int points = ev.getPoints();
-//            if (receivedPoints.containsKey(p)) {
-//                receivedPoints.put(p, receivedPoints.get(p) + points);
-//            } else {
-//                receivedPoints.put(p, points);
-//            }
-//        }
-//    }
-//
-//    public boolean didReceivePoints(Player p) {
-//        Integer pts = receivedPoints.get(p);
-//        if (pts == null) {
-//            return false;
-//        }
-//        return pts > 0; //undo can cause 0 in map!
-//    }
-//
-//    @Override
-//    public void turnPartCleanUp() {
-//        receivedPoints.clear();
-//    }
-//
-//    public Count getCount() {
-//        return count;
-//    }
-//
-//    public Position getQuarterPosition() {
-//        return quarterPosition;
-//    }
 //
 //    public Quarter getQuarter(Location loc) {
 //        return (Quarter) game.getBoard().get(quarterPosition).getFeature(loc);
