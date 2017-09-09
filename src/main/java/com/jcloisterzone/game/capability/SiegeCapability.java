@@ -5,7 +5,7 @@ import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
@@ -25,7 +25,7 @@ public final class SiegeCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("city");
         boolean besieged = false;
         for (int i = 0; i < nl.getLength(); i++) {

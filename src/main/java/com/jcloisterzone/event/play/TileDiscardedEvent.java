@@ -1,19 +1,19 @@
 package com.jcloisterzone.event.play;
 
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 
 public class TileDiscardedEvent extends PlayEvent {
 
     private static final long serialVersionUID = 1L;
 
-    private final TileDefinition tile;
+    private final Tile tile;
 
-    public TileDiscardedEvent(TileDefinition tile) {
+    public TileDiscardedEvent(Tile tile) {
         super(PlayEventMeta.createWithoutPlayer());
         this.tile = tile;
     }
 
-    public TileDefinition getTile() {
+    public Tile getTile() {
         return tile;
     }
 

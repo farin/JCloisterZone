@@ -49,7 +49,7 @@ public class TileBuilder {
         this.state = state;
     }
 
-    public TileDefinition createTile(Expansion expansion, String tileId, Element xml, boolean isTunnelActive) {
+    public Tile createTile(Expansion expansion, String tileId, Element xml, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         this.tileId = tileId;
@@ -83,7 +83,7 @@ public class TileBuilder {
         }
 
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
-        TileDefinition tileDef = new TileDefinition(expansion, tileId, _features);
+        Tile tileDef = new Tile(expansion, tileId, _features);
 
         features = null;
         tileId = null;

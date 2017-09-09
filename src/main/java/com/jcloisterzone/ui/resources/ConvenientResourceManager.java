@@ -5,7 +5,7 @@ import java.util.WeakHashMap;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.ImmutablePoint;
 
 // move caching on PluggableResourceManager ? or rename to cached manager
@@ -26,7 +26,7 @@ public class ConvenientResourceManager implements ResourceManager {
     //delegate methods
 
     @Override
-    public TileImage getTileImage(TileDefinition tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         String key = tile.getId()+"@"+rot.toString();
         TileImage img = (TileImage) imageCache.get(key);
         if (img == null) {
@@ -38,7 +38,7 @@ public class ConvenientResourceManager implements ResourceManager {
 
     @Override
     public TileImage getAbbeyImage(Rotation rot) {
-        String key = TileDefinition.ABBEY_TILE_ID+"@"+rot.toString();
+        String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
         TileImage img = (TileImage) imageCache.get(key);
         if (img == null) {
             img = manager.getAbbeyImage(rot);
@@ -69,7 +69,7 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
         return manager.getMeeplePlacement(tile, rot, loc);
     }
 
@@ -89,7 +89,7 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(TileDefinition tile, Rotation rot, Location loc) {
+    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
         return manager.getFeatureArea(tile, rot, loc);
     }
 

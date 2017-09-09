@@ -33,7 +33,7 @@ import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.PhaseMessageHandler;
 import com.jcloisterzone.game.phase.RequiredCapability;
-import com.jcloisterzone.game.phase.ScorePhase;
+import com.jcloisterzone.game.phase.ScoringPhase;
 import com.jcloisterzone.game.phase.StepResult;
 import com.jcloisterzone.game.phase.TilePhase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
@@ -77,7 +77,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
                addPhase(config, setup, next, CocCountPhase.class);
         next = addPhase(config, setup, next, CocFollowerPhase.class);
         next = addPhase(config, setup, next, WagonPhase.class);
-        next = addPhase(config, setup, next, ScorePhase.class);
+        next = addPhase(config, setup, next, ScoringPhase.class);
         next = addPhase(config, setup, next, CocScoringPhase.class);
         next = addPhase(config, setup, next, CommitActionPhase.class);
         next = addPhase(config, setup, next, CastlePhase.class);

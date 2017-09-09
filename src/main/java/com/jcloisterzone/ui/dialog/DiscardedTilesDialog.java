@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
@@ -54,9 +54,9 @@ public class DiscardedTilesDialog extends JDialog {
         pack();
     }
 
-    public void setDiscardedTiles(List<TileDefinition> tiles) {
+    public void setDiscardedTiles(List<Tile> tiles) {
         int skip = panel.getComponentCount();
-        for (TileDefinition tile : tiles) {
+        for (Tile tile : tiles) {
             if (skip > 0) {
                 skip--;
                 continue;

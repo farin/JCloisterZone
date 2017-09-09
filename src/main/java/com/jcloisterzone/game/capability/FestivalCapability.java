@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ReturnMeepleAction;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
@@ -27,7 +27,7 @@ public class FestivalCapability extends Capability<Void> {
 
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         if (xml.getElementsByTagName("festival").getLength() > 0) {
             tile = tile.setTileTrigger(TileTrigger.FESTIVAL);
         }

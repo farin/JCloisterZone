@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.ImmutablePoint;
 
 import io.vavr.collection.HashMap;
@@ -39,7 +39,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(TileDefinition tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         return null;
     }
 
@@ -64,7 +64,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
         return null;
     }
 
@@ -83,7 +83,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(TileDefinition tile, Rotation rotation, Location loc) {
+    public FeatureArea getFeatureArea(Tile tile, Rotation rotation, Location loc) {
 //        if (loc.isCityOfCarcassonneQuarter()) {
 //            double rx = NORMALIZED_SIZE * 0.6;
 //            double ry = NORMALIZED_SIZE * 0.6;

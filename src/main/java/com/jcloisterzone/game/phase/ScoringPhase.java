@@ -43,11 +43,11 @@ import io.vavr.collection.Set;
 import io.vavr.control.Option;
 
 
-public class ScorePhase extends Phase {
+public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoringResult> completedMutable = new java.util.HashMap<>();
 
-    public ScorePhase(Config config, Random random) {
+    public ScoringPhase(Config config, Random random) {
         super(config, random);
     }
 
@@ -140,7 +140,7 @@ public class ScorePhase extends Phase {
         }
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
-            state = cap.onCompleted(state, scored);
+            state = cap.onTurnScoring(state, scored);
         }
 
         if (!deployedWagonsBefore.isEmpty()) {

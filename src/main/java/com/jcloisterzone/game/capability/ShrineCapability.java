@@ -7,8 +7,8 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.feature.Cloister;
@@ -38,7 +38,7 @@ public final class ShrineCapability extends Capability<Void> {
     }
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         Set<Cloister> completedCloisters = completed.keySet()
             .filter(Predicates.instanceOf(Cloister.class))
             .map(f -> (Cloister) f);
@@ -67,7 +67,7 @@ public final class ShrineCapability extends Capability<Void> {
     }
 
     @Override
-    public boolean isTilePlacementAllowed(GameState state, TileDefinition tile, TilePlacement placement) {
+    public boolean isTilePlacementAllowed(GameState state, Tile tile, PlacementOption placement) {
         // unplaced cloister taken from Tile (with initial position set to 0,0)
         // it's enough, because just isShrine() is needed
         Cloister cloister = getCloister(tile);
@@ -95,7 +95,7 @@ public final class ShrineCapability extends Capability<Void> {
         return true;
     }
 
-    private Cloister getCloister(TileDefinition tile) {
+    private Cloister getCloister(Tile tile) {
         return (Cloister) tile.getInitialFeatures()
             .map(Tuple2::_2)
             .filter(Predicates.instanceOf(Cloister.class)) // filter out Yaga hut

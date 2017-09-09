@@ -2,7 +2,7 @@ package com.jcloisterzone.debug;
 
 import java.util.Random;
 
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.phase.GameOverPhase;
@@ -74,26 +74,26 @@ public class ForcedDrawTilePack extends TilePack {
     }
 
     @Override
-    public Tuple2<TileDefinition, TilePack> drawTile(Random random) {
+    public Tuple2<Tile, TilePack> drawTile(Random random) {
         if (!drawQueue.isEmpty()) {
             Tuple2<String, Queue<String>> q = drawQueue.dequeue();
-            Tuple2<TileDefinition, TilePack> res = drawTile(q._1);
+            Tuple2<Tile, TilePack> res = drawTile(q._1);
             return res.map2(_pack -> {
                 ForcedDrawTilePack pack = (ForcedDrawTilePack) _pack;
                 return pack.setDrawList(q._2);
             });
         }
-        Tuple2<TileDefinition, TilePack> res = super.drawTile(random);
+        Tuple2<Tile, TilePack> res = super.drawTile(random);
         return decreaseTileLimit(res);
     }
 
     @Override
-    public Tuple2<TileDefinition, TilePack> drawTile(String groupName, String tileId) {
-        Tuple2<TileDefinition, TilePack> res = super.drawTile(groupName, tileId);
+    public Tuple2<Tile, TilePack> drawTile(String groupName, String tileId) {
+        Tuple2<Tile, TilePack> res = super.drawTile(groupName, tileId);
         return decreaseTileLimit(res);
     }
 
-    private Tuple2<TileDefinition, TilePack> decreaseTileLimit(Tuple2<TileDefinition, TilePack> res) {
+    private Tuple2<Tile, TilePack> decreaseTileLimit(Tuple2<Tile, TilePack> res) {
         if (drawLimit == null) {
             return res;
         }

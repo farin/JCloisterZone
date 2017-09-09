@@ -87,7 +87,7 @@ public class TilePack implements Serializable {
         return Stream.ofAll(groups.values()).filter(TileGroup::isActive);
     }
 
-    private Stream<TileDefinition> getActiveTiles() {
+    private Stream<Tile> getActiveTiles() {
         return getActiveGroups().flatMap(TileGroup::getTiles);
     }
 
@@ -186,12 +186,12 @@ public class TilePack implements Serializable {
      * @return a tuple containing both the tile drawn and the tile pack it belongs to
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */
-    public Tuple2<TileDefinition, TilePack> drawTile(Random random) {
+    public Tuple2<Tile, TilePack> drawTile(Random random) {
         int index = random.nextInt(getInternalSize());
         for (TileGroup group : getActiveGroups()) {
             if (index < group.size()) {
-                Vector<TileDefinition> tiles = group.getTiles();
-                TileDefinition tile = tiles.get(index);
+                Vector<Tile> tiles = group.getTiles();
+                Tile tile = tiles.get(index);
                 group = group.setTiles(tiles.removeAt(index));
                 return new Tuple2<>(tile, updateGroup(group));
             } else {
@@ -210,11 +210,11 @@ public class TilePack implements Serializable {
      * @throws IllegalArgumentException if there is no group named {@code groupName} or if the group has no tile with id
      * {@code tileId}
      */
-    public Tuple2<TileDefinition, TilePack> drawTile(String groupName, String tileId) {
-        Predicate<TileDefinition> matchesId = t -> t.getId().equals(tileId);
+    public Tuple2<Tile, TilePack> drawTile(String groupName, String tileId) {
+        Predicate<Tile> matchesId = t -> t.getId().equals(tileId);
         TileGroup group = groups.get(groupName)
             .getOrElseThrow(IllegalArgumentException::new);
-        TileDefinition tile = group.getTiles().find(matchesId)
+        Tile tile = group.getTiles().find(matchesId)
             .getOrElseThrow(IllegalArgumentException::new);
         TilePack pack = updateGroup(group.mapTiles(tiles -> tiles.removeFirst(matchesId)));
         return new Tuple2<>(tile, pack);
@@ -227,7 +227,7 @@ public class TilePack implements Serializable {
      * @return a tuple containing both the tile drawn and the tile pack it belongs to
      * @throws IllegalArgumentException if there is no no tile with id {@code tileId}
      */
-    public Tuple2<TileDefinition, TilePack> drawTile(String tileId) {
+    public Tuple2<Tile, TilePack> drawTile(String tileId) {
         for (TileGroup group: getActiveGroups()) {
             try {
                 return drawTile(group.getName(), tileId);
@@ -292,10 +292,10 @@ public class TilePack implements Serializable {
      * @param tileId the tile id
      * @return {@code Some<TileDefinition>} if a tile with id {@code tileId} is found, {@code None} otherwise
      */
-    public Option<TileDefinition> findTile(String tileId) {
-        Predicate<TileDefinition> pred = t -> t.getId().equals(tileId);
+    public Option<Tile> findTile(String tileId) {
+        Predicate<Tile> pred = t -> t.getId().equals(tileId);
         for (TileGroup group : groups.values()) {
-            Option<TileDefinition> res = group.getTiles().find(pred);
+            Option<Tile> res = group.getTiles().find(pred);
             if (!res.isEmpty()) return res;
         }
         return Option.none();

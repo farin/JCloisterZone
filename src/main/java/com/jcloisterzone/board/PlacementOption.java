@@ -4,11 +4,10 @@ import java.util.Objects;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 
-//TODO rename PlacementOption
 /**
  * Represents allowed tile placement on particular board position.
  */
-public class TilePlacement implements Comparable<TilePlacement> {
+public class PlacementOption implements Comparable<PlacementOption> {
 
     private final Position position;
     private final Rotation rotation;
@@ -23,7 +22,7 @@ public class TilePlacement implements Comparable<TilePlacement> {
      * @param rotation        the rotation of the placement
      * @param mandatoryBridge the position and location of the bridge, if mandatory
      */
-    public TilePlacement(Position position, Rotation rotation, FeaturePointer mandatoryBridge) {
+    public PlacementOption(Position position, Rotation rotation, FeaturePointer mandatoryBridge) {
         this.position = position;
         this.rotation = rotation;
         this.mandatoryBridge = mandatoryBridge;
@@ -79,7 +78,7 @@ public class TilePlacement implements Comparable<TilePlacement> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        TilePlacement other = (TilePlacement) obj;
+        PlacementOption other = (PlacementOption) obj;
         if (!Objects.equals(position, other.position)) return false;
         if (!Objects.equals(rotation, other.rotation)) return false;
         if (!Objects.equals(mandatoryBridge, other.mandatoryBridge)) return false;
@@ -87,7 +86,7 @@ public class TilePlacement implements Comparable<TilePlacement> {
     }
 
     @Override
-    public int compareTo(TilePlacement o) {
+    public int compareTo(PlacementOption o) {
         int p = position.compareTo(o.position);
         if (p != 0) return p;
         return rotation.ordinal() -  o.rotation.ordinal();

@@ -25,7 +25,7 @@ public class TradeGoodsCapability extends Capability<Void> {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         for (Feature feature : completed.keySet()) {
             if (!(feature instanceof City)) continue;
 
@@ -60,7 +60,7 @@ public class TradeGoodsCapability extends Capability<Void> {
 
 
     @Override
-    public GameState finalScoring(GameState state) {
+    public GameState onFinalScoring(GameState state) {
         PlayersState ps = state.getPlayers();
         for (TradeGoods tr : TradeGoods.values()) {
             int hiVal = 1;

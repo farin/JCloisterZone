@@ -6,7 +6,7 @@ import java.util.Comparator;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
@@ -68,7 +68,7 @@ public class TileLayer extends AbstractGridLayer {
 
         for (Tuple2<Position, PlacedTile> t : sortedPlacedTiles) {
             Position p = t._1;
-            TileDefinition tdef = t._2.getTile();
+            Tile tdef = t._2.getTile();
             Rotation rot = t._2.getRotation();
             TileImage tileImg = rm.getTileImage(tdef, rot);
             g2.drawImage(tileImg.getImage(), getAffineTransform(tileImg, p), null);

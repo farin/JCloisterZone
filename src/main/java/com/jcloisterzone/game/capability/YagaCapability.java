@@ -5,7 +5,7 @@ import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.YagaHut;
 import com.jcloisterzone.game.Capability;
@@ -16,7 +16,7 @@ import io.vavr.collection.List;
 public class YagaCapability extends Capability<Void> {
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("yaga-hut");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {

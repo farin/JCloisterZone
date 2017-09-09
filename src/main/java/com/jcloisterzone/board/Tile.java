@@ -15,11 +15,10 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 
 /**
- * The type Tile definition.
+ * Represents a tile type
  */
-// TODO rename to Tile
 @Immutable
-public class TileDefinition implements Serializable {
+public class Tile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,7 +45,7 @@ public class TileDefinition implements Serializable {
      * @param id              the identifier of the tile
      * @param initialFeatures the {@link Feature}s of the tile
      */
-    public TileDefinition(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
+    public Tile(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
         this(origin, id, initialFeatures, null, null, null);
     }
 
@@ -61,7 +60,7 @@ public class TileDefinition implements Serializable {
      * @param windRose        the direction pointed by the wind rose ({@see WindRoseCapability})
      * @param cornCircle      the feature on the corn circle, if any ({@see CornCircleCapability})
      */
-    public TileDefinition(Expansion origin, String id,
+    public Tile(Expansion origin, String id,
         Map<Location, Feature> initialFeatures,
         TileTrigger trigger, Location windRose,
         Class<? extends Feature> cornCircle) {
@@ -83,9 +82,9 @@ public class TileDefinition implements Serializable {
      * @param trigger the trigger to set
      * @return a new instance with the trigger set
      */
-    public TileDefinition setTileTrigger(TileTrigger trigger) {
+    public Tile setTileTrigger(TileTrigger trigger) {
         assert this.trigger == null;
-        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -95,8 +94,8 @@ public class TileDefinition implements Serializable {
      * @param windRose the direction to set
      * @return a new instance with the direction pointed by the wind rose set
      */
-    public TileDefinition setWindRose(Location windRose) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
+    public Tile setWindRose(Location windRose) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -106,8 +105,8 @@ public class TileDefinition implements Serializable {
      * @param cornCircle the feature to set
      * @return a new instance with the corn circle feature set
      */
-    public TileDefinition setCornCircle(Class<? extends Feature> cornCircle) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
+    public Tile setCornCircle(Class<? extends Feature> cornCircle) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -116,8 +115,8 @@ public class TileDefinition implements Serializable {
      * @param initialFeatures the features to set
      * @return a new instance with the features set
      */
-    public TileDefinition setInitialFeatures(Map<Location, Feature> initialFeatures) {
-        return new TileDefinition(origin, id, initialFeatures, trigger, windRose, cornCircle);
+    public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
     /**
@@ -126,7 +125,7 @@ public class TileDefinition implements Serializable {
      * @param bridgeLoc the location where the bridge spans
      * @return a new instance with the bridge added
      */
-    public TileDefinition addBridge(Location bridgeLoc) {
+    public Tile addBridge(Location bridgeLoc) {
         assert bridgeLoc == Location.NS || bridgeLoc == Location.WE;
         Bridge bridge = new Bridge(bridgeLoc);
         return setInitialFeatures(initialFeatures.put(bridgeLoc, bridge));

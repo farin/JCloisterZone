@@ -11,7 +11,7 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -102,8 +102,8 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         realRotation = getActionWrapper().getTileRotation();
         previewRotation = realRotation;
 
-        Set<TilePlacement> allowedRotations = getAction().getOptions().filter(tp -> tp.getPosition().equals(p));
-        TilePlacement matchingPlacement = allowedRotations
+        Set<PlacementOption> allowedRotations = getAction().getOptions().filter(tp -> tp.getPosition().equals(p));
+        PlacementOption matchingPlacement = allowedRotations
             .find(tp -> tp.getRotation().equals(previewRotation))
             .getOrNull();
 
@@ -113,7 +113,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         } else {
             TileSymmetry symmetry = getAction().getTile().getSymmetry();
             if (allowedRotations.size() == 1 || symmetry == TileSymmetry.S2) {
-                TilePlacement tp = allowedRotations.get();
+                PlacementOption tp = allowedRotations.get();
                 allowedRotation = true;
                 previewRotation = tp.getRotation();
                 previewBridge = tp.getMandatoryBridge();
@@ -226,7 +226,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (getPreviewPosition() != null && isActive() && allowedRotation) {
                 e.consume();
-                gc.getConnection().send(getAction().select(new TilePlacement(p, previewRotation, null)));
+                gc.getConnection().send(getAction().select(new PlacementOption(p, previewRotation, null)));
             }
         }
     }

@@ -19,7 +19,7 @@ public class TileGroup implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String name;
-    private final Vector<TileDefinition> tiles;
+    private final Vector<Tile> tiles;
     private final boolean active;
 
     /** Name of group which should be activate when this is depleted.*/
@@ -32,7 +32,7 @@ public class TileGroup implements Serializable {
      * @param tiles  the tiles in the group
      * @param active a flag indicating whether this group is active
      */
-    public TileGroup(String name, Vector<TileDefinition> tiles, boolean active) {
+    public TileGroup(String name, Vector<Tile> tiles, boolean active) {
         this(name, tiles, active, null);
     }
 
@@ -44,7 +44,7 @@ public class TileGroup implements Serializable {
      * @param active          a flag indicating whether this group is active
      * @param successiveGroup the name of the group that should be activated when this is depleted
      */
-    public TileGroup(String name, Vector<TileDefinition> tiles, boolean active, String successiveGroup) {
+    public TileGroup(String name, Vector<Tile> tiles, boolean active, String successiveGroup) {
         this.name = name;
         this.tiles = tiles;
         this.active = active;
@@ -65,7 +65,7 @@ public class TileGroup implements Serializable {
      *
      * @return the tiles of this group
      */
-    public Vector<TileDefinition> getTiles() {
+    public Vector<Tile> getTiles() {
         return tiles;
     }
 
@@ -75,7 +75,7 @@ public class TileGroup implements Serializable {
      * @param tiles the tiles to set
      * @return a new instance with the tiles set
      */
-    public TileGroup setTiles(Vector<TileDefinition> tiles) {
+    public TileGroup setTiles(Vector<Tile> tiles) {
         if (this.tiles == tiles) return this;
         return new TileGroup(name, tiles, active, successiveGroup);
     }
@@ -87,7 +87,7 @@ public class TileGroup implements Serializable {
      * @param fn the function to apply
      * @return a new instance with the tiles replaced
      */
-    public TileGroup mapTiles(Function<Vector<TileDefinition>, Vector<TileDefinition>> fn) {
+    public TileGroup mapTiles(Function<Vector<Tile>, Vector<Tile>> fn) {
         return setTiles(fn.apply(tiles));
     }
 

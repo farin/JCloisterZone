@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
@@ -36,7 +36,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 //    private final Map<Position, Set<Player>> claimedGold = new HashMap<>();
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         if (xml.getElementsByTagName("goldmine").getLength() > 0) {
             return tile.setTileTrigger(TileTrigger.GOLDMINE);
         }
@@ -62,7 +62,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
     }
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         Map<Position, Integer> placedGold = getModel(state);
         java.util.Map<Position, java.util.Set<Player>> claimedGold = new java.util.HashMap<>();
 

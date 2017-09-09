@@ -3,7 +3,7 @@ package com.jcloisterzone.game.phase;
 import java.util.Random;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.capability.DragonCapability;
@@ -18,7 +18,7 @@ public class DragonPhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        TileDefinition tile = state.getLastPlaced().getTile();
+        Tile tile = state.getLastPlaced().getTile();
         if (tile.getTrigger() == TileTrigger.DRAGON) {
             Position pos = state.getNeutralFigures().getDragonDeployment();
             if (pos != null) {

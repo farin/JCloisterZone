@@ -8,11 +8,11 @@ import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
 
 /**
- * Represents a tile that is placed on the map. This is made of a {@link TileDefinition}, a {@link Position} and an
+ * Represents a tile that is placed on the map. This is made of a {@link Tile}, a {@link Position} and an
  * {@link Rotation}.
  */
 @Immutable
@@ -20,7 +20,7 @@ public class PlacedTile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final TileDefinition tile;
+    private final Tile tile;
     private final Position position;
     private final Rotation rotation;
 
@@ -31,7 +31,7 @@ public class PlacedTile implements Serializable {
      * @param position the position
      * @param rotation the rotation
      */
-    public PlacedTile(TileDefinition tile, Position position, Rotation rotation) {
+    public PlacedTile(Tile tile, Position position, Rotation rotation) {
         this.tile = tile;
         this.position = position;
         this.rotation = rotation;
@@ -42,7 +42,7 @@ public class PlacedTile implements Serializable {
      *
      * @return the tile data
      */
-    public TileDefinition getTile() {
+    public Tile getTile() {
         return tile;
     }
 
@@ -70,7 +70,7 @@ public class PlacedTile implements Serializable {
      * @param tile the tile
      * @return a new instance with the tile data updated
      */
-    public PlacedTile setTile(TileDefinition tile) {
+    public PlacedTile setTile(Tile tile) {
         return new PlacedTile(tile, position, rotation);
     }
 
@@ -80,7 +80,7 @@ public class PlacedTile implements Serializable {
      * @param fn the function to apply
      * @return a new instance with the tile data updated
      */
-    public PlacedTile mapTile(Function<TileDefinition, TileDefinition> fn) {
+    public PlacedTile mapTile(Function<Tile, Tile> fn) {
         return new PlacedTile(fn.apply(tile), position, rotation);
     }
 

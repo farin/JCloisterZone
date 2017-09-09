@@ -2,7 +2,7 @@ package com.jcloisterzone.game.capability;
 
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
@@ -21,7 +21,7 @@ public class MageAndWitchCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         if (xml.getElementsByTagName("mage").getLength() > 0) {
            tile = tile.setTileTrigger(TileTrigger.MAGE);
         }

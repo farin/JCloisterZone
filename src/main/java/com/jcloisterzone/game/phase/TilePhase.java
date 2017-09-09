@@ -7,9 +7,9 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
@@ -45,13 +45,13 @@ public class TilePhase extends Phase {
 
     public GameState drawTile(GameState state) {
         TilePack tps = state.getTilePack();
-        Tuple2<TileDefinition, TilePack> t = tps.drawTile(getRandom());
+        Tuple2<Tile, TilePack> t = tps.drawTile(getRandom());
         return state.setTilePack(t._2).setDrawnTile(t._1);
     }
 
     public GameState drawTile(GameState state, String tileId) {
         TilePack tps = state.getTilePack();
-        Tuple2<TileDefinition, TilePack> t = tps.drawTile(tileId);
+        Tuple2<Tile, TilePack> t = tps.drawTile(tileId);
         return state.setTilePack(t._2).setDrawnTile(t._1);
     }
 
@@ -114,8 +114,8 @@ public class TilePhase extends Phase {
                 state = drawTile(state);
             }
 
-            TileDefinition tile = state.getDrawnTile();
-            Set<TilePlacement> placements = state.getTilePlacements(tile).toSet();
+            Tile tile = state.getDrawnTile();
+            Set<PlacementOption> placements = state.getTilePlacements(tile).toSet();
 
             if (placements.isEmpty()) {
                 state = discardTile(state);
@@ -150,7 +150,7 @@ public class TilePhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
-        TileDefinition tile = state.getDrawnTile();
+        Tile tile = state.getDrawnTile();
         Position pos = msg.getPosition();
         Rotation rot = msg.getRotation();
         Player player = state.getActivePlayer();
@@ -159,7 +159,7 @@ public class TilePhase extends Phase {
 
         TilePlacementAction action = (TilePlacementAction) state.getPlayerActions().getActions().get();
 
-        TilePlacement placement = action.getOptions()
+        PlacementOption placement = action.getOptions()
             .find(tp -> tp.getPosition().equals(pos) && tp.getRotation().equals(rot))
             .getOrElseThrow(() -> new IllegalArgumentException("Invalid placement " + pos + "," + rot));
 
@@ -205,7 +205,7 @@ public class TilePhase extends Phase {
     }
 
     private GameState discardTile(GameState state) {
-        TileDefinition tile = state.getDrawnTile();
+        Tile tile = state.getDrawnTile();
         return state
             .setDrawnTile(null)
             .setDiscardedTiles(state.getDiscardedTiles().append(tile))

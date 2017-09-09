@@ -25,7 +25,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.ConfirmConfig;
 import com.jcloisterzone.event.ClockUpdateEvent;
@@ -261,7 +261,7 @@ public class ControlPanel extends JPanel {
         PlayerAction<?> action = as.getActions().get();
         if (!(action instanceof TilePlacementAction)) return false;
         TilePlacementAction tpa = (TilePlacementAction) action;
-        if (!tpa.getTile().getId().equals(TileDefinition.ABBEY_TILE_ID)) return false;
+        if (!tpa.getTile().getId().equals(Tile.ABBEY_TILE_ID)) return false;
         return state.getTilePack().size() == 0;
     }
 
@@ -425,7 +425,7 @@ public class ControlPanel extends JPanel {
             if (supply != null && !state.getPhase().equals(BazaarPhase.class)) {
                 int x = LEFT_MARGIN+LEFT_PADDING;
                 for (BazaarItem bi : supply) {
-                    TileDefinition tile = bi.getTile();
+                    Tile tile = bi.getTile();
                     Image img = client.getResourceManager().getTileImage(tile, Rotation.R0).getImage();
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;

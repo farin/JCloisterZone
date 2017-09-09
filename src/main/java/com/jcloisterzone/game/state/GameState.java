@@ -6,7 +6,7 @@ import java.util.function.Function;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent;
@@ -49,10 +49,10 @@ public class GameState implements ActionsStateMixin, BoardMixin,
     private final PlayersState players;
 
     private final TilePack tilePack;
-    private final TileDefinition drawnTile;
+    private final Tile drawnTile;
 
     private final LinkedHashMap<Position, PlacedTile> placedTiles;
-    private final List<TileDefinition> discardedTiles;
+    private final List<Tile> discardedTiles;
     private final Map<FeaturePointer, Feature> featureMap;
 
     private final NeutralFiguresState neutralFigures;
@@ -95,9 +95,9 @@ public class GameState implements ActionsStateMixin, BoardMixin,
             Map<CustomRule, Object> rules,
             CapabilitiesState capabilities,
             PlayersState players,
-            TilePack tilePack, TileDefinition drawnTile,
+            TilePack tilePack, Tile drawnTile,
             LinkedHashMap<Position, PlacedTile> placedTiles,
-            List<TileDefinition> discardedTiles, Map<FeaturePointer, Feature> featureMap,
+            List<Tile> discardedTiles, Map<FeaturePointer, Feature> featureMap,
             NeutralFiguresState neutralFigures,
             LinkedHashMap<Meeple, FeaturePointer> deployedMeeples,
             ActionsState playerActions,
@@ -162,7 +162,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
         return setTilePack(fn.apply(tilePack));
     }
 
-    public GameState setDrawnTile(TileDefinition drawnTile) {
+    public GameState setDrawnTile(Tile drawnTile) {
         if (drawnTile == this.drawnTile) return this;
         return new GameState(
             rules, capabilities, players,
@@ -200,7 +200,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
         );
     }
 
-    public GameState setDiscardedTiles(List<TileDefinition> discardedTiles) {
+    public GameState setDiscardedTiles(List<Tile> discardedTiles) {
         if (discardedTiles == this.discardedTiles) return this;
         return new GameState(
             rules, capabilities, players,
@@ -312,7 +312,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
         return tilePack;
     }
 
-    public TileDefinition getDrawnTile() {
+    public Tile getDrawnTile() {
         return drawnTile;
     }
 
@@ -321,7 +321,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
         return placedTiles;
     }
 
-    public List<TileDefinition> getDiscardedTiles() {
+    public List<Tile> getDiscardedTiles() {
         return discardedTiles;
     }
 

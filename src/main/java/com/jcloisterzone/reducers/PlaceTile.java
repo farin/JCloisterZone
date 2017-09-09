@@ -4,7 +4,7 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TilePlacedEvent;
@@ -29,11 +29,11 @@ import io.vavr.collection.Stream;
 
 public class PlaceTile implements Reducer {
 
-    private final TileDefinition tile;
+    private final Tile tile;
     private final Position pos;
     private final Rotation rot;
 
-    public PlaceTile(TileDefinition tile, Position pos, Rotation rot) {
+    public PlaceTile(Tile tile, Position pos, Rotation rot) {
         this.tile = tile;
         this.pos = pos;
         this.rot = rot;
@@ -44,7 +44,7 @@ public class PlaceTile implements Reducer {
     public GameState apply(GameState state) {
         LinkedHashMap<Position, PlacedTile> placedTiles = state.getPlacedTiles();
         assert !placedTiles.containsKey(pos);
-        boolean abbeyPlacement = TileDefinition.ABBEY_TILE_ID.equals(tile.getId());
+        boolean abbeyPlacement = Tile.ABBEY_TILE_ID.equals(tile.getId());
 
         PlacedTile placedTile = new PlacedTile(tile, pos, rot);
         state = state.setPlacedTiles(

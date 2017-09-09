@@ -8,8 +8,8 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -43,13 +43,13 @@ public class AbbeyPhase extends Phase {
         if (hasAbbey && (builderSecondTurnPart || !baazaarInProgress)) {
             Stream<Tuple2<Position, EdgePattern>> holes = state.getHoles();
             if (!holes.isEmpty()) {
-                TileDefinition abbey = state.getTilePack().findTile(TileDefinition.ABBEY_TILE_ID).get();
+                Tile abbey = state.getTilePack().findTile(Tile.ABBEY_TILE_ID).get();
 
                 TilePlacementAction action = new TilePlacementAction(
                     abbey,
                     holes.flatMap(t ->
                         Array.ofAll(Arrays.asList(Rotation.values()))
-                            .map(r -> new TilePlacement(t._1, r, null))
+                            .map(r -> new PlacementOption(t._1, r, null))
                     ).toSet()
                 );
 
@@ -67,7 +67,7 @@ public class AbbeyPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
-        if (!msg.getTileId().equals(TileDefinition.ABBEY_TILE_ID)) {
+        if (!msg.getTileId().equals(Tile.ABBEY_TILE_ID)) {
             throw new IllegalArgumentException("Only abbey can be placed.");
         }
 
@@ -76,7 +76,7 @@ public class AbbeyPhase extends Phase {
             ps.addTokenCount(player.getIndex(), Token.ABBEY_TILE, -1)
         );
 
-        TileDefinition abbey = state.getTilePack().findTile(TileDefinition.ABBEY_TILE_ID).get();
+        Tile abbey = state.getTilePack().findTile(Tile.ABBEY_TILE_ID).get();
         state = (new PlaceTile(abbey, msg.getPosition(), msg.getRotation())).apply(state);
         state = clearActions(state);
 

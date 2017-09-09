@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 
 @Immutable
 public class BazaarItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final TileDefinition tile;
+    private final Tile tile;
     private final int currentPrice;
     private final Player currentBidder;
     private final Player owner;
 
-    public BazaarItem(TileDefinition tile, int currentPrice, Player currentBidder, Player owner) {
+    public BazaarItem(Tile tile, int currentPrice, Player currentBidder, Player owner) {
         this.tile = tile;
         this.currentPrice = currentPrice;
         this.currentBidder = currentBidder;
@@ -31,7 +31,7 @@ public class BazaarItem implements Serializable {
         return new BazaarItem(tile, currentPrice, currentBidder, owner);
     }
 
-    public TileDefinition getTile() {
+    public Tile getTile() {
         return tile;
     }
 

@@ -2,8 +2,8 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
@@ -16,18 +16,18 @@ import io.vavr.collection.Stream;
 
 
 @LinkedGridLayer(TilePlacementLayer.class)
-public class TilePlacementAction extends PlayerAction<TilePlacement> {
+public class TilePlacementAction extends PlayerAction<PlacementOption> {
 
     private static final long serialVersionUID = 1L;
 
-    private final TileDefinition tile;
+    private final Tile tile;
 
-    public TilePlacementAction(TileDefinition tile, Set<TilePlacement> options) {
+    public TilePlacementAction(Tile tile, Set<PlacementOption> options) {
         super(options);
         this.tile = tile;
     }
 
-    public TileDefinition getTile() {
+    public Tile getTile() {
         return tile;
     }
 
@@ -40,7 +40,7 @@ public class TilePlacementAction extends PlayerAction<TilePlacement> {
     }
 
     @Override
-    public WsInGameMessage select(TilePlacement tp) {
+    public WsInGameMessage select(PlacementOption tp) {
         return new PlaceTileMessage(tile.getId(), tp.getRotation(), tp.getPosition());
     }
 

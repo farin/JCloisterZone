@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Capability;
@@ -26,7 +26,7 @@ public class DragonCapability extends Capability<Vector<Position>> {
     public static final String TILE_GROUP_DRAGON = "dragon";
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         if (xml.getElementsByTagName("volcano").getLength() > 0) {
             tile = tile.setTileTrigger(TileTrigger.VOLCANO);
         }
@@ -37,7 +37,7 @@ public class DragonCapability extends Capability<Vector<Position>> {
     }
 
     @Override
-    public String getTileGroup(TileDefinition tile) {
+    public String getTileGroup(Tile tile) {
         return tile.getTrigger() == TileTrigger.DRAGON ? TILE_GROUP_DRAGON : null;
     }
 

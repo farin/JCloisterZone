@@ -5,7 +5,7 @@ import java.util.Random;
 import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.RemovMageOrWithAction;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.config.Config;
@@ -37,7 +37,7 @@ public class MageAndWitchPhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        TileDefinition tile = state.getLastPlaced().getTile();
+        Tile tile = state.getLastPlaced().getTile();
         NeutralFiguresState ns = state.getNeutralFigures();
         Completable mageFeature = (Completable) ns.getMage().getFeature(state);
         Completable witchFeature = (Completable) ns.getWitch().getFeature(state);

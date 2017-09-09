@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Quarter;
@@ -37,7 +37,7 @@ public class CountCapability extends Capability<Position> {
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
         if (QUARTER_ACTION_TILE_ID.equals(tile.getId())) {
             Map<Location, Feature> features = tile.getInitialFeatures();
             features = features.merge(Location.QUARTERS.toMap(loc ->
@@ -49,7 +49,7 @@ public class CountCapability extends Capability<Position> {
     }
 
 
-    public static boolean isTileForbidden(TileDefinition tile) {
+    public static boolean isTileForbidden(Tile tile) {
         String id = tile.getId();
         for (String forbidden : FORBIDDEN_TILES) {
             if (forbidden.equals(id)) return true;

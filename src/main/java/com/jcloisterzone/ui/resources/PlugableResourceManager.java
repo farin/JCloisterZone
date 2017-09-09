@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.plugin.Plugin;
 
@@ -34,7 +34,7 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(TileDefinition tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         for (ResourceManager manager : managers) {
             TileImage result = manager.getTileImage(tile, rot);
             if (result != null) return result;
@@ -75,7 +75,7 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
             ImmutablePoint result = manager.getMeeplePlacement(tile, rot, loc);
             if (result != null) return result;
@@ -112,7 +112,7 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public FeatureArea getFeatureArea(TileDefinition tile, Rotation rot, Location loc) {
+    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
             FeatureArea result = manager.getFeatureArea(tile, rot, loc);
             if (result != null) return result;

@@ -5,7 +5,7 @@ import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.board.RemoveTileException;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
@@ -23,7 +23,7 @@ public class GermanMonasteriesCapability extends Capability<Void> {
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
         if (!state.getBooleanValue(CustomRule.KEEP_CLOISTERS)) {
             if (tile.getId().equals("BA.L") || tile.getId().equals("BA.LR")) {
                 throw new RemoveTileException();

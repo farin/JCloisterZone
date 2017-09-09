@@ -81,7 +81,7 @@ public class FinalScoring implements Reducer {
         }
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
-            state = cap.finalScoring(state);
+            state = cap.onFinalScoring(state);
         }
 
         return state;

@@ -13,7 +13,7 @@ import io.vavr.collection.Set;
  * Represents a set of options a player can choose from.
  *
  * @param <T> the type of options the player can choose from; examples are {@link com.jcloisterzone.board.Position},
- *            {@link com.jcloisterzone.board.Location}, {@link com.jcloisterzone.board.TilePlacement},
+ *            {@link com.jcloisterzone.board.Location}, {@link com.jcloisterzone.board.PlacementOption},
  *            {@link CornCircleRemoveOrDeployMessage.CornCircleOption}, etc.
  */
 public abstract class PlayerAction<T> implements Iterable<T>, Serializable {

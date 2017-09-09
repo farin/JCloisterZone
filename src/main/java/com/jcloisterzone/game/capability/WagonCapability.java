@@ -8,7 +8,7 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
@@ -43,7 +43,7 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         NodeList nl = xml.getElementsByTagName("wagon-move");
         assert nl.getLength() <= 1;
         if (nl.getLength() == 1) {

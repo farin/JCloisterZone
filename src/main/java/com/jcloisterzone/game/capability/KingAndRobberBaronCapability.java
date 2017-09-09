@@ -21,7 +21,7 @@ import io.vavr.collection.Set;
 public final class KingAndRobberBaronCapability extends Capability<Void> {
 
     @Override
-    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         Set<Scoreable> completedFeatures = completed.keySet();
         int maxCitySize = getMaxSize(state, City.class, completedFeatures);
         int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);
@@ -53,7 +53,7 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
     }
 
     @Override
-    public GameState finalScoring(GameState state) {
+    public GameState onFinalScoring(GameState state) {
         PlayersState ps = state.getPlayers();
 
         for (Player player: ps.getPlayers()) {

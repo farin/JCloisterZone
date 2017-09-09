@@ -5,8 +5,8 @@ import com.jcloisterzone.board.EdgeType;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
@@ -71,7 +71,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersStsteMixin, Capabili
          );
     }
 
-    default Stream<TilePlacement> getTilePlacements(TileDefinition tile) {
+    default Stream<PlacementOption> getTilePlacements(Tile tile) {
         boolean playerHasBridge = getPlayers().getPlayerTokenCount(
             getTurnPlayer().getIndex(), Token.BRIDGE) > 0;
 
@@ -85,7 +85,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersStsteMixin, Capabili
                     EdgePattern border = avail._2;
                     EdgePattern tilePattern = basePattern.rotate(rot);
                     if (border.isMatchingExact(tilePattern)) {
-                        return new TilePlacement(pos, rot, null);
+                        return new PlacementOption(pos, rot, null);
                     }
                     if (playerHasBridge) {
                         // check bridges on tile
@@ -93,7 +93,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersStsteMixin, Capabili
                             EdgePattern tileWithBridgePattern = t._1.rotate(rot);
                             if (border.isMatchingExact(tileWithBridgePattern)) {
                                 Location bridgeLocation = t._2.rotateCW(rot);
-                                return new TilePlacement(pos, rot, new FeaturePointer(pos, bridgeLocation));
+                                return new PlacementOption(pos, rot, new FeaturePointer(pos, bridgeLocation));
                             }
                         }
                         // check bridges on adjacent tiles
@@ -118,7 +118,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersStsteMixin, Capabili
                             // and current til edge must be ROAD
                             EdgePattern borderWithBridgePattern = border.replace(side, EdgeType.ROAD);
                             if (borderWithBridgePattern.isMatchingExact(tilePattern)) {
-                                return new TilePlacement(pos, rot, bridgePtr);
+                                return new PlacementOption(pos, rot, bridgePtr);
                             }
                         }
                     }

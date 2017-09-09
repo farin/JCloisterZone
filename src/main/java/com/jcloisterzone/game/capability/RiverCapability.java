@@ -3,8 +3,8 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.feature.River;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
@@ -52,7 +52,7 @@ public class RiverCapability extends Capability<Void> {
     }
 
     @Override
-    public boolean isTilePlacementAllowed(GameState state, TileDefinition tile, TilePlacement placement) {
+    public boolean isTilePlacementAllowed(GameState state, Tile tile, PlacementOption placement) {
         Position pos = placement.getPosition();
         Rotation rot = placement.getRotation();
         Location riverLoc = tile.getInitialFeatures()

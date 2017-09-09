@@ -23,7 +23,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePackBuilder;
 import com.jcloisterzone.board.TilePackBuilder.TileCount;
 import com.jcloisterzone.ui.Client;
@@ -112,7 +112,7 @@ public class TileDistributionWindow extends JFrame {
         private String count;
 
         public TileLabel(Theme theme, Expansion exp, TileCount tc) {
-            TileDefinition tile = new TileDefinition(exp, tc.tileId, HashMap.empty());
+            Tile tile = new Tile(exp, tc.tileId, HashMap.empty());
             this.theme = theme;
             this.image = client.getResourceManager().getTileImage(tile, Rotation.R0);
             this.count = tc.count == null ? "" : tc.count + "";

@@ -11,8 +11,8 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
-import com.jcloisterzone.board.TileDefinition;
-import com.jcloisterzone.board.TilePlacement;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
@@ -50,7 +50,7 @@ public abstract class Capability<T> implements Serializable {
     }
 
 
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
         return tile;
     }
 
@@ -58,7 +58,7 @@ public abstract class Capability<T> implements Serializable {
         return feature;
     }
 
-    public String getTileGroup(TileDefinition tile) {
+    public String getTileGroup(Tile tile) {
         return null;
     }
 
@@ -83,9 +83,11 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    // TODO rename to onScored ? (but only in game )
-    /** completed Completables + Castles */
-    public GameState onCompleted(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    /**
+     * @param state game state
+     * @param completed all Completables (roads, cities, cloisters) and Castles completed this turn
+     * */
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
         return state;
     }
 
@@ -101,11 +103,11 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public GameState finalScoring(GameState state) {
+    public GameState onFinalScoring(GameState state) {
         return state;
     }
 
-    public boolean isTilePlacementAllowed(GameState state, TileDefinition tile, TilePlacement placement) {
+    public boolean isTilePlacementAllowed(GameState state, Tile tile, PlacementOption placement) {
         return true;
     }
 

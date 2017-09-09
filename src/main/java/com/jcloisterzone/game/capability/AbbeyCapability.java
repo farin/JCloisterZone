@@ -1,7 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
@@ -26,8 +26,8 @@ public class AbbeyCapability extends Capability<Integer> {
     }
 
     @Override
-    public String getTileGroup(TileDefinition tile) {
-        return tile.getId().equals(TileDefinition.ABBEY_TILE_ID) ? "inactive": null;
+    public String getTileGroup(Tile tile) {
+        return tile.getId().equals(Tile.ABBEY_TILE_ID) ? "inactive": null;
     }
 
 //    public boolean hasUnusedAbbey(Player player) {

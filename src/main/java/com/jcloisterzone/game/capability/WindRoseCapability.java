@@ -6,7 +6,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
@@ -46,7 +46,7 @@ public class WindRoseCapability extends Capability<PlacedTile> {
     }
 
     @Override
-    public TileDefinition initTile(GameState state, TileDefinition tile, Element xml) {
+    public Tile initTile(GameState state, Tile tile, Element xml) {
         if (xml.hasAttribute("wind-rose")) {
             Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
             return tile.setWindRose(loc);

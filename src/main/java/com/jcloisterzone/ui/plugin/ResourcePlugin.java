@@ -21,7 +21,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -55,7 +55,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     private int imageRatioX = 1;
     private int imageRatioY = 1;
 
-    private java.util.HashMap<Tuple2<TileDefinition, Rotation>, Map<Location, FeatureArea>> areaCache = new java.util.HashMap<>();
+    private java.util.HashMap<Tuple2<Tile, Rotation>, Map<Location, FeatureArea>> areaCache = new java.util.HashMap<>();
 
     private Set<String> supportedExpansions = HashSet.empty(); //expansion codes
 
@@ -135,13 +135,13 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(TileDefinition tile, Rotation rot) {
+    public TileImage getTileImage(Tile tile, Rotation rot) {
         return getTileImage(tile.getId(), rot);
     }
 
     @Override
     public TileImage getAbbeyImage(Rotation rot) {
-        return getTileImage(TileDefinition.ABBEY_TILE_ID, rot);
+        return getTileImage(Tile.ABBEY_TILE_ID, rot);
     }
 
     private TileImage getTileImage(String tileId, Rotation rot) {
@@ -186,7 +186,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(TileDefinition tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
         if (!containsTile(tile.getId())) return null;
         if (loc == Location.MONASTERY) loc = Location.CLOISTER;
 
@@ -228,7 +228,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 //        return area;
 //    }
 
-    private FeatureArea getFeatureArea(TileDefinition tile, Class<? extends Feature> featureClass, Location loc) {
+    private FeatureArea getFeatureArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
         boolean monasteryShading = false;
         if (loc == Location.MONASTERY) {
             loc = Location.CLOISTER;
@@ -262,7 +262,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return area;
     }
 
-    private Area getSubtractionArea(TileDefinition tile, boolean farm) {
+    private Area getSubtractionArea(Tile tile, boolean farm) {
         Area d = defaultGeometry.getSubtractionArea(tile, farm),
              p = pluginGeometry.getSubtractionArea(tile, farm),
              area = new Area();
@@ -290,7 +290,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return area;
     }
 
-    private boolean isFarmComplement(TileDefinition tile, Location loc) {
+    private boolean isFarmComplement(Tile tile, Location loc) {
         if (pluginGeometry.isFarmComplement(tile, loc)) return true;
         if (defaultGeometry.isFarmComplement(tile, loc)) return true;
         return false;
@@ -312,8 +312,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(TileDefinition tile, Rotation rot, Location loc) {
-        Tuple2<TileDefinition, Rotation> key = new Tuple2<>(tile, rot);
+    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
+        Tuple2<Tile, Rotation> key = new Tuple2<>(tile, rot);
         Map<Location, FeatureArea> areas = areaCache.get(key);
         if (areas == null) {
             areas = getTileFeatureAreas(tile, rot);
@@ -323,7 +323,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
 
-    private Map<Location, FeatureArea> getTileFeatureAreas(TileDefinition tile, Rotation rot) {
+    private Map<Location, FeatureArea> getTileFeatureAreas(Tile tile, Rotation rot) {
         if (!containsTile(tile.getId())) return HashMap.empty();
 
         Map<Location, Feature> features = tile.getInitialFeatures();

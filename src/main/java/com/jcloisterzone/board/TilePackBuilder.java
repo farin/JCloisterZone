@@ -77,7 +77,7 @@ public class TilePackBuilder {
 
     private java.util.Set<String> usedIds = new java.util.HashSet<>(); //for assertion only
 
-    private java.util.Map<String, java.util.List<TileDefinition>> tiles = new java.util.HashMap<>();
+    private java.util.Map<String, java.util.List<Tile>> tiles = new java.util.HashMap<>();
     private Map<Position, Tuple2<PlacedTile, Integer>> preplacedTiles = HashMap.empty();
 
     public static class TileCount {
@@ -111,7 +111,7 @@ public class TilePackBuilder {
         Element el = getExpansionDefinition(expansion);
         return XMLUtils.elementStream(el.getElementsByTagName("tile")).map(tileElement -> {
             String tileId = getTileId(expansion, tileElement);
-            if (TileDefinition.ABBEY_TILE_ID.equals(tileId)) {
+            if (Tile.ABBEY_TILE_ID.equals(tileId)) {
                 return new TileCount(tileId, null);
             } else {
                 return new TileCount(tileId, getTileCount(tileElement, tileId));
@@ -126,7 +126,7 @@ public class TilePackBuilder {
         for (int i = 0; i < nl.getLength(); i++) {
             Element tileElement = (Element) nl.item(i);
             String tileId = getTileId(expansion, tileElement);
-            if (!TileDefinition.ABBEY_TILE_ID.equals(tileId)) {
+            if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
                 size += getTileCount(tileElement, tileId);
             }
         }
@@ -164,14 +164,14 @@ public class TilePackBuilder {
     }
 
     protected int getTileCount(Element card, String tileId) {
-        if (TileDefinition.ABBEY_TILE_ID.equals(tileId)) {
+        if (Tile.ABBEY_TILE_ID.equals(tileId)) {
             return 1;
         } else {
             return attributeIntValue(card, "count", 1);
         }
     }
 
-    protected String getTileGroup(TileDefinition tile, Element card) {
+    protected String getTileGroup(Tile tile, Element card) {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             String group = cap.getTileGroup(tile);
             if (group != null) return group;
@@ -179,20 +179,20 @@ public class TilePackBuilder {
         return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
     }
 
-    public TileDefinition initTile(TileDefinition tile, Element xml) throws RemoveTileException {
+    public Tile initTile(Tile tile, Element xml) throws RemoveTileException {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             tile = cap.initTile(state, tile, xml);
         }
         return tile;
     }
 
-    public TileDefinition createTile(Expansion expansion, String tileId, Element tileElement) throws RemoveTileException {
+    public Tile createTile(Expansion expansion, String tileId, Element tileElement) throws RemoveTileException {
         if (usedIds.contains(tileId)) {
             throw new IllegalArgumentException("Multiple occurences of id " + tileId + " in tile definition xml.");
         }
         usedIds.add(tileId);
 
-        TileDefinition tile = tileBuilder.createTile(expansion, tileId, tileElement, isTunnelActive(expansion));
+        Tile tile = tileBuilder.createTile(expansion, tileId, tileElement, isTunnelActive(expansion));
         return initTile(tile, tileElement);
     }
 
@@ -227,7 +227,7 @@ public class TilePackBuilder {
                 List<Preplaced> positions = getPreplacedPositions(tileId, tileElement).toList();
                 int count = getTileCount(tileElement, tileId);
 
-                TileDefinition tile;
+                Tile tile;
                 try {
                     tile = createTile(expansion, tileId, tileElement);
                 } catch (RemoveTileException ex) {
@@ -288,8 +288,8 @@ public class TilePackBuilder {
         LinkedHashMap<String, TileGroup> groups = LinkedHashMap.empty();
         Vector<String> groupNames = Vector.ofAll(tiles.keySet()).sorted();
         for (String name : groupNames) {
-            java.util.List<TileDefinition> groupTiles = tiles.get(name);
-            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(TileDefinition::getId), true));
+            java.util.List<Tile> groupTiles = tiles.get(name);
+            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(Tile::getId), true));
         }
 
         return new Tiles(

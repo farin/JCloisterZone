@@ -8,7 +8,7 @@ import com.jcloisterzone.action.BazaarBidAction;
 import com.jcloisterzone.action.BazaarSelectBuyOrSellAction;
 import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.TileDefinition;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.CustomRule;
@@ -50,7 +50,7 @@ public class BazaarPhase extends Phase {
         Queue<BazaarItem> supply = Queue.empty();
 
         for (int i = 0; i < size; i++) {
-            Tuple2<TileDefinition, TilePack> t = tilePack.drawTile(getRandom());
+            Tuple2<Tile, TilePack> t = tilePack.drawTile(getRandom());
             state = state.setTilePack(t._2);
             supply = supply.append(new BazaarItem(t._1, 0, null, null));
         }
