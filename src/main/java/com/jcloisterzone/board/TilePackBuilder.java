@@ -282,7 +282,7 @@ public class TilePackBuilder {
         });
 
 
-        /* sort groups and tiles to getdeterministic item order
+        /* sort groups and tiles to get deterministic item order
          * This required for stable behavior when game is loaded with same seed, tiles must return same tile for same index
          */
         LinkedHashMap<String, TileGroup> groups = LinkedHashMap.empty();
@@ -293,7 +293,7 @@ public class TilePackBuilder {
         }
 
         return new Tiles(
-            new TilePack(groups),
+            new TilePack(groups, 0),
             preplacedTiles.values().map(Tuple2::_1)
         );
     }

@@ -1,5 +1,7 @@
 package com.jcloisterzone.debug;
 
+import java.util.Random;
+
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
@@ -17,45 +19,102 @@ import io.vavr.collection.Queue;
  */
 public class ForcedDrawTilePack extends TilePack {
 
-    private final Queue<String> drawList;
+    private final Queue<String> drawQueue;
+    private final Integer drawLimit;
+
+
+    public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, java.util.Map<String, Object> params) {
+        this(groups, 0, paramsToDrawQueue(params), (Integer) params.get("drawLimit"));
+    }
 
     @SuppressWarnings("unchecked")
-    public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, java.util.Map<String, Object> params) {
-        this(groups, Queue.ofAll((java.util.List<String>) params.get("drawOrder")));
+    private static Queue<String> paramsToDrawQueue(java.util.Map<String, Object> params) {
+        java.util.List<String> drawOrder = (java.util.List<String>) params.get("drawOrder");
+        return drawOrder == null ? Queue.empty() : Queue.ofAll(drawOrder);
     }
 
-    private ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, Queue<String> drawList) {
-        super(groups);
-        this.drawList = drawList;
-    }
-
-    public ForcedDrawTilePack setGroups(LinkedHashMap<String, TileGroup> groups) {
-        if (getGroups() == groups) return this;
-        return new ForcedDrawTilePack(groups, drawList);
-    }
-
-    private ForcedDrawTilePack setDrawList(Queue<String> drawList) {
-        if (this.drawList == drawList) return this;
-        return new ForcedDrawTilePack(getGroups(), drawList);
+    private ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, int hiddenUnderHills, Queue<String> drawQueue, Integer drawLimit) {
+        super(groups, hiddenUnderHills);
+        this.drawQueue = drawQueue;
+        this.drawLimit = drawLimit;
     }
 
     @Override
-    public Tuple2<TileDefinition, TilePack> drawTile(int index) {
-        if (!drawList.isEmpty()) {
-            Tuple2<String, Queue<String>> q = drawList.dequeue();
-            Tuple2<TileDefinition, TilePack> res = drawTile(q._1);
-            return res.map2(pack -> ((ForcedDrawTilePack)pack).setDrawList(q._2));
-        }
-        return super.drawTile(index);
+    public ForcedDrawTilePack setGroups(LinkedHashMap<String, TileGroup> groups) {
+        if (getGroups() == groups) return this;
+        return new ForcedDrawTilePack(groups, getHiddenUnderHills(), drawQueue, drawLimit);
     }
+
+    @Override
+    public ForcedDrawTilePack setHiddenUnderHills(int hiddenUnderHills) {
+        if (getHiddenUnderHills() == hiddenUnderHills) return this;
+        return new ForcedDrawTilePack(getGroups(), hiddenUnderHills, drawQueue, drawLimit);
+    }
+
+    private ForcedDrawTilePack setDrawList(Queue<String> drawQueue) {
+        if (this.drawQueue == drawQueue) return this;
+        return new ForcedDrawTilePack(getGroups(), getHiddenUnderHills(), drawQueue, drawLimit);
+    }
+
+    private ForcedDrawTilePack setDrawLimit(Integer drawLimit) {
+        if (this.drawLimit == drawLimit) return this;
+        return new ForcedDrawTilePack(getGroups(), getHiddenUnderHills(), drawQueue, drawLimit);
+    }
+
+    @Override
+    public Tuple2<TileDefinition, TilePack> drawTile(Random random) {
+        if (!drawQueue.isEmpty()) {
+            Tuple2<String, Queue<String>> q = drawQueue.dequeue();
+            Tuple2<TileDefinition, TilePack> res = drawTile(q._1);
+            return res.map2(_pack -> {
+                ForcedDrawTilePack pack = (ForcedDrawTilePack) _pack;
+                return pack.setDrawList(q._2);
+            });
+        }
+        Tuple2<TileDefinition, TilePack> res = super.drawTile(random);
+        return decreaseTileLimit(res);
+    }
+
+    @Override
+    public Tuple2<TileDefinition, TilePack> drawTile(String groupName, String tileId) {
+        Tuple2<TileDefinition, TilePack> res = super.drawTile(groupName, tileId);
+        return decreaseTileLimit(res);
+    }
+
+    private Tuple2<TileDefinition, TilePack> decreaseTileLimit(Tuple2<TileDefinition, TilePack> res) {
+        if (drawLimit == null) {
+            return res;
+        }
+        return res.map2(_pack -> {
+            ForcedDrawTilePack pack = (ForcedDrawTilePack) _pack;
+            return pack.setDrawLimit(pack.drawLimit - 1);
+        });
+    }
+
+    @Override
+    public int totalSize() {
+        if (drawLimit != null) {
+            return drawLimit;
+        }
+        return super.totalSize();
+    }
+
 
     @Override
     public int size() {
+        if (drawLimit != null) {
+            return drawLimit;
+        }
         // if "." is at the end, quit game on that element
-        if (!drawList.isEmpty() && drawList.last().equals("#END")) {
-            return drawList.size() - 1;
+        if (!drawQueue.isEmpty() && drawQueue.last().equals("#END")) {
+            return drawQueue.size() - 1;
         }
         return super.size();
+    }
+
+    protected int getInternalSize() {
+        //don't affect internal size by drawLimit
+        return super.size() + getHiddenUnderHills();
     }
 
 }

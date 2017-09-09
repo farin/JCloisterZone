@@ -50,8 +50,7 @@ public class BazaarPhase extends Phase {
         Queue<BazaarItem> supply = Queue.empty();
 
         for (int i = 0; i < size; i++) {
-            int rndIndex = getRandom().nextInt(tilePack.size());
-            Tuple2<TileDefinition, TilePack> t = tilePack.drawTile(rndIndex);
+            Tuple2<TileDefinition, TilePack> t = tilePack.drawTile(getRandom());
             state = state.setTilePack(t._2);
             supply = supply.append(new BazaarItem(t._1, 0, null, null));
         }

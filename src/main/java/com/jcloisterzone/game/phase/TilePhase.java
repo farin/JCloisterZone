@@ -42,9 +42,9 @@ public class TilePhase extends Phase {
         super(config, random);
     }
 
-    public GameState drawTile(GameState state, int index) {
+    public GameState drawTile(GameState state) {
         TilePack tps = state.getTilePack();
-        Tuple2<TileDefinition, TilePack> t = tps.drawTile(index);
+        Tuple2<TileDefinition, TilePack> t = tps.drawTile(getRandom());
         return state.setTilePack(t._2).setDrawnTile(t._1);
     }
 
@@ -106,8 +106,7 @@ public class TilePhase extends Phase {
                     return next(state, GameOverPhase.class);
                 }
 
-                int rndIndex = getRandom().nextInt(tilePack.size());
-                state = drawTile(state, rndIndex);
+                state = drawTile(state);
             }
 
             TileDefinition tile = state.getDrawnTile();

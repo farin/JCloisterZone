@@ -1,6 +1,7 @@
 package com.jcloisterzone.board;
 
 import java.io.Serializable;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -30,13 +31,16 @@ public class TilePack implements Serializable {
 
     private final LinkedHashMap<String, TileGroup> groups;
 
+    private final int hiddenUnderHills;
+
     /**
      * Instantiates a new {@code TilePack}.
      *
      * @param groups the groups making up this pack
      */
-    public TilePack(LinkedHashMap<String, TileGroup> groups) {
+    public TilePack(LinkedHashMap<String, TileGroup> groups, int hiddenUnderHills) {
         this.groups = groups;
+        this.hiddenUnderHills = hiddenUnderHills;
     }
 
     /**
@@ -49,6 +53,15 @@ public class TilePack implements Serializable {
     }
 
     /**
+     * Gets number of tiles secretly put face-down under the hill
+     *
+     * @return number of tiles
+     */
+    public int getHiddenUnderHills() {
+        return hiddenUnderHills;
+    }
+
+    /**
      * Sets the groups making up this pack.
      *
      * @param groups the groups
@@ -56,7 +69,18 @@ public class TilePack implements Serializable {
      */
     public TilePack setGroups(LinkedHashMap<String, TileGroup> groups) {
         if (this.groups == groups) return this;
-        return new TilePack(groups);
+        return new TilePack(groups, hiddenUnderHills);
+    }
+
+    /**
+     * Sets the number of tiles hidden under hills
+     *
+     * @param hiddenUnderHills tile count
+     * @return a new instance with the count set
+     */
+    public TilePack setHiddenUnderHills(int hiddenUnderHills) {
+        if (this.hiddenUnderHills == hiddenUnderHills) return this;
+        return new TilePack(groups, hiddenUnderHills);
     }
 
     private Stream<TileGroup> getActiveGroups() {
@@ -73,7 +97,7 @@ public class TilePack implements Serializable {
      * @return the total size of this pack
      */
     public int totalSize() {
-        return Stream.ofAll(groups.values()).map(TileGroup::size).sum().intValue();
+        return Stream.ofAll(groups.values()).map(TileGroup::size).sum().intValue() - hiddenUnderHills;
     }
 
     /**
@@ -82,7 +106,7 @@ public class TilePack implements Serializable {
      * @return the size of this pack
      */
     public int size() {
-        return getActiveGroups().map(TileGroup::size).sum().intValue();
+        return getActiveGroups().map(TileGroup::size).sum().intValue() - hiddenUnderHills;
     }
 
     /**
@@ -91,7 +115,14 @@ public class TilePack implements Serializable {
      * @return {@code true} if this pack is empty, {@code false} otherwise
      */
     public boolean isEmpty() {
-        return size() == 0;
+        return size() - hiddenUnderHills <= 0;
+    }
+
+    /**
+     * Size used for random when tile is drawn.
+     */
+    protected int getInternalSize() {
+        return size() + hiddenUnderHills;
     }
 
     /**
@@ -149,13 +180,14 @@ public class TilePack implements Serializable {
     }
 
     /**
-     * Draws the tile at position {@code index}.
+     * Draws random tile  {@code index}.
      *
-     * @param index the position of the tile to remove
+     * @param radom random number generator
      * @return a tuple containing both the tile drawn and the tile pack it belongs to
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */
-    public Tuple2<TileDefinition, TilePack> drawTile(int index) {
+    public Tuple2<TileDefinition, TilePack> drawTile(Random random) {
+        int index = random.nextInt(getInternalSize());
         for (TileGroup group : getActiveGroups()) {
             if (index < group.size()) {
                 Vector<TileDefinition> tiles = group.getTiles();
