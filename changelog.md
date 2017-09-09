@@ -1,35 +1,51 @@
 # Version history
 
 ## 4.0
-* fall 2017
+*fall 2017*
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
 * saved game format changed to json (and instead of game snapshot contains just action history)
 * removed Catapult tiles, with many other expansion this extra tiles makes not much sense
-* Princess and Dragon:
-    - PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way:
-      If enabled and there is option to remove princess no other action is allowed.
-* Tower:
-    - If players has several prisoners belonging to the other player
-      during prisoners exchange, the owner may decide which prisoner should be returned.
-* Bridges, Castles, and Bazaars:
-    - Bazaar auction is not triggered when tile is discarded.
-    - When tile can place only with bridge, player is allowed to pass and let the tile to be discarded.
-    - fix: When there is no legal placement for auctioned tile, tile is discarded and random tile is drawn instead.
-    - Display bridge preview if bridge placement is mandatory (and bridge must be placed as part of tile placement).
-* River:
-    - Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
-      (changed according to New Carcassonne (C II) rules)
-* Tunnel:
-    - added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players game or two token sets for 3 player game)
-* Russion promos:
-    - Baba Yaga's hut is now not involved in shrine-cloister challenges (when player together with The Cult expansion)
-* technical notes:
-    - Grand rewrite in favor of functional programming and immutable data structure.
-    - vavr.io library is awesome!
+* added The Count expansion
+
+### Current expansions changes
+
+#### Princess and Dragon
+
+PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way: If enabled and there is option to remove princess no other action is allowed.
+
+#### Tower
+
+If players has several prisoners belonging to the other player during prisoners exchange,
+the owner may decide which prisoner should be returned.
+
+#### Bridges, Castles, and Bazaars
+
+* Bazaar auction is not triggered when tile is discarded.
+* When tile can place only with bridge, player is allowed to pass and let the tile to be discarded.
+* fix: When there is no legal placement for auctioned tile, tile is discarded and random tile is drawn instead.
+* Display bridge preview if bridge placement is mandatory (and bridge must be placed as part of tile placement).
+
+#### River
+
+Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
+(changed according to New Carcassonne (C II) rules)
+
+#### Tunnel
+
+Added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players game or two token sets for 3 player game)
+
+#### Russion promos
+
+Baba Yaga's hut is now not involved in shrine-cloister challenges (when played together with The Cult expansion)
+
+### Technical Notes
+
+* Grand rewrite in favor of functional programming and immutable data structure.
+* vavr.io library is awesome!
 
 ## 3.4.3
-*2017-05-08
+*2017-05-08*
 
 * MacOS: application title is again JCloisterZone
 * fixed: crash caused by two "Undo"s triggered in short period
