@@ -1,7 +1,5 @@
 package com.jcloisterzone.debug;
 
-import java.util.ArrayList;
-
 import com.jcloisterzone.board.TileDefinition;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
@@ -21,8 +19,9 @@ public class ForcedDrawTilePack extends TilePack {
 
     private final Queue<String> drawList;
 
-    public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, ArrayList<String> draw) {
-        this(groups, Queue.ofAll(draw));
+    @SuppressWarnings("unchecked")
+    public ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, java.util.Map<String, Object> params) {
+        this(groups, Queue.ofAll((java.util.List<String>) params.get("drawOrder")));
     }
 
     private ForcedDrawTilePack(LinkedHashMap<String, TileGroup> groups, Queue<String> drawList) {

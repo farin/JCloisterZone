@@ -7,7 +7,9 @@
   "annotations": {
     "tilePack": {
       "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
-      "params": ["BA.Rr", "BA.CcRr+", "BA.CcRr", "BA.C", "BA.RRRR", "BA.C", "BA.LR", "#END"]
+      "params": {
+        "drawOrder": ["BA.Rr", "BA.CcRr+", "BA.CcRr", "BA.C", "BA.RRRR", "BA.C", "BA.LR", "#END"]
+      }
     }
   },
   "slots": [

@@ -140,7 +140,8 @@ Force drawn tiles.
 game_annotation:
   tilePack:
     className: "com.jcloisterzone.debug.ForcedDrawTilePack"
-    params: ["BA.C", "BA.C", "BA.C"]
+    params:
+      drawOrder: ["BA.C", "BA.C", "BA.C"]
 ```
 
 Final scoring can be forced by `#END` at end of the params list.

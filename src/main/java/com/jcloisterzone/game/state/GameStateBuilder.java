@@ -113,7 +113,7 @@ public class GameStateBuilder {
             try {
                 String clsName = (String) tilePackAnnotation.get("className");
                 Object params = tilePackAnnotation.get("params");
-                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, params.getClass()).newInstance(state.getTilePack().getGroups(), params);
+                TilePack replacement = (TilePack) Class.forName(clsName).getConstructor(LinkedHashMap.class, java.util.Map.class).newInstance(state.getTilePack().getGroups(), params);
                 state = state.setTilePack(replacement);
             } catch (Exception e) {
                 throw new RuntimeException(e);
