@@ -67,7 +67,7 @@ public class SavedGame implements Serializable {
         }
         clocks = game.getClocks().map(PlayerClock::getTime).toJavaStream().mapToLong(Long::longValue).toArray();
         setup = new SavedGameSetup();
-        setup.setExpansions(game.getSetup().getExpansions().toJavaSet());
+        setup.setExpansions(game.getSetup().getExpansions().toJavaMap());
         setup.setRules(game.getSetup().getRules().toJavaMap());
         replay = game.getReplay().reverse().toJavaList();
     }
@@ -367,7 +367,7 @@ public class SavedGame implements Serializable {
      * Represents a saved game setup.
      */
     public static class SavedGameSetup {
-        private Set<Expansion> expansions;
+        private Map<Expansion, Integer> expansions;
         private Map<Rule, Object> rules;
 
         /**
@@ -375,7 +375,7 @@ public class SavedGame implements Serializable {
          *
          * @return the expansions
          */
-        public Set<Expansion> getExpansions() {
+        public Map<Expansion, Integer> getExpansions() {
             return expansions;
         }
 
@@ -384,7 +384,7 @@ public class SavedGame implements Serializable {
          *
          * @param expansions the expansions
          */
-        public void setExpansions(Set<Expansion> expansions) {
+        public void setExpansions(Map<Expansion, Integer> expansions) {
             this.expansions = expansions;
         }
 
@@ -413,7 +413,7 @@ public class SavedGame implements Serializable {
          */
         public GameSetup asGameSetup() {
             return new GameSetup(
-                io.vavr.collection.HashSet.ofAll(expansions),
+                io.vavr.collection.HashMap.ofAll(expansions),
                 io.vavr.collection.HashMap.ofAll(rules)
             );
         }

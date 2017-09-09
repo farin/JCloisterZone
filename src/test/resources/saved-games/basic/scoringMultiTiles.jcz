@@ -21,9 +21,9 @@
   ],
   "clocks": [0, 0],
   "setup": {
-    "expansions": [
-      "BASIC"
-    ],
+    "expansions": {
+      "BASIC": 1
+    },
     "rules": {}
   },
   "replay": [

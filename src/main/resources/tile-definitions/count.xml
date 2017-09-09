@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pack>
-    <tile id="1" group="count">
+<pack maxCount="1">
+    <tile id="1">
         <road>W</road>
         <farm>WR NL NR EL</farm>
         <farm>WL SR</farm>
         <position x="-2" y="-1"/>
     </tile>
-    <tile id="2" group="count">
+    <tile id="2">
         <farm>WR NL NR EL</farm>
         <position x="-1" y="-1"/>
     </tile>
-    <tile id="3" group="count">
+    <tile id="3">
         <farm>WR NL NR EL</farm>
         <position x="0" y="-1"/>
     </tile>
-    <tile id="4" group="count">
+    <tile id="4">
         <road>N</road>
         <farm>WR NL</farm>
         <farm>NR EL ER SL</farm>
         <position x="1" y="-1"/>
     </tile>
-    <tile id="5" group="count">
+    <tile id="5">
         <farm>SR WL WR NL</farm>
         <position x="-2" y="0"/>
     </tile>
-    <tile id="6" group="count">
+    <tile id="6">
         <position x="-1" y="0"/>
     </tile>
-    <tile id="7" group="count">
+    <tile id="7">
         <position x="0" y="0"/>
     </tile>
-    <tile id="8" group="count">
+    <tile id="8">
         <farm>NR EL ER SL</farm>
         <position x="1" y="0"/>
     </tile>
-    <tile id="9" group="count">
+    <tile id="9">
         <city castle-base="true">S</city>
         <farm city="S">WL WR NL ER</farm>
         <position x="-2" y="1"/>
     </tile>
-    <tile id="10" group="count">
+    <tile id="10">
         <farm>ER SL SR WL</farm>
         <position x="-1" y="1"/>
     </tile>
-    <tile id="11" group="count">
+    <tile id="11">
         <road>S</road>
         <farm>ER SL</farm>
         <farm>SR WL</farm>
         <position x="0" y="1"/>
     </tile>
-    <tile id="12" group="count">
+    <tile id="12">
         <city castle-base="true">E</city>
         <farm city="E">NR SL SR WL</farm>
         <position x="1" y="1"/>

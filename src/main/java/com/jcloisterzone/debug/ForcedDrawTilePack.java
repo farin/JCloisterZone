@@ -5,7 +5,6 @@ import java.util.Random;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.game.phase.GameOverPhase;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
@@ -30,11 +29,17 @@ public class ForcedDrawTilePack extends TilePack {
 
     @SuppressWarnings("unchecked")
     private static Queue<String> paramsToDrawQueue(java.util.Map<String, Object> params) {
+        if (params == null) {
+            return Queue.empty();
+        }
         java.util.List<String> drawOrder = (java.util.List<String>) params.get("drawOrder");
         return drawOrder == null ? Queue.empty() : Queue.ofAll(drawOrder);
     }
 
     private static Integer paramsToDrawLimit(java.util.Map<String, Object> params) {
+        if (params == null) {
+            return null;
+        }
         Object value = params.get("drawLimit");
         if (value == null) {
             return null;

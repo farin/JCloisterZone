@@ -461,11 +461,8 @@ public class CreateGamePanel extends ThemedJPanel {
     }
 
     private PresetConfig createCurrentConfig() {
-        List<String> expansions = new ArrayList<>();
-        for (Expansion exp : game.getSetup().getExpansions()) {
-            if (exp == Expansion.BASIC) continue;
-            expansions.add(exp.name());
-        }
+        Map<String, Integer> expansions = game.getSetup().getExpansions()
+            .mapKeys(exp -> exp.name()).toJavaMap();
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
         config.setRules(game.getSetup().getRules().toJavaMap());
@@ -524,7 +521,7 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
-                    SetExpansionMessage msg = new SetExpansionMessage(exp, chbox.isSelected());
+                    SetExpansionMessage msg = new SetExpansionMessage(exp, chbox.isSelected() ? 1 : 0);
                     gc.getConnection().send(msg);
                 }
             });
@@ -557,13 +554,11 @@ public class CreateGamePanel extends ThemedJPanel {
         }
     }
 
-    public void updateExpansion(Expansion expansion, Boolean enabled) {
+    public void updateExpansion(Expansion expansion, int count) {
         JCheckBox chbox = (JCheckBox) expansionComponents.get(expansion)[0];
-        if (chbox.isSelected() != enabled) {
-            chbox.setSelected(enabled);
-            if (expansion != Expansion.BASIC) { // hardcoded exception
-                UiUtils.highlightComponent(chbox);
-            }
+        if (chbox.isSelected() != count > 0) {
+            chbox.setSelected(count > 0);
+            UiUtils.highlightComponent(chbox);
         }
     }
 
@@ -674,7 +669,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
     @Subscribe
     public void updateExpansion(ExpansionChangedEvent ev) {
-        updateExpansion(ev.getExpansion(), ev.isEnabled());
+        updateExpansion(ev.getExpansion(), ev.getCount());
     }
 
     @Subscribe

@@ -377,14 +377,14 @@ public class ClientMessageListener implements MessageListener {
         Game game = getGame(msg);
         game.setSetup(
             new GameSetup(
-                HashSet.ofAll(msg.getExpansions()),
+                io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
                 io.vavr.collection.HashMap.ofAll(msg.getRules())
             )
         );
 
         for (Expansion exp : Expansion.values()) {
             if (!exp.isImplemented()) continue;
-            game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().contains(exp)));
+            game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().get(exp).getOrElse(0)));
         }
         for (Rule rule : Rule.values()) {
             Object value = game.getSetup().getRules().get(rule).getOrNull();
@@ -397,10 +397,11 @@ public class ClientMessageListener implements MessageListener {
     public void handleSetExpansion(SetExpansionMessage msg) {
         Game game = getGame(msg);
         Expansion expansion = msg.getExpansion();
+        int count = msg.getCount();
         game.mapSetup(setup ->  setup.mapExpansions(expansions ->
-            msg.isEnabled() ? expansions.add(expansion) : expansions.remove(expansion)
+             count > 0 ? expansions.put(expansion, count) : expansions.remove(expansion)
         ));
-        game.post(new ExpansionChangedEvent(expansion, msg.isEnabled()));
+        game.post(new ExpansionChangedEvent(expansion, count));
     }
 
     @WsSubscribe

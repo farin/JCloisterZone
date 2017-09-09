@@ -126,7 +126,7 @@ public class SimpleServer extends WebSocketServer  {
             gameId = KeyUtils.createRandomId();
             initialSeed = random.nextLong();
             gameSetup = new GameSetup(
-                HashSet.of(Expansion.BASIC),
+                io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
                 Rule.getDefaultRules()
             );
             replay = new ArrayList<>();
@@ -207,7 +207,7 @@ public class SimpleServer extends WebSocketServer  {
     private GameMessage newGameMessage(boolean includeReplay) {
         GameSetupMessage setupMessage = new GameSetupMessage(
             gameSetup.getRules().toJavaMap(),
-            gameSetup.getExpansions().toJavaSet()
+            gameSetup.getExpansions().toJavaMap()
         );
         setupMessage.setGameId(gameId);
 
@@ -330,7 +330,7 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         gameSetup = new GameSetup(
-            HashSet.ofAll(msg.getExpansions()),
+            io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
             io.vavr.collection.HashMap.ofAll(msg.getRules())
         );
         broadcast(msg);
@@ -398,7 +398,7 @@ public class SimpleServer extends WebSocketServer  {
             return;
         }
         gameSetup = gameSetup.mapExpansions(expansions ->
-            msg.isEnabled() ? expansions.add(expansion) : expansions.remove(expansion)
+            msg.getCount() > 0 ? expansions.put(expansion, msg.getCount()) : expansions.remove(expansion)
         );
         broadcast(msg);
     }
@@ -424,9 +424,9 @@ public class SimpleServer extends WebSocketServer  {
             for (ServerPlayerSlot slot : slots) {
                 if (!slot.isOccupied()) continue;
                 playerCount++;
-                if (slot.getSupportedExpansions() != null) {
-                    gameSetup.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
-                }
+//                if (slot.getSupportedExpansions() != null) {
+//                    gameSetup.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+//                }
                 if (gameSetup.getBooleanValue(Rule.RANDOM_SEATING_ORDER)) {
                     slot.setSerial(random.nextInt());
                 }

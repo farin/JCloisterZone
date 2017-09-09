@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -159,13 +160,12 @@ public class ChannelPanel extends ThemedJPanel {
         private JButton joinButton, abandonButton;
 
         private Joiner joiner = Joiner.on(", ").skipNulls();
-        private Set<Expansion> expansions;
+        private Map<Expansion, Integer> expansions;
 
         public GameItemPanel(final GameController gc) {
             final Game game = gc.getGame();
             setLayout(new MigLayout());
-            expansions = game.getSetup().getExpansions().toJavaSet();
-            expansions.remove(Expansion.BASIC);
+            expansions = game.getSetup().getExpansions().toJavaMap();
 
             name = new ThemedJLabel(game.getName());
             name.setFont(FONT_GAME_TITLE);
@@ -236,7 +236,8 @@ public class ChannelPanel extends ThemedJPanel {
         }
 
         private void updateExpansionsLabel() {
-            String label = joiner.join(expansions);
+            // TODO show counts if > 0
+            String label = joiner.join(expansions.keySet());
             if (label.length() == 0) label = Expansion.BASIC.toString();
             expansionNames.setText(_("Expansions") + ": " + label);
         }
@@ -249,8 +250,8 @@ public class ChannelPanel extends ThemedJPanel {
         @Subscribe
         public void expansionsChanged(ExpansionChangedEvent ev) {
             if (ev.getExpansion() == Expansion.BASIC) return;
-            if (ev.isEnabled()) {
-                expansions.add(ev.getExpansion());
+            if (ev.getCount() > 0) {
+                expansions.put(ev.getExpansion(), ev.getCount());
             } else {
                 expansions.remove(ev.getExpansion());
             }

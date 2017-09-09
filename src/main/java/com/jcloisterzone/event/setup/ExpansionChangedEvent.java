@@ -6,23 +6,23 @@ import com.jcloisterzone.event.Event;
 public class ExpansionChangedEvent extends Event {
 
     private final Expansion expansion;
-    private final boolean enabled;
+    private final int count;
 
-    public ExpansionChangedEvent(Expansion expansion, boolean enabled) {
+    public ExpansionChangedEvent(Expansion expansion, int count) {
         this.expansion = expansion;
-        this.enabled = enabled;
+        this.count = count;
     }
 
     public Expansion getExpansion() {
         return expansion;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public int getCount() {
+        return count;
     }
 
     @Override
     public String toString() {
-        return super.toString() + " " + expansion.name() + (enabled ? " on" : " off");
+        return super.toString() + " " + expansion.name() + " " + count;
     }
 }

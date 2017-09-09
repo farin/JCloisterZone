@@ -91,13 +91,13 @@ public class Config {
     }
 
     public static class PresetConfig {
-        private List<String> expansions;
+        private Map<String, Integer> expansions;
         private Map<Rule, Object> rules;
 
-        public List<String> getExpansions() {
-            return expansions == null ? Collections.<String>emptyList() : expansions;
+        public Map<String, Integer> getExpansions() {
+            return expansions == null ? Collections.<String, Integer>emptyMap() : expansions;
         }
-        public void setExpansions(List<String> expansions) {
+        public void setExpansions(Map<String, Integer> expansions) {
             this.expansions = expansions;
         }
         public Map<Rule, Object> getRules() {
@@ -108,18 +108,12 @@ public class Config {
         }
 
         public void updateGameSetup(Connection conn, String gameId) {
-            EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
-            expansionSet.add(Expansion.BASIC);
-            if (expansions != null) {
-                for (String expName : expansions) {
-                    try {
-                        expansionSet.add(Expansion.valueOf(expName));
-                    } catch (IllegalArgumentException ex) {
-                        LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
-                    }
-                }
-            }
-            GameSetupMessage msg = new GameSetupMessage(rules, expansionSet);
+            GameSetupMessage msg = new GameSetupMessage(
+                rules,
+                io.vavr.collection.HashMap.ofAll(expansions)
+                    .mapKeys(name -> Expansion.valueOf(name))
+                    .toJavaMap()
+            );
             msg.setGameId(gameId);
             conn.send(msg);
         }

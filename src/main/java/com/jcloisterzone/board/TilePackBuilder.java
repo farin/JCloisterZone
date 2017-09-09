@@ -71,9 +71,8 @@ public class TilePackBuilder {
     private final TileBuilder tileBuilder = new TileBuilder();
 
     protected GameState state;
-    protected Set<Expansion> expansions;
+    protected Map<Expansion, Integer> expansions;
     protected Config config;
-    protected Map<Expansion, Element> defs;
 
     private java.util.Set<String> usedIds = new java.util.HashSet<>(); //for assertion only
 
@@ -100,11 +99,8 @@ public class TilePackBuilder {
         this.config = config;
     }
 
-    public void setExpansions(Set<Expansion> expansions) {
+    public void setExpansions(Map<Expansion, Integer> expansions) {
         this.expansions = expansions;
-        defs = Stream.ofAll(expansions).map(
-            exp -> new Tuple2<>(exp, getExpansionDefinition(exp))
-        ).collect(LinkedHashMap.collector());
     }
 
     public Stream<TileCount> getExpansionTiles(Expansion expansion) {
@@ -114,7 +110,7 @@ public class TilePackBuilder {
             if (Tile.ABBEY_TILE_ID.equals(tileId)) {
                 return new TileCount(tileId, null);
             } else {
-                return new TileCount(tileId, getTileCount(tileElement, tileId));
+                return new TileCount(tileId, getTileCount(tileElement, tileId, 1));
             }
         });
     }
@@ -127,7 +123,7 @@ public class TilePackBuilder {
             Element tileElement = (Element) nl.item(i);
             String tileId = getTileId(expansion, tileElement);
             if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
-                size += getTileCount(tileElement, tileId);
+                size += getTileCount(tileElement, tileId, 1);
             }
         }
         return size;
@@ -163,11 +159,12 @@ public class TilePackBuilder {
             );
     }
 
-    protected int getTileCount(Element card, String tileId) {
+    protected int getTileCount(Element tileEl, String tileId, int expansionCount) {
         if (Tile.ABBEY_TILE_ID.equals(tileId)) {
             return 1;
         } else {
-            return attributeIntValue(card, "count", 1);
+            int baseCount = attributeIntValue(tileEl, "count", 1);
+            return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE)); 
         }
     }
 
@@ -207,7 +204,11 @@ public class TilePackBuilder {
     }
 
     public Tiles createTilePack() {
-        defs.forEach((expansion, element) -> {
+        expansions.forEach(t -> {
+            Expansion expansion = t._1;
+            Element element = getExpansionDefinition(expansion);
+            int expansionCount = Math.min(t._2, attributeIntValue(element, "maxCount", 5));
+
             NodeList nl = element.getElementsByTagName("tile");
             XMLUtils.elementStream(nl).forEach(tileElement -> {
                 String capabilityClass = tileElement.getAttribute("if-capability");
@@ -225,7 +226,7 @@ public class TilePackBuilder {
 
                 String tileId = getTileId(expansion, tileElement);
                 List<Preplaced> positions = getPreplacedPositions(tileId, tileElement).toList();
-                int count = getTileCount(tileElement, tileId);
+                int count = getTileCount(tileElement, tileId, expansionCount);
 
                 Tile tile;
                 try {
@@ -244,7 +245,7 @@ public class TilePackBuilder {
                         positions = positions.pop();
                         //hard coded exceptions - should be declared in pack def
                         // TODO add <remap> ... directive
-                        if (expansions.contains(Expansion.COUNT)) {
+                        if (expansions.containsKey(Expansion.COUNT)) {
                             if (tileId.equals("BA.RCr")) continue;
                             if (tileId.equals("R1.I.s") ||
                                 tileId.equals("R2.I.s") ||
@@ -254,7 +255,7 @@ public class TilePackBuilder {
                             if (tileId.equals("WR.CFR")) {
                                 pos = new Position(-2, -2);
                             }
-                        } else if (expansions.contains(Expansion.WIND_ROSE)) {
+                        } else if (expansions.containsKey(Expansion.WIND_ROSE)) {
                             if (state.getCapabilities().contains(RiverCapability.class)) {
                                 if (tileId.equals("WR.CFR")) {
                                     pos = new Position(0, 1);
@@ -264,8 +265,8 @@ public class TilePackBuilder {
                         logger.info("Setting initial placement {} for {}", pos, tileId);
                     }
                     if (pos != null) {
-                        Tuple2<PlacedTile, Integer> t = preplacedTiles.get(pos).getOrNull();
-                        if (t == null || t._2 < priority) {
+                        Tuple2<PlacedTile, Integer> pt = preplacedTiles.get(pos).getOrNull();
+                        if (pt == null || pt._2 < priority) {
                             preplacedTiles = preplacedTiles.put(pos,
                                 new Tuple2<>(new PlacedTile(tile, pos, Rotation.R0), priority)
                             );

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
@@ -12,7 +11,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
@@ -21,13 +19,14 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
     @JsonAdapter(RulesMapAdapter.class)
     private Map<Rule, Object> rules;
-    private Set<Expansion> expansions;
+    @JsonAdapter(ExpansionMapAdapter.class)
+    private Map<Expansion, Integer> expansions;
     //private Set<Class<? extends Capability<?>>> capabilityClasses;
 
     public GameSetupMessage() {
     }
 
-    public GameSetupMessage(Map<Rule, Object> rules, Set<Expansion> expansions
+    public GameSetupMessage(Map<Rule, Object> rules, Map<Expansion, Integer> expansions
             /*Set<Class<? extends Capability<?>>> capabilityClasses*/) {
         this.rules = rules;
         this.expansions = expansions;
@@ -51,11 +50,11 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
         this.rules = rules;
     }
 
-    public Set<Expansion> getExpansions() {
+    public Map<Expansion, Integer> getExpansions() {
         return expansions;
     }
 
-    public void setExpansions(Set<Expansion> expansions) {
+    public void setExpansions(Map<Expansion, Integer> expansions) {
         this.expansions = expansions;
     }
 
@@ -99,6 +98,32 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
                 } else {
                     result.put(rule, rule.unpackValue(in.nextString()));
                 }
+            }
+            in.endObject();
+            return result;
+        }
+    }
+
+    public static class ExpansionMapAdapter extends TypeAdapter<Map<Expansion, Integer>> {
+
+        @Override
+        public void write(JsonWriter out, Map<Expansion, Integer> value) throws IOException {
+            out.beginObject();
+            for (Entry<Expansion, Integer> entry : value.entrySet()) {
+                out.name(entry.getKey().name());
+                out.value(entry.getValue().intValue());
+            }
+            out.endObject();
+        }
+
+        @Override
+        public Map<Expansion, Integer> read(JsonReader in) throws IOException {
+            Map<Expansion, Integer> result = new HashMap<>();
+            in.beginObject();
+            while (in.hasNext()) {
+                Expansion exp = Expansion.valueOf(in.nextName());
+                JsonToken p = in.peek();
+                result.put(exp, in.nextInt());
             }
             in.endObject();
             return result;

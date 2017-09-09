@@ -18,32 +18,32 @@ public class GameSetup implements Serializable, RulesMixin {
 
     private static final long serialVersionUID = 1L;
 
-    private final Set<Expansion> expansions;
+    private final Map<Expansion, Integer> expansions;
     private final Map<Rule, Object> rules;
 
     // for now just cached value derived from expansions
     private Set<Class<? extends Capability<?>>> capabilities;
 
-    public GameSetup(Set<Expansion> expansions, /*Set<Class<? extends Capability<?>>> capabilities,*/ Map<Rule, Object> rules) {
+    public GameSetup(Map<Expansion, Integer> expansions, /*Set<Class<? extends Capability<?>>> capabilities,*/ Map<Rule, Object> rules) {
         this.expansions = expansions;
         //this.capabilities = capabilities;
         this.rules = rules;
     }
 
     public boolean hasExpansion(Expansion expansion) {
-        return expansions.contains(expansion);
+        return expansions.containsKey(expansion);
     }
 
-    public Set<Expansion> getExpansions() {
+    public Map<Expansion, Integer> getExpansions() {
         return expansions;
     }
 
-    public GameSetup setExpansions(Set<Expansion> expansions) {
+    public GameSetup setExpansions(Map<Expansion, Integer> expansions) {
         if (this.expansions == expansions) return this;
         return new GameSetup(expansions, rules);
     }
 
-    public GameSetup mapExpansions(Function<Set<Expansion>, Set<Expansion>> mapper) {
+    public GameSetup mapExpansions(Function<Map<Expansion, Integer>, Map<Expansion, Integer>> mapper) {
         return setExpansions(mapper.apply(expansions));
     }
 
@@ -66,7 +66,7 @@ public class GameSetup implements Serializable, RulesMixin {
              return capabilities;
         }
 
-        Set<Class<? extends Capability<?>>> capabilities = Stream.ofAll(expansions)
+        Set<Class<? extends Capability<?>>> capabilities = Stream.ofAll(expansions.keySet())
             .flatMap(exp -> Arrays.asList(exp.getCapabilities()))
             .toSet();
 
