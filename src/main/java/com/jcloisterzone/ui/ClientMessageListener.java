@@ -28,7 +28,7 @@ import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
@@ -386,7 +386,7 @@ public class ClientMessageListener implements MessageListener {
             if (!exp.isImplemented()) continue;
             game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().contains(exp)));
         }
-        for (CustomRule rule : CustomRule.values()) {
+        for (Rule rule : Rule.values()) {
             Object value = game.getSetup().getRules().get(rule).getOrNull();
             game.post(new RuleChangeEvent(rule, value));
         }
@@ -406,7 +406,7 @@ public class ClientMessageListener implements MessageListener {
     @WsSubscribe
     public void handleSetRule(SetRuleMessage msg) {
         Game game = getGame(msg);
-        CustomRule rule = msg.getRule();
+        Rule rule = msg.getRule();
         Object value = msg.getValue();
         game.mapSetup(setup ->  setup.mapRules(rules ->
             msg.getValue() == null ? rules.remove(rule) : rules.put(rule, value)

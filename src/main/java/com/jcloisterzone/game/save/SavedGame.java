@@ -11,7 +11,7 @@ import java.util.Set;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerClock;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
@@ -368,7 +368,7 @@ public class SavedGame implements Serializable {
      */
     public static class SavedGameSetup {
         private Set<Expansion> expansions;
-        private Map<CustomRule, Object> rules;
+        private Map<Rule, Object> rules;
 
         /**
          * Gets the expansions.
@@ -393,7 +393,7 @@ public class SavedGame implements Serializable {
          *
          * @return the rules
          */
-        public Map<CustomRule, Object> getRules() {
+        public Map<Rule, Object> getRules() {
             return rules;
         }
 
@@ -402,7 +402,7 @@ public class SavedGame implements Serializable {
          *
          * @param rules the rules
          */
-        public void setRules(Map<CustomRule, Object> rules) {
+        public void setRules(Map<Rule, Object> rules) {
             this.rules = rules;
         }
 

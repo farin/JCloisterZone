@@ -16,7 +16,7 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -159,7 +159,7 @@ public class TilePackBuilder {
         return expansion == Expansion.TUNNEL ||
             (
                 state.getCapabilities().contains(TunnelCapability.class) &&
-                state.getBooleanValue(CustomRule.TUNNELIZE_ALL_EXPANSIONS)
+                state.getBooleanValue(Rule.TUNNELIZE_ALL_EXPANSIONS)
             );
     }
 

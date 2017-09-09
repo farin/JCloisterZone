@@ -25,7 +25,7 @@ import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -74,7 +74,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
     }
 
     private void initComponents(GameState state) {
-        noAuction = state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
+        noAuction = state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
         setOpaque(true);
         setBackground(client.getTheme().getTransparentPanelBg());

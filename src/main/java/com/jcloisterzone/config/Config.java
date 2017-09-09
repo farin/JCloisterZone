@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
@@ -92,7 +92,7 @@ public class Config {
 
     public static class PresetConfig {
         private List<String> expansions;
-        private Map<CustomRule, Object> rules;
+        private Map<Rule, Object> rules;
 
         public List<String> getExpansions() {
             return expansions == null ? Collections.<String>emptyList() : expansions;
@@ -100,10 +100,10 @@ public class Config {
         public void setExpansions(List<String> expansions) {
             this.expansions = expansions;
         }
-        public Map<CustomRule, Object> getRules() {
+        public Map<Rule, Object> getRules() {
             return rules;
         }
-        public void setRules(Map<CustomRule, Object> rules) {
+        public void setRules(Map<Rule, Object> rules) {
             this.rules = rules;
         }
 

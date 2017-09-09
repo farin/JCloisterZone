@@ -11,7 +11,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -79,7 +79,7 @@ public class BazaarPhase extends Phase {
         int supplyIndex = msg.getSupplyIndex();
         int price = msg.getPrice();
 
-        boolean noAuction = state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
+        boolean noAuction = state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
         Player player = state.getActivePlayer();
         PlayerAction<?> action = state.getPlayerActions().getActions().get();

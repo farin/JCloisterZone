@@ -46,7 +46,7 @@ import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
@@ -89,7 +89,7 @@ public class CreateGamePanel extends ThemedJPanel {
     private SpinnerNumberModel timeLimitModel;
 
     private Map<Expansion, JComponent[]> expansionComponents = new HashMap<>();
-    private Map<CustomRule, JCheckBox> ruleCheckboxes = new HashMap<>();
+    private Map<Rule, JCheckBox> ruleCheckboxes = new HashMap<>();
 
     protected final transient Logger logger = LoggerFactory
             .getLogger(getClass());
@@ -195,9 +195,9 @@ public class CreateGamePanel extends ThemedJPanel {
             }
         }
         if (mutableSlots) {
-            JCheckBox randomSeating = createRuleCheckbox(CustomRule.RANDOM_SEATING_ORDER, true);
+            JCheckBox randomSeating = createRuleCheckbox(Rule.RANDOM_SEATING_ORDER, true);
             playersPanel.add(randomSeating, "wrap, gaptop 10");
-            ruleCheckboxes.put(CustomRule.RANDOM_SEATING_ORDER, randomSeating);
+            ruleCheckboxes.put(Rule.RANDOM_SEATING_ORDER, randomSeating);
         }
 
         playersPanel.add(createClockPanel(), "wrap, gaptop 10, grow");
@@ -229,7 +229,7 @@ public class CreateGamePanel extends ThemedJPanel {
         scrolled.add(rulesPanel, "cell 2 0,grow");
 
         Expansion prev = Expansion.BASIC;
-        for (CustomRule rule : CustomRule.values()) {
+        for (Rule rule : Rule.values()) {
             if (rule.getExpansion() == null) continue;
             if (prev != rule.getExpansion()) {
                 prev = rule.getExpansion();
@@ -258,7 +258,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         clockPanel.setLayout(new MigLayout("", "[][][]", ""));
 
-        Integer value = (Integer) game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull();
+        Integer value = (Integer) game.getSetup().getRules().get(Rule.CLOCK_PLAYER_TIME).getOrNull();
         timeLimitChbox = new ThemedJCheckBox(_("player time limit"), value != null);
         timeLimitChbox.setEnabled(mutableSlots);
         timeLimitSpinner = new JSpinner();
@@ -279,7 +279,7 @@ public class CreateGamePanel extends ThemedJPanel {
                     int value = timeLimitChbox.isSelected()
                         ? 60 * timeLimitModel.getNumber().intValue()
                         : null;
-                    SetRuleMessage msg = new SetRuleMessage(CustomRule.CLOCK_PLAYER_TIME, value);
+                    SetRuleMessage msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
                     gc.getConnection().send(msg);
                 }
             });
@@ -288,8 +288,8 @@ public class CreateGamePanel extends ThemedJPanel {
                 public void stateChanged(ChangeEvent e) {
                     if (timeLimitChbox.isSelected()) {
                         Integer value = timeLimitModel.getNumber().intValue() * 60;
-                        if (value != game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).getOrNull()) {
-                            SetRuleMessage msg = new SetRuleMessage(CustomRule.CLOCK_PLAYER_TIME, value);
+                        if (value != game.getSetup().getRules().get(Rule.CLOCK_PLAYER_TIME).getOrNull()) {
+                            SetRuleMessage msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
                             gc.getConnection().send(msg);
                         }
                     }
@@ -493,7 +493,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
     }
 
-    private JCheckBox createRuleCheckbox(final CustomRule rule,
+    private JCheckBox createRuleCheckbox(final Rule rule,
             boolean mutableSlots) {
         JCheckBox chbox = new ThemedJCheckBox(rule.getLabel(), game.getSetup().getBooleanValue(rule));
         if (mutableSlots) {
@@ -532,7 +532,7 @@ public class CreateGamePanel extends ThemedJPanel {
         return chbox;
     }
 
-    public void updateCustomRule(CustomRule rule, Object value) {
+    public void updateRule(Rule rule, Object value) {
         if (rule.getType().equals(Boolean.class)) {
             JCheckBox chbox = ruleCheckboxes.get(rule);
             boolean enabled = value == null ? false : (Boolean) value;
@@ -540,11 +540,11 @@ public class CreateGamePanel extends ThemedJPanel {
                 chbox.setSelected(enabled);
                 UiUtils.highlightComponent(chbox);
             }
-            if (rule == CustomRule.RANDOM_SEATING_ORDER) {
+            if (rule == Rule.RANDOM_SEATING_ORDER) {
                 updateSerialLabels();
             }
         } else {
-            if (rule == CustomRule.CLOCK_PLAYER_TIME) {
+            if (rule == Rule.CLOCK_PLAYER_TIME) {
                 if (value == null) {
                     timeLimitChbox.setSelected(false);
                     timeLimitSpinner.setEnabled(false);
@@ -614,7 +614,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         if (mutableSlots && !serials.isEmpty()) {
             Collections.sort(serials);
-            boolean randomSeating = game.getSetup().getBooleanValue(CustomRule.RANDOM_SEATING_ORDER);
+            boolean randomSeating = game.getSetup().getBooleanValue(Rule.RANDOM_SEATING_ORDER);
             for (Component c : playersPanel.getComponents()) {
                 if (!(c instanceof CreateGamePlayerPanel)) continue;
                 CreateGamePlayerPanel playerPanel = (CreateGamePlayerPanel) c;
@@ -668,8 +668,8 @@ public class CreateGamePanel extends ThemedJPanel {
     }
 
     @Subscribe
-    public void updateCustomRule(RuleChangeEvent ev) {
-        updateCustomRule(ev.getRule(), ev.getValue());
+    public void updateRule(RuleChangeEvent ev) {
+        updateRule(ev.getRule(), ev.getValue());
     }
 
     @Subscribe

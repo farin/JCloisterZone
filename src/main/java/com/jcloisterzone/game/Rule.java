@@ -7,7 +7,7 @@ import com.jcloisterzone.Expansion;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 
-public enum CustomRule {
+public enum Rule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _("Randomize seating order")),
 
     USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _("Use pig herds independently (without T&B expansion)")),
@@ -40,7 +40,7 @@ public enum CustomRule {
     Class<?> type;
     Expansion expansion;
 
-    private CustomRule(Expansion expansion, Class<?> type, String label) {
+    private Rule(Expansion expansion, Class<?> type, String label) {
         this.expansion = expansion;
         this.type = type;
         this.label = label;
@@ -70,7 +70,7 @@ public enum CustomRule {
         }
     }
 
-    public static Map<CustomRule, Object> getDefaultRules() {
+    public static Map<Rule, Object> getDefaultRules() {
         return HashMap.of(
             PIG_HERD_ON_GQ_FARM, true,
             TUNNELIZE_ALL_EXPANSIONS, true,

@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.JDialog;
 
 import com.google.common.base.Joiner;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
@@ -41,10 +41,10 @@ public class GameSetupDialog extends JDialog {
         joiner = Joiner.on("\n").skipNulls();
         pane.add(new ThemedJLabel(_("Rules")), "wrap, w 600, gaptop 10");
         List<String> rules = new ArrayList<>();
-        for (Tuple2<CustomRule, Object> t : game.getSetup().getRules()) {
-            CustomRule rule = t._1;
+        for (Tuple2<Rule, Object> t : game.getSetup().getRules()) {
+            Rule rule = t._1;
             if (rule.getType().equals(Boolean.class)) {
-                if (rule == CustomRule.RANDOM_SEATING_ORDER) continue;
+                if (rule == Rule.RANDOM_SEATING_ORDER) continue;
                 if (t._2.equals(Boolean.FALSE)) continue;
                 rules.add(rule.getLabel());
             } else {

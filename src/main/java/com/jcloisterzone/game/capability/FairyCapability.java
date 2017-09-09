@@ -10,7 +10,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.LinkedHashMap;
@@ -31,7 +31,7 @@ public class FairyCapability extends Capability<Void> {
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
-        boolean fairyOnTile = state.getBooleanValue(CustomRule.FAIRY_ON_TILE);
+        boolean fairyOnTile = state.getBooleanValue(Rule.FAIRY_ON_TILE);
         Player activePlayer = state.getPlayerActions().getPlayer();
 
 

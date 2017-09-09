@@ -4,7 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
@@ -26,7 +26,7 @@ public final class TunnelCapability extends Capability<Map<FeaturePointer, Place
     @Override
     public GameState onStartGame(GameState state) {
         int playersCount = state.getPlayers().getPlayers().length();
-        boolean moreTokens = state.getBooleanValue(CustomRule.MORE_TUNNEL_TOKENS);
+        boolean moreTokens = state.getBooleanValue(Rule.MORE_TUNNEL_TOKENS);
         state = state.mapPlayers(ps -> {
             ps = ps.setTokenCountForAllPlayers(Token.TUNNEL_A, 2);
             if (playersCount == 3 && moreTokens) {

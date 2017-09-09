@@ -69,7 +69,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(config, setup, next, CleanUpTurnPartPhase.class);
         next = addPhase(config, setup, next, CornCirclePhase.class);
 
-        if (setup.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+        if (setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
             addPhase(config, setup, next, DragonMovePhase.class);
             next = addPhase(config, setup, next, DragonPhase.class);
         }
@@ -82,7 +82,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(config, setup, next, CommitActionPhase.class);
         next = addPhase(config, setup, next, CastlePhase.class);
 
-        if (!setup.getBooleanValue(CustomRule.DRAGON_MOVE_AFTER_SCORING)) {
+        if (!setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
                addPhase(config, setup, next, DragonMovePhase.class);
                next = addPhase(config, setup, next, DragonPhase.class);
         }

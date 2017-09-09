@@ -21,6 +21,7 @@ import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircle
 import net.miginfocom.swing.MigLayout;
 
 
+
 public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
 
     public static Font FONT_HEADER = new Font(null, Font.BOLD, 18);

@@ -19,7 +19,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
@@ -127,7 +127,7 @@ public class SimpleServer extends WebSocketServer  {
             initialSeed = random.nextLong();
             gameSetup = new GameSetup(
                 HashSet.of(Expansion.BASIC),
-                CustomRule.getDefaultRules()
+                Rule.getDefaultRules()
             );
             replay = new ArrayList<>();
             for (int i = 0; i < slots.length; i++) {
@@ -407,7 +407,7 @@ public class SimpleServer extends WebSocketServer  {
     public void handleSetRule(WebSocket ws, SetRuleMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        CustomRule rule = msg.getRule();
+        Rule rule = msg.getRule();
         gameSetup = gameSetup.mapRules(rules ->
             msg.getValue() == null ? rules.remove(rule) : rules.put(rule, msg.getValue())
         );
@@ -427,7 +427,7 @@ public class SimpleServer extends WebSocketServer  {
                 if (slot.getSupportedExpansions() != null) {
                     gameSetup.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
                 }
-                if (gameSetup.getBooleanValue(CustomRule.RANDOM_SEATING_ORDER)) {
+                if (gameSetup.getBooleanValue(Rule.RANDOM_SEATING_ORDER)) {
                     slot.setSerial(random.nextInt());
                 }
             }

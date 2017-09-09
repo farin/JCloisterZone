@@ -13,21 +13,21 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_SETUP")
 public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
     private String gameId;
-    @JsonAdapter(CustomRulesMapAdapter.class)
-    private Map<CustomRule, Object> rules;
+    @JsonAdapter(RulesMapAdapter.class)
+    private Map<Rule, Object> rules;
     private Set<Expansion> expansions;
     //private Set<Class<? extends Capability<?>>> capabilityClasses;
 
     public GameSetupMessage() {
     }
 
-    public GameSetupMessage(Map<CustomRule, Object> rules, Set<Expansion> expansions
+    public GameSetupMessage(Map<Rule, Object> rules, Set<Expansion> expansions
             /*Set<Class<? extends Capability<?>>> capabilityClasses*/) {
         this.rules = rules;
         this.expansions = expansions;
@@ -43,11 +43,11 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
         this.gameId = gameId;
     }
 
-    public Map<CustomRule, Object> getRules() {
+    public Map<Rule, Object> getRules() {
         return rules;
     }
 
-    public void setRules(Map<CustomRule, Object> rules) {
+    public void setRules(Map<Rule, Object> rules) {
         this.rules = rules;
     }
 
@@ -67,12 +67,12 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
 //        this.capabilityClasses = capabilityClasses;
 //    }
 
-    public static class CustomRulesMapAdapter extends TypeAdapter<Map<CustomRule, Object>> {
+    public static class RulesMapAdapter extends TypeAdapter<Map<Rule, Object>> {
 
         @Override
-        public void write(JsonWriter out, Map<CustomRule, Object> value) throws IOException {
+        public void write(JsonWriter out, Map<Rule, Object> value) throws IOException {
             out.beginObject();
-            for (Entry<CustomRule, Object> entry : value.entrySet()) {
+            for (Entry<Rule, Object> entry : value.entrySet()) {
                 out.name(entry.getKey().name());
                 if (entry.getValue() instanceof Boolean) {
                     out.value((Boolean)entry.getValue());
@@ -86,11 +86,11 @@ public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
         }
 
         @Override
-        public Map<CustomRule, Object> read(JsonReader in) throws IOException {
-            Map<CustomRule, Object> result = new HashMap<>();
+        public Map<Rule, Object> read(JsonReader in) throws IOException {
+            Map<Rule, Object> result = new HashMap<>();
             in.beginObject();
             while (in.hasNext()) {
-                CustomRule rule = CustomRule.valueOf(in.nextName());
+                Rule rule = Rule.valueOf(in.nextName());
                 JsonToken p = in.peek();
                 if (p == JsonToken.BOOLEAN) {
                     result.put(rule, in.nextBoolean());

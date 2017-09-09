@@ -32,7 +32,7 @@ import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.PlayEvent;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
@@ -400,7 +400,7 @@ public class ControlPanel extends JPanel {
     @Subscribe
     public void handleClockUpdateEvent(ClockUpdateEvent ev) {
         timer.stop();
-        if (ev.isClockRunning() && game.getSetup().getRules().get(CustomRule.CLOCK_PLAYER_TIME).isDefined()) {
+        if (ev.isClockRunning() && game.getSetup().getRules().get(Rule.CLOCK_PLAYER_TIME).isDefined()) {
             PlayerClock runningClock = ev.getClocks().get(ev.getRunning());
             //this solution is not much accurate - TODO fix
             //+clean time from round trip!!!

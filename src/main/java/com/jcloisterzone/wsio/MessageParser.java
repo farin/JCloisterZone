@@ -21,7 +21,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
@@ -39,7 +39,7 @@ public final class MessageParser {
             @Override
             public SetRuleMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject obj = json.getAsJsonObject();
-                CustomRule rule = CustomRule.valueOf(obj.get("rule").getAsString());
+                Rule rule = Rule.valueOf(obj.get("rule").getAsString());
                 SetRuleMessage msg = new SetRuleMessage(
                     rule,
                     obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())

@@ -13,7 +13,7 @@ import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.mixins.ActionsStateMixin;
 import com.jcloisterzone.game.state.mixins.BoardMixin;
@@ -43,7 +43,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
 
     //TODO group some fields into sub states
 
-    private final Map<CustomRule, Object> rules;
+    private final Map<Rule, Object> rules;
 
     private final CapabilitiesState capabilities;
     private final PlayersState players;
@@ -67,7 +67,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
     private final Class<? extends Phase> phase;
 
     public static GameState createInitial(
-            Map<CustomRule, Object> rules,
+            Map<Rule, Object> rules,
             Seq<Capability<?>> capabilities,
             Array<Player> players,
             int turnPlayerIndex) {
@@ -92,7 +92,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
 
 
     public GameState(
-            Map<CustomRule, Object> rules,
+            Map<Rule, Object> rules,
             CapabilitiesState capabilities,
             PlayersState players,
             TilePack tilePack, Tile drawnTile,
@@ -295,7 +295,7 @@ public class GameState implements ActionsStateMixin, BoardMixin,
     }
 
     @Override
-    public Map<CustomRule, Object> getRules() {
+    public Map<Rule, Object> getRules() {
         return rules;
     }
 

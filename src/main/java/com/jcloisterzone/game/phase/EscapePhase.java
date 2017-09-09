@@ -14,7 +14,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -56,7 +56,7 @@ public class EscapePhase extends Phase {
             .filter(c -> {
                 Stream<PlacedTile> cityTiles = Stream.ofAll(c.getTilePositions()).map(state::getPlacedTile);
 
-                if (!state.getBooleanValue(CustomRule.ESCAPE_RGG)) {
+                if (!state.getBooleanValue(Rule.ESCAPE_RGG)) {
                     cityTiles = cityTiles.filter(pt ->
                         pt.getTile().getTrigger() == TileTrigger.BESIEGED
                     );

@@ -19,12 +19,12 @@ public class GameSetup implements Serializable, RulesMixin {
     private static final long serialVersionUID = 1L;
 
     private final Set<Expansion> expansions;
-    private final Map<CustomRule, Object> rules;
+    private final Map<Rule, Object> rules;
 
     // for now just cached value derived from expansions
     private Set<Class<? extends Capability<?>>> capabilities;
 
-    public GameSetup(Set<Expansion> expansions, /*Set<Class<? extends Capability<?>>> capabilities,*/ Map<CustomRule, Object> rules) {
+    public GameSetup(Set<Expansion> expansions, /*Set<Class<? extends Capability<?>>> capabilities,*/ Map<Rule, Object> rules) {
         this.expansions = expansions;
         //this.capabilities = capabilities;
         this.rules = rules;
@@ -48,16 +48,16 @@ public class GameSetup implements Serializable, RulesMixin {
     }
 
     @Override
-    public Map<CustomRule, Object> getRules() {
+    public Map<Rule, Object> getRules() {
         return rules;
     }
 
-    public GameSetup setRules(Map<CustomRule, Object> rules) {
+    public GameSetup setRules(Map<Rule, Object> rules) {
         if (this.rules == rules) return this;
         return new GameSetup(expansions, rules);
     }
 
-    public GameSetup mapRules(Function<Map<CustomRule, Object>, Map<CustomRule, Object>> mapper) {
+    public GameSetup mapRules(Function<Map<Rule, Object>, Map<Rule, Object>> mapper) {
         return setRules(mapper.apply(rules));
     }
 
@@ -70,7 +70,7 @@ public class GameSetup implements Serializable, RulesMixin {
             .flatMap(exp -> Arrays.asList(exp.getCapabilities()))
             .toSet();
 
-        if (getBooleanValue(CustomRule.USE_PIG_HERDS_INDEPENDENTLY)) {
+        if (getBooleanValue(Rule.USE_PIG_HERDS_INDEPENDENTLY)) {
             capabilities.add(PigHerdCapability.class);
         }
 

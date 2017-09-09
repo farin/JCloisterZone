@@ -11,7 +11,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
@@ -46,7 +46,7 @@ public class FestivalCapability extends Capability<Void> {
         Stream<Tuple2<Meeple, FeaturePointer>> meeples = Stream.ofAll(state.getDeployedMeeples())
             .filter(t -> t._1.getPlayer().equals(player));
 
-        if (state.getBooleanValue(CustomRule.FESTIVAL_FOLLOWER_ONLY)) {
+        if (state.getBooleanValue(Rule.FESTIVAL_FOLLOWER_ONLY)) {
             meeples = meeples.filter(Predicates.instanceOf(Follower.class));
         }
 

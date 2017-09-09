@@ -25,7 +25,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -70,7 +70,7 @@ public class ActionPhase extends AbstractActionPhase {
         }
 
         if (state.getCapabilities().contains(PrincessCapability.class) &&
-            state.getBooleanValue(CustomRule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+            state.getBooleanValue(Rule.PRINCESS_MUST_REMOVE_KNIGHT)) {
             PrincessAction princessAction = (PrincessAction) actions.find(a -> a instanceof PrincessAction).getOrNull();
             if (princessAction != null) {
                 actions = Vector.of(princessAction);
@@ -87,7 +87,7 @@ public class ActionPhase extends AbstractActionPhase {
         if (fig instanceof Fairy) {
             // TODO validation against ActionState
 
-            assert (state.getBooleanValue(CustomRule.FAIRY_ON_TILE) ? Position.class : BoardPointer.class).isInstance(ptr);
+            assert (state.getBooleanValue(Rule.FAIRY_ON_TILE) ? Position.class : BoardPointer.class).isInstance(ptr);
 
             Fairy fairy = (Fairy) fig;
             state = (new MoveNeutralFigure<BoardPointer>(fairy, ptr, state.getActivePlayer())).apply(state);

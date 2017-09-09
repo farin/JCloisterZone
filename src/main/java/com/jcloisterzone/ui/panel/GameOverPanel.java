@@ -23,7 +23,7 @@ import javax.swing.SwingConstants;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -119,7 +119,7 @@ public class GameOverPanel extends JPanel {
             CapabilitiesState capabilities = state.getCapabilities();
 
             //setTitle(_("Game overview"));
-            boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(CustomRule.BAZAAR_NO_AUCTION);
+            boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
             StringBuilder rowSpec = new StringBuilder("[][]10[]10[]20[][][][]");
             if (capabilities.contains(CastleCapability.class)) rowSpec.append("[]");

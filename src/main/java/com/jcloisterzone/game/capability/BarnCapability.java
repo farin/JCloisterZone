@@ -12,7 +12,7 @@ import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Predicates;
@@ -58,7 +58,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
             .map(p -> getCornerFeature(state, p))
             .filter(Predicates.isNotNull())
             .filter(t -> {
-                if (state.getBooleanValue(CustomRule.MULTI_BARN_ALLOWED)) {
+                if (state.getBooleanValue(Rule.MULTI_BARN_ALLOWED)) {
                     return true;
                 }
                 return t._2.getSpecialMeeples(state)

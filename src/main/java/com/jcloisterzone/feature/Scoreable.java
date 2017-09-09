@@ -4,7 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -54,7 +54,7 @@ public interface Scoreable extends Structure {
         Set<Position> position = getTilePositions();
         buildings = buildings.filterKeys(pos -> position.contains(pos));
 
-        if (state.getBooleanValue(CustomRule.BULDINGS_DIFFERENT_VALUE)) {
+        if (state.getBooleanValue(Rule.BULDINGS_DIFFERENT_VALUE)) {
             return buildings
                 .values()
                 .map(token -> {
