@@ -14,8 +14,8 @@ import io.vavr.collection.Array;
 public class BasicScoringTest extends IntegrationTest {
 
     /**
-     * Covers
-     * 	- basic road / city / farm scoring
+     *  - road, city (both completed and final) scoring
+     *  - farm scoring
      */
     @Test
     public void testBasicScoring() {
@@ -39,8 +39,7 @@ public class BasicScoringTest extends IntegrationTest {
     }
 
     /**
-     * Covers
-     * 	- features (road and city)with two parts on same tiles (should be score for one points only)
+     * 	- features (road and city) with two parts on same tiles (should be score for one points only)
      *  - completed cloister
      *  - if two followers are on one feature - player still gets points once
      */
@@ -66,9 +65,8 @@ public class BasicScoringTest extends IntegrationTest {
     }
 
     /**
-     * Covers
      * 	- farm scoring, one city on multiple farms
-     *  - follower count tie on one farm
+     *  - tie on one farm
      */
     @Test
     public void testFarmScoring() {
