@@ -21,7 +21,7 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-public interface PlacementsMixin extends BoardMixin, PlayersStsteMixin, CapabilitiesMixin {
+public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesMixin {
 
     default Stream<Tuple2<Position, EdgePattern>> getAvailablePlacements() {
         java.util.Set<Position> used = new java.util.HashSet<>();

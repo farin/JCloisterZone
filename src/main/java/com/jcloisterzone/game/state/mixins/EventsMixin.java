@@ -7,7 +7,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 
-public interface EventsStateMixin {
+public interface EventsMixin {
 
     Queue<PlayEvent> getEvents();
     GameState setEvents(Queue<PlayEvent> events);

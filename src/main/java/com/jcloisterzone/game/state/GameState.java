@@ -15,13 +15,13 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.game.state.mixins.ActionsStateMixin;
+import com.jcloisterzone.game.state.mixins.ActionsMixin;
 import com.jcloisterzone.game.state.mixins.BoardMixin;
 import com.jcloisterzone.game.state.mixins.CapabilitiesMixin;
-import com.jcloisterzone.game.state.mixins.EventsStateMixin;
-import com.jcloisterzone.game.state.mixins.FlagsStateMixin;
+import com.jcloisterzone.game.state.mixins.EventsMixin;
+import com.jcloisterzone.game.state.mixins.FlagsMixin;
 import com.jcloisterzone.game.state.mixins.PlacementsMixin;
-import com.jcloisterzone.game.state.mixins.PlayersStsteMixin;
+import com.jcloisterzone.game.state.mixins.PlayersMixin;
 import com.jcloisterzone.game.state.mixins.RulesMixin;
 
 import io.vavr.collection.Array;
@@ -35,9 +35,9 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 
 @Immutable
-public class GameState implements ActionsStateMixin, BoardMixin,
-        RulesMixin, CapabilitiesMixin, PlayersStsteMixin, EventsStateMixin,
-        FlagsStateMixin, PlacementsMixin, Serializable {
+public class GameState implements ActionsMixin, BoardMixin,
+        RulesMixin, CapabilitiesMixin, PlayersMixin, EventsMixin,
+        FlagsMixin, PlacementsMixin, Serializable {
 
     private static final long serialVersionUID = 1L;
 

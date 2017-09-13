@@ -5,7 +5,7 @@ import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.Set;
 
-public interface FlagsStateMixin {
+public interface FlagsMixin {
 
     Set<Flag> getFlags();
     GameState setFlags(Set<Flag> flags);

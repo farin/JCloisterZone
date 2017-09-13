@@ -4,7 +4,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 
-public interface ActionsStateMixin {
+public interface ActionsMixin {
 
     ActionsState getPlayerActions();
     GameState setPlayerActions(ActionsState actionsState);

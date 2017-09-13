@@ -7,7 +7,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
 
-public interface PlayersStsteMixin extends ActionsStateMixin {
+public interface PlayersMixin extends ActionsMixin {
 
     PlayersState getPlayers();
     GameState setPlayers(PlayersState players);
