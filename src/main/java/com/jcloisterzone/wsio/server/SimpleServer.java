@@ -20,6 +20,7 @@ import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
@@ -56,6 +57,7 @@ import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
+import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -127,6 +129,7 @@ public class SimpleServer extends WebSocketServer  {
             initialSeed = random.nextLong();
             gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
+                io.vavr.collection.HashSet.empty(),
                 Rule.getDefaultRules()
             );
             replay = new ArrayList<>();
@@ -207,6 +210,7 @@ public class SimpleServer extends WebSocketServer  {
     private GameMessage newGameMessage(boolean includeReplay) {
         GameSetupMessage setupMessage = new GameSetupMessage(
             gameSetup.getRules().toJavaMap(),
+            gameSetup.getCapabilities().toJavaSet(),
             gameSetup.getExpansions().toJavaMap()
         );
         setupMessage.setGameId(gameId);
@@ -331,6 +335,7 @@ public class SimpleServer extends WebSocketServer  {
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         gameSetup = new GameSetup(
             io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
+            io.vavr.collection.HashSet.ofAll(msg.getCapabilities()),
             io.vavr.collection.HashMap.ofAll(msg.getRules())
         );
         broadcast(msg);
@@ -410,6 +415,17 @@ public class SimpleServer extends WebSocketServer  {
         Rule rule = msg.getRule();
         gameSetup = gameSetup.mapRules(rules ->
             msg.getValue() == null ? rules.remove(rule) : rules.put(rule, msg.getValue())
+        );
+        broadcast(msg);
+    }
+
+    @WsSubscribe
+    public void handleSetCapability(WebSocket ws, SetCapabilityMessage msg) {
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
+        if (gameStarted) throw new IllegalArgumentException("Game is already started.");
+        Class<? extends Capability<?>> cap = msg.getCapability();
+        gameSetup = gameSetup.mapCapabilities(cps ->
+            msg.isEnabled() ? cps.add(cap) : cps.remove(cap)
         );
         broadcast(msg);
     }

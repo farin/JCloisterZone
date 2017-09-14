@@ -68,8 +68,6 @@ connection_history: ${connection_history}
 
 ${if hasDebug}
 debug:
-  # plain or zip
-  save_format: ${save_format}
   window_size: ${window_size}
 
   autosave: ${autosave}
@@ -83,8 +81,6 @@ debug:
   tile_definitions: ${tile_definitions}
 
   game_annotation: ${game_annotation}
-
-  off_capabilities: ${off_capabilities}
 
   # area or figure
   area_highlight: ${area_highlight}

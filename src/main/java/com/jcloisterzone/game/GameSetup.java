@@ -20,13 +20,11 @@ public class GameSetup implements Serializable, RulesMixin {
 
     private final Map<Expansion, Integer> expansions;
     private final Map<Rule, Object> rules;
+    private final Set<Class<? extends Capability<?>>> capabilities;
 
-    // for now just cached value derived from expansions
-    private Set<Class<? extends Capability<?>>> capabilities;
-
-    public GameSetup(Map<Expansion, Integer> expansions, /*Set<Class<? extends Capability<?>>> capabilities,*/ Map<Rule, Object> rules) {
+    public GameSetup(Map<Expansion, Integer> expansions, Set<Class<? extends Capability<?>>> capabilities, Map<Rule, Object> rules) {
         this.expansions = expansions;
-        //this.capabilities = capabilities;
+        this.capabilities = capabilities;
         this.rules = rules;
     }
 
@@ -40,7 +38,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setExpansions(Map<Expansion, Integer> expansions) {
         if (this.expansions == expansions) return this;
-        return new GameSetup(expansions, rules);
+        return new GameSetup(expansions, capabilities, rules);
     }
 
     public GameSetup mapExpansions(Function<Map<Expansion, Integer>, Map<Expansion, Integer>> mapper) {
@@ -54,7 +52,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setRules(Map<Rule, Object> rules) {
         if (this.rules == rules) return this;
-        return new GameSetup(expansions, rules);
+        return new GameSetup(expansions, capabilities, rules);
     }
 
     public GameSetup mapRules(Function<Map<Rule, Object>, Map<Rule, Object>> mapper) {
@@ -62,33 +60,27 @@ public class GameSetup implements Serializable, RulesMixin {
     }
 
     public Set<Class<? extends Capability<?>>> getCapabilities() {
-        if (capabilities != null) {
-             return capabilities;
-        }
+        return capabilities;
+    }
 
+    public GameSetup setCapabilities(Set<Class<? extends Capability<?>>> capabilities) {
+        if (this.capabilities == capabilities) return this;
+        return new GameSetup(expansions, capabilities, rules);
+    }
+
+    public GameSetup mapCapabilities(Function<Set<Class<? extends Capability<?>>>, Set<Class<? extends Capability<?>>>> mapper) {
+        return setCapabilities(mapper.apply(capabilities));
+    }
+
+    public static Set<Class<? extends Capability<?>>> getCapabilitiesForExpansionsAndRules(Map<Expansion, Integer> expansions, Map<Rule, Object> rules) {
         Set<Class<? extends Capability<?>>> capabilities = Stream.ofAll(expansions.keySet())
             .flatMap(exp -> Arrays.asList(exp.getCapabilities()))
             .toSet();
 
-        if (getBooleanValue(Rule.USE_PIG_HERDS_INDEPENDENTLY)) {
-            capabilities.add(PigHerdCapability.class);
+        if ((Boolean) rules.get(Rule.USE_PIG_HERDS_INDEPENDENTLY).getOrElse(Boolean.FALSE)) {
+            capabilities = capabilities.add(PigHerdCapability.class);
         }
 
-//        DebugConfig debugConfig = getDebugConfig();
-//        if (debugConfig != null && debugConfig.getOff_capabilities() != null) {
-//            List<String> offNames =  debugConfig.getOff_capabilities();
-//            for (String tok : offNames) {
-//                tok = tok.trim();
-//                try {
-//                    String className = "com.jcloisterzone.game.capability."+tok+"Capability";
-//                    @SuppressWarnings("unchecked")
-//                    Class<? extends Capability<?>> clazz = (Class<? extends Capability<?>>) Class.forName(className);
-//                    classes = classes.remove(clazz);
-//                } catch (Exception e) {
-//                    logger.warn("Invalid capability name: " + tok, e);
-//                }
-//            }
-//        }
         return capabilities;
     }
 }

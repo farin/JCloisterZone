@@ -32,6 +32,7 @@ import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
+import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -66,6 +67,7 @@ public class WsCommandRegistry {
             .put(t(SlotMessage.class))
             .put(t(SetExpansionMessage.class))
             .put(t(SetRuleMessage.class))
+            .put(t(SetCapabilityMessage.class))
             .put(t(StartGameMessage.class))
             .put(t(DeployFlierMessage.class))
             .put(t(UndoMessage.class))

@@ -25,14 +25,16 @@ import com.jcloisterzone.config.Config.PresetConfig;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
+import com.jcloisterzone.event.setup.CapabilityChangeEvent;
 import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
-import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.online.Channel;
 import com.jcloisterzone.ui.view.ChannelView;
 import com.jcloisterzone.ui.view.GameSetupView;
@@ -51,6 +53,7 @@ import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.GameUpdateMessage;
+import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -62,8 +65,6 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
-
-import io.vavr.collection.HashSet;
 
 
 public class ClientMessageListener implements MessageListener {
@@ -378,6 +379,7 @@ public class ClientMessageListener implements MessageListener {
         game.setSetup(
             new GameSetup(
                 io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
+                io.vavr.collection.HashSet.ofAll(msg.getCapabilities()),
                 io.vavr.collection.HashMap.ofAll(msg.getRules())
             )
         );
@@ -413,6 +415,17 @@ public class ClientMessageListener implements MessageListener {
             msg.getValue() == null ? rules.remove(rule) : rules.put(rule, value)
         ));
         game.post(new RuleChangeEvent(rule, msg.getValue()));
+    }
+
+    @WsSubscribe
+    public void handleSetCapability(SetCapabilityMessage msg) {
+        Game game = getGame(msg);
+        Class<? extends Capability<?>> cap = msg.getCapability();
+        boolean enabled = msg.isEnabled();
+        game.mapSetup(setup ->  setup.mapCapabilities(caps ->
+            enabled ? caps.add(cap) : caps.remove(cap)
+        ));
+        game.post(new CapabilityChangeEvent(cap, enabled));
     }
 
     @WsSubscribe

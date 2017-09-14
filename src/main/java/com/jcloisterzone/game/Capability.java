@@ -31,7 +31,6 @@ public abstract class Capability<T> implements Serializable {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-
     @SuppressWarnings("unchecked")
     private Class<? extends Capability<T>> narrowClass() {
         return (Class<? extends Capability<T>>) getClass();

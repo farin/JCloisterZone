@@ -24,7 +24,8 @@
     "expansions": {
       "BASIC": 1
     },
-    "rules": {}
+    "rules": {},
+    "capabilities": []
   },
   "replay": [
     {

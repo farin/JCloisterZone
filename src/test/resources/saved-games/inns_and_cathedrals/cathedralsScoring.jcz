@@ -22,7 +22,11 @@
       "BASIC": 1,
       "INNS_AND_CATHEDRALS": 1
     },
-    "rules": {}
+    "rules": {},
+    "capabilities": [
+        "Inn",
+        "Cathedral"
+    ]
   },
   "replay": [
     {

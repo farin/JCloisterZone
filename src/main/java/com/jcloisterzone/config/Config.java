@@ -4,19 +4,23 @@ import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
+import com.jcloisterzone.wsio.message.adapters.CapabilitiesAdapter;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -91,8 +95,12 @@ public class Config {
     }
 
     public static class PresetConfig {
+
+        protected transient Logger logger = LoggerFactory.getLogger(getClass());
+
         private Map<String, Integer> expansions;
         private Map<Rule, Object> rules;
+        private List<String> capabilities;
 
         public Map<String, Integer> getExpansions() {
             return expansions == null ? Collections.<String, Integer>emptyMap() : expansions;
@@ -106,13 +114,31 @@ public class Config {
         public void setRules(Map<Rule, Object> rules) {
             this.rules = rules;
         }
-
+        public List<String> getCapabilities() {
+            return capabilities;
+        }
+        public void setCapabilities(List<String> capabilities) {
+            this.capabilities = capabilities;
+        }
         public void updateGameSetup(Connection conn, String gameId) {
+            Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
+            if (this.capabilities != null) {
+                CapabilitiesAdapter adapter = new CapabilitiesAdapter();
+                for (String clsName : this.capabilities) {
+                    Class<? extends Capability<?>> cls = adapter.classForName(clsName);
+                    if (cls != null) {
+                        capabilities.add(cls);
+                    }
+                }
+            }
+
+            Map<Expansion, Integer> expansions = io.vavr.collection.HashMap.ofAll(this.expansions)
+                .mapKeys(name -> Expansion.valueOf(name))
+                .toJavaMap();
+
             GameSetupMessage msg = new GameSetupMessage(
-                rules,
-                io.vavr.collection.HashMap.ofAll(expansions)
-                    .mapKeys(name -> Expansion.valueOf(name))
-                    .toJavaMap()
+                rules, capabilities, expansions
+
             );
             msg.setGameId(gameId);
             conn.send(msg);
@@ -151,7 +177,6 @@ public class Config {
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
         private HashMap<String, Object> game_annotation;
-        private List<String> off_capabilities;
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
@@ -188,12 +213,6 @@ public class Config {
         }
         public void setGame_annotation(HashMap<String, Object> game_annotation) {
             this.game_annotation = game_annotation;
-        }
-        public List<String> getOff_capabilities() {
-            return off_capabilities;
-        }
-        public void setOff_capabilities(List<String> off_capabilities) {
-            this.off_capabilities = off_capabilities;
         }
         public String getArea_highlight() {
             return area_highlight;

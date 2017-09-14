@@ -8,14 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
+import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
 
 
 /**
@@ -369,6 +372,8 @@ public class SavedGame implements Serializable {
     public static class SavedGameSetup {
         private Map<Expansion, Integer> expansions;
         private Map<Rule, Object> rules;
+        @JsonAdapter(CapabilitiesSetAdapter.class)
+        private Set<Class<? extends Capability<?>>> capabilities;
 
         /**
          * Gets the expansions.
@@ -407,6 +412,24 @@ public class SavedGame implements Serializable {
         }
 
         /**
+         * Gets the capabilities.
+         *
+         * @return the capabilities
+         */
+        public Set<Class<? extends Capability<?>>> getCapabilities() {
+            return capabilities;
+        }
+
+        /**
+         * Sets the capabilities.
+         *
+         * @param capabilities the capabilities
+         */
+        public void setCapabilities(Set<Class<? extends Capability<?>>> capabilities) {
+            this.capabilities = capabilities;
+        }
+
+        /**
          * Returns a {@link GameSetup} instance based on {@code this}.
          *
          * @return the game setup instance
@@ -414,6 +437,7 @@ public class SavedGame implements Serializable {
         public GameSetup asGameSetup() {
             return new GameSetup(
                 io.vavr.collection.HashMap.ofAll(expansions),
+                io.vavr.collection.HashSet.ofAll(capabilities),
                 io.vavr.collection.HashMap.ofAll(rules)
             );
         }

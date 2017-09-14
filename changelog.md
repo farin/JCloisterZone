@@ -4,12 +4,20 @@
 *fall 2017*
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
-* saved game format changed to json (and instead of game snapshot contains just action history)
+* saved game format changed to JSON (and instead of game snapshot contains just action history)
 * removed Catapult tiles, with many other expansion this extra tiles makes not much sense
 * added The Count expansion
 * fixed #63 - experimental change: multiple tile sets of same expansion are allowed.
   No UI is present but feature can be enabled by manual edit of preset in config file
   (or by save game edit)
+* fixed #223 - experimental change: capabilities and expansions are independent. Game can be
+  created with different set of capabilities then standard derived from expansion.
+  Eg. Princess and dragon tiles but without dragon figure. Or add big follower
+  to basic tiles (without inns & cathedrals tiles)
+  No UI for creation such game is present yet, but same as multiple sets
+  it can be achieved by manual edit of preset in config.yaml
+  (Such games can be normally played with remote players)
+* added Japanese translation (thx to Alexis Jeandeau)
 
 ### Current expansions changes
 

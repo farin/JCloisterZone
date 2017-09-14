@@ -47,7 +47,9 @@ import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
@@ -57,10 +59,13 @@ import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.ui.gtk.ThemedJCheckBox;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
+import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
+import com.jcloisterzone.wsio.message.adapters.CapabilitiesAdapter;
 
+import io.vavr.collection.Set;
 import net.miginfocom.swing.MigLayout;
 
 public class CreateGamePanel extends ThemedJPanel {
@@ -461,11 +466,17 @@ public class CreateGamePanel extends ThemedJPanel {
     }
 
     private PresetConfig createCurrentConfig() {
-        Map<String, Integer> expansions = game.getSetup().getExpansions()
+        GameSetup setup = game.getSetup();
+        CapabilitiesAdapter adapter = new CapabilitiesAdapter();
+        Map<String, Integer> expansions = setup.getExpansions()
             .mapKeys(exp -> exp.name()).toJavaMap();
+        List<String> capabilities = setup.getCapabilities()
+            .map(cap -> adapter.nameForClass(cap)).toJavaList();
+
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
-        config.setRules(game.getSetup().getRules().toJavaMap());
+        config.setRules(setup.getRules().toJavaMap());
+        config.setCapabilities(capabilities);
         return config;
     }
 
@@ -498,14 +509,43 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JCheckBox chbox = (JCheckBox) e.getSource();
+
+                    GameSetup setup = game.getSetup();
+                    if (chbox.isSelected()) {
+                        setup = setup.mapRules(m -> m.put(rule, 1));
+                    } else {
+                        setup = setup.mapRules(m -> m.remove(rule));
+                    }
+
                     SetRuleMessage msg = new SetRuleMessage(rule, chbox.isSelected());
                     gc.getConnection().send(msg);
+
+                    sendCapabilityChange(game.getSetup(), setup);
                 }
             });
         } else {
             chbox.setEnabled(false);
         }
         return chbox;
+    }
+
+    private void sendCapabilityChange(GameSetup s1, GameSetup s2) {
+        Set<Class<? extends Capability<?>>> oldCap = GameSetup.getCapabilitiesForExpansionsAndRules(
+            s1.getExpansions(),
+            s1.getRules()
+        );
+        Set<Class<? extends Capability<?>>> newCap = GameSetup.getCapabilitiesForExpansionsAndRules(
+            s2.getExpansions(),
+            s2.getRules()
+        );
+        for (Class<? extends Capability<?>> cls : oldCap.diff(newCap)) {
+            SetCapabilityMessage msg = new SetCapabilityMessage(cls, false);
+            gc.getConnection().send(msg);
+        }
+        for (Class<? extends Capability<?>> cls : newCap.diff(oldCap)) {
+            SetCapabilityMessage msg = new SetCapabilityMessage(cls, true);
+            gc.getConnection().send(msg);
+        }
     }
 
     private JCheckBox createExpansionCheckbox(final Expansion exp,
@@ -521,8 +561,18 @@ public class CreateGamePanel extends ThemedJPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     final JCheckBox chbox = (JCheckBox) e.getSource();
+
+                    GameSetup setup = game.getSetup();
+                    if (chbox.isSelected()) {
+                        setup = setup.mapExpansions(m -> m.put(exp, 1));
+                    } else {
+                        setup = setup.mapExpansions(m -> m.remove(exp));
+                    }
+
                     SetExpansionMessage msg = new SetExpansionMessage(exp, chbox.isSelected() ? 1 : 0);
                     gc.getConnection().send(msg);
+
+                    sendCapabilityChange(game.getSetup(), setup);
                 }
             });
         }
