@@ -7,7 +7,7 @@ Don't hesitate to ask if there are any problems with the explanations below!
 
 ## Dependencies
 
-- [Java SE 7](http://www.oracle.com/technetwork/java/javase/downloads/) (JDK 1.7) as your `$JAVA_HOME`.
+- [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/) (JDK 1.8) as your `$JAVA_HOME`.
 - [Maven](https://maven.apache.org/) in your `$PATH`.
 - [gettext](https://www.gnu.org/software/gettext/) in your `$PATH`.
 - (optional) [Eclipse](https://eclipse.org/)
