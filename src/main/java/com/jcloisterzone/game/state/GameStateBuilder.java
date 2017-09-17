@@ -148,30 +148,6 @@ public class GameStateBuilder {
         preplacedTiles = tiles.getPreplacedTiles();
     }
 
-//    protected void prepareAiPlayers(boolean muteAi) {
-//        for (PlayerSlot slot : slots) {
-//            if (slot != null && slot.isAi() && slot.isOwn()) {
-//                try {
-//                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
-//                    ai.setMuted(muteAi);
-//                    ai.setGame(game);
-//                    ai.setGameController(gc);
-//                    for (Player player : game.getState().getPlayers().getPlayers()) {
-//                        if (player.getSlot().getNumber() == slot.getNumber()) {
-//                            ai.setPlayer(player);
-//                            break;
-//                        }
-//                    }
-//                    slot.setAiPlayer(ai);
-//                    game.getEventBus().register(ai);
-//                    logger.info("AI player created - " + slot.getAiClassName());
-//                } catch (Exception e) {
-//                    logger.error("Unable to create AI player", e);
-//                }
-//            }
-//        }
-//    }
-
     private Capability<?> createCapabilityInstance(Class<? extends Capability<?>> clazz) {
         try {
             return clazz.newInstance();

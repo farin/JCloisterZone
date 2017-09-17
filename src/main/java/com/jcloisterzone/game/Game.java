@@ -17,6 +17,8 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.ai.AiPlayer;
+import com.jcloisterzone.ai.AiPlayerAdapter;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
@@ -290,7 +292,6 @@ public class Game implements EventProxy {
         eventBus.post(event);
     }
 
-    //TODO decouple from GameController ?
     public void start(GameController gc, List<WsReplayableMessage> replay, HashMap<String, Object> savedGameAnnotations) {
         this.replay = replay.reverse();
         phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
@@ -310,10 +311,13 @@ public class Game implements EventProxy {
         this.state = state; // set state to get proper state diff against empty state later (in replacedState)
         clocks = state.getPlayers().getPlayers().map(p -> new PlayerClock(0));
 
-        // 2. notify started game - event handlers requires initial state with game config to be set
+        // 2. Register local AI players
+        createAiPlayers(gc);
+
+        // 3. notify started game - event handlers requires initial state with game config to be set
         post(new GameStartedEvent());
 
-        // 3. trigger initial board changes - make it after started event to propagate all event correctly to GameView
+        // 4. trigger initial board changes - make it after started event to propagate all event correctly to GameView
         Phase firstPhase = phaseReducer.getFirstPhase();
         state = builder.createReadyState(state);
         state = state.setPhase(firstPhase.getClass());
@@ -325,6 +329,26 @@ public class Game implements EventProxy {
             state = phaseReducer.apply(state, msg);
         }
         replaceState(state);
+    }
+
+    private void createAiPlayers(GameController gc) {
+        for (PlayerSlot slot : slots) {
+            if (slot != null && slot.isAi() && slot.isOwn()) {
+                try {
+                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    for (Player player : this.state.getPlayers().getPlayers()) {
+                        if (player.getSlot().getNumber() == slot.getNumber()) {
+                            AiPlayerAdapter adapter = new AiPlayerAdapter(gc, player, ai);
+                            eventBus.register(adapter);
+                            logger.info("AI player created - " + slot.getAiClassName());
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Unable to create AI player", e);
+                }
+            }
+        }
     }
 
     public void setSlots(PlayerSlot[] slots) {

@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.ai.DummyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
@@ -224,16 +225,15 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
                 nickname.setText(nick);
                 slot.setState(SlotState.OWN);
                 sendTakeSlotMessage(slot);
-// IMMUTABLE TODO return AI
-//            } else if (!slot.isAi()) { //player --> ai
-//                nameProvider.releaseName(false, slot.getNumber());
-//                //TODO get out hardcoded AI class
-//                slot.setAiClassName(LegacyAiPlayer.class.getName());
-//                nick = nameProvider.reserveName(true, slot.getNumber());
-//                slot.setNickname(nick);
-//                nickname.setText(nick);
-//                slot.setState(SlotState.OWN);
-//                sendTakeSlotMessage(slot);
+            } else if (!slot.isAi()) { //player --> ai
+                nameProvider.releaseName(false, slot.getNumber());
+                //TODO get out hardcoded AI class
+                slot.setAiClassName(DummyAiPlayer.class.getName());
+                nick = nameProvider.reserveName(true, slot.getNumber());
+                slot.setNickname(nick);
+                nickname.setText(nick);
+                slot.setState(SlotState.OWN);
+                sendTakeSlotMessage(slot);
             } else { //ai --> open
                 nameProvider.releaseName(true, slot.getNumber());
                 slot.setNickname(null);

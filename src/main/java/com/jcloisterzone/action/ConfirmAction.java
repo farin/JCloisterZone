@@ -10,7 +10,7 @@ public class ConfirmAction extends PlayerAction<Boolean> {
     private static final long serialVersionUID = 1L;
 
     public ConfirmAction() {
-        super(HashSet.empty());
+        super(HashSet.of(Boolean.TRUE));
     }
 
     @Override
