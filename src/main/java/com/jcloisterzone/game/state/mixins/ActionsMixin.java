@@ -11,7 +11,7 @@ public interface ActionsMixin {
 
     default PlayerAction<?> getAction() {
         ActionsState as = getPlayerActions();
-        return as == null ? null : as.getActions().get();
+        return as == null ? null : as.getActions().getOrNull();
     }
 
     default GameState appendAction(PlayerAction<?> action) {

@@ -357,7 +357,7 @@ public class ControlPanel extends JPanel {
                 if (first instanceof ConfirmAction) {
                     handleConfirmAction(state, isLocal);
                 } else if (
-                    first.getClass().isAnnotationPresent(LinkedPanel.class)
+                    first != null && first.getClass().isAnnotationPresent(LinkedPanel.class)
                 ) {
                     //ignore actions managed by panels
                     //TOOD show image anyway on control/action panel
