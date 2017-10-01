@@ -8,7 +8,6 @@ port: ${port}
 locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
-ai_place_tile_delay: ${ai_place_tile_delay} # miliseconds to wait before computer player place tile
 theme: ${theme}
 
 beep_alert: ${beep_alert}
@@ -19,6 +18,10 @@ client_name: ${client_name}
 client_id: ${client_id}
 secret: ${secret}
 play_online_host: ${play_online_host}
+
+ai:
+  place_tile_delay: ${ai_place_tile_delay} # miliseconds to wait before computer player place tile
+  class_name: ${ai_class_name}
 
 players:
   # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)

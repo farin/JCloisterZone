@@ -20,6 +20,8 @@ public class AiPlayerAdapter {
         this.gc = gc;
         this.player = player;
         this.aiPlayer = aiPlayer;
+
+        aiPlayer.onGameStart(gc.getConfig(), gc.getGame().getSetup());
     }
 
     @Subscribe
@@ -27,27 +29,25 @@ public class AiPlayerAdapter {
         GameState state = ev.getCurrentState();
         Player activePlayer = state.getActivePlayer();
         if (player.equals(activePlayer)) {
-            WsInGameMessage msg = aiPlayer.apply(state);
-            int delay = gc.getConfig().getAi_place_tile_delay();
-            if (msg instanceof CommitMessage) {
-                delay = 0;
-            }
-            sendWithDelay(msg, delay);
+            new Thread(() -> {
+                WsInGameMessage msg = aiPlayer.apply(state);
+                int delay = gc.getConfig().getAi().getPlace_tile_delay();
+                if (msg instanceof CommitMessage) {
+                    delay = 0;
+                }
+                sendWithDelay(msg, delay);
+            }, "AI player " + player.getNick()).start();
         }
     }
 
     private void sendWithDelay(WsMessage msg, int delay) {
-        if (delay == 0) {
-            gc.getConnection().send(msg);
-            return;
-        }
-        new Thread(() -> {
+        if (delay > 0) {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
             }
-            gc.getConnection().send(msg);
-        }).start();
+        }
+        gc.getConnection().send(msg);
     }
 
 }

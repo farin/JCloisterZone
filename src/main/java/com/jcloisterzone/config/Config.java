@@ -40,7 +40,6 @@ public class Config {
     private String locale;
 
     private Integer score_display_duration;
-    private Integer ai_place_tile_delay;
     private String theme;
 
     private Boolean beep_alert;
@@ -51,6 +50,7 @@ public class Config {
 
     private List<String> plugins;
     private ConfirmConfig confirm;
+    private AiConfig ai;
     private PlayersConfig players;
     private ScreenshotsConfig screenshots;
     private SavedGamesConfig saved_games;
@@ -295,7 +295,24 @@ public class Config {
         public void setFontLight(String fontLight) {
             this.fontLight = fontLight;
         }
+    }
 
+    public static class AiConfig {
+        private Integer place_tile_delay;
+        private String class_name;
+
+        public Integer getPlace_tile_delay() {
+            return place_tile_delay;
+        }
+        public void setPlace_tile_delay(Integer place_tile_delay) {
+            this.place_tile_delay = place_tile_delay;
+        }
+        public String getClass_name() {
+            return class_name;
+        }
+        public void setClass_name(String class_name) {
+            this.class_name = class_name;
+        }
     }
 
     public static class PlayersConfig {
@@ -381,14 +398,6 @@ public class Config {
         this.score_display_duration = score_display_duration;
     }
 
-    public Integer getAi_place_tile_delay() {
-        return ai_place_tile_delay;
-    }
-
-    public void setAi_place_tile_delay(Integer ai_place_tile_delay) {
-        this.ai_place_tile_delay = ai_place_tile_delay;
-    }
-
     public String getTheme() {
         return theme;
     }
@@ -411,6 +420,17 @@ public class Config {
 
     public void setPlugins(List<String> plugins) {
         this.plugins = plugins;
+    }
+
+    public AiConfig getAi() {
+        if (ai == null) {
+            ai = new AiConfig();
+        }
+        return ai;
+    }
+
+    public void setAi(AiConfig ai) {
+        this.ai = ai;
     }
 
     public PlayersConfig getPlayers() {
@@ -513,6 +533,7 @@ public class Config {
     public void setScreenshots(ScreenshotsConfig screenshots) {
         this.screenshots = screenshots;
     }
+
 
 
     public SavedGamesConfig getSaved_games() {
