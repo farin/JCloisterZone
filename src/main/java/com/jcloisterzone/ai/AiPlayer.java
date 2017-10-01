@@ -37,6 +37,4 @@ public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
             return action.select(option);
         }
     }
-
-
 }

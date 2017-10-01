@@ -1,5 +1,8 @@
 package com.jcloisterzone.ai;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameChangedEvent;
@@ -11,9 +14,13 @@ import com.jcloisterzone.wsio.message.WsMessage;
 
 public class AiPlayerAdapter {
 
+    private static ExecutorService executor = Executors.newFixedThreadPool(1);
+
     private final GameController gc;
     private final Player player;
     private final AiPlayer aiPlayer;
+
+    private final int tilePlaceDelay;
 
 
     public AiPlayerAdapter(GameController gc, Player player, AiPlayer aiPlayer) {
@@ -21,6 +28,7 @@ public class AiPlayerAdapter {
         this.player = player;
         this.aiPlayer = aiPlayer;
 
+        tilePlaceDelay = gc.getConfig().getAi().getPlace_tile_delay();
         aiPlayer.onGameStart(gc.getConfig(), gc.getGame().getSetup());
     }
 
@@ -29,14 +37,10 @@ public class AiPlayerAdapter {
         GameState state = ev.getCurrentState();
         Player activePlayer = state.getActivePlayer();
         if (player.equals(activePlayer)) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 WsInGameMessage msg = aiPlayer.apply(state);
-                int delay = gc.getConfig().getAi().getPlace_tile_delay();
-                if (msg instanceof CommitMessage) {
-                    delay = 0;
-                }
-                sendWithDelay(msg, delay);
-            }, "AI player " + player.getNick()).start();
+                sendWithDelay(msg, msg instanceof CommitMessage ? 0 : tilePlaceDelay);
+            }, "AI player " + player.getNick());
         }
     }
 
