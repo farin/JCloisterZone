@@ -159,7 +159,7 @@ public class PreferencesDialog extends JDialog {
         opt = (StringOption) themeComboBox.getSelectedItem();
         config.setTheme(opt.getKey());
         //TODO error handling
-        config.setAi_place_tile_delay(intValue(aiPlaceTileDelay.getText()));
+        config.getAi().setPlace_tile_delay(intValue(aiPlaceTileDelay.getText()));
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
 
         List<String> enabledPlugins = new ArrayList<>();
@@ -236,7 +236,7 @@ public class PreferencesDialog extends JDialog {
         panel.add(new ThemedJLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 
         aiPlaceTileDelay = new JTextField();
-        aiPlaceTileDelay.setText(valueOf(config.getAi_place_tile_delay()));
+        aiPlaceTileDelay.setText(valueOf(config.getAi().getPlace_tile_delay()));
         panel.add(aiPlaceTileDelay, "wrap, growx");
 
         panel.add(new ThemedJLabel(_("Score display duration (sec)")), "alignx trailing");
@@ -362,7 +362,7 @@ public class PreferencesDialog extends JDialog {
         tabList.setBorder(new EmptyBorder(4,4,4,4));
         tabList.addListSelectionListener(new ListSelectionListener() {
             @SuppressWarnings("unchecked")
-			@Override
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                JList<String> tabList = (JList<String>) e.getSource();
                int idx = tabList.getSelectedIndex();

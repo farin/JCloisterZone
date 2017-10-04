@@ -203,7 +203,7 @@ public class SimpleServer extends WebSocketServer  {
         SlotMessage msg = new SlotMessage(slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
         msg.setGameId(gameId);
         msg.setAiClassName(slot.getAiClassName());
-        msg.setSupportedExpansions(slot.getSupportedExpansions());
+        msg.setSupportedCapabilities(slot.getSupportedCapabilities());
         return msg;
     }
 
@@ -360,7 +360,7 @@ public class SimpleServer extends WebSocketServer  {
         slot.setNickname(msg.getNickname());
         slot.setAiClassName(msg.getAiClassName());
         slot.setSessionId(sessionId);
-        slot.setSupportedExpansions(msg.getSupportedExpansions());
+        slot.setSupportedCapabilities(msg.getSupportedCapabilities());
         slot.setClientId(client.getClientId());
         slot.setSecret(client.getSecret());
         broadcast(newSlotMessage(slot));
@@ -370,7 +370,7 @@ public class SimpleServer extends WebSocketServer  {
         if (savedGame == null) {
             slot.setNickname(null);
             slot.setAiClassName(null);
-            slot.setSupportedExpansions(null);
+            slot.setSupportedCapabilities(null);
         }
         slot.setSerial(null);
         slot.setSessionId(null);

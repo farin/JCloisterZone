@@ -3,6 +3,7 @@ package com.jcloisterzone.game;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -76,15 +77,14 @@ public class Game implements EventProxy {
     private java.util.HashMap<String, Object> gameAnnotations;
 
     protected PlayerSlot[] slots;
-    protected Expansion[][] slotSupportedExpansions = new Expansion[PlayerSlot.COUNT][];
+    @SuppressWarnings("unchecked")
+    protected java.util.Set<Class<? extends Capability<?>>>[] slotSupportedCapabilities = new java.util.Set[PlayerSlot.COUNT];
 
     private List<UndoHistoryItem> undoHistory = List.empty();
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
 
     private int idSequenceCurrVal = 0;
-
-
 
     public Game(String gameId, long randomSeed) {
         this.gameId = gameId;
@@ -235,7 +235,7 @@ public class Game implements EventProxy {
 
     @WsSubscribe
     public void handleSlotMessage(SlotMessage msg) {
-        slotSupportedExpansions[msg.getNumber()] = msg.getSupportedExpansions();
+        slotSupportedCapabilities[msg.getNumber()] = msg.getSupportedCapabilities();
         post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));
     }
 
@@ -273,18 +273,29 @@ public class Game implements EventProxy {
 
 
     private EnumSet<Expansion> mergeSupportedExpansions() {
-        EnumSet<Expansion> merged = null;
-        for (int i = 0; i < slotSupportedExpansions.length; i++) {
-            Expansion[] supported = slotSupportedExpansions[i];
+        java.util.Set<Class<? extends Capability<?>>> merged = null;
+        for (int i = 0; i < slotSupportedCapabilities.length; i++) {
+            java.util.Set<Class<? extends Capability<?>>> supported = slotSupportedCapabilities[i];
             if (supported == null) continue;
             if (merged == null) {
-                merged = EnumSet.allOf(Expansion.class);
+                merged = new HashSet<>();
             }
-            EnumSet<Expansion> supp = EnumSet.noneOf(Expansion.class);
-            Collections.addAll(supp, supported);
-            merged.retainAll(supp);
+            merged.addAll(supported);
         }
-        return merged;
+        EnumSet<Expansion> supportedExpansions = EnumSet.noneOf(Expansion.class);
+        outer:
+        for (Expansion exp : Expansion.values()) {
+            if (!exp.isImplemented()) continue;
+            if (merged != null) {
+                for (Class<? extends Capability<?>> cap : exp.getCapabilities()) {
+                    if (!merged.contains(cap)) {
+                        continue outer;
+                    }
+                }
+            }
+            supportedExpansions.add(exp);
+        }
+        return supportedExpansions;
     }
 
     @Override

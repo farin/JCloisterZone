@@ -1,7 +1,12 @@
 package com.jcloisterzone.wsio.message;
 
+import java.util.Set;
+
+import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.wsio.WsMessageCommand;
+import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
 
 @WsMessageCommand("TAKE_SLOT")
 public class TakeSlotMessage implements WsInGameMessage {
@@ -10,7 +15,8 @@ public class TakeSlotMessage implements WsInGameMessage {
     private int number;
     private String nickname;
     private String aiClassName;
-    private Expansion[] supportedExpansions;
+    @JsonAdapter(CapabilitiesSetAdapter.class)
+    private Set<Class<? extends Capability<?>>> supportedCapabilities;
 
     public TakeSlotMessage() {
     }
@@ -55,11 +61,11 @@ public class TakeSlotMessage implements WsInGameMessage {
         this.aiClassName = aiClassName;
     }
 
-    public Expansion[] getSupportedExpansions() {
-        return supportedExpansions;
+    public Set<Class<? extends Capability<?>>> getSupportedCapabilities() {
+        return supportedCapabilities;
     }
 
-    public void setSupportedExpansions(Expansion[] supportedExpansions) {
-        this.supportedExpansions = supportedExpansions;
+    public void setSupportedCapabilities(Set<Class<? extends Capability<?>>> supportedCapabilities) {
+        this.supportedCapabilities = supportedCapabilities;
     }
 }

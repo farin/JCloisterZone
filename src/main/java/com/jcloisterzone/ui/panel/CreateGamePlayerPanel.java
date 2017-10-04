@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.ai.AiPlayer;
+import com.jcloisterzone.ai.AiPlayerAdapter;
 import com.jcloisterzone.ai.player.DummyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
@@ -262,8 +264,8 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
         msg.setAiClassName(slot.getAiClassName());
         if (slot.getAiClassName() != null) {
             try {
-                EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(slot.getAiClassName()).getMethod("supportedExpansions").invoke(null);
-                msg.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
+                AiPlayer aiPlayer = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                msg.setSupportedCapabilities(aiPlayer.supportedCapabilities().toJavaSet());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }

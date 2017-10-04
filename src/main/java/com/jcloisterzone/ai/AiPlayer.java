@@ -2,6 +2,7 @@ package com.jcloisterzone.ai;
 
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -9,9 +10,15 @@ import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.Function1;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
 
 public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
+
+    default Set<Class<? extends Capability<?>>> supportedCapabilities() {
+        return HashSet.empty();
+    }
 
     default void onGameStart(Config config, GameSetup setup) {
     }
