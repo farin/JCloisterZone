@@ -1,5 +1,7 @@
 package com.jcloisterzone.ai.player;
 
+import com.jcloisterzone.Player;
+import com.jcloisterzone.ai.GameStateRanking;
 import com.jcloisterzone.ai.RankingAiPlayer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -33,8 +35,9 @@ import io.vavr.collection.Set;
 
 public class LegacyAiPlayer extends RankingAiPlayer {
 
-    public LegacyAiPlayer() {
-        super(new LegacyRanking());
+    @Override
+    protected GameStateRanking createStateRanking(Player me) {
+        return new LegacyRanking(me);
     }
 
     @Override

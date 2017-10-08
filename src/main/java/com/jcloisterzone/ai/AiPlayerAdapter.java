@@ -29,7 +29,7 @@ public class AiPlayerAdapter {
         this.aiPlayer = aiPlayer;
 
         tilePlaceDelay = gc.getConfig().getAi().getPlace_tile_delay();
-        aiPlayer.onGameStart(gc.getConfig(), gc.getGame().getSetup());
+        aiPlayer.onGameStart(gc.getConfig(), gc.getGame().getSetup(), player);
     }
 
     @Subscribe

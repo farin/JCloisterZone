@@ -1,5 +1,6 @@
 package com.jcloisterzone.ai;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Capability;
@@ -20,7 +21,7 @@ public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
         return HashSet.empty();
     }
 
-    default void onGameStart(Config config, GameSetup setup) {
+    default void onGameStart(Config config, GameSetup setup, Player me) {
     }
 
     default Vector<WsInGameMessage> getPossibleActions(GameState state) {
