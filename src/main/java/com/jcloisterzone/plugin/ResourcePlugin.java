@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.plugin;
+package com.jcloisterzone.plugin;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

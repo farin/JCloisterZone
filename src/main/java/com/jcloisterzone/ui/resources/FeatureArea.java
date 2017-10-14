@@ -8,7 +8,7 @@ import java.awt.geom.Area;
 import java.io.ObjectInputStream.GetField;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.ui.plugin.ResourcePlugin;
+import com.jcloisterzone.plugin.ResourcePlugin;
 
 public class FeatureArea {
 

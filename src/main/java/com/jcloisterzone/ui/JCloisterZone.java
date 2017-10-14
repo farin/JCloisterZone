@@ -28,9 +28,9 @@ import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.PluginType;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.PluginType;
 
 public class JCloisterZone  {
 

@@ -35,6 +35,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
@@ -44,8 +46,6 @@ import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.actionpanel.ActionInteractionPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
-import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.view.GameView;
 
 import net.miginfocom.swing.MigLayout;

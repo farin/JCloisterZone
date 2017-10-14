@@ -27,13 +27,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.PluginType;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
@@ -42,8 +42,8 @@ import com.jcloisterzone.ui.gtk.ThemedJCheckBox;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJList;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
-import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.PluginType;
+
+import net.miginfocom.swing.MigLayout;
 
 public class PreferencesDialog extends JDialog {
 

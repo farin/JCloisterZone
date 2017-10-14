@@ -1,4 +1,4 @@
-package com.jcloisterzone.ui.plugin;
+package com.jcloisterzone.plugin;
 
 public enum PluginType {
 

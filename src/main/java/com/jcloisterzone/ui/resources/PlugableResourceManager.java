@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.ImmutablePoint;
-import com.jcloisterzone.ui.plugin.Plugin;
 
 import io.vavr.Predicates;
 import io.vavr.collection.Stream;
