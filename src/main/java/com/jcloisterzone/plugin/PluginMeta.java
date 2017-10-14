@@ -1,11 +1,14 @@
 package com.jcloisterzone.plugin;
 
+import com.jcloisterzone.Expansion;
+
 public class PluginMeta {
 
     private String version;
     private String title;
     private String description;
     private String author;
+    private ExpansionMeta[] expansions;
 
     private TileImagesMeta tile_images;
 
@@ -39,7 +42,12 @@ public class PluginMeta {
     public void setTile_images(TileImagesMeta tile_images) {
         this.tile_images = tile_images;
     }
-
+    public ExpansionMeta[] getExpansions() {
+        return expansions;
+    }
+    public void setExpansions(ExpansionMeta[] expansions) {
+        this.expansions = expansions;
+    }
 
     public static class TileImagesMeta {
         private String offset;
@@ -64,6 +72,38 @@ public class PluginMeta {
         public void setRatio_y(Integer ratio_y) {
             this.ratio_y = ratio_y;
         }
+    }
+
+    public static class ExpansionMeta {
+        private String code;
+        private String name;
+        private String label;
+        private String[] capabilities;
+
+        public String getCode() {
+            return code;
+        }
+        public void setCode(String code) {
+            this.code = code;
+        }
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getLabel() {
+            return label;
+        }
+        public void setLabel(String label) {
+            this.label = label;
+        }
+		public String[] getCapabilities() {
+			return capabilities;
+		}
+		public void setCapabilities(String[] capabilities) {
+			this.capabilities = capabilities;
+		}       
     }
 
 }

@@ -173,6 +173,7 @@ public class PreferencesDialog extends JDialog {
                     logger.error(e.getMessage(), e);
                 }
             } else {
+                plugin.unload();
                 plugin.setEnabled(false);
             }
         }
@@ -266,7 +267,7 @@ public class PreferencesDialog extends JDialog {
         }
 
         public boolean isReadOnly() {
-           return plugin.getRelativePath().matches("^plugins/classic\\b");
+           return plugin.isDefault();
         }
 
         public boolean isEnabled() {

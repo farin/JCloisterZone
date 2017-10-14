@@ -15,17 +15,21 @@ import org.w3c.dom.NodeList;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.plugin.PluginMeta.ExpansionMeta;
 import com.jcloisterzone.ui.resources.ImageLoader;
+
+import io.vavr.collection.Vector;
 
 public abstract class Plugin {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final URL url;
-    protected final ImageLoader imageLoader;
-    protected final URLClassLoader loader;
+    private final ImageLoader imageLoader;
+    private final URLClassLoader loader;
     /** used to identify plugin and to be able save it back to config file */
     private final String relativePath;
 
@@ -33,6 +37,8 @@ public abstract class Plugin {
 
     private boolean loaded;
     private boolean enabled;
+
+    private Vector<Expansion> newExpansions = Vector.empty();
 
     public Plugin(URL url, String relativePath) throws MalformedURLException {
         this.relativePath = relativePath;
@@ -51,6 +57,13 @@ public abstract class Plugin {
     protected void loadMetadata() throws Exception {
         Yaml yaml = new Yaml(new Constructor(PluginMeta.class));
         meta = (PluginMeta) yaml.load(loader.getResource("plugin.yaml").openStream());
+
+        if (meta.getExpansions() != null) {
+            for (ExpansionMeta expMeta : meta.getExpansions()) {
+                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel());
+                newExpansions = newExpansions.append(exp);
+            }
+        }
     }
 
     public Image getIcon() {
@@ -67,6 +80,10 @@ public abstract class Plugin {
 
     public PluginMeta getMetadata() {
         return meta;
+    }
+
+    public boolean isDefault() {
+        return getRelativePath().matches("^plugins/classic\\b");
     }
 
     public boolean isLoaded() {
@@ -102,7 +119,24 @@ public abstract class Plugin {
         }
     }
 
-    protected abstract void doLoad() throws Exception;
+    public final void unload() {
+        if (isLoaded()) {
+           doUnload();
+           loaded = false;
+        }
+    }
+
+    protected void doLoad() throws Exception {
+        for (Expansion exp : newExpansions) {
+            Expansion.register(exp, this);
+        }
+    }
+
+    protected void doUnload() {
+        for (Expansion exp : newExpansions) {
+            Expansion.unregister(exp);
+        }
+    }
 
     private static Plugin readPlugin(URL pluginURL, String relativePath) throws Exception {
         ResourcePlugin plugin = new ResourcePlugin(pluginURL, relativePath);

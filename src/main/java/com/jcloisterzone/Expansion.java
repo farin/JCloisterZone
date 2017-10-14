@@ -39,8 +39,9 @@ import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.game.capability.YagaCapability;
+import com.jcloisterzone.plugin.Plugin;
 
-import io.vavr.collection.List;
+import io.vavr.collection.Vector;
 
 @SuppressWarnings("unchecked")
 /**
@@ -111,7 +112,7 @@ public class Expansion {
     @NotImplemented public static Expansion DARMSTADT_PROMO = new Expansion("DARMSTADT_PROMO", "DP", _("Darmstadt Promo"));
     @NotImplemented public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", _("Labyrinth"));
 
-    private static Expansion[] VALUES = new Expansion[] {
+    private static Vector<Expansion> _values = Vector.of(
         BASIC, WINTER,
         INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON, TOWER,
         ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS,
@@ -119,12 +120,13 @@ public class Expansion {
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
         FLIER, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
         RUSSIAN_PROMOS
-    };
+    );
 
     private String name;
     private String code;
     private String label;
     private Class<? extends Capability<?>>[] capabilities;
+    private Plugin origin;
 
     public Expansion(String name, String code, String label) {
         this(name, code, label, null);
@@ -138,8 +140,8 @@ public class Expansion {
     }
 
     /** Returns all implemented expansion */
-    public static Expansion[] values() {
-        return VALUES;
+    public static Vector<Expansion> values() {
+        return _values;
     }
 
     public String name() {
@@ -148,6 +150,10 @@ public class Expansion {
 
     public String getCode() {
         return code;
+    }
+
+    public Plugin getOrigin() {
+        return origin;
     }
 
     public Class<? extends Capability<?>>[] getCapabilities() {
@@ -171,5 +177,14 @@ public class Expansion {
             if (exp.code.equals(code)) return exp;
         }
         throw new IllegalArgumentException("Expansion " + code + " doesn't exist.");
+    }
+
+    public static void register(Expansion exp, Plugin origin) {
+        exp.origin = origin;
+        _values = _values.append(exp);
+    }
+    
+    public static void unregister(Expansion exp) {
+    	_values = _values.remove(exp);
     }
 }

@@ -76,14 +76,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    protected void doLoad() throws IOException, SAXException, ParserConfigurationException {
+    protected void doLoad() throws Exception {
+        super.doLoad();
         pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
     }
 
     @Override
     protected void loadMetadata() throws Exception {
         super.loadMetadata();
-        containsGraphics = Files.list(Paths.get(loader.getResource("tiles").toURI()))
+        containsGraphics = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))
             .filter(Files::isDirectory)
             .map(d -> d.getFileName().toString())
             .collect(Collectors.toSet());
@@ -117,7 +118,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     protected boolean containsTile(String tileId) {
         if (!isEnabled()) return false;
-        String expCode = tileId.substring(0, 2);
+        String expCode = tileId.split("\\.")[0];
         return containsGraphics.contains(expCode);
     }
 
@@ -145,7 +146,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private TileImage getTileImage(String tileId, Rotation rot) {
         if (!containsTile(tileId)) return null;
-        String baseName = "tiles/"+tileId.substring(0, 2) + "/" + tileId.substring(3);
+        String[] tokens = tileId.split("\\.", 2);
+        String baseName = "tiles/"+tokens[0] + "/" + tokens[1];
         String fileName;
         Image img;
         // first try to find rotation specific image

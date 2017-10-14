@@ -141,10 +141,13 @@ public class TilePackBuilder {
             fileName = debugConfig.getTile_definitions().get(expansion.name());
         }
         if (fileName == null) {
-            return getStandardTilesConfig(expansion);
-        } else {
-            return TilePackBuilder.class.getClassLoader().getResource(fileName);
+            fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
+            if (expansion.getOrigin() != null) {
+                // expansion is created by plugin
+                return expansion.getOrigin().getLoader().getResource(fileName);
+            }
         }
+        return TilePackBuilder.class.getClassLoader().getResource(fileName);
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
@@ -164,7 +167,7 @@ public class TilePackBuilder {
             return 1;
         } else {
             int baseCount = attributeIntValue(tileEl, "count", 1);
-            return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE)); 
+            return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE));
         }
     }
 

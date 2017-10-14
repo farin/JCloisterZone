@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aliases xmlns="http://www.jcloisterzone.com/aliases">
+    <alias treat="FOR2.L" as="BA.L" />
+    <alias treat="FOR2.LR" as="BA.LR" />
+    <alias treat="FOR2.LRFR" as="IC.LRFR" />
+    <alias treat="FOR2.C" as="BA.C" />
+    <alias treat="FOR2.Cc.1" as="BA.Cc.1" />
+    <alias treat="FOR2.CC.2" as="BA.CC.2" />
+    <alias treat="FOR2.Cc+" as="BA.Cc+" />
+    <alias treat="FOR2.Ccc" as="BA.Ccc" />
+    <alias treat="FOR2.Ccc+" as="BA.Ccc+" />
+    <alias treat="FOR2.Cccc+" as="BA.Cccc+" />
+    <alias treat="FOR2.CccR" as="BA.CccR" />
+    <alias treat="FOR2.CccR+" as="BA.CccR+" />
+    <alias treat="FOR2.CcRr" as="BA.CcRr" />
+    <alias treat="FOR2.CcRr+" as="BA.CcRr+" />
+    <alias treat="FOR2.CFc.1" as="BA.CFc.1" />
+    <alias treat="FOR2.CFC.2" as="BA.CFC.2" />
+    <alias treat="FOR2.CFc+" as="BA.CFc+" />
+    <alias treat="FOR2.CFR" as="IC.CFR" />
+    <alias treat="FOR2.CRr" as="BA.CRr" />
+    <alias treat="FOR2.CRRR" as="BA.CRRR" />
+    <alias treat="FOR2.RCr" as="BA.RCr" />
+    <alias treat="FOR2.RFr" as="BA.RFr" />
+    <alias treat="FOR2.Rr" as="BA.Rr" />
+    <alias treat="FOR2.RrC" as="BA.RrC" />
+    <alias treat="FOR2.RRR" as="BA.RRR" />
+    <alias treat="FOR2.RRRR" as="BA.RRRR" />
+</aliases>

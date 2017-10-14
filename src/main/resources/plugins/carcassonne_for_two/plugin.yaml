@@ -1,0 +1,12 @@
+version: 4.0
+title: Carcassonne For Two
+description: Carcassonne For Two is a special Edition of Carcassonne with only 48 tiles for 2-players only.
+author: Tom Hill
+
+expansions:
+   -
+      code: FOR2
+      name: CARCASSONNE_FOR_TWO
+      label: Spin-off for Two players
+      capabilities:
+        - StandardGame

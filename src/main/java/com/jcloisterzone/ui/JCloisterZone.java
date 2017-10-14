@@ -121,6 +121,7 @@ public class JCloisterZone  {
         Collections.sort(plugins, new Comparator<Plugin>() {
 
             private int getPluginPriority(Plugin p) {
+                if (p.isDefault()) return Integer.MAX_VALUE;
                 if (p instanceof ResourcePlugin) {
                     ResourcePlugin rp = (ResourcePlugin) p;
                     if (rp.isExpansionSupported(Expansion.BASIC)) {
@@ -135,7 +136,7 @@ public class JCloisterZone  {
             @Override
             public int compare(Plugin o1, Plugin o2) {
                 int o1ord = getPluginPriority(o1);
-                int o2ord = getPluginPriority(o2);;
+                int o2ord = getPluginPriority(o2);
                 return o1ord - o2ord;
             }
         });
