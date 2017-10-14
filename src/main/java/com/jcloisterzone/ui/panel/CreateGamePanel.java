@@ -220,7 +220,6 @@ public class CreateGamePanel extends ThemedJPanel {
 
         expansionPanel.setLayout(new MigLayout("gapy 1", "[][right]", "[]"));
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
             createExpansionLine(exp, tilePackBuilder.getExpansionSize(exp));
         }
         scrolled.add(expansionPanel, "cell 1 0,grow");
@@ -551,7 +550,7 @@ public class CreateGamePanel extends ThemedJPanel {
     private JCheckBox createExpansionCheckbox(final Expansion exp,
             boolean mutableSlots) {
         JCheckBox chbox = new ThemedJCheckBox(exp.toString(), game.getSetup().hasExpansion(exp));
-        if (!exp.isImplemented() || !mutableSlots)
+        if (!mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
             chbox.setEnabled(false);
@@ -612,17 +611,12 @@ public class CreateGamePanel extends ThemedJPanel {
         }
     }
 
-    public void updateSupportedExpansions(EnumSet<Expansion> expansions) {
-        if (expansions == null) {
-            expansions = EnumSet.allOf(Expansion.class);
-        }
+    public void updateSupportedExpansions(java.util.Set<Expansion> expansions) {
         for (Expansion exp : Expansion.values()) {
-            if (exp.isImplemented()) {
-                boolean isSupported = expansions.contains(exp);
-                JComponent[] components = expansionComponents.get(exp);
-                for (JComponent comp : components) {
-                    comp.setVisible(isSupported);
-                }
+            boolean isSupported = expansions == null || expansions.contains(exp);
+            JComponent[] components = expansionComponents.get(exp);
+            for (JComponent comp : components) {
+                comp.setVisible(isSupported);
             }
         }
     }

@@ -49,6 +49,19 @@ public final class MessageParser {
                 return msg;
             }
         });
+        builder.registerTypeAdapter(Expansion.class, new JsonSerializer<Expansion>() {
+            @Override
+            public JsonElement serialize(Expansion src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.name());
+            }
+        });
+        builder.registerTypeAdapter(Expansion.class, new JsonDeserializer<Expansion>() {
+            @Override
+            public Expansion deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                return Expansion.valueOf(json.getAsString());
+            }
+        });
         builder.registerTypeAdapter(Position.class, new JsonSerializer<Position>() {
             @Override
             public JsonElement serialize(Position src, Type typeOfSrc, JsonSerializationContext context) {

@@ -85,9 +85,13 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         nl = expansion.getElementsByTagName("expansion");
         if (nl.getLength() == 0) throw new Exception("No expansion is supported by " + getId());
         for (int i = 0; i < nl.getLength(); i++) {
-            String expName = nl.item(i).getFirstChild().getNodeValue().trim();
-            Expansion exp = Expansion.valueOf(expName);
-            supportedExpansions = supportedExpansions.add(exp.getCode());
+            try {
+                String expName = nl.item(i).getFirstChild().getNodeValue().trim();
+                Expansion exp = Expansion.valueOf(expName);
+                supportedExpansions = supportedExpansions.add(exp.getCode());
+            } catch (IllegalArgumentException e) {
+                logger.debug(e.getMessage(), e);
+            }
         }
 
         Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");

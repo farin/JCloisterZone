@@ -385,7 +385,6 @@ public class ClientMessageListener implements MessageListener {
         );
 
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
             game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().get(exp).getOrElse(0)));
         }
         for (Rule rule : Rule.values()) {

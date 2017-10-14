@@ -272,7 +272,7 @@ public class Game implements EventProxy {
     }
 
 
-    private EnumSet<Expansion> mergeSupportedExpansions() {
+    private java.util.Set<Expansion> mergeSupportedExpansions() {
         java.util.Set<Class<? extends Capability<?>>> merged = null;
         for (int i = 0; i < slotSupportedCapabilities.length; i++) {
             java.util.Set<Class<? extends Capability<?>>> supported = slotSupportedCapabilities[i];
@@ -282,10 +282,9 @@ public class Game implements EventProxy {
             }
             merged.addAll(supported);
         }
-        EnumSet<Expansion> supportedExpansions = EnumSet.noneOf(Expansion.class);
+        java.util.Set<Expansion> supportedExpansions = new HashSet<>();
         outer:
         for (Expansion exp : Expansion.values()) {
-            if (!exp.isImplemented()) continue;
             if (merged != null) {
                 for (Class<? extends Capability<?>> cap : exp.getCapabilities()) {
                     if (!merged.contains(cap)) {

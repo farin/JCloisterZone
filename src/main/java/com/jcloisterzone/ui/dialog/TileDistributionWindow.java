@@ -87,7 +87,7 @@ public class TileDistributionWindow extends JFrame {
     private Expansion[] getImplementedExpansions() {
         List<Expansion> exps = new ArrayList<>();
         for (Expansion exp : Expansion.values()) {
-            if (exp.isImplemented() && exp != Expansion.PHANTOM && exp != Expansion.LITTLE_BUILDINGS) {
+            if (exp != Expansion.PHANTOM && exp != Expansion.LITTLE_BUILDINGS) {
                 exps.add(exp);
             }
         }

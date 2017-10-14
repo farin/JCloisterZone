@@ -1,20 +1,21 @@
 package com.jcloisterzone.event.setup;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.event.Event;
 
 public class SupportedExpansionsChangeEvent extends Event {
 
-    private final EnumSet<Expansion> expansions;
+    private final Set<Expansion> expansions;
 
-    public SupportedExpansionsChangeEvent(EnumSet<Expansion> expansions) {
+    public SupportedExpansionsChangeEvent(Set<Expansion> expansions) {
         super();
         this.expansions = expansions;
     }
 
-    public EnumSet<Expansion> getExpansions() {
+    public Set<Expansion> getExpansions() {
         return expansions;
     }
 }
