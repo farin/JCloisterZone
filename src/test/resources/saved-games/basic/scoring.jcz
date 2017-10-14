@@ -22,7 +22,7 @@
       "BASIC": 1
     },
     "rules": {},
-    "capabilities": []
+    "capabilities": ["StandardGame"]
   },
   "replay": [
     {

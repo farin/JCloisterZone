@@ -24,6 +24,7 @@
     },
     "rules": {},
     "capabilities": [
+        "StandardGame",
         "Inn",
         "Cathedral"
     ]

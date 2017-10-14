@@ -20,6 +20,7 @@ import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
@@ -129,7 +130,7 @@ public class SimpleServer extends WebSocketServer  {
             initialSeed = random.nextLong();
             gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
-                io.vavr.collection.HashSet.empty(),
+                io.vavr.collection.HashSet.of(StandardGameCapability.class),
                 Rule.getDefaultRules()
             );
             replay = new ArrayList<>();

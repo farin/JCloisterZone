@@ -1,11 +1,7 @@
 package com.jcloisterzone.game;
 
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -20,7 +16,6 @@ import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ai.AiPlayerAdapter;
-import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config.DebugConfig;

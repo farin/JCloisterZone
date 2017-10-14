@@ -249,7 +249,6 @@ public class ChannelPanel extends ThemedJPanel {
 
         @Subscribe
         public void expansionsChanged(ExpansionChangedEvent ev) {
-            if (ev.getExpansion() == Expansion.BASIC) return;
             if (ev.getCount() > 0) {
                 expansions.put(ev.getExpansion(), ev.getCount());
             } else {

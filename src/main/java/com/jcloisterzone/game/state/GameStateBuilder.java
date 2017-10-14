@@ -164,9 +164,7 @@ public class GameStateBuilder {
 
     private io.vavr.collection.List<Follower> createPlayerFollowers(Player p, Seq<Capability<?>> capabilities) {
         MeepleIdProvider idProvider = new MeepleIdProvider(p);
-        Stream<Follower> stream = Stream.range(0, SmallFollower.QUANTITY)
-                .map(i -> (Follower) new SmallFollower(idProvider.generateId(SmallFollower.class), p));
-        io.vavr.collection.List<Follower> followers = io.vavr.collection.List.ofAll(stream);
+        io.vavr.collection.List<Follower> followers = io.vavr.collection.List.empty();
         followers = followers.appendAll(capabilities.flatMap(c -> c.createPlayerFollowers(p, idProvider)));
         return followers;
     }

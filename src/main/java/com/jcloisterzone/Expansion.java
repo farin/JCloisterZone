@@ -32,6 +32,7 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.SiegeCapability;
+import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
@@ -47,7 +48,8 @@ import io.vavr.collection.List;
  */
 public class Expansion {
     // Basic sets
-    public static Expansion BASIC = new Expansion("BASIC", "BA", _("Basic game"));
+    public static Expansion BASIC = new Expansion("BASIC", "BA", _("Basic game"),
+            new Class[] { StandardGameCapability.class });
     @NotImplemented public static Expansion WHEEL_OF_FORTUNE = new Expansion("WHEEL_OF_FORTUNE", "WF", _("Wheel of Fortune"));
 
     // Winter branch
