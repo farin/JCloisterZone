@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Objects;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.plugin.PluginType;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
@@ -165,10 +164,6 @@ public class PreferencesDialog extends JDialog {
         List<String> enabledPlugins = new ArrayList<>();
         for (PluginModel row : pluginRows) {
             Plugin plugin = row.plugin;
-            if (plugin.getType() == PluginType.DEFAULT_GRF_SET) {
-                enabledPlugins.add(plugin.getRelativePath());
-                continue;
-            }
             if (row.isEnabled()) {
                 try {
                     plugin.load();
@@ -263,15 +258,15 @@ public class PreferencesDialog extends JDialog {
         }
 
         public String getTitle() {
-            return plugin.getTitle();
+            return plugin.getMetadata().getTitle();
         }
 
         public String getDescription() {
-            return plugin.getDescription();
+            return plugin.getMetadata().getDescription();
         }
 
         public boolean isReadOnly() {
-            return plugin.getType() == PluginType.DEFAULT_GRF_SET;
+           return plugin.getRelativePath().matches("^plugins/classic\\b");
         }
 
         public boolean isEnabled() {

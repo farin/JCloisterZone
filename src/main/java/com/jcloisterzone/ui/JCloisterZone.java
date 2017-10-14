@@ -24,13 +24,14 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.plugin.PluginType;
 import com.jcloisterzone.config.ConfigLoader;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.ResourcePlugin;
 
 public class JCloisterZone  {
 
@@ -104,7 +105,7 @@ public class JCloisterZone  {
             for (Path file: stream) {
                 try {
                    Plugin plugin = Plugin.readPlugin(file);
-                   if (plugin.getType() == PluginType.DEFAULT_GRF_SET || isPluginEnabled(config, plugin.getRelativePath())) {
+                   if (isPluginEnabled(config, plugin.getRelativePath())) {
                        plugin.load();
                        plugin.setEnabled(true);
                    }
@@ -118,11 +119,24 @@ public class JCloisterZone  {
         }
 
         Collections.sort(plugins, new Comparator<Plugin>() {
+
+            private int getPluginPriority(Plugin p) {
+                if (p instanceof ResourcePlugin) {
+                    ResourcePlugin rp = (ResourcePlugin) p;
+                    if (rp.isExpansionSupported(Expansion.BASIC)) {
+                        return 1000 + rp.getContainedExpansions().size();
+                    } else {
+                        return 10 + rp.getContainedExpansions().size();
+                    }
+                }
+                return 1;
+            }
+
             @Override
             public int compare(Plugin o1, Plugin o2) {
-                int o1ord = o1.getType() == null ? Integer.MAX_VALUE : o1.getType().ordinal();
-                int o2ord = o2.getType() == null ? Integer.MAX_VALUE : o2.getType().ordinal();
-                return o2ord - o1ord; //reverse order
+                int o1ord = getPluginPriority(o1);
+                int o2ord = getPluginPriority(o2);;
+                return o1ord - o2ord;
             }
         });
 

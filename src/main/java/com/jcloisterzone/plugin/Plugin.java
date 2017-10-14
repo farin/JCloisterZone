@@ -12,8 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.resources.ImageLoader;
 
 public abstract class Plugin {
@@ -21,15 +24,12 @@ public abstract class Plugin {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final URL url;
-    private final ImageLoader imageLoader;
-    private final URLClassLoader loader;
+    protected final ImageLoader imageLoader;
+    protected final URLClassLoader loader;
     /** used to identify plugin and to be able save it back to config file */
     private final String relativePath;
 
-    private String id;
-    private String title;
-    private String description;
-    private PluginType type;
+    private PluginMeta meta;
 
     private boolean loaded;
     private boolean enabled;
@@ -48,25 +48,9 @@ public abstract class Plugin {
         return new URL(url.toString()+"/");
     }
 
-    protected final void loadMetadata() throws Exception {
-        Element plugin = XMLUtils.parseDocument(loader.getResource("plugin.xml")).getDocumentElement();
-        parseMetadata(plugin);
-    }
-
-    protected void parseMetadata(Element rootElement) throws Exception {
-        id = rootElement.getAttribute("id");
-        NodeList nl = rootElement.getElementsByTagName("title");
-        if (nl.getLength() > 0) {
-            title = nl.item(0).getTextContent();
-        }
-        nl = rootElement.getElementsByTagName("description");
-        if (nl.getLength() > 0) {
-            description = nl.item(0).getTextContent();
-        }
-        nl = rootElement.getElementsByTagName("type");
-        if (nl.getLength() > 0) {
-            type = PluginType.valueOf(nl.item(0).getTextContent());
-        }
+    protected void loadMetadata() throws Exception {
+        Yaml yaml = new Yaml(new Constructor(PluginMeta.class));
+        meta = (PluginMeta) yaml.load(loader.getResource("plugin.yaml").openStream());
     }
 
     public Image getIcon() {
@@ -76,22 +60,13 @@ public abstract class Plugin {
     public URL getUrl() {
         return url;
     }
-    public String getId() {
-        return id;
-    }
-    public String getTitle() {
-        return title;
-    }
-    public String getDescription() {
-        return description;
-    }
+
     public String getRelativePath() {
         return relativePath;
     }
 
-
-    public PluginType getType() {
-        return type;
+    public PluginMeta getMetadata() {
+        return meta;
     }
 
     public boolean isLoaded() {
@@ -111,12 +86,12 @@ public abstract class Plugin {
     }
 
     public ImageLoader getImageLoader() {
-		return imageLoader;
-	}
+        return imageLoader;
+    }
 
     @Override
     public String toString() {
-        return title;
+        return meta.getTitle();
     }
 
     //TOOD better throws own Exception

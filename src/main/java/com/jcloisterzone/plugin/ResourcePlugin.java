@@ -9,6 +9,10 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,7 +61,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private java.util.HashMap<Tuple2<Tile, Rotation>, Map<Location, FeatureArea>> areaCache = new java.util.HashMap<>();
 
-    private Set<String> supportedExpansions = HashSet.empty(); //expansion codes
+    private java.util.Set<String> containsGraphics = null; // expansion codes
 
     static {
         try {
@@ -77,26 +81,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    protected void parseMetadata(Element rootElement) throws Exception {
-        super.parseMetadata(rootElement);
-        NodeList nl = rootElement.getElementsByTagName("expansions");
-        if (nl.getLength() == 0) throw new Exception("Supported expansions missing in plugin.xml for " + getId());
-        Element expansion = (Element) nl.item(0);
-        nl = expansion.getElementsByTagName("expansion");
-        if (nl.getLength() == 0) throw new Exception("No expansion is supported by " + getId());
-        for (int i = 0; i < nl.getLength(); i++) {
-            try {
-                String expName = nl.item(i).getFirstChild().getNodeValue().trim();
-                Expansion exp = Expansion.valueOf(expName);
-                supportedExpansions = supportedExpansions.add(exp.getCode());
-            } catch (IllegalArgumentException e) {
-                logger.debug(e.getMessage(), e);
-            }
-        }
+    protected void loadMetadata() throws Exception {
+        super.loadMetadata();
+        containsGraphics = Files.list(Paths.get(loader.getResource("tiles").toURI()))
+            .filter(Files::isDirectory)
+            .map(d -> d.getFileName().toString())
+            .collect(Collectors.toSet());
 
-        Element tiles = XMLUtils.getElementByTagName(rootElement, "tiles");
-        if (tiles != null) {
-            String value = XMLUtils.childValue(tiles, "image-offset");
+        if (getMetadata().getTile_images() != null) {
+            String value = getMetadata().getTile_images().getOffset();
             if (value != null) {
                 String[] tokens = value.split(",");
                 if (tokens.length != 4) {
@@ -109,29 +102,31 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                    Integer.parseInt(tokens[3])
                 );
             }
-            value = XMLUtils.childValue(tiles, "image-ratio-x");
-            if (value != null) {
-                imageRatioX = Integer.parseInt(value);
-                if (imageRatioX == 0)
-                    imageRatioX = 1;
+            Integer intValue = getMetadata().getTile_images().getRatio_x();
+            if (intValue != null) {
+                imageRatioX = intValue;
+                if (imageRatioX == 0) imageRatioX = 1;
             }
-            value = XMLUtils.childValue(tiles, "image-ratio-y");
-            if (value != null) {
-                imageRatioY = Integer.parseInt(value);
+            intValue = getMetadata().getTile_images().getRatio_y();
+            if (intValue != null) {
+                imageRatioY = intValue;
                 if (imageRatioY == 0) imageRatioY = 1;
             }
         }
     }
 
-
     protected boolean containsTile(String tileId) {
         if (!isEnabled()) return false;
         String expCode = tileId.substring(0, 2);
-        return supportedExpansions.contains(expCode);
+        return containsGraphics.contains(expCode);
     }
 
     public boolean isExpansionSupported(Expansion exp) {
-        return supportedExpansions.contains(exp.getCode());
+        return containsGraphics.contains(exp.getCode());
+    }
+
+    public java.util.Set<String> getContainedExpansions() {
+        return containsGraphics;
     }
 
     public double getImageSizeRatio() {
