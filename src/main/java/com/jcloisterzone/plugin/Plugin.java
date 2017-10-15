@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ExpansionType;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.plugin.PluginMeta.ExpansionMeta;
 import com.jcloisterzone.ui.resources.ImageLoader;
 
@@ -62,8 +64,16 @@ public abstract class Plugin {
         if (meta.getExpansions() != null) {
             for (ExpansionMeta expMeta : meta.getExpansions()) {
                 ExpansionType type = ExpansionType.valueOf(expMeta.getType());
-                // TODO create capabilities
-                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel(), type);
+                java.util.List<Class<? extends Capability<?>>> capabilityClasses = new ArrayList<>();
+                for (String name : expMeta.getCapabilities()) {
+                    Class<? extends Capability<?>> cls = Capability.classForName(name);
+                    if (cls != null) {
+                        capabilityClasses.add(cls);
+                    }
+                }
+                @SuppressWarnings("unchecked")
+                Class<? extends Capability<?>>[] _capabilityClasses = capabilityClasses.toArray(new Class[capabilityClasses.size()]);
+                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel(), _capabilityClasses, type);
                 newExpansions = newExpansions.append(exp);
             }
         }

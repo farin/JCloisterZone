@@ -29,8 +29,6 @@ import io.vavr.collection.Set;
 @Immutable
 public abstract class Capability<T> implements Serializable {
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-
     @SuppressWarnings("unchecked")
     private Class<? extends Capability<T>> narrowClass() {
         return (Class<? extends Capability<T>>) getClass();
@@ -114,9 +112,26 @@ public abstract class Capability<T> implements Serializable {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String toString() {
-        return getClass().getSimpleName().replace("Capability", "");
+        return nameForClass((Class<? extends Capability<?>>) getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Capability<?>> classForName(String name) {
+        String clsName = "com.jcloisterzone.game.capability." + name + "Capability";
+        try {
+            return (Class<? extends Capability<?>>) Class.forName(clsName);
+        } catch (ClassNotFoundException e) {
+            Logger logger = LoggerFactory.getLogger(Capability.class);
+            logger.error("Unable to find capability class.", e);
+            return null;
+        }
+    }
+
+    public static String nameForClass(Class<? extends Capability<?>> cls) {
+        return cls.getSimpleName().replaceAll("Capability$", "");
     }
 
 }

@@ -2,6 +2,9 @@ package com.jcloisterzone;
 
 import static com.jcloisterzone.ui.I18nUtils._;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -48,6 +51,7 @@ import io.vavr.collection.Vector;
  * See https://boardgamegeek.com/wiki/page/Carcassonne_series
  */
 public class Expansion {
+
     // Basic sets
     public static Expansion BASIC = new Expansion("BASIC", "BA", _("Basic game"),
             new Class[] { StandardGameCapability.class }, ExpansionType.BASIC);
@@ -189,6 +193,8 @@ public class Expansion {
     public static void register(Expansion exp, Plugin origin) {
         exp.origin = origin;
         _values = _values.append(exp);
+        Logger logger = LoggerFactory.getLogger(Expansion.class);
+        logger.info(String.format("Expansion %s has been registered.", exp.name()));
     }
 
     public static void unregister(Expansion exp) {

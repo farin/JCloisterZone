@@ -123,9 +123,8 @@ public class Config {
         public void updateGameSetup(Connection conn, String gameId) {
             Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
             if (this.capabilities != null) {
-                CapabilitiesAdapter adapter = new CapabilitiesAdapter();
                 for (String clsName : this.capabilities) {
-                    Class<? extends Capability<?>> cls = adapter.classForName(clsName);
+                    Class<? extends Capability<?>> cls = Capability.classForName(clsName);
                     if (cls != null) {
                         capabilities.add(cls);
                     }

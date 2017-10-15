@@ -468,11 +468,10 @@ public class CreateGamePanel extends ThemedJPanel {
 
     private PresetConfig createCurrentConfig() {
         GameSetup setup = game.getSetup();
-        CapabilitiesAdapter adapter = new CapabilitiesAdapter();
         Map<String, Integer> expansions = setup.getExpansions()
             .mapKeys(exp -> exp.name()).toJavaMap();
         List<String> capabilities = setup.getCapabilities()
-            .map(cap -> adapter.nameForClass(cap)).toJavaList();
+            .map(cap -> Capability.nameForClass(cap)).toJavaList();
 
         PresetConfig config = new PresetConfig();
         config.setExpansions(expansions);
