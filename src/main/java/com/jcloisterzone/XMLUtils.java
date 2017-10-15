@@ -28,7 +28,9 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.SnapshotCorruptedException;
 
+import io.vavr.Predicates;
 import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 
 public class XMLUtils {
@@ -74,7 +76,15 @@ public class XMLUtils {
     }
 
     public static io.vavr.collection.Stream<Element> elementStream(NodeList nl) {
-        return nodeStream(nl).map(node -> (Element) node);
+        return nodeStream(nl).filter(Predicates.instanceOf(Element.class)).map(node -> (Element) node);
+    }
+
+    public static io.vavr.collection.Stream<Element> getChildElementStream(Vector<Element> tileElements) {
+        return Stream.concat(tileElements.map(el -> XMLUtils.elementStream(el.getChildNodes())));
+    }
+
+    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Vector<Element> tileElements, String tagName) {
+        return getChildElementStream(tileElements).filter(el -> el.getNodeName().equals(tagName));
     }
 
     public static Element getElementByTagName(Element parent, String childName) {

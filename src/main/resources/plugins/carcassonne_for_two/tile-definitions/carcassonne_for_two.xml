@@ -1,151 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <tile count="2" id="L" >
-        <cloister/>
-        <farm>NL NR EL ER SL SR WL WR</farm>
-    </tile>
-    <tile count="1" id="LR">
-        <cloister/>
-        <road>S</road>
-        <farm>NL NR EL ER SL SR WL WR</farm>
-        <wagon-move>
-            <neighbouring>CLOISTER S</neighbouring>
-        </wagon-move>
-    </tile>
-
-    <tile count="4" id="RCr">
-        <road>W E</road>
-        <city castle-base="true">N</city>
-        <farm city="N">EL WR</farm>
-        <farm>ER SL SR WL</farm>
-        <position x="0" y="0" priority="1"/>
-    </tile>
-
-    <tile count="2" id="CccR+">
-        <road>S</road>
-        <city pennant="yes">N W E</city>
-        <farm city="N">SL</farm>
-        <farm city="N">SR</farm>
-        <wagon-move>
-            <neighbouring>N S</neighbouring>
-        </wagon-move>
-    </tile>
-    <tile count="1" id="CccR">
-        <road>S</road>
-        <city>N W E</city>
-        <farm city="N">SL</farm>
-        <farm city="N">SR</farm>
-        <wagon-move>
-            <neighbouring>N S</neighbouring>
-        </wagon-move>
-    </tile>
-    <tile count="2" id="CFc+">
-        <city pennant="yes">W E</city>
-        <farm city="W">NL NR</farm>
-        <farm city="W">SL SR</farm>
-    </tile>
-    <tile count="1" id="CFc.1">
-        <city>W E</city>
-        <farm city="W">NL NR</farm>
-        <farm city="W">SL SR</farm>
-    </tile>
-    <tile count="4" id="Cc.1">
-        <city>N W</city>
-        <farm city="N">SL SR EL ER</farm>
-    </tile>
-    <tile count="1" id="CcRr">
-        <road>E S</road>
-        <city>N W</city>
-        <farm city="N">EL SR</farm>
-        <farm>ER SL</farm>
-    </tile>
-    <tile count="2" id="CcRr+">
-        <road>E S</road>
-        <city pennant="yes">N W</city>
-        <farm city="N">EL SR</farm>
-        <farm>ER SL</farm>
-    </tile>
-    <tile count="1" id="Ccc+">
-        <city pennant="yes">N E W</city>
-        <farm city="N">SL SR</farm>
-    </tile>
-    <tile count="2" id="CRr">
-        <road>E S</road>
-        <city castle-base="true">N</city>
-        <farm city="N">EL WL WR SR</farm>
-        <farm>ER SL</farm>
-    </tile>
-    <tile count="3" id="CRRR">
-        <road>E</road>
-        <road>S</road>
-        <road>W</road>
-        <city castle-base="true">N</city>
-        <farm city="N">WR EL</farm>
-        <farm>WL SR</farm>
-        <farm>ER SL</farm>
-        <wagon-move>
-            <neighbouring>W S E</neighbouring>
-        </wagon-move>
-    </tile>
-    <tile count="2" id="RrC">
-        <road>S W</road>
-        <city castle-base="true">N</city>
-        <farm city="N">WR EL ER SL</farm>
-        <farm>WL SR</farm>
-    </tile>
-    <tile count="2" id="C">
-        <city castle-base="true">N</city>
-        <farm city="N">WL WR SL SR EL ER</farm>
-    </tile>
-    <tile count="2" id="CFC.2">
-        <city castle-base="true">N</city>
-        <city castle-base="true">S</city>
-        <farm city="N S">WL WR EL ER</farm>
-    </tile>
-    <tile count="2" id="CC.2">
-        <city castle-base="true">N</city>
-        <city castle-base="true">W</city>
-        <farm city="N W">EL ER SL SR</farm>
-    </tile>
-    <tile count="3" id="RRR">
-        <road>E</road>
-        <road>S</road>
-        <road>W</road>
-        <farm>WR NL NR EL</farm>
-        <farm>ER SL</farm>
-        <farm>SR WL</farm>
-        <wagon-move>
-            <neighbouring>E S W</neighbouring>
-        </wagon-move>
-    </tile>
-    <tile count="5" id="Rr">
-        <road>W S</road>
-        <farm>WR NL NR EL ER SL</farm>
-        <farm>SR WL</farm>
-    </tile>
-    <tile count="4" id="RFr">
-        <road>W E</road>
-        <farm>WR NL NR EL</farm>
-        <farm>ER SL SR WL</farm>
-    </tile>
-    <tile id="CFR">
-        <city castle-base="true">N</city>
-        <road>S</road>
-        <farm city="N">WL WR SR</farm>
-        <farm city="N">EL ER SL</farm>
-        <wagon-move>
-            <neighbouring>N S</neighbouring>
-        </wagon-move>
-    </tile>
-    <tile id="LRFR">
-        <cloister/>
-        <road>W</road>
-        <road>E</road>
-        <farm>ER SL SR WL</farm>
-        <farm>EL NL NR WR</farm>
-        <wagon-move>
-            <neighbouring>CLOISTER W</neighbouring>
-            <neighbouring>CLOISTER E</neighbouring>
-        </wagon-move>
-    </tile>
+    <tile count="2" id="L" extends="BA.L" />
+    <tile count="1" id="LR" extends="BA.LR" />
+    <tile count="4" id="RCr" extends="BA.RCr" />
+    <tile count="2" id="CccR+" extends="BA.CccR+" />
+    <tile count="1" id="CccR"  extends="BA.CccR" />
+    <tile count="2" id="CFc+" extends="BA.CFc+" />
+    <tile count="1" id="CFc.1" extends="BA.CFc.1" />
+    <tile count="4" id="Cc.1" extends="BA.Cc.1" />
+    <tile count="1" id="CcRr" extends="BA.CcRr" />
+    <tile count="2" id="CcRr+" extends="BA.CcRr+" />
+    <tile count="1" id="Ccc+" extends="BA.Ccc+" />
+    <tile count="2" id="CRr" extends="BA.CRr" />
+    <tile count="3" id="CRRR" extends="BA.CRRR" />
+    <tile count="2" id="RrC" extends="BA.RrC" />
+    <tile count="2" id="C" extends="BA.C" />
+    <tile count="2" id="CFC.2" extends="BA.CFC.2" />
+    <tile count="2" id="CC.2" extends="BA.CC.2" />
+    <tile count="3" id="RRR" extends="BA.RRR" />
+    <tile count="5" id="Rr" extends="BA.Rr" />
+    <tile count="4" id="RFr" extends="BA.RFr" />
+    <tile id="CFR" extends="IC.CFR" />
+    <tile id="LRFR" extends="IC.LRFR" />
 </pack>

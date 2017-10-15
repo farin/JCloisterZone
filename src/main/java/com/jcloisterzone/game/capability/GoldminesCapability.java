@@ -7,12 +7,12 @@ import java.util.Map.Entry;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoringResult;
@@ -24,25 +24,20 @@ import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
+import io.vavr.collection.Vector;
 
 /**
  * Model is map of placed gold tokens.
  */
 public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
-//    private final Map<Position, Integer> boardGold = new HashMap<>();
-//    private final Map<Player, Integer> playerGold = new HashMap<>();
-//
-//    private final Map<Position, Set<Player>> claimedGold = new HashMap<>();
-
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) {
-        if (xml.getElementsByTagName("goldmine").getLength() > 0) {
-            return tile.setTileTrigger(TileTrigger.GOLDMINE);
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "goldmine").isEmpty()) {
+            tile = tile.setTileTrigger(TileTrigger.GOLDMINE);
         }
         return tile;
     }
-
 
     @Override
     public GameState onStartGame(GameState state) {

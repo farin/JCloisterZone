@@ -20,6 +20,7 @@ import com.jcloisterzone.reducers.MoveNeutralFigure;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import io.vavr.collection.Vector;
 
 /** model is Position od CO.7 tile */
 public class CountCapability extends Capability<Position> {
@@ -37,7 +38,7 @@ public class CountCapability extends Capability<Position> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
         if (QUARTER_ACTION_TILE_ID.equals(tile.getId())) {
             Map<Location, Feature> features = tile.getInitialFeatures();
             features = features.merge(Location.QUARTERS.toMap(loc ->

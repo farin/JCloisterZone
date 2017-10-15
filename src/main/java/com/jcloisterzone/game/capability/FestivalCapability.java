@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
@@ -20,6 +21,7 @@ import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 public class FestivalCapability extends Capability<Void> {
 
@@ -27,8 +29,8 @@ public class FestivalCapability extends Capability<Void> {
 
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) {
-        if (xml.getElementsByTagName("festival").getLength() > 0) {
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "festival").isEmpty()) {
             tile = tile.setTileTrigger(TileTrigger.FESTIVAL);
         }
         return tile;

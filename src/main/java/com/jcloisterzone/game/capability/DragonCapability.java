@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Immutable;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
@@ -26,11 +27,11 @@ public class DragonCapability extends Capability<Vector<Position>> {
     public static final String TILE_GROUP_DRAGON = "dragon";
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) {
-        if (xml.getElementsByTagName("volcano").getLength() > 0) {
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "valcano").isEmpty()) {
             tile = tile.setTileTrigger(TileTrigger.VOLCANO);
         }
-        if (xml.getElementsByTagName("dragon").getLength() > 0) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "dragon").isEmpty()) {
             tile = tile.setTileTrigger(TileTrigger.DRAGON);
         }
         return tile;

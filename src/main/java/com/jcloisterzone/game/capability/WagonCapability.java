@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -23,6 +24,7 @@ import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
+import io.vavr.collection.Vector;
 
 /**
  * @model Queue<Tuple2<Wagon, FeaturePointer>>
@@ -43,13 +45,11 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) {
-        NodeList nl = xml.getElementsByTagName("wagon-move");
-        assert nl.getLength() <= 1;
-        if (nl.getLength() == 1) {
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        for (Element moveEl : XMLUtils.getElementStreamByTagName(tileElements, "wagon-move")) {
             String tileId = tile.getId();
             Map<Location, Feature> features = tile.getInitialFeatures();
-            nl = ((Element) nl.item(0)).getElementsByTagName("neighbouring");
+            NodeList nl = moveEl.getElementsByTagName("neighbouring");
             for (int i = 0; i < nl.getLength(); i++) {
                 Array<FeaturePointer> fps = contentAsLocations((Element) nl.item(i))
                     .map(l -> new FeaturePointer(Position.ZERO, l))

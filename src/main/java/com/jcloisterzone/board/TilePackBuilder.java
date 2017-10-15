@@ -5,6 +5,7 @@ import static com.jcloisterzone.XMLUtils.attributeStringValue;
 import static com.jcloisterzone.XMLUtils.getTileId;
 
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,7 @@ public class TilePackBuilder {
 
     private java.util.Set<String> usedIds = new java.util.HashSet<>(); //for assertion only
 
+    private java.util.Map<Expansion, Element> parsedDefinitions = new java.util.HashMap<>();
     private java.util.Map<String, java.util.List<Tile>> tiles = new java.util.HashMap<>();
     private Map<Position, Tuple2<PlacedTile, Integer>> preplacedTiles = HashMap.empty();
 
@@ -151,7 +153,12 @@ public class TilePackBuilder {
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
-        return XMLUtils.parseDocument(getTilesConfig(expansion)).getDocumentElement();
+        Element root = parsedDefinitions.get(expansion);
+        if (root == null) {
+            root = XMLUtils.parseDocument(getTilesConfig(expansion)).getDocumentElement();
+            parsedDefinitions.put(expansion, root);
+        }
+        return root;
     }
 
     protected boolean isTunnelActive(Expansion expansion) {
@@ -171,39 +178,60 @@ public class TilePackBuilder {
         }
     }
 
-    protected String getTileGroup(Tile tile, Element card) {
+    protected String getTileGroup(Tile tile, Vector<Element> tileElements) {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             String group = cap.getTileGroup(tile);
             if (group != null) return group;
         }
-        return attributeStringValue(card, "group", DEFAULT_TILE_GROUP);
+        for (Element tileElement : tileElements) {
+            String group = tileElement.getAttribute("group");
+            if (!group.isEmpty()) {
+                return group;
+            }
+        }
+        return DEFAULT_TILE_GROUP;
     }
 
-    public Tile initTile(Tile tile, Element xml) throws RemoveTileException {
+    public Tile initTile(Tile tile, Vector<Element> tileElements) throws RemoveTileException {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
-            tile = cap.initTile(state, tile, xml);
+            tile = cap.initTile(state, tile, tileElements);
         }
         return tile;
     }
 
-    public Tile createTile(Expansion expansion, String tileId, Element tileElement) throws RemoveTileException {
+    public Tile createTile(Expansion expansion, String tileId, Vector<Element> tileElements) throws RemoveTileException {
         if (usedIds.contains(tileId)) {
             throw new IllegalArgumentException("Multiple occurences of id " + tileId + " in tile definition xml.");
         }
         usedIds.add(tileId);
 
-        Tile tile = tileBuilder.createTile(expansion, tileId, tileElement, isTunnelActive(expansion));
-        return initTile(tile, tileElement);
+        Tile tile = tileBuilder.createTile(expansion, tileId, tileElements, isTunnelActive(expansion));
+        return initTile(tile, tileElements);
     }
 
-    public Stream<Preplaced> getPreplacedPositions(String tileId, Element card) {
-        NodeList nl = card.getElementsByTagName("position");
-        return XMLUtils.elementStream(nl).map(
+    public Stream<Preplaced> getPreplacedPositions(String tileId, Vector<Element> tileElements) {
+        return Stream.concat(
+            tileElements.map(el -> XMLUtils.elementStream(el.getElementsByTagName("position")))
+        ).map(
             e -> {
                 Position pos = new Position(attributeIntValue(e, "x"), attributeIntValue(e, "y"));
                 return new Preplaced(pos, attributeIntValue(e, "priority", 1));
             }
         );
+    }
+
+    public Element findTileElement(String id) {
+        String[] tokens = id.split("\\.", 2);
+        Expansion expansion = Expansion.valueOfCode(tokens[0]);
+        Element element = getExpansionDefinition(expansion);
+        NodeList nl = element.getElementsByTagName("tile");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element tileElement =  (Element) nl.item(i);
+            if (tileElement.getAttribute("id").equals(tokens[1])) {
+                return tileElement;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     public Tiles createTilePack() {
@@ -227,13 +255,21 @@ public class TilePackBuilder {
                     }
                 }
 
+
+                String extendsTile = tileElement.getAttribute("extends");
+                Vector<Element> tileElements = Vector.of(tileElement);
+                if (!extendsTile.isEmpty()) {
+                    Element parentElement = findTileElement(extendsTile);
+                    tileElements = tileElements.append(parentElement);
+                }
+
                 String tileId = getTileId(expansion, tileElement);
-                List<Preplaced> positions = getPreplacedPositions(tileId, tileElement).toList();
+                List<Preplaced> positions = getPreplacedPositions(tileId, tileElements).toList();
                 int count = getTileCount(tileElement, tileId, expansionCount);
 
                 Tile tile;
                 try {
-                    tile = createTile(expansion, tileId, tileElement);
+                    tile = createTile(expansion, tileId, tileElements);
                 } catch (RemoveTileException ex) {
                     return;
                 }
@@ -275,7 +311,7 @@ public class TilePackBuilder {
                             );
                         }
                     } else {
-                        String group = getTileGroup(tile, tileElement);
+                        String group = getTileGroup(tile, tileElements);
                         if (!tiles.containsKey(group)) {
                             tiles.put(group, new java.util.ArrayList<>());
                         }

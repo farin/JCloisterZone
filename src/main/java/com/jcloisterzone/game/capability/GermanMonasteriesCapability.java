@@ -12,6 +12,9 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
+
 public class GermanMonasteriesCapability extends Capability<Void> {
 
     @Override
@@ -23,7 +26,7 @@ public class GermanMonasteriesCapability extends Capability<Void> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
         if (!state.getBooleanValue(Rule.KEEP_CLOISTERS)) {
             if (tile.getId().equals("BA.L") || tile.getId().equals("BA.LR")) {
                 throw new RemoveTileException();

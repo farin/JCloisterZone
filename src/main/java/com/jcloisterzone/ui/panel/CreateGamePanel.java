@@ -74,6 +74,7 @@ public class CreateGamePanel extends ThemedJPanel {
     private static final long serialVersionUID = -8993000662700228625L;
 
     static Font FONT_RULE_SECTION = new Font(null, Font.ITALIC, 13);
+    static Font FONT_PLUGIN_EXPANSION = new Font(null, Font.ITALIC, 13);
 
     private final Client client;
     private final Game game;
@@ -558,6 +559,9 @@ public class CreateGamePanel extends ThemedJPanel {
             if (!hasMultipleBasics) {
                 chbox.setEnabled(false);
             }
+        }
+        if (exp.getOrigin() != null) {
+            chbox.setFont(FONT_PLUGIN_EXPANSION);
         }
         if (chbox.isEnabled()) {
             chbox.addActionListener(new ActionListener() {

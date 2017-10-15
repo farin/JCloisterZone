@@ -25,6 +25,8 @@ import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -47,7 +49,14 @@ public abstract class Capability<T> implements Serializable {
     }
 
 
-    public Tile initTile(GameState state, Tile tile, Element xml) throws RemoveTileException {
+    /**
+     * @param state
+     * @param tile
+     * @param tileElements XML elements defining tile. Because of tile inheritance, more than one element can exist.
+     * @return
+     * @throws RemoveTileException
+     */
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
         return tile;
     }
 

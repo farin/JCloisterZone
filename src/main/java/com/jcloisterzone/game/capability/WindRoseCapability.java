@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -12,6 +13,9 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
+
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 /** model contains placement of last placed rose */
 public class WindRoseCapability extends Capability<PlacedTile> {
@@ -46,10 +50,12 @@ public class WindRoseCapability extends Capability<PlacedTile> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Element xml) {
-        if (xml.hasAttribute("wind-rose")) {
-            Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
-            return tile.setWindRose(loc);
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        for (Element el : tileElements) {
+            if (el.hasAttribute("wind-rose")) {
+                Location loc = Location.valueOf(el.getAttribute("wind-rose"));
+                tile = tile.setWindRose(loc);
+            }
         }
         return tile;
     }

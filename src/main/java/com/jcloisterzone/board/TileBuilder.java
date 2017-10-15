@@ -29,6 +29,7 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 
 public class TileBuilder {
@@ -49,37 +50,39 @@ public class TileBuilder {
         this.state = state;
     }
 
-    public Tile createTile(Expansion expansion, String tileId, Element xml, boolean isTunnelActive) {
+    public Tile createTile(Expansion expansion, String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         this.tileId = tileId;
 
         logger.debug("Creating " + tileId);
 
-        NodeList nl;
-        nl = xml.getElementsByTagName("cloister");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processCloisterElement((Element) nl.item(i));
-        }
-        nl = xml.getElementsByTagName("road");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processRoadElement((Element) nl.item(i), isTunnelActive);
-        }
-        nl = xml.getElementsByTagName("city");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processCityElement((Element) nl.item(i));
-        }
-        nl = xml.getElementsByTagName("farm");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processFarmElement((Element) nl.item(i));
-        }
-        nl = xml.getElementsByTagName("tower");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processTowerElement((Element) nl.item(i));
-        }
-        nl = xml.getElementsByTagName("river");
-        for (int i = 0; i < nl.getLength(); i++) {
-            processRiverElement((Element) nl.item(i));
+        for (Element xml : tileElements) {
+            NodeList nl;
+            nl = xml.getElementsByTagName("cloister");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processCloisterElement((Element) nl.item(i));
+            }
+            nl = xml.getElementsByTagName("road");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processRoadElement((Element) nl.item(i), isTunnelActive);
+            }
+            nl = xml.getElementsByTagName("city");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processCityElement((Element) nl.item(i));
+            }
+            nl = xml.getElementsByTagName("farm");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processFarmElement((Element) nl.item(i));
+            }
+            nl = xml.getElementsByTagName("tower");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processTowerElement((Element) nl.item(i));
+            }
+            nl = xml.getElementsByTagName("river");
+            for (int i = 0; i < nl.getLength(); i++) {
+                processRiverElement((Element) nl.item(i));
+            }
         }
 
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
