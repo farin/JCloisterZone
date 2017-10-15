@@ -426,7 +426,7 @@ public class ControlPanel extends JPanel {
                 int x = LEFT_MARGIN+LEFT_PADDING;
                 for (BazaarItem bi : supply) {
                     Tile tile = bi.getTile();
-                    Image img = client.getResourceManager().getTileImage(tile, Rotation.R0).getImage();
+                    Image img = client.getResourceManager().getTileImage(tile.getId(), Rotation.R0).getImage();
                     g2.drawImage(img, x, 0, 40, 40, null);
                     x += 45;
                 }

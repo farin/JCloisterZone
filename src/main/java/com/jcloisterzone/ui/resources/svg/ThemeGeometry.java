@@ -28,6 +28,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.plugin.Aliases;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
@@ -55,7 +56,7 @@ public class ThemeGeometry {
     }
 
     private final double imageSizeRatio;
-    private final Map<String, String> aliases = new HashMap<>();
+    private final Aliases aliases;
     private final Map<FeatureDescriptor, FeatureArea> areas = new HashMap<>();
     private final Map<String, Area> subtractionAll = new HashMap<>(); //key tile ID
     private final Map<String, Area> subtractionFarm = new HashMap<>(); //key tile ID
@@ -72,26 +73,11 @@ public class ThemeGeometry {
         BRIDGE_AREA_WE = a;
     }
 
-    public ThemeGeometry(ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
+    public ThemeGeometry(Aliases aliases, ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
+        this.aliases = aliases;
         this.imageSizeRatio = imageSizeRatio;
 
         NodeList nl;
-        URL aliasesResource = loader.getResource(folder + "/aliases.xml");
-        if (aliasesResource != null) {
-            Element aliasesEl = XMLUtils.parseDocument(aliasesResource).getDocumentElement();
-            nl = aliasesEl.getElementsByTagName("alias");
-            for (int i = 0; i < nl.getLength(); i++) {
-                Element alias = (Element) nl.item(i);
-                String geom = alias.getAttribute("useGeometry");
-                if (geom.isEmpty()) {
-                    geom = alias.getAttribute("use");
-                }
-                if (!geom.isEmpty()) {
-                    aliases.put(alias.getAttribute("for"), geom);
-                }
-            }
-        }
-
         Element shapes = XMLUtils.parseDocument(loader.getResource(folder +"/shapes.xml")).getDocumentElement();
         nl = shapes.getElementsByTagName("shape");
         for (int i = 0; i < nl.getLength(); i++) {
@@ -173,7 +159,7 @@ public class ThemeGeometry {
     }
 
     private FeatureDescriptor[] getLookups(Tile tile, Class<? extends Feature> featureType, Location location) {
-        String alias = aliases.get(tile.getId());
+        String alias = aliases.getGeometryAlias(tile.getId());
         FeatureDescriptor[] fd = new FeatureDescriptor[alias == null ? 2 : 3];
         fd[0] = new FeatureDescriptor(tile.getId(), featureType, location);
         if (alias != null) {
@@ -218,7 +204,7 @@ public class ThemeGeometry {
     private Area getSubtractionArea(Map<String, Area> subtractions, Tile tile) {
         Area area = subtractions.get(tile.getId());
         if (area == null) {
-            String alias = aliases.get(tile.getId());
+            String alias = aliases.getGeometryAlias(tile.getId());
             if (alias != null) {
                 area = subtractions.get(alias);
             }

@@ -32,7 +32,7 @@ public class TilePlacementActionWrapper extends ActionWrapper implements Forward
 
     @Override
     public Image getImage(ResourceManager rm, Player player, boolean active) {
-        TileImage tileImg = rm.getTileImage(getAction().getTile(), tileRotation);
+        TileImage tileImg = rm.getTileImage(getAction().getTile().getId(), tileRotation);
         Insets ins = tileImg.getOffset();
         Image img =  tileImg.getImage();
         int w = img.getWidth(null);

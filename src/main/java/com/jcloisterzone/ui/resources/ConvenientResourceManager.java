@@ -26,11 +26,11 @@ public class ConvenientResourceManager implements ResourceManager {
     //delegate methods
 
     @Override
-    public TileImage getTileImage(Tile tile, Rotation rot) {
-        String key = tile.getId()+"@"+rot.toString();
+    public TileImage getTileImage(String tileId, Rotation rot) {
+        String key = tileId+"@"+rot.toString();
         TileImage img = (TileImage) imageCache.get(key);
         if (img == null) {
-            img = manager.getTileImage(tile, rot);
+            img = manager.getTileImage(tileId, rot);
             imageCache.put(key, img);
         }
         return img;

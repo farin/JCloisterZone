@@ -54,6 +54,8 @@ import io.vavr.collection.Stream;
 public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
+
+    private Aliases aliases;
     private ThemeGeometry pluginGeometry;
     private Insets imageOffset =  new Insets(0, 0, 0, 0);
     private int imageRatioX = 1;
@@ -65,7 +67,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     static {
         try {
-            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
+            Aliases defaultAliases = new Aliases(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
+            defaultGeometry = new ThemeGeometry(defaultAliases, ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -78,7 +81,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     @Override
     protected void doLoad() throws Exception {
         super.doLoad();
-        pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
+        aliases = new Aliases(getLoader(), "tiles");
+        pluginGeometry = new ThemeGeometry(aliases, getLoader(), "tiles", getImageSizeRatio());
     }
 
     @Override
@@ -135,17 +139,21 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(Tile tile, Rotation rot) {
-        return getTileImage(tile.getId(), rot);
-    }
-
-    @Override
-    public TileImage getAbbeyImage(Rotation rot) {
+    public TileImage getAbbeyImage(Rotation rot) throws ExternalResourceException {
         return getTileImage(Tile.ABBEY_TILE_ID, rot);
     }
 
-    private TileImage getTileImage(String tileId, Rotation rot) {
+    @Override
+    public TileImage getTileImage(String tileId, Rotation rot) throws ExternalResourceException {
         if (!containsTile(tileId)) return null;
+        String alias = aliases.getImageAlias(tileId);
+        if (alias != null) {
+            if (containsTile(alias)) {
+                tileId = alias;
+            } else {
+                throw new ExternalResourceException(alias);
+            }
+        }
         String[] tokens = tileId.split("\\.", 2);
         String baseName = "tiles/"+tokens[0] + "/" + tokens[1];
         String fileName;

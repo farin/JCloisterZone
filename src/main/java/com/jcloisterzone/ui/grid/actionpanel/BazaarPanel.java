@@ -164,7 +164,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
             Graphics2D g2 = (Graphics2D) g;
             BazaarItem bi = model.getSupply().get(idx);
 
-            Image img =  client.getResourceManager().getTileImage(bi.getTile(), Rotation.R0).getImage();
+            Image img =  client.getResourceManager().getTileImage(bi.getTile().getId(), Rotation.R0).getImage();
 
             if (selectedItem == idx) {
                 g2.setColor(client.getTheme().getPlayerBoxBg());

@@ -112,9 +112,8 @@ public class TileDistributionWindow extends JFrame {
         private String count;
 
         public TileLabel(Theme theme, Expansion exp, TileCount tc) {
-            Tile tile = new Tile(exp, tc.tileId, HashMap.empty());
             this.theme = theme;
-            this.image = client.getResourceManager().getTileImage(tile, Rotation.R0);
+            this.image = client.getResourceManager().getTileImage(tc.tileId, Rotation.R0);
             this.count = tc.count == null ? "" : tc.count + "";
         }
 

@@ -91,7 +91,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         if (realRotation != actionWrapper.getTileRotation()) {
             preparePreviewRotation(previewPosition);
         }
-        TileImage previewIcon = rm.getTileImage(getAction().getTile(), previewRotation);
+        TileImage previewIcon = rm.getTileImage(getAction().getTile().getId(), previewRotation);
         Composite compositeBackup = g2.getComposite();
         g2.setComposite(allowedRotation ? ALLOWED_PREVIEW : DISALLOWED_PREVIEW);
         g2.drawImage(previewIcon.getImage(), getAffineTransform(previewIcon, previewPosition), null);

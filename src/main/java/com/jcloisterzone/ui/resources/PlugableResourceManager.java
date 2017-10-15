@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.plugin.ExternalResourceException;
 import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.ImmutablePoint;
 
@@ -34,12 +35,16 @@ public class PlugableResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(Tile tile, Rotation rot) {
-        for (ResourceManager manager : managers) {
-            TileImage result = manager.getTileImage(tile, rot);
-            if (result != null) return result;
+    public TileImage getTileImage(String tileId, Rotation rot) {
+        try {
+            for (ResourceManager manager : managers) {
+                TileImage result = manager.getTileImage(tileId, rot);
+                if (result != null) return result;
+            }
+        } catch (ExternalResourceException ex) {
+            return getTileImage(ex.getAlias(), rot);
         }
-        logger.warn("Unable to load tile image for {}", tile.getId());
+        logger.warn("Unable to load tile image for {}", tileId);
         return null;
     }
 

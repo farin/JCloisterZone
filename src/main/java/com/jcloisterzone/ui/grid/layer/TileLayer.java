@@ -70,7 +70,7 @@ public class TileLayer extends AbstractGridLayer {
             Position p = t._1;
             Tile tdef = t._2.getTile();
             Rotation rot = t._2.getRotation();
-            TileImage tileImg = rm.getTileImage(tdef, rot);
+            TileImage tileImg = rm.getTileImage(tdef.getId(), rot);
             g2.drawImage(tileImg.getImage(), getAffineTransform(tileImg, p), null);
         }
 

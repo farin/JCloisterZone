@@ -39,7 +39,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getTileImage(Tile tile, Rotation rot) {
+    public TileImage getTileImage(String tileId, Rotation rot) {
         return null;
     }
 
