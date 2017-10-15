@@ -79,6 +79,7 @@ public class PluginMeta {
         private String name;
         private String label;
         private String[] capabilities;
+        private String type;
 
         public String getCode() {
             return code;
@@ -98,12 +99,18 @@ public class PluginMeta {
         public void setLabel(String label) {
             this.label = label;
         }
-		public String[] getCapabilities() {
-			return capabilities;
-		}
-		public void setCapabilities(String[] capabilities) {
-			this.capabilities = capabilities;
-		}       
+        public String[] getCapabilities() {
+            return capabilities;
+        }
+        public void setCapabilities(String[] capabilities) {
+            this.capabilities = capabilities;
+        }
+        public String getType() {
+            return type;
+        }
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 
 }

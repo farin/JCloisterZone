@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.ExpansionType;
 import com.jcloisterzone.board.TilePackBuilder;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.PresetConfig;
@@ -219,8 +220,12 @@ public class CreateGamePanel extends ThemedJPanel {
         tilePackBuilder.setConfig(client.getConfig());
 
         expansionPanel.setLayout(new MigLayout("gapy 1", "[][right]", "[]"));
-        for (Expansion exp : Expansion.values()) {
-            createExpansionLine(exp, tilePackBuilder.getExpansionSize(exp));
+        for (ExpansionType expType: ExpansionType.values()) {
+            boolean showGap = expType != ExpansionType.BASIC;
+            for (Expansion exp : Expansion.values().filter(exp -> exp.getType() == expType)) {
+                createExpansionLine(exp, tilePackBuilder.getExpansionSize(exp), showGap);
+                showGap = false;
+            }
         }
         scrolled.add(expansionPanel, "cell 1 0,grow");
 
@@ -433,12 +438,9 @@ public class CreateGamePanel extends ThemedJPanel {
         }
     }
 
-    private void createExpansionLine(Expansion exp, int expSize) {
+    private void createExpansionLine(Expansion exp, int expSize, boolean showGap) {
         JCheckBox chbox = createExpansionCheckbox(exp, mutableSlots);
-        if (exp == Expansion.KING_AND_ROBBER_BARON
-                || exp == Expansion.INNS_AND_CATHEDRALS
-                || exp == Expansion.FLIER
-                || exp == Expansion.RUSSIAN_PROMOS) {
+        if (showGap) {
             expansionPanel.add(chbox, "gaptop 5");
         } else {
             expansionPanel.add(chbox, "");
@@ -553,7 +555,10 @@ public class CreateGamePanel extends ThemedJPanel {
         if (!mutableSlots)
             chbox.setEnabled(false);
         if (exp == Expansion.BASIC) {
-            chbox.setEnabled(false);
+            boolean hasMultipleBasics = Expansion.values().filter(e -> e.getType() == ExpansionType.BASIC).size() > 1;
+            if (!hasMultipleBasics) {
+                chbox.setEnabled(false);
+            }
         }
         if (chbox.isEnabled()) {
             chbox.addActionListener(new ActionListener() {

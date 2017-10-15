@@ -399,10 +399,6 @@ public class SimpleServer extends WebSocketServer  {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         Expansion expansion = msg.getExpansion();
-        if (expansion == Expansion.BASIC) {
-            logger.error("Invalid expansion {}", expansion);
-            return;
-        }
         gameSetup = gameSetup.mapExpansions(expansions ->
             msg.getCount() > 0 ? expansions.put(expansion, msg.getCount()) : expansions.remove(expansion)
         );

@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.ExpansionType;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.plugin.PluginMeta.ExpansionMeta;
@@ -60,7 +61,9 @@ public abstract class Plugin {
 
         if (meta.getExpansions() != null) {
             for (ExpansionMeta expMeta : meta.getExpansions()) {
-                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel());
+                ExpansionType type = ExpansionType.valueOf(expMeta.getType());
+                // TODO create capabilities
+                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel(), type);
                 newExpansions = newExpansions.append(exp);
             }
         }

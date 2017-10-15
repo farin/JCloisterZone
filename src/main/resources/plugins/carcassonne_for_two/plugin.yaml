@@ -10,3 +10,4 @@ expansions:
       label: Spin-off for Two players
       capabilities:
         - StandardGame
+      type: BASIC
