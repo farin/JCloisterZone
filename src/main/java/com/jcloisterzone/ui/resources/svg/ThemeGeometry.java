@@ -82,7 +82,13 @@ public class ThemeGeometry {
             nl = aliasesEl.getElementsByTagName("alias");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element alias = (Element) nl.item(i);
-                aliases.put(alias.getAttribute("treat"), alias.getAttribute("as"));
+                String geom = alias.getAttribute("useGeometry");
+                if (geom.isEmpty()) {
+                    geom = alias.getAttribute("use");
+                }
+                if (!geom.isEmpty()) {
+                    aliases.put(alias.getAttribute("for"), geom);
+                }
             }
         }
 
