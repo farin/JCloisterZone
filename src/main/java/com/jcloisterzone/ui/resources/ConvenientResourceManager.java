@@ -37,17 +37,6 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getAbbeyImage(Rotation rot) {
-        String key = Tile.ABBEY_TILE_ID+"@"+rot.toString();
-        TileImage img = (TileImage) imageCache.get(key);
-        if (img == null) {
-            img = manager.getAbbeyImage(rot);
-            imageCache.put(key, img);
-        }
-        return img;
-    }
-
-    @Override
     public Image getImage(String path) {
         Image img = (Image) imageCache.get(path);
         if (img == null) {

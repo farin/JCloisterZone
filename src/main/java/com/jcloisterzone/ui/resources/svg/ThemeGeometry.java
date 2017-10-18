@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -22,13 +21,11 @@ import org.xml.sax.SAXException;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.plugin.Aliases;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
@@ -56,7 +53,6 @@ public class ThemeGeometry {
     }
 
     private final double imageSizeRatio;
-    private final Aliases aliases;
     private final Map<FeatureDescriptor, FeatureArea> areas = new HashMap<>();
     private final Map<String, Area> subtractionAll = new HashMap<>(); //key tile ID
     private final Map<String, Area> subtractionFarm = new HashMap<>(); //key tile ID
@@ -73,8 +69,7 @@ public class ThemeGeometry {
         BRIDGE_AREA_WE = a;
     }
 
-    public ThemeGeometry(Aliases aliases, ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
-        this.aliases = aliases;
+    public ThemeGeometry(ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
         this.imageSizeRatio = imageSizeRatio;
 
         NodeList nl;
@@ -158,18 +153,14 @@ public class ThemeGeometry {
         }
     }
 
-    private FeatureDescriptor[] getLookups(Tile tile, Class<? extends Feature> featureType, Location location) {
-        String alias = aliases.getGeometryAlias(tile.getId());
-        FeatureDescriptor[] fd = new FeatureDescriptor[alias == null ? 2 : 3];
-        fd[0] = new FeatureDescriptor(tile.getId(), featureType, location);
-        if (alias != null) {
-            fd[1] = new FeatureDescriptor(alias, featureType, location);
-        }
-        fd[alias == null ? 1 : 2] = new FeatureDescriptor(FeatureDescriptor.EVERY, featureType, location);
+    private FeatureDescriptor[] getLookups(String tileId, Class<? extends Feature> featureType, Location location) {
+        FeatureDescriptor[] fd = new FeatureDescriptor[2];
+        fd[0] = new FeatureDescriptor(tileId, featureType, location);
+        fd[1] = new FeatureDescriptor(FeatureDescriptor.EVERY, featureType, location);
         return fd;
     }
 
-    public FeatureArea getArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+    public FeatureArea getArea(String tileId, Class<? extends Feature> featureClass, Location loc) {
         FeatureArea fa;
         if (featureClass != null && featureClass.equals(Bridge.class)) {
             Area a = getBridgeArea(loc);
@@ -177,7 +168,7 @@ public class ThemeGeometry {
             fa = fa.setFixed(true);
             return fa;
         }
-        FeatureDescriptor lookups[] = getLookups(tile, featureClass, loc);
+        FeatureDescriptor lookups[] = getLookups(tileId, featureClass, loc);
 
         for (FeatureDescriptor fd : lookups) {
             fa = areas.get(fd);
@@ -193,35 +184,29 @@ public class ThemeGeometry {
         throw new IllegalArgumentException("Incorrect location");
     }
 
-    public Area getSubtractionArea(Tile tile, boolean isFarm) {
+    public Area getSubtractionArea(String tileId, boolean isFarm) {
         if (isFarm) {
-            Area area = getSubtractionArea(subtractionFarm, tile);
+            Area area = getSubtractionArea(subtractionFarm, tileId);
             if (area != null) return area;
         }
-        return getSubtractionArea(subtractionAll, tile);
+        return getSubtractionArea(subtractionAll, tileId);
     }
 
-    private Area getSubtractionArea(Map<String, Area> subtractions, Tile tile) {
-        Area area = subtractions.get(tile.getId());
-        if (area == null) {
-            String alias = aliases.getGeometryAlias(tile.getId());
-            if (alias != null) {
-                area = subtractions.get(alias);
-            }
-        }
+    private Area getSubtractionArea(Map<String, Area> subtractions, String tileId) {
+        Area area = subtractions.get(tileId);
         return area;
     }
 
-    public boolean isFarmComplement(Tile tile, Location loc) {
-        FeatureDescriptor lookups[] = getLookups(tile, Farm.class, loc);
+    public boolean isFarmComplement(String tileId, Location loc) {
+        FeatureDescriptor lookups[] = getLookups(tileId, Farm.class, loc);
         for (FeatureDescriptor fd : lookups) {
             if (complementFarms.contains(fd)) return true;
         }
         return false;
     }
 
-    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Feature> feature, Location location) {
-        FeatureDescriptor lookups[] = getLookups(tile, feature, location);
+    public ImmutablePoint getMeeplePlacement(String tileId, Class<? extends Feature> feature, Location location) {
+        FeatureDescriptor lookups[] = getLookups(tileId, feature, location);
         ImmutablePoint point = null;
         for (FeatureDescriptor fd : lookups) {
             point = points.get(fd);

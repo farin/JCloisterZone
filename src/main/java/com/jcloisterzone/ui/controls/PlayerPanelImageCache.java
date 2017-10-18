@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Token;
@@ -78,7 +79,7 @@ public class PlayerPanelImageCache {
         scaledImages.put("grain", rm.getImage("neutral/grain"));
         scaledImages.put("wine", rm.getImage("neutral/wine"));
 
-        scaledImages.put("abbey", scaleImage(rm.getAbbeyImage(Rotation.R0).getImage()));
+        scaledImages.put("abbey", scaleImage(rm.getTileImage(Tile.ABBEY_TILE_ID, Rotation.R0).getImage()));
 
         scaledImages.put("lb-tower", scaleImage(rm.getImage("neutral/lb-tower")));
         scaledImages.put("lb-house", scaleImage(rm.getImage("neutral/lb-house")));

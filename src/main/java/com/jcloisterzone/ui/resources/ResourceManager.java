@@ -13,7 +13,6 @@ public interface ResourceManager {
     static final int POINT_NORMALIZED_SIZE = 100; // TODO merge with NORMALIZED_SIZE
 
     TileImage getTileImage(String tileId, Rotation rot); //use custom rotation
-    TileImage getAbbeyImage(Rotation rot);
 
     //generic image, path is without extension
     Image getImage(String path);

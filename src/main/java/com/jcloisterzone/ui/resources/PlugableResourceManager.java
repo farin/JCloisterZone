@@ -8,8 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.plugin.ExternalResourceException;
+import com.jcloisterzone.plugin.MergedAliases;
 import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.ImmutablePoint;
 
 import io.vavr.Predicates;
@@ -24,7 +25,6 @@ public class PlugableResourceManager implements ResourceManager {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
     private final Vector<ResourceManager> managers;
 
-
     public PlugableResourceManager(Iterable<Plugin> plugins) {
         managers = Stream.ofAll(plugins)
             .filter(p -> p.isEnabled())
@@ -32,29 +32,22 @@ public class PlugableResourceManager implements ResourceManager {
             .map(p -> (ResourceManager) p)
             .append(new DefaultResourceManager())
             .toVector();
+
+        MergedAliases mergedAliases = new MergedAliases(plugins);
+        managers.forEach(rm -> {
+            if (rm instanceof ResourcePlugin) {
+                ((ResourcePlugin)rm).setMergedAliases(mergedAliases);
+            }
+        });
     }
 
     @Override
     public TileImage getTileImage(String tileId, Rotation rot) {
-        try {
-            for (ResourceManager manager : managers) {
-                TileImage result = manager.getTileImage(tileId, rot);
-                if (result != null) return result;
-            }
-        } catch (ExternalResourceException ex) {
-            return getTileImage(ex.getAlias(), rot);
-        }
-        logger.warn("Unable to load tile image for {}", tileId);
-        return null;
-    }
-
-    @Override
-    public TileImage getAbbeyImage(Rotation rot) {
         for (ResourceManager manager : managers) {
-            TileImage result = manager.getAbbeyImage(rot);
+            TileImage result = manager.getTileImage(tileId, rot);
             if (result != null) return result;
         }
-        logger.warn("Unable to load tile Abbey image");
+        logger.warn("Unable to load tile image for {}", tileId);
         return null;
     }
 

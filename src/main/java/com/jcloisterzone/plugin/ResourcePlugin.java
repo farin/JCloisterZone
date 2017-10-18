@@ -10,19 +10,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
@@ -32,7 +28,6 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.resources.FeatureArea;
@@ -44,10 +39,8 @@ import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
-import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
 
@@ -55,7 +48,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private static ThemeGeometry defaultGeometry;
 
-    private Aliases aliases;
+    private PluginAliases aliases;
+    /** reference to merged aliases of all plugins */
+    private Aliases mergedAliases;
+
     private ThemeGeometry pluginGeometry;
     private Insets imageOffset =  new Insets(0, 0, 0, 0);
     private int imageRatioX = 1;
@@ -67,8 +63,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     static {
         try {
-            Aliases defaultAliases = new Aliases(ResourcePlugin.class.getClassLoader(), "defaults/tiles");
-            defaultGeometry = new ThemeGeometry(defaultAliases, ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
+            defaultGeometry = new ThemeGeometry(ResourcePlugin.class.getClassLoader(), "defaults/tiles", 1.0);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
@@ -81,8 +76,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     @Override
     protected void doLoad() throws Exception {
         super.doLoad();
-        aliases = new Aliases(getLoader(), "tiles");
-        pluginGeometry = new ThemeGeometry(aliases, getLoader(), "tiles", getImageSizeRatio());
+        aliases = new PluginAliases(getLoader(), "tiles");
+        pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
     }
 
     @Override
@@ -120,11 +115,30 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         }
     }
 
-    protected boolean containsTile(String tileId) {
-        if (!isEnabled()) return false;
+    protected String getEffectiveTileIdForImage(String tileId) {
+        if (!isEnabled()) {
+            return null;
+        }
+        String aliasedId = mergedAliases.getImageAlias(tileId);
+        if (aliasedId != null) {
+            tileId = aliasedId;
+        }
         String expCode = tileId.split("\\.")[0];
-        return containsGraphics.contains(expCode);
+        return containsGraphics.contains(expCode) ? tileId : null;
     }
+
+    protected String getEffectiveTileIdForGeometry(String tileId) {
+        if (!isEnabled()) {
+            return null;
+        }
+        String aliasedId = mergedAliases.getGeometryAlias(tileId);
+        if (aliasedId != null) {
+            tileId = aliasedId;
+        }
+        String expCode = tileId.split("\\.")[0];
+        return containsGraphics.contains(expCode) ? tileId : null;
+    }
+
 
     public boolean isExpansionSupported(Expansion exp) {
         return containsGraphics.contains(exp.getCode());
@@ -139,20 +153,10 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
     }
 
     @Override
-    public TileImage getAbbeyImage(Rotation rot) throws ExternalResourceException {
-        return getTileImage(Tile.ABBEY_TILE_ID, rot);
-    }
-
-    @Override
-    public TileImage getTileImage(String tileId, Rotation rot) throws ExternalResourceException {
-        if (!containsTile(tileId)) return null;
-        String alias = aliases.getImageAlias(tileId);
-        if (alias != null) {
-            if (containsTile(alias)) {
-                tileId = alias;
-            } else {
-                throw new ExternalResourceException(alias);
-            }
+    public TileImage getTileImage(String tileId, Rotation rot) {
+        tileId = getEffectiveTileIdForImage(tileId);
+        if (tileId == null) {
+            return null;
         }
         String[] tokens = tileId.split("\\.", 2);
         String baseName = "tiles/"+tokens[0] + "/" + tokens[1];
@@ -196,15 +200,16 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     @Override
     public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
-        if (!containsTile(tile.getId())) return null;
+        String tileId = getEffectiveTileIdForGeometry(tile.getId());
+        if (tileId == null) return null;
         if (loc == Location.MONASTERY) loc = Location.CLOISTER;
 
         Location iniLoc = loc.rotateCCW(rot);
         Feature feature = tile.getInitialFeatures().get(iniLoc).get();
 
-        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tile, feature.getClass(), iniLoc);
+        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tileId, feature.getClass(), iniLoc);
         if (point == null) {
-            point = defaultGeometry.getMeeplePlacement(tile, feature.getClass(), iniLoc);
+            point = defaultGeometry.getMeeplePlacement(tileId, feature.getClass(), iniLoc);
         }
         if (point == null) {
             logger.warn("No point defined for <" + (new FeatureDescriptor(tile.getId(), feature.getClass(), loc)) + ">");
@@ -237,7 +242,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 //        return area;
 //    }
 
-    private FeatureArea getFeatureArea(Tile tile, Class<? extends Feature> featureClass, Location loc) {
+    private FeatureArea getFeatureArea(String tileId, Class<? extends Feature> featureClass, Location loc) {
         boolean monasteryShading = false;
         if (loc == Location.MONASTERY) {
             loc = Location.CLOISTER;
@@ -247,11 +252,11 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
             featureClass = City.class;
         }
         ThemeGeometry source = null;
-        FeatureArea area = pluginGeometry.getArea(tile, featureClass, loc);
+        FeatureArea area = pluginGeometry.getArea(tileId, featureClass, loc);
         if (area == null) {
-            area = adaptDefaultGeometry(defaultGeometry.getArea(tile, featureClass, loc));
+            area = adaptDefaultGeometry(defaultGeometry.getArea(tileId, featureClass, loc));
             if (area == null) {
-                logger.error("No shape defined for <" + (new FeatureDescriptor(tile.getId(), featureClass, loc)) + ">");
+                logger.error("No shape defined for <" + (new FeatureDescriptor(tileId, featureClass, loc)) + ">");
                 return new FeatureArea(new Area(), 0);
             } else {
                 source = defaultGeometry;
@@ -271,9 +276,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return area;
     }
 
-    private Area getSubtractionArea(Tile tile, boolean farm) {
-        Area d = defaultGeometry.getSubtractionArea(tile, farm),
-             p = pluginGeometry.getSubtractionArea(tile, farm),
+    private Area getSubtractionArea(String tileId, boolean farm) {
+        Area d = defaultGeometry.getSubtractionArea(tileId, farm),
+             p = pluginGeometry.getSubtractionArea(tileId, farm),
              area = new Area();
 
         if (d != null) {
@@ -299,9 +304,9 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
         return area;
     }
 
-    private boolean isFarmComplement(Tile tile, Location loc) {
-        if (pluginGeometry.isFarmComplement(tile, loc)) return true;
-        if (defaultGeometry.isFarmComplement(tile, loc)) return true;
+    private boolean isFarmComplement(String tileId, Location loc) {
+        if (pluginGeometry.isFarmComplement(tileId, loc)) return true;
+        if (defaultGeometry.isFarmComplement(tileId, loc)) return true;
         return false;
     }
 
@@ -333,12 +338,15 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
 
     private Map<Location, FeatureArea> getTileFeatureAreas(Tile tile, Rotation rot) {
-        if (!containsTile(tile.getId())) return HashMap.empty();
+        String effectiveTileId = getEffectiveTileIdForGeometry(tile.getId());
+        if (effectiveTileId == null) {
+            return HashMap.empty();
+        }
 
         Map<Location, Feature> features = tile.getInitialFeatures();
 
         Location complementFarm = features
-            .find(t -> t._2 instanceof Farm && isFarmComplement(tile, t._1))
+            .find(t -> t._2 instanceof Farm && isFarmComplement(effectiveTileId, t._1))
             .map(Tuple2::_1).getOrNull();
         Location bridgeLoc = features
             .find(t -> t._2 instanceof Bridge)
@@ -346,8 +354,8 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
         AffineTransform txRot = rot.getAffineTransform(NORMALIZED_SIZE);
 
-        Area onlyFarmSubtraction = getSubtractionArea(tile, true);
-        Area allSubtraction = getSubtractionArea(tile, false);
+        Area onlyFarmSubtraction = getSubtractionArea(effectiveTileId, true);
+        Area allSubtraction = getSubtractionArea(effectiveTileId, false);
         onlyFarmSubtraction.transform(txRot);
         allSubtraction.transform(txRot);
 
@@ -371,7 +379,7 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
                 if (bridgeLoc == loc) {
                     fa = getBridgeArea(loc.rotateCCW(rot));
                 } else {
-                    fa = getFeatureArea(tile, feature.getClass(), loc);
+                    fa = getFeatureArea(effectiveTileId, feature.getClass(), loc);
                 }
                 if (!fa.isFixed()) {
                     fa = fa.transform(txRot);
@@ -477,5 +485,17 @@ public class ResourcePlugin extends Plugin implements ResourceManager {
 
     private Rectangle getFullRectangle() {
         return new Rectangle(0,0, NORMALIZED_SIZE-1, (int) (NORMALIZED_SIZE * getImageSizeRatio()));
+    }
+
+    public PluginAliases getAliases() {
+        return aliases;
+    }
+
+    public Aliases getMergedAliases() {
+        return mergedAliases;
+    }
+
+    public void setMergedAliases(Aliases mergedAliases) {
+        this.mergedAliases = mergedAliases;
     }
 }

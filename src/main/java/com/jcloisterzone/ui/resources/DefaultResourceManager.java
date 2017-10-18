@@ -44,11 +44,6 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public TileImage getAbbeyImage(Rotation rot) {
-        return null;
-    }
-
-    @Override
     public Image getImage(String path) {
         return imgLoader.getImage(path);
     }
