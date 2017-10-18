@@ -36,7 +36,6 @@ import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
@@ -104,7 +103,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
         this.chatPanel = networkGame ? chatPanel : null;
 
-        ResourcePlugin rp = getBaseExpansionResourcePlugin();
+        Plugin rp = getBaseExpansionPlugin();
         if (rp != null) {
             //sqrt -> geometric average between width and height
             meepleScaleFactor = Math.sqrt(rp.getImageSizeRatio());
@@ -124,21 +123,19 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return meepleScaleFactor;
     }
 
-    private ResourcePlugin getBaseExpansionResourcePlugin() {
+    private Plugin getBaseExpansionPlugin() {
         for (Plugin plugin : client.getPlugins()) {
             if (!plugin.isEnabled()) continue;
-            if (!(plugin instanceof ResourcePlugin)) continue;
-            ResourcePlugin rp = (ResourcePlugin) plugin;
-            if (rp.isExpansionSupported(Expansion.BASIC)) {
-                return rp;
+            if (plugin.isExpansionSupported(Expansion.BASIC)) {
+                return plugin;
             }
         }
         return null;
     }
 
     private void updateTileSize(int baseWidth) {
-        ResourcePlugin rp = getBaseExpansionResourcePlugin();
-        double ratio = rp == null ? 1.0 : rp.getImageSizeRatio();
+        Plugin plugin = getBaseExpansionPlugin();
+        double ratio = plugin == null ? 1.0 : plugin.getImageSizeRatio();
         tileWidth = baseWidth;
         tileHeight = (int)(ratio * baseWidth);
     }

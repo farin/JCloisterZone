@@ -10,9 +10,7 @@ public class MergedAliases implements Aliases {
 
     public MergedAliases(Iterable<Plugin> plugins) {
         aliases = Stream.ofAll(plugins)
-            .filter(p -> p.isEnabled())
-            .filter(Predicates.instanceOf(ResourcePlugin.class))
-            .map(p -> (Aliases) ((ResourcePlugin) p).getAliases())
+            .map(Plugin::getAliases)
             .toVector();
     }
 

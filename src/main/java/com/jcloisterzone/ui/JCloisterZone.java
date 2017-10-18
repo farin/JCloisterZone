@@ -31,7 +31,6 @@ import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.plugin.ResourcePlugin;
 
 public class JCloisterZone  {
 
@@ -122,15 +121,11 @@ public class JCloisterZone  {
 
             private int getPluginPriority(Plugin p) {
                 if (p.isDefault()) return Integer.MAX_VALUE;
-                if (p instanceof ResourcePlugin) {
-                    ResourcePlugin rp = (ResourcePlugin) p;
-                    if (rp.isExpansionSupported(Expansion.BASIC)) {
-                        return 1000 + rp.getContainedExpansions().size();
-                    } else {
-                        return 10 + rp.getContainedExpansions().size();
-                    }
+                if (p.isExpansionSupported(Expansion.BASIC)) {
+                    return 1000 + p.getContainedExpansions().size();
+                } else {
+                    return 10 + p.getContainedExpansions().size();
                 }
-                return 1;
             }
 
             @Override

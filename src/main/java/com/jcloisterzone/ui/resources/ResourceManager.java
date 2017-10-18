@@ -26,4 +26,6 @@ public interface ResourceManager {
     /** returns meeple offset on tile, normalized to 100x100 tile size */
     ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc);
     ImmutablePoint getBarnPlacement();
+
+    void reload();
 }

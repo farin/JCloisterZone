@@ -5,10 +5,8 @@ import static com.jcloisterzone.ui.resources.ResourceManager.NORMALIZED_SIZE;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.io.ObjectInputStream.GetField;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.plugin.ResourcePlugin;
 
 public class FeatureArea {
 

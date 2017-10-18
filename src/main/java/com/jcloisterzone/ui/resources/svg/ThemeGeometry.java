@@ -26,6 +26,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.resources.AreaRotationScaling;
 import com.jcloisterzone.ui.resources.FeatureArea;
@@ -36,20 +37,23 @@ import com.jcloisterzone.ui.resources.svg.SvgTransformationCollector.GeometryHan
 
 public class ThemeGeometry {
 
-    public double getImageSizeRatio() {
-        return imageSizeRatio;
-    }
-
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static class AreaWithZIndex {
-        Area area;
-        Integer zIndex;
+    public static ThemeGeometry DEFAULT_GEOMETRY;
+    private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
 
-        public AreaWithZIndex(Area area, Integer zIndex) {
-            this.area = area;
-            this.zIndex = zIndex;
+    static {
+        try {
+            DEFAULT_GEOMETRY = new ThemeGeometry(Plugin.class.getClassLoader(), "defaults/tiles", 1.0);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            LoggerFactory.getLogger(ThemeGeometry.class).error(e.getMessage(), e);
         }
+
+        Area a = new Area(new Rectangle(400, 0, 200, 1000));
+        a.subtract(new Area(new Ellipse2D.Double(300, 150, 200, 700)));
+        BRIDGE_AREA_NS = new Area(a);
+        a.transform(Rotation.R270.getAffineTransform(ResourceManager.NORMALIZED_SIZE));
+        BRIDGE_AREA_WE = a;
     }
 
     private final double imageSizeRatio;
@@ -58,16 +62,6 @@ public class ThemeGeometry {
     private final Map<String, Area> subtractionFarm = new HashMap<>(); //key tile ID
     private final Set<FeatureDescriptor> complementFarms = new HashSet<>();
     private final Map<FeatureDescriptor, ImmutablePoint> points;
-
-    private static final Area BRIDGE_AREA_NS, BRIDGE_AREA_WE;
-
-    static {
-        Area a = new Area(new Rectangle(400, 0, 200, 1000));
-        a.subtract(new Area(new Ellipse2D.Double(300, 150, 200, 700)));
-        BRIDGE_AREA_NS = new Area(a);
-        a.transform(Rotation.R270.getAffineTransform(ResourceManager.NORMALIZED_SIZE));
-        BRIDGE_AREA_WE = a;
-    }
 
     public ThemeGeometry(ClassLoader loader, String folder, double imageSizeRatio) throws IOException, SAXException, ParserConfigurationException {
         this.imageSizeRatio = imageSizeRatio;
@@ -84,6 +78,10 @@ public class ThemeGeometry {
         }
 
         points = (new PointsParser(loader.getResource(folder + "/points.xml"))).parse();
+    }
+
+    public double getImageSizeRatio() {
+        return imageSizeRatio;
     }
 
     private FeatureDescriptor createFeatureDescriptor(String featureName, String tileAndLocation) {

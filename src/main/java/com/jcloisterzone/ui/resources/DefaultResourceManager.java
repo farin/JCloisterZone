@@ -39,6 +39,10 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
+    public void reload() {
+    }
+
+    @Override
     public TileImage getTileImage(String tileId, Rotation rot) {
         return null;
     }

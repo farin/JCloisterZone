@@ -10,10 +10,8 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.plugin.MergedAliases;
 import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.plugin.ResourcePlugin;
 import com.jcloisterzone.ui.ImmutablePoint;
 
-import io.vavr.Predicates;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
@@ -23,22 +21,29 @@ import io.vavr.collection.Vector;
 public class PlugableResourceManager implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private final Vector<ResourceManager> managers;
+
+    private final Iterable<Plugin> plugins;
+    private Vector<ResourceManager> managers;
+
 
     public PlugableResourceManager(Iterable<Plugin> plugins) {
-        managers = Stream.ofAll(plugins)
-            .filter(p -> p.isEnabled())
-            .filter(Predicates.instanceOf(ResourceManager.class))
+        this.plugins = plugins;
+        reload();
+    }
+
+    public void reload() {
+        Stream<Plugin> enabledPlugins = Stream.ofAll(plugins)
+            .filter(Plugin::isEnabled);
+
+        enabledPlugins.forEach(Plugin::reload);
+
+        managers = enabledPlugins
             .map(p -> (ResourceManager) p)
             .append(new DefaultResourceManager())
             .toVector();
 
-        MergedAliases mergedAliases = new MergedAliases(plugins);
-        managers.forEach(rm -> {
-            if (rm instanceof ResourcePlugin) {
-                ((ResourcePlugin)rm).setMergedAliases(mergedAliases);
-            }
-        });
+        MergedAliases mergedAliases = new MergedAliases(enabledPlugins);
+        enabledPlugins.forEach(p -> p.setMergedAliases(mergedAliases));
     }
 
     @Override

@@ -19,7 +19,8 @@ public class ConvenientResourceManager implements ResourceManager {
         this.manager = manager;
     }
 
-    public void clearCache() {
+    public void reload() {
+        manager.reload();
         imageCache.clear();
     }
 

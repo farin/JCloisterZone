@@ -258,7 +258,7 @@ public class Client extends JFrame {
 
     public void saveConfig() {
         configLoader.save(config);
-        resourceManager.clearCache();
+        resourceManager.reload();
     }
 
     public ConvenientResourceManager getResourceManager() {
