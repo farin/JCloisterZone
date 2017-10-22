@@ -83,7 +83,8 @@ public class JCloisterZone  {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    private boolean isPluginEnabled(Config config, String pluginName) {
+    private boolean isPluginEnabled(Config config, Path relPath) {
+    		String pluginName = relPath.toString();
         for (String path : config.getPlugins().getEnabled_plugins()) {
             if (pluginName.equals(path)) return true;
             //dev helper, match also unpacked plugins
@@ -105,24 +106,24 @@ public class JCloisterZone  {
                 }
                 DirectoryStream<Path> stream = Files.newDirectoryStream(pluginFolder);
 
-                for (Path file: stream) {
-                    String filename = pluginFolder.relativize(file).toString();
-                    boolean isValid = !filename.startsWith(".") && (
-                            Files.isDirectory(file) || file.endsWith(".jar") || file.endsWith(".zip")
+                for (Path fullPath: stream) {
+                		Path relPath = pluginFolder.relativize(fullPath);
+                    boolean isValid = !relPath.toString().startsWith(".") && (
+                            Files.isDirectory(fullPath) || fullPath.endsWith(".jar") || fullPath.endsWith(".zip")
                     );
                     if (!isValid) {
                         continue;
                     }
 
                     try {
-                        Plugin plugin = Plugin.readPlugin(filename, file);
-                        if (isPluginEnabled(config, filename)) {
+                        Plugin plugin = Plugin.readPlugin(relPath, fullPath);
+                        if (isPluginEnabled(config, relPath)) {
                             plugin.load();
                             plugin.setEnabled(true);
                         }
                         plugins.add(plugin);
                     } catch (Exception e) {
-                        logger.error("Unable to load plugin " + file, e);
+                        logger.error("Unable to load plugin " + fullPath, e);
                     }
                 }
             } catch (URISyntaxException | IOException e) {
@@ -152,7 +153,7 @@ public class JCloisterZone  {
 
         //log after sort
         for (Plugin plugin: plugins) {
-            logger.info("plugin <{}> loaded, enabled: {}", plugin.getFilename(), plugin.isEnabled());
+            logger.info("plugin <{}> loaded, enabled: {}", plugin.getRelativePath(), plugin.isEnabled());
         }
 
         return plugins;

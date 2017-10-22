@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -58,11 +57,10 @@ public class Plugin implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final URL url;
+    private final Path path;
+    private final Path relPath;
     private final ImageLoader imageLoader;
     private final URLClassLoader loader;
-    /** used to identify plugin and to be able save it back to config file */
-    private final String filename;
 
     private PluginMeta meta;
 
@@ -83,28 +81,27 @@ public class Plugin implements ResourceManager {
     private Vector<Expansion> expansionsToRegister = Vector.empty();
     private java.util.Set<String> supportedExpansions = null; // expansion codes
 
-    private static Plugin readPlugin(String filename, URL pluginURL) throws Exception {
-        Plugin plugin = new Plugin(filename, pluginURL);
+    public static Plugin readPlugin(Path relPath, Path path) throws Exception {
+        Plugin plugin = new Plugin(relPath, path);
         plugin.loadMetadata();
         return plugin;
     }
 
-    public static Plugin readPlugin(String filename, Path path) throws Exception {
-        return readPlugin(filename, path.toUri().toURL());
-    }
-
-    public Plugin(String filename, URL url) throws MalformedURLException {
-        this.filename = filename;
-        this.url = fixPluginURL(url);
-        logger.debug("Creating plugin loader for URL {}", this.url);
-        loader = new URLClassLoader(new URL[] { this.url });
+    public Plugin(Path relPath, Path path) throws MalformedURLException {
+    		this.relPath = relPath;
+        this.path = path;
+        URL url = getFixedURL();
+        logger.debug("Creating plugin loader for {}", url);
+        loader = new URLClassLoader(new URL[] { url });
         imageLoader = new ImageLoader(loader);
     }
 
-    private URL fixPluginURL(URL url) throws MalformedURLException {
-        boolean isFile = url.toString().endsWith(".jar") || url.toString().endsWith(".zip");
-        if (isFile) return url;
-        return new URL(url.toString()+"/");
+    private URL getFixedURL() throws MalformedURLException {
+    		URL url = path.toUri().toURL();
+    		if (Files.isRegularFile(path)) {
+    			return url;
+    		}
+        return new URL(url.toString() + "/");
     }
 
     protected void loadMetadata() throws Exception {
@@ -166,20 +163,20 @@ public class Plugin implements ResourceManager {
         return imageLoader.getImage("icon");
     }
 
-    public URL getUrl() {
-        return url;
-    }
+    public Path getPath() {
+		return path;
+	}
 
-    public String getFilename() {
-        return filename;
-    }
+    public Path getRelativePath() {
+		return relPath;
+	}
 
     public PluginMeta getMetadata() {
         return meta;
     }
 
     public boolean isDefault() {
-        return filename.matches("^classic\\b");
+        return path.getFileName().toString().matches("^classic\\b");
     }
 
     public boolean isLoaded() {
