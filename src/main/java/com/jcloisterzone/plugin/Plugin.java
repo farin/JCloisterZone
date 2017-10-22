@@ -62,7 +62,7 @@ public class Plugin implements ResourceManager {
     private final ImageLoader imageLoader;
     private final URLClassLoader loader;
     /** used to identify plugin and to be able save it back to config file */
-    private final String relativePath;
+    private final String filename;
 
     private PluginMeta meta;
 
@@ -83,23 +83,18 @@ public class Plugin implements ResourceManager {
     private Vector<Expansion> expansionsToRegister = Vector.empty();
     private java.util.Set<String> supportedExpansions = null; // expansion codes
 
-    private static Plugin readPlugin(URL pluginURL, String relativePath) throws Exception {
-        Plugin plugin = new Plugin(pluginURL, relativePath);
+    private static Plugin readPlugin(String filename, URL pluginURL) throws Exception {
+        Plugin plugin = new Plugin(filename, pluginURL);
         plugin.loadMetadata();
         return plugin;
     }
 
-    public static Plugin readPlugin(Path path) throws Exception {
-        Path basePath = Paths.get(ClassLoader.getSystemClassLoader().getResource(".").toURI());
-        String relativePath = path.toString().substring(basePath.toString().length()+1);
-        if (File.separatorChar != '/') {
-            relativePath = relativePath.replace(File.separatorChar, '/');
-        }
-        return readPlugin(path.toUri().toURL(), relativePath);
+    public static Plugin readPlugin(String filename, Path path) throws Exception {
+        return readPlugin(filename, path.toUri().toURL());
     }
 
-    public Plugin(URL url, String relativePath) throws MalformedURLException {
-        this.relativePath = relativePath;
+    public Plugin(String filename, URL url) throws MalformedURLException {
+        this.filename = filename;
         this.url = fixPluginURL(url);
         logger.debug("Creating plugin loader for URL {}", this.url);
         loader = new URLClassLoader(new URL[] { this.url });
@@ -120,10 +115,12 @@ public class Plugin implements ResourceManager {
             for (ExpansionMeta expMeta : meta.getExpansions()) {
                 ExpansionType type = ExpansionType.valueOf(expMeta.getType());
                 java.util.List<Class<? extends Capability<?>>> capabilityClasses = new ArrayList<>();
-                for (String name : expMeta.getCapabilities()) {
-                    Class<? extends Capability<?>> cls = Capability.classForName(name);
-                    if (cls != null) {
-                        capabilityClasses.add(cls);
+                if (expMeta.getCapabilities() != null) {
+                    for (String name : expMeta.getCapabilities()) {
+                        Class<? extends Capability<?>> cls = Capability.classForName(name, loader);
+                        if (cls != null) {
+                            capabilityClasses.add(cls);
+                        }
                     }
                 }
                 @SuppressWarnings("unchecked")
@@ -173,8 +170,8 @@ public class Plugin implements ResourceManager {
         return url;
     }
 
-    public String getRelativePath() {
-        return relativePath;
+    public String getFilename() {
+        return filename;
     }
 
     public PluginMeta getMetadata() {
@@ -182,7 +179,7 @@ public class Plugin implements ResourceManager {
     }
 
     public boolean isDefault() {
-        return getRelativePath().matches("^plugins/classic\\b");
+        return filename.matches("^classic\\b");
     }
 
     public boolean isLoaded() {

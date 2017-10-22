@@ -43,10 +43,9 @@ saved_games:
     # Specifies how JSON file is stored. Possible values: compact (no white spaces), pretty (human readable pretty print)
     format: ${saved_games_format}
 
-# plugins/classic.jar - Graphics from original board game
-# plugins/jcz3d.jar - 3D graphics
-# plugins/rgg_siege.jar - RGG's Siege tiles instead of original The Cathars tiles
-plugins: ${plugins}
+plugins:
+  lookup_folders: ${plugins_lookup_folders}
+  enabled_plugins: ${plugins_enabled_plugins}
 
 # possible expansions in profile definition:
 #   WINTER, INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON,

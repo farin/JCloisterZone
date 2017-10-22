@@ -161,7 +161,8 @@ public class ConfigLoader {
             new ColorConfig("#812EFF", null, "#ba92f8")
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
-        config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
+        config.getPlugins().setLookup_folders(Lists.newArrayList("plugins"));
+        config.getPlugins().setEnabled_plugins(Lists.newArrayList("classic.jar"));
         config.getScreenshots().setScale(DEFAULT_SCREENSHOT_SCALE);
         config.getSaved_games().setFormat(DEFAULT_SAVED_GAMES_FORMAT);
         return config;
@@ -220,9 +221,9 @@ public class ConfigLoader {
             }
         }
 
-        if (config.getPlugins() != null && !config.getPlugins().isEmpty()) {
-            model.put("plugins", indent(1, yaml.dumpAs(config.getPlugins(), Tag.SEQ, FlowStyle.BLOCK)));
-        }
+        model.put("plugins_lookup_folders", indent(2, yaml.dumpAs(config.getPlugins().getLookup_folders(), Tag.SEQ, FlowStyle.BLOCK)));
+        model.put("plugins_enabled_plugins", indent(2, yaml.dumpAs(config.getPlugins().getEnabled_plugins(), Tag.SEQ, FlowStyle.BLOCK)));
+
         if (config.getPresets() != null && !config.getPresets().isEmpty()) {
             model.put("presets", indent(1, yaml.dumpAs(config.getPresets(), Tag.MAP, FlowStyle.BLOCK)));
         }

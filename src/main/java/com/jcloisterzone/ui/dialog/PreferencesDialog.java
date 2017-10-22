@@ -168,7 +168,7 @@ public class PreferencesDialog extends JDialog {
                 try {
                     plugin.load();
                     plugin.setEnabled(true);
-                    enabledPlugins.add(plugin.getRelativePath());
+                    enabledPlugins.add(plugin.getFilename());
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -177,7 +177,7 @@ public class PreferencesDialog extends JDialog {
                 plugin.setEnabled(false);
             }
         }
-        config.setPlugins(enabledPlugins);
+        config.getPlugins().setEnabled_plugins(enabledPlugins);
 
         client.saveConfig();
     }

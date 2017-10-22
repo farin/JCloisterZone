@@ -48,12 +48,12 @@ public class Config {
     private String secret;
     private String play_online_host;
 
-    private List<String> plugins;
     private ConfirmConfig confirm;
     private AiConfig ai;
     private PlayersConfig players;
     private ScreenshotsConfig screenshots;
     private SavedGamesConfig saved_games;
+    private PluginsConfig plugins;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
@@ -91,6 +91,24 @@ public class Config {
         }
         public void setFormat(String format) {
             this.format = format;
+        }
+    }
+
+    public static class PluginsConfig {
+        private List<String> lookup_folders;
+        private List<String> enabled_plugins;
+
+        public List<String> getLookup_folders() {
+            return lookup_folders == null ? Collections.<String>emptyList() : lookup_folders;
+        }
+        public void setLookup_folders(List<String> lookup_folders) {
+            this.lookup_folders = lookup_folders;
+        }
+        public List<String> getEnabled_plugins() {
+            return enabled_plugins == null ? Collections.<String>emptyList() : enabled_plugins;
+        }
+        public void setEnabled_plugins(List<String> enabled_plugins) {
+            this.enabled_plugins = enabled_plugins;
         }
     }
 
@@ -413,11 +431,15 @@ public class Config {
         this.beep_alert = beep_alert;
     }
 
-    public List<String> getPlugins() {
-        return plugins == null ? Collections.<String>emptyList() : plugins;
+
+    public PluginsConfig getPlugins() {
+        if (plugins == null) {
+            plugins = new PluginsConfig();
+        }
+        return plugins;
     }
 
-    public void setPlugins(List<String> plugins) {
+    public void setPlugins(PluginsConfig plugins) {
         this.plugins = plugins;
     }
 

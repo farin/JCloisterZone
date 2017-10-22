@@ -83,12 +83,12 @@ public class JCloisterZone  {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    private boolean isPluginEnabled(Config config, String relativePath) {
-        for (String path : config.getPlugins()) {
-            if (relativePath.equals(path)) return true;
+    private boolean isPluginEnabled(Config config, String pluginName) {
+        for (String path : config.getPlugins().getEnabled_plugins()) {
+            if (pluginName.equals(path)) return true;
             //dev helper, match also unpacked plugins
-            if (!relativePath.endsWith(".jar")) {
-                if ((relativePath+".jar").equals(path)) return true;
+            if (!pluginName.endsWith(".jar")) {
+                if ((pluginName+".jar").equals(path)) return true;
             }
         }
         return false;
@@ -97,25 +97,39 @@ public class JCloisterZone  {
     public List<Plugin> loadPlugins(Config config) {
         ArrayList<Plugin> plugins = new ArrayList<>();
 
-        try {
-            Path pluginDir = Paths.get(getClass().getClassLoader().getResource("plugins").toURI());
-            DirectoryStream<Path> stream = Files.newDirectoryStream(pluginDir);
-
-            for (Path file: stream) {
-                try {
-                   Plugin plugin = Plugin.readPlugin(file);
-                   if (isPluginEnabled(config, plugin.getRelativePath())) {
-                       plugin.load();
-                       plugin.setEnabled(true);
-                   }
-                   plugins.add(plugin);
-                } catch (Exception e) {
-                    logger.error("Unable to load plugin " + file, e);
+        for (String folderName : config.getPlugins().getLookup_folders()) {
+            try {
+                Path pluginFolder = Paths.get(folderName);
+                if (!pluginFolder.isAbsolute()) {
+                    pluginFolder = Paths.get(getClass().getClassLoader().getResource(folderName).toURI());
                 }
+                DirectoryStream<Path> stream = Files.newDirectoryStream(pluginFolder);
+
+                for (Path file: stream) {
+                    String filename = pluginFolder.relativize(file).toString();
+                    boolean isValid = !filename.startsWith(".") && (
+                            Files.isDirectory(file) || file.endsWith(".jar") || file.endsWith(".zip")
+                    );
+                    if (!isValid) {
+                        continue;
+                    }
+
+                    try {
+                        Plugin plugin = Plugin.readPlugin(filename, file);
+                        if (isPluginEnabled(config, filename)) {
+                            plugin.load();
+                            plugin.setEnabled(true);
+                        }
+                        plugins.add(plugin);
+                    } catch (Exception e) {
+                        logger.error("Unable to load plugin " + file, e);
+                    }
+                }
+            } catch (URISyntaxException | IOException e) {
+                logger.error("Cannot read plugin directory", e);
             }
-        } catch (URISyntaxException | IOException e) {
-            logger.error("Cannot read plugin directory", e);
         }
+
 
         Collections.sort(plugins, new Comparator<Plugin>() {
 
@@ -138,7 +152,7 @@ public class JCloisterZone  {
 
         //log after sort
         for (Plugin plugin: plugins) {
-            logger.info("plugin <{}> loaded, enabled: {}", plugin.getRelativePath(), plugin.isEnabled());
+            logger.info("plugin <{}> loaded, enabled: {}", plugin.getFilename(), plugin.isEnabled());
         }
 
         return plugins;
@@ -168,8 +182,6 @@ public class JCloisterZone  {
             }).start();
         }
     }
-
-
 
     public void run() {
         System.setProperty("apple.awt.graphics.EnableQ2DX", "true");

@@ -127,11 +127,15 @@ public abstract class Capability<T> implements Serializable {
         return nameForClass((Class<? extends Capability<?>>) getClass());
     }
 
-    @SuppressWarnings("unchecked")
     public static Class<? extends Capability<?>> classForName(String name) {
+            return classForName(name, Capability.class.getClassLoader());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Capability<?>> classForName(String name, ClassLoader classLoader) {
         String clsName = "com.jcloisterzone.game.capability." + name + "Capability";
         try {
-            return (Class<? extends Capability<?>>) Class.forName(clsName);
+            return (Class<? extends Capability<?>>) Class.forName(clsName, true, classLoader);
         } catch (ClassNotFoundException e) {
             Logger logger = LoggerFactory.getLogger(Capability.class);
             logger.error("Unable to find capability class.", e);
