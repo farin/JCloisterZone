@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -107,6 +108,20 @@ public class Plugin implements ResourceManager {
     protected void loadMetadata() throws Exception {
         Yaml yaml = new Yaml(new Constructor(PluginMeta.class));
         meta = (PluginMeta) yaml.load(loader.getResource("plugin.yaml").openStream());
+
+        Files.walk(path)
+        		.filter(f -> f.toString().endsWith(".class"))
+        		.forEach(f -> {
+        			String clsName = path.relativize(f).toString()
+        				.replace(File.separator, ".")
+        				.replaceAll("\\.class$", "");
+        			try {
+					Class<?> c = loader.loadClass(clsName);
+					logger.debug("External class {} has been loaded.", c.getName());
+				} catch (ClassNotFoundException e) {
+					logger.error(e.getMessage(), e);
+				}
+        		});
 
         if (meta.getExpansions() != null) {
             for (ExpansionMeta expMeta : meta.getExpansions()) {

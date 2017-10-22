@@ -142,10 +142,12 @@ public class Config {
             Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
             if (this.capabilities != null) {
                 for (String clsName : this.capabilities) {
-                    Class<? extends Capability<?>> cls = Capability.classForName(clsName);
-                    if (cls != null) {
-                        capabilities.add(cls);
-                    }
+                		try {
+                			Class<? extends Capability<?>> cls = Capability.classForName(clsName);
+                			capabilities.add(cls);
+                		} catch (ClassNotFoundException ex) {
+                			logger.error("Unable to find capability class.", ex);
+                		}
                 }
             }
 

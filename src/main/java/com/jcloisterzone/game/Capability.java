@@ -21,6 +21,9 @@ import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.JCloisterZone;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
@@ -127,20 +130,29 @@ public abstract class Capability<T> implements Serializable {
         return nameForClass((Class<? extends Capability<?>>) getClass());
     }
 
-    public static Class<? extends Capability<?>> classForName(String name) {
-            return classForName(name, Capability.class.getClassLoader());
+    public static Class<? extends Capability<?>> classForName(String name) throws ClassNotFoundException {
+    		ClassLoader defaultLoader = Capability.class.getClassLoader();
+    		try {
+    			return classForName(name, defaultLoader);
+    		} catch (ClassNotFoundException ex) {
+    			for (Plugin p : Client.getInstance().getPlugins()) {
+    				if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
+    					continue;
+    				}
+    				try {
+    					return classForName(name, p.getLoader());
+    				} catch (ClassNotFoundException nested) {
+    					// do nothing
+    				}
+    			}
+    			throw ex;
+    		}
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends Capability<?>> classForName(String name, ClassLoader classLoader) {
+    public static Class<? extends Capability<?>> classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
         String clsName = "com.jcloisterzone.game.capability." + name + "Capability";
-        try {
-            return (Class<? extends Capability<?>>) Class.forName(clsName, true, classLoader);
-        } catch (ClassNotFoundException e) {
-            Logger logger = LoggerFactory.getLogger(Capability.class);
-            logger.error("Unable to find capability class.", e);
-            return null;
-        }
+        return (Class<? extends Capability<?>>) Class.forName(clsName, true, classLoader);
     }
 
     public static String nameForClass(Class<? extends Capability<?>> cls) {

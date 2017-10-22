@@ -16,7 +16,11 @@ public class CapabilitiesAdapter extends TypeAdapter<Class<? extends Capability<
 
     @Override
     public Class<? extends Capability<?>> read(JsonReader in) throws IOException {
-        return Capability.classForName(in.nextString());
+        try {
+			return Capability.classForName(in.nextString());
+		} catch (ClassNotFoundException e) {
+			throw new IOException(e);
+		}
     }
 
 }
