@@ -64,6 +64,7 @@ public class Plugin implements ResourceManager {
     private final URLClassLoader loader;
 
     private PluginMeta meta;
+    private Vector<String> includedClasses;
 
     private boolean loaded;
     private boolean enabled;
@@ -109,18 +110,14 @@ public class Plugin implements ResourceManager {
         Yaml yaml = new Yaml(new Constructor(PluginMeta.class));
         meta = (PluginMeta) yaml.load(loader.getResource("plugin.yaml").openStream());
 
+        includedClasses = Vector.empty();
         Files.walk(path)
         		.filter(f -> f.toString().endsWith(".class"))
         		.forEach(f -> {
         			String clsName = path.relativize(f).toString()
         				.replace(File.separator, ".")
         				.replaceAll("\\.class$", "");
-        			try {
-					Class<?> c = loader.loadClass(clsName);
-					logger.debug("External class {} has been loaded.", c.getName());
-				} catch (ClassNotFoundException e) {
-					logger.error(e.getMessage(), e);
-				}
+        			includedClasses = includedClasses.append(clsName);
         		});
 
         if (meta.getExpansions() != null) {
@@ -240,11 +237,22 @@ public class Plugin implements ResourceManager {
     }
 
     protected void doLoad() throws Exception {
+    		includedClasses.forEach(clsName -> {
+	    		try {
+				Class<?> c = loader.loadClass(clsName);
+				logger.debug("External class {} has been loaded.", c.getName());
+			} catch (ClassNotFoundException e) {
+				logger.error(e.getMessage(), e);
+			}
+    		});
+
         for (Expansion exp : expansionsToRegister) {
             Expansion.register(exp, this);
         }
         aliases = new PluginAliases(getLoader(), "tiles");
         pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
+
+
     }
 
     protected void doUnload() {
