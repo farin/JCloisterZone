@@ -95,6 +95,11 @@ public class JCloisterZone  {
         return false;
     }
 
+    private boolean isPluginArchive(Path path) {
+    		String s = path.toString();
+    		return s.endsWith(".jar") || s.endsWith(".zip");
+    }
+
     public List<Plugin> loadPlugins(Config config) {
         ArrayList<Plugin> plugins = new ArrayList<>();
 
@@ -109,8 +114,9 @@ public class JCloisterZone  {
                 for (Path fullPath: stream) {
                 		Path relPath = pluginFolder.relativize(fullPath);
                     boolean isValid = !relPath.toString().startsWith(".") && (
-                            Files.isDirectory(fullPath) || fullPath.endsWith(".jar") || fullPath.endsWith(".zip")
+                       Files.isDirectory(fullPath) || isPluginArchive(fullPath)
                     );
+
                     if (!isValid) {
                         continue;
                     }
