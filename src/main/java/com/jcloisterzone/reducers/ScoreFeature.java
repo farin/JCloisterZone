@@ -9,6 +9,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.state.GameState;
@@ -20,7 +21,7 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
 /** Score feature followers */
-public abstract class ScoreFeature implements Reducer {
+public abstract class ScoreFeature implements ScoreFeatureReducer {
 
     private final Scoreable feature;
 
@@ -133,11 +134,13 @@ public abstract class ScoreFeature implements Reducer {
         return state;
     }
 
-    public Scoreable getFeature() {
+    @Override
+	public Scoreable getFeature() {
         return feature;
     }
 
-    public Set<Player> getOwners() {
+    @Override
+	public Set<Player> getOwners() {
         return owners;
     }
 

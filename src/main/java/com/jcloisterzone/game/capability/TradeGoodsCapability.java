@@ -9,7 +9,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
@@ -25,7 +25,7 @@ public class TradeGoodsCapability extends Capability<Void> {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         for (Feature feature : completed.keySet()) {
             if (!(feature instanceof City)) continue;
 

@@ -9,13 +9,18 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.SmallFollower;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.ScoreCompletable;
+import com.jcloisterzone.reducers.ScoreFarm;
+import com.jcloisterzone.reducers.ScoreFarmBarn;
 
+import io.vavr.Predicates;
 import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -77,9 +82,9 @@ class LegacyRanking implements GameStateRanking {
         double r = 0.0;
 
         for (Completable completable : getOccupiedScoreables(state, Completable.class)) {
-            ScoreCompletable sc = new ScoreCompletable(completable);
-            sc.apply(state); //no assign!
-            for (Player player : sc.getOwners()) {
+            ScoreFeatureReducer sr = new ScoreCompletable(completable);
+            sr.apply(state); //no assign!
+            for (Player player : sr.getOwners()) {
                 double q = 1.0;
                 if (completable instanceof City) {
                     q = 1.8;
@@ -87,7 +92,27 @@ class LegacyRanking implements GameStateRanking {
                 if (player != me) {
                     q = -q;
                 }
-                r += q * sc.getPoints();
+                r += q * sr.getFeaturePoints(player);
+            }
+        }
+
+        //USE AS SCORING RESULT
+        for (Farm farm : getOccupiedScoreables(state, Farm.class)) {
+            boolean hasBarn = farm.getSpecialMeeples(state)
+                .find(Predicates.instanceOf(Barn.class)).isDefined();
+            ScoreFeatureReducer sr;
+            if (hasBarn) {
+               sr = new ScoreFarmBarn(farm);
+            } else {
+               sr = new ScoreFarm(farm);
+            }
+            sr.apply(state);
+            for (Player player : sr.getOwners()) {
+                double q = 0.99;
+                if (player != me) {
+                    q = -q;
+                }
+                r += q * sr.getFeaturePoints(player);
             }
         }
 

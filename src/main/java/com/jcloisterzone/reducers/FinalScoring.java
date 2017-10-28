@@ -74,7 +74,7 @@ public class FinalScoring implements Reducer {
             boolean hasBarn = farm.getSpecialMeeples(state)
                 .find(Predicates.instanceOf(Barn.class)).isDefined();
             if (hasBarn) {
-                   state = (new ScoreFarmBarn(farm)).apply(state);
+                state = (new ScoreFarmBarn(farm)).apply(state);
             } else {
                 state = (new ScoreFarm(farm)).apply(state);
             }

@@ -4,7 +4,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.game.state.GameState;
 
-public class ScoreFarmWhenBarnIsConnected extends ScoreFeature {
+public class ScoreFarmWhenBarnIsConnected extends ScoreFarm {
+
 
     public ScoreFarmWhenBarnIsConnected(Farm feature) {
         super(feature);
@@ -13,11 +14,8 @@ public class ScoreFarmWhenBarnIsConnected extends ScoreFeature {
     @Override
     protected int getFeaturePoints(GameState state, Player player) {
         Farm farm = getFeature();
-        return farm.getPointsWhenBarnIsConnected(state, player);
-    }
-
-    @Override
-    public Farm getFeature() {
-        return (Farm) super.getFeature();
+        int points = farm.getPointsWhenBarnIsConnected(state, player);
+        playerPoints = playerPoints.put(player, points);
+        return points;
     }
 }

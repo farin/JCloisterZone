@@ -2,10 +2,10 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 
-public class ScoreCompletable extends ScoreFeature implements ScoringResult {
+public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReducer {
 
     // points is store to instance and can be accesed after reduce
     private int points;
@@ -20,6 +20,11 @@ public class ScoreCompletable extends ScoreFeature implements ScoringResult {
     }
 
     @Override
+    public int getFeaturePoints() {
+    		return points;
+    }
+
+    @Override
     public Completable getFeature() {
         return (Completable) super.getFeature();
     }
@@ -28,9 +33,5 @@ public class ScoreCompletable extends ScoreFeature implements ScoringResult {
     public GameState apply(GameState state) {
         points = getFeature().getPoints(state);
         return super.apply(state);
-    }
-
-    public int getPoints() {
-        return points;
     }
 }

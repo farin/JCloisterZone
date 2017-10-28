@@ -15,7 +15,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -57,12 +57,12 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
     }
 
     @Override
-    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         Map<Position, Integer> placedGold = getModel(state);
         java.util.Map<Position, java.util.Set<Player>> claimedGold = new java.util.HashMap<>();
 
         // collect claims for particular tiles
-        for (Tuple2<Scoreable, ScoringResult> t : completed) {
+        for (Tuple2<Scoreable, ScoreFeatureReducer> t : completed) {
             Scoreable feature = t._1;
             Set<Player> owners = t._2.getOwners();
             if (owners.isEmpty()) {

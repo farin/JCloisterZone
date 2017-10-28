@@ -96,7 +96,7 @@ public abstract class Capability<T> implements Serializable {
      * @param state game state
      * @param completed all Completables (roads, cities, cloisters) and Castles completed this turn
      * */
-    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         return state;
     }
 

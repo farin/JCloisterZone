@@ -2,10 +2,11 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 
-public class ScoreCastle extends ScoreFeature implements ScoringResult {
+public class ScoreCastle extends ScoreFeature implements ScoreFeatureReducer {
 
     private final int points;
 
@@ -19,8 +20,8 @@ public class ScoreCastle extends ScoreFeature implements ScoringResult {
         return points;
     }
 
-    public int getPoints() {
-        return points;
+    @Override
+    public int getFeaturePoints() {
+	    	return points;
     }
-
 }

@@ -7,7 +7,7 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.MemoizedValue;
@@ -21,7 +21,7 @@ import io.vavr.collection.Set;
 public final class KingAndRobberBaronCapability extends Capability<Void> {
 
     @Override
-    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         Set<Scoreable> completedFeatures = completed.keySet();
         int maxCitySize = getMaxSize(state, City.class, completedFeatures);
         int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);

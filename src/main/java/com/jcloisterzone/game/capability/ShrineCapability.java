@@ -16,7 +16,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.UndeployMeeples;
 
@@ -38,7 +38,7 @@ public final class ShrineCapability extends Capability<Void> {
     }
 
     @Override
-    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoringResult> completed) {
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         Set<Cloister> completedCloisters = completed.keySet()
             .filter(Predicates.instanceOf(Cloister.class))
             .map(f -> (Cloister) f);

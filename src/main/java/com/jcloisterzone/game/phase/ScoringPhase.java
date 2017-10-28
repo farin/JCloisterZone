@@ -19,7 +19,7 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -45,7 +45,7 @@ import io.vavr.control.Option;
 
 public class ScoringPhase extends Phase {
 
-    private java.util.Map<Completable, ScoringResult> completedMutable = new java.util.HashMap<>();
+    private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
 
     public ScoringPhase(Config config, Random random) {
         super(config, random);
@@ -131,10 +131,10 @@ public class ScoringPhase extends Phase {
 
 
         CastleCapability castleCap = state.getCapabilities().get(CastleCapability.class);
-        HashMap<Completable, ScoringResult> completed = HashMap.ofAll(completedMutable);
-        HashMap<Scoreable, ScoringResult> scored = HashMap.narrow(completed);
+        HashMap<Completable, ScoreFeatureReducer> completed = HashMap.ofAll(completedMutable);
+        HashMap<Scoreable, ScoreFeatureReducer> scored = HashMap.narrow(completed);
         if (castleCap != null) {
-            Tuple2<GameState, Map<Castle, ScoringResult>> castleRes = castleCap.scoreCastles(state, completed);
+            Tuple2<GameState, Map<Castle, ScoreFeatureReducer>> castleRes = castleCap.scoreCastles(state, completed);
             state = castleRes._1;
             scored = scored.merge(castleRes._2);
         }

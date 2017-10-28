@@ -12,7 +12,7 @@ import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoringResult;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
