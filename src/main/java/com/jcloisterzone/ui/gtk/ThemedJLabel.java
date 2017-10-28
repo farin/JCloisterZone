@@ -9,32 +9,32 @@ import javax.swing.UIManager;
  */
 public class ThemedJLabel extends JLabel {
 
-	public ThemedJLabel() {
-		super();
-	}
+    public ThemedJLabel() {
+        super();
+    }
 
-	public ThemedJLabel(Icon image, int horizontalAlignment) {
-		super(image, horizontalAlignment);
-	}
+    public ThemedJLabel(Icon image, int horizontalAlignment) {
+        super(image, horizontalAlignment);
+    }
 
-	public ThemedJLabel(Icon image) {
-		super(image);
-	}
+    public ThemedJLabel(Icon image) {
+        super(image);
+    }
 
-	public ThemedJLabel(String text, Icon icon, int horizontalAlignment) {
-		super(text, icon, horizontalAlignment);
-	}
+    public ThemedJLabel(String text, Icon icon, int horizontalAlignment) {
+        super(text, icon, horizontalAlignment);
+    }
 
-	public ThemedJLabel(String text, int horizontalAlignment) {
-		super(text, horizontalAlignment);
-	}
+    public ThemedJLabel(String text, int horizontalAlignment) {
+        super(text, horizontalAlignment);
+    }
 
-	public ThemedJLabel(String text) {
-		super(text);
-	}
+    public ThemedJLabel(String text) {
+        super(text);
+    }
 
-	{
-		setForeground(UIManager.getColor("Label.foreground"));
-	}
+    {
+        setForeground(UIManager.getColor("Label.foreground"));
+    }
 
 }

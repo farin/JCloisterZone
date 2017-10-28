@@ -12,28 +12,28 @@ import javax.swing.UIManager;
  */
 public class ThemedJList<T> extends JList<T> {
 
-	public ThemedJList() {
-		super();
-	}
+    public ThemedJList() {
+        super();
+    }
 
-	public ThemedJList(ListModel<T> dataModel) {
-		super(dataModel);
-	}
+    public ThemedJList(ListModel<T> dataModel) {
+        super(dataModel);
+    }
 
-	public ThemedJList(T[] listData) {
-		super(listData);
-	}
+    public ThemedJList(T[] listData) {
+        super(listData);
+    }
 
-	public ThemedJList(Vector<? extends T> listData) {
-		super(listData);
-	}
+    public ThemedJList(Vector<? extends T> listData) {
+        super(listData);
+    }
 
-	{
-		setForeground(UIManager.getColor("List.foreground"));
-		Color c = UIManager.getColor("List.background");
-		if (c != null) {
-			//HACK for some reason, direct passing not work in GTK LaF
-			setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue()));
-		}
-	}
+    {
+        setForeground(UIManager.getColor("List.foreground"));
+        Color c = UIManager.getColor("List.background");
+        if (c != null) {
+            //HACK for some reason, direct passing not work in GTK LaF
+            setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue()));
+        }
+    }
 }

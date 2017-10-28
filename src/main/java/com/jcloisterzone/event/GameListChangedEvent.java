@@ -13,15 +13,15 @@ public class GameListChangedEvent extends Event {
         this.gameControllers = gameControllers;
     }
 
-	public GameController[] getGameControllers() {
-		return gameControllers;
-	}
+    public GameController[] getGameControllers() {
+        return gameControllers;
+    }
 
-	public void setGameControllers(GameController[] gameControllers) {
-		this.gameControllers = gameControllers;
-	}
+    public void setGameControllers(GameController[] gameControllers) {
+        this.gameControllers = gameControllers;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return super.toString() + " " + Arrays.toString(gameControllers);
     }

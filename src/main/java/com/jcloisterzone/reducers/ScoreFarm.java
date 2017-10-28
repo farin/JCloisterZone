@@ -9,7 +9,7 @@ import io.vavr.collection.Map;
 
 public class ScoreFarm extends ScoreFeature {
 
-	protected Map<Player, Integer> playerPoints = HashMap.empty();
+    protected Map<Player, Integer> playerPoints = HashMap.empty();
 
     public ScoreFarm(Farm feature) {
         super(feature);
@@ -17,19 +17,19 @@ public class ScoreFarm extends ScoreFeature {
 
     @Override
     protected int getFeaturePoints(GameState state, Player player) {
-    		int value = getFeature().getPoints(state, player);
-    		playerPoints = playerPoints.put(player, value);
+        int value = getFeature().getPoints(state, player);
+        playerPoints = playerPoints.put(player, value);
         return value;
     }
 
     @Override
     public int getFeaturePoints() {
-    		throw new UnsupportedOperationException("Call getFeaturePoints() with player argument");
+        throw new UnsupportedOperationException("Call getFeaturePoints() with player argument");
     }
 
     @Override
     public int getFeaturePoints(Player player) {
-    		return playerPoints.get(player).getOrElse(0);
+        return playerPoints.get(player).getOrElse(0);
     }
 
     @Override

@@ -13,6 +13,6 @@ public interface ScoreFeatureReducer extends Reducer {
 
     int getFeaturePoints();
     default int getFeaturePoints(Player player) {
-    		return getOwners().contains(player) ? getFeaturePoints() : 0;
+        return getOwners().contains(player) ? getFeaturePoints() : 0;
     }
 }

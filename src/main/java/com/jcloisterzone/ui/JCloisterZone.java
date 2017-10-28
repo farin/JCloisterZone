@@ -84,7 +84,7 @@ public class JCloisterZone  {
     }
 
     private boolean isPluginEnabled(Config config, Path relPath) {
-    		String pluginName = relPath.toString();
+            String pluginName = relPath.toString();
         for (String path : config.getPlugins().getEnabled_plugins()) {
             if (pluginName.equals(path)) return true;
             //dev helper, match also unpacked plugins
@@ -96,8 +96,8 @@ public class JCloisterZone  {
     }
 
     private boolean isPluginArchive(Path path) {
-    		String s = path.toString();
-    		return s.endsWith(".jar") || s.endsWith(".zip");
+        String s = path.toString();
+        return s.endsWith(".jar") || s.endsWith(".zip");
     }
 
     public List<Plugin> loadPlugins(Config config) {
@@ -112,7 +112,7 @@ public class JCloisterZone  {
                 DirectoryStream<Path> stream = Files.newDirectoryStream(pluginFolder);
 
                 for (Path fullPath: stream) {
-                		Path relPath = pluginFolder.relativize(fullPath);
+                        Path relPath = pluginFolder.relativize(fullPath);
                     boolean isValid = !relPath.toString().startsWith(".") && (
                        Files.isDirectory(fullPath) || isPluginArchive(fullPath)
                     );

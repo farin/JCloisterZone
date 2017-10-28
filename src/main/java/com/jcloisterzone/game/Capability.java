@@ -3,16 +3,14 @@ package com.jcloisterzone.game;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
@@ -23,12 +21,10 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.JCloisterZone;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
 @Immutable
@@ -131,22 +127,22 @@ public abstract class Capability<T> implements Serializable {
     }
 
     public static Class<? extends Capability<?>> classForName(String name) throws ClassNotFoundException {
-    		ClassLoader defaultLoader = Capability.class.getClassLoader();
-    		try {
-    			return classForName(name, defaultLoader);
-    		} catch (ClassNotFoundException ex) {
-    			for (Plugin p : Client.getInstance().getPlugins()) {
-    				if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
-    					continue;
-    				}
-    				try {
-    					return classForName(name, p.getLoader());
-    				} catch (ClassNotFoundException nested) {
-    					// do nothing
-    				}
-    			}
-    			throw ex;
-    		}
+        ClassLoader defaultLoader = Capability.class.getClassLoader();
+        try {
+            return classForName(name, defaultLoader);
+        } catch (ClassNotFoundException ex) {
+            for (Plugin p : Client.getInstance().getPlugins()) {
+                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
+                    continue;
+                }
+                try {
+                    return classForName(name, p.getLoader());
+                } catch (ClassNotFoundException nested) {
+                    // do nothing
+                }
+            }
+            throw ex;
+        }
     }
 
     @SuppressWarnings("unchecked")

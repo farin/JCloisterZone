@@ -47,7 +47,7 @@ public class BugReportPanel extends ThemedJPanel {
         downloadButton.addActionListener(new ActionListener() {
 
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 selectFile(textArea.getText());
             }
         });

@@ -31,7 +31,7 @@ public class ScoreFarmBarn implements ScoreFeatureReducer {
 
     @Override
     public Scoreable getFeature() {
-	    	return farm;
+        return farm;
     }
 
     @Override
@@ -60,19 +60,19 @@ public class ScoreFarmBarn implements ScoreFeatureReducer {
         return state;
     }
 
-	@Override
-	public Set<Player> getOwners() {
-		return playerPoints.keySet();
-	}
-
-	@Override
-    public int getFeaturePoints() {
-    		throw new UnsupportedOperationException("Call getFeaturePoints() with player argument");
+    @Override
+    public Set<Player> getOwners() {
+        return playerPoints.keySet();
     }
 
-	@Override
-	public int getFeaturePoints(Player player) {
-		return playerPoints.getOrElse(player, 0);
-	}
+    @Override
+    public int getFeaturePoints() {
+        throw new UnsupportedOperationException("Call getFeaturePoints() with player argument");
+    }
+
+    @Override
+    public int getFeaturePoints(Player player) {
+        return playerPoints.getOrElse(player, 0);
+    }
 
 }

@@ -34,8 +34,8 @@ public class ConnectedClientsPanel extends JPanel {
     private JTextPane connectedClients;
 
     public ConnectedClientsPanel(Client client, String titleText) {
-    	Color bg = client.getTheme().getPanelBg();
-    	if (bg == null) bg = Color.WHITE;
+        Color bg = client.getTheme().getPanelBg();
+        if (bg == null) bg = Color.WHITE;
 
         setLayout(new MigLayout("ins 0, fillx", "[grow]", "[][grow]"));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -68,7 +68,7 @@ public class ConnectedClientsPanel extends JPanel {
                     doc.insertString(offs, text+"\n", attrs);
                     offs += text.length() + 1;
                 }
-                if (ClientState.IN_GAME.equals(rc.getState	())) {
+                if (ClientState.IN_GAME.equals(rc.getState  ())) {
                     inGameClients.add(rc);
                 }
             }

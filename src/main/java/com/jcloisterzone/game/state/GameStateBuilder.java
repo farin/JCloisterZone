@@ -101,7 +101,7 @@ public class GameStateBuilder {
     }
 
     /**
-     *	Debug helper, allows loading integration tests in UI
+     *  Debug helper, allows loading integration tests in UI
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private GameState processGameAnnotations(GameState state) {

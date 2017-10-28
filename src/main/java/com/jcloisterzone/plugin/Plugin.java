@@ -13,7 +13,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -92,7 +91,7 @@ public class Plugin implements ResourceManager {
     }
 
     public Plugin(Path relPath, Path path) throws MalformedURLException {
-    		this.relPath = relPath;
+        this.relPath = relPath;
         this.path = path;
         URL url = getFixedURL();
         logger.debug("Creating plugin loader for {}", url);
@@ -101,10 +100,10 @@ public class Plugin implements ResourceManager {
     }
 
     private URL getFixedURL() throws MalformedURLException {
-    		URL url = path.toUri().toURL();
-    		if (Files.isRegularFile(path)) {
-    			return url;
-    		}
+        URL url = path.toUri().toURL();
+        if (Files.isRegularFile(path)) {
+            return url;
+        }
         return new URL(url.toString() + "/");
     }
 
@@ -114,13 +113,13 @@ public class Plugin implements ResourceManager {
 
         includedClasses = Vector.empty();
         Files.walk(path)
-        		.filter(f -> f.toString().endsWith(".class"))
-        		.forEach(f -> {
-        			String clsName = path.relativize(f).toString()
-        				.replace(File.separator, ".")
-        				.replaceAll("\\.class$", "");
-        			includedClasses = includedClasses.append(clsName);
-        		});
+            .filter(f -> f.toString().endsWith(".class"))
+            .forEach(f -> {
+                String clsName = path.relativize(f).toString()
+                    .replace(File.separator, ".")
+                    .replaceAll("\\.class$", "");
+                includedClasses = includedClasses.append(clsName);
+            });
 
         if (meta.getExpansions() != null) {
             for (ExpansionMeta expMeta : meta.getExpansions()) {
@@ -143,10 +142,10 @@ public class Plugin implements ResourceManager {
 
 
         if (!Files.isDirectory(path)) {
-        		//register tiles to make Paths.get working for packed plugins
-        		java.util.Map<String, String> env = new java.util.HashMap<>();
-        		env.put("create", "true");
-        		FileSystems.newFileSystem(getLoader().getResource("tiles").toURI(), env);
+            //register tiles to make Paths.get working for packed plugins
+            java.util.Map<String, String> env = new java.util.HashMap<>();
+            env.put("create", "true");
+            FileSystems.newFileSystem(getLoader().getResource("tiles").toURI(), env);
         }
 
         supportedExpansions = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))
@@ -186,12 +185,12 @@ public class Plugin implements ResourceManager {
     }
 
     public Path getPath() {
-		return path;
-	}
+        return path;
+    }
 
     public Path getRelativePath() {
-		return relPath;
-	}
+        return relPath;
+    }
 
     public PluginMeta getMetadata() {
         return meta;
@@ -247,22 +246,20 @@ public class Plugin implements ResourceManager {
     }
 
     protected void doLoad() throws Exception {
-    		includedClasses.forEach(clsName -> {
-	    		try {
-				Class<?> c = loader.loadClass(clsName);
-				logger.debug("External class {} has been loaded.", c.getName());
-			} catch (ClassNotFoundException e) {
-				logger.error(e.getMessage(), e);
-			}
-    		});
+        includedClasses.forEach(clsName -> {
+            try {
+            Class<?> c = loader.loadClass(clsName);
+            logger.debug("External class {} has been loaded.", c.getName());
+        } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        }
+        });
 
         for (Expansion exp : expansionsToRegister) {
             Expansion.register(exp, this);
         }
         aliases = new PluginAliases(getLoader(), "tiles");
         pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
-
-
     }
 
     protected void doUnload() {
@@ -377,8 +374,6 @@ public class Plugin implements ResourceManager {
     public ImmutablePoint getBarnPlacement() {
         return null;
     }
-
-
 
 //    private FeatureArea applyRotationScaling(Tile tile, ThemeGeometry geom, FeatureArea area) {
 //        if (area == null) return null;

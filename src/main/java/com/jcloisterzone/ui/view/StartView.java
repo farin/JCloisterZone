@@ -26,15 +26,15 @@ import static com.jcloisterzone.ui.I18nUtils._;
 public class StartView extends AbstractUiView {
 
 
-	private StartPanel startPanel;
+    private StartPanel startPanel;
 
-	public StartView(Client client) {
-		super(client);
-	}
+    public StartView(Client client) {
+        super(client);
+    }
 
-	@Override
-	public void show(Container pane, Object ctx) {
-		pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
+    @Override
+    public void show(Container pane, Object ctx) {
+        pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         envelope.setBackground(client.getTheme().getMainBg());
         pane.add(envelope, BorderLayout.CENTER);
@@ -49,10 +49,10 @@ public class StartView extends AbstractUiView {
 
         startPanel = new StartPanel(client);
         envelope.add(startPanel);
-	}
+    }
 
-	public void showUpdateIsAvailable(final AppUpdate appUpdate) {
-		Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
+    public void showUpdateIsAvailable(final AppUpdate appUpdate) {
+        Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
         HelpPanel hp = startPanel.getHelpPanel();
         hp.removeAll();
         hp.setOpaque(true);
@@ -84,6 +84,6 @@ public class StartView extends AbstractUiView {
 
         hp.add(link, "wrap, growx");
         hp.repaint();
-	}
+    }
 
 }

@@ -95,7 +95,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .filter(t -> t._2.getLocation() == quarter)   // is deployed on quarter
                     .map(Tuple2::_1)
                     .filter(m -> m.getPlayer().equals(player))    // and is owned by active player
-                    .groupBy(Object::getClass)					  // for each meeple class create action ...
+                    .groupBy(Object::getClass)                    // for each meeple class create action ...
                     .values()
                     .map(Seq::get)
                     .map(m -> new MeepleAction(m, options));

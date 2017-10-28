@@ -174,7 +174,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         g2.setColor(client.getTheme().getPlayerBoxBg());
         g2.fillRect(8, 8, PANEL_WIDTH, 36);
 
-//		gp.profile(" > create buffer");
+//      gp.profile(" > create buffer");
 
         getMouseRegions().clear();
 
@@ -199,7 +199,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
 
 
-//		gp.profile(" > nick & score");
+//      gp.profile(" > nick & score");
 
         g2.setFont(FONT_MEEPLE);
         bx = PADDING_L;
@@ -235,13 +235,13 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
         drawMeepleBox(player, smallImgKey, small, true); //case when only small followers are in collection (not drawn yet)
 
-//		gp.profile(" > followers");
+//      gp.profile(" > followers");
 
         for (Special meeple : player.getSpecialMeeples(state).filter(f -> f.isInSupply(state))) {
             drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
         }
 
-//		gp.profile(" > special");
+//      gp.profile(" > special");
 
 //   TODO IMMUTABLE
 
@@ -308,7 +308,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
 
 
-//		gp.profile(" > expansions");
+//      gp.profile(" > expansions");
         int oldValue = realHeight;
 
         realHeight = by + (bx > PADDING_L ? LINE_HEIGHT : 0);

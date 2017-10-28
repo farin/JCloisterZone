@@ -19,7 +19,7 @@ import io.vavr.collection.Set;
 
 /**
  * Capability model is {@code Map<FeaturePointer, String>} - tunnels,
- * 	 key is tunnel token id or null if nothing is placed
+ *   key is tunnel token id or null if nothing is placed
  */
 public final class TunnelCapability extends Capability<Map<FeaturePointer, PlacedTunnelToken>> {
 

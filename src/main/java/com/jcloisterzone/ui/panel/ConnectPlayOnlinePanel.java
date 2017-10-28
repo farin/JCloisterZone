@@ -52,7 +52,7 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
         };
 
         if (!client.getTheme().isDark()) {
-        	setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+            setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
 
         setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));

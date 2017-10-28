@@ -3,7 +3,6 @@ package com.jcloisterzone.wsio.message;
 import java.util.Set;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.wsio.WsMessageCommand;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;

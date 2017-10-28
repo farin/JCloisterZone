@@ -5,6 +5,6 @@ import com.jcloisterzone.event.Event;
 
 public interface EventProxy {
 
-	EventBus getEventBus();
-	void post(Event event);
+    EventBus getEventBus();
+    void post(Event event);
 }

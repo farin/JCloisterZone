@@ -135,12 +135,12 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     }
 
     @Override
-	public Scoreable getFeature() {
+    public Scoreable getFeature() {
         return feature;
     }
 
     @Override
-	public Set<Player> getOwners() {
+    public Set<Player> getOwners() {
         return owners;
     }
 

@@ -73,9 +73,9 @@ public class CastleLayer extends AbstractGridLayer {
             } else {
                 int size = getTileHeight();
 
-//				AffineTransform at = Rotation.R90.getAffineTransform(size);
-//				at.concatenate(AffineTransform.getTranslateInstance(getOffsetX(dc.position) + size/2, getOffsetY(dc.position)));
-//				g2.drawImage(castleImage, at, null);
+//              AffineTransform at = Rotation.R90.getAffineTransform(size);
+//              at.concatenate(AffineTransform.getTranslateInstance(getOffsetX(dc.position) + size/2, getOffsetY(dc.position)));
+//              g2.drawImage(castleImage, at, null);
 
                 //TODO rotated
                 g2.drawImage(castleImage, getOffsetX(pos) + size/2, getOffsetY(pos), size, size, null);

@@ -2,7 +2,6 @@ package com.jcloisterzone.config;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.adapters.CapabilitiesAdapter;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -142,12 +140,12 @@ public class Config {
             Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
             if (this.capabilities != null) {
                 for (String clsName : this.capabilities) {
-                		try {
-                			Class<? extends Capability<?>> cls = Capability.classForName(clsName);
-                			capabilities.add(cls);
-                		} catch (ClassNotFoundException ex) {
-                			logger.error("Unable to find capability class.", ex);
-                		}
+                    try {
+                        Class<? extends Capability<?>> cls = Capability.classForName(clsName);
+                        capabilities.add(cls);
+                    } catch (ClassNotFoundException ex) {
+                        logger.error("Unable to find capability class.", ex);
+                    }
                 }
             }
 
@@ -557,8 +555,6 @@ public class Config {
         this.screenshots = screenshots;
     }
 
-
-
     public SavedGamesConfig getSaved_games() {
         if (saved_games == null) {
             saved_games = new SavedGamesConfig();
@@ -577,6 +573,4 @@ public class Config {
     public void setDarkTheme(boolean darkTheme) {
         this.darkTheme = darkTheme;
     }
-
-
 }

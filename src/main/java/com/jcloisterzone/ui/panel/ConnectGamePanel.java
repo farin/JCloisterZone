@@ -46,7 +46,7 @@ public class ConnectGamePanel extends ThemedJPanel {
         this.client = client;
         ActionListener actionListener = new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
                 message.setText(_("Connecting") + "...");
@@ -61,7 +61,7 @@ public class ConnectGamePanel extends ThemedJPanel {
         };
 
         if (!client.getTheme().isDark()) {
-        	setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+            setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
 
         setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
@@ -95,11 +95,11 @@ public class ConnectGamePanel extends ThemedJPanel {
 
         btnBack = new JButton(_("Back"));
         btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ConnectGamePanel.this.client.mountView(new StartView(ConnectGamePanel.this.client));
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ConnectGamePanel.this.client.mountView(new StartView(ConnectGamePanel.this.client));
+            }
+        });
         add(btnBack, "cell 2 3");
 
         message = new ThemedJLabel("");

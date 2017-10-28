@@ -21,7 +21,7 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
 
     @Override
     public int getFeaturePoints() {
-    		return points;
+            return points;
     }
 
     @Override

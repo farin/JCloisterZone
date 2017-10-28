@@ -28,7 +28,7 @@ import io.vavr.collection.Vector;
 
 /**
  * @model Queue<Tuple2<Wagon, FeaturePointer>>
- * 	: scored wagons (and unprocessed), order by playing order
+ *  : scored wagons (and unprocessed), order by playing order
  */
 public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePointer>>> {
 

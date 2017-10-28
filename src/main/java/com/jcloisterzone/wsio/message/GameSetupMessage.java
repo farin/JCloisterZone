@@ -13,7 +13,7 @@ import com.jcloisterzone.wsio.message.adapters.ExpansionMapAdapter;
 import com.jcloisterzone.wsio.message.adapters.RulesMapAdapter;
 
 @WsMessageCommand("GAME_SETUP")
-public class GameSetupMessage implements WsMessage, WsInGameMessage	 {
+public class GameSetupMessage implements WsMessage, WsInGameMessage  {
     private String gameId;
     @JsonAdapter(RulesMapAdapter.class)
     private Map<Rule, Object> rules;

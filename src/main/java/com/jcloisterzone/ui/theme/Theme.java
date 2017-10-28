@@ -56,8 +56,8 @@ public class Theme {
         return alternativeBg;
     }
     public Color getTileDistCountBg() {
-		return tileDistCountBg;
-	}
+        return tileDistCountBg;
+    }
     public Color getPanelShadow() {
         return panelShadow;
     }
@@ -68,8 +68,8 @@ public class Theme {
         return headerFontColor;
     }
     public Color getHintColor() {
-		return hintColor;
-	}
+        return hintColor;
+    }
     public Color getDelimiterBottomColor() {
         return delimiterBottomColor;
     }
@@ -89,14 +89,14 @@ public class Theme {
         return tilePlacementColor;
     }
     public Color getChatMyColor() {
-		return chatMyColor;
-	}
+        return chatMyColor;
+    }
     public Color getChatNeutralColor() {
         return chatNeutralColor;
     }
     public Color getChatSystemColor() {
-		return chatSystemColor;
-	}
+        return chatSystemColor;
+    }
     public Color getTextColor() {
         return textColor;
     }

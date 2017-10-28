@@ -9,19 +9,19 @@ public class ChannelController extends EventProxyUiController<Channel> {
     private ChannelPanel channelPanel;
 
     public ChannelController(Client client, Channel channel) {
-    	super(client, channel);
+        super(client, channel);
         this.channel = channel;
     }
 
     public Channel getChannel() {
-		return channel;
-	}
+        return channel;
+    }
 
-	public ChannelPanel getChannelPanel() {
-		return channelPanel;
-	}
+    public ChannelPanel getChannelPanel() {
+        return channelPanel;
+    }
 
-	public void setChannelPanel(ChannelPanel channelPanel) {
-		this.channelPanel = channelPanel;
-	}
+    public void setChannelPanel(ChannelPanel channelPanel) {
+        this.channelPanel = channelPanel;
+    }
 }

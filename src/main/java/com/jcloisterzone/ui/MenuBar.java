@@ -50,7 +50,7 @@ public class MenuBar extends JMenuBar {
         CONFIRM_TOWER_DEPLOYMENT(_("Confirm Meeple Deployment on a Tower")),
         CONFIRM_RANSOM(_("Confirm Ransom Payment")),
         PREFERENCES(_("Preferences"), JCloisterZone.isMac() ? 
-        	KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) : null),
+            KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) : null),
         //Help
         ABOUT(_("About")),
         TILE_DISTRIBUTION(_("Tile Distribution"), KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0)),

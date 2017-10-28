@@ -104,31 +104,31 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.SAVE, e -> handleSave());
         menu.setItemActionListener(MenuItem.UNDO, e -> {
-			menu.setItemEnabled(MenuItem.UNDO, false);
-			int replaySize = game.getUndoHistory().head().getReplay().size();
-			gc.getConnection().send(new UndoMessage(replaySize));
-		});
+            menu.setItemEnabled(MenuItem.UNDO, false);
+            int replaySize = game.getUndoHistory().head().getReplay().size();
+            gc.getConnection().send(new UndoMessage(replaySize));
+        });
         menu.setItemActionListener(MenuItem.ZOOM_IN, e -> zoom(2.0));
         menu.setItemActionListener(MenuItem.ZOOM_OUT, e -> zoom(-2.0));
         menu.setItemActionListener(MenuItem.ROTATE_BOARD, e -> rotateBoard());
         menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, e -> {
-			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-			mainPanel.toggleRecentHistory(ch.isSelected());
-		});
+            JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            mainPanel.toggleRecentHistory(ch.isSelected());
+        });
         if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
             mainPanel.toggleRecentHistory(true);
         }
         menu.setItemActionListener(MenuItem.FARM_HINTS, e -> {
-			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-			mainPanel.setShowFarmHints(ch.isSelected());
-		});
+            JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            mainPanel.setShowFarmHints(ch.isSelected());
+        });
         if (menu.isSelected(MenuItem.FARM_HINTS)) {
             mainPanel.setShowFarmHints(true);
         }
         menu.setItemActionListener(MenuItem.PROJECTED_POINTS, e -> {
-			JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
-			getControlPanel().setShowProjectedPoints(ch.isSelected());
-		});
+            JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            getControlPanel().setShowProjectedPoints(ch.isSelected());
+        });
         if (menu.isSelected(MenuItem.PROJECTED_POINTS)) {
             getControlPanel().setShowProjectedPoints(true);
         }
