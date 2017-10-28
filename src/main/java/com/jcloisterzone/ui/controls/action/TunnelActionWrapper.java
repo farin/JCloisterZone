@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.controls.action;
 
-import java.awt.Color;
 import java.awt.Image;
 
 import com.jcloisterzone.Player;

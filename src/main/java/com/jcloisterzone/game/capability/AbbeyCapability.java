@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;

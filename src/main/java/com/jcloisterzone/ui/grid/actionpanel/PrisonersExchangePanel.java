@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.grid.actionpanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -39,12 +39,12 @@ public class PrisonersExchangePanel extends ActionInteractionPanel<SelectPrisone
 
         JLabel label;
 
-        label = new ThemedJLabel(_("Prisoners exchange"));
+        label = new ThemedJLabel(_tr("Prisoners exchange"));
         label.setFont(CornCirclesPanel.FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 
-        MultiLineLabel mll = new MultiLineLabel(_("The captured prisoner is going to be"
+        MultiLineLabel mll = new MultiLineLabel(_tr("The captured prisoner is going to be"
             + " immediately exchanged. You can select which follower you want to exchange for."));
         add(mll, "wrap, growx, gapbottom 5");
 

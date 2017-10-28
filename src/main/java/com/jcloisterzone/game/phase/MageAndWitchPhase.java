@@ -20,7 +20,6 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-import com.jcloisterzone.wsio.WsSubscribe;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
 import io.vavr.collection.HashSet;

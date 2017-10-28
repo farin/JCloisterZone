@@ -9,12 +9,11 @@ import java.awt.geom.Area;
 
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.action.ActionWrapper;

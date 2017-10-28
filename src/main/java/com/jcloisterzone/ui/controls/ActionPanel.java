@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
 
 import java.awt.Cursor;
@@ -55,9 +55,9 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private boolean showConfirmRequest;
 
     //it has one flaw -  if game was just loaded, undo is not possible - may check gameView.getGame().isUndoAlloerd() - and update label
-    private static final String CONFIRMATION_HINT = _("Confirm or undo a meeple placement.");
-    private static final String REMOTE_CONFIRMATION_HINT = _("Waiting for a confirmation by remote player.");
-    private static final String NO_ACTION_HINT = _("No action available. Pass or undo a tile placement.");
+    private static final String CONFIRMATION_HINT = _tr("Confirm or undo a meeple placement.");
+    private static final String REMOTE_CONFIRMATION_HINT = _tr("Waiting for a confirmation by remote player.");
+    private static final String NO_ACTION_HINT = _tr("No action available. Pass or undo a tile placement.");
 
     private MultiLineLabel hintMessage;
 
@@ -227,7 +227,6 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         }
     }
 
-    @SuppressWarnings("unchecked")
     private ActionLayer getActionLayer(ActionWrapper actionWrapper) {
         PlayerAction<?> action = actionWrapper.getAction();
         if (!action.getClass().isAnnotationPresent(LinkedGridLayer.class)) {

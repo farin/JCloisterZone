@@ -9,16 +9,13 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Quarter;
-import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Vector;
 

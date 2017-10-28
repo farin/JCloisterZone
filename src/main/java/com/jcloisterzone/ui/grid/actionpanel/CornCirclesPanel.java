@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.grid.actionpanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -36,18 +36,18 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
 
         JLabel label;
 
-        label = new ThemedJLabel(_("Corn circle"));
+        label = new ThemedJLabel(_tr("Corn circle"));
         label.setFont(FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 
-        label = new ThemedJLabel(_("Each player…"));
+        label = new ThemedJLabel(_tr("Each player…"));
         add(label, "wrap, gapbottom 5");
 
         boolean isActive = gc.getGame().getState().getActivePlayer().isLocalHuman();
 
         deploymentOption = new JButton();
-        deploymentOption.setText(_("may deploy additional follower"));
+        deploymentOption.setText(_tr("may deploy additional follower"));
         deploymentOption.setEnabled(isActive);
         deploymentOption.addActionListener(new ActionListener() {
             @Override
@@ -60,7 +60,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
         add(deploymentOption, "wrap, growx, h 40, gapbottom 5");
 
         removalOption = new JButton();
-        removalOption.setText(_("must remove follower"));
+        removalOption.setText(_tr("must remove follower"));
         removalOption.setEnabled(isActive);
         removalOption.addActionListener(new ActionListener() {
             @Override
@@ -74,7 +74,7 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
 
         Tile tile = gc.getGame().getState().getLastPlaced().getTile();
         String feature = Feature.getLocalizedNamefor(tile.getCornCircle());
-        label = new ThemedJLabel(_("on/from a {0}.", feature.toLowerCase()));
+        label = new ThemedJLabel(_tr("on/from a {0}.", feature.toLowerCase()));
         add(label, "wrap");
     }
 }

@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.view;
 
+import static com.jcloisterzone.ui.I18nUtils._tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -20,8 +22,6 @@ import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 public class StartView extends AbstractUiView {
 
@@ -59,7 +59,7 @@ public class StartView extends AbstractUiView {
         hp.setBackground(bg);
         Font font = new Font(null, Font.BOLD, 14);
         JLabel label;
-        label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
+        label = new JLabel(_tr("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
         label.setFont(font);
         hp.add(label, "wrap");
         label = new JLabel(appUpdate.getDescription());

@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._tr;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JDialog;
@@ -8,8 +10,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.panel.HelpPanel;
-
-import static com.jcloisterzone.ui.I18nUtils._;
 
 
 public class HelpDialog extends JDialog {
@@ -34,7 +34,7 @@ public class HelpDialog extends JDialog {
      * Create the dialog.
      */
     public HelpDialog() {
-        setTitle(_("Controls"));
+        setTitle(_tr("Controls"));
         UiUtils.centerDialog(this, 480, 300);
         contentPanel.setBounds(0, 0, 480, 30);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

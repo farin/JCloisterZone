@@ -12,7 +12,6 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 
-import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
 public class GermanMonasteriesCapability extends Capability<Void> {

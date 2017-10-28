@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Font;
 import java.awt.Image;
@@ -89,7 +89,7 @@ public class PreferencesDialog extends JDialog {
 
     private void initLocaleOptions(JComboBox<StringOption> comboBox) {
         ArrayList<StringOption> result = new ArrayList<>();
-        result.add(new StringOption(null, _("Use system language")));
+        result.add(new StringOption(null, _tr("Use system language")));
         result.add(new StringOption("ca", "català (ca)"));
         result.add(new StringOption("cs", "čeština (cs)"));
         result.add(new StringOption("de", "deutch (de)"));
@@ -185,7 +185,7 @@ public class PreferencesDialog extends JDialog {
     private JPanel createInerfaceTab() {
         JPanel panel = new ThemedJPanel(new MigLayout("", "[]10px[]", ""));
 
-        panel.add(new ThemedJLabel(_("Language")), "alignx trailing");
+        panel.add(new ThemedJLabel(_tr("Language")), "alignx trailing");
 
         langComboBox = new JComboBox<StringOption>();
         langComboBox.setEditable(false);
@@ -201,13 +201,13 @@ public class PreferencesDialog extends JDialog {
         });
         panel.add(langComboBox, "wrap, growx");
 
-        languageHint = new ThemedJLabel(_("To apply new language you must restart the application"));
+        languageHint = new ThemedJLabel(_tr("To apply new language you must restart the application"));
         languageHint.setVisible(false);
         languageHint.setFont(HINT_FONT);
         languageHint.setForeground(client.getTheme().getHintColor());
         panel.add(languageHint, "sx 2, wrap");
 
-        panel.add(new ThemedJLabel(_("Theme")), "alignx trailing");
+        panel.add(new ThemedJLabel(_tr("Theme")), "alignx trailing");
 
         themeComboBox = new JComboBox<StringOption>();
         themeComboBox.setEditable(false);
@@ -223,19 +223,19 @@ public class PreferencesDialog extends JDialog {
         });
         panel.add(themeComboBox, "wrap, growx");
 
-        themeHint = new ThemedJLabel(_("To apply new theme you must restart the application"));
+        themeHint = new ThemedJLabel(_tr("To apply new theme you must restart the application"));
         themeHint.setVisible(false);
         themeHint.setFont(HINT_FONT);
         themeHint.setForeground(client.getTheme().getHintColor());
         panel.add(themeHint, "sx 2, wrap");
 
-        panel.add(new ThemedJLabel(_("AI placement delay (ms)")), "gaptop 10, alignx trailing");
+        panel.add(new ThemedJLabel(_tr("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 
         aiPlaceTileDelay = new JTextField();
         aiPlaceTileDelay.setText(valueOf(config.getAi().getPlace_tile_delay()));
         panel.add(aiPlaceTileDelay, "wrap, growx");
 
-        panel.add(new ThemedJLabel(_("Score display duration (sec)")), "alignx trailing");
+        panel.add(new ThemedJLabel(_tr("Score display duration (sec)")), "alignx trailing");
         scoreDisplayDuration = new JTextField();
         scoreDisplayDuration.setText(valueOf(config.getScore_display_duration()));
         panel.add(scoreDisplayDuration, "wrap, growx");
@@ -338,7 +338,7 @@ public class PreferencesDialog extends JDialog {
         super(client);
         this.client = client;
         this.config = client.getConfig();
-        setTitle(_("Preferences"));
+        setTitle(_tr("Preferences"));
         setModalityType(ModalityType.DOCUMENT_MODAL);
         UiUtils.centerDialog(this, 650, Math.min(client.getHeight(), 600));
 
@@ -351,7 +351,7 @@ public class PreferencesDialog extends JDialog {
         };
         visibleTab = tabs[0];
 
-        JList<String> tabList = new ThemedJList<String>(new String[] {_("Interface"), _("Plugins")});
+        JList<String> tabList = new ThemedJList<String>(new String[] {_tr("Interface"), _tr("Plugins")});
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.setLayoutOrientation(JList.VERTICAL);
         tabList.setSelectedIndex(0);
@@ -373,7 +373,7 @@ public class PreferencesDialog extends JDialog {
         getContentPane().add(visibleTab, "cell 1 0, aligny top, grow");
 
         JPanel buttonBox = new ThemedJPanel(new MigLayout("fill", "[grow][][]", "[]"));
-        JButton cancel = new JButton(_("Cancel"));
+        JButton cancel = new JButton(_tr("Cancel"));
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -381,7 +381,7 @@ public class PreferencesDialog extends JDialog {
             }
         });
         buttonBox.add(cancel, "skip 1");
-        JButton ok = new JButton(_("Save"));
+        JButton ok = new JButton(_tr("Save"));
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

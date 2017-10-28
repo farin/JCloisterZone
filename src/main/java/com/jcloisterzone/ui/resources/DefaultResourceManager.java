@@ -16,9 +16,6 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.ui.ImmutablePoint;
 
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
-
 public class DefaultResourceManager implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());

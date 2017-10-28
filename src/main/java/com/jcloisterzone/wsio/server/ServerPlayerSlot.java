@@ -2,7 +2,6 @@ package com.jcloisterzone.wsio.server;
 
 import java.util.Set;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 
 //TODO use slot message directly

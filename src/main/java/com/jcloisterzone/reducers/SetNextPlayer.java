@@ -2,8 +2,8 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
+import com.jcloisterzone.game.state.GameState;
 
 public class SetNextPlayer implements Reducer {
 

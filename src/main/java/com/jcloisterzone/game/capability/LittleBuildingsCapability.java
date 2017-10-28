@@ -5,7 +5,6 @@ import java.util.Arrays;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.config.Config.PlayersConfig;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;

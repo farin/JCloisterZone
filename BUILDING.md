@@ -162,7 +162,7 @@ area_highlight: figure
 ### `gettext`
 
 ```bash
-xgettext -k_ -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
+xgettext -k_tr -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
 msgmerge -N -U po/ca.po po/keys.pot
 msgmerge -N -U po/cs.po po/keys.pot
 msgmerge -N -U po/de.po po/keys.pot

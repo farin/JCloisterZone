@@ -491,8 +491,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 //        System.out.println("------------------------");
 //        ts = last = System.currentTimeMillis();
 
-        int w = getWidth();
-
         AffineTransform origTransform = g2.getTransform();
         offsetX = calculateCenterX() - (int)(cx * tileWidth);
         offsetY = calculateCenterY() - (int)(cy * tileHeight);

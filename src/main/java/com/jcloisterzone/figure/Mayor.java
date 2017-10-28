@@ -6,7 +6,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.FlyingMachine;
-import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Container;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.JDialog;
 
 import com.google.common.base.Joiner;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.MultiLineLabel;
@@ -24,7 +24,7 @@ public class GameSetupDialog extends JDialog {
     public GameSetupDialog(Client client, Game game) {
         super(client);
 
-        setTitle(_("Game setup"));
+        setTitle(_tr("Game setup"));
         UiUtils.centerDialog(this, 600, 400);
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -34,12 +34,12 @@ public class GameSetupDialog extends JDialog {
         pane.setLayout(new MigLayout("", "[]", ""));
 
         Joiner joiner = Joiner.on(", ").skipNulls();
-        pane.add(new ThemedJLabel(_("Expansions")), "wrap, w 600, gaptop 5");
+        pane.add(new ThemedJLabel(_tr("Expansions")), "wrap, w 600, gaptop 5");
         MultiLineLabel lExpansion = new MultiLineLabel(joiner.join(game.getSetup().getExpansions()));
         pane.add(lExpansion, "wrap, w 600");
 
         joiner = Joiner.on("\n").skipNulls();
-        pane.add(new ThemedJLabel(_("Rules")), "wrap, w 600, gaptop 10");
+        pane.add(new ThemedJLabel(_tr("Rules")), "wrap, w 600, gaptop 10");
         List<String> rules = new ArrayList<>();
         for (Tuple2<Rule, Object> t : game.getSetup().getRules()) {
             Rule rule = t._1;

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.io.File;
 
@@ -15,7 +15,7 @@ public class SavegameFileFilter extends FileFilter {
 
     @Override
     public String getDescription() {
-        return _("JCloisterZone saved games");
+        return _tr("JCloisterZone saved games");
     }
 
 

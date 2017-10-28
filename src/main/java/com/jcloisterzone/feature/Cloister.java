@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
@@ -86,7 +86,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     public static String name() {
-        return _("Cloister");
+        return _tr("Cloister");
     }
 
     protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {

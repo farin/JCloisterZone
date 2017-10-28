@@ -1,8 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 
@@ -31,7 +30,7 @@ public class AboutDialog extends JDialog {
      * Create the dialog.
      */
     public AboutDialog(Client client, File configLocation) {
-        setTitle(_("About application"));
+        setTitle(_tr("About application"));
         UiUtils.centerDialog(this, 460, 230);
         contentPanel.setBounds(0, 0, 444, 214);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,11 +51,11 @@ public class AboutDialog extends JDialog {
         url.setBounds(167, 46, 235, 26);
         contentPanel.add(url);
 
-        JLabel version = new ThemedJLabel(_("Version") + ": " + Application.VERSION + " (" + Application.BUILD_DATE + ")");
+        JLabel version = new ThemedJLabel(_tr("Version") + ": " + Application.VERSION + " (" + Application.BUILD_DATE + ")");
         version.setBounds(167, 77, 235, 21);
         contentPanel.add(version);
 
-        MultiLineLabel license = new MultiLineLabel(_("Distributed under the terms of GNU Affero General Public License version 3"));
+        MultiLineLabel license = new MultiLineLabel(_tr("Distributed under the terms of GNU Affero General Public License version 3"));
         license.setBounds(167, 123, 235, 37);
         license.setRows(3);
         contentPanel.add(license);

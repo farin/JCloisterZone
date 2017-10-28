@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import javax.swing.JOptionPane;
 
@@ -85,13 +85,13 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                     String[] dialogOptions;
                     boolean abbotOnly = !monasteryOptions.contains(Location.CLOISTER);
                     if (abbotOnly) {
-                        dialogOptions = new String[] {_("Place as abbot")};
+                        dialogOptions = new String[] {_tr("Place as abbot")};
                     } else {
-                        dialogOptions = new String[] {_("Place as monk"), _("Place as abbot") };
+                        dialogOptions = new String[] {_tr("Place as monk"), _tr("Place as abbot") };
                     }
                     int result = JOptionPane.showOptionDialog(getClient(),
-                        _("How do you want to place follower on monastery?"),
-                        _("Monastery"),
+                        _tr("How do you want to place follower on monastery?"),
+                        _tr("Monastery"),
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, dialogOptions, dialogOptions[0]);
                     if (result == -1) { //closed dialog
                         return;

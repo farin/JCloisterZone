@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -98,7 +97,7 @@ public class ChannelPanel extends ThemedJPanel {
             createGamePanel.add(new ThemedJLabel("Server is in maintenance mode."), "wrap");
             createGamePanel.add(new ThemedJLabel(maintenance), "wrap");
         } else {
-            createGamePanel.add(new ThemedJLabel(_("Game title")+":"));
+            createGamePanel.add(new ThemedJLabel(_tr("Game title")+":"));
 
             String defaultTitle = cc.getConnection().getNickname() + "'s game";
             final JTextField gameTitle = new JTextField();
@@ -106,15 +105,15 @@ public class ChannelPanel extends ThemedJPanel {
             gameTitle.setText(defaultTitle); //set after document
             createGamePanel.add(gameTitle, "wrap, width 250::");
 
-            createGamePanel.add(new ThemedJLabel(_("Password")+":"));
+            createGamePanel.add(new ThemedJLabel(_tr("Password")+":"));
             final JTextField password = new JPasswordField();
             createGamePanel.add(password, "wrap, width 250::");
 
-            JLabel passwordHint = new ThemedJLabel(_("If you leave password empty, anybody can connect to your game."));
+            JLabel passwordHint = new ThemedJLabel(_tr("If you leave password empty, anybody can connect to your game."));
             passwordHint.setFont(new Font(null, Font.ITALIC, 12));
             createGamePanel.add(passwordHint, "wrap, span 2");
 
-            JButton createGameButton = new JButton(_("Create game"));
+            JButton createGameButton = new JButton(_tr("Create game"));
             createGameButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -180,11 +179,11 @@ public class ChannelPanel extends ThemedJPanel {
 
             final JPasswordField password = new JPasswordField();
             if (gc.isPasswordProtected()) {
-                buttons.add(new ThemedJLabel(_("Password")+":"));
+                buttons.add(new ThemedJLabel(_tr("Password")+":"));
                 buttons.add(password, "width 160");
             }
 
-            joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _("Join game") : _("Continue"));
+            joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _tr("Join game") : _tr("Continue"));
             joinButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -199,12 +198,12 @@ public class ChannelPanel extends ThemedJPanel {
             buttons.add(joinButton);
 
             if (gc.getGameStatus() != GameStatus.OPEN) {
-                abandonButton = new JButton(_("Remove game"));
+                abandonButton = new JButton(_tr("Remove game"));
                 abandonButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int result = JOptionPane.showConfirmDialog(client,
-                            _("Do you want to remove game permanently?"), _("Remove game"),
+                            _tr("Do you want to remove game permanently?"), _tr("Remove game"),
                             JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
                             cc.getConnection().send(new AbandonGameMessage(gc.getGame().getGameId()));
@@ -232,14 +231,14 @@ public class ChannelPanel extends ThemedJPanel {
                     return rc.getName();
                 }
             }));
-            connectedClients.setText(_("Players") + ": " + label);
+            connectedClients.setText(_tr("Players") + ": " + label);
         }
 
         private void updateExpansionsLabel() {
             // TODO show counts if > 0
             String label = joiner.join(expansions.keySet());
             if (label.length() == 0) label = Expansion.BASIC.toString();
-            expansionNames.setText(_("Expansions") + ": " + label);
+            expansionNames.setText(_tr("Expansions") + ": " + label);
         }
 
         @Subscribe

@@ -51,8 +51,6 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
     @Override
     public void setActionWrapper(boolean active, ActionWrapper actionWrapper) {
         this.actionWrapper = actionWrapper;
-        LittleBuildingAction action = getAction();
-        //setPosition(action == null ? null : action.getPosition());
         if (active) {
             prepareAreas();
         } else {

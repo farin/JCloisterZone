@@ -15,7 +15,6 @@ import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;

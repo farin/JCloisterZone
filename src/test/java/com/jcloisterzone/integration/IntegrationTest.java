@@ -14,8 +14,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.save.SavedGame;
-import com.jcloisterzone.game.save.SavedGameParser;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
+import com.jcloisterzone.game.save.SavedGameParser;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
@@ -38,7 +38,6 @@ public class IntegrationTest {
         return slots;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected GameState createGameState(String savedGameFile) {
         Config config = new Config();
         SavedGameParser parser = new SavedGameParser(config);

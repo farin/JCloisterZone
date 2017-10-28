@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import javax.swing.JLabel;
-
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 
 public class JLabelAntialised extends ThemedJLabel {

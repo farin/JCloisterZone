@@ -12,11 +12,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerClock;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
 

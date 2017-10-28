@@ -1,7 +1,7 @@
 package com.jcloisterzone.ui;
 
 // TODO underscore is deprecated as an identifier, from Java 9 it will be a reserved word
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -232,6 +232,7 @@ public class ClientMessageListener implements MessageListener {
         handleGame(msg, false);
     }
 
+    @SuppressWarnings("incomplete-switch")
     public GameController handleGame(final GameMessage msg, boolean channelList) throws InvocationTargetException, InterruptedException {
         msg.getGameSetup().setGameId(msg.getGameId());  //fill omitted id
         if (msg.getSlots() != null) {
@@ -440,14 +441,14 @@ public class ClientMessageListener implements MessageListener {
             logger.warn(err.getMessage());
             String msg;
             if (playOnline) {
-                msg = _("Online play server is not compatible with your application. Please upgrade JCloisterZone to the latest version.");
+                msg = _tr("Online play server is not compatible with your application. Please upgrade JCloisterZone to the latest version.");
             } else {
-                msg = _("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version.");
+                msg = _tr("Remote JCloisterZone is not compatible with local application. Please upgrade both applications to same version.");
             }
-            JOptionPane.showMessageDialog(client, msg, _("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(client, msg, _tr("Incompatible versions"), JOptionPane.ERROR_MESSAGE);
             break;
         case ErrorMessage.INVALID_PASSWORD:
-            JOptionPane.showMessageDialog(client, _("Invalid password"), _("Invalid password"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(client, _tr("Invalid password"), _tr("Invalid password"), JOptionPane.WARNING_MESSAGE);
         default:
             JOptionPane.showMessageDialog(client, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

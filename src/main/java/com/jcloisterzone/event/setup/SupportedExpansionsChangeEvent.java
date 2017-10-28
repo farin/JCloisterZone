@@ -1,6 +1,5 @@
 package com.jcloisterzone.event.setup;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import com.jcloisterzone.Expansion;

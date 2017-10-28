@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -133,7 +133,7 @@ public class GameController extends EventProxyUiController<Game> {
             title.append(" ⋅ ").append(activePlayer.getNick());
         }
         int packSize = state.getTilePack().totalSize();
-        title.append(" ⋅ ").append(String.format(_("%d tiles left"), packSize));
+        title.append(" ⋅ ").append(String.format(_tr("%d tiles left"), packSize));
 
         client.setTitle(title.toString());
     }

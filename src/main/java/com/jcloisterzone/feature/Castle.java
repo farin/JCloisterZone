@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
@@ -59,7 +59,7 @@ public class Castle extends TileFeature implements Scoreable {
     }
 
     public static String name() {
-        return _("Castle");
+        return _tr("Castle");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePackBuilder;
 import com.jcloisterzone.board.TilePackBuilder.TileCount;
 import com.jcloisterzone.ui.Client;
@@ -33,8 +32,6 @@ import com.jcloisterzone.ui.gtk.ThemedJList;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.theme.Theme;
-
-import io.vavr.collection.HashMap;
 
 
 public class TileDistributionWindow extends JFrame {
@@ -50,7 +47,7 @@ public class TileDistributionWindow extends JFrame {
     public static final int BANNER = 34;
 
     public TileDistributionWindow(Client client) {
-        super(_("Tile Distribution"));
+        super(_tr("Tile Distribution"));
         this.client = client;
 
         tilePackBuilder = new TilePackBuilder();

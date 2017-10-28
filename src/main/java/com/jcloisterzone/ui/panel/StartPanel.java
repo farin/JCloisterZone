@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -14,14 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.MultiLineLabel;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.ConnectP2PView;
 import com.jcloisterzone.ui.view.ConnectPlayOnlineView;
+
+import net.miginfocom.swing.MigLayout;
 
 public class StartPanel extends ThemedJPanel {
 
@@ -60,7 +60,7 @@ public class StartPanel extends ThemedJPanel {
         playHostedPanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
         playHostedPanel.add(new MultiLineLabel(
-          _("Create a new game or continue a previously saved one. A game will be hosted on your computer and other players may connect during game set up. " +
+          _tr("Create a new game or continue a previously saved one. A game will be hosted on your computer and other players may connect during game set up. " +
             "You can also play only against any number of computer players.")),
             "wrap, grow");
 
@@ -69,7 +69,7 @@ public class StartPanel extends ThemedJPanel {
         btnPanel.setLayout(new MigLayout("", "[]30[]30[]", "[]"));
         playHostedPanel.add(btnPanel, "wrap");
 
-        JButton btn = new JButton(_("New game"));
+        JButton btn = new JButton(_tr("New game"));
         btnPanel.add(btn, "aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
@@ -79,9 +79,9 @@ public class StartPanel extends ThemedJPanel {
         });
         btn.setFont(FONT_LARGE_BUTTON);
 
-        btnPanel.add(new ThemedJLabel(_("or")));
+        btnPanel.add(new ThemedJLabel(_tr("or")));
 
-        btn = new JButton(_("Load game"));
+        btn = new JButton(_tr("Load game"));
         btnPanel.add(btn, "aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
@@ -92,10 +92,10 @@ public class StartPanel extends ThemedJPanel {
         btn.setFont(FONT_LARGE_BUTTON);
 
         playHostedPanel.add(new MultiLineLabel(
-                _("You can also connect to remote JCloisterZone application hosting a game. Connect when game is created but not yet started.")),
+                _tr("You can also connect to remote JCloisterZone application hosting a game. Connect when game is created but not yet started.")),
             "wrap, grow, gaptop 15");
 
-        btn = new JButton(_("Connect"));
+        btn = new JButton(_tr("Connect"));
         playHostedPanel.add(btn, "wrap, alignx center,aligny top");
         btn.addActionListener(new ActionListener() {
             @Override
@@ -113,9 +113,9 @@ public class StartPanel extends ThemedJPanel {
         playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
 
         playOnlinePanel.add(new MultiLineLabel(
-          _("Connect to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
+          _tr("Connect to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
 
-        btn = new JButton(_("Play online"));
+        btn = new JButton(_tr("Play online"));
         playOnlinePanel.add(btn, "wrap, alignx center, aligny top");
         btn.addActionListener(new ActionListener() {
             @Override

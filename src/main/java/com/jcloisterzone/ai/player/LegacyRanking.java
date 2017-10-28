@@ -22,7 +22,6 @@ import com.jcloisterzone.reducers.ScoreFarmBarn;
 
 import io.vavr.Predicates;
 import io.vavr.collection.Array;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;

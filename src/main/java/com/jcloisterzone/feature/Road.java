@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
@@ -130,7 +130,7 @@ public class Road extends CompletableFeature<Road> {
     }
 
     public static String name() {
-        return _("Road");
+        return _tr("Road");
     }
 
     // immutable helpers

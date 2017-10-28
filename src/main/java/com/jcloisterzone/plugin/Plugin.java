@@ -609,19 +609,19 @@ public class Plugin implements ResourceManager {
 //        );
     }
 
-    //TODO return back, just scale to NORMALIZED size but use ImageSizeRatio
-    private AffineTransform getAreaScaleTransform(Rotation rot, int width, int height) {
-        double ratioX;
-        double ratioY;
-        if (rot == Rotation.R90 || rot  == Rotation.R270) {
-            ratioX = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
-            ratioY = (double) width / NORMALIZED_SIZE;
-        } else {
-            ratioX = (double) width / NORMALIZED_SIZE;
-            ratioY = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
-        }
-        return AffineTransform.getScaleInstance(ratioX, ratioY);
-    }
+//    //TODO return back, just scale to NORMALIZED size but use ImageSizeRatio
+//    private AffineTransform getAreaScaleTransform(Rotation rot, int width, int height) {
+//        double ratioX;
+//        double ratioY;
+//        if (rot == Rotation.R90 || rot  == Rotation.R270) {
+//            ratioX = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
+//            ratioY = (double) width / NORMALIZED_SIZE;
+//        } else {
+//            ratioX = (double) width / NORMALIZED_SIZE;
+//            ratioY = (double) height / NORMALIZED_SIZE / getImageSizeRatio();
+//        }
+//        return AffineTransform.getScaleInstance(ratioX, ratioY);
+//    }
 
     @Override
     public FeatureArea getBarnArea() {

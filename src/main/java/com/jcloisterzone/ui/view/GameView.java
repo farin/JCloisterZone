@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.view;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Container;
 import java.awt.event.KeyEvent;
@@ -214,7 +214,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
-        String message = _("Connection lost") + ". " + _("Reconnecting...");
+        String message = _tr("Connection lost") + ". " + _tr("Reconnecting...");
         if (remote) {
             if (gc.getChannel() == null) {
                 if (!game.isOver()) {
@@ -356,7 +356,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     public void handleSave() {
         JFileChooser fc = new JFileChooser(client.getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setDialogTitle(_("Save game"));
+        fc.setDialogTitle(_tr("Save game"));
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         fc.setFileFilter(new SavegameFileFilter());
         fc.setLocale(client.getLocale());
@@ -374,7 +374,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
                     parser.toJson(save, writer);
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -409,7 +409,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
             client.playSound("audio/shutter.wav");
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
-            JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(client, ex.getLocalizedMessage(), _tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

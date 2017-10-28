@@ -12,21 +12,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.figure.neutral.Fairy;
-import com.jcloisterzone.figure.neutral.Mage;
-import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.DragonCapability;
-import com.jcloisterzone.game.capability.FairyCapability;
-import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
-
-import io.vavr.collection.Seq;
 
 public class NeutralFigurePanel extends JComponent {
 

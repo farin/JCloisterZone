@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.dialog;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Container;
 import java.awt.Image;
@@ -33,7 +33,7 @@ public class DiscardedTilesDialog extends JDialog {
         super(client);
         this.client = client;
 
-        setTitle(_("Discarded tiles"));
+        setTitle(_tr("Discarded tiles"));
         Point p = client.getLocation();
         setLocation(p.x+200,p.y+150);
 
@@ -42,7 +42,7 @@ public class DiscardedTilesDialog extends JDialog {
         Container pane = getContentPane();
         pane.setBackground(client.getTheme().getPanelBg());
         pane.setLayout(new MigLayout("", "[grow]", "[][]"));
-        pane.add(new ThemedJLabel(_("These tiles have been discarded during the game")), "wrap, growx, gapbottom 10");
+        pane.add(new ThemedJLabel(_tr("These tiles have been discarded during the game")), "wrap, growx, gapbottom 10");
 
         panel = new ThemedJPanel();
         scroll = new JScrollPane(panel);

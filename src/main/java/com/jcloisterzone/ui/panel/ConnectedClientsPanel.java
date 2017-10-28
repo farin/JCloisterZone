@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,14 +16,14 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants.ColorConstants;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import net.miginfocom.swing.MigLayout;
 
 public class ConnectedClientsPanel extends JPanel {
 
@@ -46,7 +46,7 @@ public class ConnectedClientsPanel extends JPanel {
         add(title, "wrap");
 
         connectedClients = new JTextPane();
-        connectedClients.setToolTipText(_("Connected clients"));
+        connectedClients.setToolTipText(_tr("Connected clients"));
         connectedClients.setEditable(false);
         connectedClients.setBackground(bg);
         connectedClients.setForeground(client.getTheme().getTextColor());

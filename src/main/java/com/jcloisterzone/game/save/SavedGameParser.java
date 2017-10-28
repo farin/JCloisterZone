@@ -1,26 +1,14 @@
 package com.jcloisterzone.game.save;
 
 import java.io.Writer;
-import java.lang.reflect.Type;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.wsio.MessageParser;
-import com.jcloisterzone.wsio.WsCommandRegistry;
-import com.jcloisterzone.wsio.WsMessageCommand;
-import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 public class SavedGameParser {
@@ -57,10 +45,12 @@ public class SavedGameParser {
 
     public class SavedGameExclStrat implements ExclusionStrategy {
 
+        @Override
         public boolean shouldSkipClass(Class<?> arg0) {
             return false;
         }
 
+        @Override
         public boolean shouldSkipField(FieldAttributes f) {
             return (WsReplayableMessage.class.isAssignableFrom(f.getDeclaringClass()) && f.getName().equals("gameId"));
         }

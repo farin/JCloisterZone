@@ -19,12 +19,12 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
 import com.jcloisterzone.wsio.MessageDispatcher;
@@ -71,8 +71,6 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.WsSeedMeesage;
-
-import io.vavr.collection.HashSet;
 
 public class SimpleServer extends WebSocketServer  {
 

@@ -2,8 +2,6 @@ package com.jcloisterzone;
 
 import java.io.Serializable;
 
-import com.jcloisterzone.PointCategory;
-
 import io.vavr.collection.HashMap;
 import io.vavr.control.Option;
 

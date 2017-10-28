@@ -6,8 +6,6 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 
-import io.vavr.control.Option;
-
 public class Pig extends Special {
 
     private static final long serialVersionUID = 1L;

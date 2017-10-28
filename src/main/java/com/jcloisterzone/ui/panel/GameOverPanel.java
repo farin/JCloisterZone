@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -23,8 +23,8 @@ import javax.swing.SwingConstants;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -63,7 +63,7 @@ public class GameOverPanel extends JPanel {
 
         add(new PointStatsPanel(), "sx 2, wrap, hidemode 3");
         JButton btn;
-        btn = new JButton(_("Leave game"));
+        btn = new JButton(_tr("Leave game"));
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,7 +73,7 @@ public class GameOverPanel extends JPanel {
         add(btn, "hidemode 3");
 
         if (showPlayAgain) {
-            btn = new JButton(_("Play again"));
+            btn = new JButton(_tr("Play again"));
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -118,7 +118,7 @@ public class GameOverPanel extends JPanel {
             GameState state = game.getState();
             CapabilitiesState capabilities = state.getCapabilities();
 
-            //setTitle(_("Game overview"));
+            //setTitle(_tr("Game overview"));
             boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
             StringBuilder rowSpec = new StringBuilder("[][]10[]10[]20[][][][]");
@@ -136,40 +136,40 @@ public class GameOverPanel extends JPanel {
             setLayout(new MigLayout("ins 0", "", rowSpec.toString()));
             int gridx = 0, gridy = 1;
 
-            add(new JLabel(_("Player")), getLegendSpec(0, gridy++));
-            add(new JLabel(_("Rank")), getLegendSpec(0, gridy++));
-            add(new JLabel(_("Total points")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Player")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Rank")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Total points")), getLegendSpec(0, gridy++));
 
-            add(new JLabel(_("Roads")), getLegendSpec(0, gridy++));
-            add(new JLabel(_("Cities")), getLegendSpec(0, gridy++));
-            add(new JLabel(_("Cloisters")), getLegendSpec(0, gridy++));
-            add(new JLabel(_("Farms")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Roads")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Cities")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Cloisters")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Farms")), getLegendSpec(0, gridy++));
             if (capabilities.contains(CastleCapability.class)) {
-                add(new JLabel(_("Castles")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Castles")), getLegendSpec(0, gridy++));
             }
 
             if (capabilities.contains(KingAndRobberBaronCapability.class)) {
-                add(new JLabel(_("The biggest city")), getLegendSpec(0, gridy++));
-                add(new JLabel(_("The longest road")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("The biggest city")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("The longest road")), getLegendSpec(0, gridy++));
             }
 
             if (capabilities.contains(TradeGoodsCapability.class)) {
-                add(new JLabel(_("Trade goods")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Trade goods")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(GoldminesCapability.class)) {
-                add(new JLabel(_("Gold")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Gold")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(FairyCapability.class)) {
-                add(new JLabel(_("Fairy")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Fairy")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(TowerCapability.class)) {
-                add(new JLabel(_("Tower ransom")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Tower ransom")), getLegendSpec(0, gridy++));
             }
             if (hasBazaars) {
-                add(new JLabel(_("Bazaars")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Bazaars")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(WindRoseCapability.class)) {
-                add(new JLabel(_("Wind rose")), getLegendSpec(0, gridy++));
+                add(new JLabel(_tr("Wind rose")), getLegendSpec(0, gridy++));
             }
 
             Player[] players = getSortedPlayers().toArray(new Player[state.getPlayers().length()]);

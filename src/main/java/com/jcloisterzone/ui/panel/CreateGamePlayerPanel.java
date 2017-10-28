@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.EnumSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,10 +21,7 @@ import javax.swing.event.CaretListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.AiPlayer;
-import com.jcloisterzone.ai.AiPlayerAdapter;
-import com.jcloisterzone.ai.player.DummyAiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
 import com.jcloisterzone.ui.Client;
@@ -147,22 +143,22 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     public void updateSlotImmutable() {
         Color color = slot.getColors().getMeepleColor();
         if (!slot.isOccupied()) {
-            status.setText(_("Unassigned player"));
+            status.setText(_tr("Unassigned player"));
             updateIcon("open", color, true);
         } else if (!slot.isAi()) {
             if (slot.isOwn()) {
-                status.setText(_("Local player"));
+                status.setText(_tr("Local player"));
                 updateIcon("local", color, true);
             } else {
-                status.setText(_("Remote player"));
+                status.setText(_tr("Remote player"));
                 updateIcon("remote", color, false);
             }
         } else {
             if (slot.isOwn()) {
-                status.setText(_("Computer player"));
+                status.setText(_tr("Computer player"));
                 updateIcon("ai", color, false);
             } else {
-                status.setText(_("Remote computer player"));
+                status.setText(_tr("Remote computer player"));
                 updateIcon("remote_ai", color, false);
             }
         }
@@ -172,25 +168,25 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
     public void updateSlotMutable() {
         Color color = slot.getColors().getMeepleColor();
         if (!slot.isOccupied()) {
-            status.setText(_("Open player slot"));
+            status.setText(_tr("Open player slot"));
             updateIcon("open", color, true);
             updateNickname(false);
         } else if (!slot.isAi()) {
             if (slot.isOwn()) {
-                status.setText(_("Local player"));
+                status.setText(_tr("Local player"));
                 updateIcon("local", color, true);
                 updateNickname(true);
             } else {
-                status.setText(_("Remote player"));
+                status.setText(_tr("Remote player"));
                 updateIcon("remote", color, false);
                 updateNickname(false);
             }
         } else {
             if (slot.isOwn()) {
-                status.setText(_("Computer player"));
+                status.setText(_tr("Computer player"));
                 updateIcon("ai", color, true);
             } else {
-                status.setText(_("Remote computer player"));
+                status.setText(_tr("Remote computer player"));
                 updateIcon("remote_ai", color, false);
             }
             updateNickname(false);
@@ -258,7 +254,6 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void sendTakeSlotMessage(PlayerSlot slot) {
         TakeSlotMessage msg = new TakeSlotMessage(slot.getNumber(), slot.getNickname());
         msg.setAiClassName(slot.getAiClassName());

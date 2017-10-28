@@ -1,8 +1,7 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeGoods;
 import com.jcloisterzone.board.Edge;
@@ -166,6 +165,6 @@ public class City extends CompletableFeature<City> {
     }
 
     public static String name() {
-        return _("City");
+        return _tr("City");
     }
 }

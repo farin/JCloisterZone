@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +46,11 @@ import com.jcloisterzone.event.setup.ExpansionChangedEvent;
 import com.jcloisterzone.event.setup.PlayerSlotChangeEvent;
 import com.jcloisterzone.event.setup.RuleChangeEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.UiUtils;
@@ -64,7 +63,6 @@ import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.message.adapters.CapabilitiesAdapter;
 
 import io.vavr.collection.Set;
 import net.miginfocom.swing.MigLayout;
@@ -148,12 +146,12 @@ public class CreateGamePanel extends ThemedJPanel {
         header.setBackground(client.getTheme().getMainBg());
         header.setLayout(new MigLayout("", "[grow]"));
 
-        startGameButton = new JButton(_("Start game"));
+        startGameButton = new JButton(_tr("Start game"));
         startGameButton.setFont(new Font(null, Font.PLAIN, 25));
         header.add(startGameButton, "width 240, h 40, east");
 
         if (gc.getChannel() != null) {
-            leaveGameButton = new JButton(_("Leave game"));
+            leaveGameButton = new JButton(_tr("Leave game"));
             header.add(leaveGameButton, "h pref!, gapx 10px 10px, east");
 
             leaveGameButton.addActionListener(new ActionListener() {
@@ -183,12 +181,12 @@ public class CreateGamePanel extends ThemedJPanel {
 
         playersPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
-            playersPanel.setBorder(new TitledBorder(null, _("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+            playersPanel.setBorder(new TitledBorder(null, _tr("Players"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
         playersPanel.setLayout(new MigLayout("", "[grow]", ""));
 
         if (mutableSlots) {
-            JLabel hint = new ThemedJLabel(_("Click twice on a slot button to add a computer player."));
+            JLabel hint = new ThemedJLabel(_tr("Click twice on a slot button to add a computer player."));
             hint.setFont(new Font(null, Font.ITALIC, 11));
             hint.setForeground(client.getTheme().getHintColor());
             playersPanel.add(hint, "aligny bottom, gapbottom 5, wrap");
@@ -213,7 +211,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
         expansionPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
-            expansionPanel.setBorder(new TitledBorder(null, _("Expansions"),
+            expansionPanel.setBorder(new TitledBorder(null, _tr("Expansions"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
 
@@ -232,7 +230,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
         rulesPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
-            rulesPanel.setBorder(new TitledBorder(null, _("Rules"),
+            rulesPanel.setBorder(new TitledBorder(null, _tr("Rules"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
@@ -264,12 +262,12 @@ public class CreateGamePanel extends ThemedJPanel {
     private JPanel createClockPanel() {
         JPanel clockPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
-            clockPanel.setBorder(new TitledBorder(null, _("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+            clockPanel.setBorder(new TitledBorder(null, _tr("Clock"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
         clockPanel.setLayout(new MigLayout("", "[][][]", ""));
 
         Integer value = (Integer) game.getSetup().getRules().get(Rule.CLOCK_PLAYER_TIME).getOrNull();
-        timeLimitChbox = new ThemedJCheckBox(_("player time limit"), value != null);
+        timeLimitChbox = new ThemedJCheckBox(_tr("player time limit"), value != null);
         timeLimitChbox.setEnabled(mutableSlots);
         timeLimitSpinner = new JSpinner();
         timeLimitModel = new SpinnerNumberModel(value == null ? 20 : value / 60, 0, 300, 1);
@@ -280,7 +278,7 @@ public class CreateGamePanel extends ThemedJPanel {
         }
         clockPanel.add(timeLimitChbox);
         clockPanel.add(timeLimitSpinner, "w 40");
-        clockPanel.add(new ThemedJLabel(_("minutes")), "gapleft 4");
+        clockPanel.add(new ThemedJLabel(_tr("minutes")), "gapleft 4");
         if (mutableSlots) {
             timeLimitChbox.addActionListener(new ActionListener() {
                 @Override
@@ -312,7 +310,7 @@ public class CreateGamePanel extends ThemedJPanel {
     private JPanel createPresetPanel() {
         JPanel presetPanel = new ThemedJPanel();
         if (!client.getTheme().isDark()) {
-            presetPanel.setBorder(new TitledBorder(null, _("Presets"),
+            presetPanel.setBorder(new TitledBorder(null, _tr("Presets"),
                 TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
         presetPanel.setLayout(new MigLayout());
@@ -333,7 +331,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
         JTextComponent editorComponent = (JTextComponent) presets.getEditor()
                 .getEditorComponent();
-        TextPrompt tp = new TextPrompt(_("Preset name"), editorComponent);
+        TextPrompt tp = new TextPrompt(_tr("Preset name"), editorComponent);
         tp.setShow(Show.FOCUS_LOST);
         tp.changeStyle(Font.ITALIC);
         tp.changeAlpha(0.4f);
@@ -366,7 +364,7 @@ public class CreateGamePanel extends ThemedJPanel {
                     }
                 });
 
-        presetSave = new JButton(_("Save"));
+        presetSave = new JButton(_tr("Save"));
         presetSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -394,7 +392,7 @@ public class CreateGamePanel extends ThemedJPanel {
         });
         presetPanel.add(presetSave, "width 80, gapright 10, west");
 
-        presetDelete = new JButton(_("Delete"));
+        presetDelete = new JButton(_tr("Delete"));
         presetDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

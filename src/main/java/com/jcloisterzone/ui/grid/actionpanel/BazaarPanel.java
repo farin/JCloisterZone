@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.grid.actionpanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -33,7 +33,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
-import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel.BazaarPanelState;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -82,7 +81,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
 
         JLabel label;
 
-        label = new ThemedJLabel(_("Bazaar supply"));
+        label = new ThemedJLabel(_tr("Bazaar supply"));
         label.setFont(FONT_HEADER);
         label.setForeground(client.getTheme().getHeaderFontColor());
         add(label, "wrap, gap 20 20 10 5");
@@ -210,6 +209,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
             leftButton.setFont(FONT_BUTTON);
             leftButton.setMargin(new Insets(1,1,1,1));
             leftButton.addActionListener(new ActionListener() {
+                @SuppressWarnings("incomplete-switch")
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                     switch (panelState) {
@@ -236,6 +236,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
             rightButton = new JButton();
             rightButton.setFont(FONT_BUTTON);
             rightButton.addActionListener(new ActionListener() {
+                @SuppressWarnings("incomplete-switch")
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                     switch (panelState) {
@@ -263,27 +264,27 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                 break;
             case SELECT_TILE:
                 if (noAuction) {
-                    hint.setText( _("Choose your tile."));
+                    hint.setText( _tr("Choose your tile."));
                 } else {
-                    hint.setText( _("<html>Choose tile for next auction<br>and make initial offer.</html>"));
+                    hint.setText( _tr("<html>Choose tile for next auction<br>and make initial offer.</html>"));
                     updateBidRange();
                 }
                 break;
             case MAKE_BID:
-                hint.setText( _("Raise bid or pass."));
+                hint.setText( _tr("Raise bid or pass."));
                 updateBidRange();
                 break;
             case BUY_OR_SELL:
-                hint.setText(_("Buy or sell tile from latest bidder."));
+                hint.setText(_tr("Buy or sell tile from latest bidder."));
                 break;
             }
             if (bidAmountLabel != null) {
                 if (panelState == BazaarPanelState.BUY_OR_SELL) {
                     int points = model.getAuctionedItem().getCurrentPrice();
-                    bidAmountLabel.setText(points + "  " + _("points"));
+                    bidAmountLabel.setText(points + "  " + _tr("points"));
                     layout.setComponentConstraints(bidAmountLabel, "pos 20 20");
                 } else {
-                    bidAmountLabel.setText(_("points"));
+                    bidAmountLabel.setText(_tr("points"));
                     layout.setComponentConstraints(bidAmountLabel, "pos 75 20");
                 }
             }
@@ -297,8 +298,8 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
 
             switch (panelState) {
             case BUY_OR_SELL:
-                leftButton.setText(_("Buy"));
-                rightButton.setText(_("Sell"));
+                leftButton.setText(_tr("Buy"));
+                rightButton.setText(_tr("Sell"));
                 leftButton.setVisible(true);
                 rightButton.setVisible(true);
                 if (bidAmount != null) {
@@ -307,7 +308,7 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                 }
                 break;
             case SELECT_TILE:
-                leftButton.setText(_("Select"));
+                leftButton.setText(_tr("Select"));
                 leftButton.setVisible(true);
                 rightButton.setVisible(false);
                 if (bidAmount != null) {
@@ -316,8 +317,8 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
                 }
                 break;
             case MAKE_BID:
-                leftButton.setText(_("Bid"));
-                rightButton.setText(_("Pass"));
+                leftButton.setText(_tr("Bid"));
+                rightButton.setText(_tr("Pass"));
                 leftButton.setVisible(true);
                 rightButton.setVisible(true);
                 if (bidAmount != null) {

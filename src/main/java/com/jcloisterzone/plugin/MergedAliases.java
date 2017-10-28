@@ -1,6 +1,5 @@
 package com.jcloisterzone.plugin;
 
-import io.vavr.Predicates;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 

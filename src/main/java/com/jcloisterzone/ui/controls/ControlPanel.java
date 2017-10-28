@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.controls;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -32,8 +32,8 @@ import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.PlayEvent;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -68,8 +68,8 @@ public class ControlPanel extends JPanel {
     public static final int ACTIVE_MARKER_SIZE = 25;
     public static final int ACTIVE_MARKER_PADDING = 6;
 
-    private static final String PASS_LABEL = _("Skip");
-    private static final String CONFIRMATION_LABEL = _("Continue");
+    private static final String PASS_LABEL = _tr("Skip");
+    private static final String CONFIRMATION_LABEL = _tr("Continue");
 
     private final Client client;
     private final GameView gameView;
@@ -283,10 +283,10 @@ public class ControlPanel extends JPanel {
             }
 
             if (isLastAbbeyPlacement(state)) {
-                String[] options = new String[] {_("Skip Abbey"), _("Cancel and place Abbey") };
+                String[] options = new String[] {_tr("Skip Abbey"), _tr("Cancel and place Abbey") };
                 int result = JOptionPane.showOptionDialog(client,
-                    _("This is your last turn. If you skip it your Abbey remain unplaced."),
-                    _("Last chance to place the Abbey"),
+                    _tr("This is your last turn. If you skip it your Abbey remain unplaced."),
+                    _tr("Last chance to place the Abbey"),
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == -1 || result == 1) { //closed dialog
                     return;

@@ -1,7 +1,6 @@
 package com.jcloisterzone.board;
 
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
-import static com.jcloisterzone.XMLUtils.attributeStringValue;
 import static com.jcloisterzone.XMLUtils.getTileId;
 
 import java.net.URL;
@@ -29,7 +28,6 @@ import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
@@ -234,6 +232,7 @@ public class TilePackBuilder {
         throw new NoSuchElementException();
     }
 
+    @SuppressWarnings("unchecked")
     public Tiles createTilePack() {
         expansions.forEach(t -> {
             Expansion expansion = t._1;
@@ -245,7 +244,6 @@ public class TilePackBuilder {
                 String capabilityClass = tileElement.getAttribute("if-capability");
                 if (!capabilityClass.isEmpty()) {
                     try {
-                        @SuppressWarnings("unchecked")
                         Class<? extends Capability<?>> cls = (Class<? extends Capability<?>>) Class.forName(capabilityClass);
                         if (!state.getCapabilities().contains(cls)) {
                             return;

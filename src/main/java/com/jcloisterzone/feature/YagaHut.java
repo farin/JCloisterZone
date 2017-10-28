@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
@@ -70,7 +70,7 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
     }
 
     public static String name() {
-        return _("Yaga's Hut");
+        return _tr("Yaga's Hut");
     }
 
     protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {

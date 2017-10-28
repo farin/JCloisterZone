@@ -1,7 +1,5 @@
 package com.jcloisterzone.plugin;
 
-import com.jcloisterzone.Expansion;
-
 public class PluginMeta {
 
     private String version;

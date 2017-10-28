@@ -1,6 +1,6 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
@@ -124,7 +124,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     public static String name() {
-        return _("Farm");
+        return _tr("Farm");
     }
 
     // immutable helpers

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.grid.actionpanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,19 +33,19 @@ public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAc
 
         JLabel label;
 
-        label = new ThemedJLabel(_("Mage and Witch"));
+        label = new ThemedJLabel(_tr("Mage and Witch"));
         label.setFont(CornCirclesPanel.FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 
-        MultiLineLabel mll = new MultiLineLabel(_("It''s not possible to place mage or witch because there isn''t an unfinished feature. Select what figure do you want to remove from board."));
+        MultiLineLabel mll = new MultiLineLabel(_tr("It''s not possible to place mage or witch because there isn''t an unfinished feature. Select what figure do you want to remove from board."));
         add(mll, "wrap, growx, gapbottom 5");
 
         GameState state = gc.getGame().getState();
         boolean isActive = state.getActivePlayer().isLocalHuman();
 
         JButton btn = new JButton();
-        btn.setText(_("Remove the mage."));
+        btn.setText(_tr("Remove the mage."));
         btn.setEnabled(isActive);
         btn.addActionListener(new ActionListener() {
             @Override
@@ -59,7 +59,7 @@ public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAc
         add(btn, "wrap, growx, h 40, gapbottom 5");
 
         btn = new JButton();
-        btn.setText(_("Remove the witch."));
+        btn.setText(_tr("Remove the witch."));
         btn.setEnabled(isActive);
         btn.addActionListener(new ActionListener() {
             @Override
