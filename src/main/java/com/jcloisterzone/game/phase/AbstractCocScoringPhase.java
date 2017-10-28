@@ -7,7 +7,6 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
@@ -29,8 +28,8 @@ import io.vavr.collection.Vector;
 
 public abstract class AbstractCocScoringPhase extends Phase {
 
-    public AbstractCocScoringPhase(Config config, Random random) {
-        super(config, random);
+    public AbstractCocScoringPhase(Random random) {
+        super(random);
     }
 
     private boolean isLast(GameState state, Player player) {

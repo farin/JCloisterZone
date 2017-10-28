@@ -191,13 +191,24 @@ public class Expansion {
     }
 
     public static void register(Expansion exp, Plugin origin) {
-        exp.origin = origin;
-        _values = _values.append(exp);
         Logger logger = LoggerFactory.getLogger(Expansion.class);
-        logger.info(String.format("Expansion %s has been registered.", exp.name()));
+        exp.origin = origin;
+        for (Expansion other : _values) {
+            if (other.name.equals(exp.name)) {
+                logger.warn("Expansion {} is already registered.", exp.name);
+                return;
+            }
+            if (other.code.equals(exp.code)) {
+                logger.warn("Expansion {} is already registered.", exp.code);
+                return;
+            }
+        }
+        _values = _values.append(exp);
+        logger.info("Expansion {} has been registered.", exp.name());
     }
 
     public static void unregister(Expansion exp) {
+        assert exp.origin != null;
         _values = _values.remove(exp);
     }
 }

@@ -10,7 +10,6 @@ import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Tower;
@@ -46,8 +45,8 @@ import io.vavr.collection.Vector;
 
 public class ActionPhase extends AbstractActionPhase {
 
-    public ActionPhase(Config config, Random random) {
-        super(config, random);
+    public ActionPhase(Random random) {
+        super(random);
     }
 
     @Override

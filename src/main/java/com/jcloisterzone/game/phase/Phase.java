@@ -5,7 +5,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.wsio.message.PassMessage;
@@ -16,15 +15,12 @@ public abstract class Phase {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Config config;
     private final Random random;
-
 
     //TODO change to class ? but what about skipping phase in handlePass
     private Phase defaultNext;
 
-    public Phase(Config config, Random random) {
-        this.config = config;
+    public Phase(Random random) {
         this.random = random;
     }
 
@@ -42,7 +38,6 @@ public abstract class Phase {
 
     public StepResult next(GameState state, Class<? extends Phase> phaseClass) {
         return new StepResult(state, phaseClass);
-        //next(state, game.getPhases().get(phaseClass));
     }
 
     public void next(GameState state, Phase phase) {

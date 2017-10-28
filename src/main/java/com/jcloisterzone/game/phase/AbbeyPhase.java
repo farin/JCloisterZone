@@ -10,7 +10,6 @@ import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -29,8 +28,8 @@ import io.vavr.collection.Stream;
 @RequiredCapability(AbbeyCapability.class)
 public class AbbeyPhase extends Phase {
 
-    public AbbeyPhase(Config config, Random random) {
-        super(config, random);
+    public AbbeyPhase(Random random) {
+        super(random);
     }
 
     @Override

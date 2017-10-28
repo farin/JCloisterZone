@@ -7,7 +7,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -20,8 +19,8 @@ import io.vavr.Tuple2;
 @RequiredCapability(FairyCapability.class)
 public class FairyPhase extends Phase {
 
-    public FairyPhase(Config config, Random random) {
-        super(config, random);
+    public FairyPhase(Random random) {
+        super(random);
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
@@ -30,8 +29,8 @@ import io.vavr.collection.Queue;
 @RequiredCapability(BazaarCapability.class)
 public class BazaarPhase extends Phase {
 
-    public BazaarPhase(Config config, Random random) {
-        super(config, random);
+    public BazaarPhase(Random random) {
+        super(random);
     }
 
     @Override
@@ -181,6 +180,7 @@ public class BazaarPhase extends Phase {
         return next(state);
     }
 
+    @Override
     @PhaseMessageHandler
     public StepResult handlePass(GameState state, PassMessage msg) {
         BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);

@@ -5,15 +5,14 @@ import java.util.Random;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.GameState;
 
 @RequiredCapability(DragonCapability.class)
 public class DragonPhase extends Phase {
 
-    public DragonPhase(Config config, Random random) {
-        super(config, random);
+    public DragonPhase(Random random) {
+        super(random);
     }
 
     @Override

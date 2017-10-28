@@ -5,7 +5,6 @@ import java.util.Random;
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.Token;
@@ -20,8 +19,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    public GoldPiecePhase(Config config, Random random) {
-        super(config, random);
+    public GoldPiecePhase(Random random) {
+        super(random);
     }
 
     @Override

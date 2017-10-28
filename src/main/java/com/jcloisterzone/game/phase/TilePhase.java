@@ -12,7 +12,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
@@ -39,8 +38,8 @@ import io.vavr.collection.Vector;
 
 public class TilePhase extends Phase {
 
-    public TilePhase(Config config, Random random) {
-        super(config, random);
+    public TilePhase(Random random) {
+        super(random);
     }
 
     public GameState drawTile(GameState state) {
@@ -135,6 +134,7 @@ public class TilePhase extends Phase {
         }
     }
 
+    @Override
     @PhaseMessageHandler
     public StepResult handlePass(GameState state, PassMessage msg) {
         TilePlacementAction action = (TilePlacementAction) state.getAction();

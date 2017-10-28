@@ -7,7 +7,6 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.BigFollower;
@@ -32,8 +31,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
 
-    public CocFollowerPhase(Config config, Random random) {
-        super(config, random);
+    public CocFollowerPhase(Random random) {
+        super(random);
     }
 
     @Override

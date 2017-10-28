@@ -5,7 +5,6 @@ import java.util.Random;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
@@ -23,8 +22,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(WagonCapability.class)
 public class WagonPhase extends Phase {
 
-    public WagonPhase(Config config, Random random) {
-        super(config, random);
+    public WagonPhase(Random random) {
+        super(random);
     }
 
     @Override

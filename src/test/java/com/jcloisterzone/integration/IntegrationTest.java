@@ -57,7 +57,7 @@ public class IntegrationTest {
 
         GameSetup setup = sg.getSetup().asGameSetup();
         PlayerSlot[] slots = createPlayerSlots(sg);
-        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(config, setup, sg.getInitialSeed());
+        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(setup, sg.getInitialSeed());
         GameStateBuilder builder = new GameStateBuilder(setup, slots, config);
         builder.setGameAnnotations(sg.getAnnotations());
 

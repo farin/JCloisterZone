@@ -5,7 +5,6 @@ import java.util.Random;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -18,8 +17,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(PhantomCapability.class)
 public class PhantomPhase extends AbstractActionPhase {
 
-    public PhantomPhase(Config config, Random random) {
-        super(config, random);
+    public PhantomPhase(Random random) {
+        super(random);
     }
 
     @Override

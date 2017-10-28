@@ -3,7 +3,6 @@ package com.jcloisterzone.ai;
 import java.util.Comparator;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
 import com.jcloisterzone.game.state.GameState;
@@ -25,8 +24,8 @@ public abstract class RankingAiPlayer implements AiPlayer {
     protected abstract GameStateRanking createStateRanking(Player me);
 
     @Override
-    public void onGameStart(Config config, GameSetup setup, Player me) {
-        phaseReducer = new GameStatePhaseReducer(config, setup, 0);
+    public void onGameStart(GameSetup setup, Player me) {
+        phaseReducer = new GameStatePhaseReducer(setup, 0);
         stateRanking = createStateRanking(me);
     }
 

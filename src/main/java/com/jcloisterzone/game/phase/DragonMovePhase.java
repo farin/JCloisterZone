@@ -7,7 +7,6 @@ import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
@@ -28,8 +27,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(DragonCapability.class)
 public class DragonMovePhase extends Phase {
 
-    public DragonMovePhase(Config config, Random random) {
-        super(config, random);
+    public DragonMovePhase(Random random) {
+        super(random);
     }
 
     private Vector<Position> getVisitedPositions(GameState state) {

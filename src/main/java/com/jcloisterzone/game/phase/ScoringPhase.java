@@ -6,7 +6,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
@@ -47,8 +46,8 @@ public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
 
-    public ScoringPhase(Config config, Random random) {
-        super(config, random);
+    public ScoringPhase(Random random) {
+        super(random);
     }
 
     private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {

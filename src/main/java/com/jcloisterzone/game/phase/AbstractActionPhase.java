@@ -9,7 +9,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.FlierRollEvent;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Cloister;
@@ -39,8 +38,8 @@ import io.vavr.collection.Vector;
 
 public abstract class AbstractActionPhase extends Phase {
 
-    public AbstractActionPhase(Config config, Random random) {
-        super(config, random);
+    public AbstractActionPhase(Random random) {
+        super(random);
     }
 
     private boolean isMeepleDeploymentAllowedByCapabilities(GameState state, Position pos) {

@@ -11,7 +11,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Rule;
@@ -29,8 +28,8 @@ import io.vavr.collection.Stream;
 @RequiredCapability(SiegeCapability.class)
 public class EscapePhase extends Phase {
 
-    public EscapePhase(Config config, Random random) {
-        super(config, random);
+    public EscapePhase(Random random) {
+        super(random);
     }
 
     @Override

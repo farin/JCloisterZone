@@ -8,7 +8,6 @@ import com.jcloisterzone.action.RemovMageOrWithAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
@@ -30,8 +29,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(MageAndWitchCapability.class)
 public class MageAndWitchPhase extends Phase {
 
-    public MageAndWitchPhase(Config config, Random random) {
-        super(config, random);
+    public MageAndWitchPhase(Random random) {
+        super(random);
     }
 
     @Override

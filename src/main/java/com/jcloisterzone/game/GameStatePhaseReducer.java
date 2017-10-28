@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.phase.AbbeyPhase;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.BazaarPhase;
@@ -55,46 +54,46 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
     private final Random random;
 
-    public GameStatePhaseReducer(Config config, GameSetup setup, long initialSeed) {
+    public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
         random = new Random(initialSeed);
 
         Phase over, last, next = null;
         //if there isn't assignment - phase is out of standard flow
-        over = addPhase(config, setup, next, GameOverPhase.class);
-               addPhase(config, setup, over, CocFinalScoringPhase.class);
+        over = addPhase(setup, next, GameOverPhase.class);
+               addPhase(setup, over, CocFinalScoringPhase.class);
 
-        next = last = addPhase(config, setup, next, CleanUpTurnPhase.class);
-        next = addPhase(config, setup, next, BazaarPhase.class);
-        next = addPhase(config, setup, next, EscapePhase.class);
-        next = addPhase(config, setup, next, CleanUpTurnPartPhase.class);
-        next = addPhase(config, setup, next, CornCirclePhase.class);
+        next = last = addPhase(setup, next, CleanUpTurnPhase.class);
+        next = addPhase(setup, next, BazaarPhase.class);
+        next = addPhase(setup, next, EscapePhase.class);
+        next = addPhase(setup, next, CleanUpTurnPartPhase.class);
+        next = addPhase(setup, next, CornCirclePhase.class);
 
         if (setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
-            addPhase(config, setup, next, DragonMovePhase.class);
-            next = addPhase(config, setup, next, DragonPhase.class);
+            addPhase(setup, next, DragonMovePhase.class);
+            next = addPhase(setup, next, DragonPhase.class);
         }
 
-               addPhase(config, setup, next, CocCountPhase.class);
-        next = addPhase(config, setup, next, CocFollowerPhase.class);
-        next = addPhase(config, setup, next, WagonPhase.class);
-        next = addPhase(config, setup, next, ScoringPhase.class);
-        next = addPhase(config, setup, next, CocScoringPhase.class);
-        next = addPhase(config, setup, next, CommitActionPhase.class);
-        next = addPhase(config, setup, next, CastlePhase.class);
+               addPhase(setup, next, CocCountPhase.class);
+        next = addPhase(setup, next, CocFollowerPhase.class);
+        next = addPhase(setup, next, WagonPhase.class);
+        next = addPhase(setup, next, ScoringPhase.class);
+        next = addPhase(setup, next, CocScoringPhase.class);
+        next = addPhase(setup, next, CommitActionPhase.class);
+        next = addPhase(setup, next, CastlePhase.class);
 
         if (!setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
-               addPhase(config, setup, next, DragonMovePhase.class);
-               next = addPhase(config, setup, next, DragonPhase.class);
+               addPhase(setup, next, DragonMovePhase.class);
+               next = addPhase(setup, next, DragonPhase.class);
         }
 
-        next = addPhase(config, setup, next, PhantomPhase.class);
-               addPhase(config, setup, next, TowerCapturePhase.class);
-        next = addPhase(config, setup, next, ActionPhase.class);
-        next = addPhase(config, setup, next, MageAndWitchPhase.class);
-        next = addPhase(config, setup, next, GoldPiecePhase.class);
-        next = addPhase(config, setup, next, TilePhase.class);
-        next = addPhase(config, setup, next, AbbeyPhase.class);
-        next = addPhase(config, setup, next, FairyPhase.class);
+        next = addPhase(setup, next, PhantomPhase.class);
+               addPhase(setup, next, TowerCapturePhase.class);
+        next = addPhase(setup, next, ActionPhase.class);
+        next = addPhase(setup, next, MageAndWitchPhase.class);
+        next = addPhase(setup, next, GoldPiecePhase.class);
+        next = addPhase(setup, next, TilePhase.class);
+        next = addPhase(setup, next, AbbeyPhase.class);
+        next = addPhase(setup, next, FairyPhase.class);
         last.setDefaultNext(next); //after last phase, the first is default
 
         firstPhase = next;
@@ -104,7 +103,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         random.setSeed(seed);
     }
 
-    private Phase addPhase(Config config, GameSetup setup, Phase next, Class<? extends Phase> phaseClass) {
+    private Phase addPhase(GameSetup setup, Phase next, Class<? extends Phase> phaseClass) {
         RequiredCapability req = phaseClass.getAnnotation(RequiredCapability.class);
 
         if (req != null && !setup.getCapabilities().contains(req.value())) {
@@ -113,7 +112,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         Phase phase;
         try {
-            phase = phaseClass.getConstructor(Config.class, Random.class).newInstance(config, random);
+            phase = phaseClass.getConstructor(Random.class).newInstance(random);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             throw new RuntimeException(e);
@@ -133,7 +132,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
             Class<?> params[] = m.getParameterTypes();
             assert params.length == 2;
 
-            Class<?> acceptedMessageClass = (Class<?>) params[1];
+            Class<?> acceptedMessageClass = params[1];
             if (!acceptedMessageClass.isInstance(message)) {
                 continue;
             }

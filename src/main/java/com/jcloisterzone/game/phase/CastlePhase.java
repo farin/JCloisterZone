@@ -6,7 +6,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.CastleCreated;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Castle;
@@ -29,8 +28,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(CastleCapability.class)
 public class CastlePhase extends Phase {
 
-    public CastlePhase(Config config, Random random) {
-        super(config, random);
+    public CastlePhase(Random random) {
+        super(random);
     }
 
     private Set<FeaturePointer> getPlayerOptions(GameState state, Player player) {

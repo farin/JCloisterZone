@@ -8,7 +8,6 @@ import com.jcloisterzone.action.SelectPrisonerToExchangeAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
@@ -31,8 +30,8 @@ import io.vavr.collection.Stream;
 @RequiredCapability(TowerCapability.class)
 public class TowerCapturePhase extends Phase {
 
-    public TowerCapturePhase(Config config, Random random) {
-        super(config, random);
+    public TowerCapturePhase(Random random) {
+        super(random);
     }
 
     @Override

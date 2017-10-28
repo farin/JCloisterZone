@@ -9,7 +9,6 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -40,8 +39,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(CornCircleCapability.class)
 public class CornCirclePhase extends Phase {
 
-    public CornCirclePhase(Config config, Random random) {
-        super(config, random);
+    public CornCirclePhase(Random random) {
+        super(random);
     }
 
     private Class<? extends Feature> getCornType(GameState state) {

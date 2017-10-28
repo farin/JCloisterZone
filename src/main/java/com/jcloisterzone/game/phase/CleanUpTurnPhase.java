@@ -2,7 +2,6 @@ package com.jcloisterzone.game.phase;
 
 import java.util.Random;
 
-import com.jcloisterzone.config.Config;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.SetNextPlayer;
@@ -14,8 +13,8 @@ import io.vavr.collection.HashSet;
  */
 public class CleanUpTurnPhase extends Phase {
 
-    public CleanUpTurnPhase(Config config, Random random) {
-        super(config, random);
+    public CleanUpTurnPhase(Random random) {
+        super(random);
     }
 
     @Override

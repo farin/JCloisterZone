@@ -299,7 +299,7 @@ public class Game implements EventProxy {
 
     public void start(GameController gc, List<WsReplayableMessage> replay, HashMap<String, Object> savedGameAnnotations) {
         this.replay = replay.reverse();
-        phaseReducer = new GameStatePhaseReducer(gc.getConfig(), setup, initialSeed);
+        phaseReducer = new GameStatePhaseReducer(setup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(setup, slots, gc.getConfig());
         if (savedGameAnnotations != null) {
             gameAnnotations = savedGameAnnotations;
