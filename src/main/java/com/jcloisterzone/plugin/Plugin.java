@@ -13,6 +13,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -137,6 +139,14 @@ public class Plugin implements ResourceManager {
                 Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel(), _capabilityClasses, type);
                 expansionsToRegister = expansionsToRegister.append(exp);
             }
+        }
+
+
+        if (!Files.isDirectory(path)) {
+        		//register tiles to make Paths.get working for packed plugins
+        		java.util.Map<String, String> env = new java.util.HashMap<>();
+        		env.put("create", "true");
+        		FileSystems.newFileSystem(getLoader().getResource("tiles").toURI(), env);
         }
 
         supportedExpansions = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))

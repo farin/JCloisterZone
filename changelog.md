@@ -7,6 +7,9 @@
 * saved game format changed to JSON (and instead of game snapshot contains just action history)
 * removed Catapult tiles, with many other expansion this extra tiles makes not much sense
 * added The Count expansion
+* plugin changes: 
+  Multiple plugin folders can be specified in config (as relative or absolute paths).
+  Plugins can contain java classes and register new expansions. 
 * fixed #63 - experimental change: multiple tile sets of same expansion are allowed.
   No UI is present but feature can be enabled by manual edit of preset in config file
   (or by save game edit)
