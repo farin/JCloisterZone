@@ -16,6 +16,7 @@ import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.ai.AiPlayerAdapter;
+import com.jcloisterzone.ai.ForceSupportIfSupports;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.config.Config.DebugConfig;
@@ -282,9 +283,14 @@ public class Game implements EventProxy {
                 continue outer;
             }
             for (Class<? extends Capability<?>> cap : exp.getCapabilities()) {
-                if (!merged.getCapabilities().contains(cap)) {
-                    continue outer;
+                if (merged.getCapabilities().contains(cap)) {
+                    continue;
                 }
+                ForceSupportIfSupports forced = cap.getAnnotation(ForceSupportIfSupports.class);
+                if (forced != null && merged.getCapabilities().contains(forced.value())) {
+                    continue;
+                }
+                continue outer;
             }
             supportedExpansions.add(exp);
         }

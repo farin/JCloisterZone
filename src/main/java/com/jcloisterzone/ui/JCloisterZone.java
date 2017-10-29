@@ -30,7 +30,9 @@ import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
+import com.jcloisterzone.plugin.NotAPluginException;
 import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.PluginLoadException;
 
 public class JCloisterZone  {
 
@@ -128,8 +130,10 @@ public class JCloisterZone  {
                             plugin.setEnabled(true);
                         }
                         plugins.add(plugin);
-                    } catch (Exception e) {
-                        logger.error("Unable to load plugin " + fullPath, e);
+                    } catch (NotAPluginException e1) {
+                        logger.info("{} is not recognized as plugin", fullPath);
+                    } catch (PluginLoadException e2) {
+                        logger.error(String.format("Unable to load plugin %s", fullPath), e2);
                     }
                 }
             } catch (URISyntaxException | IOException e) {

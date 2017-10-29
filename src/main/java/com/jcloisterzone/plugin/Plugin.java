@@ -10,7 +10,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
@@ -20,8 +22,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -84,13 +89,13 @@ public class Plugin implements ResourceManager {
     private Vector<Expansion> expansionsToRegister = Vector.empty();
     private java.util.Set<String> supportedExpansions = null; // expansion codes
 
-    public static Plugin readPlugin(Path relPath, Path path) throws Exception {
+    public static Plugin readPlugin(Path relPath, Path path) throws NotAPluginException, PluginLoadException {
         Plugin plugin = new Plugin(relPath, path);
         plugin.loadMetadata();
         return plugin;
     }
 
-    public Plugin(Path relPath, Path path) throws MalformedURLException {
+    public Plugin(Path relPath, Path path) throws PluginLoadException {
         this.relPath = relPath;
         this.path = path;
         URL url = getFixedURL();
@@ -99,27 +104,43 @@ public class Plugin implements ResourceManager {
         imageLoader = new ImageLoader(loader);
     }
 
-    private URL getFixedURL() throws MalformedURLException {
-        URL url = path.toUri().toURL();
-        if (Files.isRegularFile(path)) {
-            return url;
+    private URL getFixedURL() throws PluginLoadException {
+        try {
+            URL url = path.toUri().toURL();
+            if (Files.isRegularFile(path)) {
+                return url;
+            }
+            return new URL(url.toString() + "/");
+        } catch (MalformedURLException e) {
+            throw new PluginLoadException(e);
         }
-        return new URL(url.toString() + "/");
     }
 
-    protected void loadMetadata() throws Exception {
+    protected void loadMetadata() throws NotAPluginException, PluginLoadException {
         Yaml yaml = new Yaml(new Constructor(PluginMeta.class));
-        meta = (PluginMeta) yaml.load(loader.getResource("plugin.yaml").openStream());
+        URL pluginYaml = loader.getResource("plugin.yaml");
+        if (pluginYaml == null) {
+            throw new NotAPluginException(String.format("%s is not a plugin", path));
+        }
+        try {
+            meta = (PluginMeta) yaml.load(pluginYaml.openStream());
+        } catch (IOException e) {
+            throw new PluginLoadException(e);
+        }
 
         includedClasses = Vector.empty();
-        Files.walk(path)
-            .filter(f -> f.toString().endsWith(".class"))
-            .forEach(f -> {
-                String clsName = path.relativize(f).toString()
-                    .replace(File.separator, ".")
-                    .replaceAll("\\.class$", "");
-                includedClasses = includedClasses.append(clsName);
-            });
+        try {
+            Files.walk(path)
+                .filter(f -> f.toString().endsWith(".class"))
+                .forEach(f -> {
+                    String clsName = path.relativize(f).toString()
+                        .replace(File.separator, ".")
+                        .replaceAll("\\.class$", "");
+                    includedClasses = includedClasses.append(clsName);
+                });
+        } catch (IOException e) {
+            throw new PluginLoadException(e);
+        }
 
         if (meta.getExpansions() != null) {
             for (ExpansionMeta expMeta : meta.getExpansions()) {
@@ -127,9 +148,12 @@ public class Plugin implements ResourceManager {
                 java.util.List<Class<? extends Capability<?>>> capabilityClasses = new ArrayList<>();
                 if (expMeta.getCapabilities() != null) {
                     for (String name : expMeta.getCapabilities()) {
-                        Class<? extends Capability<?>> cls = Capability.classForName(name, loader);
-                        if (cls != null) {
+                        Class<? extends Capability<?>> cls;
+                        try {
+                            cls = Capability.classForName(name, loader);
                             capabilityClasses.add(cls);
+                        } catch (ClassNotFoundException e) {
+                            throw new PluginLoadException(e);
                         }
                     }
                 }
@@ -145,20 +169,28 @@ public class Plugin implements ResourceManager {
             //register tiles to make Paths.get working for packed plugins
             java.util.Map<String, String> env = new java.util.HashMap<>();
             env.put("create", "true");
-            FileSystems.newFileSystem(getLoader().getResource("tiles").toURI(), env);
+            try {
+                FileSystems.newFileSystem(getLoader().getResource("tiles").toURI(), env);
+            } catch (IOException | URISyntaxException e) {
+                throw new PluginLoadException(e);
+            }
         }
 
-        supportedExpansions = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))
-            .filter(Files::isDirectory)
-            .map(d -> d.getFileName().toString())
-            .collect(Collectors.toSet());
+        try {
+            supportedExpansions = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))
+                .filter(Files::isDirectory)
+                .map(d -> d.getFileName().toString())
+                .collect(Collectors.toSet());
+        } catch (IOException | URISyntaxException e) {
+            throw new PluginLoadException(e);
+        }
 
         if (meta.getTile_images() != null) {
             String value = meta.getTile_images().getOffset();
             if (value != null) {
                 String[] tokens = value.split(",");
                 if (tokens.length != 4) {
-                    throw new Exception("Invalid value for image-offset " + value);
+                    throw new PluginLoadException("Invalid value for image-offset " + value);
                 }
                 imageOffset = new Insets(
                    Integer.parseInt(tokens[0]),
@@ -226,7 +258,7 @@ public class Plugin implements ResourceManager {
     }
 
     //TOOD better throws own Exception
-    public final void load() throws Exception {
+    public final void load() throws PluginLoadException {
         if (!isLoaded()) {
            doLoad();
            loaded = true;
@@ -245,7 +277,7 @@ public class Plugin implements ResourceManager {
         }
     }
 
-    protected void doLoad() throws Exception {
+    protected void doLoad() throws PluginLoadException {
         includedClasses.forEach(clsName -> {
             try {
             Class<?> c = loader.loadClass(clsName);
@@ -258,8 +290,13 @@ public class Plugin implements ResourceManager {
         for (Expansion exp : expansionsToRegister) {
             Expansion.register(exp, this);
         }
-        aliases = new PluginAliases(getLoader(), "tiles");
-        pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
+
+        try {
+            aliases = new PluginAliases(getLoader(), "tiles");
+            pluginGeometry = new ThemeGeometry(getLoader(), "tiles", getImageSizeRatio());
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            throw new PluginLoadException(e);
+        }
     }
 
     protected void doUnload() {
