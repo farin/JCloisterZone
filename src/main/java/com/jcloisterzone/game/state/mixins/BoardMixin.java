@@ -101,8 +101,11 @@ public interface BoardMixin {
             ));
     }
 
+    @SuppressWarnings("unchecked")
     default <T extends Feature> Stream<Tuple2<Location, T>> getTileFeatures2(Position pos, Class<T> cls) {
-        return Stream.narrow(getTileFeatures2(pos).filter(t -> cls.isInstance(t._2)));
+        return getTileFeatures2(pos)
+           .filter(t -> cls.isInstance(t._2))
+           .map(t -> (Tuple2<Location, T>) t);
     }
 
     default Feature getFeature(FeaturePointer fp) {
