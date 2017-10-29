@@ -1,8 +1,6 @@
 package com.jcloisterzone.wsio.server;
 
-import java.util.Set;
-
-import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.SupportedSetup;
 
 //TODO use slot message directly
 public class ServerPlayerSlot {
@@ -12,7 +10,7 @@ public class ServerPlayerSlot {
     private String nickname;
     private String sessionId;
     private String aiClassName;
-    private Set<Class<? extends Capability<?>>> supportedCapabilities;
+    private SupportedSetup supportedSetup;
 
     private String clientId;
     private String autoAssignClientId;
@@ -62,12 +60,12 @@ public class ServerPlayerSlot {
         return number;
     }
 
-    public Set<Class<? extends Capability<?>>> getSupportedCapabilities() {
-        return supportedCapabilities;
+    public SupportedSetup getSupportedSetup() {
+        return supportedSetup;
     }
 
-    public void setSupportedCapabilities(Set<Class<? extends Capability<?>>> supportedCapabilities) {
-        this.supportedCapabilities = supportedCapabilities;
+    public void setSupportedSetup(SupportedSetup supportedSetup) {
+        this.supportedSetup = supportedSetup;
     }
 
     public String getClientId() {

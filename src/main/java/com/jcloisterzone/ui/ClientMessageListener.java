@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
+import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
@@ -459,48 +460,57 @@ public class ClientMessageListener implements MessageListener {
     }
 
 
-  protected void performAutostart(Game game) {
-      DebugConfig debugConfig = client.getConfig().getDebug();
-      if (!autostartPerfomed && debugConfig != null && debugConfig.isAutostartEnabled()) {
-          autostartPerfomed = true; //apply autostart only once
-          AutostartConfig autostartConfig = debugConfig.getAutostart();
-          final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
-          if (presetCfg == null) {
-              logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
-              return;
-          }
+    protected void performAutostart(Game game) {
+        DebugConfig debugConfig = client.getConfig().getDebug();
+        if (!autostartPerfomed && debugConfig != null && debugConfig.isAutostartEnabled()) {
+            autostartPerfomed = true; // apply autostart only once
+            AutostartConfig autostartConfig = debugConfig.getAutostart();
+            final PresetConfig presetCfg = client.getConfig().getPresets().get(autostartConfig.getPreset());
+            if (presetCfg == null) {
+                logger.warn("Autostart profile {} not found.", autostartConfig.getPreset());
+                return;
+            }
 
-          final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>() : autostartConfig.getPlayers();
-          if (players.isEmpty()) {
-              players.add("Player");
-          }
+            final List<String> players = autostartConfig.getPlayers() == null ? new ArrayList<String>()
+                    : autostartConfig.getPlayers();
+            if (players.isEmpty()) {
+                players.add("Player");
+            }
 
-          int i = 0;
-          for (String name: players) {
-              Class<?> clazz = null;;
-              PlayerSlot slot = game.getPlayerSlots()[i];
-              try {
-                  clazz = Class.forName(name);
-                  slot.setAiClassName(name);
-                  name = "AI-" + i + "-" + clazz.getSimpleName().replace("AiPlayer", "");
-              } catch (ClassNotFoundException e) {
-                  //empty
-              }
-              TakeSlotMessage msg = new TakeSlotMessage(i, name);
-              msg.setGameId(game.getGameId());
-              if (slot.getAiClassName() != null) {
-                  msg.setAiClassName(slot.getAiClassName());
-              }
-              conn.send(msg);
-              i++;
-          }
+            int i = 0;
+            for (String name : players) {
+                Class<?> clazz = null;
+                ;
+                PlayerSlot slot = game.getPlayerSlots()[i];
+                try {
+                    clazz = Class.forName(name);
+                    slot.setAiClassName(name);
+                    name = "AI-" + i + "-" + clazz.getSimpleName().replace("AiPlayer", "");
+                } catch (ClassNotFoundException e) {
+                    // empty
+                }
+                TakeSlotMessage msg = new TakeSlotMessage(i, name);
+                msg.setGameId(game.getGameId());
+                if (slot.getAiClassName() != null) {
+                    msg.setAiClassName(slot.getAiClassName());
+                    AiPlayer aiPlayer;
+                    try {
+                        aiPlayer = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                        msg.setSupportedSetup(aiPlayer.supportedSetup());
+                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                }
+                conn.send(msg);
+                i++;
+            }
 
-          presetCfg.updateGameSetup(conn, game.getGameId());
+            presetCfg.updateGameSetup(conn, game.getGameId());
 
-          StartGameMessage msg = new StartGameMessage();
-          msg.setGameId(game.getGameId());
-          conn.send(msg);
-      }
-  }
+            StartGameMessage msg = new StartGameMessage();
+            msg.setGameId(game.getGameId());
+            conn.send(msg);
+        }
+    }
 
 }

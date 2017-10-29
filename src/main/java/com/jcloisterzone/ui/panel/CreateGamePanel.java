@@ -337,32 +337,32 @@ public class CreateGamePanel extends ThemedJPanel {
         tp.changeAlpha(0.4f);
 
         editorComponent.getDocument().addDocumentListener(
-                new DocumentListener() {
-
-                    private void handle(DocumentEvent e) {
-                        try {
-                            Document doc = e.getDocument();
-                            updatePresetButtons(doc.getText(0, doc.getLength()));
-                        } catch (BadLocationException ex) {
-                            logger.error(ex.getMessage(), ex);
-                        }
+            new DocumentListener() {
+                private void handle(DocumentEvent e) {
+                    try {
+                        Document doc = e.getDocument();
+                        updatePresetButtons(doc.getText(0, doc.getLength()));
+                    } catch (BadLocationException ex) {
+                        logger.error(ex.getMessage(), ex);
                     }
+                }
 
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        handle(e);
-                    }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    handle(e);
+                }
 
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        handle(e);
-                    }
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    handle(e);
+                }
 
-                    @Override
-                    public void changedUpdate(DocumentEvent e) {
-                        handle(e);
-                    }
-                });
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    handle(e);
+                }
+            }
+        );
 
         presetSave = new JButton(_tr("Save"));
         presetSave.addActionListener(new ActionListener() {

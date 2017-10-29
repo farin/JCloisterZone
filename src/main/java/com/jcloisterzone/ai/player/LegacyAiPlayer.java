@@ -1,9 +1,13 @@
 package com.jcloisterzone.ai.player;
 
+import java.util.Set;
+
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.GameStateRanking;
 import com.jcloisterzone.ai.RankingAiPlayer;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.SupportedSetup;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BigFollowerCapability;
@@ -24,6 +28,7 @@ import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.SiegeCapability;
+import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
@@ -31,7 +36,6 @@ import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
 
 import io.vavr.collection.HashSet;
-import io.vavr.collection.Set;
 
 public class LegacyAiPlayer extends RankingAiPlayer {
 
@@ -40,9 +44,9 @@ public class LegacyAiPlayer extends RankingAiPlayer {
         return new LegacyRanking(me);
     }
 
-    @Override
-    public Set<Class<? extends Capability<?>>> supportedCapabilities() {
-        return HashSet.of(
+    private Set<Class<? extends Capability<?>>> getSupportedCapabilities() {
+        HashSet<Class<? extends Capability<?>>> value = HashSet.of(
+            StandardGameCapability.class,
             InnCapability.class,
             BigFollowerCapability.class,
             CathedralCapability.class,
@@ -68,6 +72,15 @@ public class LegacyAiPlayer extends RankingAiPlayer {
             PhantomCapability.class,
             FestivalCapability.class,
             WindRoseCapability.class
+        );
+        return value.toJavaSet();
+    }
+
+    @Override
+    public SupportedSetup supportedSetup() {
+        return new SupportedSetup(
+            getSupportedCapabilities(),
+            Expansion.values().toJavaSet()
         );
     }
 }

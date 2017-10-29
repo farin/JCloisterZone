@@ -10,6 +10,7 @@ import com.jcloisterzone.ui.PlayerColors;
  * slot.
  */
 public class PlayerSlot implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /**

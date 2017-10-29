@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.PlayerSlot.SlotState;
+import com.jcloisterzone.game.SupportedSetup;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
@@ -260,10 +261,12 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
         if (slot.getAiClassName() != null) {
             try {
                 AiPlayer aiPlayer = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
-                msg.setSupportedCapabilities(aiPlayer.supportedCapabilities().toJavaSet());
+                msg.setSupportedSetup(aiPlayer.supportedSetup());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
+        } else {
+            msg.setSupportedSetup(SupportedSetup.getCurrentClientSupported());
         }
         gc.getConnection().send(msg);
     }
@@ -272,7 +275,6 @@ public class CreateGamePlayerPanel extends ThemedJPanel {
         LeaveSlotMessage msg = new LeaveSlotMessage(slot.getNumber());
         gc.getConnection().send(msg);
     }
-
 
     public NameProvider getNameProvider() {
         return nameProvider;

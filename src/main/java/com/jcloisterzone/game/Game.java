@@ -72,8 +72,7 @@ public class Game implements EventProxy {
     private java.util.HashMap<String, Object> gameAnnotations;
 
     protected PlayerSlot[] slots;
-    @SuppressWarnings("unchecked")
-    protected java.util.Set<Class<? extends Capability<?>>>[] slotSupportedCapabilities = new java.util.Set[PlayerSlot.COUNT];
+    protected SupportedSetup[] slotSupported = new SupportedSetup[PlayerSlot.COUNT];
 
     private List<UndoHistoryItem> undoHistory = List.empty();
 
@@ -230,7 +229,7 @@ public class Game implements EventProxy {
 
     @WsSubscribe
     public void handleSlotMessage(SlotMessage msg) {
-        slotSupportedCapabilities[msg.getNumber()] = msg.getSupportedCapabilities();
+        slotSupported[msg.getNumber()] = msg.getSupportedSetup();
         post(new SupportedExpansionsChangeEvent(mergeSupportedExpansions()));
     }
 
@@ -268,23 +267,23 @@ public class Game implements EventProxy {
 
 
     private java.util.Set<Expansion> mergeSupportedExpansions() {
-        java.util.Set<Class<? extends Capability<?>>> merged = null;
-        for (int i = 0; i < slotSupportedCapabilities.length; i++) {
-            java.util.Set<Class<? extends Capability<?>>> supported = slotSupportedCapabilities[i];
-            if (supported == null) continue;
-            if (merged == null) {
-                merged = new HashSet<>();
+        SupportedSetup merged = SupportedSetup.getCurrentClientSupported();
+        for (int i = 0; i < slotSupported.length; i++) {
+            if (slotSupported[i] == null) {
+                continue;
             }
-            merged.addAll(supported);
+            merged = merged.intersect(slotSupported[i]);
         }
+
         java.util.Set<Expansion> supportedExpansions = new HashSet<>();
         outer:
         for (Expansion exp : Expansion.values()) {
-            if (merged != null) {
-                for (Class<? extends Capability<?>> cap : exp.getCapabilities()) {
-                    if (!merged.contains(cap)) {
-                        continue outer;
-                    }
+            if (!merged.getTiles().contains(exp)) {
+                continue outer;
+            }
+            for (Class<? extends Capability<?>> cap : exp.getCapabilities()) {
+                if (!merged.getCapabilities().contains(cap)) {
+                    continue outer;
                 }
             }
             supportedExpansions.add(exp);
