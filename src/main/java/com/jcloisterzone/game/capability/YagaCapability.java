@@ -1,26 +1,26 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-
 import org.w3c.dom.Element;
 
+import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.YagaHut;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
-public class YagaCapability extends Capability {
+import io.vavr.collection.Vector;
 
-	public YagaCapability(Game game) {
-		super(game);
-	}
+public class YagaCapability extends Capability<Void> {
 
-	@Override
-    public void initFeature(Tile tile, Feature feature, Element xml) {
-        if (feature instanceof Cloister) {
-            ((Cloister)feature).setYagaHut(attributeBoolValue(xml, "yaga"));
+    @Override
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        Vector<Element> yagaEl = XMLUtils.getElementStreamByTagName(tileElements, "yaga-hut").toVector();
+        assert yagaEl.size() <= 1;
+        if (yagaEl.size() > 0) {
+            YagaHut feature =  new YagaHut();
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, feature));
         }
+        return tile;
     }
-
 }

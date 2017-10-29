@@ -22,11 +22,11 @@ public class Channel implements EventProxy {
     }
 
     public void post(Event event) {
-    	eventBus.post(event);
+        eventBus.post(event);
     }
 
     @Override
-	public EventBus getEventBus() {
+    public EventBus getEventBus() {
         return eventBus;
     }
 

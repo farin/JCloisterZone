@@ -1,5 +1,8 @@
 package com.jcloisterzone.ui.controls;
 
+import static com.jcloisterzone.ui.I18nUtils._tr;
+import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,20 +14,29 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.AbbeyPlacementAction;
+import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.action.TunnelAction;
+import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.component.MultiLineLabel;
+import com.jcloisterzone.ui.controls.action.ActionWrapper;
+import com.jcloisterzone.ui.controls.action.MeepleActionWrapper;
+import com.jcloisterzone.ui.controls.action.NeutralFigureActionWrapper;
+import com.jcloisterzone.ui.controls.action.TilePlacementActionWrapper;
+import com.jcloisterzone.ui.controls.action.TunnelActionWrapper;
+import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.ForwardBackwardListener;
-import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.GameView;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-import static com.jcloisterzone.ui.controls.ControlPanel.CORNER_DIAMETER;
+import io.vavr.collection.IndexedSeq;
+import io.vavr.collection.Vector;
+import io.vavr.control.Option;
+import net.miginfocom.swing.MigLayout;
 
 public class ActionPanel extends MouseTrackingComponent implements ForwardBackwardListener, RegionMouseListener {
 
@@ -36,15 +48,16 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     public static final double ACTIVE_SIZE_RATIO = 1.375;
 
+    private ActionsState actionsState;
     private boolean active;
-    private PlayerAction<?>[] actions;
+    private IndexedSeq<ActionWrapper> actions = Vector.empty();
     private int selectedActionIndex = -1;
     private boolean showConfirmRequest;
 
     //it has one flaw -  if game was just loaded, undo is not possible - may check gameView.getGame().isUndoAlloerd() - and update label
-    private static final String CONFIRMATION_HINT = _("Confirm or undo a meeple placement.");
-    private static final String REMOTE_CONFIRMATION_HINT = _("Waiting for a confirmation by remote player.");
-    private static final String NO_ACTION_HINT = _("No action available. Pass or undo a tile placement.");
+    private static final String CONFIRMATION_HINT = _tr("Confirm or undo a meeple placement.");
+    private static final String REMOTE_CONFIRMATION_HINT = _tr("Waiting for a confirmation by remote player.");
+    private static final String NO_ACTION_HINT = _tr("No action available. Pass or undo a tile placement.");
 
     private MultiLineLabel hintMessage;
 
@@ -52,9 +65,6 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     private Image[] selected, deselected;
     private int imgOffset = 0;
     private boolean refreshImages, refreshMouseRegions;
-
-    private String fakeAction;
-    private Image fakeActionImage;
 
     private final Client client;
     private final GameView gameView;
@@ -73,23 +83,41 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     }
 
 
-    public PlayerAction<?>[] getActions() {
+    public IndexedSeq<ActionWrapper> getActions() {
         return actions;
     }
 
-    public void setActions(boolean active, PlayerAction<?>[] actions) {
-        this.active = active;
-        selected = new Image[actions.length];
-        deselected = new Image[actions.length];
+    public void onPlayerActionsChanged(ActionsState actionsState) {
+        this.actionsState = actionsState;
+        Vector<PlayerAction<?>> actions = actionsState.getActions();
+
+        active = actionsState.getPlayer().isLocalHuman();
+        selected = new Image[actions.size()];
+        deselected = new Image[actions.size()];
         refreshImages = true;
         refreshMouseRegions = true;
-        this.actions = actions;
+
+        this.actions = actions.map(a -> {
+            if (a instanceof TilePlacementAction) {
+                return new TilePlacementActionWrapper((TilePlacementAction) a);
+            }
+            if (a instanceof MeepleAction) {
+                return new MeepleActionWrapper((MeepleAction) a);
+            }
+            if (a instanceof TunnelAction) {
+                return new TunnelActionWrapper((TunnelAction) a);
+            }
+            if (a instanceof NeutralFigureAction) {
+                return new NeutralFigureActionWrapper((NeutralFigureAction) a);
+            }
+            return new ActionWrapper(a);
+        });
         if (active) {
-            if (actions.length > 0) {
-                setSelectedActionIndex(0);
-            } else {
-            	hintMessage.setText(NO_ACTION_HINT);
+            if (actions.isEmpty()) {
+                hintMessage.setText(NO_ACTION_HINT);
                 hintMessage.setVisible(true);
+            } else {
+                setSelectedActionIndex(0);
             }
         }
         repaint();
@@ -103,36 +131,42 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     }
 
     private void doRefreshImageCache() {
-        if (actions == null || actions.length == 0) {
+        if (actions.isEmpty()) {
             selected = null;
             deselected = null;
+            return;
         }
 
         int maxIconSize = 40;
         imgOffset = 0;
 
-        if (actions[0] instanceof TilePlacementAction) {
-            imgOffset = -10;
-            maxIconSize = 62;
-        } else if (actions[0] instanceof AbbeyPlacementAction) {
-            imgOffset = 4;
-            maxIconSize = 52;
+        PlayerAction<?> action = actions.get().getAction();
+
+        if (action instanceof TilePlacementAction) {
+            TilePlacementAction tpa = (TilePlacementAction) action;
+            if (tpa.getTile().isAbbeyTile() || actionsState.isPassAllowed()) {
+                imgOffset = 4;
+                maxIconSize = 52;
+            } else {
+                imgOffset = -10;
+                maxIconSize = 62;
+            }
         }  else {
             maxIconSize = 40;
         }
 
-        int availableWidth = getWidth() - LEFT_MARGIN - (actions.length-1)*PADDING;
-        double units = actions.length + (ACTIVE_SIZE_RATIO-1.0);
+        int availableWidth = getWidth() - LEFT_MARGIN - (actions.size() - 1)*PADDING;
+        double units = actions.size()  + (ACTIVE_SIZE_RATIO-1.0);
         int baseSize = Math.min(maxIconSize, (int) Math.floor(availableWidth / units));
         int activeSize = (int) (baseSize * ACTIVE_SIZE_RATIO);
 
-        Player activePlayer = gameView.getGame().getActivePlayer();
-        for (int i = 0; i < actions.length; i++) {
+        Player activePlayer = gameView.getGame().getState().getActivePlayer();
+        for (int i = 0; i < actions.size(); i++) {
             selected[i] = new ImageIcon(
-                actions[i].getImage(activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
+                actions.get(i).getImage(client.getResourceManager(), activePlayer, true).getScaledInstance(activeSize, activeSize, Image.SCALE_SMOOTH)
             ).getImage();
             deselected[i] = new ImageIcon(
-                actions[i].getImage(activePlayer, false).getScaledInstance(baseSize, baseSize, Image.SCALE_SMOOTH)
+                actions.get(i).getImage(client.getResourceManager(), activePlayer, false).getScaledInstance(baseSize, baseSize, Image.SCALE_SMOOTH)
             ).getImage();
         }
     }
@@ -140,20 +174,21 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     public void clearActions() {
         deselectAction();
         hintMessage.setVisible(false);
-        this.actions = null;
+        this.actions = Vector.empty();
         this.selectedActionIndex = -1;
         refreshImages = true;
         refreshMouseRegions = true;
-        fakeAction = null;
         active = false;
+        actionsState = null;
         repaint();
     }
 
     @Override
     public void forward() {
-        if (active && selectedActionIndex != -1) {
-            if (getSelectedAction() instanceof ForwardBackwardListener) {
-                ((ForwardBackwardListener) getSelectedAction()).forward();
+        if (active) {
+            ActionWrapper selected = getSelectedActionWrapper().getOrNull();
+            if (selected instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) selected).forward();
             } else {
                 rollAction(1);
             }
@@ -164,8 +199,9 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     @Override
     public void backward() {
         if (active && selectedActionIndex != -1) {
-            if (getSelectedAction() instanceof ForwardBackwardListener) {
-                ((ForwardBackwardListener) getSelectedAction()).backward();
+            ActionWrapper selected = getSelectedActionWrapper().getOrNull();
+            if (selected instanceof ForwardBackwardListener) {
+                ((ForwardBackwardListener) selected).backward();
             } else {
                 rollAction(-1);
             }
@@ -173,30 +209,53 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
     }
 
     public void rollAction(int change) {
-        if (active) {
-            if (actions.length == 0) return;
-            int idx = (selectedActionIndex + change + actions.length) % actions.length;
+        if (active && !actions.isEmpty()) {
+            int idx = (selectedActionIndex + change + actions.size()) % actions.size();
             setSelectedActionIndex(idx);
             repaint();
         }
     }
 
     private void deselectAction() {
-        if (this.selectedActionIndex != -1) {
-            PlayerAction<?> prev = actions[this.selectedActionIndex];
-            prev.deselect();
+        ActionWrapper prev = getSelectedActionWrapper().getOrNull();
+        if (prev == null) return;
+
+        ActionLayer layer = getActionLayer(prev);
+        if (layer != null) {
+            layer.setActionWrapper(false, null);
+            gameView.getGridPanel().hideLayer(layer);
         }
+    }
+
+    private ActionLayer getActionLayer(ActionWrapper actionWrapper) {
+        PlayerAction<?> action = actionWrapper.getAction();
+        if (!action.getClass().isAnnotationPresent(LinkedGridLayer.class)) {
+            return null;
+        }
+        Class<? extends ActionLayer> layerType = action.getClass().getAnnotation(LinkedGridLayer.class).value();
+        return gameView.getGridPanel().findLayer(layerType);
     }
 
     private void setSelectedActionIndex(int selectedActionIndex) {
         deselectAction();
         this.selectedActionIndex = selectedActionIndex;
-        PlayerAction<?> action = actions[selectedActionIndex];
-        action.select(active);
+        ActionWrapper actionWrapper = getSelectedActionWrapper().getOrNull();
+
+        if (actionWrapper == null) return;
+        ActionLayer layer = getActionLayer(actionWrapper);
+        if (layer != null) {
+            layer.setActionWrapper(active, actionWrapper);
+            gameView.getGridPanel().showLayer(layer);
+        }
     }
 
-    public PlayerAction<?> getSelectedAction() {
-        return selectedActionIndex == -1 ? null : actions[selectedActionIndex];
+    public Option<ActionWrapper> getSelectedActionWrapper() {
+        if (selectedActionIndex == -1) return Option.none();
+         return Option.some(actions.get(selectedActionIndex));
+    }
+
+    public Option<PlayerAction<?>> getSelectedAction() {
+        return getSelectedActionWrapper().map(ActionWrapper::getAction);
     }
 
     @Override
@@ -212,11 +271,8 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         g2.fillRoundRect(0, LINE_Y, getWidth()+CORNER_DIAMETER, LINE_HEIGHT, CORNER_DIAMETER, CORNER_DIAMETER);
 
         int x = LEFT_MARGIN;
-        if (fakeActionImage != null) {
-            g2.drawImage(fakeActionImage, x, LINE_Y+((LINE_HEIGHT-FAKE_ACTION_SIZE) / 2)+imgOffset, FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, null);
-        }
 
-        if (actions != null && actions.length > 0) {
+        if (!actions.isEmpty()) {
             //possible race condition - (but AtomBoolean cannot be used, too slow for painting)
             boolean refreshImages = this.refreshImages;
             this.refreshImages = false;
@@ -226,7 +282,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
             if (refreshImages) doRefreshImageCache();
             if (refreshMouseRegions) getMouseRegions().clear();
 
-            for (int i = 0; i < actions.length; i++) {
+            for (int i = 0; i < actions.size(); i++) {
                 boolean active = (i == selectedActionIndex);
 
                 Image img = active ? selected[i] : deselected[i];
@@ -245,7 +301,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
-        if (showConfirmRequest || actions == null || actions.length == 0) return;
+        if (showConfirmRequest || actions.isEmpty()) return;
         if (e.getButton() == MouseEvent.BUTTON1) {
             Integer i = (Integer) origin.getData();
             if (selectedActionIndex == i) {
@@ -277,25 +333,10 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
         gameView.getGridPanel().setCursor(Cursor.getDefaultCursor());
     }
 
-    public String getFakeAction() {
-        return fakeAction;
-    }
-
-    public void setFakeAction(String fakeAction) {
-        this.fakeAction = fakeAction;
-        if (fakeAction == null) {
-            fakeActionImage = null;
-        } else {
-        	fakeActionImage = client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("actions/"+fakeAction));
-        	fakeActionImage = fakeActionImage.getScaledInstance(FAKE_ACTION_SIZE, FAKE_ACTION_SIZE, Image.SCALE_SMOOTH);
-        }
-        repaint();
-    }
-
     public void setShowConfirmRequest(boolean showConfirmRequest, boolean remote) {
         this.showConfirmRequest = showConfirmRequest;
         if (showConfirmRequest) {
-        	hintMessage.setText(remote ? REMOTE_CONFIRMATION_HINT : CONFIRMATION_HINT);
+            hintMessage.setText(remote ? REMOTE_CONFIRMATION_HINT : CONFIRMATION_HINT);
         }
         hintMessage.setVisible(showConfirmRequest);
     }

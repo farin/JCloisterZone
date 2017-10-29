@@ -1,164 +1,109 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.FeatureCompletedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.score.ScoringStrategy;
-import com.jcloisterzone.feature.visitor.score.CompletableScoreContext;
-import com.jcloisterzone.feature.visitor.score.PositionCollectingScoreContext;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.SnapshotCorruptedException;
+import com.jcloisterzone.game.ScoreFeatureReducer;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.MemoizedValue;
+import com.jcloisterzone.game.state.PlayersState;
+import com.jcloisterzone.reducers.AddPoints;
 
-public final class KingAndRobberBaronCapability extends Capability {
+import io.vavr.collection.HashMap;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 
-    protected int completedCities, biggestCitySize;
-    protected int completedRoads, longestRoadLength;
+public final class KingAndRobberBaronCapability extends Capability<Void> {
 
-    private Player king, robberBaron;
+    @Override
+    public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
+        Set<Scoreable> completedFeatures = completed.keySet();
+        int maxCitySize = getMaxSize(state, City.class, completedFeatures);
+        int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);
+        boolean biggestCityCompleted = false;
+        boolean longestRoadCompleted = false;
 
-    public KingAndRobberBaronCapability(Game game) {
-        super(game);
+        for (Scoreable c : completed.keySet()) {
+            if (!biggestCityCompleted && c instanceof City) {
+                biggestCityCompleted = c.getTilePositions().size() > maxCitySize;
+            }
+            if (!longestRoadCompleted && c instanceof Road) {
+                longestRoadCompleted = c.getTilePositions().size() > maxRoadSize;
+            }
+        }
+
+        Player turnPlayer = state.getTurnPlayer();
+        PlayersState ps = state.getPlayers();
+        if (biggestCityCompleted) {
+            for (Player p : ps.getPlayers()) {
+                ps = ps.setTokenCount(p.getIndex(), Token.KING, p.equals(turnPlayer) ? 1 : 0);
+            }
+        }
+        if (longestRoadCompleted) {
+            for (Player p : ps.getPlayers()) {
+                ps = ps.setTokenCount(p.getIndex(), Token.ROBBER, p.equals(turnPlayer) ? 1 : 0);
+            }
+        }
+        return state.setPlayers(ps);
     }
 
     @Override
-    public Object backup() {
-        return new Object[] {
-            new int[] { completedCities, biggestCitySize, completedRoads, longestRoadLength },
-            king,
-            robberBaron
-        };
-    }
+    public GameState onFinalScoring(GameState state) {
+        PlayersState ps = state.getPlayers();
 
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        int[] i = (int[]) a[0];
-        completedCities = i[0];
-        biggestCitySize = i[1];
-        completedRoads = i[2];
-        longestRoadLength = i[3];
-        king = (Player) a[1];
-        robberBaron = (Player) a[2];
-    }
-
-    @Override
-    public void begin() {
-        if (game.hasExpansion(Expansion.COUNT)) {
-            //City of Carcassonne is counted as city
-            completedCities = 1;
+        for (Player player: ps.getPlayers()) {
+            if (ps.getPlayerTokenCount(player.getIndex(), Token.KING) > 0) {
+                state = (new AddPoints(player, countCompletedCities(state), PointCategory.BIGGEST_CITY)).apply(state);
+            }
+            if (ps.getPlayerTokenCount(player.getIndex(), Token.ROBBER) > 0) {
+                state = (new AddPoints(player, countCompletedRoads(state), PointCategory.LONGEST_ROAD)).apply(state);
+            }
         }
+        return state;
     }
 
-    @Override
-    public void handleEvent(Event event) {
-       if (event instanceof FeatureCompletedEvent) {
-           completed((FeatureCompletedEvent) event);
-       }
-
+    private int getMaxSize(GameState state, Class<? extends Completable> cls, Set<Scoreable> exclude) {
+        return state.getFeatures(cls)
+            .filter(c -> !exclude.contains(c))
+            .filter(c -> c.isCompleted(state))
+            .map(c -> c.getTilePositions().size())
+            .max()
+            .getOrElse(0);
     }
 
-    private void completed(FeatureCompletedEvent ev) {
-        Completable feature = ev.getFeature();
-        CompletableScoreContext ctx = ev.getScoreContent();
-        if (feature instanceof City) {
-            cityCompleted((City) feature, (PositionCollectingScoreContext) ctx);
+    private MemoizedValue<Integer> _getBiggestCitySize = new MemoizedValue<>(state -> getMaxSize(state, City.class, HashSet.empty()));
+
+    public int getBiggestCitySize(GameState state) {
+        return _getBiggestCitySize.apply(state);
+    }
+
+    public int countCompletedCities(GameState state) {
+        int count = state.getFeatures(City.class)
+            .filter(c -> c.isCompleted(state))
+            .size();
+
+        if (state.hasCapability(CountCapability.class)) {
+            count += 1;
         }
-        if (feature instanceof Road) {
-            roadCompleted((Road) feature, (PositionCollectingScoreContext) ctx);
-        }
+
+        return count;
     }
 
-    private void cityCompleted(City c, PositionCollectingScoreContext ctx) {
-        completedCities++;
-        int size = ctx.getSize();
-        if (size > biggestCitySize) {
-            biggestCitySize = size;
-            king = game.getActivePlayer();
-        }
+    public int countCompletedRoads(GameState state) {
+        return state.getFeatures(Road.class)
+            .filter(c -> c.isCompleted(state))
+            .size();
     }
 
-    private void roadCompleted(Road r, PositionCollectingScoreContext ctx) {
-        completedRoads++;
-        int size = ctx.getSize();
-        if (size > longestRoadLength) {
-            longestRoadLength = size;
-            robberBaron = game.getActivePlayer();
-        }
+    private MemoizedValue<Integer> _getLongestRoadSize = new MemoizedValue<>(state -> getMaxSize(state, Road.class, HashSet.empty()));
+
+    public int getLongestRoadSize(GameState state) {
+        return _getLongestRoadSize.apply(state);
     }
-
-    @Override
-    public void finalScoring(ScoringStrategy strategy) {
-        if (king != null) {
-        	strategy.addPoints(king, completedCities, PointCategory.BIGGEST_CITY);
-        }
-        if (robberBaron != null) {
-        	strategy.addPoints(robberBaron, completedRoads, PointCategory.LONGEST_ROAD);
-        }
-    }
-
-    public int getCompletedCities() {
-        return completedCities;
-    }
-
-    public int getBiggestCitySize() {
-        return biggestCitySize;
-    }
-
-    public int getCompletedRoads() {
-        return completedRoads;
-    }
-
-    public int getLongestRoadLength() {
-        return longestRoadLength;
-    }
-
-    public Player getKing() {
-        return king;
-    }
-
-    public Player getRobberBaron() {
-        return robberBaron;
-    }
-
-
-
-    @Override
-    public void saveToSnapshot(Document doc, Element node) {
-        if (king != null) {
-            node.setAttribute("king", king.getIndex() + "");
-        }
-        if (robberBaron != null) {
-            node.setAttribute("robber", robberBaron.getIndex() + "");
-        }
-        node.setAttribute("completedCities", "" + completedCities);
-        node.setAttribute("biggestCitySize", "" + biggestCitySize);
-        node.setAttribute("completedRoads", "" + completedRoads);
-        node.setAttribute("longestRoadLength", "" + longestRoadLength);
-    }
-
-    @Override
-    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        if (node.hasAttribute("king")) {
-            king = game.getPlayer(Integer.parseInt(node.getAttribute("king")));
-        }
-        if (node.hasAttribute("robber")) {
-            robberBaron = game.getPlayer(Integer.parseInt(node.getAttribute("robber")));
-        }
-        completedCities = Integer.parseInt(node.getAttribute("completedCities"));
-        biggestCitySize = Integer.parseInt(node.getAttribute("biggestCitySize"));
-        completedRoads = Integer.parseInt(node.getAttribute("completedRoads"));
-        longestRoadLength = Integer.parseInt(node.getAttribute("longestRoadLength"));
-    }
-
-
 }
 

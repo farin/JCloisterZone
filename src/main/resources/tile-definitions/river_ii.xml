@@ -3,10 +3,10 @@
     <distile tile="R1.I.s"/>
     <distile tile="R1.I.e"/>
 
-    <tile id="I.s" group="river-start">
+    <tile id="I.s" maxCount="1">
         <farm>NL NR EL ER SL SR WL WR</farm>
         <river>E</river>
-        <position x="0" y="0"/>
+        <position x="0" y="0" priority="3"/>
     </tile>
     <tile id="IFC" group="river">
         <city castle-base="true">E</city>
@@ -14,12 +14,12 @@
         <farm city="E">SL SR WL</farm>
         <river>W</river>
     </tile>
-    <tile id="I.v" group="inactive">
+    <tile id="I.v" maxCount="1" group="river-lake">
         <volcano/>
         <farm>NL NR EL ER SL SR WL WR</farm>
         <river>W</river>
     </tile>
-    <tile id="III" group="river-start">
+    <tile id="III" group="river-fork">
         <farm>WR NL</farm>
         <farm>NR EL</farm>
         <farm>ER SL SR WL</farm>

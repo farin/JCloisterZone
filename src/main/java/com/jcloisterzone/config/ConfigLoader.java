@@ -25,6 +25,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import com.jcloisterzone.KeyUtils;
+import com.jcloisterzone.ai.player.LegacyAiPlayer;
 import com.jcloisterzone.config.Config.ColorConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PlayersConfig;
@@ -40,9 +41,11 @@ public class ConfigLoader {
     public static final int DEFAULT_PORT = 37447;
     public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
     public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
+    public static final String DEFAULT_AI_CLASS_NAME = LegacyAiPlayer.class.getName();
     public static final String DEFAULT_THEME = "light";
     public static final int DEFAULT_SCREENSHOT_SCALE = 120;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
+    public static final String DEFAULT_SAVED_GAMES_FORMAT = "compact";
 
     private final Path dataDirectory;
     private final Yaml yaml;
@@ -139,7 +142,8 @@ public class ConfigLoader {
         config.setUpdate(DEFAULT_UPDATE);
         config.setPort(DEFAULT_PORT);
         config.setScore_display_duration(DEFAULT_SCORE_DISPLAY_DURATION);
-        config.setAi_place_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
+        config.getAi().setPlace_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
+        config.getAi().setClass_name(DEFAULT_AI_CLASS_NAME);
         config.setTheme(DEFAULT_THEME);
         config.setClient_name("");
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
@@ -157,8 +161,10 @@ public class ConfigLoader {
             new ColorConfig("#812EFF", null, "#ba92f8")
         ));
         config.getPlayers().setAi_names(Lists.newArrayList("Adda", "Ellen", "Caitlyn", "Riannon", "Tankred", "Rigatona"));
-        config.setPlugins(Lists.newArrayList("plugins/classic.jar"));
+        config.getPlugins().setLookup_folders(Lists.newArrayList("plugins"));
+        config.getPlugins().setEnabled_plugins(Lists.newArrayList("classic.jar"));
         config.getScreenshots().setScale(DEFAULT_SCREENSHOT_SCALE);
+        config.getSaved_games().setFormat(DEFAULT_SAVED_GAMES_FORMAT);
         return config;
     }
 
@@ -177,7 +183,6 @@ public class ConfigLoader {
         model.put("port", config.getPort());
         model.put("locale", config.getLocale());
         model.put("score_display_duration", config.getScore_display_duration());
-        model.put("ai_place_tile_delay", config.getAi_place_tile_delay());
         model.put("theme", config.getTheme());
         model.put("beep_alert", config.getBeep_alert());
         model.put("client_name", config.getClient_name());
@@ -186,10 +191,18 @@ public class ConfigLoader {
         model.put("secret", config.getSecret());
         model.put("screenshot_folder", config.getScreenshots().getFolder());
         model.put("screenshot_scale", config.getScreenshots().getScale());
+        model.put("saved_games_folder", config.getSaved_games().getFolder());
+        model.put("saved_games_format", config.getSaved_games().getFormat());
 
         if (config.getConfirm() != null) {
             model.put("confirm", indent(1, yaml.dumpAs(config.getConfirm(), Tag.MAP, FlowStyle.BLOCK)));
         }
+
+        if (config.getAi() != null) {
+            model.put("ai_place_tile_delay", config.getAi().getPlace_tile_delay());
+            model.put("ai_class_name", config.getAi().getClass_name());
+        }
+
         PlayersConfig pc = config.getPlayers();
         if (pc != null) {
             if (pc.getColors() != null && !pc.getColors().isEmpty()) {
@@ -208,9 +221,9 @@ public class ConfigLoader {
             }
         }
 
-        if (config.getPlugins() != null && !config.getPlugins().isEmpty()) {
-            model.put("plugins", indent(1, yaml.dumpAs(config.getPlugins(), Tag.SEQ, FlowStyle.BLOCK)));
-        }
+        model.put("plugins_lookup_folders", indent(2, yaml.dumpAs(config.getPlugins().getLookup_folders(), Tag.SEQ, FlowStyle.BLOCK)));
+        model.put("plugins_enabled_plugins", indent(2, yaml.dumpAs(config.getPlugins().getEnabled_plugins(), Tag.SEQ, FlowStyle.BLOCK)));
+
         if (config.getPresets() != null && !config.getPresets().isEmpty()) {
             model.put("presets", indent(1, yaml.dumpAs(config.getPresets(), Tag.MAP, FlowStyle.BLOCK)));
         }
@@ -221,7 +234,6 @@ public class ConfigLoader {
         DebugConfig dc = config.getDebug();
         model.put("hasDebug", dc != null);
         if (dc != null) {
-            model.put("save_format", dc.getSave_format());
             model.put("window_size", dc.getWindow_size());
             model.put("autosave", dc.getAutosave());
             if (dc.getAutostart() != null) {
@@ -230,11 +242,8 @@ public class ConfigLoader {
             if (dc.getTile_definitions() != null && !dc.getTile_definitions().isEmpty()) {
                 model.put("tile_definitions", indent(2, yaml.dumpAs(dc.getTile_definitions(), Tag.MAP, FlowStyle.BLOCK)));
             }
-            if (dc.getDraw() != null && !dc.getDraw().isEmpty()) {
-                model.put("draw", indent(2, yaml.dumpAs(dc.getDraw(), Tag.SEQ, FlowStyle.BLOCK)));
-            }
-            if (dc.getOff_capabilities() != null && !dc.getOff_capabilities().isEmpty()) {
-                model.put("off_capabilities", indent(2, yaml.dumpAs(dc.getOff_capabilities(), Tag.SEQ, FlowStyle.BLOCK)));
+            if (dc.getGame_annotation() != null && !dc.getGame_annotation().isEmpty()) {
+                model.put("game_annotation", indent(2, yaml.dumpAs(dc.getGame_annotation(), Tag.MAP, FlowStyle.BLOCK)));
             }
             model.put("area_highlight", dc.getArea_highlight());
         }

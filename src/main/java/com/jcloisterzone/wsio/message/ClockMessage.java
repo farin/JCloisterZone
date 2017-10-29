@@ -10,10 +10,10 @@ public class ClockMessage implements WsInGameMessage {
     private long[] clocks;
     private long currentTime;
 
+    public ClockMessage() {
+    }
 
-    public ClockMessage(String gameId, Integer running, long[] clocks, long currentTime) {
-        super();
-        this.gameId = gameId;
+    public ClockMessage(Integer running, long[] clocks, long currentTime) {
         this.running = running;
         this.clocks = clocks;
         this.currentTime = currentTime;
@@ -23,6 +23,8 @@ public class ClockMessage implements WsInGameMessage {
     public String getGameId() {
         return gameId;
     }
+
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

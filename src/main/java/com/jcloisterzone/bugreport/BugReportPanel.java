@@ -1,6 +1,6 @@
 package com.jcloisterzone.bugreport;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 public class BugReportPanel extends ThemedJPanel {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -33,10 +33,10 @@ public class BugReportPanel extends ThemedJPanel {
     public BugReportPanel() {
         setLayout(new MigLayout("insets dialog, gapy unrel", "[grow]", "[][][grow,fill][][]"));
 
-        JLabel headerLabel = new ThemedJLabel(_("<html>Bug report tool pack saved game, internal game log and system information to simplify debugging process.</html>"));
+        JLabel headerLabel = new ThemedJLabel(_tr("<html>Bug report tool pack saved game, internal game log and system information to simplify debugging process.</html>"));
         add(headerLabel, "cell 0 0");
 
-        JLabel describeLabel = new ThemedJLabel(_("Please describe bug..."));
+        JLabel describeLabel = new ThemedJLabel(_tr("Please describe bug..."));
         add(describeLabel, "cell 0 1,grow");
 
         final JTextArea textArea = new JTextArea();
@@ -47,12 +47,12 @@ public class BugReportPanel extends ThemedJPanel {
         downloadButton.addActionListener(new ActionListener() {
 
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 selectFile(textArea.getText());
             }
         });
 
-        JLabel downloadLabel = new ThemedJLabel(_("...then download report archive and send via email to farin@farin.cz"));
+        JLabel downloadLabel = new ThemedJLabel(_tr("...then download report archive and send via email to farin@farin.cz"));
         add(downloadLabel, "cell 0 3");
         add(downloadButton, "cell 0 4");
     }
@@ -60,7 +60,7 @@ public class BugReportPanel extends ThemedJPanel {
     public void selectFile(String description) {
         JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setDialogTitle(_("Report bug"));
+        fc.setDialogTitle(_tr("Report bug"));
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         fc.setFileFilter(new ReportFileFilter());
         fc.setLocale(getLocale());
@@ -77,7 +77,7 @@ public class BugReportPanel extends ThemedJPanel {
                     parent.dispose();
                 } catch (Exception ex) {
                     logger.error("Bug report failed", ex);
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _("Bug report failed"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _tr("Bug report failed"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

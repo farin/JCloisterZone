@@ -1,29 +1,31 @@
 package com.jcloisterzone.feature;
 
-import java.util.List;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.visitor.FeatureVisitor;
-import com.jcloisterzone.figure.Meeple;
+import java.lang.reflect.Method;
+
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
 
 public interface Feature {
 
-    int getId();
+    List<FeaturePointer> getPlaces();
+    Feature placeOnBoard(Position pos, Rotation rot);
 
-    Location getLocation();
-    Location getRawLocation();
-    Tile getTile();
-    Feature[] getNeighbouring();
+    default Set<Position> getTilePositions() {
+        return getPlaces().map(fp -> fp.getPosition()).toSet();
+    }
 
-    void addMeeple(Meeple meeple);
-    void removeMeeple(Meeple meeple);
-    List<Meeple> getMeeples();
 
-    <T> T walk(FeatureVisitor<T> visitor);
-    /**
-     * Returns feature part with minimal ID.
-     */
-    Feature getMaster();
-
+    static String getLocalizedNamefor(Class<? extends Feature> feature) {
+        try {
+            Method m = feature.getMethod("name");
+            return (String) m.invoke(null);
+        } catch (Exception e) {
+            return feature.getSimpleName();
+        }
+    }
 }

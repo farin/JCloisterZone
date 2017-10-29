@@ -1,19 +1,19 @@
 package com.jcloisterzone.event.setup;
 
 import com.jcloisterzone.event.Event;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 
 public class RuleChangeEvent extends Event {
 
-    private final CustomRule rule;
+    private final Rule rule;
     private final Object value;
 
-    public RuleChangeEvent(CustomRule rule, Object value) {
+    public RuleChangeEvent(Rule rule, Object value) {
         this.rule = rule;
         this.value = value;
     }
 
-    public CustomRule getRule() {
+    public Rule getRule() {
         return rule;
     }
 

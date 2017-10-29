@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.dialog;
 
+import static com.jcloisterzone.ui.I18nUtils._tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,9 +22,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TilePackFactory;
-import com.jcloisterzone.board.TilePackFactory.TileCount;
+import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.TilePackBuilder;
+import com.jcloisterzone.board.TilePackBuilder.TileCount;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.WrapLayout;
@@ -31,15 +33,13 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.theme.Theme;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 
 public class TileDistributionWindow extends JFrame {
 
     final Client client;
     final JScrollPane scrollPane;
     final JPanel content = new ThemedJPanel();
-    final TilePackFactory tilePackFactory;
+    final TilePackBuilder tilePackBuilder;
 
     private static Font FONT = new Font("Dialog", Font.PLAIN, 26);
 
@@ -47,11 +47,11 @@ public class TileDistributionWindow extends JFrame {
     public static final int BANNER = 34;
 
     public TileDistributionWindow(Client client) {
-        super(_("Tile Distribution"));
+        super(_tr("Tile Distribution"));
         this.client = client;
 
-        tilePackFactory = new TilePackFactory();
-        tilePackFactory.setConfig(client.getConfig());
+        tilePackBuilder = new TilePackBuilder();
+        tilePackBuilder.setConfig(client.getConfig());
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         UiUtils.centerDialog(this, Math.min(client.getWidth(), 890), client.getHeight() - 40);
@@ -84,7 +84,7 @@ public class TileDistributionWindow extends JFrame {
     private Expansion[] getImplementedExpansions() {
         List<Expansion> exps = new ArrayList<>();
         for (Expansion exp : Expansion.values()) {
-            if (exp.isImplemented() && exp != Expansion.PHANTOM && exp != Expansion.LITTLE_BUILDINGS) {
+            if (exp != Expansion.PHANTOM && exp != Expansion.LITTLE_BUILDINGS) {
                 exps.add(exp);
             }
         }
@@ -94,7 +94,7 @@ public class TileDistributionWindow extends JFrame {
     private void fillContent(Expansion exp) {
         content.removeAll();
         Dimension dim = new Dimension(SIZE, SIZE+BANNER);
-        for (TileCount tc : tilePackFactory.getExpansionTiles(exp)) {
+        for (TileCount tc : tilePackBuilder.getExpansionTiles(exp)) {
             TileLabel tileLabel = new TileLabel(client.getTheme(), exp, tc);
             tileLabel.setPreferredSize(dim);
             content.add(tileLabel);
@@ -109,9 +109,8 @@ public class TileDistributionWindow extends JFrame {
         private String count;
 
         public TileLabel(Theme theme, Expansion exp, TileCount tc) {
-            Tile tile = new Tile(exp, tc.tileId);
             this.theme = theme;
-            this.image = client.getResourceManager().getTileImage(tile);
+            this.image = client.getResourceManager().getTileImage(tc.tileId, Rotation.R0);
             this.count = tc.count == null ? "" : tc.count + "";
         }
 

@@ -249,8 +249,8 @@
 
     <shape> <!-- center -->
         <svg:rect x="400" y="400" width="200" height="200"/>
-        <substract>BA.RRR</substract>
-        <substract>BA.RRRR</substract>
-        <substract>BA.CRRR</substract>
+        <subtract>BA.RRR</subtract>
+        <subtract>BA.RRRR</subtract>
+        <subtract>BA.CRRR</subtract>
     </shape>
 </shapes>

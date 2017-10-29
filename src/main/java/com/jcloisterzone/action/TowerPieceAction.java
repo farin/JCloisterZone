@@ -1,33 +1,30 @@
 package com.jcloisterzone.action;
 
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.ui.annotations.LinkedGridLayer;
+import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.PlaceTokenMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
+
+import io.vavr.collection.Set;
 
 
+@LinkedImage("actions/towerpiece")
+@LinkedGridLayer(TileActionLayer.class)
 public class TowerPieceAction extends SelectTileAction {
 
-
-    public TowerPieceAction() {
-        super("towerpiece");
+    public TowerPieceAction(Set<Position> options) {
+        super(options);
     }
 
     @Override
-    public void perform(RmiProxy server, Position p) {
-        server.placeTowerPiece(p);
+    public WsInGameMessage select(Position pos) {
+        return new PlaceTokenMessage(Token.TOWER_PIECE, new FeaturePointer(pos, Location.TOWER));
     }
-
-    @Override
-    protected int getSortOrder() {
-        return 20;
-    }
-
-    @Override
-    protected Class<? extends ActionLayer<?>> getActionLayerType() {
-        return TileActionLayer.class;
-    }
-
 
     @Override
     public String toString() {

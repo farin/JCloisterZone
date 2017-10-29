@@ -3,17 +3,14 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("JOIN_GAME")
-public class JoinGameMessage implements WsInGameMessage {
+public class JoinGameMessage implements WsMessage {
     private String gameId;
     private String password;
 
-    public JoinGameMessage(String gameId) {
-        super();
-        this.gameId = gameId;
+    public JoinGameMessage() {
     }
 
-    @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
@@ -21,11 +18,11 @@ public class JoinGameMessage implements WsInGameMessage {
         this.gameId = gameId;
     }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.controls.chat;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -43,8 +43,6 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +52,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.PostChatMessage;
+
+import net.miginfocom.swing.MigLayout;
 
 public abstract class ChatPanel extends JPanel implements WindowStateListener {
 
@@ -122,7 +122,7 @@ public abstract class ChatPanel extends JPanel implements WindowStateListener {
             input.setForeground(client.getTheme().getTextColor());
             input.setCaretColor(client.getTheme().getTextColor());
         }
-        TextPrompt tp = new TextPrompt(_("Type to chat"), input);
+        TextPrompt tp = new TextPrompt(_tr("Type to chat"), input);
         tp.setShow(Show.FOCUS_LOST);
         tp.changeStyle(Font.ITALIC);
         tp.changeAlpha(0.4f);

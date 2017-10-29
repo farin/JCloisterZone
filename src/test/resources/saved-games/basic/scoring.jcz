@@ -1,0 +1,234 @@
+{
+  "gameId": "1",
+  "name": "Test scoring when city/road has multiple parts on same tile",
+  "appVersion": "4.0.0",
+  "initialSeed": 1,
+  "created": "2017-01-01T00:00:00.000Z",
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": {
+        "drawOrder": ["BA.Rr", "BA.CcRr+", "BA.CcRr", "BA.C", "BA.RRRR", "BA.C", "BA.LR", "#END"]
+      }
+    }
+  },
+  "slots": [
+    {"number": 0, "serial": 1, "clientId": "1", "nickname": "Alice"},
+    {"number": 1, "serial": 2, "clientId": "2", "nickname": "Bob"}
+  ],
+  "clocks": [0, 0],
+  "setup": {
+    "expansions": {
+      "BASIC": 1
+    },
+    "rules": {},
+    "capabilities": ["StandardGame"]
+  },
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Rr",
+        "rotation": "R90",
+        "position": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            0
+          ],
+          "location": "NW"
+        },
+        "meepleId": "0.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CcRr+",
+        "rotation": "R180",
+        "position": [
+          0,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            0,
+            -1
+          ],
+          "location": "SE"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.CcRr",
+        "rotation": "R0",
+        "position": [
+          1,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            -1
+          ],
+          "location": "EL.SR"
+        },
+        "meepleId": "0.small.2"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R180",
+        "position": [
+          1,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.RRRR",
+        "rotation": "R0",
+        "position": [
+          2,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            2,
+            -1
+          ],
+          "location": "N"
+        },
+        "meepleId": "0.small.3"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R0",
+        "position": [
+          1,
+          -3
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            -3
+          ],
+          "location": "N"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.LR",
+        "rotation": "R0",
+        "position": [
+          2,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            2,
+            -2
+          ],
+          "location": "CLOISTER"
+        },
+        "meepleId": "0.small.4"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 0
+      }
+    },
+    {
+      "type": "GAME_OVER",
+      "payload": {}
+    }
+  ]
+}

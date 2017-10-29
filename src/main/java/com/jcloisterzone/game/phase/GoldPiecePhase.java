@@ -1,62 +1,71 @@
 package com.jcloisterzone.game.phase;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.Random;
+
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.event.GoldChangeEvent;
-import com.jcloisterzone.event.SelectActionEvent;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 
+import io.vavr.collection.Set;
+
+@RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    private final GoldminesCapability gldCap;
-
-    public GoldPiecePhase(Game game) {
-        super(game);
-        gldCap = game.getCapability(GoldminesCapability.class);
+    public GoldPiecePhase(Random random) {
+        super(random);
     }
 
     @Override
-    public boolean isActive() {
-        return game.hasCapability(GoldminesCapability.class);
-    }
-
-    @Override
-    public void enter() {
-        if (getTile().hasTrigger(TileTrigger.GOLDMINE)) {
-            Position pos = getTile().getPosition();
-            int count = gldCap.addGold(pos);
-            game.post(new GoldChangeEvent(getActivePlayer(), pos, count-1, count));
+    public StepResult enter(GameState state) {
+        PlacedTile placedTile = state.getLastPlaced();
+        if (placedTile.getTile().getTrigger() == TileTrigger.GOLDMINE) {
+            Position pos = placedTile.getPosition();
+            state = placeGoldToken(state, pos);
+            Set<Position> options = state.getAdjacentAndDiagonalTiles(pos).map(PlacedTile::getPosition).toSet();
+            switch (options.size()) {
+            case 0:
+                break;
+            case 1:
+                state = placeGoldToken(state, options.get());
+                break;
+            default:
+                // player must choose second piece placement
+                GoldPieceAction action = new GoldPieceAction(options);
+                state = state.setPlayerActions(new ActionsState(state.getTurnPlayer(), action, false));
+                return promote(state);
+            }
         }
-        reenter();
+        return next(state);
     }
 
-    @Override
-    public void reenter() {
-        if (getTile().hasTrigger(TileTrigger.GOLDMINE)) {
-            Position pos = getTile().getPosition();
-            GoldPieceAction action = new GoldPieceAction();
-            action.addAll(Lists.transform(getBoard().getAdjacentAndDiagonalTiles(pos), new Function<Tile, Position>() {
-                @Override
-                public Position apply(Tile t) {
-                    return t.getPosition();
-                }
-            }));
-            game.post(new SelectActionEvent(getActivePlayer(), action, false));
-        } else {
-            next();
+    private GameState placeGoldToken(GameState state, Position pos) {
+        state = state.mapCapabilityModel(GoldminesCapability.class, placedGold -> {
+            int currValue = placedGold.get(pos).getOrElse(0);
+            return placedGold.put(pos, currValue + 1);
+        });
+        state = state.appendEvent(new TokenPlacedEvent(PlayEventMeta.createWithoutPlayer(), Token.GOLD, pos));
+        return state;
+    }
+
+
+    @PhaseMessageHandler
+    public StepResult handlePlaceToken(GameState state, PlaceTokenMessage msg) {
+        Token token = msg.getToken();
+        Position pos = (Position) msg.getPointer();
+
+        if (token != Token.GOLD) {
+            throw new IllegalArgumentException();
         }
-    }
-
-    @Override
-    public void placeGoldPiece(Position pos) {
-        //TODO nice to have validate position
-        int count = gldCap.addGold(pos);
-        game.post(new GoldChangeEvent(getActivePlayer(), pos, count-1, count));
-        next();
+        state = placeGoldToken(state, pos);
+        state = clearActions(state);
+        return next(state);
     }
 }

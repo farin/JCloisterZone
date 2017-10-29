@@ -5,12 +5,15 @@ import java.awt.Graphics2D;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.FlierRollEvent;
-import com.jcloisterzone.event.ScoreEvent;
-import com.jcloisterzone.event.TileEvent;
-import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.FlierRollEvent;
+import com.jcloisterzone.event.play.PlayEvent;
+import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.TilePlacedEvent;
+import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.animation.Animation;
@@ -33,6 +36,21 @@ public class AnimationLayer extends AbstractGridLayer {
         gc.register(this);
     }
 
+    @Subscribe
+    public void handleGameChanged(GameChangedEvent ev) {
+        for (PlayEvent pe : ev.getNewPlayEvents()) {
+            if (pe instanceof ScoreEvent) {
+                onScoreEvent((ScoreEvent) pe);
+            }
+            if (pe instanceof TilePlacedEvent) {
+                onTilePlacedEvent((TilePlacedEvent) pe);
+            }
+            if (pe instanceof FlierRollEvent) {
+                onFlierRollEvent((FlierRollEvent) pe);
+            }
+        }
+    }
+
     @Override
     public void paint(Graphics2D g2) {
         //HACK to correct animation order - TODO change animation design
@@ -44,29 +62,26 @@ public class AnimationLayer extends AbstractGridLayer {
         }
     }
 
-    @Subscribe
     public void onFlierRollEvent(FlierRollEvent ev) {
         service.registerAnimation(new FlierDiceRollAnimation(ev.getPosition(), ev.getDistance()));
     }
 
-    @Subscribe
     public void onScoreEvent(ScoreEvent ev) {
-        if (ev.getFeature() == null) {
-            scored(ev.getPosition(), ev.getTargetPlayer(), ev.getLabel(), ev.isFinal());
+        if (ev.getFeaturePointer() == null) {
+            scored(ev.getPosition(), ev.getReceiver(), ev.getLabel(), ev.isFinal());
         } else {
-            scored(ev.getFeature(), ev.getTargetPlayer(), ev.getLabel(), ev.getMeepleType(), ev.isFinal());
+            scored(ev.getFeaturePointer(), ev.getReceiver(), ev.getLabel(), ev.getMeeple().getClass(), ev.isFinal());
         }
     }
 
-    @Subscribe
-    public void onTileEvent(TileEvent ev) {
-        if (ev.getType() == TileEvent.PLACEMENT) {
-            Tile tile = ev.getTile();
+    public void onTilePlacedEvent(TilePlacedEvent ev) {
+        Position pos = ev.getPosition();
 
-            boolean initialPlacement = ev.getTriggeringPlayer() == null;//if triggering player is null we are placing initial tiles
-            if ((!initialPlacement && !ev.getTriggeringPlayer().isLocalHuman()) ||
-                (initialPlacement && tile.equals(getGame().getCurrentTile()))) {
-                service.registerAnimation(new RecentPlacement(tile.getPosition()));
+        boolean initialPlacement = ev.getMetadata().getTriggeringPlayerIndex() == null;//if triggering player is null we are placing initial tiles
+        if (!initialPlacement) {
+            Player p = getGame().getState().getPlayers().getPlayer(ev.getMetadata().getTriggeringPlayerIndex());
+            if (!p.isLocalHuman()) {
+                service.registerAnimation(new RecentPlacement(pos));
             }
         }
     }
@@ -76,10 +91,16 @@ public class AnimationLayer extends AbstractGridLayer {
         return duration == null ? 10 : Math.max(duration, 1);
     }
 
-    private void scored(Feature scoreable, Player player, String points, Class<? extends Meeple> meepleType, boolean finalScoring) {
-        Tile tile = scoreable.getTile();
-        Position pos = tile.getPosition();
-        ImmutablePoint offset = rm.getMeeplePlacement(tile, meepleType, scoreable.getLocation());
+    private void scored(FeaturePointer fp, Player player, String points, Class<? extends Meeple> meepleType, boolean finalScoring) {
+        Position pos = fp.getPosition();
+        ImmutablePoint offset;
+        //IMMUTABLE TODO (low priority probably) coupled with game by gc.getGame().getBoard().get(pos)
+        if (Barn.class.equals(meepleType)) {
+            offset = rm.getBarnPlacement();
+        } else {
+            PlacedTile pt = gc.getGame().getState().getPlacedTile(fp.getPosition());
+            offset = rm.getMeeplePlacement(pt.getTile(), pt.getRotation(), fp.getLocation());
+        }
         service.registerAnimation(new ScoreAnimation(
             pos,
             points,
@@ -90,7 +111,7 @@ public class AnimationLayer extends AbstractGridLayer {
     }
 
     private void scored(Position pos, Player player, String points, boolean finalScoring) {
-	service.registerAnimation(new ScoreAnimation(
+        service.registerAnimation(new ScoreAnimation(
             pos,
             points,
             new ImmutablePoint(50, 50),

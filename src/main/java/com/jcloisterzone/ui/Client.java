@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Container;
 import java.awt.GraphicsDevice;
@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.BindException;
@@ -46,14 +47,16 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
+import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.save.SavedGame;
+import com.jcloisterzone.game.save.SavedGameParser;
+import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.dialog.AboutDialog;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
@@ -63,7 +66,6 @@ import com.jcloisterzone.ui.dialog.TileDistributionWindow;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.ui.gtk.MenuFix;
-import com.jcloisterzone.ui.plugin.Plugin;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.PlugableResourceManager;
 import com.jcloisterzone.ui.theme.Theme;
@@ -99,6 +101,10 @@ public class Client extends JFrame {
 
     private final AtomicReference<SimpleServer> localServer = new AtomicReference<>();
     private ClientMessageListener clientMessageListener;
+
+    // little bit HACK, just easy way how to be able load integration test games in UI
+    // works only for local games
+    private HashMap<String, Object> savedGameAnnotations;
 
     private static Client instance;
 
@@ -252,7 +258,7 @@ public class Client extends JFrame {
 
     public void saveConfig() {
         configLoader.save(config);
-        resourceManager.clearCache();
+        resourceManager.reload();
     }
 
     public ConvenientResourceManager getResourceManager() {
@@ -290,17 +296,17 @@ public class Client extends JFrame {
         boolean isGameRunning = (view instanceof GameView) && ((GameView)view).isGameRunning();
         if (isGameRunning && !"false".equals(System.getProperty("closeGameConfirm"))) {
             if (localServer.get() != null) {
-                String options[] = {_("Leave game"), _("Cancel") };
+                String options[] = {_tr("Leave game"), _tr("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("The game is not finished. Do you really want to stop game and disconnect all other players?"),
-                        _("Leave game"),
+                        _tr("The game is not finished. Do you really want to stop game and disconnect all other players?"),
+                        _tr("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             } else {
-                String options[] = {_("Leave game"), _("Cancel") };
+                String options[] = {_tr("Leave game"), _tr("Cancel") };
                 int result = JOptionPane.showOptionDialog(this,
-                        _("The game is not finished. Do you really want to leave it?"),
-                        _("Leave game"),
+                        _tr("The game is not finished. Do you really want to leave it?"),
+                        _tr("Leave game"),
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION != result) return false;
             }
@@ -376,16 +382,22 @@ public class Client extends JFrame {
         createGame(null, null);
     }
 
-    public void createGame(Game settings) {
-        createGame(null, settings);
+    public void createGame(Game game) {
+        createGame(null, game);
     }
 
-    public void createGame(Snapshot snapshot) {
-        createGame(snapshot, null);
+    public void createGame(SavedGame savedGame) {
+        createGame(savedGame, null);
     }
 
-    private void createGame(Snapshot snapshot, Game settings) {
+    private void createGame(SavedGame savedGame, Game game) {
         if (closeGame()) {
+            if (savedGame != null) {
+                savedGameAnnotations = savedGame.getAnnotations();
+            } else {
+                savedGameAnnotations = null;
+            }
+
             int port = config.getPort() == null ? ConfigLoader.DEFAULT_PORT : config.getPort();
             SimpleServer server = new SimpleServer(new InetSocketAddress(port), new SimpleServerErrorHandler() {
                 @Override
@@ -401,7 +413,7 @@ public class Client extends JFrame {
                 }
             });
             localServer.set(server);
-            server.createGame(snapshot, settings, config.getClient_id());
+            server.createGame(savedGame, game, config.getClient_id());
             server.start();
             try {
                 //HACK - there is not success handler in WebSocket server
@@ -422,18 +434,24 @@ public class Client extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JOptionPane.showMessageDialog(Client.this, ex.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(Client.this, ex.getLocalizedMessage(), _tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
         });
 
     }
 
     public File getSavesDirectory() {
-        File savesDir = dataDirectory.resolve("saves").toFile();
-        if (!savesDir.exists()) {
-            savesDir.mkdir();
+        String savesFolderValue = getConfig().getSaved_games().getFolder();
+        File savesFolder;
+        if (savesFolderValue == null || savesFolderValue.isEmpty()) {
+            savesFolder = dataDirectory.resolve("saves").toFile();
+        } else {
+            savesFolder = new File(savesFolderValue);
         }
-        return savesDir;
+        if (!savesFolder.exists()) {
+            savesFolder.mkdir();
+        }
+        return savesFolder;
     }
 
     public File getScreenshotDirectory() {
@@ -453,7 +471,7 @@ public class Client extends JFrame {
     public void handleLoad() {
         JFileChooser fc = new JFileChooser(getSavesDirectory());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setDialogTitle(_("Load game"));
+        fc.setDialogTitle(_tr("Load game"));
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
         fc.setFileFilter(new SavegameFileFilter());
         fc.setLocale(getLocale());
@@ -462,10 +480,13 @@ public class Client extends JFrame {
             File file = fc.getSelectedFile();
             if (file != null) {
                 try {
-                    createGame(new Snapshot(file));
-                } catch (IOException | SAXException ex1) {
+                    SavedGameParser parser = new SavedGameParser(getConfig());
+                    JsonReader reader = new JsonReader(new FileReader(file));
+                    SavedGame sg = parser.fromJson(reader);
+                    createGame(sg);
+                } catch (IOException ex) {
                     //do not create error.log
-                    JOptionPane.showMessageDialog(this, ex1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -623,7 +644,7 @@ public class Client extends JFrame {
     public void onUnhandledWebsocketError(Exception ex) {
         String message;
         if (ex instanceof WebsocketNotConnectedException) {
-            message = _("Connection lost");
+            message = _tr("Connection lost");
         } else {
             message = ex.getMessage();
             if (message == null || message.length() == 0) {
@@ -631,7 +652,11 @@ public class Client extends JFrame {
             }
             logger.error(message, ex);
         }
-        JOptionPane.showMessageDialog(this, message, _("Error"), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, _tr("Error"), JOptionPane.ERROR_MESSAGE);
+    }
+
+    public HashMap<String, Object> getSavedGameAnnotations() {
+        return savedGameAnnotations;
     }
 
     //------------------- LEGACY: TODO refactor ---------------

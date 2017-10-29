@@ -21,58 +21,58 @@ import com.jcloisterzone.ui.legacy.FigureImageFilter;
 
 public class ImageLoader {
 
-	protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
 
-	private static final String[] EXTENSIONS = {".jpg", ".png"};
+    private static final String[] EXTENSIONS = {".jpg", ".png"};
 
-	public ImageLoader(ClassLoader classLoader) {
-		this(classLoader,  "");
-	}
+    public ImageLoader(ClassLoader classLoader) {
+        this(classLoader,  "");
+    }
 
-	public ImageLoader(ClassLoader classLoader, String baseDir) {
-		this.classLoader = classLoader;
-	}
+    public ImageLoader(ClassLoader classLoader, String baseDir) {
+        this.classLoader = classLoader;
+    }
 
-	private URL getResource(String relativePath) {
-		//logger.debug("Trying to load resource {}", relativePath);
+    private URL getResource(String relativePath) {
+        //logger.debug("Trying to load resource {}", relativePath);
         return classLoader.getResource(relativePath);
     }
 
-	public Image getImageResource(String path) {
+    public Image getImageResource(String path) {
         URL url = getResource(path);
         return url == null ? null : Toolkit.getDefaultToolkit().getImage(url);
     }
 
-	/**
-	 * @param full path without file extension
-	 */
-	public Image getImage(String baseName) {
-		for (String ext : EXTENSIONS) {
-			Image img = getImageResource(baseName + ext);
-			if (img != null) {
-				return (new ImageIcon(img)).getImage();
-			}
-		}
-		return null;
+    /**
+     * @param full path without file extension
+     */
+    public Image getImage(String baseName) {
+        for (String ext : EXTENSIONS) {
+            Image img = getImageResource(baseName + ext);
+            if (img != null) {
+                return (new ImageIcon(img)).getImage();
+            }
+        }
+        return null;
     }
 
-	public Image getLayeredImage(LayeredImageDescriptor lid) {
-		List<URL> layers = getResourceLayers(lid.getBaseName());
-		if (layers == null) return null;
-		if (lid.getAdditionalLayer() != null) {
-			URL url = getResource(lid.getAdditionalLayer() + ".png");
-			if (url != null) {
-				layers.add(url);
-			}
-		}
-		return composeImages(layers, lid.getColorOverlay());
-	}
+    public Image getLayeredImage(LayeredImageDescriptor lid) {
+        List<URL> layers = getResourceLayers(lid.getBaseName());
+        if (layers == null) return null;
+        if (lid.getAdditionalLayer() != null) {
+            URL url = getResource(lid.getAdditionalLayer() + ".png");
+            if (url != null) {
+                layers.add(url);
+            }
+        }
+        return composeImages(layers, lid.getColorOverlay());
+    }
 
 
-	protected List<URL> getResourceLayers(String name) {
+    protected List<URL> getResourceLayers(String name) {
         int i = 0;
         List<URL> layers = null;
         for (;;) {
@@ -85,7 +85,7 @@ public class ImageLoader {
         return layers;
     }
 
-	protected Image composeImages(Iterable<URL> layers, Color colorOverlay) {
+    protected Image composeImages(Iterable<URL> layers, Color colorOverlay) {
         BufferedImage result = null;
         Graphics2D g = null;
 

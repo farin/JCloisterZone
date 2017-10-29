@@ -18,7 +18,7 @@
         <city castle-base="true">N</city>
         <farm city="N">EL WR</farm>
         <farm>ER SL SR WL</farm>
-        <position x="0" y="0"/>
+        <position x="0" y="0" priority="1"/>
     </tile>
 
     <tile count="1" id="Cccc+">

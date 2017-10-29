@@ -1,10 +1,6 @@
 package com.jcloisterzone.ui.resources;
 
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +8,12 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.plugin.MergedAliases;
+import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.ImmutablePoint;
-import com.jcloisterzone.ui.plugin.Plugin;
+
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 /**
  * Delegates requests to child plugins
@@ -23,87 +21,93 @@ import com.jcloisterzone.ui.plugin.Plugin;
 public class PlugableResourceManager implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
-    private final List<ResourceManager> managers;
+
+    private final Iterable<Plugin> plugins;
+    private Vector<ResourceManager> managers;
 
 
-    public PlugableResourceManager(List<Plugin> plugins) {
-        managers = new ArrayList<>();
-        for (Plugin p: plugins) {
-            if (p instanceof ResourceManager) {
-                managers.add((ResourceManager) p);
-            }
-        }
-        managers.add(new DefaultResourceManager());
+    public PlugableResourceManager(Iterable<Plugin> plugins) {
+        this.plugins = plugins;
+        reload();
+    }
+
+    public void reload() {
+        Stream<Plugin> enabledPlugins = Stream.ofAll(plugins)
+            .filter(Plugin::isEnabled);
+
+        enabledPlugins.forEach(Plugin::reload);
+
+        managers = enabledPlugins
+            .map(p -> (ResourceManager) p)
+            .append(new DefaultResourceManager())
+            .toVector();
+
+        MergedAliases mergedAliases = new MergedAliases(enabledPlugins);
+        enabledPlugins.forEach(p -> p.setMergedAliases(mergedAliases));
     }
 
     @Override
-    public TileImage getTileImage(Tile tile) {
-        return getTileImage(tile, tile.getRotation());
-    }
-
-    @Override
-    public TileImage getTileImage(Tile tile, Rotation rot) {
+    public TileImage getTileImage(String tileId, Rotation rot) {
         for (ResourceManager manager : managers) {
-            TileImage result = manager.getTileImage(tile, rot);
+            TileImage result = manager.getTileImage(tileId, rot);
             if (result != null) return result;
         }
-        logger.warn("Unable to load tile image for {}", tile.getId());
-        return null;
-    }
-
-    @Override
-    public TileImage getAbbeyImage(Rotation rot) {
-        for (ResourceManager manager : managers) {
-            TileImage result = manager.getAbbeyImage(rot);
-            if (result != null) return result;
-        }
-        logger.warn("Unable to load tile Abbey image");
+        logger.warn("Unable to load tile image for {}", tileId);
         return null;
     }
 
     @Override
     public Image getImage(String path) {
-    	for (ResourceManager manager : managers) {
+        for (ResourceManager manager : managers) {
             Image result = manager.getImage(path);
             if (result != null) return result;
         }
-    	logger.warn("Unable to load image {}", path);
+        logger.warn("Unable to load image {}", path);
         return null;
     }
 
     @Override
     public Image getLayeredImage(LayeredImageDescriptor lid) {
-    	for (ResourceManager manager : managers) {
+        for (ResourceManager manager : managers) {
             Image result = manager.getLayeredImage(lid);
             if (result != null) return result;
         }
-    	logger.warn("Unable to load layered image {}", lid.getBaseName());
+        logger.warn("Unable to load layered image {}", lid.getBaseName());
         return null;
     }
 
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Class<? extends Meeple> type, Location loc) {
+    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
-            ImmutablePoint result = manager.getMeeplePlacement(tile, type, loc);
+            ImmutablePoint result = manager.getMeeplePlacement(tile, rot, loc);
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Map<Location, FeatureArea> getBarnTileAreas(Tile tile, int width, int height, Set<Location> corners) {
+    public ImmutablePoint getBarnPlacement() {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getBarnTileAreas(tile, width, height, corners);
+            ImmutablePoint result = manager.getBarnPlacement();
             if (result != null) return result;
         }
         return null;
     }
 
     @Override
-    public Map<Location, FeatureArea> getBridgeAreas(Tile tile, int width, int height, Set<Location> locations) {
+    public FeatureArea getBarnArea() {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getBridgeAreas(tile, width, height, locations);
+            FeatureArea result = manager.getBarnArea();
+            if (result != null) return result;
+        }
+        return null;
+    }
+
+    @Override
+    public FeatureArea getBridgeArea(Location bridgeLoc) {
+        for (ResourceManager manager : managers) {
+            FeatureArea result = manager.getBridgeArea(bridgeLoc);
             if (result != null) return result;
         }
         return null;
@@ -111,9 +115,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public Map<Location, FeatureArea> getFeatureAreas(Tile tile, int width, int height, Set<Location> locations) {
+    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
-            Map<Location, FeatureArea> result = manager.getFeatureAreas(tile, width, height, locations);
+            FeatureArea result = manager.getFeatureArea(tile, rot, loc);
             if (result != null) return result;
         }
         return null;

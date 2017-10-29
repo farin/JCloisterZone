@@ -49,7 +49,7 @@ class PointsParser {
 
             @Override
             public void processSubstract(Element node, String tileId, AffineTransform transform, boolean isFarm) {
-                throw new UnsupportedOperationException("<substract> not allowed for points.xml");
+                throw new UnsupportedOperationException("<subtract> not allowed for points.xml");
             }
 
         });

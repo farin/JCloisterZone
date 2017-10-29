@@ -10,30 +10,35 @@ public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
     private String sessionId;
     private String text;
 
+    public ChatMessage() {
+    }
+
     public ChatMessage(String sessionId, String text) {
         this.sessionId = sessionId;
         this.text = text;
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 
     @Override
-	public String getChannel() {
-		return channel;
-	}
+    public String getChannel() {
+        return channel;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    @Override
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
-	public String getText() {
+    public String getText() {
         return text;
     }
 
@@ -41,11 +46,11 @@ public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
         this.text = text;
     }
 
-	public String getSessionId() {
-		return sessionId;
-	}
+    public String getSessionId() {
+        return sessionId;
+    }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 }

@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aliases xmlns="http://www.jcloisterzone.com/aliases">
-    <alias treat="R2.I.s" as="R1.I.s" />
-    <alias treat="R2.II" as="R1.II" />
-    <alias treat="R2.RIrI" as="R1.RIrI" />
-    <alias treat="R2.CcII+" as="R1.CcII" />
-    <alias treat="R2.CIRI" as="R1.CIRI" />
-    <alias treat="R2.RrII" as="R1.RrII" />
+    <alias for="R2.I.s" useGeometry="R1.I.s" />
+    <alias for="R2.II" useGeometry="R1.II" />
+    <alias for="R2.RIrI" useGeometry="R1.RIrI" />
+    <alias for="R2.CcII+" useGeometry="R1.CcII" />
+    <alias for="R2.CIRI" useGeometry="R1.CIRI" />
+    <alias for="R2.RrII" useGeometry="R1.RrII" />
 
-    <alias treat="GQ.LRRRR" as="AM.LRRRR" />
-    <alias treat="GQ.CICI" as="R1.CICI" />
-    <alias treat="GQ.Cc!" as="DG.Cc!.p" />
-    <alias treat="GQ.CcRR" as="TB.CcRR.w" />
-    <alias treat="GQ.CRcR.1" as="IC.CRcR+" />
+    <alias for="GQ.LRRRR" useGeometry="AM.LRRRR" />
+    <alias for="GQ.CICI" useGeometry="R1.CICI" />
+    <alias for="GQ.Cc!" useGeometry="DG.Cc!.p" />
+    <alias for="GQ.CcRR" useGeometry="TB.CcRR.w" />
+    <alias for="GQ.CRcR.1" useGeometry="IC.CRcR+" />
 
-    <alias treat="KR.CCcc" as="AM.CCcc+" />
-    <alias treat="KR.RC" as="AM.RC" />
+    <alias for="KR.CCcc" useGeometry="AM.CCcc+" />
+    <alias for="KR.RC" useGeometry="AM.RC" />
 
-    <alias treat="PL.Cc+" as="BA.Cc+" />
-    <alias treat="PL.CC" as="BA.CC.2" />
-    <alias treat="PL.CCRR" as="AM.CCRR" />
-    <alias treat="PL.Rr" as="BA.Rr" />
-    <alias treat="PL.RRC" as="TB.RRC" />
-    <alias treat="PL.RRRR" as="BA.RRRR" />
+    <alias for="PL.Cc+" useGeometry="BA.Cc+" />
+    <alias for="PL.CC" useGeometry="BA.CC.2" />
+    <alias for="PL.CCRR" useGeometry="AM.CCRR" />
+    <alias for="PL.Rr" useGeometry="BA.Rr" />
+    <alias for="PL.RRC" useGeometry="TB.RRC" />
+    <alias for="PL.RRRR" useGeometry="BA.RRRR" />
 
-    <alias treat="CC.RrC" as="BA.RrC" />
+    <alias for="CC.RrC" useGeometry="BA.RrC" />
 
-    <alias treat="WI.R" as="AM.R" />
-    <alias treat="WI.CRr" as="BA.CRr" />
-    <alias treat="WI.RC" as="AM.RC" />
-    <alias treat="WI.LR" as="BA.LR" />
-    <alias treat="WI.RRR" as="BA.RRR" />
-    <alias treat="WI.RrC" as="BA.RrC" />
-    <alias treat="WI.RCc.i" as="IC.RCc.i" />
-    <alias treat="WI.CFR" as="IC.CFR" />
-    <alias treat="WI.LRFR" as="IC.LRFR" />
-    <alias treat="WI.RrRr" as="IC.RrRr" />
-    <alias treat="WI.CcR" as="IC.CcR" />
-    <alias treat="WI.CR" as="TB.CR" />
+    <alias for="WI.R" useGeometry="AM.R" />
+    <alias for="WI.CRr" useGeometry="BA.CRr" />
+    <alias for="WI.RC" useGeometry="AM.RC" />
+    <alias for="WI.LR" useGeometry="BA.LR" />
+    <alias for="WI.RRR" useGeometry="BA.RRR" />
+    <alias for="WI.RrC" useGeometry="BA.RrC" />
+    <alias for="WI.RCc.i" useGeometry="IC.RCc.i" />
+    <alias for="WI.CFR" useGeometry="IC.CFR" />
+    <alias for="WI.LRFR" useGeometry="IC.LRFR" />
+    <alias for="WI.RrRr" useGeometry="IC.RrRr" />
+    <alias for="WI.CcR" useGeometry="IC.CcR" />
+    <alias for="WI.CR" useGeometry="TB.CR" />
 
-    <alias treat="FE.CR" as="TB.CR" />
-    <alias treat="FE.CRCR" as="IC.CRCR" />
-    <alias treat="FE.RC" as="AM.RC" />
-    <alias treat="FE.RrC" as="BA.RrC" />
-    <alias treat="FE.CCc" as="TB.CCc.c" />
-    <alias treat="FE.CFR" as="IC.CFR" />
-    <alias treat="FE.CcCc" as="TB.CcCc.w" />
-    <alias treat="FE.CRr" as="BA.CRr" />
-    <alias treat="FE.RrRr" as="IC.RrRr" />
+    <alias for="FE.CR" useGeometry="TB.CR" />
+    <alias for="FE.CRCR" useGeometry="IC.CRCR" />
+    <alias for="FE.RC" useGeometry="AM.RC" />
+    <alias for="FE.RrC" useGeometry="BA.RrC" />
+    <alias for="FE.CCc" useGeometry="TB.CCc.c" />
+    <alias for="FE.CFR" useGeometry="IC.CFR" />
+    <alias for="FE.CcCc" useGeometry="TB.CcCc.w" />
+    <alias for="FE.CRr" useGeometry="BA.CRr" />
+    <alias for="FE.RrRr" useGeometry="IC.RrRr" />
 
-    <alias treat="WR.Cc.1" as="BA.Cc.1" />
-    <alias treat="WR.CC.2" as="BA.CC.2" />
+    <alias for="WR.Cc.1" useGeometry="BA.Cc.1" />
+    <alias for="WR.CC.2" useGeometry="BA.CC.2" />
 
-    <alias treat="BE.RrC" as="BA.RrC" />
-    <alias treat="BE.CRr" as="BA.CRr" />
-    <alias treat="BE.RCc" as="TB.RCc.g" />
-    <alias treat="BE.CcR" as="IC.CcR" />
+    <alias for="BE.RrC" useGeometry="BA.RrC" />
+    <alias for="BE.CRr" useGeometry="BA.CRr" />
+    <alias for="BE.RCc" useGeometry="TB.RCc.g" />
+    <alias for="BE.CcR" useGeometry="IC.CcR" />
 
-    <alias treat="MW.CccR.1" as="BA.CccR" />
-    <alias treat="MW.CcRr.1" as="DG.CcRr.g" />
-    <alias treat="MW.CRRr.2" as="GQ.CRRr" />
-    <alias treat="MW.CCCR.3" as="BB.CCCR" />
-    <alias treat="MW.CRRR.3" as="BA.CRRR" />
-    <alias treat="MW.CFC" as="BA.CFC.2" />
-    <alias treat="MW.CRcR" as="IC.CRcR+" />
+    <alias for="MW.CccR.1" useGeometry="BA.CccR" />
+    <alias for="MW.CcRr.1" useGeometry="DG.CcRr.g" />
+    <alias for="MW.CRRr.2" useGeometry="GQ.CRRr" />
+    <alias for="MW.CCCR.3" useGeometry="BB.CCCR" />
+    <alias for="MW.CRRR.3" useGeometry="BA.CRRR" />
+    <alias for="MW.CFC" useGeometry="BA.CFC.2" />
+    <alias for="MW.CRcR" useGeometry="IC.CRcR+" />
 
-    <alias treat="GO.RRrr.X" as="TB.RRrr" />
-    <alias treat="GO.CcRr" as="BA.CcRr" />
-    <alias treat="GO.RrRr" as="IC.RrRr" />
+    <alias for="GO.RRrr.X" useGeometry="TB.RRrr" />
+    <alias for="GO.CcRr" useGeometry="BA.CcRr" />
+    <alias for="GO.RrRr" useGeometry="IC.RrRr" />
 
 </aliases>

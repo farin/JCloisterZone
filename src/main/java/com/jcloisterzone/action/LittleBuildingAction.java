@@ -1,24 +1,33 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.LittleBuilding;
-import com.jcloisterzone.ui.grid.ActionLayer;
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.game.Token;
+import com.jcloisterzone.ui.annotations.LinkedGridLayer;
+import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.PlaceTokenMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
-public class LittleBuildingAction extends PlayerAction<LittleBuilding> {
+import io.vavr.collection.Set;
 
-    public LittleBuildingAction() {
-        super("building");
+@LinkedImage("actions/building")
+@LinkedGridLayer(LittleBuildingActionLayer.class)
+public class LittleBuildingAction extends PlayerAction<Token> {
+
+    private final Position pos;
+
+    public LittleBuildingAction(Set<Token> options, Position pos) {
+        super(options);
+        this.pos = pos;
+        assert options.find(t -> !t.isLittleBuilding()).isEmpty();
     }
 
     @Override
-    protected Class<? extends ActionLayer<?>> getActionLayerType() {
-        return LittleBuildingActionLayer.class;
+    public WsInGameMessage select(Token option) {
+        return new PlaceTokenMessage(option, pos);
     }
 
-    @Override
-    public void perform(RmiProxy server, LittleBuilding target) {
-       server.placeLittleBuilding(target);
+    public Position getPosition() {
+        return pos;
     }
-
 }

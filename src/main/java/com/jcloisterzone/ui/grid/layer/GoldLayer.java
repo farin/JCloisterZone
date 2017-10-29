@@ -5,24 +5,29 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.GoldChangeEvent;
+import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.grid.GridPanel;
 
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
+
+// TODO nice to have, merge with GoldCapability ?
 public class GoldLayer extends AbstractGridLayer {
+
+    private final static Color FILL_COLOR = new Color(40,40,40,120);
 
     private final Image goldImage;
     private final double widthHeightRatio;
-    private final Map<Position, Integer> placedGold = new HashMap<>();
 
-    private final static Color FILL_COLOR = new Color(40,40,40,120);
+    private Map<Position, Integer> placedGold = HashMap.empty();
+
+
 
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -33,18 +38,10 @@ public class GoldLayer extends AbstractGridLayer {
     }
 
     @Subscribe
-    public void onGoldChangeEvent(GoldChangeEvent ev) {
-        setGoldCount(ev.getPos(), ev.getCurrCount());
-        gridPanel.repaint();
+    public void handleGameChanged(GameChangedEvent ev) {
+        placedGold = ev.getCurrentState().getCapabilityModel(GoldminesCapability.class);
     }
 
-    private void setGoldCount(Position pos, int count) {
-        if (count == 0) {
-            placedGold.remove(pos);
-        } else {
-            placedGold.put(pos, count);
-        }
-    }
 
     @Override
     public void paint(Graphics2D g2) {
@@ -52,8 +49,7 @@ public class GoldLayer extends AbstractGridLayer {
         int w = (int)(size*0.4);
         int h = (int)(w / widthHeightRatio);
         g2.setColor(FILL_COLOR);
-        for (Entry<Position, Integer> entry : placedGold.entrySet()) {
-            Position pos = entry.getKey();
+        placedGold.forEach((pos, count) -> {
             int tx = (int)(size*0.45);
 
             AffineTransform at = getAffineTransformIgnoringRotation(pos);
@@ -62,7 +58,7 @@ public class GoldLayer extends AbstractGridLayer {
 
             drawImageIgnoringRotation(g2, goldImage, pos, tx, 0, w, h);
             ImmutablePoint point = new ImmutablePoint(90,10).rotate100(gridPanel.getBoardRotation().inverse());
-            drawAntialiasedTextCentered(g2, ""+entry.getValue(), 20, entry.getKey(), point, Color.WHITE, null);
-        }
+            drawAntialiasedTextCentered(g2, ""+count, 20, pos, point, Color.WHITE, null);
+        });
     }
 }

@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.server;
 
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.SupportedSetup;
 
-//TODO use slot messge directly
+//TODO use slot message directly
 public class ServerPlayerSlot {
 
     private final int number;
@@ -10,7 +10,7 @@ public class ServerPlayerSlot {
     private String nickname;
     private String sessionId;
     private String aiClassName;
-    private Expansion[] supportedExpansions;
+    private SupportedSetup supportedSetup;
 
     private String clientId;
     private String autoAssignClientId;
@@ -60,35 +60,35 @@ public class ServerPlayerSlot {
         return number;
     }
 
-    public Expansion[] getSupportedExpansions() {
-        return supportedExpansions;
+    public SupportedSetup getSupportedSetup() {
+        return supportedSetup;
     }
 
-    public void setSupportedExpansions(Expansion[] supportedExpansions) {
-        this.supportedExpansions = supportedExpansions;
+    public void setSupportedSetup(SupportedSetup supportedSetup) {
+        this.supportedSetup = supportedSetup;
     }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public String getSecret() {
-		return secret;
-	}
+    public String getSecret() {
+        return secret;
+    }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
-	public String getAutoAssignClientId() {
-		return autoAssignClientId;
-	}
+    public String getAutoAssignClientId() {
+        return autoAssignClientId;
+    }
 
-	public void setAutoAssignClientId(String autoAssignClientId) {
-		this.autoAssignClientId = autoAssignClientId;
-	}
+    public void setAutoAssignClientId(String autoAssignClientId) {
+        this.autoAssignClientId = autoAssignClientId;
+    }
 }

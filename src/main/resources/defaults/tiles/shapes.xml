@@ -37,9 +37,9 @@
         <apply>* INNER_FARM_B</apply>
     </shape>
 
-    <shape feature="@">
+    <shape feature="FLYING_MACHINE">
         <svg:circle cx="500" cy="500" r="200"/>
-        <apply>* FLIER</apply>
+        <apply>* FLYING_MACHINE</apply>
     </shape>
 
      <complement-farm>

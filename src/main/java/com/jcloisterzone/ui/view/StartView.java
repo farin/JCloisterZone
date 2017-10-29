@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.view;
 
+import static com.jcloisterzone.ui.I18nUtils._tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -21,20 +23,18 @@ import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.HelpPanel;
 import com.jcloisterzone.ui.panel.StartPanel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
-
 public class StartView extends AbstractUiView {
 
 
-	private StartPanel startPanel;
+    private StartPanel startPanel;
 
-	public StartView(Client client) {
-		super(client);
-	}
+    public StartView(Client client) {
+        super(client);
+    }
 
-	@Override
-	public void show(Container pane, Object ctx) {
-		pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
+    @Override
+    public void show(Container pane, Object ctx) {
+        pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         envelope.setBackground(client.getTheme().getMainBg());
         pane.add(envelope, BorderLayout.CENTER);
@@ -49,17 +49,17 @@ public class StartView extends AbstractUiView {
 
         startPanel = new StartPanel(client);
         envelope.add(startPanel);
-	}
+    }
 
-	public void showUpdateIsAvailable(final AppUpdate appUpdate) {
-		Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
+    public void showUpdateIsAvailable(final AppUpdate appUpdate) {
+        Color bg = new Color(0.2f, 1.0f, 0.0f, 0.1f);
         HelpPanel hp = startPanel.getHelpPanel();
         hp.removeAll();
         hp.setOpaque(true);
         hp.setBackground(bg);
         Font font = new Font(null, Font.BOLD, 14);
         JLabel label;
-        label = new JLabel(_("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
+        label = new JLabel(_tr("JCloisterZone " + appUpdate.getVersion() + " is available for download."));
         label.setFont(font);
         hp.add(label, "wrap");
         label = new JLabel(appUpdate.getDescription());
@@ -84,6 +84,6 @@ public class StartView extends AbstractUiView {
 
         hp.add(link, "wrap, growx");
         hp.repaint();
-	}
+    }
 
 }

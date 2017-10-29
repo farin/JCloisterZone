@@ -1,33 +1,38 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SET_RULE")
 public class SetRuleMessage implements WsInGameMessage {
+
     private String gameId;
-    private CustomRule rule;
+    private Rule rule;
     private Object value;
 
-    public SetRuleMessage(String gameId, CustomRule rule, Object value) {
-        this.gameId = gameId;
+    public SetRuleMessage() {
+    }
+
+    public SetRuleMessage(Rule rule, Object value) {
         this.rule = rule;
         this.value = value;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 
-    public CustomRule getRule() {
+    public Rule getRule() {
         return rule;
     }
 
-    public void setRule(CustomRule rule) {
+    public void setRule(Rule rule) {
         this.rule = rule;
     }
 

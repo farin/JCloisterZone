@@ -2,19 +2,21 @@ package com.jcloisterzone.config;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 
@@ -36,7 +38,6 @@ public class Config {
     private String locale;
 
     private Integer score_display_duration;
-    private Integer ai_place_tile_delay;
     private String theme;
 
     private Boolean beep_alert;
@@ -45,10 +46,12 @@ public class Config {
     private String secret;
     private String play_online_host;
 
-    private List<String> plugins;
     private ConfirmConfig confirm;
+    private AiConfig ai;
     private PlayersConfig players;
     private ScreenshotsConfig screenshots;
+    private SavedGamesConfig saved_games;
+    private PluginsConfig plugins;
     private DebugConfig debug;
     private Map<String, PresetConfig> presets;
     private List<String> connection_history;
@@ -71,34 +74,91 @@ public class Config {
         }
     }
 
-    public static class PresetConfig {
-        private List<String> expansions;
-        private Map<CustomRule, Object> rules;
+    public static class SavedGamesConfig {
+        private String folder;
+        private String format;
 
-        public List<String> getExpansions() {
-            return expansions == null ? Collections.<String>emptyList() : expansions;
+        public String getFolder() {
+            return folder;
         }
-        public void setExpansions(List<String> expansions) {
+        public void setFolder(String folder) {
+            this.folder = folder;
+        }
+        public String getFormat() {
+            return format;
+        }
+        public void setFormat(String format) {
+            this.format = format;
+        }
+    }
+
+    public static class PluginsConfig {
+        private List<String> lookup_folders;
+        private List<String> enabled_plugins;
+
+        public List<String> getLookup_folders() {
+            return lookup_folders == null ? Collections.<String>emptyList() : lookup_folders;
+        }
+        public void setLookup_folders(List<String> lookup_folders) {
+            this.lookup_folders = lookup_folders;
+        }
+        public List<String> getEnabled_plugins() {
+            return enabled_plugins == null ? Collections.<String>emptyList() : enabled_plugins;
+        }
+        public void setEnabled_plugins(List<String> enabled_plugins) {
+            this.enabled_plugins = enabled_plugins;
+        }
+    }
+
+    public static class PresetConfig {
+
+        protected transient Logger logger = LoggerFactory.getLogger(getClass());
+
+        private Map<String, Integer> expansions;
+        private Map<Rule, Object> rules;
+        private List<String> capabilities;
+
+        public Map<String, Integer> getExpansions() {
+            return expansions == null ? Collections.<String, Integer>emptyMap() : expansions;
+        }
+        public void setExpansions(Map<String, Integer> expansions) {
             this.expansions = expansions;
         }
-        public Map<CustomRule, Object> getRules() {
+        public Map<Rule, Object> getRules() {
             return rules;
         }
-        public void setRules(Map<CustomRule, Object> rules) {
+        public void setRules(Map<Rule, Object> rules) {
             this.rules = rules;
         }
-
+        public List<String> getCapabilities() {
+            return capabilities;
+        }
+        public void setCapabilities(List<String> capabilities) {
+            this.capabilities = capabilities;
+        }
         public void updateGameSetup(Connection conn, String gameId) {
-            EnumSet<Expansion> expansionSet = EnumSet.noneOf(Expansion.class);
-            expansionSet.add(Expansion.BASIC);
-            for (String expName : expansions) {
-                try {
-                    expansionSet.add(Expansion.valueOf(expName));
-                } catch (IllegalArgumentException ex) {
-                    LoggerFactory.getLogger(Config.class).error("Invalid expansion name {} in preset config", expName);
+            Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
+            if (this.capabilities != null) {
+                for (String clsName : this.capabilities) {
+                    try {
+                        Class<? extends Capability<?>> cls = Capability.classForName(clsName);
+                        capabilities.add(cls);
+                    } catch (ClassNotFoundException ex) {
+                        logger.error("Unable to find capability class.", ex);
+                    }
                 }
             }
-            conn.send(new GameSetupMessage(gameId, rules, expansionSet, null));
+
+            Map<Expansion, Integer> expansions = io.vavr.collection.HashMap.ofAll(this.expansions)
+                .mapKeys(name -> Expansion.valueOf(name))
+                .toJavaMap();
+
+            GameSetupMessage msg = new GameSetupMessage(
+                rules, capabilities, expansions
+
+            );
+            msg.setGameId(gameId);
+            conn.send(msg);
         }
     }
 
@@ -129,24 +189,15 @@ public class Config {
     }
 
     public static class DebugConfig {
-        private String save_format;
         private String window_size;
         private String autosave;
         private AutostartConfig autostart;
         private Map<String, String> tile_definitions;
-        private List<String> draw;
-        private List<String> off_capabilities;
+        private HashMap<String, Object> game_annotation;
         private String area_highlight;
 
         public boolean isAutostartEnabled() {
             return autostart != null && (autostart.getPreset() != null || Boolean.TRUE.equals(autostart.getOnline()));
-        }
-
-        public String getSave_format() {
-            return save_format;
-        }
-        public void setSave_format(String save_format) {
-            this.save_format = save_format;
         }
 
         public String getWindow_size() {
@@ -174,17 +225,11 @@ public class Config {
         public void setTile_definitions(Map<String, String> tile_definitions) {
             this.tile_definitions = tile_definitions;
         }
-        public List<String> getDraw() {
-            return draw;
+        public HashMap<String, Object> getGame_annotation() {
+            return game_annotation;
         }
-        public void setDraw(List<String> draw) {
-            this.draw = draw;
-        }
-        public List<String> getOff_capabilities() {
-            return off_capabilities;
-        }
-        public void setOff_capabilities(List<String> off_capabilities) {
-            this.off_capabilities = off_capabilities;
+        public void setGame_annotation(HashMap<String, Object> game_annotation) {
+            this.game_annotation = game_annotation;
         }
         public String getArea_highlight() {
             return area_highlight;
@@ -217,18 +262,6 @@ public class Config {
         }
         public void setOn_tower_deployment(Boolean on_tower_deployment) {
             this.on_tower_deployment = on_tower_deployment;
-        }
-        @Deprecated
-        public void setFarm_place(Boolean farm_place) {
-            this.farm_deployment = farm_place;
-        }
-        @Deprecated
-        public void setTower_place(Boolean tower_place) {
-            this.on_tower_deployment = tower_place;
-        }
-        @Deprecated
-        public void setGame_close(Boolean game_close) {
-            //ignore - keep for backward compatibility
         }
         public Boolean getRansom_payment() {
             return ransom_payment == null ? Boolean.FALSE : ransom_payment;
@@ -279,7 +312,24 @@ public class Config {
         public void setFontLight(String fontLight) {
             this.fontLight = fontLight;
         }
+    }
 
+    public static class AiConfig {
+        private Integer place_tile_delay;
+        private String class_name;
+
+        public Integer getPlace_tile_delay() {
+            return place_tile_delay;
+        }
+        public void setPlace_tile_delay(Integer place_tile_delay) {
+            this.place_tile_delay = place_tile_delay;
+        }
+        public String getClass_name() {
+            return class_name;
+        }
+        public void setClass_name(String class_name) {
+            this.class_name = class_name;
+        }
     }
 
     public static class PlayersConfig {
@@ -307,13 +357,17 @@ public class Config {
         }
     }
 
-    public PlayerColor getPlayerColor(PlayerSlot slot) {
+    public PlayerColors getPlayerColor(PlayerSlot slot) {
+        return getPlayerColor(slot.getNumber());
+    }
+
+    public PlayerColors getPlayerColor(int slotNumber) {
         try {
-            ColorConfig cfg = players.getColors().get(slot.getNumber());
-            return new PlayerColor(cfg, darkTheme);
+            ColorConfig cfg = players.getColors().get(slotNumber);
+            return new PlayerColors(cfg, darkTheme);
         } catch (IndexOutOfBoundsException ex) {
             logger.warn("Too few player colors defined in config");
-            return new PlayerColor();
+            return new PlayerColors();
         }
     }
 
@@ -361,14 +415,6 @@ public class Config {
         this.score_display_duration = score_display_duration;
     }
 
-    public Integer getAi_place_tile_delay() {
-        return ai_place_tile_delay;
-    }
-
-    public void setAi_place_tile_delay(Integer ai_place_tile_delay) {
-        this.ai_place_tile_delay = ai_place_tile_delay;
-    }
-
     public String getTheme() {
         return theme;
     }
@@ -385,12 +431,27 @@ public class Config {
         this.beep_alert = beep_alert;
     }
 
-    public List<String> getPlugins() {
-        return plugins == null ? Collections.<String>emptyList() : plugins;
+
+    public PluginsConfig getPlugins() {
+        if (plugins == null) {
+            plugins = new PluginsConfig();
+        }
+        return plugins;
     }
 
-    public void setPlugins(List<String> plugins) {
+    public void setPlugins(PluginsConfig plugins) {
         this.plugins = plugins;
+    }
+
+    public AiConfig getAi() {
+        if (ai == null) {
+            ai = new AiConfig();
+        }
+        return ai;
+    }
+
+    public void setAi(AiConfig ai) {
+        this.ai = ai;
     }
 
     public PlayersConfig getPlayers() {
@@ -494,6 +555,17 @@ public class Config {
         this.screenshots = screenshots;
     }
 
+    public SavedGamesConfig getSaved_games() {
+        if (saved_games == null) {
+            saved_games = new SavedGamesConfig();
+        }
+        return saved_games;
+    }
+
+    public void setSaved_games(SavedGamesConfig saved_games) {
+        this.saved_games = saved_games;
+    }
+
     public boolean isDarkTheme() {
         return darkTheme;
     }
@@ -501,6 +573,4 @@ public class Config {
     public void setDarkTheme(boolean darkTheme) {
         this.darkTheme = darkTheme;
     }
-
-
 }

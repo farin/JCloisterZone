@@ -1,14 +1,15 @@
 package com.jcloisterzone.figure;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.game.Game;
 
+@Immutable
 public class Phantom extends SmallFollower {
 
-    private static final long serialVersionUID = 3013786263529361093L;
+    private static final long serialVersionUID = 1L;
 
-    public Phantom(Game game, Integer idSuffix, Player player) {
-        super(game, idSuffix, player);
+    public Phantom(String id, Player player) {
+        super(id, player);
     }
 
 }

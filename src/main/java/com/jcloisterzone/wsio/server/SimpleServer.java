@@ -1,17 +1,12 @@
 package com.jcloisterzone.wsio.server;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.swing.SwingUtilities;
-import javax.xml.transform.TransformerException;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -22,35 +17,48 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
-import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.game.CustomRule;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameSettings;
+import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.Snapshot;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.StandardGameCapability;
+import com.jcloisterzone.game.save.SavedGame;
+import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
+import com.jcloisterzone.wsio.message.BazaarBidMessage;
+import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
+import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
 import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CommitMessage;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
+import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
+import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
-import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 import com.jcloisterzone.wsio.message.HelloMessage;
 import com.jcloisterzone.wsio.message.LeaveSlotMessage;
+import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
+import com.jcloisterzone.wsio.message.PassMessage;
+import com.jcloisterzone.wsio.message.PayRansomMessage;
 import com.jcloisterzone.wsio.message.PingMessage;
+import com.jcloisterzone.wsio.message.PlaceTileMessage;
+import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.PongMessage;
 import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.RmiMessage;
+import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
+import com.jcloisterzone.wsio.message.SetCapabilityMessage;
 import com.jcloisterzone.wsio.message.SetExpansionMessage;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
@@ -59,7 +67,10 @@ import com.jcloisterzone.wsio.message.TakeSlotMessage;
 import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
+import com.jcloisterzone.wsio.message.WsReplayableMessage;
+import com.jcloisterzone.wsio.message.WsSeedMeesage;
 
 public class SimpleServer extends WebSocketServer  {
 
@@ -70,12 +81,14 @@ public class SimpleServer extends WebSocketServer  {
     private MessageParser parser = new MessageParser();
     private MessageDispatcher dispatcher = new MessageDispatcher();
 
-    private GameSettings game;
+    private GameSetup gameSetup;
+    private String gameId;
+    private long initialSeed;
     protected final ServerPlayerSlot[] slots;
     protected int slotSerial;
-    private final List<String> replay = new ArrayList<String>();
+    private List<WsReplayableMessage> replay;
 
-    private Snapshot snapshot;
+    private SavedGame savedGame;
     private boolean gameStarted;
 
     private long[] clocks;
@@ -97,80 +110,47 @@ public class SimpleServer extends WebSocketServer  {
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
 
-    public void createGame(Snapshot snapshot, Game settings, String hostClientId) {
+    public void createGame(SavedGame savedGame, Game game, String hostClientId) {
         slotSerial = 0;
         runningClock = -1;
         gameStarted = false;
-        replay.clear();
-        this.snapshot = null;
+        this.savedGame = savedGame;
         this.hostClientId = hostClientId;
-        game = new GameSettings(KeyUtils.createRandomId());
-        if (snapshot != null) {
-            this.snapshot =  snapshot;
-            game.getExpansions().addAll(snapshot.getExpansions());
-            game.getCustomRules().putAll(snapshot.getCustomRules());
-            loadSlotsFromSnapshot();
-        } else if (settings != null) {
-            game.getExpansions().addAll(settings.getExpansions());
-            game.getCustomRules().putAll(settings.getCustomRules());
-            loadSlotsFromGame(settings);
+
+        if (savedGame != null) {
+            gameId = savedGame.getGameId();
+            initialSeed = savedGame.getInitialSeed();
+            gameSetup = savedGame.getSetup().asGameSetup();
+            replay = new ArrayList<>(savedGame.getReplay());
+            loadSlotsFromSavedGame(savedGame);
         } else {
-            game.getExpansions().add(Expansion.BASIC);
-            game.getCustomRules().putAll(CustomRule.getDefaultRules());
+            gameId = KeyUtils.createRandomId();
+            initialSeed = random.nextLong();
+            gameSetup = new GameSetup(
+                io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
+                io.vavr.collection.HashSet.of(StandardGameCapability.class),
+                Rule.getDefaultRules()
+            );
+            replay = new ArrayList<>();
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new ServerPlayerSlot(i);
             }
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private void loadSlotsFromGame(Game settings) {
-        //Game is game from client since, so we can use isLocalHuman
+    private void loadSlotsFromSavedGame(SavedGame savedGame) {
         int maxSerial = 0;
-        for (Player player : settings.getAllPlayers()) {
-            int slotNumber = player.getSlot().getNumber();
-            ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
-            slots[slotNumber] = slot;
-            boolean isAi = player.getSlot().isAi();
-            if (player.isLocalHuman() || isAi) {
-                if (isAi) {
-                    String className = player.getSlot().getAiClassName();
-                    try {
-                        EnumSet<Expansion> supported = (EnumSet<Expansion>) Class.forName(className).getMethod("supportedExpansions").invoke(null);
-                        slot.setSupportedExpansions(supported.toArray(new Expansion[supported.size()]));
-                        slot.setAiClassName(className);
-                    } catch (Exception e) {
-                        logger.warn("AI class is not present " + className);
-                        continue;
-                    }
-                }
-                slot.setNickname(player.getNick());
-                slot.setAutoAssignClientId(player.getSlot().getClientId());
-                int serial = player.getSlot().getSerial() == null ? player.getIndex() : player.getSlot().getSerial();
-                maxSerial = Math.max(maxSerial, serial);
-                slot.setSerial(serial);
-            }
-        }
-        for (int i = 0; i < slots.length; i++) {
-            if (slots[i] == null) {
-                slots[i] = new ServerPlayerSlot(i);
-            }
+        for (SavedGamePlayerSlot sgSlot : savedGame.getSlots()) {
+            int idx = sgSlot.getNumber();
+            slots[idx] = new ServerPlayerSlot(idx);
+            slots[idx].setAutoAssignClientId(sgSlot.getClientId());
+            slots[idx].setNickname(sgSlot.getNickname());
+            slots[idx].setSerial(sgSlot.getSerial());
+            slots[idx].setAiClassName(sgSlot.getAiClassName());
+            maxSerial = Math.max(maxSerial, sgSlot.getSerial());
         }
         slotSerial = maxSerial + 1;
     }
-
-    private void loadSlotsFromSnapshot() {
-        List<Player> players = snapshot.getPlayers();
-        for (Player player : players) {
-            int slotNumber = player.getSlot().getNumber();
-            ServerPlayerSlot slot = new ServerPlayerSlot(slotNumber);
-            slot.setNickname(player.getNick());
-            slot.setAiClassName(player.getSlot().getAiClassName());
-            slot.setAutoAssignClientId(player.getSlot().getClientId());
-            slots[slotNumber] = slot;
-        }
-    }
-
 
     @Override
     public void onClose(WebSocket ws, int code, String reason, boolean remote) {
@@ -184,16 +164,23 @@ public class SimpleServer extends WebSocketServer  {
                     leaveSlot(slot);
                 } else {
                     slot.setSessionId(null);
-                    broadcast(newSlotMessage(slot), false);
+                    broadcast(newSlotMessage(slot));
                 }
             }
         }
-        broadcast(new ClientUpdateMessage(game.getGameId(), conn.getSessionId(), null, ClientState.OFFLINE), false);
+        ClientUpdateMessage msg = new ClientUpdateMessage(conn.getSessionId(), null, ClientState.OFFLINE);
+        msg.setGameId(gameId);
+        broadcast(msg);
     }
 
     @Override
     public void onError(WebSocket ws, final Exception ex) {
         errHandler.onError(ws, ex);
+    }
+
+    @Override
+    public void onStart() {
+
     }
 
     @Override
@@ -212,15 +199,31 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
-        SlotMessage msg = new SlotMessage(game.getGameId(), slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
+        SlotMessage msg = new SlotMessage(slot.getNumber(), slot.getSerial(), slot.getSessionId(), slot.getClientId(), slot.getNickname());
+        msg.setGameId(gameId);
         msg.setAiClassName(slot.getAiClassName());
-        msg.setSupportedExpansions(slot.getSupportedExpansions());
+        msg.setSupportedSetup(slot.getSupportedSetup());
         return msg;
     }
 
     private GameMessage newGameMessage(boolean includeReplay) {
-        GameSetupMessage gsm = new GameSetupMessage(game.getGameId(), game.getCustomRules(), game.getExpansions(), game.getCapabilityClasses());
-        GameMessage gm = new GameMessage(game.getGameId(), "", gameStarted ? GameState.RUNNING : GameState.OPEN, gsm);
+        GameSetupMessage setupMessage = new GameSetupMessage(
+            gameSetup.getRules().toJavaMap(),
+            gameSetup.getCapabilities().toJavaSet(),
+            gameSetup.getExpansions().toJavaMap()
+        );
+        setupMessage.setGameId(gameId);
+
+        GameStatus status;
+        if (gameStarted) {
+            status = GameStatus.RUNNING;
+        } else if (savedGame == null) {
+            status = GameStatus.OPEN;
+        } else {
+            status = GameStatus.PAUSED;
+        }
+        GameMessage gm = new GameMessage(gameId, "", status, setupMessage);
+        gm.setInitialSeed(initialSeed);
         List<SlotMessage> slotMsgs = new ArrayList<>();
         for (ServerPlayerSlot slot : slots) {
             if (slot != null) {
@@ -229,15 +232,8 @@ public class SimpleServer extends WebSocketServer  {
             }
         }
         gm.setSlots(slotMsgs.toArray(new SlotMessage[slotMsgs.size()]));
-        if (snapshot != null) {
-            try {
-                gm.setSnapshot(snapshot.saveToString());
-            } catch (TransformerException | IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
         if (includeReplay) {
-            gm.setReplay(replay.toArray(new String[replay.size()]));
+            gm.setReplay(replay);
         }
         return gm;
     }
@@ -271,6 +267,10 @@ public class SimpleServer extends WebSocketServer  {
         }
     }
 
+    private long getRandomSeed() {
+        return random.nextLong();
+    }
+
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
         if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
@@ -296,7 +296,7 @@ public class SimpleServer extends WebSocketServer  {
                 slot.setClientId(msg.getClientId());
                 slot.setSessionId(sessionId);
                 slot.setSecret(msg.getSecret());
-                broadcast(newSlotMessage(slot), false);
+                broadcast(newSlotMessage(slot));
             }
         }
 
@@ -307,17 +307,22 @@ public class SimpleServer extends WebSocketServer  {
         send(ws, newGameMessage(gameStarted));
         for (ServerRemoteClient rc : connections.values()) {
             if (!rc.getSessionId().equals(sessionId)) {
-                send(ws, new ClientUpdateMessage(game.getGameId(), rc.getSessionId(), rc.getName(), ClientState.ACTIVE));
+                ClientUpdateMessage updateMsg = new ClientUpdateMessage(rc.getSessionId(), rc.getName(), ClientState.ACTIVE);
+                updateMsg.setGameId(gameId);
+                send(ws, updateMsg);
             }
         }
-        broadcast(new ClientUpdateMessage(game.getGameId(), sessionId, nickname, ClientState.ACTIVE), false);
+        ClientUpdateMessage updateMsg = new ClientUpdateMessage(sessionId, nickname, ClientState.ACTIVE);
+        updateMsg.setGameId(gameId);
+        broadcast(updateMsg);
         if (gameStarted) {
             long ts = System.currentTimeMillis();
             long[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
             if (runningClock != -1) {
                 clocksCopy[runningClock] += ts-runningSince;
              }
-            ClockMessage clockMsg = new ClockMessage(game.getGameId(), runningClock == -1 ? null : runningClock, clocksCopy, ts);
+            ClockMessage clockMsg = new ClockMessage(runningClock == -1 ? null : runningClock, clocksCopy, ts);
+            clockMsg.setGameId(gameId);
             send(ws, clockMsg);
         }
     }
@@ -325,19 +330,20 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleGameSetupMessage(WebSocket ws, GameSetupMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        game.getExpansions().clear();
-        game.getExpansions().addAll(msg.getExpansions());
-        game.getCustomRules().clear();
-        game.getCustomRules().putAll(msg.getRules());
-        broadcast(msg, false);
+        gameSetup = new GameSetup(
+            io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
+            io.vavr.collection.HashSet.ofAll(msg.getCapabilities()),
+            io.vavr.collection.HashMap.ofAll(msg.getRules())
+        );
+        broadcast(msg);
     }
 
 
     @WsSubscribe
     public void handleTakeSlot(WebSocket ws, TakeSlotMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         ServerRemoteClient client = connections.get(ws);
         String sessionId = client.getSessionId();
@@ -353,28 +359,28 @@ public class SimpleServer extends WebSocketServer  {
         slot.setNickname(msg.getNickname());
         slot.setAiClassName(msg.getAiClassName());
         slot.setSessionId(sessionId);
-        slot.setSupportedExpansions(msg.getSupportedExpansions());
+        slot.setSupportedSetup(msg.getSupportedSetup());
         slot.setClientId(client.getClientId());
         slot.setSecret(client.getSecret());
-        broadcast(newSlotMessage(slot), false);
+        broadcast(newSlotMessage(slot));
     }
 
     private void leaveSlot(ServerPlayerSlot slot) {
-        if (snapshot == null) {
+        if (savedGame == null) {
             slot.setNickname(null);
             slot.setAiClassName(null);
-            slot.setSupportedExpansions(null);
+            slot.setSupportedSetup(null);
         }
         slot.setSerial(null);
         slot.setSessionId(null);
         slot.setClientId(null);
         slot.setSecret(null);
-        broadcast(newSlotMessage(slot), false);
+        broadcast(newSlotMessage(slot));
     }
 
     @WsSubscribe
     public void handleLeaveSlot(WebSocket ws, LeaveSlotMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         int number = msg.getNumber();
         if (number < 0 || number >= slots.length || slots[number] == null) {
@@ -388,67 +394,79 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleSetExpansion(WebSocket ws, SetExpansionMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         Expansion expansion = msg.getExpansion();
-        if (!expansion.isImplemented() || expansion == Expansion.BASIC) {
-            logger.error("Invalid expansion {}", expansion);
-            return;
-        }
-        if (msg.isEnabled()) {
-            game.getExpansions().add(msg.getExpansion());
-        } else {
-            game.getExpansions().remove(msg.getExpansion());
-        }
-        broadcast(msg, false);
+        gameSetup = gameSetup.mapExpansions(expansions ->
+            msg.getCount() > 0 ? expansions.put(expansion, msg.getCount()) : expansions.remove(expansion)
+        );
+        broadcast(msg);
     }
 
     @WsSubscribe
     public void handleSetRule(WebSocket ws, SetRuleMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        CustomRule rule = msg.getRule();
-        game.getCustomRules().put(rule, msg.getValue());
-        broadcast(msg, false);
+        Rule rule = msg.getRule();
+        gameSetup = gameSetup.mapRules(rules ->
+            msg.getValue() == null ? rules.remove(rule) : rules.put(rule, msg.getValue())
+        );
+        broadcast(msg);
+    }
+
+    @WsSubscribe
+    public void handleSetCapability(WebSocket ws, SetCapabilityMessage msg) {
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
+        if (gameStarted) throw new IllegalArgumentException("Game is already started.");
+        Class<? extends Capability<?>> cap = msg.getCapability();
+        gameSetup = gameSetup.mapCapabilities(cps ->
+            msg.isEnabled() ? cps.add(cap) : cps.remove(cap)
+        );
+        broadcast(msg);
     }
 
     @WsSubscribe
     public void handleStartGame(WebSocket ws, StartGameMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
         runningClock = -1;
-        if (snapshot == null) {
+        if (savedGame == null) {
             int playerCount = 0;
             for (ServerPlayerSlot slot : slots) {
                 if (!slot.isOccupied()) continue;
                 playerCount++;
-                if (slot.getSupportedExpansions() != null) {
-                    game.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
-                }
-                if (game.getBooleanValue(CustomRule.RANDOM_SEATING_ORDER)) {
+//                if (slot.getSupportedExpansions() != null) {
+//                    gameSetup.getExpansions().retainAll(Arrays.asList(slot.getSupportedExpansions()));
+//                }
+                if (gameSetup.getBooleanValue(Rule.RANDOM_SEATING_ORDER)) {
                     slot.setSerial(random.nextInt());
                 }
             }
             clocks = new long[playerCount];
         } else {
-            List<Player> players = snapshot.getPlayers();
-            clocks = new long[players.size()];
-            for (int i = 0; i < clocks.length; i++) {
-                PlayerClock clock = players.get(i).getClock();
-                clocks[i] = clock.resetRunning();
-                if (clock.isRunning()) {
-                    runningClock = i;
-                }
-            }
+            clocks = savedGame.getClocks();
+//            List<Player> players = snapshot.getPlayers();
+//            clocks = new long[players.size()];
+//            for (int i = 0; i < clocks.length; i++) {
+//                //IMMUTABLE TODO
+//                //PlayerClock clock = players.get(i).getClock();
+//                //clocks[i] = clock.resetRunning();
+////                if (clock.isRunning()) {
+////                    runningClock = i;
+////                }
+//                // ---- just dev fix
+//                clocks[i] = 0;
+//                runningClock = -1;
+//            }
             runningSince = System.currentTimeMillis();
         }
         gameStarted = true;
-        broadcast(newGameMessage(false), false);
+        broadcast(newGameMessage(true));
     }
 
     @WsSubscribe
     public void handleToggleClock(WebSocket ws, ToggleClockMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
         long ts = System.currentTimeMillis();
         if (runningClock != -1) {
@@ -457,62 +475,125 @@ public class SimpleServer extends WebSocketServer  {
         runningSince = ts;
         runningClock = msg.getRun() == null ? -1 : msg.getRun();
         long[] clocksCopy = Arrays.copyOf(clocks, clocks.length);
-        ClockMessage clockMsg = new ClockMessage(msg.getGameId(), msg.getRun(), clocksCopy, ts);
-        broadcast(clockMsg, false);
+        ClockMessage clockMsg = new ClockMessage(msg.getRun(), clocksCopy, ts);
+        clockMsg.setGameId(msg.getGameId());
+        broadcast(clockMsg);
+    }
+
+    private void handleInGameMessage(WsInGameMessage msg) {
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
+        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
+        if (msg instanceof WsSeedMeesage) {
+            ((WsSeedMeesage) msg).setSeed(getRandomSeed());
+        }
+        broadcast(msg);
     }
 
     @WsSubscribe
     public void handleDeployFlier(WebSocket ws, DeployFlierMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
-        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        msg.setCurrentTime(System.currentTimeMillis());
-        broadcast(msg, true);
+        handleInGameMessage(msg);
     }
 
     @WsSubscribe
     public void handleCommit(WebSocket ws, CommitMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
-        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        msg.setCurrentTime(System.currentTimeMillis());
-        broadcast(msg, true);
+        handleInGameMessage(msg);
     }
 
     @WsSubscribe
-    public void handleRmi(WebSocket ws, RmiMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
-        if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        broadcast(msg, true);
+    public void handlePass(WebSocket ws, PassMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handlePlaceTile(WebSocket ws, PlaceTileMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleDeployMeeple(WebSocket ws, DeployMeepleMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleReturnMeeple(WebSocket ws, ReturnMeepleMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleMoveNeutralFigureMessage(WebSocket ws, MoveNeutralFigureMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handlePlaceTokenMessage(WebSocket ws, PlaceTokenMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleCaptureFollowerMessage(WebSocket ws, CaptureFollowerMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handlePayRansomMessage(WebSocket ws, PayRansomMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleExchangeFollowerChoiceMessage(WebSocket ws, ExchangeFollowerChoiceMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleBazaarBidMessage(WebSocket ws, BazaarBidMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleBazaarBuyOrSellMessage(WebSocket ws, BazaarBuyOrSellMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleCornCircleRemoveOrDeployMessage(WebSocket ws, CornCircleRemoveOrDeployMessage msg) {
+        handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void handleGameOverMessage(WebSocket ws, GameOverMessage msg) {
+        handleInGameMessage(msg);
     }
 
     @WsSubscribe
     public void handleUndo(WebSocket ws, UndoMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        broadcast(msg, true);
+        replay = replay.subList(0, msg.getReplaySize());
+        broadcast(msg);
     }
 
     @WsSubscribe
     public void handlePostChat(WebSocket ws, PostChatMessage msg) {
-        if (!msg.getGameId().equals(game.getGameId())) throw new IllegalArgumentException("Invalid game id.");
+        if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         String sessionId = getSessionId(ws);
         ChatMessage reMsg = new ChatMessage(sessionId, msg.getText());
         reMsg.setGameId(msg.getGameId());
-        broadcast(reMsg, false);
+        broadcast(reMsg);
     }
 
     public void send(WebSocket ws, WsMessage message) {
         ws.send(parser.toJson(message));
     }
 
-    public void broadcast(WsMessage data, boolean recordReplay) {
-        String payload = parser.toJson(data);
-        if (recordReplay) {
-            replay.add(payload);
+    public void broadcast(WsMessage msg) {
+        if (gameStarted && msg instanceof WsReplayableMessage) {
+            replay.add((WsReplayableMessage) msg);
         }
+        String payload = parser.toJson(msg);
         for (WebSocket ws : connections.keySet()) {
-        	if (ws.isOpen()) { //prevent exception when server is closing
-        		ws.send(payload);
-        	}
+            if (ws.isOpen()) { //prevent exception when server is closing
+                ws.send(payload);
+            }
         }
     }
 

@@ -13,43 +13,44 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.jcloisterzone.LittleBuilding;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.controls.action.ActionWrapper;
 import com.jcloisterzone.ui.grid.ActionLayer;
 import com.jcloisterzone.ui.grid.GridMouseAdapter;
 import com.jcloisterzone.ui.grid.GridMouseListener;
 import com.jcloisterzone.ui.grid.GridPanel;
 
-public class LittleBuildingActionLayer extends AbstractTileLayer implements ActionLayer<LittleBuildingAction>, GridMouseListener {
+public class LittleBuildingActionLayer extends AbstractGridLayer implements ActionLayer, GridMouseListener {
 
     protected static final Composite SHADOW_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
     private static final double PADDING_RATIO = 0.10;
 
-    private Map<LittleBuilding, Image> images = new HashMap<>();
-    private LittleBuildingAction action;
-    private LittleBuilding selected = null;
+    private Map<Token, Image> images = new HashMap<>();
+    private ActionWrapper actionWrapper;
+    //private LittleBuildingAction action;
+    private Token selected = null;
 
-    private HashMap<LittleBuilding, Rectangle> areas = new HashMap<>();
+    private HashMap<Token, Rectangle> areas = new HashMap<>();
 
     int icoSize, padding;
 
     public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        for (LittleBuilding lb : LittleBuilding.values()) {
-            Image img = rm.getImage("neutral/lb-"+lb.name().toLowerCase());
-            images.put(lb, img);
-        }
+        images.put(Token.LB_SHED, rm.getImage("neutral/lb-shed"));
+        images.put(Token.LB_HOUSE, rm.getImage("neutral/lb-house"));
+        images.put(Token.LB_TOWER, rm.getImage("neutral/lb-tower"));
         recomputeDimenensions(getTileWidth());
     }
 
+
     @Override
-    public void setAction(boolean active, LittleBuildingAction action) {
-        this.action = action;
-        setPosition(action == null ? null : getGame().getCurrentTile().getPosition());
+    public void setActionWrapper(boolean active, ActionWrapper actionWrapper) {
+        this.actionWrapper = actionWrapper;
         if (active) {
             prepareAreas();
         } else {
@@ -59,22 +60,27 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
-    public LittleBuildingAction getAction() {
-        return action;
+    public ActionWrapper getActionWrapper() {
+        return actionWrapper;
     }
 
-    private void recomputeDimenensions(int squareSize) {
-        icoSize = squareSize / 2;
+    @Override
+    public LittleBuildingAction getAction() {
+        return actionWrapper == null ? null : (LittleBuildingAction) actionWrapper.getAction();
+    }
+
+    private void recomputeDimenensions(int tileWidth) {
+        icoSize = tileWidth / 2;
         padding = (int) (icoSize * PADDING_RATIO);
     }
 
 
     @Override
-    public void zoomChanged(int squareSize) {
-        recomputeDimenensions(squareSize);
+    public void zoomChanged(int tileWidth) {
+        recomputeDimenensions(tileWidth);
         areas.clear();
         prepareAreas();
-        super.zoomChanged(squareSize);
+        super.zoomChanged(tileWidth);
     }
 
     @Override
@@ -84,23 +90,32 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
         super.boardRotated(boardRotation);
     }
 
-    private int getIconX(LittleBuilding lb) {
+    private int geBuildingIndex(Token lb) {
+        if (lb == Token.LB_SHED) return 0;
+        if (lb == Token.LB_HOUSE) return 1;
+        if (lb == Token.LB_TOWER) return 2;
+        throw new IllegalArgumentException();
+    }
+
+    private int getIconX(Token lb) {
         int x = -icoSize / 2 - padding * 3;
-        return x + lb.ordinal() * (icoSize + 3*padding);
+        return x + geBuildingIndex(lb) * (icoSize + 3*padding);
     }
 
     @SuppressWarnings("unused")
-    private int getIconY(LittleBuilding lb) {
+    private int getIconY(Token lb) {
         return -icoSize / 2;
     }
 
 
     private void prepareAreas() {
+        LittleBuildingAction action = getAction();
         if (action == null) return;
 
-        AffineTransform at = getAffineTransformIgnoringRotation(getPosition());
+        Position pos = action.getPosition();
+        AffineTransform at = getAffineTransformIgnoringRotation(pos);
 
-        for (LittleBuilding lb : LittleBuilding.values()) {
+        for (Token lb : Token.littleBuildingValues()) {
             if (action.getOptions().contains(lb)) {
                 int x = getIconX(lb), y = getIconY(lb);
                 Rectangle rect = new Rectangle(x-padding, y-padding, icoSize+2*padding, icoSize+2*padding);
@@ -111,11 +126,14 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
 
     @Override
     public void paint(Graphics2D g2) {
+        LittleBuildingAction action = getAction();
+        Position pos = action.getPosition();
+
         Composite origComposite = g2.getComposite();
         ImmutablePoint shadowOffset = new ImmutablePoint(3, 3);
         shadowOffset = shadowOffset.rotate(gridPanel.getBoardRotation().inverse());
 
-        for (LittleBuilding lb : action.getOptions()) {
+        for (Token lb : Token.littleBuildingValues()) {
             Rectangle r = areas.get(lb);
             if (r == null) continue;
             g2.setComposite(SHADOW_COMPOSITE);
@@ -127,7 +145,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
 
             Image img = images.get(lb);
             int x = getIconX(lb), y = getIconY(lb);
-            AffineTransform at = getAffineTransform(getPosition(), gridPanel.getBoardRotation().inverse());
+            AffineTransform at = getAffineTransform(pos, gridPanel.getBoardRotation().inverse());
             at.concatenate(AffineTransform.getTranslateInstance(x, y));
             at.concatenate(AffineTransform.getScaleInstance(icoSize / (double) img.getWidth(null), icoSize / (double) img.getHeight(null)));
             g2.drawImage(images.get(lb), at, null);
@@ -147,8 +165,8 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
             Point2D point = gridPanel.getRelativePoint(e.getPoint());
             int x = (int) point.getX();
             int y = (int) point.getY();
-            LittleBuilding newValue = null;
-            for (Entry<LittleBuilding, Rectangle> entry : areas.entrySet()) {
+            Token newValue = null;
+            for (Entry<Token, Rectangle> entry : areas.entrySet()) {
                 if (entry.getValue().contains(x, y)) {
                     newValue = entry.getKey();
                     break;
@@ -163,16 +181,18 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     }
 
     @Override
-    protected GridMouseAdapter createGridMouserAdapter(GridMouseListener listener) {
-        return new MoveTrackingGridMouseAdapter(gridPanel, listener);
+    public void onShow() {
+        super.onShow();
+        //TODO extract listener from this
+        attachMouseInputListener(new MoveTrackingGridMouseAdapter(gridPanel, this));
     }
 
     @Override
-    public void squareEntered(MouseEvent e, Position p) {
+    public void tileEntered(MouseEvent e, Position p) {
     }
 
     @Override
-    public void squareExited(MouseEvent e, Position p) {
+    public void tileExited(MouseEvent e, Position p) {
 
     }
 
@@ -180,7 +200,7 @@ public class LittleBuildingActionLayer extends AbstractTileLayer implements Acti
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selected != null) {
-                action.perform(getRmiProxy(), selected);
+                gc.getConnection().send(getAction().select(selected));
                 e.consume();
             }
         }

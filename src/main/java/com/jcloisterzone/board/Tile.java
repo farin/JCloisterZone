@@ -1,368 +1,266 @@
 package com.jcloisterzone.board;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.google.common.base.Objects;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.Player;
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.MultiTileFeature;
-import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.feature.visitor.IsOccupied;
-import com.jcloisterzone.feature.visitor.IsOccupiedAndUncompleted;
-import com.jcloisterzone.feature.visitor.IsOccupiedOrCompleted;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.feature.River;
+import com.jcloisterzone.feature.Road;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Map;
 
 /**
- * Represents one game tile. Contains references on score objects
- * which lays on tile and provides logic for tiles merging, rotating
- * and placing figures.
- *
- * @author Roman Krejcik
+ * Represents a tile type
  */
-public class Tile /*implements Cloneable*/ {
+@Immutable
+public class Tile implements Serializable {
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * The constant ABBEY_TILE_ID.
+     */
     public static final String ABBEY_TILE_ID = "AM.A";
 
-    protected Game game;
     private final Expansion origin;
     private final String id;
+    private final EdgePattern edgePattern;
+    private final TileSymmetry symmetry;
 
-    private ArrayList<Feature> features;
-    private Bridge bridge; //direct reference to bridge feature
+    private final Map<Location, Feature> initialFeatures;
 
-    protected TileSymmetry symmetry;
-    protected Position position = null;
-    private Rotation rotation = Rotation.R0;
+    private final TileTrigger trigger;
+    private final Location windRose;
+    private final Class<? extends Feature> cornCircle;
 
-    private EdgePattern edgePattern;
+    /**
+     * Instantiates a new {@code TileDefinition}
+     *
+     * @param origin          the {@link Expansion} this tile belongs to
+     * @param id              the identifier of the tile
+     * @param initialFeatures the {@link Feature}s of the tile
+     */
+    public Tile(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
+        this(origin, id, initialFeatures, null, null, null);
+    }
 
-    //expansions data - maybe some map instead ? but still it is only few tiles
-    private TileTrigger trigger;
-    private Location river;
-    private Location flier;
-    private Location windRose;
-    private Class<? extends Feature> cornCircle;
-
-    public Tile(Expansion origin, String id) {
+    /**
+     * Instantiates a new {@code TileDefinition}.
+     *
+     * @param origin          the {@link Expansion} this tile belongs to
+     * @param id              the identifier of the tile
+     * @param initialFeatures the {@link Feature}s of the tile
+     * @param trigger         the tile trigger (a tag for some special behaviour)
+     * @param flier           the direction pointed by of the flier ({@see FlierCapability})
+     * @param windRose        the direction pointed by the wind rose ({@see WindRoseCapability})
+     * @param cornCircle      the feature on the corn circle, if any ({@see CornCircleCapability})
+     */
+    public Tile(Expansion origin, String id,
+        Map<Location, Feature> initialFeatures,
+        TileTrigger trigger, Location windRose,
+        Class<? extends Feature> cornCircle) {
         this.origin = origin;
         this.id = id;
+        this.initialFeatures = initialFeatures;
+
+        this.trigger = trigger;
+        this.windRose = windRose;
+        this.cornCircle = cornCircle;
+
+        this.edgePattern = computeEdgePattern();
+        this.symmetry = this.edgePattern.getSymmetry();
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    /**
+     * Sets the tile trigger
+     *
+     * @param trigger the trigger to set
+     * @return a new instance with the trigger set
+     */
+    public Tile setTileTrigger(TileTrigger trigger) {
+        assert this.trigger == null;
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
-    public EdgePattern getEdgePattern() {
-        return edgePattern;
+    /**
+     * Sets the direction pointed by the wind rose.
+     * {@see WindRoseCapability}
+     *
+     * @param windRose the direction to set
+     * @return a new instance with the direction pointed by the wind rose set
+     */
+    public Tile setWindRose(Location windRose) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
-    public void setEdgePattern(EdgePattern edgePattern) {
-        this.edgePattern = edgePattern;
+    /**
+     * Sets the feature on the corn circle (if any).
+     * {@see CornCircleCapability}
+     *
+     * @param cornCircle the feature to set
+     * @return a new instance with the corn circle feature set
+     */
+    public Tile setCornCircle(Class<? extends Feature> cornCircle) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
-    public Edge getEdge(Location side) {
-        return getEdgePattern().at(side, rotation);
+    /**
+     * Sets the tile features
+     *
+     * @param initialFeatures the features to set
+     * @return a new instance with the features set
+     */
+    public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
+        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
     }
 
-    public String getId() {
-        return id;
+    /**
+     * Adds a bridge to the instance
+     *
+     * @param bridgeLoc the location where the bridge spans
+     * @return a new instance with the bridge added
+     */
+    public Tile addBridge(Location bridgeLoc) {
+        assert bridgeLoc == Location.NS || bridgeLoc == Location.WE;
+        Bridge bridge = new Bridge(bridgeLoc);
+        return setInitialFeatures(initialFeatures.put(bridgeLoc, bridge));
     }
 
-    public Expansion getOrigin() {
-        return origin;
-    }
-
-    protected boolean check(Tile tile, Location rel, Board board) {
-        return getEdge(rel) == tile.getEdge(rel.rev());
-    }
-
-    public void setFeatures(ArrayList<Feature> features) {
-        assert this.features == null;
-        this.features = features;
-    }
-
-    public List<Feature> getFeatures() {
-        return features;
-    }
-
-    public Feature getFeature(Location loc) {
-        if (loc == Location.ABBOT) loc = Location.CLOISTER;
-        for (Feature p : features) {
-            if (p.getLocation().equals(loc)) return p;
-        }
-        return null;
-    }
-
-    public Feature getFeaturePartOf(Location loc) {
-        if (loc == Location.ABBOT) loc = Location.CLOISTER;
-        for (Feature p : features) {
-            if (loc.isPartOf(p.getLocation())) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    /** merge this to another tile - method argument is tile placed before */
-    protected void merge(Tile tile, Location loc) {
-        //if (logger.isDebugEnabled()) logger.debug("Merging " + id + " with " + tile.getId());
-        Location oppositeLoc = loc.rev();
-        MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
-        if (oppositePiece != null) {
-            if (isAbbeyTile()) {
-                oppositePiece.setAbbeyEdge(oppositeLoc);
-            } else {
-                MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc);
-                oppositePiece.setEdge(oppositeLoc, thisPiece);
-                thisPiece.setEdge(loc, oppositePiece);
-            }
-        }
-        for (int i = 0; i < 2; i++) {
-            Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
-            Location oppositeHalfSide = halfSide.rev();
-            oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
-            if (oppositePiece != null) {
-                if (isAbbeyTile()) {
-                    oppositePiece.setAbbeyEdge(oppositeHalfSide);
-                } else {
-                    MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide);
-                    oppositePiece.setEdge(oppositeHalfSide, thisPiece);
-                    thisPiece.setEdge(halfSide, oppositePiece);
-                }
-            }
-        }
-    }
-
-    protected void unmerge(Tile tile, Location loc) {
-        Location oppositeLoc = loc.rev();
-        MultiTileFeature oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeLoc);
-        if (oppositePiece != null) {
-            oppositePiece.setEdge(oppositeLoc, null);
-            if (!isAbbeyTile()) {
-                MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(loc);
-                if (thisPiece != null) { //can be null for bridge undo
-                    thisPiece.setEdge(loc, null);
-                }
-            }
-        }
-        for (int i = 0; i < 2; i++) {
-            Location halfSide = i == 0 ? loc.getLeftFarm() : loc.getRightFarm();
-            Location oppositeHalfSide = halfSide.rev();
-            oppositePiece = (MultiTileFeature) tile.getFeaturePartOf(oppositeHalfSide);
-            if (oppositePiece != null) {
-                oppositePiece.setEdge(oppositeHalfSide, null);
-                if (!isAbbeyTile()) {
-                    MultiTileFeature thisPiece = (MultiTileFeature) getFeaturePartOf(halfSide);
-                    thisPiece.setEdge(halfSide, null);
-                }
-            }
-        }
-    }
-
-    protected void rotate() {
-        rotation = rotation.next();
-    }
-
-    public void setRotation(Rotation rotation) {
-        assert rotation != null;
-        this.rotation =  rotation;
-    }
-
-    public Rotation getRotation() {
-        return rotation;
-    }
-
-    public TileSymmetry getSymmetry() {
-        return symmetry;
-    }
-
-    public void setSymmetry(TileSymmetry symmetry) {
-        this.symmetry = symmetry;
-    }
-
+    /**
+     * Checks if {@code this} is an abbey tile.
+     * {@see AbbeyCapability}
+     *
+     * @return {@code true} if {@code this} is an abbey tile., {@code false} otherwise
+     */
     public boolean isAbbeyTile() {
         return id.equals(ABBEY_TILE_ID);
     }
 
-    public boolean hasCloister() {
-        return getFeature(Location.CLOISTER) != null;
-    }
-
-
-    public Cloister getCloister() {
-        return (Cloister) getFeature(Location.CLOISTER);
-    }
-
-    public Tower getTower() {
-        return (Tower) getFeature(Location.TOWER);
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-
-    public void setPosition(Position p) {
-        position = p;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-
-    public Bridge getBridge() {
-        return bridge;
-    }
-
-    public void placeBridge(Location bridgeLoc) {
-        assert bridge == null && bridgeLoc != null; //TODO AI support - remove bridge from tile
-        Location normalizedLoc = bridgeLoc.rotateCCW(rotation);
-        bridge = new Bridge();
-        bridge.setId(game.idSequnceNextVal());
-        bridge.setTile(this);
-        bridge.setLocation(normalizedLoc);
-        features.add(bridge);
-        edgePattern = edgePattern.getBridgePattern(normalizedLoc);
-    }
-
-    public void removeBridge(Location bridgeLoc) {
-        Location normalizedLoc = bridgeLoc.rotateCCW(rotation);
-        features.remove(bridge);
-        bridge = null;
-        edgePattern = edgePattern.removeBridgePattern(normalizedLoc);
-    }
-
-    public Set<Location> getUnoccupiedScoreables(boolean excludeCompleted) {
-        Set<Location> locations = new HashSet<>();
-        for (Feature f : features) {
-            if (f instanceof Scoreable) {
-                if (f instanceof Cloister) {
-                    Cloister c = (Cloister) f;
-                    if (c.isMonastery() && c.getMeeples().isEmpty()) {
-                        locations.add(Location.ABBOT);
-                    }
-                }
-                IsOccupied visitor;
-                if (excludeCompleted && f instanceof Completable) {
-                    visitor = new IsOccupiedOrCompleted();
-                } else {
-                    visitor = new IsOccupied();
-                }
-                if (f.walk(visitor)) continue;
-                locations.add(f.getLocation());
-            }
-        }
-        return locations;
-    }
-
-    public Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass) {
-        return getPlayerFeatures(player, featureClass, false);
-    }
-
-    public Set<Location> getPlayerUncompletedFeatures(Player player, Class<? extends Feature> featureClass) {
-        return getPlayerFeatures(player, featureClass, true);
-    }
-
-
-    private Set<Location> getPlayerFeatures(Player player, Class<? extends Feature> featureClass, boolean uncompletedOnly)  {
-        Set<Location> locations = new HashSet<>();
-        for (Feature f : features) {
-            if (!featureClass.isInstance(f)) continue;
-            IsOccupied visitor = uncompletedOnly ? new IsOccupiedAndUncompleted() : new IsOccupied();
-            if (f.walk(visitor.with(player).with(Follower.class))) {
-                locations.add(f.getLocation());
-            }
-        }
-        return locations;
-    }
-
     @Override
-    public String toString() {
-        return getId() + '(' + getRotation() + ')';
+    public int hashCode() {
+        return Objects.hashCode(id, initialFeatures);
     }
 
+    /**
+     * Gets the {@link Expansion} this tile belongs to.
+     *
+     * @return the {@link Expansion} this tile belongs to
+     */
+    public Expansion getOrigin() {
+        return origin;
+    }
+
+    /**
+     * Gets the id of this tile.
+     *
+     * @return the id of this tile
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Gets the edge pattern of this tile.
+     *
+     * @return the edge pattern of this tile
+     */
+    public EdgePattern getEdgePattern() {
+        return edgePattern;
+    }
+
+    /**
+     * Gets the symmetry of this tile.
+     *
+     * @return the symmetry of this tile
+     */
+    public TileSymmetry getSymmetry() {
+        return symmetry;
+    }
+
+    /**
+     * Gets the features of this tile.
+     *
+     * @return the features of this tile
+     */
+    public Map<Location, Feature> getInitialFeatures() {
+        return initialFeatures;
+    }
+
+    /**
+     * Gets the trigger of this tile.
+     *
+     * @return the trigger of this tile
+     */
     public TileTrigger getTrigger() {
         return trigger;
     }
 
-    public void setTrigger(TileTrigger trigger) {
-        this.trigger = trigger;
-    }
-
-    public boolean hasTrigger(TileTrigger trigger) {
-        return trigger == this.trigger;
-    }
-
-    public Class<? extends Feature> getCornCircle() {
-        return cornCircle;
-    }
-
-    public void setCornCircle(Class<? extends Feature> cornCircle) {
-        this.cornCircle = cornCircle;
-    }
-
-    public City getCityWithPrincess() {
-        for (Feature p : features) {
-            if (p instanceof City ) {
-                City cp = (City) p;
-                if (cp.isPricenss()) {
-                    return cp;
-                }
-            }
-        }
-        return null;
-    }
-
-
-    public Location getRiver() {
-        return river;
-    }
-
-    public void setRiver(Location river) {
-        this.river = river;
-    }
-
-
-    public Location getFlier() {
-        return flier;
-    }
-
-    public void setFlier(Location flier) {
-        this.flier = flier;
-    }
-
+    /**
+     * Gets the direction pointed by the wind rose.
+     *
+     * @return the direction pointed by the wind rose
+     */
     public Location getWindRose() {
         return windRose;
     }
 
-    public void setWindRose(Location windRose) {
-        this.windRose = windRose;
+    /**
+     * Gets the feature on the corn circle (if any).
+     * {@see CornCircleCapability}
+     *
+     * @return the feature on the corn circle, if any
+     */
+    public Class<? extends Feature> getCornCircle() {
+        return cornCircle;
     }
 
-    public boolean isBridgeAllowed(Location bridgeLoc) {
-        if (origin == Expansion.COUNT || getBridge() != null) return false;
-        return edgePattern.isBridgeAllowed(bridgeLoc, rotation);
+    /**
+     * Checks whether this tile has a tower place on it
+     *
+     * @return {@code true} it this tile has a tower place on it, {@code false} otherwise
+     */
+    public boolean hasTower() {
+        return initialFeatures.containsKey(Location.TOWER);
     }
 
+    /**
+     * Calculates and returns the type of the edge pointed by {@code loc}.
+     *
+     * @param loc the location indicating the edge of interest
+     * @return the edge type
+     */
+    private EdgeType computeSideEdge(Location loc) {
+        Tuple2<Location, Feature> tuple = initialFeatures.find(item -> loc.isPartOf(item._1)).getOrNull();
+
+        if (tuple == null) return EdgeType.FARM;
+        if (tuple._2 instanceof Road) return EdgeType.ROAD;
+        if (tuple._2 instanceof City) return EdgeType.CITY;
+        if (tuple._2 instanceof River) return EdgeType.RIVER;
+
+        throw new IllegalArgumentException();
+    }
+
+    /**
+     * Calculates and returns the edge pattern of this tile.
+     *
+     * @return the edge pattern of this tile.
+     */
+    private EdgePattern computeEdgePattern() {
+        return new EdgePattern(
+            computeSideEdge(Location.N),
+            computeSideEdge(Location.E),
+            computeSideEdge(Location.S),
+            computeSideEdge(Location.W)
+        );
+    }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

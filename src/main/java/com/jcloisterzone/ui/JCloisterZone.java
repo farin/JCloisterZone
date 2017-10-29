@@ -24,13 +24,15 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
+import com.jcloisterzone.Expansion;
 import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.ui.plugin.Plugin;
-import com.jcloisterzone.ui.plugin.PluginType;
+import com.jcloisterzone.plugin.NotAPluginException;
+import com.jcloisterzone.plugin.Plugin;
+import com.jcloisterzone.plugin.PluginLoadException;
 
 public class JCloisterZone  {
 
@@ -61,7 +63,6 @@ public class JCloisterZone  {
         if (path != null) return path;
         path = getDataDirectory(System.getProperty("user.home"), ".jcloisterzone");
         if (path != null) return path;
-        System.err.println(System.getProperty("user.home"));
         System.err.println("Could not locate writeable working dir");
         //returns user's working directory anyway //but configuration saving will not work
         return workingDir;
@@ -84,46 +85,79 @@ public class JCloisterZone  {
         return System.getProperty("os.name").startsWith("Mac");
     }
 
-    private boolean isPluginEnabled(Config config, String relativePath) {
-        for (String path : config.getPlugins()) {
-            if (relativePath.equals(path)) return true;
+    private boolean isPluginEnabled(Config config, Path relPath) {
+            String pluginName = relPath.toString();
+        for (String path : config.getPlugins().getEnabled_plugins()) {
+            if (pluginName.equals(path)) return true;
             //dev helper, match also unpacked plugins
-            if (!relativePath.endsWith(".jar")) {
-                if ((relativePath+".jar").equals(path)) return true;
+            if (!pluginName.endsWith(".jar")) {
+                if ((pluginName+".jar").equals(path)) return true;
             }
         }
         return false;
     }
 
+    private boolean isPluginArchive(Path path) {
+        String s = path.toString();
+        return s.endsWith(".jar") || s.endsWith(".zip");
+    }
+
     public List<Plugin> loadPlugins(Config config) {
         ArrayList<Plugin> plugins = new ArrayList<>();
 
-        try {
-            Path pluginDir = Paths.get(getClass().getClassLoader().getResource("plugins").toURI());
-            DirectoryStream<Path> stream = Files.newDirectoryStream(pluginDir);
-
-            for (Path file: stream) {
-                try {
-                   Plugin plugin = Plugin.readPlugin(file);
-                   if (plugin.getType() == PluginType.DEFAULT_GRF_SET || isPluginEnabled(config, plugin.getRelativePath())) {
-                       plugin.load();
-                       plugin.setEnabled(true);
-                   }
-                   plugins.add(plugin);
-                } catch (Exception e) {
-                    logger.error("Unable to load plugin " + file, e);
+        for (String folderName : config.getPlugins().getLookup_folders()) {
+            try {
+                Path pluginFolder = Paths.get(folderName);
+                if (!pluginFolder.isAbsolute()) {
+                    pluginFolder = Paths.get(getClass().getClassLoader().getResource(folderName).toURI());
                 }
+                DirectoryStream<Path> stream = Files.newDirectoryStream(pluginFolder);
+
+                for (Path fullPath: stream) {
+                        Path relPath = pluginFolder.relativize(fullPath);
+                    boolean isValid = !relPath.toString().startsWith(".") && (
+                       Files.isDirectory(fullPath) || isPluginArchive(fullPath)
+                    );
+
+                    if (!isValid) {
+                        continue;
+                    }
+
+                    try {
+                        Plugin plugin = Plugin.readPlugin(relPath, fullPath);
+                        if (isPluginEnabled(config, relPath)) {
+                            plugin.load();
+                            plugin.setEnabled(true);
+                        }
+                        plugins.add(plugin);
+                    } catch (NotAPluginException e1) {
+                        logger.info("{} is not recognized as plugin", fullPath);
+                    } catch (PluginLoadException e2) {
+                        logger.error(String.format("Unable to load plugin %s", fullPath), e2);
+                    }
+                }
+            } catch (URISyntaxException | IOException e) {
+                logger.error("Cannot read plugin directory", e);
             }
-        } catch (URISyntaxException | IOException e) {
-            logger.error("Cannot read plugin directory", e);
         }
 
+
         Collections.sort(plugins, new Comparator<Plugin>() {
+
+            private int getPluginPriority(Plugin p) {
+                if (p.isDefault()) return Integer.MAX_VALUE;
+                if (p.isExpansionSupported(Expansion.BASIC)) {
+                    return 1000 + p.getContainedExpansions().size();
+                } else {
+                    return 10 + p.getContainedExpansions().size();
+                }
+            }
+
             @Override
             public int compare(Plugin o1, Plugin o2) {
-                int o1ord = o1.getType() == null ? Integer.MAX_VALUE : o1.getType().ordinal();
-                int o2ord = o2.getType() == null ? Integer.MAX_VALUE : o2.getType().ordinal();
-                return o2ord - o1ord; //reverse order
+                int o1ord = getPluginPriority(o1);
+                int o2ord = getPluginPriority(o2);
+                return o1ord - o2ord;
             }
         });
 
@@ -160,14 +194,12 @@ public class JCloisterZone  {
         }
     }
 
-
-
     public void run() {
         System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        logger.info("Date directory {}", dataDirectory.toString());
+        logger.info("Data directory {}", dataDirectory.toString());
 
         ConfigLoader configLoader = new ConfigLoader(dataDirectory);
         Config config = configLoader.load();

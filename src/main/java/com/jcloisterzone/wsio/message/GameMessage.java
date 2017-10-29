@@ -1,52 +1,59 @@
 package com.jcloisterzone.wsio.message;
 
+import java.util.List;
+
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME")
 public class GameMessage implements WsMessage, WsInGameMessage {
 
-    public enum GameState {
+    public enum GameStatus {
         OPEN, RUNNING, REMOVED, PAUSED
     }
 
     private String gameId;
     private String channel;
     private String name;
-    private GameState state;
-    private String snapshot;
-    private SlotMessage[] slots;
-    private GameSetupMessage gameSetup;
-    private String[] replay;
+    private GameStatus status;
     private boolean passwordProtected;
+
+    //TODO use structures instead of message?
+    private GameSetupMessage gameSetup;
+    private SlotMessage[] slots;
+
+    private long initialSeed;
+    private List<WsReplayableMessage> replay;
+
 
     public GameMessage() {
     }
 
-    public GameMessage(String id, String name, GameState state, GameSetupMessage gameSetup) {
+    public GameMessage(String id, String name, GameStatus status, GameSetupMessage gameSetup) {
         this.gameId = id;
         this.name = name;
-        this.state = state;
+        this.status = status;
         this.gameSetup = gameSetup;
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 
     public String getChannel() {
-		return channel;
-	}
+        return channel;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
-	public String getName() {
+    public String getName() {
         return name;
     }
 
@@ -54,20 +61,12 @@ public class GameMessage implements WsMessage, WsInGameMessage {
         this.name = name;
     }
 
-    public GameState getState() {
-        return state;
+    public GameStatus getStatus() {
+        return status;
     }
 
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-    public String getSnapshot() {
-        return snapshot;
-    }
-
-    public void setSnapshot(String snapshot) {
-        this.snapshot = snapshot;
+    public void setStatus(GameStatus state) {
+        this.status = state;
     }
 
     public SlotMessage[] getSlots() {
@@ -86,19 +85,27 @@ public class GameMessage implements WsMessage, WsInGameMessage {
         this.gameSetup = gameSetup;
     }
 
-	public String[] getReplay() {
-		return replay;
-	}
+    public boolean isPasswordProtected() {
+        return passwordProtected;
+    }
 
-	public void setReplay(String[] replay) {
-		this.replay = replay;
-	}
+    public void setPasswordProtected(boolean passwordProtected) {
+        this.passwordProtected = passwordProtected;
+    }
 
-	public boolean isPasswordProtected() {
-		return passwordProtected;
-	}
+    public long getInitialSeed() {
+        return initialSeed;
+    }
 
-	public void setPasswordProtected(boolean passwordProtected) {
-		this.passwordProtected = passwordProtected;
-	}
+    public void setInitialSeed(long initialSeed) {
+        this.initialSeed = initialSeed;
+    }
+
+    public List<WsReplayableMessage> getReplay() {
+        return replay;
+    }
+
+    public void setReplay(List<WsReplayableMessage> replay) {
+        this.replay = replay;
+    }
 }

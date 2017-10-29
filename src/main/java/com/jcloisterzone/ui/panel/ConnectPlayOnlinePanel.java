@@ -1,6 +1,6 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +21,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
 import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.ui.view.StartView;
+
+import net.miginfocom.swing.MigLayout;
 
 
 public class ConnectPlayOnlinePanel extends ThemedJPanel {
@@ -45,14 +45,14 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
             public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false); //TODO change to Interrupt button
                 message.setForeground(Color.BLACK);
-                message.setText(_("Connecting") + "...");
+                message.setText(_tr("Connecting") + "...");
                 saveClientName();
                 connect();
             }
         };
 
         if (!client.getTheme().isDark()) {
-        	setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+            setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         }
 
         setLayout(new MigLayout("", "[80.00][][grow]", "[][][][][]"));
@@ -60,7 +60,7 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
         JLabel helpLabel = new ThemedJLabel("Enter your nickname");
         add(helpLabel, "cell 0 0,spanx 3");
 
-        JLabel hostLabel = new ThemedJLabel(_("Nickname"));
+        JLabel hostLabel = new ThemedJLabel(_tr("Nickname"));
         add(hostLabel, "cell 0 1,alignx left,aligny top, gaptop 10");
 
 
@@ -70,11 +70,11 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
         nickField .setColumns(20);
         nickField.setText(getDefaultNick());
 
-        btnConnect = new JButton(_("Connect"));
+        btnConnect = new JButton(_tr("Connect"));
         btnConnect.addActionListener(actionListener);
         add(btnConnect, "cell 1 2");
 
-        btnBack = new JButton(_("Back"));
+        btnBack = new JButton(_tr("Back"));
         btnBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -113,11 +113,11 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
         if (ex instanceof UnresolvedAddressException) {
-            message.setText( _("Connection failed. Unknown host."));
+            message.setText( _tr("Connection failed. Unknown host."));
         } else if (ex instanceof ConnectException && "Connection refused: connect".equals(ex.getMessage())) {
-            message.setText( _("Connection refused."));
+            message.setText( _tr("Connection refused."));
         } else {
-            message.setText( _("Connection failed.") + " (" + ex.getMessage() + ")");
+            message.setText( _tr("Connection failed.") + " (" + ex.getMessage() + ")");
             logger.warn(ex.getMessage(), ex);
         }
     }
@@ -128,7 +128,7 @@ public class ConnectPlayOnlinePanel extends ThemedJPanel {
             client.connectPlayOnline(nick);
             return;
         } catch (NumberFormatException nfe) {
-            message.setText( _("Invalid port number."));
+            message.setText( _tr("Invalid port number."));
         }
 
         message.setForeground(Color.RED);

@@ -12,14 +12,14 @@ import com.jcloisterzone.ui.panel.ConnectGamePanel;
 
 public class ConnectP2PView extends AbstractUiView {
 
-	private ConnectGamePanel panel;
+    private ConnectGamePanel panel;
 
-	public ConnectP2PView(Client client) {
-		super(client);
-	}
+    public ConnectP2PView(Client client) {
+        super(client);
+    }
 
-	@Override
-	public void show(Container pane, Object ctx) {
+    @Override
+    public void show(Container pane, Object ctx) {
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new GridBagLayout()); //to have centered inner panel
 
@@ -27,10 +27,10 @@ public class ConnectP2PView extends AbstractUiView {
         envelope.add(panel);
 
         pane.add(envelope, BorderLayout.CENTER);
-	}
+    }
 
-	@Override
-	public void onWebsocketError(Exception ex) {
-		panel.onWebsocketError(ex);
-	}
+    @Override
+    public void onWebsocketError(Exception ex) {
+        panel.onWebsocketError(ex);
+    }
 }

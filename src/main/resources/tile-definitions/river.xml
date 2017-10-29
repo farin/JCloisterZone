@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <tile id="I.s" group="river-start">
+    <tile id="I.s" maxCount="1">
         <farm>NL NR EL ER SL SR WL WR</farm>
         <river>E</river>
-        <position x="0" y="0"/>
+        <position x="0" y="0" priority="2"/>
     </tile>
-    <tile id="I.e" group="inactive">
+    <tile id="I.e" maxCount="1" group="river-lake">
         <farm>NL NR EL ER SL SR WL WR</farm>
         <river>W</river>
     </tile>

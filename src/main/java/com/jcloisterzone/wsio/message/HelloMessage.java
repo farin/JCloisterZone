@@ -12,6 +12,9 @@ public class HelloMessage implements WsMessage {
     private String clientId;
     private String secret;
 
+    public HelloMessage() {
+    }
+
     public HelloMessage(String nickname, String clientId, String secret) {
         this.nickname = nickname;
         this.clientId = clientId;

@@ -1,14 +1,14 @@
 package com.jcloisterzone.figure.neutral;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.Game;
 
+@Immutable
 public class Witch extends NeutralFigure<FeaturePointer> {
 
-    private static final long serialVersionUID = -3086047207200957895L;
+    private static final long serialVersionUID = 1L;
 
-    public Witch(Game game) {
-        super(game);
+    public Witch(String id) {
+        super(id);
     }
-
 }

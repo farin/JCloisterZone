@@ -1,32 +1,29 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.board.TileTrigger;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.capability.DragonCapability;
+import java.util.Random;
 
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.state.GameState;
+
+@RequiredCapability(DragonCapability.class)
 public class DragonPhase extends Phase {
 
-    private final DragonCapability dragonCap;
-
-    public DragonPhase(Game game) {
-        super(game);
-        dragonCap = game.getCapability(DragonCapability.class);
+    public DragonPhase(Random random) {
+        super(random);
     }
 
     @Override
-    public boolean isActive() {
-        return game.hasCapability(DragonCapability.class);
-    }
-
-    @Override
-    public void enter() {
-        if (getTile().hasTrigger(TileTrigger.DRAGON)) {
-            if (dragonCap.getDragon().getPosition() != null) {
-                dragonCap.triggerDragonMove();
-                next(DragonMovePhase.class);
-                return;
+    public StepResult enter(GameState state) {
+        Tile tile = state.getLastPlaced().getTile();
+        if (tile.getTrigger() == TileTrigger.DRAGON) {
+            Position pos = state.getNeutralFigures().getDragonDeployment();
+            if (pos != null) {
+                return next(state, DragonMovePhase.class);
             }
         }
-        next();
+        return next(state);
     }
 }

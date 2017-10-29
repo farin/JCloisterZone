@@ -1,28 +1,23 @@
 package com.jcloisterzone.game.capability;
 
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
+
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
+public class CathedralCapability extends Capability<Void> {
 
-public class CathedralCapability extends Capability {
-
-    public CathedralCapability(Game game) {
-        super(game);
-    }
+    private static final long serialVersionUID = 1L;
 
     @Override
-    public void initFeature(Tile tile, Feature feature, Element xml) {
+    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City) {
-            ((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));
+            feature = ((City) feature).setCathedral(attributeBoolValue(xml, "cathedral"));
         }
+        return feature;
     }
-
-
-
 }

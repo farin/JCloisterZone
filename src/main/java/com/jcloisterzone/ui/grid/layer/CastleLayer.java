@@ -2,31 +2,31 @@ package com.jcloisterzone.ui.grid.layer;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.event.CastleDeployedEvent;
+import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.CastleCreated;
+import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
+import io.vavr.Predicates;
+import io.vavr.collection.List;
+import io.vavr.collection.Stream;
+
 public class CastleLayer extends AbstractGridLayer {
 
-    private static class DeployedCastle {
-        Position position;
-        Rotation rotation;
-
-        public DeployedCastle(Position position, Rotation rotation) {
-            this.position = position;
-            this.rotation = rotation;
-        }
+    public static class CastleLayerModel {
+        List<Edge> castles = List.empty();
     }
 
-    private List<DeployedCastle> castles = new ArrayList<>();
-    private Image castleImage;
+    private final Image castleImage;
+    private CastleLayerModel model = new CastleLayerModel();
+
 
     public CastleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -34,46 +34,51 @@ public class CastleLayer extends AbstractGridLayer {
         gc.register(this);
     }
 
+
     @Subscribe
-    public void onCastleDeployed(CastleDeployedEvent ev) {
-	gridPanel.clearActionDecorations();
-        castleDeployed(ev.getPart1(), ev.getPart2());
-    }
-
-    private void castleDeployed(Castle castle1, Castle castle2) {
-        Position p1 = castle1.getTile().getPosition();
-        Position p2 = castle2.getTile().getPosition();
-        Position pos;
-        Rotation rot;
-
-        if (p1.x == p2.x) {
-            pos = p1.y < p2.y ? p1 : p2;
-            rot = Rotation.R0;
-        } else {
-            pos = p1.x < p2.x ? p1 : p2;
-            rot = Rotation.R90;
+    public void handleGameChanged(GameChangedEvent ev) {
+        boolean changed = false;
+        for (PlayEvent pe : ev.getPlayEventsSymmetricDifference()) {
+            if (pe instanceof CastleCreated) {
+                changed = true;
+                break;
+            }
         }
-        castles.add(new DeployedCastle(pos, rot));
+
+        if (changed) {
+            model = createModel(ev.getCurrentState());
+            gridPanel.repaint();
+        }
     }
+
+    private CastleLayerModel createModel(GameState state) {
+        CastleLayerModel model = new CastleLayerModel();
+
+        model.castles = Stream.ofAll(state.getFeatureMap().values())
+            .filter(Predicates.instanceOf(Castle.class))
+            .distinct()
+            .map(c -> ((Castle)c).getEdge())
+            .toList();
+        return model;
+    }
+
 
     @Override
     public void paint(Graphics2D g2) {
-        int size;
-        for (DeployedCastle dc : castles) {
-        	if (dc.rotation == Rotation.R0 || dc.rotation == Rotation.R180) {
-        		size = getTileWidth();
-        	} else {
-        		size = getTileHeight();
-        	}
-            if (dc.rotation == Rotation.R0) {
-                g2.drawImage(castleImage, getOffsetX(dc.position), getOffsetY(dc.position) + size/2, size, size, null);
+        for (Edge edge : model.castles) {
+            Position pos = edge.getP1();
+            if (edge.isHorizontal()) {
+                int size = getTileWidth();
+                g2.drawImage(castleImage, getOffsetX(pos), getOffsetY(pos) + size/2, size, size, null);
             } else {
-//				AffineTransform at = Rotation.R90.getAffineTransform(size);
-//				at.concatenate(AffineTransform.getTranslateInstance(getOffsetX(dc.position) + size/2, getOffsetY(dc.position)));
-//				g2.drawImage(castleImage, at, null);
+                int size = getTileHeight();
+
+//              AffineTransform at = Rotation.R90.getAffineTransform(size);
+//              at.concatenate(AffineTransform.getTranslateInstance(getOffsetX(dc.position) + size/2, getOffsetY(dc.position)));
+//              g2.drawImage(castleImage, at, null);
 
                 //TODO rotated
-                g2.drawImage(castleImage, getOffsetX(dc.position) + size/2, getOffsetY(dc.position), size, size, null);
+                g2.drawImage(castleImage, getOffsetX(pos) + size/2, getOffsetY(pos), size, size, null);
             }
         }
     }

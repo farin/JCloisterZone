@@ -3,55 +3,36 @@ package com.jcloisterzone.wsio.message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
+/**
+ * Because random dice is following deploy on flying machine seed should be also update.
+ * For this reason just DeployMeepleMessage is not sufficient.
+ * (DeployMeepleMessage would work but result of dice would be known before tile placement)
+ */
 @WsMessageCommand("DEPLOY_FLIER")
-public class DeployFlierMessage implements WsInGameMessage {
+public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String gameId;
-    private String meepleType;
-    private long currentTime;
+    private long seed;
 
-    public DeployFlierMessage(String gameId, Class<? extends Meeple> meepleType) {
-        this.gameId = gameId;
-        this.meepleType = meepleType.getSimpleName();
-        this.currentTime = System.currentTimeMillis();
+    public DeployFlierMessage() {
     }
 
-    public String getGameId() {
-        return gameId;
+    public DeployFlierMessage(FeaturePointer pointer, String meepleId) {
+        super(pointer, meepleId);
+        assert pointer.getLocation() == Location.FLYING_MACHINE;
+
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public long getSeed() {
+        return seed;
     }
 
-    public String getMeepleType() {
-        return meepleType;
-    }
-
-    public void setMeepleType(String meepleType) {
-        this.meepleType = meepleType;
-    }
-
-    public long getCurrentTime() {
-        return currentTime;
-    }
-
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Class<? extends Meeple> getMeepleTypeClass() {
-        try {
-            return (Class<? extends Meeple>) Class.forName("com.jcloisterzone.figure." + meepleType);
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage(), e);
-            return null;
-        }
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,6 +27,10 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.SnapshotCorruptedException;
+
+import io.vavr.Predicates;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 
 public class XMLUtils {
@@ -61,6 +67,26 @@ public class XMLUtils {
         }
     }
 
+    public static io.vavr.collection.Stream<Node> nodeStream(NodeList nl) {
+        List<Node> arrayList = new ArrayList<>();
+        for (int i = 0; i < nl.getLength(); i++) {
+            arrayList.add(nl.item(i));
+        }
+        return io.vavr.collection.Stream.ofAll(arrayList);
+    }
+
+    public static io.vavr.collection.Stream<Element> elementStream(NodeList nl) {
+        return nodeStream(nl).filter(Predicates.instanceOf(Element.class)).map(node -> (Element) node);
+    }
+
+    public static io.vavr.collection.Stream<Element> getChildElementStream(Vector<Element> tileElements) {
+        return Stream.concat(tileElements.map(el -> XMLUtils.elementStream(el.getChildNodes())));
+    }
+
+    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Vector<Element> tileElements, String tagName) {
+        return getChildElementStream(tileElements).filter(el -> el.getNodeName().equals(tagName));
+    }
+
     public static Element getElementByTagName(Element parent, String childName) {
         NodeList nl = parent.getElementsByTagName(childName);
         if (nl.getLength() == 0) return null;
@@ -85,12 +111,14 @@ public class XMLUtils {
         return sw.toString();
     }
 
-    public static String[] asLocation(Element e) {
-        return e.getFirstChild().getNodeValue().trim().split("\\s+");
+    public static Stream<Location> contentAsLocations(Element e) {
+        String[] tokens = e.getFirstChild().getNodeValue().trim().split("\\s+");
+        return Stream.of(tokens).map(s -> Location.valueOf(s));
     }
 
-    public static String[] asLocations(Element e, String attr) {
-        return e.getAttribute(attr).trim().split("\\s+");
+    public static Stream<Location> attrAsLocations(Element e, String attr) {
+        String[] tokens = e.getAttribute(attr).trim().split("\\s+");
+        return Stream.of(tokens).map(s -> Location.valueOf(s));
     }
 
     public static String getTileId(Expansion expansion, Element xml) {

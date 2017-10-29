@@ -1,144 +1,45 @@
 package com.jcloisterzone.ai;
 
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.AbbeyPlacementAction;
-import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.TakePrisonerAction;
-import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TilePlacement;
-import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.event.PlayEvent;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.ui.GameController;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.game.GameSetup;
+import com.jcloisterzone.game.SupportedSetup;
+import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.wsio.message.PassMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
-public abstract class AiPlayer {
+import io.vavr.Function1;
+import io.vavr.collection.Vector;
 
-    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
+public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
 
-    protected Game game;
-    protected GameController gc;
-
-    private RmiProxy rmiProxy;
-    private Player player;
-    private boolean muted;
-
-    public void setGame(Game game) {
-        this.game = game;
+    default SupportedSetup supportedSetup() {
+        return SupportedSetup.getCurrentClientSupported();
     }
 
-    public RmiProxy getRmiProxy() {
-        return rmiProxy;
+    default void onGameStart(GameSetup setup, Player me) {
     }
 
-    public void setGameController(GameController gc) {
-        this.gc = gc;
-        Integer placeTileDelay = gc.getConfig().getAi_place_tile_delay();
-        rmiProxy = new DelayedServer(gc.getRmiProxy(), placeTileDelay == null ? 0 : placeTileDelay);
-    }
+    default Vector<WsInGameMessage> getPossibleActions(GameState state) {
+        ActionsState as = state.getPlayerActions();
 
-    public Player getPlayer() {
-        return player;
-    }
+        Vector<WsInGameMessage> messages = as.getActions().flatMap(action ->
+            action.getOptions().map(o -> _This.createMessage(action, o)).toVector()
+        );
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    protected GameController getGameController() {
-        return gc;
-    }
-
-    protected boolean isAiActive(PlayEvent ev) {
-        return player.equals(ev.getTargetPlayer()) && !muted;
-    }
-
-    public boolean isMuted() {
-        return muted;
-    }
-
-    public void setMuted(boolean muted) {
-        this.muted = muted;
-    }
-
-    // dummy implementations
-
-    protected final void selectDummyAction(List<? extends PlayerAction<?>> actions, boolean canPass) {
-        for (PlayerAction<?> action : actions) {
-            if (action instanceof TilePlacementAction) {
-                if (selectDummyTilePlacement((TilePlacementAction) action)) return;
-            }
-            if (action instanceof AbbeyPlacementAction) {
-                if (selectDummyAbbeyPlacement((AbbeyPlacementAction) action)) return;
-            }
-            if (action instanceof MeepleAction) {
-                if (selectDummyMeepleAction((MeepleAction) action)) return;
-            }
-            if (action instanceof TakePrisonerAction) {
-                if (selectDummyTowerCapture((TakePrisonerAction) action)) return;
-            }
+        if (as.isPassAllowed()) {
+            messages = messages.append(new PassMessage());
         }
-        getRmiProxy().pass();
+
+        return messages;
     }
 
-    protected boolean selectDummyAbbeyPlacement(AbbeyPlacementAction action) {
-        getRmiProxy().pass();
-        return true;
-    }
-
-    protected boolean selectDummyTilePlacement(TilePlacementAction action) {
-        TilePlacement nearest = null;
-        Position p0 = new Position(0, 0);
-        int min = Integer.MAX_VALUE;
-        for (TilePlacement tp : action) {
-            int dist = tp.getPosition().squareDistance(p0);
-            if (dist < min) {
-                min = dist;
-                nearest = tp;
-            }
+    // private helpers
+    class _This {
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        private static WsInGameMessage createMessage(PlayerAction action, Object option) {
+            return action.select(option);
         }
-        getRmiProxy().placeTile(nearest.getRotation(), nearest.getPosition());
-        return true;
     }
-
-    protected boolean selectDummyMeepleAction(MeepleAction ma) {
-        for (FeaturePointer fp : ma) {
-            Feature f = game.getBoard().get(fp.getPosition()).getFeature(fp.getLocation());
-            if (f instanceof City || f instanceof Road || f instanceof Cloister) {
-                getRmiProxy().deployMeeple(fp, ma.getMeepleType());
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean selectDummyTowerCapture(TakePrisonerAction action) {
-        MeeplePointer mp = action.iterator().next();
-        getRmiProxy().takePrisoner(mp);
-        return true;
-    }
-
-    protected final void selectDummyDragonMove(Set<Position> positions, int movesLeft) {
-        getRmiProxy().moveNeutralFigure(positions.iterator().next().asFeaturePointer(), Dragon.class);
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(player);
-    }
-
 }

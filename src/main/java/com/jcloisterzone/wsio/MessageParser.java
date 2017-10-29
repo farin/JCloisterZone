@@ -1,167 +1,171 @@
 package com.jcloisterzone.wsio;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
-import com.jcloisterzone.game.CustomRule;
-import com.jcloisterzone.wsio.message.AbandonGameMessage;
-import com.jcloisterzone.wsio.message.ChannelMessage;
-import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientUpdateMessage;
-import com.jcloisterzone.wsio.message.ClockMessage;
-import com.jcloisterzone.wsio.message.CommitMessage;
-import com.jcloisterzone.wsio.message.CreateGameMessage;
-import com.jcloisterzone.wsio.message.DeployFlierMessage;
-import com.jcloisterzone.wsio.message.ErrorMessage;
-import com.jcloisterzone.wsio.message.GameMessage;
-import com.jcloisterzone.wsio.message.GameOverMessage;
-import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.GameUpdateMessage;
-import com.jcloisterzone.wsio.message.HelloMessage;
-import com.jcloisterzone.wsio.message.JoinGameMessage;
-import com.jcloisterzone.wsio.message.LeaveGameMessage;
-import com.jcloisterzone.wsio.message.LeaveSlotMessage;
-import com.jcloisterzone.wsio.message.PingMessage;
-import com.jcloisterzone.wsio.message.PongMessage;
-import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.RmiMessage;
-import com.jcloisterzone.wsio.message.SetExpansionMessage;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.jcloisterzone.Expansion;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.message.SetRuleMessage;
-import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.message.TakeSlotMessage;
-import com.jcloisterzone.wsio.message.ToggleClockMessage;
-import com.jcloisterzone.wsio.message.UndoMessage;
-import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
+import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 public final class MessageParser {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Gson gson;
-    private final Map<String, Class<? extends WsMessage>> types = new HashMap<>();
 
-    public static class CustomRulesMapAdapter extends TypeAdapter<Map<CustomRule, Object>> {
-
-        @Override
-        public void write(JsonWriter out, Map<CustomRule, Object> value) throws IOException {
-            out.beginObject();
-            for (Entry<CustomRule, Object> entry : value.entrySet()) {
-                out.name(entry.getKey().name());
-                if (entry.getValue() instanceof Boolean) {
-                	out.value((Boolean)entry.getValue());
-                } else if (entry.getValue() instanceof Integer) {
-                	out.value((Integer)entry.getValue());
-                } else {
-                	out.value(entry.getValue().toString());
-                }
-            }
-            out.endObject();
-        }
-
-        @Override
-        public Map<CustomRule, Object> read(JsonReader in) throws IOException {
-            Map<CustomRule, Object> result = new HashMap<>();
-            in.beginObject();
-            while (in.hasNext()) {
-                CustomRule rule = CustomRule.valueOf(in.nextName());
-                JsonToken p = in.peek();
-                if (p == JsonToken.BOOLEAN) {
-                	result.put(rule, in.nextBoolean());
-                } else if (p == JsonToken.NUMBER) {
-                	result.put(rule, in.nextInt());
-                } else {
-                	result.put(rule, rule.unpackValue(in.nextString()));
-                }
-            }
-            in.endObject();
-            return result;
-        }
-    }
-
-    public MessageParser() {
+    public static GsonBuilder createGsonBuilder() {
         GsonBuilder builder = new GsonBuilder().disableHtmlEscaping();
 
         builder.registerTypeAdapter(SetRuleMessage.class, new JsonDeserializer<SetRuleMessage>() {
             @Override
             public SetRuleMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject obj = json.getAsJsonObject();
-                CustomRule rule = CustomRule.valueOf(obj.get("rule").getAsString());
-                return new SetRuleMessage(
-                        obj.get("gameId").getAsString(), rule,
-                        obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
+                Rule rule = Rule.valueOf(obj.get("rule").getAsString());
+                SetRuleMessage msg = new SetRuleMessage(
+                    rule,
+                    obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
                 );
+                msg.setGameId(obj.get("gameId").getAsString());
+                return msg;
             }
         });
-        gson = builder.create();
+        builder.registerTypeAdapter(Expansion.class, new JsonSerializer<Expansion>() {
+            @Override
+            public JsonElement serialize(Expansion src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.name());
+            }
+        });
+        builder.registerTypeAdapter(Expansion.class, new JsonDeserializer<Expansion>() {
+            @Override
+            public Expansion deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                return Expansion.valueOf(json.getAsString());
+            }
+        });
+        builder.registerTypeAdapter(Position.class, new JsonSerializer<Position>() {
+            @Override
+            public JsonElement serialize(Position src, Type typeOfSrc, JsonSerializationContext context) {
+                JsonArray arr = new JsonArray(2);
+                arr.add(src.x);
+                arr.add(src.y);
+                return arr;
+            }
+        });
+        builder.registerTypeAdapter(Position.class, new JsonDeserializer<Position>() {
+            @Override
+            public Position deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                JsonArray arr = json.getAsJsonArray();
+                return new Position(arr.get(0).getAsInt(), arr.get(1).getAsInt());
+            }
+        });
+        builder.registerTypeAdapter(Location.class, new JsonSerializer<Location>() {
+            @Override
+            public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.toString());
+            }
+        });
+        builder.registerTypeAdapter(Location.class, new JsonDeserializer<Location>() {
+            @Override
+            public Location deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                return Location.valueOf(json.getAsString());
+            }
+        });
+        builder.registerTypeAdapter(BoardPointer.class, new JsonSerializer<BoardPointer>() {
+            @Override
+            public JsonElement serialize(BoardPointer src, Type typeOfSrc, JsonSerializationContext context) {
+                return context.serialize(src);
+            }
+        });
+        builder.registerTypeAdapter(BoardPointer.class, new JsonDeserializer<BoardPointer>() {
+            @Override
+            public BoardPointer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                if (json.isJsonArray()) {
+                    return context.deserialize(json, Position.class);
+                }
+                JsonObject obj = json.getAsJsonObject();
+                if (obj.has("meepleId")) {
+                    return context.deserialize(json, MeeplePointer.class);
+                }
+                if (obj.has("location")) {
+                    return context.deserialize(json, FeaturePointer.class);
+                }
+                return context.deserialize(json, Position.class);
+            }
+        });
 
-        registerMsgType(ErrorMessage.class);
-        registerMsgType(HelloMessage.class);
-        registerMsgType(WelcomeMessage.class);
-        registerMsgType(CreateGameMessage.class);
-        registerMsgType(JoinGameMessage.class);
-        registerMsgType(LeaveGameMessage.class);
-        registerMsgType(AbandonGameMessage.class);
-        registerMsgType(GameMessage.class);
-        registerMsgType(GameSetupMessage.class);
-        registerMsgType(TakeSlotMessage.class);
-        registerMsgType(LeaveSlotMessage.class);
-        registerMsgType(SlotMessage.class);
-        registerMsgType(SetExpansionMessage.class);
-        registerMsgType(SetRuleMessage.class);
-        registerMsgType(StartGameMessage.class);
-        registerMsgType(DeployFlierMessage.class);
-        registerMsgType(RmiMessage.class);
-        registerMsgType(UndoMessage.class);
-        registerMsgType(ClientUpdateMessage.class);
-        registerMsgType(GameUpdateMessage.class);
-        registerMsgType(PostChatMessage.class);
-        registerMsgType(ChatMessage.class);
-        registerMsgType(ChannelMessage.class);
-        registerMsgType(GameOverMessage.class);
-        registerMsgType(PingMessage.class);
-        registerMsgType(PongMessage.class);
-        registerMsgType(ToggleClockMessage.class);
-        registerMsgType(ClockMessage.class);
-        registerMsgType(CommitMessage.class);
+        JsonSerializer<WsMessage> msgSerializer = new JsonSerializer<WsMessage>() {
+            @Override
+            public JsonElement serialize(WsMessage src, Type typeOfSrc, JsonSerializationContext context) {
+                JsonObject obj = new JsonObject();
+                obj.add("type", new JsonPrimitive(src.getClass().getAnnotation(WsMessageCommand.class).value()));
+                obj.add("payload", context.serialize(src));
+                return obj;
+            }
+        };
+        JsonDeserializer<WsMessage> msgDeserializer = new JsonDeserializer<WsMessage>() {
+            @Override
+            public WsMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                    throws JsonParseException {
+                JsonObject obj = (JsonObject) json;
+                Class<? extends WsMessage> cls = WsCommandRegistry.TYPES.get(obj.get("type").getAsString()).get();
+                return context.deserialize(obj.get("payload"), cls);
+            }
+        };
+
+        builder.registerTypeAdapter(WsMessage.class, msgSerializer);
+        builder.registerTypeAdapter(WsMessage.class, msgDeserializer);
+        builder.registerTypeAdapter(WsReplayableMessage.class, msgSerializer);
+        builder.registerTypeAdapter(WsReplayableMessage.class, msgDeserializer);
+
+        return builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    }
+
+    public MessageParser() {
+        gson = createGsonBuilder().create();
     }
 
     protected String getCmdName(Class<? extends WsMessage> msgType) {
         return msgType.getAnnotation(WsMessageCommand.class).value();
     }
 
-    private void registerMsgType(Class<? extends WsMessage> type) {
-        types.put(getCmdName(type), type);
-    }
-
-    public WsMessage fromJson(String payload) {
-        String s[] = payload.split(" ", 2); //command, arg
-        Class<? extends WsMessage> type = types.get(s[0]);
-        if (type == null) {
-            throw new IllegalArgumentException("Mapping type is not declared for "+s[0]);
-        }
-        return gson.fromJson(s[1], type);
+    public WsMessage fromJson(String src) {
+//        JsonParser parser = new JsonParser();
+//        JsonObject obj = parser.parse(src).getAsJsonObject();
+//        String typeName = obj.get("type").getAsString();
+//        Class<? extends WsMessage> type = WsCommandRegistry.TYPES.get(typeName).getOrElseThrow(
+//            () -> new IllegalArgumentException("Mapping type is not declared for " + typeName)
+//        );
+        return gson.fromJson(src, WsMessage.class);
     }
 
     public String toJson(WsMessage arg) {
-        return getCmdName(arg.getClass()) + " " + gson.toJson(arg);
+        return gson.toJson(arg, WsMessage.class);
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

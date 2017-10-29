@@ -9,8 +9,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.bugreport.ReportingTool;
 import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.MeepleEvent;
-import com.jcloisterzone.figure.Meeple;
 
 
 public class InvokeInSwingUiAdapter {
@@ -30,23 +28,9 @@ public class InvokeInSwingUiAdapter {
         if (reportingTool != null) {
             reportingTool.report("event: " + event);
         }
-        final Object frozenEvent = freezeEvent(event);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-			public void run() {
-                uiEventBus.post(frozenEvent);
-            }
+        SwingUtilities.invokeLater(() -> {
+            uiEventBus.post(event);
         });
-    }
-
-    private Event freezeEvent(Event ev) {
-        if (ev instanceof MeepleEvent) {
-            //TODO is it really needed with new meeple events?
-            MeepleEvent mev = (MeepleEvent) ev;
-            Meeple m = mev.getMeeple();
-            return new MeepleEvent(((MeepleEvent) ev).getTriggeringPlayer(), (Meeple) m.clone(), mev.getFrom(), mev.getTo());
-        }
-        return ev;
     }
 
     public void setReportingTool(ReportingTool reportingTool) {

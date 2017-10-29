@@ -1,0 +1,10 @@
+version: 4.0
+title: JCZ 3D artwork
+description: JCloisterZone 3D
+author:
+
+tile_images:
+  offset: 49,0,0,0
+  ratio_x: 34
+  ratio_y: 24
+

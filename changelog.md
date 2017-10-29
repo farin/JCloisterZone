@@ -1,12 +1,71 @@
 # Version history
 
-## 3.4.3
-*2017-05-08
+## 4.0
+*fall 2017*
 
-* MacOS: application title is again JCloisterZone 
+* multiple undo steps are now supported (including eg. undoing paid ransom)
+* saved game format changed to JSON (and instead of game snapshot contains just action history)
+* removed Catapult tiles, with many other expansion this extra tiles makes not much sense
+* added The Count expansion
+* plugin changes: 
+  Multiple plugin folders can be specified in config (as relative or absolute paths).
+  Plugins can contain java classes and register new expansions. 
+* fixed #63 - experimental change: multiple tile sets of same expansion are allowed.
+  No UI is present but feature can be enabled by manual edit of preset in config file
+  (or by save game edit)
+* fixed #223 - experimental change: capabilities and expansions are independent. Game can be
+  created with different set of capabilities then standard derived from expansion.
+  Eg. Princess and dragon tiles but without dragon figure. Or add big follower
+  to basic tiles (without inns & cathedrals tiles)
+  No UI for creation such game is present yet, but same as multiple sets
+  it can be achieved by manual edit of preset in config.yaml
+  (Such games can be normally played with remote players)
+* added Japanese translation (thx to Alexis Jeandeau)
+
+### Current expansions changes
+
+#### Princess and Dragon
+
+PRINCESS_MUST_REMOVE_KNIGHT rule implemented in proper way: If enabled and there is option to remove princess no other action is allowed.
+
+#### Tower
+
+If players has several prisoners belonging to the other player during prisoners exchange,
+the owner may decide which prisoner should be returned.
+
+#### Bridges, Castles, and Bazaars
+
+* Bazaar auction is not triggered when tile is discarded.
+* When tile can place only with bridge, player is allowed to pass and let the tile to be discarded.
+* fix: When there is no legal placement for auctioned tile, tile is discarded and random tile is drawn instead.
+* Display bridge preview if bridge placement is mandatory (and bridge must be placed as part of tile placement).
+
+#### River
+
+Rule change: Lakes (River 1 lake and River 2 volcano lake) are drawn by player as common tile
+(changed according to New Carcassonne (C II) rules)
+
+#### Tunnel
+
+Added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players game or two token sets for 3 player game)
+
+#### Russion promos
+
+Baba Yaga's hut is now not involved in shrine-cloister challenges (when played together with The Cult expansion)
+
+### Technical Notes
+
+* Grand rewrite in favor of functional programming and immutable data structure.
+* vavr.io library is awesome!
+
+## 3.4.3
+*2017-05-08*
+
+* MacOS: application title is again JCloisterZone
+* fixed: crash caused by two "Undo"s triggered in short period
 * fixed: Little Buildings (unable to place building)
 * fixed: WindRose points can be repeated by undo tile placement infinitely
-* fixed TO.CccC+ definition (shield on one Tower tile is properly counted) 
+* fixed TO.CccC+ definition (shield on one Tower tile is properly counted)
 * experimental support for "rectangular" tiles - possibility to display 3d tiles projected as rectangle - currently no theme
 
 ## 3.4.2
@@ -133,7 +192,7 @@
 
 * bug reporting feature (in help menu)
 * fix: wagon issue (usually when playing against ai causing game freeze)
-* fix: wrong colors of chat nicknames
+* fix: wrong color of chat nicknames
 
 ## 3.0
 *2014-08-27*
@@ -180,7 +239,7 @@
 * volcano rule updated according to latest FAQs: no follower deployment except barn, fairy movement allowed, so removed CANNOT_PLACE_BUILDER_ON_VOLCANO custom rule
 * FARM_CITY_SCORED_ONCE custom rule removed - 2nd edition scoring is obsolete and may leads to confusion together with some expansions
 * builder can be placed on uncompleted feature only (makes no sense to places on just finshed feature and return immediatelly)
-* default player colors changed
+* default player color changed
 * chat is hidden in single player game
 * submit connect dialog with enter
 * connect dialog: last remote host is remembered
@@ -359,7 +418,7 @@ Remarkable points:
 ## 1.6.10
 *2011-03-17*
 
-* fix: 5/6 six players, color exception
+* fix: 5/6 six players, colors exception
 * backport from 2.0; mouse wheel scroll, scroll bar in control panel
 
 ## 1.6.9
@@ -406,7 +465,7 @@ Remarkable points:
 
 * beep notification is played also for dragon move
 * fixed: vagon move on cards from other expansions
-* fixed: black decoration on bright player color (e.g. yellow)
+* fixed: black decoration on bright player colors (e.g. yellow)
 * fixed: tower placement icon, correct display on "just placed" tile
 * fixed: proper meeple position on particular "strange" card from expansions.
 

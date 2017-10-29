@@ -1,10 +1,11 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.SupportedSetup;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SLOT")
 public class SlotMessage implements WsInGameMessage {
+
     private String gameId;
     private int number;
     private String sessionId;
@@ -12,11 +13,9 @@ public class SlotMessage implements WsInGameMessage {
     private Integer serial;
     private String nickname;
     private String aiClassName;
-    private Expansion[] supportedExpansions;
+    private SupportedSetup supportedSetup;
 
-    public SlotMessage(String gameId, int number, Integer serial, String sessionId, String clientId, String nickname) {
-        super();
-        this.gameId = gameId;
+    public SlotMessage(int number, Integer serial, String sessionId, String clientId, String nickname) {
         this.number = number;
         this.serial = serial;
         this.sessionId = sessionId;
@@ -25,10 +24,11 @@ public class SlotMessage implements WsInGameMessage {
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
@@ -65,12 +65,12 @@ public class SlotMessage implements WsInGameMessage {
         this.serial = serial;
     }
 
-    public Expansion[] getSupportedExpansions() {
-        return supportedExpansions;
+    public SupportedSetup getSupportedSetup() {
+        return supportedSetup;
     }
 
-    public void setSupportedExpansions(Expansion[] supportedExpansions) {
-        this.supportedExpansions = supportedExpansions;
+    public void setSupportedSetup(SupportedSetup supportedSetup) {
+        this.supportedSetup = supportedSetup;
     }
 
     public String getSessionId() {
@@ -81,11 +81,11 @@ public class SlotMessage implements WsInGameMessage {
         this.sessionId = sessionId;
     }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 }

@@ -1,13 +1,19 @@
 package com.jcloisterzone.board.pointer;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Meeple;
 
+import io.vavr.Tuple2;
+
 /**
  * Points on feature on board or placed meeple.
  */
+@Immutable
 public class MeeplePointer implements BoardPointer {
+
+    private static final long serialVersionUID = 1L;
 
     private final FeaturePointer featurePointer;
     private final String meepleId;
@@ -21,9 +27,8 @@ public class MeeplePointer implements BoardPointer {
         this(new FeaturePointer(position, location), meepleId);
     }
 
-    public MeeplePointer(Meeple m) {
-        this(m.getPosition(), m.getLocation(), m.getId());
-        assert meepleId != null;
+    public MeeplePointer(Tuple2<? extends Meeple, FeaturePointer> t) {
+        this(t._2, t._1.getId());
     }
 
     public FeaturePointer asFeaturePointer() {
@@ -49,9 +54,7 @@ public class MeeplePointer implements BoardPointer {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("[x=").append(getPosition().x).append(",y=")
-                .append(getPosition().y).append(",").append(getLocation()).append(",")
-                .append(meepleId).append("]").toString();
+        return "[x=" + getPosition().x + ",y=" + getPosition().y + "," + getLocation() + "," + meepleId + "]";
     }
 
     @Override

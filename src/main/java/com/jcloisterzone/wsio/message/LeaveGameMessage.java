@@ -6,16 +6,15 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class LeaveGameMessage implements WsInGameMessage {
     private String gameId;
 
-    public LeaveGameMessage(String gameId) {
-        super();
-        this.gameId = gameId;
+    public LeaveGameMessage() {
     }
 
     @Override
-	public String getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

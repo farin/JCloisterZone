@@ -6,8 +6,8 @@ import com.jcloisterzone.board.Position;
 
 public interface GridMouseListener {
 
-	void squareEntered(MouseEvent e, Position p);
-	void squareExited(MouseEvent e, Position p);
+    void tileEntered(MouseEvent e, Position p);
+    void tileExited(MouseEvent e, Position p);
 
-	void mouseClicked(MouseEvent e, Position p);
+    void mouseClicked(MouseEvent e, Position p);
 }

@@ -1,15 +1,18 @@
 package com.jcloisterzone.ui.resources;
 
+import com.google.common.base.CaseFormat;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.FlyingMachine;
+import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Tower;
+import com.jcloisterzone.feature.YagaHut;
 
 public class FeatureDescriptor {
 
@@ -25,15 +28,15 @@ public class FeatureDescriptor {
         this.location = location;
     }
 
-    public FeatureDescriptor(Tile tile, Class<? extends Feature> featureType, Location location) {
-        this(tile.getId(), featureType, location);
+    private String getFeatureTypeName() {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, featureType.getSimpleName());
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(tileId).append(' ');
-        sb.append(featureType == null ? '@' : featureType.getSimpleName().toUpperCase()).append(' ');
+        sb.append(getFeatureTypeName()).append(' ');
         sb.append(location.toString());
         return sb.toString();
     }
@@ -53,7 +56,9 @@ public class FeatureDescriptor {
         case "TOWER": featureType = Tower.class; break;
         case "CASTLE": featureType = Castle.class; break;
         case "BRIDGE": featureType = Bridge.class; break;
-        case "@": featureType = null; break;
+        case "QUARTER": featureType = Quarter.class; break;
+        case "FLYING_MACHINE": featureType = FlyingMachine.class; break;
+        case "YAGA_HUT": featureType = YagaHut.class; break;
         default: throw new IllegalArgumentException("Unsupported feature "+featureName);
         }
         Location location = Location.valueOf(locationName);
@@ -108,9 +113,4 @@ public class FeatureDescriptor {
             return false;
         return true;
     }
-
-
-
-
-
 }

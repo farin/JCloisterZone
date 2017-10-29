@@ -4,17 +4,18 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("START_GAME")
 public class StartGameMessage implements WsInGameMessage {
+
     private String gameId;
 
-    public StartGameMessage(String gameId) {
-        super();
-        this.gameId = gameId;
+    public StartGameMessage() {
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }

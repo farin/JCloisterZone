@@ -1,111 +1,72 @@
 package com.jcloisterzone.action;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.Serializable;
 
-import com.google.common.collect.ImmutableSet;
-import com.jcloisterzone.Player;
-import com.jcloisterzone.ui.Client;
-import com.jcloisterzone.ui.grid.ActionLayer;
-import com.jcloisterzone.ui.grid.MainPanel;
-import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
-import com.jcloisterzone.ui.view.GameView;
-import com.jcloisterzone.wsio.RmiProxy;
+import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
+import com.jcloisterzone.wsio.message.WsInGameMessage;
 
-public abstract class PlayerAction<T> implements Comparable<PlayerAction<?>>, Iterable<T> {
+import io.vavr.collection.Iterator;
+import io.vavr.collection.Set;
 
-    @Deprecated
-    private final String name;
-    protected final Set<T> options = new HashSet<T>();
+// TODO rename to PlayerChoice?
+/**
+ * Represents a set of options a player can choose from.
+ *
+ * @param <T> the type of options the player can choose from; examples are {@link com.jcloisterzone.board.Position},
+ *            {@link com.jcloisterzone.board.Location}, {@link com.jcloisterzone.board.PlacementOption},
+ *            {@link CornCircleRemoveOrDeployMessage.CornCircleOption}, etc.
+ */
+public abstract class PlayerAction<T> implements Iterable<T>, Serializable {
 
-    protected Client client;
-    protected MainPanel mainPanel;
+    private static final long serialVersionUID = 1L;
 
-    public PlayerAction(String name) {
-        this.name = name;
+    /**
+     * The options the player can choose from.
+     */
+    protected final Set<T> options;
+
+    /**
+     * Instantiates a new {@code PlayerAction}.
+     *
+     * @param options the options the player can choose from
+     */
+    public PlayerAction(Set<T> options) {
+       this.options = options;
     }
 
-    public abstract void perform(RmiProxy server, T target);
+    /**
+     * Generates a WebSocket message that informs the receiver that the player chose the given {@code option}.
+     *
+     * @param option the option chosen
+     * @return the WebSocket message
+     */
+    public abstract WsInGameMessage select(T option);
 
+    /**
+     * Returns an iterator over the options the player can choose from.
+     *
+     * @return an iterator over the options the player can choose from
+     */
     @Override
     public Iterator<T> iterator() {
         return options.iterator();
     }
 
-    public PlayerAction<T> add(T option) {
-        options.add(option);
-        return this;
+    /**
+     * Returns the options the player can choose from.
+     *
+     * @return the options the player can choose from
+     */
+    public Set<T> getOptions() {
+        return options;
     }
 
-    public PlayerAction<T> addAll(Collection<T> options) {
-        this.options.addAll(options);
-        return this;
-    }
-
-    public ImmutableSet<T> getOptions() {
-        return ImmutableSet.copyOf(options);
-    }
-
+    /**
+     * Checks whether there are any options.
+     *
+     * @return {@code true} if there are no options, {@code false} otherwise
+     */
     public boolean isEmpty() {
         return options.isEmpty();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Image getImage(Player player, boolean active) {
-        return getImage(player != null && active ? player.getColors().getMeepleColor() : Color.GRAY);
-    }
-
-
-    protected final ActionLayer<?> getActionLayer(Class<? extends ActionLayer<?>> layerType) {
-        return mainPanel.getGridPanel().findLayer(layerType);
-    }
-
-    abstract protected Class<? extends ActionLayer<?>> getActionLayerType();
-
-
-    /** Called when user select action in action panel */
-    public void select(boolean active) {
-        @SuppressWarnings("unchecked")
-        ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
-        layer.setAction(active, this);
-        mainPanel.getGridPanel().showLayer(layer);
-    }
-
-    /** Called when user deselect action in action panel */
-    public void deselect() {
-        @SuppressWarnings("unchecked")
-        ActionLayer<? super PlayerAction<?>> layer = (ActionLayer<? super PlayerAction<?>>) getActionLayer(getActionLayerType());
-        layer.setAction(false, null);
-        mainPanel.getGridPanel().hideLayer(layer);
-    }
-
-    protected Image getImage(Color color) {
-    	return client.getResourceManager().getLayeredImage(new LayeredImageDescriptor("actions/" + getName(), color));
-    }
-
-
-    protected int getSortOrder() {
-        return 1024;
-    }
-
-    @Override
-    public int compareTo(PlayerAction<?> o) {
-        return getSortOrder() - o.getSortOrder();
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-        this.mainPanel = ((GameView) client.getView()).getMainPanel();
-    }
-
-    public MainPanel getMainPanel() {
-        return mainPanel;
     }
 }

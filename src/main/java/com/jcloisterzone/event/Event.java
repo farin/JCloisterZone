@@ -1,14 +1,12 @@
 package com.jcloisterzone.event;
 
-
 /**
  * Ancestor for all events including non-game events like setup and chat.
  */
 public abstract class Event {
 
+    @Deprecated
     private final int type;
-    /* flag if event is inverse event triggered by undo */
-    private boolean undo;
 
     public Event() {
         this(0);
@@ -24,17 +22,10 @@ public abstract class Event {
 
     @Override
     public String toString() {
-    	if (type != 0) {
-    		return getClass().getSimpleName() + "/" + type;
-    	}
-    	return getClass().getSimpleName();
+        if (type != 0) {
+            return getClass().getSimpleName() + "/" + type;
+        }
+        return getClass().getSimpleName();
     }
 
-	public boolean isUndo() {
-		return undo;
-	}
-
-	public void setUndo(boolean undo) {
-		this.undo = undo;
-	}
 }

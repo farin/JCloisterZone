@@ -17,7 +17,9 @@ public class MessageDispatcher {
             throw new IllegalArgumentException("No targets");
         }
         for (Object target : targets) {
-            dispatchOn(msg, context, target);
+            if (target != null) {
+                dispatchOn(msg, context, target);
+            }
         }
     }
 
@@ -30,7 +32,7 @@ public class MessageDispatcher {
                 Class<?> params[] = m.getParameterTypes();
                 @SuppressWarnings("unchecked")
                 Class<? extends WsMessage> cls = (Class<? extends WsMessage>) params[params.length-1];
-                if (cls.equals(msg.getClass())) {
+                if (cls.isInstance(msg)) {
                     try {
                         if (params.length == 1) {
                             m.invoke(target, msg);

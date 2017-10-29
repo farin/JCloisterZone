@@ -1,79 +1,64 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.event.Event;
-import com.jcloisterzone.event.ScoreEvent;
-import com.jcloisterzone.event.TileEvent;
+import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.SnapshotCorruptedException;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.AddPoints;
 
-public class WindRoseCapability extends Capability {
+import io.vavr.collection.Vector;
+
+/** model contains placement of last placed rose */
+public class WindRoseCapability extends Capability<PlacedTile> {
 
     public static final int WIND_ROSE_POINTS = 3;
 
-    private Rotation roseRotation;
-    private Position rosePosition;
-
-    public WindRoseCapability(final Game game) {
-        super(game);
+    @Override
+    public GameState onTilePlaced(GameState state, PlacedTile pt) {
+        Location rose = pt.getTile().getWindRose();
+        if (rose == null) {
+            return state;
+        }
+        if (rose == Location.NWSE) {
+            return setModel(state, pt);
+        }
+        PlacedTile ptRose = getModel(state);
+        rose = rose.rotateCW(ptRose.getRotation());
+        if (isInProperQuadrant(rose, pt.getPosition(), ptRose.getPosition())) {
+            Player p = state.getTurnPlayer();
+            state = (new AddPoints(p, WIND_ROSE_POINTS, PointCategory.WIND_ROSE)).apply(state);
+            ScoreEvent scoreEvent = new ScoreEvent(
+                WIND_ROSE_POINTS,
+                WIND_ROSE_POINTS + "",
+                PointCategory.WIND_ROSE,
+                false,
+                pt.getPosition(),
+                p
+            );
+            state = state.appendEvent(scoreEvent);
+        }
+        return state;
     }
 
     @Override
-    public void handleEvent(Event event) {
-       if (event instanceof TileEvent) {
-           tilePlaced((TileEvent) event);
-       }
-    }
-
-    private void tilePlaced(TileEvent ev) {
-        if (ev.getType() != TileEvent.PLACEMENT) return;
-        Tile tile = ev.getTile();
-        Location rose = tile.getWindRose();
-        if (rose == null) return;
-        if (rose == Location.NWSE) {
-            roseRotation = tile.getRotation();
-            rosePosition = tile.getPosition();
-        } else {
-            rose = rose.rotateCW(roseRotation);
-            if (isInProperQuadrant(rose, tile.getPosition())) {
-                Player p = game.getActivePlayer();
-                p.addPoints(WIND_ROSE_POINTS, PointCategory.WIND_ROSE);
-                game.post(new ScoreEvent(tile.getPosition(), p, WIND_ROSE_POINTS, PointCategory.WIND_ROSE));
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        for (Element el : tileElements) {
+            if (el.hasAttribute("wind-rose")) {
+                Location loc = Location.valueOf(el.getAttribute("wind-rose"));
+                tile = tile.setWindRose(loc);
             }
         }
+        return tile;
     }
 
-    @Override
-    public Object backup() {
-        return new Object[] { rosePosition, roseRotation };
-    }
-
-    @Override
-    public void restore(Object data) {
-        Object[] a = (Object[]) data;
-        rosePosition = (Position) a[0];
-        roseRotation = (Rotation) a[1];
-    }
-
-    @Override
-    public void initTile(Tile tile, Element xml) {
-        if (xml.hasAttribute("wind-rose")) {
-            Location loc = Location.valueOf(xml.getAttribute("wind-rose"));
-            tile.setWindRose(loc);
-        }
-    }
-
-    private boolean isInProperQuadrant(Location rose, Position pos) {
+    private boolean isInProperQuadrant(Location rose, Position pos, Position rosePosition) {
         if (rose == Location.NW) {
             return pos.x <= rosePosition.x && pos.y <= rosePosition.y;
         }
@@ -88,17 +73,4 @@ public class WindRoseCapability extends Capability {
         }
         throw new IllegalArgumentException("Wrong rose argument");
     }
-
-    @Override
-    public void saveToSnapshot(Document doc, Element node) {
-        node.setAttribute("rotation", roseRotation.name());
-        XMLUtils.injectPosition(node, rosePosition);
-    }
-
-    @Override
-    public void loadFromSnapshot(Document doc, Element node) throws SnapshotCorruptedException {
-        roseRotation = Rotation.valueOf(node.getAttribute("rotation"));
-        rosePosition = XMLUtils.extractPosition(node);
-    }
-
 }

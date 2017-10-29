@@ -2,142 +2,90 @@ package com.jcloisterzone;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
-import com.jcloisterzone.figure.predicate.MeeplePredicates;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.ui.PlayerColor;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.ui.PlayerColors;
 
+import io.vavr.Predicates;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
+import io.vavr.control.Option;
 
 /**
- * Represents one player in game. Contains information about figures, points and
- * control informations.<br>
- *
- * @author Roman Krejcik
+ * Represents a player.
  */
+@Immutable
 public class Player implements Serializable {
-
-    private static final long serialVersionUID = -7276471952562769832L;
-
-    private int points;
-    private final Map<PointCategory, Integer> pointStats = new HashMap<>();
-
-    private final List<Follower> followers = new ArrayList<Follower>(SmallFollower.QUANTITY + 3);
-    private final List<Special> specialMeeples = new ArrayList<Special>(3);
-    private final Iterable<Meeple> meeples = Iterables.<Meeple>concat(followers, specialMeeples);
+    private static final long serialVersionUID = 1L;
 
     final private String nick;
     final private int index;
-    private PlayerSlot slot;
-    private final PlayerClock clock = new PlayerClock();
+    final private PlayerSlot slot;
 
+    // TODO clarify difference between player index and slot number/serial
+    /**
+     * Instantiates a new Player.
+     *
+     * @param nick  the nickname of the player
+     * @param index the index of the player
+     * @param slot  the slot
+     */
     public Player(String nick, int index, PlayerSlot slot) {
         this.nick = nick;
         this.index = index;
         this.slot = slot;
     }
 
-    public void addMeeple(Meeple meeple) {
-        if (meeple instanceof Follower) {
-            followers.add((Follower) meeple);
-        } else {
-            specialMeeples.add((Special) meeple);
-        }
-    }
-
-    public List<Follower> getFollowers() {
-        return followers;
-    }
-
-    public List<Special> getSpecialMeeples() {
-        return specialMeeples;
-    }
-
-    public Iterable<Meeple> getMeeples() {
-        return meeples;
-    }
-
-    public boolean hasSpecialMeeple(Class<? extends Special> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        return Iterables.any(specialMeeples, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public boolean hasFollower() {
-        return Iterables.any(followers, MeeplePredicates.inSupply());
-    }
-
-    public boolean hasFollower(Class<? extends Follower> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        //chcek equality not instanceOf - phantom is subclass of small follower
-        return Iterables.any(followers, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public Meeple getMeepleFromSupply(Class<? extends Meeple> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        Iterable<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? followers : specialMeeples);
-        return Iterables.find(collection, Predicates.and(MeeplePredicates.inSupply(), MeeplePredicates.type(clazz)));
-    }
-
-    public void addPoints(int points, PointCategory category) {
-        this.points += points;
-        if (pointStats.containsKey(category)) {
-            pointStats.put(category, pointStats.get(category) + points);
-        } else {
-            pointStats.put(category, points);
-        }
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
+    /**
+     * Gets the nickname of the player.
+     *
+     * @return the nickname of the player
+     */
     public String getNick() {
         return nick;
     }
 
-    @Override
-    public String toString() {
-        return nick + " " + points;
-    }
-
+    /**
+     * Gets the index of the player.
+     *
+     * @return the index of the player
+     */
     public int getIndex() {
         return index;
     }
 
-    public PlayerColor getColors() {
-        return slot.getColors();
-    }
-
+    /**
+     * Gets the slot of the player.
+     *
+     * @return the slot of the player
+     */
     public PlayerSlot getSlot() {
         return slot;
     }
-    public void setSlot(PlayerSlot slot) {
-        this.slot = slot;
+
+    /**
+     * Gets the colors of the player.
+     *
+     * @return the colors of the player
+     */
+    public PlayerColors getColors() {
+        return slot.getColors();
     }
 
-    public PlayerClock getClock() {
-        return clock;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o instanceof Player) {
-            if (((Player) o).index == index && index != -1)
-                return true;
-        }
-        return false;
+    /**
+     * Checks if this player is the user of the application (as opposed to an AI or a remote player)
+     *
+     * @return {@code true} if this player is the user of the application, {@code false} otherwise
+     */
+    public boolean isLocalHuman() {
+        return slot.isOwn() && !slot.isAi();
     }
 
     @Override
@@ -145,22 +93,184 @@ public class Player implements Serializable {
         return Objects.hash(index, nick);
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o instanceof Player) {
+            return index == ((Player)o).index;
+        }
+        return false;
     }
 
-
-    public int getPointsInCategory(PointCategory cat) {
-        Integer points = pointStats.get(cat);
-        return points == null ? 0 : points;
+    /**
+     * Gets the next player.
+     *
+     * @param state the state of the game
+     * @return the next player
+     */
+    public Player getNextPlayer(GameState state) {
+        int nextPlayerIndex = (index + 1) % state.getPlayers().length();
+        return state.getPlayers().getPlayer(nextPlayerIndex);
     }
 
-    public void setPointsInCategory(PointCategory category, int points) {
-        pointStats.put(category, points);
+    /**
+     * Gets the previous player.
+     *
+     * @param state the state of the game
+     * @return the previous player
+     */
+    public Player getPrevPlayer(GameState state) {
+        // mod (% operator) on negative numbers is also negative! don't use it for prev player
+        int prevPlayerIndex = index == 0 ? state.getPlayers().length() - 1 : index - 1;
+        return state.getPlayers().getPlayer(prevPlayerIndex);
     }
 
-    public boolean isLocalHuman() {
-        return getSlot().isOwn() && !getSlot().isAi();
+    /**
+     * Gets the current score of the player.
+     *
+     * @param state the state of the game
+     * @return the score of the player
+     */
+    public int getPoints(GameState state) {
+        return state.getPlayers().getScore().get(index).getPoints();
     }
 
+    /**
+     * Gets the amount of points the player has in a given category.
+     *
+     * @param state the state of the game
+     * @param cat   the category of interest
+     * @return the amount of points in the given category
+     */
+    public int getPointsInCategory(GameState state, PointCategory cat) {
+        HashMap<PointCategory, Integer> pointStats = state.getPlayers().getScore().get(getIndex()).getStats();
+        Option<Integer> points = pointStats.get(cat);
+        return points.getOrElse(0);
+    }
+
+    /**
+     * Gets the followers of the player.
+     *
+     * @param state the state of the game
+     * @return the followers of the player
+     */
+    public Seq<Follower> getFollowers(GameState state) {
+        return state.getPlayers().getFollowers().get(index);
+    }
+
+    /**
+     * Gets the special meeples of the player.
+     *
+     * @param state the state of the game
+     * @return the special meeples of the player
+     */
+    public Seq<Special> getSpecialMeeples(GameState state) {
+        return state.getPlayers().getSpecialMeeples().get(index);
+    }
+
+    /**
+     * Gets the meeples of the player.
+     *
+     * @param state the state of the game
+     * @return the meeples of the player
+     */
+    public Stream<Meeple> getMeeples(GameState state) {
+        return Stream.concat(getFollowers(state), getSpecialMeeples(state));
+    }
+
+    /**
+     * Checks whether the player has any special meeple of a specific class.
+     *
+     * @param state the state of the game
+     * @param clazz the class of interest
+     * @return {@code true} if the player has special meeples of the given class, {@code otherwise}
+     */
+    public boolean hasSpecialMeeple(GameState state, Class<? extends Special> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        return !Stream.ofAll(getSpecialMeeples(state))
+            .filter(m -> m.getClass().equals(clazz))
+            .filter(m -> m.isInSupply(state))
+            .isEmpty();
+    }
+
+    /**
+     * Checks if the player has any followers.
+     *
+     * @param state the state of the game
+     * @return {@code true} if the player has followers, {@code otherwise}
+     */
+    public boolean hasFollower(GameState state) {
+        return !Stream.ofAll(getFollowers(state))
+            .filter(m -> m.isInSupply(state))
+            .isEmpty();
+    }
+
+    /**
+     * Checks whether the player has any follower of a specific class.
+     *
+     * @param state the state of the game
+     * @param clazz the class of interest
+     * @return {@code true} if the player has followers of the given class, {@code otherwise}
+     */
+    public boolean hasFollower(GameState state, Class<? extends Follower> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        //check equality not instanceOf - phantom is subclass of small follower
+        return !Stream.ofAll(getFollowers(state))
+                .filter(m -> m.getClass().equals(clazz))
+                .filter(m -> m.isInSupply(state))
+                .isEmpty();
+    }
+
+    /**
+     * Gets a meeple from the player supply.
+     *
+     * @param <T>   the type of meeple
+     * @param state the state of the game
+     * @param clazz the class of the desired meeple
+     * @return a meeple from the player supply
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Meeple> T getMeepleFromSupply(GameState state, Class<T> clazz) {
+        assert !Modifier.isAbstract(clazz.getModifiers());
+        Seq<? extends Meeple> collection = (Follower.class.isAssignableFrom(clazz) ? getFollowers(state) : getSpecialMeeples(state));
+        return (T) Stream.ofAll(collection)
+            .filter(m -> m.getClass().equals(clazz))
+            .find(m -> m.isInSupply(state))
+            .getOrNull();
+    }
+
+    /**
+     * Gets a meeple from the player supply given its id.
+     *
+     * @param state    the state of the game
+     * @param meepleId the meeple id
+     * @return the meeple from the player supply
+     */
+    public Meeple getMeepleFromSupply(GameState state, String meepleId) {
+        return Stream.ofAll(getMeeples(state))
+            .find(m -> m.getId().equals(meepleId))
+            .filter(m -> m.isInSupply(state))
+            .getOrNull();
+    }
+
+    /**
+     * Gets meeples of desired types from the player supply.
+     *
+     * @param state       the state of the game
+     * @param meepleTypes the meeple types desired
+     * @return the meeples from the player supply
+     */
+    public Vector<Meeple> getMeeplesFromSupply(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
+        return meepleTypes.map(cls -> (Meeple) getMeepleFromSupply(state, cls))
+            .filter(Predicates.isNotNull());
+    }
+
+//    public int getTokens(GameState state, Token token) {
+//        return state.getPlayers().getPlayerTokenCount(index, token);
+//    }
+
+    @Override
+    public String toString() {
+        return nick;
+    }
 }

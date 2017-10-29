@@ -7,7 +7,7 @@ Don't hesitate to ask if there are any problems with the explanations below!
 
 ## Dependencies
 
-- [Java SE 7](http://www.oracle.com/technetwork/java/javase/downloads/) (JDK 1.7) as your `$JAVA_HOME`.
+- [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/) (JDK 1.8) as your `$JAVA_HOME`.
 - [Maven](https://maven.apache.org/) in your `$PATH`.
 - [gettext](https://www.gnu.org/software/gettext/) in your `$PATH`.
 - (optional) [Eclipse](https://eclipse.org/)
@@ -36,25 +36,14 @@ open build/JCloisterZone.jar  # Execute the game.
 
 ## Running in Eclipse
 
-### Java-WebSockets
-
-The special fork of WebSockets needs to be installed in Maven first.
-
-1. Clone the code from https://github.com/farin/Java-WebSocket.git
-1. "Import..." the "Java-WebSockets" project as an "Existing Maven project" from disk.
-1. Run the project as "Maven install" - it should now be available to the JCloisterZone project.
-
-
-### JCloisterZone
-
 1. Clone the code from https://github.com/farin/JCloisterZone.git
 1. "Import..." the "JCloisterZone" project as an "Existing Maven project" from disk.
 1. Right click the project and select "Update project..." from the Maven menu.
 1. Run the project as a java application; select `JCloisterZone` (`com.jcloisterzone.ui.JCloisterZone`) as the main class.
 
 
-
 ## Troubleshooting
+
 
 ### Can't find `$JAVA_HOME` or java compiler version errors.
 
@@ -119,10 +108,9 @@ debug:
   # use some keys described below ...
 ```
 
-Don't compress saves, autosave before each AI play.
+Autosave before each AI play.
 
 ```yaml
-save_format: plain
 autosave: saves/_prerank.jcz
 ```
 
@@ -149,12 +137,14 @@ tile_definitions:
 Force drawn tiles.
 
 ```yaml
-draw:
-  - BA.C
-  - BA.Cccc+
+game_annotation:
+  tilePack:
+    className: "com.jcloisterzone.debug.ForcedDrawTilePack"
+    params:
+      drawOrder: ["BA.C", "BA.C", "BA.C"]
 ```
 
-And then force final scoring with dot item.
+Final scoring can be forced by `#END` at end of the params list.
 
 ```yaml
 draw:
@@ -172,7 +162,7 @@ area_highlight: figure
 ### `gettext`
 
 ```bash
-xgettext -k_ -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
+xgettext -k_tr -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
 msgmerge -N -U po/ca.po po/keys.pot
 msgmerge -N -U po/cs.po po/keys.pot
 msgmerge -N -U po/de.po po/keys.pot
@@ -184,6 +174,7 @@ msgmerge -N -U po/fr.po po/keys.pot
 msgmerge -N -U po/hu.po po/keys.pot
 msgmerge -N -U po/nl.po po/keys.pot
 msgmerge -N -U po/it.po po/keys.pot
+msgmerge -N -U po/ja.po po/keys.pot
 msgmerge -N -U po/pl.po po/keys.pot
 msgmerge -N -U po/ro.po po/keys.pot
 msgmerge -N -U po/ru.po po/keys.pot
@@ -202,7 +193,7 @@ chmod a+x JCloisterZone.jar
 mkdir JCloisterZone
 mv JCloisterZone.jar plugins JCloisterZone
 
-$JCZVER=3.4.3
+JCZVER=3.4.3
 tar cvzf JCloisterZone-$JCZVER.tgz JCloisterZone
 7z a JCloisterZone-$JCZVER.7z JCloisterZone
 zip -r -9 JCloisterZone-$JCZVER.zip JCloisterZone

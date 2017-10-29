@@ -1,106 +1,42 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.List;
-import java.util.Set;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.collect.Iterables;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Builder;
+import com.jcloisterzone.figure.MeepleIdProvider;
+import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
 
-public class BuilderCapability extends Capability {
+import io.vavr.collection.List;
 
-    public enum BuilderState { INACTIVE, ACTIVATED, BUILDER_TURN; }
+public class BuilderCapability extends Capability<BuilderState> {
 
-    protected BuilderState builderState = BuilderState.INACTIVE;
+    private static final long serialVersionUID = 1L;
 
-    public BuilderCapability(Game game) {
-        super(game);
+    @Override
+    public GameState onStartGame(GameState state) {
+        return setModel(state, BuilderState.UNUSED);
+    }
+
+    public GameState useBuilder(GameState state) {
+        return updateModel(state, builderState -> builderState == BuilderState.UNUSED ? BuilderState.USED : builderState);
     }
 
     @Override
-    public Object backup() {
-        return builderState;
+    public List<Special> createPlayerSpecialMeeples(Player p, MeepleIdProvider idProvider) {
+        return List.of(new Builder(idProvider.generateId(Builder.class), p));
     }
 
     @Override
-    public void restore(Object data) {
-        builderState = (BuilderState) data;
+    public GameState onTurnPartCleanUp(GameState state) {
+        return updateModel(state, bs -> {
+            if (bs == BuilderState.USED) {
+                return BuilderState.SECOND_TURN;
+            }
+            if (bs == BuilderState.SECOND_TURN) {
+                return BuilderState.UNUSED;
+            }
+            return bs;
+        });
     }
-
-    @Override
-    public void initPlayer(Player player) {
-        player.addMeeple(new Builder(game, player));
-    }
-
-    public BuilderState getBuilderState() {
-        return builderState;
-    }
-
-    public void useBuilder() {
-        if (builderState == BuilderState.INACTIVE) {
-            builderState = BuilderState.ACTIVATED;
-        }
-    }
-
-    public boolean hasPlayerAnotherTurn() {
-        return builderState == BuilderState.ACTIVATED;
-    }
-
-    @Override
-    public void prepareActions(List<PlayerAction<?>> actions, Set<FeaturePointer> followerOptions) {
-        Player player = game.getActivePlayer();
-        if (!player.hasSpecialMeeple(Builder.class)) return;
-
-        Tile tile = getCurrentTile();
-        if (!game.isDeployAllowed(tile, Builder.class)) return;
-
-        Set<Location> roads = tile.getPlayerUncompletedFeatures(player, Road.class);
-        Set<Location> cities = tile.getPlayerUncompletedFeatures(player, City.class);
-        if (roads.isEmpty() && cities.isEmpty()) return;
-
-        Position pos = tile.getPosition();
-        MeepleAction builderAction = new MeepleAction(Builder.class);
-
-        for (Location loc : Iterables.concat(roads, cities)) {
-            builderAction.add(new FeaturePointer(pos, loc));
-        }
-        actions.add(builderAction);
-
-    }
-
-    @Override
-    public void turnPartCleanUp() {
-        switch (builderState) {
-        case ACTIVATED:
-            builderState = BuilderState.BUILDER_TURN;
-            break;
-        case BUILDER_TURN:
-            builderState = BuilderState.INACTIVE;
-            break;
-        }
-    }
-
-    @Override
-    public void saveToSnapshot(Document doc, Element node) {
-        node.setAttribute("builderState", builderState.name());
-    }
-
-    @Override
-    public void loadFromSnapshot(Document doc, Element node) {
-        builderState = BuilderState.valueOf(node.getAttribute("builderState"));
-    }
-
 }

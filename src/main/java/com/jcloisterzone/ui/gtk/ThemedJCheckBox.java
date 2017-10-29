@@ -12,47 +12,47 @@ import javax.swing.UIManager;
  */
 public class ThemedJCheckBox extends JCheckBox {
 
-	public ThemedJCheckBox() {
-		super();
-	}
+    public ThemedJCheckBox() {
+        super();
+    }
 
-	public ThemedJCheckBox(Action a) {
-		super(a);
-	}
+    public ThemedJCheckBox(Action a) {
+        super(a);
+    }
 
-	public ThemedJCheckBox(Icon icon, boolean selected) {
-		super(icon, selected);
-	}
+    public ThemedJCheckBox(Icon icon, boolean selected) {
+        super(icon, selected);
+    }
 
-	public ThemedJCheckBox(Icon icon) {
-		super(icon);
-	}
+    public ThemedJCheckBox(Icon icon) {
+        super(icon);
+    }
 
-	public ThemedJCheckBox(String text, boolean selected) {
-		super(text, selected);
-	}
+    public ThemedJCheckBox(String text, boolean selected) {
+        super(text, selected);
+    }
 
-	public ThemedJCheckBox(String text, Icon icon, boolean selected) {
-		super(text, icon, selected);
-	}
+    public ThemedJCheckBox(String text, Icon icon, boolean selected) {
+        super(text, icon, selected);
+    }
 
-	public ThemedJCheckBox(String text, Icon icon) {
-		super(text, icon);
-	}
+    public ThemedJCheckBox(String text, Icon icon) {
+        super(text, icon);
+    }
 
-	public ThemedJCheckBox(String text) {
-		super(text);
-	}
+    public ThemedJCheckBox(String text) {
+        super(text);
+    }
 
-	{
-		//setForeground(UIManager.getColor("CheckBox.foreground"));
-		setBackground(UIManager.getColor("CheckBox.background"));
-		Color c = UIManager.getColor("CheckBox.foreground");
-		if (c != null) {
-			//HACK for some reason, direct passing not work in GTK LaF
-			setForeground(new Color(c.getRed(), c.getGreen(), c.getBlue()));
-		}
+    {
+        //setForeground(UIManager.getColors("CheckBox.foreground"));
+        setBackground(UIManager.getColor("CheckBox.background"));
+        Color c = UIManager.getColor("CheckBox.foreground");
+        if (c != null) {
+            //HACK for some reason, direct passing not work in GTK LaF
+            setForeground(new Color(c.getRed(), c.getGreen(), c.getBlue()));
+        }
 
-	}
+    }
 
 }

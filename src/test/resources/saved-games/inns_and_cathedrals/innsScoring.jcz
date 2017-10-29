@@ -1,0 +1,119 @@
+{
+  "gameId": "1",
+  "name": "Test scoring when city/road has multiple parts on same tile",
+  "appVersion": "4.0.0",
+  "initialSeed": 1,
+  "created": "2017-01-01T00:00:00.000Z",
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": {
+        "drawOrder": ["IC.RFr.i", "IC.RRR.i", "IC.CRCR", "#END"]
+      }
+    }
+  },
+  "slots": [
+    {"number": 0, "serial": 1, "clientId": "1", "nickname": "Alice"},
+    {"number": 1, "serial": 2, "clientId": "2", "nickname": "Bob"}
+  ],
+  "clocks": [0, 0],
+  "setup": {
+    "expansions": {
+      "BASIC": 1,
+      "INNS_AND_CATHEDRALS": 1
+    },
+    "rules": {},
+    "capabilities": [
+        "StandardGame",
+        "Inn",
+        "Cathedral"
+    ]
+  },
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "IC.RFr.i",
+        "rotation": "R0",
+        "position": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            1,
+            0
+          ],
+          "location": "WE"
+        },
+        "meepleId": "0.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 806400076850371427
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "IC.RRR.i",
+        "rotation": "R0",
+        "position": [
+          2,
+          0
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            2,
+            0
+          ],
+          "location": "E"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": 6585862247295631537
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "IC.CRCR",
+        "rotation": "R0",
+        "position": [
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "seed": -7027366990033147025
+      }
+    },
+    {
+      "type": "GAME_OVER",
+      "payload": {}
+    }
+  ]
+}

@@ -1,14 +1,13 @@
 package com.jcloisterzone.ui.panel;
 
-import static com.jcloisterzone.ui.I18nUtils._;
+import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,8 +18,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -42,9 +39,11 @@ import com.jcloisterzone.ui.gtk.ThemedJPanel;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.message.AbandonGameMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
-import com.jcloisterzone.wsio.message.GameMessage.GameState;
+import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.JoinGameMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
+
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class ChannelPanel extends ThemedJPanel {
@@ -74,9 +73,9 @@ public class ChannelPanel extends ThemedJPanel {
         gameListPanel.setLayout(new MigLayout("ins rel 0, gap 0 rel", "[grow]", ""));
         //HACK
         if (client.getTheme().isDark()) {
-        	gameListPanel.setBackground(client.getTheme().getMainBg());
+            gameListPanel.setBackground(client.getTheme().getMainBg());
         } else {
-        	gameListPanel.setBackground(new Color(180, 180, 180));
+            gameListPanel.setBackground(new Color(180, 180, 180));
         }
 
 
@@ -98,7 +97,7 @@ public class ChannelPanel extends ThemedJPanel {
             createGamePanel.add(new ThemedJLabel("Server is in maintenance mode."), "wrap");
             createGamePanel.add(new ThemedJLabel(maintenance), "wrap");
         } else {
-            createGamePanel.add(new ThemedJLabel(_("Game title")+":"));
+            createGamePanel.add(new ThemedJLabel(_tr("Game title")+":"));
 
             String defaultTitle = cc.getConnection().getNickname() + "'s game";
             final JTextField gameTitle = new JTextField();
@@ -106,15 +105,15 @@ public class ChannelPanel extends ThemedJPanel {
             gameTitle.setText(defaultTitle); //set after document
             createGamePanel.add(gameTitle, "wrap, width 250::");
 
-            createGamePanel.add(new ThemedJLabel(_("Password")+":"));
+            createGamePanel.add(new ThemedJLabel(_tr("Password")+":"));
             final JTextField password = new JPasswordField();
             createGamePanel.add(password, "wrap, width 250::");
 
-            JLabel passwordHint = new ThemedJLabel(_("If you leave password empty, anybody can connect to your game."));
+            JLabel passwordHint = new ThemedJLabel(_tr("If you leave password empty, anybody can connect to your game."));
             passwordHint.setFont(new Font(null, Font.ITALIC, 12));
             createGamePanel.add(passwordHint, "wrap, span 2");
 
-            JButton createGameButton = new JButton(_("Create game"));
+            JButton createGameButton = new JButton(_tr("Create game"));
             createGameButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -160,13 +159,12 @@ public class ChannelPanel extends ThemedJPanel {
         private JButton joinButton, abandonButton;
 
         private Joiner joiner = Joiner.on(", ").skipNulls();
-        private Set<Expansion> expansions;
+        private Map<Expansion, Integer> expansions;
 
         public GameItemPanel(final GameController gc) {
             final Game game = gc.getGame();
             setLayout(new MigLayout());
-            expansions = new HashSet<Expansion>(game.getExpansions());
-            expansions.remove(Expansion.BASIC);
+            expansions = game.getSetup().getExpansions().toJavaMap();
 
             name = new ThemedJLabel(game.getName());
             name.setFont(FONT_GAME_TITLE);
@@ -181,15 +179,16 @@ public class ChannelPanel extends ThemedJPanel {
 
             final JPasswordField password = new JPasswordField();
             if (gc.isPasswordProtected()) {
-                buttons.add(new ThemedJLabel(_("Password")+":"));
+                buttons.add(new ThemedJLabel(_tr("Password")+":"));
                 buttons.add(password, "width 160");
             }
 
-            joinButton = new JButton(gc.getGameState() == GameState.OPEN ? _("Join game") : _("Continue"));
+            joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _tr("Join game") : _tr("Continue"));
             joinButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JoinGameMessage msg = new JoinGameMessage(game.getGameId());
+                    JoinGameMessage msg = new JoinGameMessage();
+                    msg.setGameId(game.getGameId());
                     if (gc.isPasswordProtected()) {
                         msg.setPassword(password.getText().toString());
                     }
@@ -198,13 +197,13 @@ public class ChannelPanel extends ThemedJPanel {
             });
             buttons.add(joinButton);
 
-            if (gc.getGameState() != GameState.OPEN) {
-                abandonButton = new JButton(_("Remove game"));
+            if (gc.getGameStatus() != GameStatus.OPEN) {
+                abandonButton = new JButton(_tr("Remove game"));
                 abandonButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int result = JOptionPane.showConfirmDialog(client,
-                            _("Do you want to remove game permanently?"), _("Remove game"),
+                            _tr("Do you want to remove game permanently?"), _tr("Remove game"),
                             JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
                             cc.getConnection().send(new AbandonGameMessage(gc.getGame().getGameId()));
@@ -232,13 +231,14 @@ public class ChannelPanel extends ThemedJPanel {
                     return rc.getName();
                 }
             }));
-            connectedClients.setText(_("Players") + ": " + label);
+            connectedClients.setText(_tr("Players") + ": " + label);
         }
 
         private void updateExpansionsLabel() {
-            String label = joiner.join(expansions);
+            // TODO show counts if > 0
+            String label = joiner.join(expansions.keySet());
             if (label.length() == 0) label = Expansion.BASIC.toString();
-            expansionNames.setText(_("Expansions") + ": " + label);
+            expansionNames.setText(_tr("Expansions") + ": " + label);
         }
 
         @Subscribe
@@ -248,9 +248,8 @@ public class ChannelPanel extends ThemedJPanel {
 
         @Subscribe
         public void expansionsChanged(ExpansionChangedEvent ev) {
-            if (ev.getExpansion() == Expansion.BASIC) return;
-            if (ev.isEnabled()) {
-                expansions.add(ev.getExpansion());
+            if (ev.getCount() > 0) {
+                expansions.put(ev.getExpansion(), ev.getCount());
             } else {
                 expansions.remove(ev.getExpansion());
             }

@@ -5,6 +5,9 @@
     <point feature="CLOISTER" cx="500" cy="500">
         <apply>* CLOISTER</apply>
     </point>
+    <point feature="YAGA_HUT" cx="500" cy="500">
+        <apply>* CLOISTER</apply>
+    </point>
 
     <point feature="BRIDGE" cx="500" cy="200">
         <apply>* NS</apply>

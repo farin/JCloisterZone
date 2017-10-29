@@ -1,18 +1,21 @@
 package com.jcloisterzone.figure;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.game.Game;
+import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.game.state.GameState;
 
+@Immutable
 public class BigFollower extends Follower {
 
-    private static final long serialVersionUID = -5506815500027084904L;
+    private static final long serialVersionUID = 1L;
 
-    public BigFollower(Game game, Integer idSuffix, Player player) {
-        super(game, idSuffix, player);
+    public BigFollower(String id, Player player) {
+        super(id, player);
     }
 
     @Override
-    public int getPower() {
+    public int getPower(GameState state, Scoreable feature) {
         return 2;
     }
 

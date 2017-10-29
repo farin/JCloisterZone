@@ -70,8 +70,8 @@
         <festival/>
         <city castle-base="true">N</city>
         <road>W</road>
-        <farm city="W">WR</farm>
-        <farm city="W">EL ER SL SR WL</farm>
+        <farm city="N">WR</farm>
+        <farm city="N">EL ER SL SR WL</farm>
         <wagon-move>
             <neighbouring>N W</neighbouring>
         </wagon-move>

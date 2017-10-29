@@ -11,25 +11,25 @@ import javax.swing.UIManager;
 public class ThemedJPanel extends JPanel {
 
 
-	public ThemedJPanel() {
-		super();
-	}
+    public ThemedJPanel() {
+        super();
+    }
 
-	public ThemedJPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-	}
+    public ThemedJPanel(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+    }
 
-	public ThemedJPanel(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-	}
+    public ThemedJPanel(LayoutManager layout, boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+    }
 
-	public ThemedJPanel(LayoutManager layout) {
-		super(layout);
-	}
+    public ThemedJPanel(LayoutManager layout) {
+        super(layout);
+    }
 
-	{
-		setBackground(UIManager.getColor("Panel.background"));
-		setForeground(UIManager.getColor("Panel.foreground"));
-	}
+    {
+        setBackground(UIManager.getColor("Panel.background"));
+        setForeground(UIManager.getColor("Panel.foreground"));
+    }
 
 }

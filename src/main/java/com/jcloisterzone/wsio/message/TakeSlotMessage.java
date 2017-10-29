@@ -1,27 +1,31 @@
 package com.jcloisterzone.wsio.message;
 
-import com.jcloisterzone.Expansion;
+import com.jcloisterzone.game.SupportedSetup;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("TAKE_SLOT")
 public class TakeSlotMessage implements WsInGameMessage {
+
     private String gameId;
     private int number;
     private String nickname;
     private String aiClassName;
-    private Expansion[] supportedExpansions;
+    private SupportedSetup supportedSetup;
 
-    public TakeSlotMessage(String gameId, int number, String nickname) {
-        super();
-        this.gameId = gameId;
+    public TakeSlotMessage() {
+    }
+
+    public TakeSlotMessage(int number, String nickname) {
         this.number = number;
         this.nickname = nickname;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
     }
@@ -51,11 +55,11 @@ public class TakeSlotMessage implements WsInGameMessage {
         this.aiClassName = aiClassName;
     }
 
-    public Expansion[] getSupportedExpansions() {
-        return supportedExpansions;
+    public SupportedSetup getSupportedSetup() {
+        return supportedSetup;
     }
 
-    public void setSupportedExpansions(Expansion[] supportedExpansions) {
-        this.supportedExpansions = supportedExpansions;
+    public void setSupportedSetup(SupportedSetup supportedSetup) {
+        this.supportedSetup = supportedSetup;
     }
 }
