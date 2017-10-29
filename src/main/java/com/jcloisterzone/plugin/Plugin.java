@@ -179,7 +179,7 @@ public class Plugin implements ResourceManager {
         try {
             supportedExpansions = Files.list(Paths.get(getLoader().getResource("tiles").toURI()))
                 .filter(Files::isDirectory)
-                .map(d -> d.getFileName().toString())
+                .map(d -> d.getFileName().toString().replaceAll("/$", ""))  // fix trailing / which appears when listing folders in jar
                 .collect(Collectors.toSet());
         } catch (IOException | URISyntaxException e) {
             throw new PluginLoadException(e);
