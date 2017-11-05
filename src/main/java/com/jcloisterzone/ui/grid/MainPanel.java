@@ -18,6 +18,7 @@ import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
 import com.jcloisterzone.ui.grid.layer.BridgeLayer;
 import com.jcloisterzone.ui.grid.layer.CastleLayer;
+import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
@@ -46,6 +47,7 @@ public class MainPanel extends JPanel {
     private ChatPanel chatPanel;
 
     private FarmHintsLayer farmHintLayer;
+    private EventsOverlayLayer eventsOverlayPanel;
     private PlacementHistory placementHistoryLayer;
 
     public MainPanel(Client client, GameView gameView, ChatPanel chatPanel) {
@@ -101,6 +103,7 @@ public class MainPanel extends JPanel {
         }
 
         gridPanel.addLayer(new TokenLayer(gridPanel, gc));
+
         gridPanel.addLayer(meepleLayer);
 
         if (capabs.contains(BridgeCapability.class)) {
@@ -127,6 +130,10 @@ public class MainPanel extends JPanel {
 
         placementHistoryLayer = new PlacementHistory(gridPanel, gc);
         gridPanel.addLayer(placementHistoryLayer, false);
+
+        eventsOverlayPanel = new EventsOverlayLayer(gridPanel, gc);
+        gridPanel.addLayer(eventsOverlayPanel, true);
+        gridPanel.getEventsPanel().setEventsOverlayPanel(eventsOverlayPanel);
 
         add(gridPanel);
     }

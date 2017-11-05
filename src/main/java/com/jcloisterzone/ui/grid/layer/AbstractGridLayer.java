@@ -18,9 +18,14 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.event.MouseInputListener;
 
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -28,6 +33,7 @@ import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.ConvenientResourceManager;
+import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.TileImage;
 
 public abstract class AbstractGridLayer implements GridLayer {
@@ -261,6 +267,20 @@ public abstract class AbstractGridLayer implements GridLayer {
         tl.draw(g2, x,  y+h);
         g2.setColor(original);
         g2.setTransform(orig);
+    }
+
+    protected Area getFeatureArea(GameState state, Feature f) {
+        Area area = new Area();
+
+        for (FeaturePointer fp : f.getPlaces()) {
+            Position pos = fp.getPosition();
+            Location loc = fp.getLocation();
+            PlacedTile pt = state.getPlacedTile(pos);
+
+            FeatureArea fa = rm.getFeatureArea(pt.getTile(), pt.getRotation(), loc).translateTo(pos);
+            area.add(fa.getDisplayArea());
+        }
+        return area;
     }
 
 }

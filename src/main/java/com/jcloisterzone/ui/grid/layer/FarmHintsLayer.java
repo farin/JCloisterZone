@@ -10,16 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
-import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.ResourceManager;
 
 import io.vavr.Tuple2;
@@ -106,16 +101,7 @@ public class FarmHintsLayer extends AbstractGridLayer {
             })
             .map(t -> {
                 Farm farm = t._1;
-                Area area = new Area();
-
-                for (FeaturePointer fp : farm.getPlaces()) {
-                    Position pos = fp.getPosition();
-                    Location loc = fp.getLocation();
-                    PlacedTile pt = state.getPlacedTile(pos);
-
-                    FeatureArea fa = rm.getFeatureArea(pt.getTile(), pt.getRotation(), loc).translateTo(pos);
-                    area.add(fa.getDisplayArea());
-                }
+                Area area = getFeatureArea(state, farm);
 
                 List<Color> colors;
                 if (t._2.isEmpty()) {

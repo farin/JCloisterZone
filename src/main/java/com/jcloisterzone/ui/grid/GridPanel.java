@@ -67,6 +67,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ControlPanel controlPanel;
     private final ChatPanel chatPanel;
     private ActionInteractionPanel<?> actionInteractionPanel;
+    private final GameEventsPanel eventsPanel;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -117,6 +118,9 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             chatPanel.initHidingMode();
             add(chatPanel, "pos 0 0 250 100%");
         }
+
+        eventsPanel = new GameEventsPanel(gc);
+        add(eventsPanel, "pos 0 0 (100%-242) 36");
     }
 
     public double getMeepleScaleFactor() {
@@ -262,6 +266,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return chatPanel;
     }
 
+    public GameEventsPanel getEventsPanel() {
+        return eventsPanel;
+    }
+
 //    public String getErrorMessage() {
 //        return errorMessage;
 //    }
@@ -312,6 +320,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             top = rect.y;
             bottom = rect.y + rect.height;
         }
+
+        eventsPanel.handleGameChanged(ev);
 
         repaint();
     }
@@ -632,7 +642,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             add(label);
             add(icon);
         }
-
     }
 
 }
