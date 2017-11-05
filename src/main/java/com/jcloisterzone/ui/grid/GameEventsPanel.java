@@ -45,6 +45,7 @@ public class GameEventsPanel extends JPanel {
     private GameState state;
     private ArrayList<EventItem> model = new ArrayList<>();
     private Integer mouseOverIdx;
+    private int skipItems;
 
     protected final ResourceManager rm;
 
@@ -55,7 +56,7 @@ public class GameEventsPanel extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int idx = e.getX() / ICON_WIDTH;
+                int idx = skipItems + e.getX() / ICON_WIDTH;
                 setMouseOverIdx(idx < model.size() ? idx : null);
             }
         });
@@ -111,7 +112,7 @@ public class GameEventsPanel extends JPanel {
                 continue;
             }
             if (ev instanceof PlayerTurnEvent) {
-                turnColor = getPlayerColor(((PlayerTurnEvent)ev).getPlayer());
+                turnColor = getMeepleColor(((PlayerTurnEvent)ev).getPlayer());
                 ignore = false;
                 continue;
             }
@@ -124,7 +125,7 @@ public class GameEventsPanel extends JPanel {
             if (idx == null) {
                 triggeringColor = turnColor;
             } else {
-                triggeringColor = getPlayerColor(state.getPlayers().getPlayer(idx));
+                triggeringColor = getMeepleColor(state.getPlayers().getPlayer(idx));
             }
 
             if (ev instanceof TilePlacedEvent) {
@@ -137,16 +138,16 @@ public class GameEventsPanel extends JPanel {
                 //TOOD draw with opacity if returned
                 MeepleDeployed evt = (MeepleDeployed) ev;
                 Image img = rm.getLayeredImage(new LayeredImageDescriptor(evt.getMeeple().getClass(), triggeringColor));
-                model.add(new EventItem(ev, turnColor, triggeringColor, img));
+                EventItem item = new EventItem(ev, turnColor, triggeringColor, img);
+                item.imageMargin = 2;
+                model.add(item);
                 continue;
             }
             if (ev instanceof ScoreEvent) {
                 ScoreEvent evt = (ScoreEvent) ev;
-                Color color = getPlayerColor(evt.getReceiver());
                 model.add(new EventItem(ev, turnColor, triggeringColor, null));
                 continue;
             }
-
             //DEV
             System.err.println(ev.getClass());
         }
@@ -157,12 +158,15 @@ public class GameEventsPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
+        int size = model.size();
+        skipItems = Math.max(0, size - getWidth() / ICON_WIDTH);
+
         Graphics2D g2 = (Graphics2D) g;
         int x = 0;
 
         g2.setFont(FONT_SCORE);
-
-        for (EventItem item : model) {
+        for (int i = skipItems; i < size; i++) {
+            EventItem item = model.get(i);
             int y = 0;
             g2.setColor(item.turnColor);
             g2.fillRect(x * ICON_WIDTH, y, ICON_WIDTH, 2);
@@ -172,12 +176,14 @@ public class GameEventsPanel extends JPanel {
             y += 3; // 1px space
 
             if (item.image != null) {
-                g2.drawImage(item.image, x * ICON_WIDTH, y, ICON_WIDTH, ICON_WIDTH, null);
+                int m = item.imageMargin;
+                g2.drawImage(item.image, x * ICON_WIDTH + m, y + m, ICON_WIDTH - 2 * m , ICON_WIDTH - 2 * m, null);
             } else if (item.event instanceof ScoreEvent) {
                 ScoreEvent evt = (ScoreEvent) item.event;
-                Color color = getPlayerColor(evt.getReceiver());
+                Color color = evt.getReceiver().getColors().getFontColor();
                 g2.setColor(color);
-                g2.drawString("" + evt.getPoints(), x * ICON_WIDTH + 8, y + 22);
+                int offset = evt.getPoints() > 9 ? 0 : 8;
+                g2.drawString("" + evt.getPoints(), x * ICON_WIDTH + offset, y + 22);
             } else {
                 logger.error("Should never happen");
             }
@@ -185,7 +191,7 @@ public class GameEventsPanel extends JPanel {
         }
     }
 
-    private Color getPlayerColor(Player player) {
+    private Color getMeepleColor(Player player) {
         return player.getColors().getMeepleColor();
     }
 
@@ -202,6 +208,7 @@ public class GameEventsPanel extends JPanel {
         Color turnColor;
         Color color;
         Image image;
+        int imageMargin = 0;
 
         public EventItem(PlayEvent event, Color turnColor, Color color, Image image) {
             this.event = event;
