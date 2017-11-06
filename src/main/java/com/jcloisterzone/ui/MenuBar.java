@@ -37,6 +37,7 @@ public class MenuBar extends JMenuBar {
         ZOOM_IN(_tr("Zoom In"), KeyStroke.getKeyStroke('+')),
         ZOOM_OUT(_tr("Zoom Out"), KeyStroke.getKeyStroke('-')),
         ROTATE_BOARD(_tr("Rotate Board"), KeyStroke.getKeyStroke('/')),
+        GAME_EVENTS(_tr("Show Game Events"), KeyStroke.getKeyStroke('e')),
         LAST_PLACEMENTS(_tr("Show Last Placements"), KeyStroke.getKeyStroke('x')),
         FARM_HINTS(_tr("Show Farm Hints"), KeyStroke.getKeyStroke('f')),
         PROJECTED_POINTS(_tr("Show Projected Points"), KeyStroke.getKeyStroke('p')),
@@ -49,7 +50,7 @@ public class MenuBar extends JMenuBar {
         CONFIRM_FARM_DEPLOYMENT(_tr("Confirm Meeple Deployment on a Farm")),
         CONFIRM_TOWER_DEPLOYMENT(_tr("Confirm Meeple Deployment on a Tower")),
         CONFIRM_RANSOM(_tr("Confirm Ransom Payment")),
-        PREFERENCES(_tr("Preferences"), JCloisterZone.isMac() ? 
+        PREFERENCES(_tr("Preferences"), JCloisterZone.isMac() ?
             KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) : null),
         //Help
         ABOUT(_tr("About")),
@@ -137,6 +138,9 @@ public class MenuBar extends JMenuBar {
         menu.add(createMenuItem(MenuItem.ZOOM_OUT, false));
         menu.add(createMenuItem(MenuItem.ROTATE_BOARD, false));
         menu.addSeparator();
+        chbox = createCheckBoxMenuItem(MenuItem.GAME_EVENTS, false);
+        chbox.setSelected(true);
+        menu.add(chbox);
         menu.add(createCheckBoxMenuItem(MenuItem.LAST_PLACEMENTS, false));
         menu.add(createCheckBoxMenuItem(MenuItem.FARM_HINTS, false));
         menu.add(createCheckBoxMenuItem(MenuItem.PROJECTED_POINTS, false));

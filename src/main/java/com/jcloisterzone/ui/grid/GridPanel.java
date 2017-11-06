@@ -44,6 +44,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.actionpanel.ActionInteractionPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
+import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.view.GameView;
 
@@ -68,6 +69,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ChatPanel chatPanel;
     private ActionInteractionPanel<?> actionInteractionPanel;
     private final GameEventsPanel eventsPanel;
+    private boolean isEventsPanelVisible;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -120,6 +122,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         }
 
         eventsPanel = new GameEventsPanel(gc);
+        //client.is
         add(eventsPanel, "pos 0 0 (100%-242) 36");
     }
 
@@ -144,6 +147,15 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         tileHeight = (int)(ratio * baseWidth);
     }
 
+    public void toggleGameEvents(boolean visible) {
+        isEventsPanelVisible = visible;
+        eventsPanel.setVisible(visible);
+        if (visible) {
+            showLayer(EventsOverlayLayer.class);
+        } else {
+            hideLayer(EventsOverlayLayer.class);
+        }
+    }
 
     @Override
     public void forward() {
