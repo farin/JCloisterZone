@@ -19,11 +19,13 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
+import com.jcloisterzone.event.play.NeutralFigureMoved;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
@@ -82,7 +84,7 @@ public class GameEventsPanel extends JPanel {
         PlayEvent ev = item.event;
         if (ev instanceof TilePlacedEvent) {
             eventsOverlayPanel.setHighlightedPosition(state, ((TilePlacedEvent) ev).getPosition());
-        } else if (ev instanceof MeepleDeployed){
+        } else if (ev instanceof MeepleDeployed) {
             MeepleDeployed evt = (MeepleDeployed) ev;
             Feature feature = state.getFeature(evt.getPointer().asFeaturePointer());
             eventsOverlayPanel.setHighlightedFeature(state, feature);
@@ -90,8 +92,16 @@ public class GameEventsPanel extends JPanel {
             ScoreEvent evt = (ScoreEvent) ev;
             Feature feature = state.getFeature(evt.getFeaturePointer());
             eventsOverlayPanel.setHighlightedFeature(state, feature);
+        } else if (ev instanceof NeutralFigureMoved) {
+            NeutralFigureMoved evt = (NeutralFigureMoved) ev;
+            if (evt.getNeutralFigure() instanceof Count) {
+                Feature feature = state.getFeature(evt.getTo().asFeaturePointer());
+                eventsOverlayPanel.setHighlightedFeature(state, feature);
+            } else {
+                eventsOverlayPanel.setHighlightedPosition(state, evt.getTo().getPosition());
+            }
         } else {
-            eventsOverlayPanel.clearHighlight(); //should never happen
+            eventsOverlayPanel.clearHighlight(); // should never happen
         }
     }
 
@@ -112,7 +122,7 @@ public class GameEventsPanel extends JPanel {
                 continue;
             }
             if (ev instanceof PlayerTurnEvent) {
-                turnColor = getMeepleColor(((PlayerTurnEvent)ev).getPlayer());
+                turnColor = getMeepleColor(((PlayerTurnEvent) ev).getPlayer());
                 ignore = false;
                 continue;
             }
@@ -135,7 +145,7 @@ public class GameEventsPanel extends JPanel {
                 continue;
             }
             if (ev instanceof MeepleDeployed) {
-                //TOOD draw with opacity if returned
+                // TOOD draw with opacity if returned
                 MeepleDeployed evt = (MeepleDeployed) ev;
                 Image img = rm.getLayeredImage(new LayeredImageDescriptor(evt.getMeeple().getClass(), triggeringColor));
                 EventItem item = new EventItem(ev, turnColor, triggeringColor, img);
@@ -148,8 +158,13 @@ public class GameEventsPanel extends JPanel {
                 model.add(new EventItem(ev, turnColor, triggeringColor, null));
                 continue;
             }
-            //DEV
-            System.err.println(ev.getClass());
+            if (ev instanceof NeutralFigureMoved) {
+                NeutralFigureMoved evt = (NeutralFigureMoved) ev;
+                Image img = rm.getImage("neutral/count");
+                model.add(new EventItem(ev, turnColor, triggeringColor, img));
+                continue;
+            }
+            logger.warn("Unhandled event {}", ev.getClass());
         }
         return model;
     }
@@ -177,7 +192,7 @@ public class GameEventsPanel extends JPanel {
 
             if (item.image != null) {
                 int m = item.imageMargin;
-                g2.drawImage(item.image, x * ICON_WIDTH + m, y + m, ICON_WIDTH - 2 * m , ICON_WIDTH - 2 * m, null);
+                g2.drawImage(item.image, x * ICON_WIDTH + m, y + m, ICON_WIDTH - 2 * m, ICON_WIDTH - 2 * m, null);
             } else if (item.event instanceof ScoreEvent) {
                 ScoreEvent evt = (ScoreEvent) item.event;
                 Color color = evt.getReceiver().getColors().getFontColor();
