@@ -77,12 +77,23 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .filter(f -> f instanceof Farm || ((Completable) f).isCompleted(state))
                     .flatMap(f -> {
                         List<FeaturePointer> places = f.getPlaces();
-                        if (f instanceof Farm || places.find(p -> p.getPosition().equals(lastPlacedPos)).isDefined()) {
+                        if (f instanceof Farm) {
+                            return places;
+                        }
+                        if (places.find(p -> p.getPosition().equals(lastPlacedPos)).isDefined()) {
                             //feature lays on last placed tile -> is finished this turn
                             return places;
-                        } else {
-                            return List.empty();
                         }
+                        if (f instanceof Cloister) {
+                            Position cloisterPos = places.get().getPosition();
+                            if (!Position.ADJACENT_AND_DIAGONAL
+                                .map(t -> cloisterPos.add(t._2))
+                                .filter(p -> p.equals(lastPlacedPos))
+                                .isEmpty()) {
+                                return places;
+                            }
+                        }
+                        return List.empty();
                     })
                     .toSet();
 
@@ -97,7 +108,11 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .groupBy(Object::getClass)                    // for each meeple class create action ...
                     .values()
                     .map(Seq::get)
-                    .map(m -> new MeepleAction(m, options));
+                    .map(m -> {
+                        MeepleAction action = new MeepleAction(m, options);
+                        action.setCityOfCarcassoneMove(true);
+                        return action;
+                    });
             })
             .toVector();
 

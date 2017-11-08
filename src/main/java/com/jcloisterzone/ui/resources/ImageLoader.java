@@ -104,7 +104,6 @@ public class ImageLoader {
                 result = UiUtils.newTransparentImage(img.getWidth(null), img.getHeight(null));
                 g = result.createGraphics();
             }
-            // bez new ImgIcon nefunguje - vyzkoumat proc
             g.drawImage(img, 0, 0, null);
         }
 

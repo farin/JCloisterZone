@@ -13,6 +13,7 @@ public class MeepleAction extends SelectFeatureAction {
 
     private final String meepleId;
     private final Class<? extends Meeple> meepleType;
+    private boolean cityOfCarcassoneMove;
 
     public MeepleAction(Meeple meeple, Set<FeaturePointer> options) {
         this(meeple.getId(), meeple.getClass(), options);
@@ -30,6 +31,14 @@ public class MeepleAction extends SelectFeatureAction {
 
     public Class<? extends Meeple> getMeepleType() {
         return meepleType;
+    }
+
+    public boolean isCityOfCarcassoneMove() {
+        return cityOfCarcassoneMove;
+    }
+
+    public void setCityOfCarcassoneMove(boolean cityOfCarcassoneMove) {
+        this.cityOfCarcassoneMove = cityOfCarcassoneMove;
     }
 
     @Override
