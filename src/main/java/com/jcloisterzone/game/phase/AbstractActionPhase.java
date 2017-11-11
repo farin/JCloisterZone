@@ -15,6 +15,7 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.FlyingMachine;
 import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
@@ -74,6 +75,10 @@ public abstract class AbstractActionPhase extends Phase {
             }
 
             Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
+
+            //towers are handled by Tower capability (needs collect towers on all tiles)
+            places = places.filter(t -> !(t._2 instanceof Tower));
+
 
             if (!isCurrentTile) {
                 //exclude completed
