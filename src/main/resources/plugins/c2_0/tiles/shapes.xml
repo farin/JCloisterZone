@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shapes xmlns="http://www.jcloisterzone.com/shapes" xmlns:svg="http://www.w3.org/2000/svg">
+
+    <shape feature="CLOISTER">
+        <svg:polygon points="220,462 285,415 332,355 380,385 380,345 375,337 402,317 472,167 537,325 560,342 552,357 555,432 647,475 665,495 760,547 760,657 697,695 697,730 667,757 632,762 585,742 500,790 342,710 342,700 240,640 240,622 227,617 227,477"/>
+        <apply>BA.L CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
+        <apply>BA.LR CLOISTER</apply>
+        <svg:polygon points="297,185 392,75 477,187 467,205 467,285 667,367 740,455 740,610 590,682 402,592 335,620 240,575 240,555 235,550 232,467 237,452 237,437 227,427 317,320 315,200"/>
+    </shape>
+
+    <shape feature="QUARTER">
+        <svg:circle cx="400" cy="-400" r="600" />
+        <apply>CO.7 QUARTER_CASTLE</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="1000" cy="500" r="600" />
+        <apply>CO.7 QUARTER_MARKET</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="600" cy="1300" r="600" />
+        <apply>CO.7 QUARTER_BLACKSMITH</apply>
+    </shape>
+    <shape feature="QUARTER">
+        <svg:circle cx="-800" cy="50" r="600" />
+        <apply>CO.7 QUARTER_CATHEDRAL</apply>
+    </shape>
+
+    <shape feature="ROAD">
+        <svg:polygon points="613,999 413,999 452,910 492,867 545,827 642,785 665,770 655,752 582,700 772,592 835,650 860,700 880,790 880,857 852,907 790,947 690,962 650,972"/>
+        <apply>BA.LR S</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="608,999 408,999 427,930 447,887 487,847 502,835 417,777 597,685 675,737 692,765 702,805 702,855 687,897 652,945"/>
+        <apply>BA.RRR S</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="0,600 0,400 87,420 150,447 220,497 277,537 307,540 407,457 457,370 535,277 602,237 690,210 737,207 817,237 947,320 992,367 999,400 999,600 940,595 865,535 787,462 752,435 715,425 677,440 637,487 595,570 560,620 505,680 430,720 335,762 282,775 215,752 145,705 87,642"/>
+        <apply>BA.RFr WE</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="0,600 0,400 115,417 215,452 290,497 347,522 410,522 477,505 542,462 607,445 685,450 752,440 820,417 912,407 999,400 999,600 897,600 800,622 727,642 640,645 545,667 440,695 347,705 235,692 155,640 97,612"/>
+        <apply>BA.RCr WE</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="0,600 0,400 155,342 277,297 422,287 572,322 675,412 747,520 787,645 787,765 740,865 680,932 647,979 640,999 430,999 445,892 487,790 530,732 532,682 507,610 400,517 357,510 242,547 125,592"/>
+        <apply>BA.Rr SW</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="600,999 400,999 420,915 440,885 447,850 440,775 465,712 520,657 605,620 682,592 737,560 770,497 800,455 877,422 999,400 999,600 940,610 910,625 892,655 860,710 812,752 690,807 670,837 675,887 677,915 660,942"/>
+        <apply>BA.CcRr+ SE</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="600,999 400,999 385,947 360,897 362,817 390,752 465,690 517,672 565,660 605,615 640,555 702,507 787,467 847,442 925,422 999,400 999,600 885,617 805,642 772,677 752,725 722,780 667,815 602,840 570,855 562,892 585,955"/>
+        <apply>BA.CcRr SE</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="600,999 400,999 397,922 375,870 337,825 277,742 260,675 270,587 312,535 370,500 445,475 542,477 600,457 680,412 795,402 999,400 999,600 882,592 825,602 800,635 777,677 717,692 612,687 540,677 515,680 512,700 547,740 580,787 600,867"/>
+        <apply>BA.CRr SE</apply>
+    </shape>
+    <shape feature="ROAD">
+        <svg:polygon points="0,600 0,400 85,355 172,335 252,340 352,357 450,392 575,450 690,530 727,602 722,705 650,795 615,860 605,892 600,999 400,999 395,877 407,787 437,730 492,677 515,645 500,625 370,560 277,527 217,517 150,532"/>
+        <apply>BA.RrC SW</apply>
+    </shape>
+
+    <shape feature="CITY" baseLocation="N">
+        <svg:polygon points="0,0 0,12 125,137 122,175 155,180 255,262 255,305 280,317 307,322 335,300 460,357 462,385 492,402 527,387 592,397 650,400 690,395 722,407 742,405 787,377 785,340 832,265 845,260 857,245 857,222 920,115 987,25 999,0"/>
+        <apply>BA.C N</apply>
+        <apply>BA.RrC N</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="N">
+        <svg:polygon points="0,0 25,37 125,170 125,250 145,267 170,270 210,262 232,287 295,317 320,325 320,355 345,370 367,375 407,355 500,365 545,370 572,362 587,372 600,370 607,355 650,350 720,327 747,337 797,325 797,312 850,292 960,235 960,117 922,112 999,22 999,0"/>
+        <apply>BA.CFC.2 N</apply>
+        <apply>BA.CRr N</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="N">
+        <svg:polygon points="17,0 62,57 107,115 160,150 180,157 180,172 200,182 222,177 305,215 307,260 337,275 375,277 395,267 410,272 422,260 457,260 517,237 540,250 572,252 595,242 652,252 677,265 695,265 707,252 735,250 810,222 842,227 862,212 862,202 870,202 907,165 999,22 999,0"/>
+        <apply>BA.RCr N</apply>
+        <apply>BA.CFC.2 S</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="N">
+        <svg:polygon points="0,0 0,5 137,152 197,202 197,222 210,237 240,235 310,262 337,270 352,287 397,290 410,280 410,267 517,272 555,260 585,272 630,262 632,250 800,190 822,195 840,187 860,172 862,122 982,00"/>
+        <apply>BA.CRRR N</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="10,0 980,0 850,152 850,190 825,205 797,202 727,232 695,235 675,247 657,247 640,230 600,232 580,222 567,235 530,235 500,220 400,242 392,250 380,247 360,260 325,260 287,242 285,205 202,150 172,152"/>
+        <apply>BA.CC.2 N</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 10,0 120,112 165,157 192,190 232,215 235,255 267,345 290,370 290,402 272,430 260,560 275,587 270,632 245,655 217,722 202,797 192,825 182,872 117,875 0,999"/>
+        <apply>BA.CC.2 W</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="NW">
+        <svg:polygon points="0,0 999,0 992,27 880,107 832,162 806,195 796,215 757,337 742,370 665,367 655,375 615,355 605,355 597,382 600,397 567,445 547,450 497,547 500,562 472,615 450,617 385,762 382,785 365,817 352,817 325,855 292,885 210,925 140,947 112,952 72,965 45,980 22,999 0,999"/>
+        <apply>BA.Cc+ NW</apply>
+        <apply>BA.Cc.1 NW</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="NW">
+        <svg:polygon points="0,0 985,0 957,42 885,172 875,177 875,252 832,252 807,290 805,412 757,440 727,442 690,467 640,505 625,512 620,535 605,545 570,552 517,590 512,607 465,630 447,622 347,677 260,730 232,720 177,762 180,827 157,840 137,845 115,897 87,945 87,972 50,975 25,999 0,999"/>
+        <apply>BA.CcRr NW</apply>
+        <apply>BA.CcRr+ NW</apply>
+    </shape>
+    <shape feature="CITY" baseLocation="_S">
+        <svg:polygon points="0,0 999,17 999,999 975,999 897,945 867,945 862,937 857,897 795,820 782,825 770,820 750,810 750,787 660,732 642,735 600,735 577,717 432,715 415,730 362,730 297,762 292,790 260,802 235,802 195,842 155,875 137,890 107,895 0,990"/>
+        <apply>BA.Ccc+ _S</apply>
+        <apply>BA.Ccc _S</apply>
+        <apply>BA.CccR _S</apply>
+        <apply>BA.CccR+ _S</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,15 77,85 102,85 112,100 125,96 186,115 186,167 202,185 215,172 225,172 235,187 315,175 320,165 340,165 372,152 390,150 427,172 460,172 530,195 555,187 580,197 650,182 652,172 702,145 737,160 855,110 870,95 882,85 905,87 962,42 975,20 999,0 999,999 967,999 892,940 872,945 860,935 855,897 792,810 775,820 747,805 745,780 687,747 667,742 655,727 627,735 592,732 575,717 567,712 430,712 417,725 372,732 360,725 292,760 290,782 267,797 230,797 192,845 147,877 142,890 102,897 0,992"/>
+        <apply>BA.CFc.1 WE</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 17,0 112,72 130,75 147,92 147,120 210,195 242,197 258,212 258,225 347,287 377,282 400,285 429,300 572,300 590,287 630,285 680,267 705,245 705,235 722,215 752,217 767,220 807,165 850,135 857,127 895,120 910,100 999,17 999,999 990,999 922,932 892,935 887,915 867,920 842,920 817,905 817,862 795,842 772,845 762,835 687,847 680,855 662,855 635,865 602,867 567,842 542,845 470,815 452,825 427,817 355,830 352,847 302,872 267,850 142,907 137,927 117,935 92,930 20,999 0,999"/>
+        <apply>BA.CFc+ WE</apply>
+    </shape>
+    
+    <shape feature="FARM" baseLocation="WL.WR">
+        <title>edge-W</title>
+        <svg:polygon points="0,0 0,999 500,500"/>
+        <apply>CA.C! NL.NR</apply>
+        <apply>BB.CFR! NL.NR</apply>
+        <apply>AM.C!+ NL.NR</apply>
+        <apply>IC.C! EL.ER</apply>
+        <apply>TB.RCc!.g EL.ER</apply>
+        <apply>DG.Cc!.p EL.ER</apply>
+        <apply>AM.C!+ EL.ER</apply>
+        <apply>TB.CcR!.w SL.SR</apply>
+        <apply>DG.LCcc.d SL.SR</apply>
+        <apply>DG.Cc!.p SL.SR</apply>
+        <apply>TO.CcR! SL.SR</apply>
+        <apply>AM.C!+ SL.SR</apply>
+    </shape>
+    <shape feature="FARM" baseLocation="NR">
+        <title>edge-NR</title>
+        <svg:polygon points="500,0 999,0 500,500"/>
+        <apply>TB.CcRR!.c ER</apply>
+        <apply>TB.CcR!.w ER</apply>
+        <apply>KR.CcRR! ER</apply>
+        <apply>TO.CcR! ER</apply>
+        <apply>AM.CRcr+ NR</apply>
+    </shape>
+    <shape feature="FARM" baseLocation="NL">
+        <title>edge-NL</title>
+        <svg:polygon points="0,0 500,0 500,500"/>
+        <apply>BB.CFR! EL</apply>
+        <apply>TB.CcRR!.c SL</apply>
+        <apply>TB.RCc!.g SL</apply>
+        <apply>AM.CRcr+ NL</apply>
+        <apply>KR.CcRR! SL</apply>
+    </shape>
+    <shape feature="FARM" baseLocation="NL.WR">
+        <title>oblique-NL,WR</title>
+        <svg:polygon points="0,0 500,0 0,500"/>
+        <apply>R2.II+ NL.WR</apply>
+        <apply>R1.RrII NR.EL</apply>
+        <apply>BA.CcRr ER.SL</apply>
+        <apply>BA.CcRr+ ER.SL</apply>
+        <apply>CA.RrR.1 ER.SL</apply>
+        <apply>SI.CcRr ER.SL</apply>
+        <apply>IC.RrRr ER.SL</apply>
+        <apply>IC.CcRr+.i ER.SL</apply>
+        <apply>KR.CRrR ER.SL</apply>
+        <apply>DG.LCcc.d ER.SL</apply>
+        <apply>DG.CcRr.p ER.SL</apply>
+        <apply>DG.RrRr.g ER.SL</apply>
+        <apply>TO.RrRr.2 ER.SL</apply>
+        <apply>GQ.CRRr SR.WL</apply>
+        <apply>R1.CcII ER.SL</apply>
+        <apply>R1.II SR.WL</apply>
+        <apply>R1.RrII SR.WL</apply>
+        <apply>FL.Rr.SW.o SR.WL</apply>
+        <apply>C2.RRRr SR.WL</apply>
+        <apply>WR.Rr SR.WL</apply>
+        <apply>WR.RrC SR.WL</apply>
+        <apply>MW.CCRr.2 ER.SL</apply>
+        <apply>GO.LCcRr ER.SL</apply>
+        <apply>GO.LRrRr SR.WL</apply>
+    </shape>
+    <shape feature="FARM" baseLocation="NL.WR">
+        <title>half-oblique-NL,WR</title>
+        <svg:polygon points="0,0 400,0 400,250 250,400 0,400"/>
+        <apply>DG.RrRr.g NL.WR</apply>
+        <apply>TO.RrRr.2 NL.WR</apply>
+        <apply>IC.RrRr NL.WR</apply>
+        <apply>CA.RRr.2 NR.EL</apply>
+        <apply>BA.CRRR ER.SL</apply>
+        <apply>IC.RRR.i ER.SL</apply>
+        <apply>DG.RRR.g ER.SL</apply>
+        <apply>DG.CRRR.p ER.SL</apply>
+        <apply>DG.CcRr.g ER.SL</apply>
+        <apply>DG.CRr.d ER.SL</apply>
+        <apply>DG.CRr.g ER.SL</apply>
+        <apply>BA.CRRR SR.WL</apply>
+        <apply>IC.RrC.i SR.WL</apply>
+        <apply>IC.RRR.i SR.WL</apply>
+        <apply>DG.RRR.g SR.WL</apply>
+        <apply>DG.CRRR.p SR.WL</apply>
+        <apply>DG.RrC.d SR.WL</apply>
+        <apply>DG.RrC.g SR.WL</apply>
+        <apply>TO.RrC SR.WL</apply>
+        <apply>CC.Rr SR.WL</apply>
+        <apply>C2.RRr SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,515 350,405 572,495 657,742 512,999 0,999"/>
+        <apply>BA.Rr SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="502,999 485,815 377,640 447,577 670,570 732,485 999,505 999,999"/>
+        <apply>BA.CRr ER.SL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,999 0,490 187,427 627,597 482,999"/>
+        <apply>BA.RrC SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,0 999,0 999,495 705,310 297,650 0,492"/>
+        <apply>BA.RFr WR.NL.NR.EL</apply>
+    </shape>
+
+    <complement-farm>
+        <apply>BA.CcRr EL.SR</apply>
+        <apply>BA.CcRr+ EL.SR</apply>
+        <apply>BA.CRr EL.WL.WR.SR</apply>
+        <apply>BA.RrC WR.EL.ER.SL</apply>
+        <apply>BA.RFr ER.SL.SR.WL</apply>
+        <apply>IC.CCC SL.SR</apply>
+        <apply>IC.CCc+ EL.ER</apply>
+        <apply>IC.RCc.i SL.EL.ER</apply>
+        <apply>IC.RrC.i WR.EL.ER.SL</apply>
+        <apply>IC.CcRr+.i SR.EL</apply>
+        <apply>IC.RrRr NR.EL.SR.WL</apply>
+        <apply>TB.Ccc.g SL.SR</apply>
+        <apply>TB.CcRR.w SL.ER</apply>
+        <apply>TB.CcRC.c ER</apply>
+        <apply>TB.CcRC.g ER</apply>
+        <apply>TB.CcR.c ER.SL.SR</apply>
+        <apply>TB.CR WL.WR.SL.SR.ER</apply>
+        <apply>TB.RCc.g SL.EL.ER</apply>
+        <apply>TB.RRC EL.ER.SL</apply>
+        <apply>DG.RrRr.g NR.EL.SR.WL</apply>
+        <apply>DG.CcRr.p EL.SR</apply>
+        <apply>DG.CcRr.g EL.SR</apply>
+        <apply>DG.RrC.d WR.EL.ER.SL</apply>
+        <apply>DG.RrC.g WR.EL.ER.SL</apply>
+        <apply>DG.CRr.d EL.WL.WR.SR</apply>
+        <apply>DG.CRr.g EL.WL.WR.SR</apply>
+        <apply>TO.RrRr.2 NR.EL.SR.WL</apply>
+        <apply>TO.RrC WR.EL.ER.SL</apply>
+        <apply>TO.RCr WL.SL.SR.ER</apply>
+        <apply>AM.CCRR SL.ER</apply>
+        <apply>AM.RC EL.ER.SL.SR.WL</apply>
+        <apply>AM.RrC SR.WL</apply>
+        <apply>KR.CRrR EL.SR.WL</apply>
+        <apply>R1.CcII SR.EL</apply>
+        <apply>R1.RrII WR.NL.ER.SL</apply>
+        <apply>SI.RCr WR.EL</apply>
+        <apply>BB.LRFr WR.EL</apply>
+        <apply>BB.CCCR SR</apply>
+        <apply>SI.CcRr EL.SR</apply>
+        <apply>GQ.CRRr ER.SL.WR</apply>
+        <apply>GQ.RCc SL.EL.ER</apply>
+        <apply>GQ.CcCR SL</apply>
+        <apply>FL.RFr.d WR.NL.NR.EL</apply>
+        <apply>FL.RFr.NS.o SR.WL.WR.NL</apply>
+        <apply>FL.RFr.WE.o WR.NL.NR.EL</apply>
+        <apply>FL.Rr.d SR.WL.WR.NL.NR.EL</apply>
+        <apply>FL.Rr.NW.o NR.EL.ER.SL.SR.WL</apply>
+        <apply>C2.RRRr WR.NL.ER.SL</apply>
+        <apply>TU.RCR EL.WR</apply>
+        <apply>WR.CFR WR.NL.NR</apply>
+        <apply>WR.RrC EL.ER.SL.WR</apply>
+        <apply>BE.Ccc SL.SR</apply>
+        <apply>CO.4 NR.EL.ER.SL</apply>
+        <apply>CO.9 NL.ER.WL.WR</apply>
+        <apply>CO.11 ER.SL</apply>
+        <apply>CO.12 NR.SL.SR.WL</apply>
+        <apply>MW.CCRr.2 EL.SR</apply>
+        <apply>GO.LCcRr EL.SR</apply>
+        <apply>GO.LRr SR.WL.WR.NL.NR.EL</apply>
+        <apply>GO.LRrRr WR.NL.ER.SL</apply>
+    </complement-farm>
+    
+    <shape> <!-- center -->
+        <svg:polygon points="687,452 687,562 550,702 254,702 257,402 445,355"/>
+        <subtract>BA.RRR</subtract>
+        <subtract>BA.RRRR</subtract>
+        <subtract>BA.CRRR</subtract>
+    </shape>
+    
+</shapes>
