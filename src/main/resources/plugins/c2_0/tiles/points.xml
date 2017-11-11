@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
-    <point feature="QUARTER" cx="400" cy="-400">
+    <point feature="QUARTER" cx="720" cy="-300">
         <apply>CO.7 QUARTER_CASTLE</apply>
     </point>
-    <point feature="QUARTER" cx="1000" cy="500">
+    <point feature="QUARTER" cx="1220" cy="400">
         <apply>CO.7 QUARTER_MARKET</apply>
     </point>
-    <point feature="QUARTER" cx="600" cy="1300">
+    <point feature="QUARTER" cx="1050" cy="600">
         <apply>CO.7 QUARTER_BLACKSMITH</apply>
     </point>
-    <point feature="QUARTER" cx="-800" cy="50">
+    <point feature="QUARTER" cx="-600" cy="-150">
         <apply>CO.7 QUARTER_CATHEDRAL</apply>
     </point>
 </points>

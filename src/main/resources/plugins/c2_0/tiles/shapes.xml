@@ -11,19 +11,19 @@
     </shape>
 
     <shape feature="QUARTER">
-        <svg:circle cx="400" cy="-400" r="600" />
+        <svg:circle cx="720" cy="-300" r="600" />
         <apply>CO.7 QUARTER_CASTLE</apply>
     </shape>
     <shape feature="QUARTER">
-        <svg:circle cx="1000" cy="500" r="600" />
+        <svg:circle cx="1220" cy="400" r="600" />
         <apply>CO.7 QUARTER_MARKET</apply>
     </shape>
     <shape feature="QUARTER">
-        <svg:circle cx="600" cy="1300" r="600" />
+        <svg:circle cx="-500" cy="1050" r="600" />
         <apply>CO.7 QUARTER_BLACKSMITH</apply>
     </shape>
     <shape feature="QUARTER">
-        <svg:circle cx="-800" cy="50" r="600" />
+        <svg:circle cx="-600" cy="-150" r="600" />
         <apply>CO.7 QUARTER_CATHEDRAL</apply>
     </shape>
 
@@ -68,6 +68,7 @@
         <svg:polygon points="0,0 0,12 125,137 122,175 155,180 255,262 255,305 280,317 307,322 335,300 460,357 462,385 492,402 527,387 592,397 650,400 690,395 722,407 742,405 787,377 785,340 832,265 845,260 857,245 857,222 920,115 987,25 999,0"/>
         <apply>BA.C N</apply>
         <apply>BA.RrC N</apply>
+        <apply>CO.9 S</apply>
     </shape>
     <shape feature="CITY" baseLocation="N">
         <svg:polygon points="0,0 25,37 125,170 125,250 145,267 170,270 210,262 232,287 295,317 320,325 320,355 345,370 367,375 407,355 500,365 545,370 572,362 587,372 600,370 607,355 650,350 720,327 747,337 797,325 797,312 850,292 960,235 960,117 922,112 999,22 999,0"/>
