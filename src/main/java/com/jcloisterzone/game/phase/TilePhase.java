@@ -155,7 +155,7 @@ public class TilePhase extends Phase {
         Rotation rot = msg.getRotation();
         Player player = state.getActivePlayer();
 
-        assert tile.getId().equals(msg.getTileId());
+        assert tile.getId().equals(msg.getTileId()) : String.format("%s received, but %s is drawn", msg.getTileId(), tile.getId());
 
         TilePlacementAction action = (TilePlacementAction) state.getPlayerActions().getActions().get();
 

@@ -511,7 +511,7 @@ public class CreateGamePanel extends ThemedJPanel {
 
                     GameSetup setup = game.getSetup();
                     if (chbox.isSelected()) {
-                        setup = setup.mapRules(m -> m.put(rule, 1));
+                        setup = setup.mapRules(m -> m.put(rule, Boolean.TRUE));
                     } else {
                         setup = setup.mapRules(m -> m.remove(rule));
                     }
