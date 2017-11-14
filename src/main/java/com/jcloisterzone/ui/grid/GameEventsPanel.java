@@ -1,5 +1,6 @@
 package com.jcloisterzone.ui.grid;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
@@ -23,6 +26,7 @@ import com.jcloisterzone.event.play.NeutralFigureMoved;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.neutral.Count;
@@ -101,7 +105,7 @@ public class GameEventsPanel extends JPanel {
                 eventsOverlayPanel.setHighlightedPosition(state, evt.getTo().getPosition());
             }
         } else {
-            eventsOverlayPanel.clearHighlight(); // should never happen
+            eventsOverlayPanel.clearHighlight();
         }
     }
 
@@ -144,6 +148,12 @@ public class GameEventsPanel extends JPanel {
                 model.add(new EventItem(ev, turnColor, triggeringColor, img.getImage()));
                 continue;
             }
+            if (ev instanceof TileDiscardedEvent) {
+                TileDiscardedEvent evt = (TileDiscardedEvent) ev;
+                TileImage img = rm.getTileImage(evt.getTile().getId(), Rotation.R0);
+                model.add(new EventItem(ev, turnColor, triggeringColor, img.getImage()));
+                continue;
+            }
             if (ev instanceof MeepleDeployed) {
                 // TOOD draw with opacity if returned
                 MeepleDeployed evt = (MeepleDeployed) ev;
@@ -177,33 +187,42 @@ public class GameEventsPanel extends JPanel {
         skipItems = Math.max(0, size - getWidth() / ICON_WIDTH);
 
         Graphics2D g2 = (Graphics2D) g;
+        AffineTransform orig = g2.getTransform();
         int x = 0;
 
         g2.setFont(FONT_SCORE);
+        g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         for (int i = skipItems; i < size; i++) {
             EventItem item = model.get(i);
             int y = 0;
             g2.setColor(item.turnColor);
-            g2.fillRect(x * ICON_WIDTH, y, ICON_WIDTH, 2);
+            g2.fillRect(0, y, ICON_WIDTH, 2);
             y += 2;
             g2.setColor(item.color);
-            g2.fillRect(x * ICON_WIDTH, y, ICON_WIDTH, 2);
+            g2.fillRect(0, y, ICON_WIDTH, 2);
             y += 3; // 1px space
 
             if (item.image != null) {
                 int m = item.imageMargin;
-                g2.drawImage(item.image, x * ICON_WIDTH + m, y + m, ICON_WIDTH - 2 * m, ICON_WIDTH - 2 * m, null);
+                g2.drawImage(item.image, 0 + m, y + m, ICON_WIDTH - 2 * m, ICON_WIDTH - 2 * m, null);
+                if (item.event instanceof TileDiscardedEvent) {
+                    g2.setColor(Color.BLACK);
+                    g2.drawLine(m + 2, y + m + 2, ICON_WIDTH - m - 2, y + ICON_WIDTH - m - 2);
+                    g2.drawLine(ICON_WIDTH - m - 2, y + m + 2, m + 2, y + ICON_WIDTH - m - 2);
+                }
             } else if (item.event instanceof ScoreEvent) {
                 ScoreEvent evt = (ScoreEvent) item.event;
                 Color color = evt.getReceiver().getColors().getFontColor();
                 g2.setColor(color);
                 int offset = evt.getPoints() > 9 ? 0 : 8;
-                g2.drawString("" + evt.getPoints(), x * ICON_WIDTH + offset, y + 22);
+                g2.drawString("" + evt.getPoints(), offset, y + 22);
             } else {
                 logger.error("Should never happen");
             }
             x++;
+            g2.translate(ICON_WIDTH, 0);
         }
+        g2.setTransform(orig);
     }
 
     private Color getMeepleColor(Player player) {
