@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
@@ -49,6 +50,8 @@ public class PlacementHistory extends AbstractGridLayer {
         boolean turnEventSeen = false;
         Boolean placedCurrentTurn = null;
 
+        ArrayList<TilePlacedEvent> buffer = new ArrayList<>();
+
         for (PlayEvent ev : state.getEvents().reverseIterator()) {
             if (ev instanceof PlayerTurnEvent) {
                 if (breakOnTurnEvent) break;
@@ -76,6 +79,19 @@ public class PlacementHistory extends AbstractGridLayer {
                 placedCurrentTurn = true;
             }
 
+            buffer.add(te);
+        }
+
+        while (!buffer.isEmpty()) {
+            int lastIdx = buffer.size() - 1;
+            TilePlacedEvent te = buffer.get(lastIdx);
+            if (te.getMetadata().getTriggeringPlayerIndex() != null) {
+                break;
+            }
+            buffer.remove(lastIdx);
+        }
+
+        for (TilePlacedEvent te : buffer) {
             Position pos = te.getPosition();
             Player player = getTriggeringPlayer(state, te);
             String text = String.valueOf(++counter);
@@ -88,6 +104,7 @@ public class PlacementHistory extends AbstractGridLayer {
             drawAntialiasedTextCentered(gb, text, 80, ZERO, SHADOW_POINT, Color.GRAY, null);
             g.drawImage(buf, null, getOffsetX(pos), getOffsetY(pos));
         }
+
         g.setComposite(oldComposite);
     }
 }
