@@ -36,6 +36,7 @@ import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.resources.TileImage;
+import com.jcloisterzone.ui.theme.Theme;
 
 import io.vavr.collection.Queue;
 
@@ -44,7 +45,7 @@ public class GameEventsPanel extends JPanel {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final int ICON_WIDTH = 30;
-    private static Font FONT_SCORE = new Font(null, Font.PLAIN, 24);
+    private static Font FONT_SCORE = new Font("Georgia", Font.PLAIN, 24);
 
     private EventsOverlayLayer eventsOverlayPanel;
 
@@ -53,10 +54,13 @@ public class GameEventsPanel extends JPanel {
     private Integer mouseOverIdx;
     private int skipItems;
 
+    protected final Theme theme;
     protected final ResourceManager rm;
 
     public GameEventsPanel(GameController gc) {
-        setBackground(Color.WHITE);
+        theme = gc.getClient().getTheme();
+        setBackground(theme.getEventsBg());
+
         rm = gc.getClient().getResourceManager();
 
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -213,9 +217,8 @@ public class GameEventsPanel extends JPanel {
             } else if (item.event instanceof ScoreEvent) {
                 ScoreEvent evt = (ScoreEvent) item.event;
                 Color color = evt.getReceiver().getColors().getFontColor();
-                g2.setColor(color);
                 int offset = evt.getPoints() > 9 ? 0 : 8;
-                g2.drawString("" + evt.getPoints(), offset, y + 22);
+                drawTextShadow(g2, "" + evt.getPoints(), offset, y + 22, color);
             } else {
                 logger.error("Should never happen");
             }
@@ -223,6 +226,16 @@ public class GameEventsPanel extends JPanel {
             g2.translate(ICON_WIDTH, 0);
         }
         g2.setTransform(orig);
+    }
+
+    private void drawTextShadow(Graphics2D g2, String text, int x, int y, Color color) {
+        Color shadowColor = theme.getFontShadowColor();
+        if (shadowColor != null) {
+            g2.setColor(shadowColor);
+            g2.drawString(text, x+1, y+1);
+        }
+        g2.setColor(color);
+        g2.drawString(text, x, y);
     }
 
     private Color getMeepleColor(Player player) {
