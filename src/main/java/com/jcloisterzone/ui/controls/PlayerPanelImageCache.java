@@ -58,16 +58,19 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getSpecialMeeples(state));
 
             Map<Token, Color> tunnelColors = player.getColors().getTunnelColors();
-            Image tunnelA = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_A)));
-            Image tunnelB = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_B)));
-            Image tunnelC = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_C)));
+            Image tunnelA = rm.getLayeredImage(
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_A)));
+            Image tunnelB = rm.getLayeredImage(
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_B)));
+            Image tunnelC = rm.getLayeredImage(
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_C)));
 
             scaledImages.put(String.format("%dtunnel.A", player.getIndex()), scaleImage(tunnelA));
             scaledImages.put(String.format("%dtunnel.B", player.getIndex()), scaleImage(tunnelB));
             scaledImages.put(String.format("%dtunnel.C", player.getIndex()), scaleImage(tunnelC));
         }
 
-        scaledImages.put("towerpiece", scaleImage(rm.getImage("neutral/towerpiece")));
+        scaledImages.put("tower_piece", scaleImage(rm.getImage("neutral/tower_piece")));
 
         scaledImages.put("king", scaleImage(rm.getImage("neutral/king")));
         scaledImages.put("robber", scaleImage(rm.getImage("neutral/robber")));
@@ -81,13 +84,14 @@ public class PlayerPanelImageCache {
 
         scaledImages.put("abbey", scaleImage(rm.getTileImage(Tile.ABBEY_TILE_ID, Rotation.R0).getImage()));
 
-        scaledImages.put("lb-tower", scaleImage(rm.getImage("neutral/lb-tower")));
-        scaledImages.put("lb-house", scaleImage(rm.getImage("neutral/lb-house")));
-        scaledImages.put("lb-shed", scaleImage(rm.getImage("neutral/lb-shed")));
+        scaledImages.put("lb_tower", scaleImage(rm.getImage("neutral/lb_tower")));
+        scaledImages.put("lb_house", scaleImage(rm.getImage("neutral/lb_house")));
+        scaledImages.put("lb_shed", scaleImage(rm.getImage("neutral/lb_shed")));
 
         scaledImages.put("gold", scaleImage(rm.getImage("neutral/gold")));
 
-        Image scaled = new ImageIcon(rm.getImage("neutral/dragon").getScaledInstance(42, 42, Image.SCALE_SMOOTH)).getImage();
+        Image scaled = new ImageIcon(rm.getImage("neutral/dragon").getScaledInstance(42, 42, Image.SCALE_SMOOTH))
+                .getImage();
         scaledImages.put("dragon", scaled);
 
         scaledImages.put("fairy", scaleImage(rm.getImage("neutral/fairy")));

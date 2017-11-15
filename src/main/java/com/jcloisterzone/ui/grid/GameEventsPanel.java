@@ -28,6 +28,7 @@ import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
+import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.state.GameState;
@@ -108,6 +109,9 @@ public class GameEventsPanel extends JPanel {
             } else {
                 eventsOverlayPanel.setHighlightedPosition(state, evt.getTo().getPosition());
             }
+        } else if (ev instanceof TokenPlacedEvent) {
+            TokenPlacedEvent evt = (TokenPlacedEvent) ev;
+            eventsOverlayPanel.setHighlightedPosition(state, evt.getPointer().getPosition());
         } else {
             eventsOverlayPanel.clearHighlight();
         }
@@ -146,6 +150,7 @@ public class GameEventsPanel extends JPanel {
                 triggeringColor = getMeepleColor(state.getPlayers().getPlayer(idx));
             }
 
+            // TODO clean up ugly if branches
             if (ev instanceof TilePlacedEvent) {
                 TilePlacedEvent evt = (TilePlacedEvent) ev;
                 TileImage img = rm.getTileImage(evt.getTile().getId(), evt.getRotation());
@@ -177,6 +182,11 @@ public class GameEventsPanel extends JPanel {
                 Image img = rm.getImage("neutral/count");
                 model.add(new EventItem(ev, turnColor, triggeringColor, img));
                 continue;
+            }
+            if (ev instanceof TokenPlacedEvent) {
+                TokenPlacedEvent evt = (TokenPlacedEvent) ev;
+                Image img = rm.getImage("neutral/" + evt.getToken().name().toLowerCase());
+                model.add(new EventItem(ev, turnColor, triggeringColor, img));
             }
             logger.warn("Unhandled event {}", ev.getClass());
         }
