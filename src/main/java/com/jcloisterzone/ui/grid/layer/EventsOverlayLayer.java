@@ -1,6 +1,5 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
@@ -13,11 +12,11 @@ import com.jcloisterzone.ui.grid.GridPanel;
 
 public class EventsOverlayLayer extends AbstractGridLayer {
 
-    private static final Color OVERLAY = new Color(47, 79,  79, 185);
 
     private GameState state;
     private Feature highlightedFeature;
     private Position highlightedPosition;
+
 
     public EventsOverlayLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
@@ -29,7 +28,7 @@ public class EventsOverlayLayer extends AbstractGridLayer {
             return;
         }
 
-        g2.setColor(OVERLAY);
+        g2.setColor(gc.getClient().getTheme().getBoardOverlay());
 
         Area wholeGrid = new Area(new Rectangle(
            -gridPanel.getOffsetX(),
