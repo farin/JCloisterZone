@@ -1,8 +1,6 @@
 package com.jcloisterzone.ui.grid;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.MeepleDeployed;
@@ -33,20 +32,26 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.grid.eventpanel.EventItem;
+import com.jcloisterzone.ui.grid.eventpanel.ImageEventItem;
+import com.jcloisterzone.ui.grid.eventpanel.ScoreEventItem;
+import com.jcloisterzone.ui.grid.eventpanel.TileDiscardedEventItem;
 import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
 import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.theme.Theme;
 
+import io.vavr.Function1;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
 
 public class GameEventsPanel extends JPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final int ICON_WIDTH = 30;
-    private static Font FONT_SCORE = new Font("Georgia", Font.PLAIN, 24);
+    public static final int ICON_WIDTH = 30;
 
     private EventsOverlayLayer eventsOverlayPanel;
 
@@ -55,8 +60,12 @@ public class GameEventsPanel extends JPanel {
     private Integer mouseOverIdx;
     private int skipItems;
 
+    Map<Class<? extends PlayEvent>, Function1<PlayEvent, EventItem>> mapping;
+
     protected final Theme theme;
     protected final ResourceManager rm;
+
+    private Color turnColor, triggeringColor;
 
     public GameEventsPanel(GameController gc) {
         theme = gc.getClient().getTheme();
@@ -77,6 +86,78 @@ public class GameEventsPanel extends JPanel {
                 setMouseOverIdx(null);
             }
         });
+
+        mapping = HashMap.empty();
+        mapping = mapping.put(TilePlacedEvent.class, this::processTilePlacedEvent);
+        mapping = mapping.put(TileDiscardedEvent.class, this::processTileDiscardedEvent);
+        mapping = mapping.put(MeepleDeployed.class, this::processMeepleDeployedEvent);
+        mapping = mapping.put(ScoreEvent.class, this::processScoreEvent);
+        mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
+        mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
+    }
+
+    private EventItem processTilePlacedEvent(PlayEvent _ev) {
+        TilePlacedEvent ev = (TilePlacedEvent) _ev;
+        TileImage img = rm.getTileImage(ev.getTile().getId(), ev.getRotation());
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img.getImage());
+
+        item.setHighlightedPosition(ev.getPosition());
+        return item;
+    }
+
+    private EventItem processTileDiscardedEvent(PlayEvent _ev) {
+        TileDiscardedEvent ev = (TileDiscardedEvent) _ev;
+        TileImage img = rm.getTileImage(ev.getTile().getId(), Rotation.R0);
+        TileDiscardedEventItem item = new TileDiscardedEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img.getImage());
+        return item;
+    }
+
+    private EventItem processMeepleDeployedEvent(PlayEvent _ev) {
+        MeepleDeployed ev = (MeepleDeployed) _ev;
+        Image img = rm.getLayeredImage(new LayeredImageDescriptor(ev.getMeeple().getClass(), triggeringColor));
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+        item.setPadding(2);
+
+        Feature feature = state.getFeature(ev.getPointer().asFeaturePointer());
+        item.setHighlightedFeature(feature);
+        return item;
+    }
+
+    private EventItem processScoreEvent(PlayEvent _ev) {
+        ScoreEvent ev = (ScoreEvent) _ev;
+        ScoreEventItem item = new ScoreEventItem(theme, ev, turnColor, triggeringColor);
+
+        Feature feature = state.getFeature(ev.getFeaturePointer());
+        item.setHighlightedFeature(feature);
+        return item;
+    }
+
+    private EventItem processNeutralFigureMoved(PlayEvent _ev) {
+        NeutralFigureMoved ev = (NeutralFigureMoved) _ev;
+        Image img = rm.getImage("neutral/" + ev.getNeutralFigure().getClass().getSimpleName().toLowerCase());
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+
+        if (ev.getNeutralFigure() instanceof Count) {
+            Feature feature = state.getFeature(ev.getTo().asFeaturePointer());
+            item.setHighlightedFeature(feature);
+        } else {
+            item.setHighlightedPosition(ev.getTo().getPosition());
+        }
+        return item;
+    }
+
+    private EventItem processTokenPlacedEvent(PlayEvent _ev) {
+        TokenPlacedEvent ev = (TokenPlacedEvent) _ev;
+        Image img = rm.getImage("neutral/" + ev.getToken().name().toLowerCase());
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+
+        item.setHighlightedPosition(ev.getPointer().getPosition());
+        return item;
     }
 
     public void setMouseOverIdx(Integer mouseOverIdx) {
@@ -90,28 +171,12 @@ public class GameEventsPanel extends JPanel {
             return;
         }
         EventItem item = model.get(mouseOverIdx);
-        PlayEvent ev = item.event;
-        if (ev instanceof TilePlacedEvent) {
-            eventsOverlayPanel.setHighlightedPosition(state, ((TilePlacedEvent) ev).getPosition());
-        } else if (ev instanceof MeepleDeployed) {
-            MeepleDeployed evt = (MeepleDeployed) ev;
-            Feature feature = state.getFeature(evt.getPointer().asFeaturePointer());
+        Position pos = item.getHighlightedPosition();
+        Feature feature = item.getHighlightedFeature();
+        if (pos != null) {
+            eventsOverlayPanel.setHighlightedPosition(state, pos);
+        } else if (feature != null) {
             eventsOverlayPanel.setHighlightedFeature(state, feature);
-        } else if (ev instanceof ScoreEvent) {
-            ScoreEvent evt = (ScoreEvent) ev;
-            Feature feature = state.getFeature(evt.getFeaturePointer());
-            eventsOverlayPanel.setHighlightedFeature(state, feature);
-        } else if (ev instanceof NeutralFigureMoved) {
-            NeutralFigureMoved evt = (NeutralFigureMoved) ev;
-            if (evt.getNeutralFigure() instanceof Count) {
-                Feature feature = state.getFeature(evt.getTo().asFeaturePointer());
-                eventsOverlayPanel.setHighlightedFeature(state, feature);
-            } else {
-                eventsOverlayPanel.setHighlightedPosition(state, evt.getTo().getPosition());
-            }
-        } else if (ev instanceof TokenPlacedEvent) {
-            TokenPlacedEvent evt = (TokenPlacedEvent) ev;
-            eventsOverlayPanel.setHighlightedPosition(state, evt.getPointer().getPosition());
         } else {
             eventsOverlayPanel.clearHighlight();
         }
@@ -126,7 +191,9 @@ public class GameEventsPanel extends JPanel {
     private ArrayList<EventItem> prepareModel(GameState state, Queue<PlayEvent> events) {
         ArrayList<EventItem> model = new ArrayList<>();
 
-        Color turnColor = Color.GRAY;
+        turnColor = Color.GRAY;
+        triggeringColor = null;
+
         boolean ignore = true;
 
         for (PlayEvent ev : events) {
@@ -143,52 +210,18 @@ public class GameEventsPanel extends JPanel {
             }
 
             Integer idx = ev.getMetadata().getTriggeringPlayerIndex();
-            Color triggeringColor;
             if (idx == null) {
                 triggeringColor = turnColor;
             } else {
                 triggeringColor = getMeepleColor(state.getPlayers().getPlayer(idx));
             }
 
-            // TODO clean up ugly if branches
-            if (ev instanceof TilePlacedEvent) {
-                TilePlacedEvent evt = (TilePlacedEvent) ev;
-                TileImage img = rm.getTileImage(evt.getTile().getId(), evt.getRotation());
-                model.add(new EventItem(ev, turnColor, triggeringColor, img.getImage()));
-                continue;
+            Function1<PlayEvent, EventItem> fn = mapping.get(ev.getClass()).getOrNull();
+            if (fn == null) {
+                logger.warn("Unhandled event {}", ev.getClass());
+            } else {
+                model.add(fn.apply(ev));
             }
-            if (ev instanceof TileDiscardedEvent) {
-                TileDiscardedEvent evt = (TileDiscardedEvent) ev;
-                TileImage img = rm.getTileImage(evt.getTile().getId(), Rotation.R0);
-                model.add(new EventItem(ev, turnColor, triggeringColor, img.getImage()));
-                continue;
-            }
-            if (ev instanceof MeepleDeployed) {
-                // TOOD draw with opacity if returned
-                MeepleDeployed evt = (MeepleDeployed) ev;
-                Image img = rm.getLayeredImage(new LayeredImageDescriptor(evt.getMeeple().getClass(), triggeringColor));
-                EventItem item = new EventItem(ev, turnColor, triggeringColor, img);
-                item.imageMargin = 2;
-                model.add(item);
-                continue;
-            }
-            if (ev instanceof ScoreEvent) {
-                ScoreEvent evt = (ScoreEvent) ev;
-                model.add(new EventItem(ev, turnColor, triggeringColor, null));
-                continue;
-            }
-            if (ev instanceof NeutralFigureMoved) {
-                NeutralFigureMoved evt = (NeutralFigureMoved) ev;
-                Image img = rm.getImage("neutral/count");
-                model.add(new EventItem(ev, turnColor, triggeringColor, img));
-                continue;
-            }
-            if (ev instanceof TokenPlacedEvent) {
-                TokenPlacedEvent evt = (TokenPlacedEvent) ev;
-                Image img = rm.getImage("neutral/" + evt.getToken().name().toLowerCase());
-                model.add(new EventItem(ev, turnColor, triggeringColor, img));
-            }
-            logger.warn("Unhandled event {}", ev.getClass());
         }
         return model;
     }
@@ -202,50 +235,19 @@ public class GameEventsPanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform orig = g2.getTransform();
-        int x = 0;
+        g2.translate(0, 5);
 
-        g2.setFont(FONT_SCORE);
-        g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         for (int i = skipItems; i < size; i++) {
             EventItem item = model.get(i);
-            int y = 0;
-            g2.setColor(item.turnColor);
-            g2.fillRect(0, y, ICON_WIDTH, 2);
-            y += 2;
-            g2.setColor(item.color);
-            g2.fillRect(0, y, ICON_WIDTH, 2);
-            y += 3; // 1px space
+            g2.setColor(item.getTurnColor());
+            g2.fillRect(0, -5, ICON_WIDTH, 2);
+            g2.setColor(item.getColor());
+            g2.fillRect(0, -3, ICON_WIDTH, 2);
+            item.draw(g2);
 
-            if (item.image != null) {
-                int m = item.imageMargin;
-                g2.drawImage(item.image, 0 + m, y + m, ICON_WIDTH - 2 * m, ICON_WIDTH - 2 * m, null);
-                if (item.event instanceof TileDiscardedEvent) {
-                    g2.setColor(Color.BLACK);
-                    g2.drawLine(m + 2, y + m + 2, ICON_WIDTH - m - 2, y + ICON_WIDTH - m - 2);
-                    g2.drawLine(ICON_WIDTH - m - 2, y + m + 2, m + 2, y + ICON_WIDTH - m - 2);
-                }
-            } else if (item.event instanceof ScoreEvent) {
-                ScoreEvent evt = (ScoreEvent) item.event;
-                Color color = evt.getReceiver().getColors().getFontColor();
-                int offset = evt.getPoints() > 9 ? 0 : 8;
-                drawTextShadow(g2, "" + evt.getPoints(), offset, y + 22, color);
-            } else {
-                logger.error("Should never happen");
-            }
-            x++;
             g2.translate(ICON_WIDTH, 0);
         }
         g2.setTransform(orig);
-    }
-
-    private void drawTextShadow(Graphics2D g2, String text, int x, int y, Color color) {
-        Color shadowColor = theme.getFontShadowColor();
-        if (shadowColor != null) {
-            g2.setColor(shadowColor);
-            g2.drawString(text, x+1, y+1);
-        }
-        g2.setColor(color);
-        g2.drawString(text, x, y);
     }
 
     private Color getMeepleColor(Player player) {
@@ -258,20 +260,5 @@ public class GameEventsPanel extends JPanel {
 
     public void setEventsOverlayPanel(EventsOverlayLayer eventsOverlayPanel) {
         this.eventsOverlayPanel = eventsOverlayPanel;
-    }
-
-    static class EventItem {
-        PlayEvent event;
-        Color turnColor;
-        Color color;
-        Image image;
-        int imageMargin = 0;
-
-        public EventItem(PlayEvent event, Color turnColor, Color color, Image image) {
-            this.event = event;
-            this.turnColor = turnColor;
-            this.color = color;
-            this.image = image;
-        }
     }
 }

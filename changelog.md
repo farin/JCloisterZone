@@ -20,6 +20,7 @@
   No UI for creation such game is present yet, but same as multiple sets
   it can be achieved by manual edit of preset in config.yaml
   (Such games can be normally played with remote players)
+* added game event panel on top of window 
 * added Japanese translation (thx to Alexis Jeandeau)
 
 ### Current expansions changes
