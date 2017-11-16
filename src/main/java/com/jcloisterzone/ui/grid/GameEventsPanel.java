@@ -37,6 +37,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.Dragon;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.eventpanel.EventItem;
@@ -186,9 +187,19 @@ public class GameEventsPanel extends JPanel {
 
     private EventItem processTokenPlacedEvent(PlayEvent _ev) {
         TokenPlacedEvent ev = (TokenPlacedEvent) _ev;
-        Image img = rm.getImage("neutral/" + ev.getToken().name().toLowerCase());
+        Token token = ev.getToken();
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
-        item.setImage(img);
+
+        if (token.isTunnel()) {
+            Player player = state.getPlayers().getPlayer(ev.getMetadata().getTriggeringPlayerIndex());
+            java.util.Map<Token, Color> tunnelColors = player.getColors().getTunnelColors();
+            Image img = rm.getLayeredImage(
+                new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(token))
+             );
+            item.setImage(img);
+        } else {
+            item.setImage(rm.getImage("neutral/" + token.name().toLowerCase()));
+        }
 
         item.setHighlightedPositions(Vector.of(ev.getPointer().getPosition()));
         return item;

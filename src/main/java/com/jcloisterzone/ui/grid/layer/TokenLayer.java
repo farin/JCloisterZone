@@ -70,7 +70,7 @@ public class TokenLayer extends AbstractGridLayer {
         return lbState.map(t -> {
             Position pos = t._1;
             Token lb = t._2;
-            String imgName = lb.name().toLowerCase().replace("_", "-");
+            String imgName = lb.name().toLowerCase();
             Image img = rm.getImage("neutral/" + imgName);
             int w = img.getWidth(null);
             int h = img.getHeight(null);
@@ -82,15 +82,6 @@ public class TokenLayer extends AbstractGridLayer {
                 img
             );
         });
-//            ImmutablePoint offset = new ImmutablePoint(65, 35);
-//        double xScale = 1.15, yScale = 1.15;
-//        //TODO tightly coupled with current theme, todo change image size in theme
-//        if (ev.getBuilding() == LittleBuilding.TOWER) {
-//            xScale = 1.0;
-//            yScale = 0.7;
-//        }
-//        });
-
     }
 
     private Seq<Tuple2<ImmutablePoint, Image>> createTunnelsViewModel(GameState state, Map<FeaturePointer, PlacedTunnelToken> tunnelsState) {
@@ -136,23 +127,4 @@ public class TokenLayer extends AbstractGridLayer {
             g2.setTransform(originalTransform);
         }
     }
-
-/*
-
-    @Subscribe
-    public void onLittleBuildingEvent(LittleBuildingEvent ev) {
-        Image img = rm.getImage("neutral/lb-"+ev.getBuilding().name().toLowerCase());
-        ImmutablePoint offset = new ImmutablePoint(65, 35);
-        double xScale = 1.15, yScale = 1.15;
-        //TODO tightly coupled with current theme, todo change image size in theme
-        if (ev.getBuilding() == LittleBuilding.TOWER) {
-            xScale = 1.0;
-            yScale = 0.7;
-        }
-        addPermanentImage(ev.getPosition(), offset, img, xScale, yScale);
-    }
-
-*/
-
-
 }
