@@ -19,6 +19,8 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
+import com.jcloisterzone.wsio.message.adapters.ExpansionMapAdapter;
+import com.jcloisterzone.wsio.message.adapters.RulesMapAdapter;
 
 
 /**
@@ -72,6 +74,7 @@ public class SavedGame implements Serializable {
         setup = new SavedGameSetup();
         setup.setExpansions(game.getSetup().getExpansions().toJavaMap());
         setup.setRules(game.getSetup().getRules().toJavaMap());
+        setup.setCapabilities(game.getSetup().getCapabilities().toJavaSet());
         replay = game.getReplay().reverse().toJavaList();
     }
 
@@ -370,7 +373,9 @@ public class SavedGame implements Serializable {
      * Represents a saved game setup.
      */
     public static class SavedGameSetup {
+        @JsonAdapter(ExpansionMapAdapter.class)
         private Map<Expansion, Integer> expansions;
+        @JsonAdapter(RulesMapAdapter.class)
         private Map<Rule, Object> rules;
         @JsonAdapter(CapabilitiesSetAdapter.class)
         private Set<Class<? extends Capability<?>>> capabilities;
