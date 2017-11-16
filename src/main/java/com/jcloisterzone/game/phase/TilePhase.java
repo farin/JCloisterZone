@@ -12,9 +12,9 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
+import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -186,7 +186,7 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.appendEvent(
-                new BridgePlaced(PlayEventMeta.createWithPlayer(player), mandatoryBridge)
+                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), Token.BRIDGE, mandatoryBridge)
             );
         }
 

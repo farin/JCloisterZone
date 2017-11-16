@@ -16,10 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.CastleCreated;
 import com.jcloisterzone.event.play.FollowerCaptured;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
@@ -103,6 +105,8 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
         mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
+        mapping = mapping.put(CastleCreated.class, this::processCastleCreatedEvent);
+
     }
 
     private EventItem processTilePlacedEvent(PlayEvent _ev) {
@@ -147,8 +151,12 @@ public class GameEventsPanel extends JPanel {
         ScoreEvent ev = (ScoreEvent) _ev;
         ScoreEventItem item = new ScoreEventItem(theme, ev, turnColor, triggeringColor);
 
-        Feature feature = state.getFeature(ev.getFeaturePointer());
-        item.setHighlightedFeature(feature);
+        if (ev.getCategory() == PointCategory.FAIRY) {
+            item.setHighlightedPositions(Vector.of(ev.getFeaturePointer().getPosition()));
+        } else {
+            Feature feature = state.getFeature(ev.getFeaturePointer());
+            item.setHighlightedFeature(feature);
+        }
         return item;
     }
 
@@ -198,6 +206,15 @@ public class GameEventsPanel extends JPanel {
         if (ev.getSourcePosition() != null) {
             item.setHighlightedPositions(Vector.of(ev.getSourcePosition()));
         }
+        return item;
+    }
+
+    private EventItem processCastleCreatedEvent(PlayEvent _ev) {
+        CastleCreated ev = (CastleCreated) _ev;
+        Image img = rm.getImage("neutral/castle");
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+        item.setHighlightedFeature(ev.getCastle());
         return item;
     }
 

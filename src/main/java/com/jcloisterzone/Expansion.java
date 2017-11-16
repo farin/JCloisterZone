@@ -73,7 +73,7 @@ public class Expansion {
             new Class[] { TowerCapability.class }, ExpansionType.MAJOR);
     public static Expansion ABBEY_AND_MAYOR = new Expansion("ABBEY_AND_MAYOR", "AM", _tr("Abbey & Mayor"),
             new Class[] { AbbeyCapability.class, WagonCapability.class, MayorCapability.class, BarnCapability.class }, ExpansionType.MAJOR);
-    public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
+    @NotImplemented public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
     public static Expansion BRIDGES_CASTLES_AND_BAZAARS = new Expansion("BRIDGES_CASTLES_AND_BAZAARS", "BB", _tr("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }, ExpansionType.MAJOR);
     @NotImplemented public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"), ExpansionType.MAJOR);
