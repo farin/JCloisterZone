@@ -30,6 +30,7 @@ import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
@@ -93,10 +94,11 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(TilePlacedEvent.class, this::processTilePlacedEvent);
         mapping = mapping.put(TileDiscardedEvent.class, this::processTileDiscardedEvent);
         mapping = mapping.put(MeepleDeployed.class, this::processMeepleDeployedEvent);
+        mapping = mapping.put(FollowerCaptured.class, this::processFollowerCaptured);
         mapping = mapping.put(ScoreEvent.class, this::processScoreEvent);
         mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
-        mapping = mapping.put(FollowerCaptured.class, this::processFollowerCaptured);
+        mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
     }
 
     private EventItem processTilePlacedEvent(PlayEvent _ev) {
@@ -121,6 +123,13 @@ public class GameEventsPanel extends JPanel {
     private EventItem processMeepleDeployedEvent(PlayEvent _ev) {
         MeepleDeployed ev = (MeepleDeployed) _ev;
         return getMeepleItem(ev, ev.getMeeple(), ev.getPointer().asFeaturePointer());
+    }
+
+    private EventItem processFollowerCaptured(PlayEvent _ev) {
+        FollowerCaptured ev = (FollowerCaptured) _ev;
+        ImageEventItem item = getMeepleItem(ev, ev.getFollower(), ev.getFrom().asFeaturePointer());
+        item.setDrawCross(true);
+        return item;
     }
 
     private EventItem processScoreEvent(PlayEvent _ev) {
@@ -157,12 +166,22 @@ public class GameEventsPanel extends JPanel {
         return item;
     }
 
-    private EventItem processFollowerCaptured(PlayEvent _ev) {
-        FollowerCaptured ev = (FollowerCaptured) _ev;
-        ImageEventItem item = getMeepleItem(ev, ev.getFollower(), ev.getFrom().asFeaturePointer());
-        item.setDrawCross(true);
+    private EventItem processTokenReceivedEvent(PlayEvent _ev) {
+        TokenReceivedEvent ev = (TokenReceivedEvent) _ev;
+        Image img = rm.getImage("neutral/" + ev.getToken().name().toLowerCase());
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+
+        if (ev.getSourceFeature() != null) {
+            item.setHighlightedFeature(ev.getSourceFeature() );
+        }
+        if (ev.getSourcePosition() != null) {
+            item.setHighlightedPosition(ev.getSourcePosition());
+        }
         return item;
     }
+
+
 
     private ImageEventItem getMeepleItem(PlayEvent ev, Meeple meeple, FeaturePointer fp) {
         Image img = rm.getLayeredImage(new LayeredImageDescriptor(meeple.getClass(), triggeringColor));

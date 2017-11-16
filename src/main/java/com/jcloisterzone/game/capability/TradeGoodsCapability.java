@@ -5,6 +5,8 @@ import org.w3c.dom.Element;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.TradeGoods;
+import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
@@ -42,6 +44,15 @@ public class TradeGoodsCapability extends Capability<Void> {
                 }
                 return ps;
             });
+            for (Tuple2<TradeGoods, Integer> t : cityTradeGoods) {
+                TokenReceivedEvent ev = new TokenReceivedEvent(
+                    PlayEventMeta.createWithActivePlayer(state),
+                    state.getPlayers().getTurnPlayer(),
+                    t._1.getToken(), t._2
+                );
+                ev.setSourceFeature(feature);
+                state = state.appendEvent(ev);
+            }
         }
 
         return state;
