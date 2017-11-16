@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
+import com.jcloisterzone.event.play.FollowerCaptured;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
 import com.jcloisterzone.event.play.NeutralFigureMoved;
@@ -29,13 +31,13 @@ import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.eventpanel.EventItem;
 import com.jcloisterzone.ui.grid.eventpanel.ImageEventItem;
 import com.jcloisterzone.ui.grid.eventpanel.ScoreEventItem;
-import com.jcloisterzone.ui.grid.eventpanel.TileDiscardedEventItem;
 import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.resources.ResourceManager;
@@ -94,6 +96,7 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(ScoreEvent.class, this::processScoreEvent);
         mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
+        mapping = mapping.put(FollowerCaptured.class, this::processFollowerCaptured);
     }
 
     private EventItem processTilePlacedEvent(PlayEvent _ev) {
@@ -109,21 +112,15 @@ public class GameEventsPanel extends JPanel {
     private EventItem processTileDiscardedEvent(PlayEvent _ev) {
         TileDiscardedEvent ev = (TileDiscardedEvent) _ev;
         TileImage img = rm.getTileImage(ev.getTile().getId(), Rotation.R0);
-        TileDiscardedEventItem item = new TileDiscardedEventItem(ev, turnColor, triggeringColor);
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
         item.setImage(img.getImage());
+        item.setDrawCross(true);
         return item;
     }
 
     private EventItem processMeepleDeployedEvent(PlayEvent _ev) {
         MeepleDeployed ev = (MeepleDeployed) _ev;
-        Image img = rm.getLayeredImage(new LayeredImageDescriptor(ev.getMeeple().getClass(), triggeringColor));
-        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
-        item.setImage(img);
-        item.setPadding(2);
-
-        Feature feature = state.getFeature(ev.getPointer().asFeaturePointer());
-        item.setHighlightedFeature(feature);
-        return item;
+        return getMeepleItem(ev, ev.getMeeple(), ev.getPointer().asFeaturePointer());
     }
 
     private EventItem processScoreEvent(PlayEvent _ev) {
@@ -159,6 +156,25 @@ public class GameEventsPanel extends JPanel {
         item.setHighlightedPosition(ev.getPointer().getPosition());
         return item;
     }
+
+    private EventItem processFollowerCaptured(PlayEvent _ev) {
+        FollowerCaptured ev = (FollowerCaptured) _ev;
+        ImageEventItem item = getMeepleItem(ev, ev.getFollower(), ev.getFrom().asFeaturePointer());
+        item.setDrawCross(true);
+        return item;
+    }
+
+    private ImageEventItem getMeepleItem(PlayEvent ev, Meeple meeple, FeaturePointer fp) {
+        Image img = rm.getLayeredImage(new LayeredImageDescriptor(meeple.getClass(), triggeringColor));
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+        item.setPadding(2);
+
+        Feature feature = state.getFeature(fp);
+        item.setHighlightedFeature(feature);
+        return item;
+    }
+
 
     public void setMouseOverIdx(Integer mouseOverIdx) {
         if (this.mouseOverIdx == mouseOverIdx) {
