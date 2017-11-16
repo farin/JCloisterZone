@@ -10,12 +10,14 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 
+import io.vavr.collection.Vector;
+
 public class EventsOverlayLayer extends AbstractGridLayer {
 
 
     private GameState state;
     private Feature highlightedFeature;
-    private Position highlightedPosition;
+    private Vector<Position> highlightedPositions;
 
 
     public EventsOverlayLayer(GridPanel gridPanel, GameController gc) {
@@ -24,7 +26,7 @@ public class EventsOverlayLayer extends AbstractGridLayer {
 
     @Override
     public void paint(Graphics2D g2) {
-        if (highlightedPosition == null && highlightedFeature == null)  {
+        if (highlightedPositions == null && highlightedFeature == null)  {
             return;
         }
 
@@ -36,15 +38,12 @@ public class EventsOverlayLayer extends AbstractGridLayer {
            gridPanel.getWidth(),
            gridPanel.getHeight()
         ));
-        if (highlightedPosition != null) {
+        if (highlightedPositions != null) {
             int sx = gridPanel.getTileHeight();
             int sy = gridPanel.getTileHeight();
-            wholeGrid.subtract(new Area(new Rectangle(
-                highlightedPosition.x * sx,
-                highlightedPosition.y * sy,
-                sx,
-                sy
-            )));
+            for (Position pos : highlightedPositions) {
+                wholeGrid.subtract(new Area(new Rectangle(pos.x * sx, pos.y * sy, sx, sy)));
+            }
         }
         if (highlightedFeature != null) {
             Area featureArea = getFeatureArea(state, highlightedFeature);
@@ -58,7 +57,7 @@ public class EventsOverlayLayer extends AbstractGridLayer {
     public void clearHighlight() {
         this.state = null;
         this.highlightedFeature = null;
-        this.highlightedPosition = null;
+        this.highlightedPositions = null;
         gridPanel.repaint();
     }
 
@@ -69,18 +68,18 @@ public class EventsOverlayLayer extends AbstractGridLayer {
     public void setHighlightedFeature(GameState state, Feature highlightedFeature) {
         this.state = state;
         this.highlightedFeature = highlightedFeature;
-        this.highlightedPosition = null;
+        this.highlightedPositions = null;
         gridPanel.repaint();
     }
 
-    public Position getHighlightedPosition() {
-        return highlightedPosition;
+    public Vector<Position> getHighlightedPositions() {
+        return highlightedPositions;
     }
 
-    public void setHighlightedPosition(GameState state, Position highlightedPosition) {
+    public void setHighlightedPositions(GameState state, Vector<Position> highlightedPosition) {
         this.state = state;
         this.highlightedFeature = null;
-        this.highlightedPosition = highlightedPosition;
+        this.highlightedPositions = highlightedPosition;
         gridPanel.repaint();
     }
 

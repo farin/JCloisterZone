@@ -14,9 +14,10 @@ import io.vavr.collection.LinkedHashMap;
 public class CaptureMeeple extends UndeployMeeple {
 
     public CaptureMeeple(Follower follower) {
-        super(follower);
+        super(follower, true);
     }
 
+    @Override
     protected GameState primaryUndeploy(GameState state, PlayEventMeta meta, Meeple meeple, FeaturePointer source) {
         Follower follower = (Follower) meeple;
         Player p = state.getPlayers().getPlayer(meta.getTriggeringPlayerIndex());

@@ -10,6 +10,7 @@ import com.jcloisterzone.ui.grid.GameEventsPanel;
 
 public class ImageEventItem extends EventItem {
 
+    private static final BasicStroke BORDER_STROKE = new BasicStroke(4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     private static final BasicStroke STROKE = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
     protected Image image;
@@ -22,16 +23,23 @@ public class ImageEventItem extends EventItem {
 
     @Override
     public void draw(Graphics2D g2) {
-        int size = GameEventsPanel.ICON_WIDTH  - 2 * padding;
-        g2.drawImage(image, padding, padding, size, size, null);
+        int width = GameEventsPanel.ICON_WIDTH  - 2 * padding;
+        int height = GameEventsPanel.ICON_HEIGHT  - 2 * padding;
+        g2.drawImage(image, padding, padding, width, height, null);
 
         if (drawCross) {
-            int p1 = padding + 2;
-            int p2 = GameEventsPanel.ICON_WIDTH  - padding - 2;
+            int x1 = padding + 2;
+            int x2 = GameEventsPanel.ICON_WIDTH  - padding - 2;
+            int y1 = padding + 2;
+            int y2 = GameEventsPanel.ICON_HEIGHT  - padding - 2;
+            g2.setStroke(BORDER_STROKE);
+            g2.setColor(Color.WHITE);
+            g2.drawLine(x1, y1, x2, y2);
+            g2.drawLine(x2, y1, x1, y2);
             g2.setStroke(STROKE);
             g2.setColor(Color.BLACK);
-            g2.drawLine(p1, p1, p2, p2);
-            g2.drawLine(p2, p1, p1, p2);
+            g2.drawLine(x1, y1, x2, y2);
+            g2.drawLine(x2, y1, x1, y2);
         }
     }
 

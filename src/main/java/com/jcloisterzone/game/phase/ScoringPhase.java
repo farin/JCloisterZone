@@ -81,7 +81,7 @@ public class ScoringPhase extends Phase {
             if (placedBarnFarm != null) {
                 //ScoreFeature is scoring just followers!
                 state = (new ScoreFarm(placedBarnFarm)).apply(state);
-                state = (new UndeployMeeples(placedBarnFarm)).apply(state);
+                state = (new UndeployMeeples(placedBarnFarm, false)).apply(state);
             }
 
             GameState _state = state;
@@ -95,7 +95,7 @@ public class ScoringPhase extends Phase {
                     .isDefined()
                 )) {
                 state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
-                state = (new UndeployMeeples(farm)).apply(state);
+                state = (new UndeployMeeples(farm, false)).apply(state);
             }
         }
 
@@ -185,7 +185,7 @@ public class ScoringPhase extends Phase {
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
             ScoreCompletable scoreReducer = new ScoreCompletable(completable);
             state = scoreReducer.apply(state);
-            state = (new UndeployMeeples(completable)).apply(state);
+            state = (new UndeployMeeples(completable, false)).apply(state);
 
             completedMutable.put(completable, scoreReducer);
         }

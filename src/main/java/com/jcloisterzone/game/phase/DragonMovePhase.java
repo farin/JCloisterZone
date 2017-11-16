@@ -112,7 +112,7 @@ public class DragonMovePhase extends Phase {
             Meeple m = t._1;
             FeaturePointer fp = t._2;
             if (pos.equals(fp.getPosition()) && m.canBeEatenByDragon(state)) {
-                state = (new UndeployMeeple(m)).apply(state);
+                state = (new UndeployMeeple(m, true)).apply(state);
             }
         }
 

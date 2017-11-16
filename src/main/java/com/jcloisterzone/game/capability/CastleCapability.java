@@ -54,7 +54,7 @@ public class CastleCapability extends Capability<Void> {
                 if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {
                     ScoreCastle scoreReducer = new ScoreCastle(castle, t._2.getFeaturePoints());
                     state = scoreReducer.apply(state);
-                    state = (new UndeployMeeples(castle)).apply(state);
+                    state = (new UndeployMeeples(castle, false)).apply(state);
                     scoredCastles.put(castle, scoreReducer);
                     break;
                 }
@@ -73,7 +73,7 @@ public class CastleCapability extends Capability<Void> {
                     if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {
                         ScoreCastle scoreReducer = new ScoreCastle(castle, t._2.getFeaturePoints());
                         state = scoreReducer.apply(state);
-                        state = (new UndeployMeeples(castle)).apply(state);
+                        state = (new UndeployMeeples(castle, false)).apply(state);
                         scoredCastles.put(castle, scoreReducer);
                         break;
                     }

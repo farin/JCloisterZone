@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.ui.grid.GameEventsPanel;
 import com.jcloisterzone.ui.theme.Theme;
 
 public class ScoreEventItem extends EventItem {
@@ -30,7 +31,7 @@ public class ScoreEventItem extends EventItem {
         ScoreEvent ev = getEvent();
         Color color = ev.getReceiver().getColors().getFontColor();
         int offset = ev.getPoints() > 9 ? 0 : 8;
-        drawTextShadow(g2, "" + ev.getPoints(), offset, 22, color);
+        drawTextShadow(g2, "" + ev.getPoints(), offset, GameEventsPanel.ICON_HEIGHT - 8, color);
 
     }
 

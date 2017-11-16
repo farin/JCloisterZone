@@ -9,11 +9,14 @@ public class MeepleReturned extends PlayEvent {
 
     private Meeple meeple;
     private FeaturePointer from;
+    /** true if meeple is returned different way than scoring feature */
+    private final boolean forced;
 
-    public MeepleReturned(PlayEventMeta metadata, Meeple meeple, FeaturePointer from) {
+    public MeepleReturned(PlayEventMeta metadata, Meeple meeple, FeaturePointer from, boolean forced) {
         super(metadata);
         this.meeple = meeple;
         this.from = from;
+        this.forced = forced;
     }
 
     public Meeple getMeeple() {
@@ -22,6 +25,10 @@ public class MeepleReturned extends PlayEvent {
 
     public FeaturePointer getFrom() {
         return from;
+    }
+
+    public boolean isForced() {
+        return forced;
     }
 
 }

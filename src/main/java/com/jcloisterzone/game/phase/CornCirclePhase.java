@@ -165,7 +165,7 @@ public class CornCirclePhase extends Phase {
         Player player = state.getActivePlayer();
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
-        state = (new UndeployMeeple(meeple)).apply(state);
+        state = (new UndeployMeeple(meeple, true)).apply(state);
         return nextCornPlayer(state, player);
     }
 

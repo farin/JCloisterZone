@@ -7,13 +7,15 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.feature.Feature;
 
+import io.vavr.collection.Vector;
+
 public abstract class EventItem {
     private final PlayEvent event;
     private final Color turnColor;
     private final Color color;
 
     private Feature highlightedFeature;
-    private Position highlightedPosition;
+    private Vector<Position> highlightedPositions;
 
     public EventItem(PlayEvent event, Color turnColor, Color color) {
         super();
@@ -33,12 +35,12 @@ public abstract class EventItem {
         this.highlightedFeature = highlightedFeature;
     }
 
-    public Position getHighlightedPosition() {
-        return highlightedPosition;
+    public Vector<Position> getHighlightedPositions() {
+        return highlightedPositions;
     }
 
-    public void setHighlightedPosition(Position highlightedPosition) {
-        this.highlightedPosition = highlightedPosition;
+    public void setHighlightedPositions(Vector<Position> highlightedPositions) {
+        this.highlightedPositions = highlightedPositions;
     }
 
     public PlayEvent getEvent() {

@@ -22,9 +22,12 @@ import io.vavr.collection.Set;
 public class UndeployMeeples implements Reducer {
 
     private final Feature feature;
+    /** true if meeple is returned different way than scoring feature */
+    private final boolean forced;
 
-    public UndeployMeeples(Feature feature) {
+    public UndeployMeeples(Feature feature, boolean forced) {
         this.feature = feature;
+        this.forced = forced;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class UndeployMeeples implements Reducer {
             ) {
             meeples.add(t._1);
             events.add(
-                new MeepleReturned(eventMeta, t._1, t._2)
+                new MeepleReturned(eventMeta, t._1, t._2, forced)
             );
         }
         state = state.setDeployedMeeples(
@@ -64,6 +67,10 @@ public class UndeployMeeples implements Reducer {
 //        }
 
         return state;
+    }
+
+    public boolean isForced() {
+        return forced;
     }
 
 }

@@ -61,7 +61,7 @@ public final class ShrineCapability extends Capability<Void> {
 
             ScoreEvent scoreEvent = new ScoreEvent(0, PointCategory.CLOISTER, false, cloister.getPlace(), meeple);
             state = state.appendEvent(scoreEvent);
-            state = (new UndeployMeeples(cloister)).apply(state);
+            state = (new UndeployMeeples(cloister, true)).apply(state);
         }
         return state;
     }

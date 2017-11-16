@@ -34,6 +34,7 @@ import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
+import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.eventpanel.EventItem;
@@ -49,12 +50,14 @@ import io.vavr.Function1;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
+import io.vavr.collection.Vector;
 
 public class GameEventsPanel extends JPanel {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final int ICON_WIDTH = 30;
+    public static final int ICON_HEIGHT = 30;
 
     private EventsOverlayLayer eventsOverlayPanel;
 
@@ -94,7 +97,8 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(TilePlacedEvent.class, this::processTilePlacedEvent);
         mapping = mapping.put(TileDiscardedEvent.class, this::processTileDiscardedEvent);
         mapping = mapping.put(MeepleDeployed.class, this::processMeepleDeployedEvent);
-        mapping = mapping.put(FollowerCaptured.class, this::processFollowerCaptured);
+        mapping = mapping.put(MeepleReturned.class, this::processMeepleReturnedEvent);
+        mapping = mapping.put(FollowerCaptured.class, this::processFollowerCapturedEvent);
         mapping = mapping.put(ScoreEvent.class, this::processScoreEvent);
         mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
@@ -107,7 +111,7 @@ public class GameEventsPanel extends JPanel {
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
         item.setImage(img.getImage());
 
-        item.setHighlightedPosition(ev.getPosition());
+        item.setHighlightedPositions(Vector.of(ev.getPosition()));
         return item;
     }
 
@@ -125,9 +129,16 @@ public class GameEventsPanel extends JPanel {
         return getMeepleItem(ev, ev.getMeeple(), ev.getPointer().asFeaturePointer());
     }
 
-    private EventItem processFollowerCaptured(PlayEvent _ev) {
+    private EventItem processFollowerCapturedEvent(PlayEvent _ev) {
         FollowerCaptured ev = (FollowerCaptured) _ev;
         ImageEventItem item = getMeepleItem(ev, ev.getFollower(), ev.getFrom().asFeaturePointer());
+        item.setDrawCross(true);
+        return item;
+    }
+
+    private EventItem processMeepleReturnedEvent(PlayEvent _ev) {
+        MeepleReturned ev = (MeepleReturned) _ev;
+        ImageEventItem item = getMeepleItem(ev, ev.getMeeple(), ev.getFrom().asFeaturePointer());
         item.setDrawCross(true);
         return item;
     }
@@ -151,7 +162,16 @@ public class GameEventsPanel extends JPanel {
             Feature feature = state.getFeature(ev.getTo().asFeaturePointer());
             item.setHighlightedFeature(feature);
         } else {
-            item.setHighlightedPosition(ev.getTo().getPosition());
+            Position from = ev.getFrom() == null ? null : ev.getFrom().getPosition();
+            Position to = ev.getTo() == null ? null : ev.getTo().getPosition();
+            Vector<Position> positions = Vector.empty();
+            if (from != null) {
+                positions = positions.append(from);
+            }
+            if (to != null && (from == null || !to.equals(from))) {
+                positions = positions.append(to);
+            }
+            item.setHighlightedPositions(positions);
         }
         return item;
     }
@@ -162,7 +182,7 @@ public class GameEventsPanel extends JPanel {
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
         item.setImage(img);
 
-        item.setHighlightedPosition(ev.getPointer().getPosition());
+        item.setHighlightedPositions(Vector.of(ev.getPointer().getPosition()));
         return item;
     }
 
@@ -176,12 +196,10 @@ public class GameEventsPanel extends JPanel {
             item.setHighlightedFeature(ev.getSourceFeature() );
         }
         if (ev.getSourcePosition() != null) {
-            item.setHighlightedPosition(ev.getSourcePosition());
+            item.setHighlightedPositions(Vector.of(ev.getSourcePosition()));
         }
         return item;
     }
-
-
 
     private ImageEventItem getMeepleItem(PlayEvent ev, Meeple meeple, FeaturePointer fp) {
         Image img = rm.getLayeredImage(new LayeredImageDescriptor(meeple.getClass(), triggeringColor));
@@ -206,10 +224,10 @@ public class GameEventsPanel extends JPanel {
             return;
         }
         EventItem item = model.get(mouseOverIdx);
-        Position pos = item.getHighlightedPosition();
+        Vector<Position> positions = item.getHighlightedPositions();
         Feature feature = item.getHighlightedFeature();
-        if (pos != null) {
-            eventsOverlayPanel.setHighlightedPosition(state, pos);
+        if (positions != null) {
+            eventsOverlayPanel.setHighlightedPositions(state, positions);
         } else if (feature != null) {
             eventsOverlayPanel.setHighlightedFeature(state, feature);
         } else {
@@ -230,17 +248,29 @@ public class GameEventsPanel extends JPanel {
         triggeringColor = null;
 
         boolean ignore = true;
+        EventItem dragonItem = null;
 
         for (PlayEvent ev : events) {
             if (ev instanceof MeepleReturned) {
-                continue;
+                MeepleReturned mrev = (MeepleReturned) ev;
+                if (!mrev.isForced()) {
+                    continue;
+                }
             }
             if (ev instanceof PlayerTurnEvent) {
                 turnColor = getMeepleColor(((PlayerTurnEvent) ev).getPlayer());
                 ignore = false;
+                dragonItem = null;
                 continue;
             }
             if (ignore) {
+                continue;
+            }
+
+            if (dragonItem != null && isDragonMoveEvent(ev)) {
+                Vector<Position> positions = dragonItem.getHighlightedPositions();
+                positions = positions.append(((NeutralFigureMoved)ev).getTo().getPosition());
+                dragonItem.setHighlightedPositions(positions);
                 continue;
             }
 
@@ -255,10 +285,18 @@ public class GameEventsPanel extends JPanel {
             if (fn == null) {
                 logger.warn("Unhandled event {}", ev.getClass());
             } else {
-                model.add(fn.apply(ev));
+                EventItem item = fn.apply(ev);
+                if (isDragonMoveEvent(ev)) {
+                    dragonItem = item;
+                }
+                model.add(item);
             }
         }
         return model;
+    }
+
+    private boolean isDragonMoveEvent(PlayEvent ev) {
+        return ev instanceof NeutralFigureMoved && ((NeutralFigureMoved)ev).getNeutralFigure() instanceof Dragon;
     }
 
     @Override

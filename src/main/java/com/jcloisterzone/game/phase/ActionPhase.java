@@ -123,7 +123,7 @@ public class ActionPhase extends AbstractActionPhase {
             throw new IllegalArgumentException("Return meeple is not allowed");
         }
 
-        state = (new UndeployMeeple(meeple)).apply(state);
+        state = (new UndeployMeeple(meeple, true)).apply(state);
         state = clearActions(state);
         return next(state);
     }
