@@ -139,9 +139,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
                    ps.addTokenCount(pl.getIndex(), Token.GOLD, count)
                 );
                 TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state),
-                    state.getPlayers().getTurnPlayer(),
-                    Token.GOLD, count
+                    PlayEventMeta.createWithActivePlayer(state), pl, Token.GOLD, count
                 );
                 ev.setSourcePositions(Vector.ofAll(awardedGoldPositions.get(pl)));
                 state = state.appendEvent(ev);

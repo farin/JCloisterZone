@@ -229,8 +229,9 @@ public class GameEventsPanel extends JPanel {
 
     private EventItem processTokenReceivedEvent(PlayEvent _ev) {
         TokenReceivedEvent ev = (TokenReceivedEvent) _ev;
+        Color playerColor = getMeepleColor(ev.getPlayer());
         Image img = rm.getImage("neutral/" + ev.getToken().name().toLowerCase());
-        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        ImageEventItem item = new ImageEventItem(ev, turnColor, playerColor);
         item.setImage(img);
 
         if (ev.getSourceFeature() != null) {
@@ -359,10 +360,17 @@ public class GameEventsPanel extends JPanel {
 
         for (int i = skipItems; i < size; i++) {
             EventItem item = model.get(i);
-            g2.setColor(item.getTurnColor());
-            g2.fillRect(0, -5, ICON_WIDTH, 2);
-            g2.setColor(item.getColor());
-            g2.fillRect(0, -3, ICON_WIDTH, 2);
+            Color top = item.getTurnColor();
+            Color bottom = item.getColor();
+            if (top.equals(bottom)) {
+                g2.setColor(top);
+                g2.fillRect(0, -5, ICON_WIDTH, 4);
+            } else {
+                g2.setColor(top);
+                g2.fillRect(0, -5, ICON_WIDTH, 2);
+                g2.setColor(bottom);
+                g2.fillRect(0, -3, ICON_WIDTH, 3); //1px overlap
+            }
             item.draw(g2);
 
             g2.translate(ICON_WIDTH, 0);
