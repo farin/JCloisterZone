@@ -188,6 +188,12 @@ public class GameEventsPanel extends JPanel {
     private EventItem processTokenPlacedEvent(PlayEvent _ev) {
         TokenPlacedEvent ev = (TokenPlacedEvent) _ev;
         Token token = ev.getToken();
+
+        if (token == Token.GOLD) {
+            // gold placement on board is obvious and only recevied gold should be notified
+            return null;
+        }
+
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
 
         if (token.isTunnel()) {
@@ -214,8 +220,8 @@ public class GameEventsPanel extends JPanel {
         if (ev.getSourceFeature() != null) {
             item.setHighlightedFeature(ev.getSourceFeature() );
         }
-        if (ev.getSourcePosition() != null) {
-            item.setHighlightedPositions(Vector.of(ev.getSourcePosition()));
+        if (ev.getSourcePositions() != null) {
+            item.setHighlightedPositions(ev.getSourcePositions());
         }
         return item;
     }
@@ -314,6 +320,9 @@ public class GameEventsPanel extends JPanel {
                 logger.warn("Unhandled event {}", ev.getClass());
             } else {
                 EventItem item = fn.apply(ev);
+                if (item == null) {
+                    continue;
+                }
                 if (isDragonMoveEvent(ev)) {
                     dragonItem = item;
                 }

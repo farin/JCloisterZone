@@ -5,6 +5,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Token;
 
+import io.vavr.collection.Vector;
+
 public class TokenReceivedEvent extends PlayEvent {
 
     private final Token token;
@@ -13,7 +15,7 @@ public class TokenReceivedEvent extends PlayEvent {
 
     // feature or position is filled
     private Feature sourceFeature;
-    private Position sourcePosition;
+    private Vector<Position> sourcePositions;
 
     public TokenReceivedEvent(PlayEventMeta metadata, Player player, Token token, int count) {
         super(metadata);
@@ -42,11 +44,11 @@ public class TokenReceivedEvent extends PlayEvent {
         this.sourceFeature = sourceFeature;
     }
 
-    public Position getSourcePosition() {
-        return sourcePosition;
+    public Vector<Position> getSourcePositions() {
+        return sourcePositions;
     }
 
-    public void setSourcePosition(Position sourcePosition) {
-        this.sourcePosition = sourcePosition;
+    public void setSourcePositions(Vector<Position> sourcePositions) {
+        this.sourcePositions = sourcePositions;
     }
 }

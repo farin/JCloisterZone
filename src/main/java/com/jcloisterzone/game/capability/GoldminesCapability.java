@@ -7,10 +7,13 @@ import java.util.Map.Entry;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Scoreable;
@@ -19,6 +22,8 @@ import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.game.state.PlayersState;
+import com.jcloisterzone.reducers.AddPoints;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
@@ -84,9 +89,11 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
         java.util.Map<Position, Integer> initialGoldCount = new java.util.HashMap<>();
         java.util.List<Entry<Position, java.util.Set<Player>>> entries = new java.util.ArrayList<>(claimedGold.entrySet());
         java.util.Map<Player, Integer> awardedGold = new java.util.HashMap<>();
+        java.util.Map<Player, java.util.Set<Position>> awardedGoldPositions = new java.util.HashMap<>();
 
         for (Player player : state.getPlayers().getPlayers()) {
             awardedGold.put(player, 0);
+            awardedGoldPositions.put(player, new java.util.HashSet<>());
         }
 
         // best claim strategy is claim on tiles with the most players - make this automatically for players
@@ -111,6 +118,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
                 if (piecesOnTile > 0 && claimingPlayers.contains(player)) {
                     goldPieces--;
                     awardedGold.put(player, awardedGold.get(player) + 1);
+                    awardedGoldPositions.get(player).add(pos);
                     if (piecesOnTile == 1) {
                         placedGold = placedGold.remove(pos);
                     } else {
@@ -130,63 +138,40 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
                 state = state.mapPlayers(ps ->
                    ps.addTokenCount(pl.getIndex(), Token.GOLD, count)
                 );
+                TokenReceivedEvent ev = new TokenReceivedEvent(
+                    PlayEventMeta.createWithActivePlayer(state),
+                    state.getPlayers().getTurnPlayer(),
+                    Token.GOLD, count
+                );
+                ev.setSourcePositions(Vector.ofAll(awardedGoldPositions.get(pl)));
+                state = state.appendEvent(ev);
             }
         }
 
         return state;
     }
 
-//    public void awardGoldPieces() {
-//        Map<Position, Integer> initialGoldCount = new HashMap<>();
-//        List<Entry<Position, Set<Player>>> entries = new ArrayList<>(claimedGold.entrySet());
-//        Collections.sort(entries, new Comparator<Entry<Position, Set<Player>>>() {
-//            @Override
-//            public int compare(Entry<Position, Set<Player>> o1, Entry<Position, Set<Player>> o2) {
-//                return o2.getValue().size() - o1.getValue().size();
-//            }
-//        });
-//        int goldPieces = 0;
-//        for (Position pos : claimedGold.keySet()) {
-//            int count = boardGold.get(pos);
-//            goldPieces += count;
-//            initialGoldCount.put(pos, count);
-//        }
-//        Player player = game.getActivePlayer();
-//        while (goldPieces > 0) {
-//            for (Entry<Position, Set<Player>> entry: entries) {
-//                Position pos = entry.getKey();
-//                Set<Player> claimingPlayers = entry.getValue();
-//                int piecesOnTile = getGoldPiecesOntile(pos);
-//                if (piecesOnTile > 0 && claimingPlayers.contains(player)) {
-//                    goldPieces--;
-//                    playerGold.put(player, playerGold.get(player) + 1);
-//                    if (piecesOnTile == 1) {
-//                        boardGold.remove(pos);
-//                    } else {
-//                        boardGold.put(pos, piecesOnTile - 1);
-//                    }
-//                    break;
-//                }
-//            }
-//            player = game.getNextPlayer(player);
-//        }
-//        for (Position pos : claimedGold.keySet()) {
-//            game.post(new GoldChangeEvent(null, pos, initialGoldCount.get(pos), 0));
-//        }
-//        claimedGold.clear();
-//    }
-//
-//    @Override
-//    public void finalScoring() {
-//        for (Player player: game.getAllPlayers()) {
-//            int pieces = getPlayerGoldPieces(player);
-//            if (pieces == 0) continue;
-//            int points = 0;
-//            if (pieces < 4) points = 1 * pieces;
-//            else if (pieces < 7) points = 2 * pieces;
-//            else if (pieces < 10) points = 3 * pieces;
-//            else points = 4 * pieces;
-//            player.addPoints( points, PointCategory.GOLD);
-//        }
-//    }
+    @Override
+    public GameState onFinalScoring(GameState state) {
+        PlayersState ps = state.getPlayers();
+
+        for (Player player: ps.getPlayers()) {
+            int pieces = ps.getPlayerTokenCount(player.getIndex(), Token.GOLD);
+            if (pieces == 0) {
+                continue;
+            }
+            int points = 0;
+            if (pieces < 4) {
+                points = 1 * pieces;
+            } else if (pieces < 7) {
+                points = 2 * pieces;
+            } else if (pieces < 10) {
+                points = 3 * pieces;
+            } else {
+                points = 4 * pieces;
+            }
+            state = (new AddPoints(player, points, PointCategory.GOLD)).apply(state);
+        }
+        return state;
+    }
 }
