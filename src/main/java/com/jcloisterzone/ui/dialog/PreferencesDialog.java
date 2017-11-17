@@ -259,11 +259,11 @@ public class PreferencesDialog extends JDialog {
         }
 
         public String getTitle() {
-            return plugin.getMetadata().getTitle();
+            return plugin.getTitle();
         }
 
         public String getDescription() {
-            return plugin.getMetadata().getDescription();
+            return plugin.getDescription();
         }
 
         public boolean isReadOnly() {

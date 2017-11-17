@@ -36,6 +36,7 @@ public class Config {
     private String update;
     private Integer port;
     private String locale;
+    private Locale _locale; // cached object
 
     private Integer score_display_duration;
     private String theme;
@@ -392,19 +393,23 @@ public class Config {
     }
 
     public Locale getLocaleObject() {
+        if (_locale != null) {
+            return _locale;
+        }
         String language = getLocale();
         if (language == null) {
-            return Locale.getDefault();
+            return _locale = Locale.getDefault();
         }
         if (language.contains("_")) {
             String[] tokens = language.split("_", 2);
-            return new Locale(tokens[0], tokens[1]);
+            return _locale = new Locale(tokens[0], tokens[1]);
         }
-        return new Locale(language);
+        return _locale = new Locale(language);
     }
 
     public void setLocale(String locale) {
         this.locale = locale;
+        this._locale = null;
     }
 
     public Integer getScore_display_duration() {

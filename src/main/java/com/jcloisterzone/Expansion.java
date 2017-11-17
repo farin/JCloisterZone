@@ -96,7 +96,7 @@ public class Expansion {
     public static Expansion LITTLE_BUILDINGS = new Expansion("LITTLE_BUILDINGS", "LB", _tr("Little Buildings"), new Class[] { LittleBuildingsCapability.class }, ExpansionType.MINOR);
     public static Expansion WIND_ROSE = new Expansion("WIND_ROSE", "WR", _tr("The Wind Rose"), new Class[] { WindRoseCapability.class }, ExpansionType.MINOR);
     public static Expansion GERMAN_MONASTERIES = new Expansion("GERMAN_MONASTERIES", "GM", _tr("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }, ExpansionType.MINOR);
-    @NotImplemented public static Expansion CASTLES = new Expansion("CASTLES", "CA", _tr("Castles in Germany"), ExpansionType.MINOR);
+    @NotImplemented public static Expansion CASTLES = new Expansion("CASTLES", "CS", _tr("Castles in Germany"), ExpansionType.MINOR);
     @NotImplemented public static Expansion HALFINGS_I = new Expansion("HALFINGS_I", "H1", _tr("Halfings") + " I", ExpansionType.MINOR);
     @NotImplemented public static Expansion HALFINGS_II = new Expansion("HALFINGS_II", "H2", _tr("Halfings") + " ÏI", ExpansionType.MINOR);
     @NotImplemented public static Expansion WATCHTOWER = new Expansion("WATCHTOWER", "WT", _tr("The Watchtower"), ExpansionType.MINOR);
