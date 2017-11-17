@@ -9,7 +9,7 @@ public class PluginMeta {
     private HashMap<String, String> title_i18n;
     private String description;
     private HashMap<String, String> description_i18n;
-    private String author;
+    private String authors;
     private ExpansionMeta[] expansions;
 
     private TileImagesMeta tile_images;
@@ -32,11 +32,11 @@ public class PluginMeta {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getAuthor() {
-        return author;
+    public String getAuthors() {
+        return authors;
     }
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthors(String authors) {
+        this.authors = authors;
     }
     public TileImagesMeta getTile_images() {
         return tile_images;

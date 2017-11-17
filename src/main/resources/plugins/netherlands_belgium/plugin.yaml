@@ -1,4 +1,8 @@
 version: 4.0
 title: Monasteries in the Netherlands & Belgium
+title_i18n:
+  cs: Klaštery v Nizozemí a Belgii
 description: Replace German monasteries with monasteries in Netherlands & Belgium
-author:
+description_i18n:
+  cs: Nahrazuje kláštery v Německu za kláštery v Nizozemí a Belgii.
+authors:

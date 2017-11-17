@@ -1,7 +1,7 @@
 version: 4.0
 title: JCZ 3D artwork
 description: JCloisterZone 3D
-author:
+authors:
 
 tile_images:
   offset: 49,0,0,0

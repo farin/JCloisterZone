@@ -19,8 +19,7 @@ title_i18n:
 description: Plain catapult tiles. Nothing more, nothing less.
 description_i18n:
   cs: Kartičky z rozšíření katapult. Nic víc, nic míň.
-author: JCloisterZone
-
+authors: 
 expansions:
   -
     code: CA

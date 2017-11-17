@@ -1,4 +1,8 @@
 version: 4.0
-title: Carcassonne 2.0
-description: New artwork   by Anne Pätzke
-author: packed by carcassonnecentral.com community 
+title: New artwork
+title_i18n:
+  cs: Nová grafika
+description: New board game artwork, also known as Carcassonne 2.0 (illustrated by Anne Pätzke)
+description_i18n:
+  cs: Nová grafika z deskové hry, někdy označována jako Carcassonne 2.0 (ilustrátorka Anne Pätzke)
+authors: 

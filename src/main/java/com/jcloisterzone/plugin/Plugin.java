@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ExpansionType;
@@ -127,7 +128,7 @@ public class Plugin implements ResourceManager {
         }
         try {
             meta = (PluginMeta) yaml.load(pluginYaml.openStream());
-        } catch (IOException e) {
+        } catch (IOException | YAMLException e) {
             throw new PluginLoadException(e);
         }
 
