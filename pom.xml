@@ -237,6 +237,27 @@
                     </execution>
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/winter.jar -C src/main/resources/plugins/winter . -->
+                        <id>plugin-winter</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/catapult.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/catapult" />
+                                    <arg value="." />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
                         <!-- jar cfM build/plugins/winter.jar -C src/main/resources/plugins/netherlands_belgium . -->
                         <id>plugin-netherlands-belgium</id>
                         <phase>package</phase>
