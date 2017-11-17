@@ -26,6 +26,7 @@ import com.jcloisterzone.event.play.FollowerCaptured;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
 import com.jcloisterzone.event.play.NeutralFigureMoved;
+import com.jcloisterzone.event.play.NeutralFigureReturned;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
@@ -104,6 +105,7 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(FollowerCaptured.class, this::processFollowerCapturedEvent);
         mapping = mapping.put(ScoreEvent.class, this::processScoreEvent);
         mapping = mapping.put(NeutralFigureMoved.class, this::processNeutralFigureMoved);
+        mapping = mapping.put(NeutralFigureReturned.class, this::processNeutralFigureReturned);
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
         mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
         mapping = mapping.put(CastleCreated.class, this::processCastleCreatedEvent);
@@ -143,6 +145,9 @@ public class GameEventsPanel extends JPanel {
 
     private EventItem processMeepleReturnedEvent(PlayEvent _ev) {
         MeepleReturned ev = (MeepleReturned) _ev;
+        if (!ev.isForced()) {
+            return null;
+        }
         ImageEventItem item = getMeepleItem(ev, ev.getMeeple(), ev.getFrom().asFeaturePointer());
         item.setDrawCross(true);
         return item;
@@ -182,6 +187,17 @@ public class GameEventsPanel extends JPanel {
             }
             item.setHighlightedPositions(positions);
         }
+        return item;
+    }
+
+    private EventItem processNeutralFigureReturned(PlayEvent _ev) {
+        NeutralFigureReturned ev = (NeutralFigureReturned) _ev;
+        Image img = rm.getImage("neutral/" + ev.getNeutralFigure().getClass().getSimpleName().toLowerCase());
+        ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
+        item.setImage(img);
+        item.setDrawCross(true);
+        Feature feature = state.getFeature(ev.getFrom().asFeaturePointer());
+        item.setHighlightedFeature(feature);
         return item;
     }
 
@@ -285,12 +301,6 @@ public class GameEventsPanel extends JPanel {
         EventItem dragonItem = null;
 
         for (PlayEvent ev : events) {
-            if (ev instanceof MeepleReturned) {
-                MeepleReturned mrev = (MeepleReturned) ev;
-                if (!mrev.isForced()) {
-                    continue;
-                }
-            }
             if (ev instanceof PlayerTurnEvent) {
                 turnColor = getMeepleColor(((PlayerTurnEvent) ev).getPlayer());
                 ignore = false;

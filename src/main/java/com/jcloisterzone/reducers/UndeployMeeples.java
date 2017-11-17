@@ -54,18 +54,6 @@ public class UndeployMeeples implements Reducer {
             state.getEvents().appendAll(events)
         );
 
-                // IMMUTABLE TOOD Mage and Witch undeploy
-//            if (ctx instanceof PositionCollectingScoreContext) {
-//                PositionCollectingScoreContext pctx = (PositionCollectingScoreContext) ctx;
-//                if (pctx.containsMage()) {
-//                    mageWitchCap.getMage().undeploy();
-//                }
-//                if (pctx.containsWitch()) {
-//                    mageWitchCap.getWitch().undeploy();
-//                }
-//            }
-//        }
-
         return state;
     }
 

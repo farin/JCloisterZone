@@ -72,9 +72,13 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         return state;
     }
 
+    protected boolean isFinalScoring(GameState state) {
+        return GameOverPhase.class.equals(state.getPhase());
+    }
+
     @Override
     public GameState apply(GameState state) {
-        boolean finalScoring = GameOverPhase.class.equals(state.getPhase());
+        boolean finalScoring = isFinalScoring(state);
 
         owners = feature.getOwners(state);
         if (owners.isEmpty()) {
@@ -143,5 +147,4 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     public Set<Player> getOwners() {
         return owners;
     }
-
 }

@@ -39,8 +39,9 @@ public class MageAndWitchPhase extends Phase {
         NeutralFiguresState ns = state.getNeutralFigures();
         Completable mageFeature = (Completable) ns.getMage().getFeature(state);
         Completable witchFeature = (Completable) ns.getWitch().getFeature(state);
+        boolean mageAndWithOnSameFeature = mageFeature != null && mageFeature == witchFeature;
 
-        if (tile.getTrigger() != TileTrigger.MAGE && mageFeature != witchFeature) {
+        if (tile.getTrigger() != TileTrigger.MAGE && !mageAndWithOnSameFeature) {
             return next(state);
         }
 
