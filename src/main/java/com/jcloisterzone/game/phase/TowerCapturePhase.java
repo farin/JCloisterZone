@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CaptureFollowerAction;
 import com.jcloisterzone.action.SelectPrisonerToExchangeAction;
@@ -13,6 +11,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -30,7 +29,7 @@ import io.vavr.collection.Stream;
 @RequiredCapability(TowerCapability.class)
 public class TowerCapturePhase extends Phase {
 
-    public TowerCapturePhase(Random random) {
+    public TowerCapturePhase(RandomGenerator random) {
         super(random);
     }
 

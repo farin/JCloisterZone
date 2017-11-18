@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
@@ -10,6 +9,7 @@ import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -28,7 +28,7 @@ import io.vavr.collection.Stream;
 @RequiredCapability(AbbeyCapability.class)
 public class AbbeyPhase extends Phase {
 
-    public AbbeyPhase(Random random) {
+    public AbbeyPhase(RandomGenerator random) {
         super(random);
     }
 

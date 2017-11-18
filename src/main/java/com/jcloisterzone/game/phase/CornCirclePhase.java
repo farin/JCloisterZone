@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CornCircleSelectDeployOrRemoveAction;
 import com.jcloisterzone.action.MeepleAction;
@@ -18,6 +16,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -39,7 +38,7 @@ import io.vavr.collection.Vector;
 @RequiredCapability(CornCircleCapability.class)
 public class CornCirclePhase extends Phase {
 
-    public CornCirclePhase(Random random) {
+    public CornCirclePhase(RandomGenerator random) {
         super(random);
     }
 

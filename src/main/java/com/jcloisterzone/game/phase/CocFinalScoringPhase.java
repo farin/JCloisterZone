@@ -1,14 +1,13 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.game.RandomGenerator;
 
 import io.vavr.collection.List;
 
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 
-    public CocFinalScoringPhase(Random random) {
+    public CocFinalScoringPhase(RandomGenerator random) {
         super(random);
     }
 

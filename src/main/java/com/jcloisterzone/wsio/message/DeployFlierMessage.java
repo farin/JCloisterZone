@@ -13,11 +13,11 @@ import com.jcloisterzone.wsio.WsMessageCommand;
  * (DeployMeepleMessage would work but result of dice would be known before tile placement)
  */
 @WsMessageCommand("DEPLOY_FLIER")
-public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
+public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMeesage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private long seed;
+    private long salt;
 
     public DeployFlierMessage() {
     }
@@ -25,14 +25,15 @@ public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameM
     public DeployFlierMessage(FeaturePointer pointer, String meepleId) {
         super(pointer, meepleId);
         assert pointer.getLocation() == Location.FLYING_MACHINE;
-
     }
 
-    public long getSeed() {
-        return seed;
+    @Override
+    public long getSalt() {
+        return salt;
     }
 
-    public void setSeed(long seed) {
-        this.seed = seed;
+    @Override
+    public void setSalt(long salt) {
+        this.salt = salt;
     }
 }

@@ -1,8 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 
 import io.vavr.collection.List;
@@ -10,7 +9,7 @@ import io.vavr.collection.List;
 @RequiredCapability(CountCapability.class)
 public class CocScoringPhase extends AbstractCocScoringPhase {
 
-    public CocScoringPhase(Random random) {
+    public CocScoringPhase(RandomGenerator random) {
         super(random);
     }
 

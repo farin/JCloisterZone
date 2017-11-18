@@ -2,7 +2,6 @@ package com.jcloisterzone.game;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +50,10 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private final Phase firstPhase;
-
-    private final Random random;
+    private final RandomGenerator random;
 
     public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
-        random = new Random(initialSeed);
+        random = new RandomGenerator(initialSeed);
 
         Phase over, last, next = null;
         //if there isn't assignment - phase is out of standard flow
@@ -99,10 +97,6 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         firstPhase = next;
     }
 
-    public void updateRandomSeed(long seed) {
-        random.setSeed(seed);
-    }
-
     private Phase addPhase(GameSetup setup, Phase next, Class<? extends Phase> phaseClass) {
         RequiredCapability req = phaseClass.getAnnotation(RequiredCapability.class);
 
@@ -112,7 +106,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         Phase phase;
         try {
-            phase = phaseClass.getConstructor(Random.class).newInstance(random);
+            phase = phaseClass.getConstructor(RandomGenerator.class).newInstance(random);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             throw new RuntimeException(e);
@@ -168,5 +162,9 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
     public Phase getPhase(Class<? extends Phase> cls) {
         return phases.get(cls);
+    }
+
+    public RandomGenerator getRandom() {
+        return random;
     }
 }

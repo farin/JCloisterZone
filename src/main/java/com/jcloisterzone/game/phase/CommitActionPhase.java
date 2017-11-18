@@ -1,16 +1,15 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ConfirmAction;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.CommitMessage;
 
 public class CommitActionPhase extends Phase {
 
-    public CommitActionPhase(Random random) {
+    public CommitActionPhase(RandomGenerator random) {
         super(random);
     }
 

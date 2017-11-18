@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -18,6 +16,7 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
@@ -46,7 +45,7 @@ public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
 
-    public ScoringPhase(Random random) {
+    public ScoringPhase(RandomGenerator random) {
         super(random);
     }
 

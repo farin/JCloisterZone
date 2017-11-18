@@ -1,10 +1,9 @@
 package com.jcloisterzone.debug;
 
-import java.util.Random;
-
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.RandomGenerator;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
@@ -79,7 +78,7 @@ public class ForcedDrawTilePack extends TilePack {
     }
 
     @Override
-    public Tuple2<Tile, TilePack> drawTile(Random random) {
+    public Tuple2<Tile, TilePack> drawTile(RandomGenerator random) {
         if (!drawQueue.isEmpty()) {
             Tuple2<String, Queue<String>> q = drawQueue.dequeue();
             Tuple2<Tile, TilePack> res = drawTile(q._1);
@@ -129,6 +128,7 @@ public class ForcedDrawTilePack extends TilePack {
         return super.size();
     }
 
+    @Override
     protected int getInternalSize() {
         //don't affect internal size by drawLimit
         return super.size() + getHiddenUnderHills();

@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -16,6 +14,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -31,7 +30,7 @@ import io.vavr.collection.Vector;
 @RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
 
-    public CocFollowerPhase(Random random) {
+    public CocFollowerPhase(RandomGenerator random) {
         super(random);
     }
 

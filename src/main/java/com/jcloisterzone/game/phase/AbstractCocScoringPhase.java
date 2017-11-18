@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
@@ -14,6 +12,7 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
@@ -28,7 +27,7 @@ import io.vavr.collection.Vector;
 
 public abstract class AbstractCocScoringPhase extends Phase {
 
-    public AbstractCocScoringPhase(Random random) {
+    public AbstractCocScoringPhase(RandomGenerator random) {
         super(random);
     }
 

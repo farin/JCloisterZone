@@ -70,7 +70,7 @@ import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSeedMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMeesage;
 
 public class SimpleServer extends WebSocketServer  {
 
@@ -267,8 +267,8 @@ public class SimpleServer extends WebSocketServer  {
         }
     }
 
-    private long getRandomSeed() {
-        return random.nextLong();
+    private long createSalt() {
+        return System.currentTimeMillis();
     }
 
     @WsSubscribe
@@ -483,8 +483,8 @@ public class SimpleServer extends WebSocketServer  {
     private void handleInGameMessage(WsInGameMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        if (msg instanceof WsSeedMeesage) {
-            ((WsSeedMeesage) msg).setSeed(getRandomSeed());
+        if (msg instanceof WsSaltMeesage) {
+            ((WsSaltMeesage) msg).setSalt(createSalt());
         }
         broadcast(msg);
     }

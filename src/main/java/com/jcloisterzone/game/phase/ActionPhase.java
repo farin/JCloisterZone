@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
@@ -24,6 +22,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.PrincessCapability;
@@ -45,7 +44,7 @@ import io.vavr.collection.Vector;
 
 public class ActionPhase extends AbstractActionPhase {
 
-    public ActionPhase(Random random) {
+    public ActionPhase(RandomGenerator random) {
         super(random);
     }
 

@@ -41,7 +41,7 @@ import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSeedMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMeesage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
@@ -238,12 +238,12 @@ public class Game implements EventProxy {
     public void handleInGameMessage(WsReplayableMessage msg) {
         markUndo();
         replay = replay.prepend(msg);
-        if (msg instanceof WsSeedMeesage) {
-            phaseReducer.updateRandomSeed(((WsSeedMeesage)msg).getSeed());
+        if (msg instanceof WsSaltMeesage) {
+            phaseReducer.getRandom().setSalt(((WsSaltMeesage)msg).getSalt());
         }
         GameState newState = phaseReducer.apply(state, msg);
         Player activePlayer = newState.getActivePlayer();
-        if (msg instanceof WsSeedMeesage
+        if (msg instanceof WsSaltMeesage
             || activePlayer == null
             || !activePlayer.equals(undoHistory.get().getState().getActivePlayer())
         ) {
@@ -333,8 +333,8 @@ public class Game implements EventProxy {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
-            if (msg instanceof WsSeedMeesage) {
-                phaseReducer.updateRandomSeed(((WsSeedMeesage) msg).getSeed());
+            if (msg instanceof WsSaltMeesage) {
+                phaseReducer.getRandom().setSalt(((WsSaltMeesage) msg).getSalt());
             }
             state = phaseReducer.apply(state, msg);
         }

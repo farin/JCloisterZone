@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -13,6 +12,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -28,7 +28,7 @@ import io.vavr.collection.Stream;
 @RequiredCapability(SiegeCapability.class)
 public class EscapePhase extends Phase {
 
-    public EscapePhase(Random random) {
+    public EscapePhase(RandomGenerator random) {
         super(random);
     }
 
