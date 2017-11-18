@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
+    <point feature="ROAD" cx="390" cy="405">
+        <apply>BA.Rr SW</apply>
+    </point>
+    <point feature="ROAD" cx="555" cy="837">
+        <apply>BA.CcRr+ SE</apply>
+    </point>
+    <point feature="ROAD" cx="457" cy="860">
+        <apply>BA.CcRr SE</apply>
+    </point>
+    <point feature="ROAD" cx="655" cy="574">
+        <apply>BA.RCr WE</apply>
+    </point>
+    <point feature="ROAD" cx="540" cy="787">
+        <apply>BA.RrC SW</apply>
+    </point>
+    <point feature="ROAD" cx="590" cy="580">
+        <apply>BA.CRr SE</apply>
+    </point>
+
+    <point feature="FARM" cx="800" cy="200">
+        <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="850" cy="800">
+        <apply>BA.RrC WR.EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="300" cy="860">
+        <apply>BA.CcRr+ EL.SR</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="500">
+        <apply>BA.CRr SR.WL.WR.EL</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="100">
+        <apply>BA.CFc NL.NR</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="900">
+        <apply>BA.CFc+ SL.SR</apply>
+    </point>
+
     <point feature="QUARTER" cx="720" cy="-300">
         <apply>CO.7 QUARTER_CASTLE</apply>
     </point>

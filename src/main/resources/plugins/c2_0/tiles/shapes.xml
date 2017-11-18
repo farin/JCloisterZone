@@ -156,9 +156,7 @@
         <title>oblique-NL,WR</title>
         <svg:polygon points="0,0 500,0 0,500"/>
         <apply>R2.II+ NL.WR</apply>
-        <apply>R1.RrII NR.EL</apply>
-        <apply>BA.CcRr ER.SL</apply>
-        <apply>BA.CcRr+ ER.SL</apply>
+        <apply>R1.RrII NR.EL</apply>        
         <apply>CA.RrR.1 ER.SL</apply>
         <apply>SI.CcRr ER.SL</apply>
         <apply>IC.RrRr ER.SL</apply>
@@ -183,18 +181,19 @@
     <shape feature="FARM" baseLocation="NL.WR">
         <title>half-oblique-NL,WR</title>
         <svg:polygon points="0,0 400,0 400,250 250,400 0,400"/>
+        <apply>BA.CcRr+ ER.SL</apply>
+        <apply>BA.CRRR ER.SL</apply>
+        <apply>BA.CRRR SR.WL</apply>
         <apply>DG.RrRr.g NL.WR</apply>
         <apply>TO.RrRr.2 NL.WR</apply>
         <apply>IC.RrRr NL.WR</apply>
         <apply>CA.RRr.2 NR.EL</apply>
-        <apply>BA.CRRR ER.SL</apply>
         <apply>IC.RRR.i ER.SL</apply>
         <apply>DG.RRR.g ER.SL</apply>
         <apply>DG.CRRR.p ER.SL</apply>
         <apply>DG.CcRr.g ER.SL</apply>
         <apply>DG.CRr.d ER.SL</apply>
         <apply>DG.CRr.g ER.SL</apply>
-        <apply>BA.CRRR SR.WL</apply>
         <apply>IC.RrC.i SR.WL</apply>
         <apply>IC.RRR.i SR.WL</apply>
         <apply>DG.RRR.g SR.WL</apply>
@@ -204,6 +203,10 @@
         <apply>TO.RrC SR.WL</apply>
         <apply>CC.Rr SR.WL</apply>
         <apply>C2.RRr SR.WL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="500,999 462,810 642,710 770,555 999,495 999,999"/>
+        <apply>BA.CcRr ER.SL</apply>
     </shape>
     <shape feature="FARM">
         <svg:polygon points="0,515 350,405 572,495 657,742 512,999 0,999"/>
@@ -220,6 +223,10 @@
     <shape feature="FARM">
         <svg:polygon points="0,0 999,0 999,495 705,310 297,650 0,492"/>
         <apply>BA.RFr WR.NL.NR.EL</apply>
+    </shape>
+    <shape feature="FARM">
+        <svg:polygon points="0,510 387,632 999,515 999,999 0,999"/>
+        <apply>BA.RCr ER.SL.SR.WL</apply>
     </shape>
 
     <complement-farm>
@@ -284,12 +291,12 @@
         <apply>GO.LRr SR.WL.WR.NL.NR.EL</apply>
         <apply>GO.LRrRr WR.NL.ER.SL</apply>
     </complement-farm>
-    
+
     <shape> <!-- center -->
         <svg:polygon points="687,452 687,562 550,702 254,702 257,402 445,355"/>
         <subtract>BA.RRR</subtract>
         <subtract>BA.RRRR</subtract>
         <subtract>BA.CRRR</subtract>
     </shape>
-    
+
 </shapes>
