@@ -256,7 +256,7 @@ public class Game implements EventProxy {
     public void handleClockMessage(ClockMessage msg) {
         long[] clockValues = msg.getClocks();
         for (int i = 0; i < clockValues.length; i++) {
-            boolean running = msg.getRunning() == i;
+            boolean running = msg.getRunning() != null && msg.getRunning() == i;
             PlayerClock clock = clocks.get(i);
             PlayerClock newClock = clock.setRunning(running).setTime(clockValues[i]);
             if (clock != newClock) {

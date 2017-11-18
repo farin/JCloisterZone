@@ -12,8 +12,8 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
     // points is store to instance and can be accesed after reduce
     private int points;
 
-    public ScoreCompletable(Completable feature) {
-        super(feature);
+    public ScoreCompletable(Completable feature, boolean isFinal) {
+        super(feature, isFinal);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
 
     @Override
     public int getFeaturePoints() {
-            return points;
+        return points;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
         points = getFeature().getPoints(state);
         state = super.apply(state);
 
-        if (!isFinalScoring(state)) {
+        if (!isFinal) {
             Mage mage = state.getNeutralFigures().getMage();
             if (mage != null && mage.getFeature(state) == getFeature()) {
                 state = (new ReturnNeutralFigure(mage)).apply(state);

@@ -6,9 +6,8 @@ import com.jcloisterzone.game.state.GameState;
 
 public class ScoreFarmWhenBarnIsConnected extends ScoreFarm {
 
-
     public ScoreFarmWhenBarnIsConnected(Farm feature) {
-        super(feature);
+        super(feature, false);
     }
 
     @Override

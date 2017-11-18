@@ -94,7 +94,7 @@ public class AnimationLayer extends AbstractGridLayer {
     private void scored(FeaturePointer fp, Player player, String points, Class<? extends Meeple> meepleType, boolean finalScoring) {
         Position pos = fp.getPosition();
         ImmutablePoint offset;
-        //IMMUTABLE TODO (low priority probably) coupled with game by gc.getGame().getBoard().get(pos)
+        //TODO (low priority probably) coupled with game by gc.getGame().getBoard().get(pos)
         if (Barn.class.equals(meepleType)) {
             offset = rm.getBarnPlacement();
         } else {

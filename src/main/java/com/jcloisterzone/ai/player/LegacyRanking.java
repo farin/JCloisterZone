@@ -81,7 +81,7 @@ class LegacyRanking implements GameStateRanking {
         double r = 0.0;
 
         for (Completable completable : getOccupiedScoreables(state, Completable.class)) {
-            ScoreFeatureReducer sr = new ScoreCompletable(completable);
+            ScoreFeatureReducer sr = new ScoreCompletable(completable, true);
             sr.apply(state); //no assign!
             for (Player player : sr.getOwners()) {
                 double q = 1.0;
@@ -101,9 +101,9 @@ class LegacyRanking implements GameStateRanking {
                 .find(Predicates.instanceOf(Barn.class)).isDefined();
             ScoreFeatureReducer sr;
             if (hasBarn) {
-               sr = new ScoreFarmBarn(farm);
+               sr = new ScoreFarmBarn(farm, true);
             } else {
-               sr = new ScoreFarm(farm);
+               sr = new ScoreFarm(farm, true);
             }
             sr.apply(state);
             for (Player player : sr.getOwners()) {

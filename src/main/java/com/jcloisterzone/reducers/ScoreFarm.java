@@ -11,8 +11,8 @@ public class ScoreFarm extends ScoreFeature {
 
     protected Map<Player, Integer> playerPoints = HashMap.empty();
 
-    public ScoreFarm(Farm feature) {
-        super(feature);
+    public ScoreFarm(Farm feature, boolean isFinal) {
+        super(feature, isFinal);
     }
 
     @Override

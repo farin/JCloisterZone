@@ -359,8 +359,8 @@ public class ControlPanel extends JPanel {
                 } else if (
                     first != null && first.getClass().isAnnotationPresent(LinkedPanel.class)
                 ) {
-                    //ignore actions managed by panels
-                    //TOOD show image anyway on control/action panel
+                    //do nothing - ignore actions managed by panels
+                    //TODO show image anyway on control/action panel
                 } else {
                     actionPanel.onPlayerActionsChanged(actionsState);
                     passButton.setVisible(isLocal && actionsState.isPassAllowed());
@@ -373,7 +373,6 @@ public class ControlPanel extends JPanel {
     public void handleConfirmAction(GameState state, boolean isLocal) {
         if (isLocal) {
             boolean needsConfirm = false;
-            // IMMUTABLE TODO
             PlayEvent last = state.getEvents().last();
             if (last instanceof MeepleDeployed) {
                 ConfirmConfig cfg =  gc.getConfig().getConfirm();

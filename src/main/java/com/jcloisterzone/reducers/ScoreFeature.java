@@ -11,7 +11,6 @@ import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.FairyCapability;
-import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
@@ -24,13 +23,16 @@ import io.vavr.collection.Stream;
 public abstract class ScoreFeature implements ScoreFeatureReducer {
 
     private final Scoreable feature;
+    protected final boolean isFinal;
 
     // "out" variable - computed owners are store to instance
     // to be available to reducer caller
     private Set<Player> owners;
 
-    public ScoreFeature(Scoreable feature) {
+
+    public ScoreFeature(Scoreable feature, boolean isFinal) {
         this.feature = feature;
+        this.isFinal = isFinal;
     }
 
     abstract protected int getFeaturePoints(GameState state, Player player);
@@ -72,21 +74,15 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         return state;
     }
 
-    protected boolean isFinalScoring(GameState state) {
-        return GameOverPhase.class.equals(state.getPhase());
-    }
-
     @Override
     public GameState apply(GameState state) {
-        boolean finalScoring = isFinalScoring(state);
-
         owners = feature.getOwners(state);
         if (owners.isEmpty()) {
             Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
             if (!followers.isEmpty()) {
                 for (Seq<Tuple2<Follower, FeaturePointer>> l : followers.groupBy(t -> t._1.getPlayer()).values()) {
                     Tuple2<Follower, FeaturePointer> t = l.get();
-                    ScoreEvent scoreEvent = new ScoreEvent(0, feature.getPointCategory(), finalScoring, t._2, t._1);
+                    ScoreEvent scoreEvent = new ScoreEvent(0, feature.getPointCategory(), isFinal, t._2, t._1);
                     state = state.appendEvent(scoreEvent);
                 }
             }
@@ -96,7 +92,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         HashMap<Player, Follower> playersWithFairyBonus = HashMap.empty();
 
         BoardPointer ptr = state.getNeutralFigures().getFairyDeployment();
-        if (ptr != null && !finalScoring) {
+        if (ptr != null && !isFinal) {
             boolean onTileRule = ptr instanceof Position;
             FeaturePointer fairyFp = ptr.asFeaturePointer();
 
@@ -114,7 +110,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
 
         for (Player pl : owners) {
             Follower nextToFairy = playersWithFairyBonus.get(pl).getOrNull();
-            state = scorePlayer(state, pl, nextToFairy, finalScoring);
+            state = scorePlayer(state, pl, nextToFairy, isFinal);
         }
 
         for (Player pl : playersWithFairyBonus.keySet().removeAll(owners)) {

@@ -79,7 +79,7 @@ public class ScoringPhase extends Phase {
             Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
             if (placedBarnFarm != null) {
                 //ScoreFeature is scoring just followers!
-                state = (new ScoreFarm(placedBarnFarm)).apply(state);
+                state = (new ScoreFarm(placedBarnFarm, false)).apply(state);
                 state = (new UndeployMeeples(placedBarnFarm, false)).apply(state);
             }
 
@@ -182,7 +182,7 @@ public class ScoringPhase extends Phase {
         }
 
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
-            ScoreCompletable scoreReducer = new ScoreCompletable(completable);
+            ScoreCompletable scoreReducer = new ScoreCompletable(completable, false);
             state = scoreReducer.apply(state);
             state = (new UndeployMeeples(completable, false)).apply(state);
 
