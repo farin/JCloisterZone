@@ -254,15 +254,15 @@ public class Game implements EventProxy {
 
     @WsSubscribe
     public void handleClockMessage(ClockMessage msg) {
-        int idx = clocks.indexWhere(c -> c.isRunning());
-        if (idx != -1) {
-            clocks = clocks.update(idx, new PlayerClock(msg.getClocks()[idx], false));
+        long[] clockValues = msg.getClocks();
+        for (int i = 0; i < clockValues.length; i++) {
+            boolean running = msg.getRunning() == i;
+            PlayerClock clock = clocks.get(i);
+            PlayerClock newClock = clock.setRunning(running).setTime(clockValues[i]);
+            if (clock != newClock) {
+                clocks = clocks.update(i, newClock);
+            }
         }
-        if (msg.getRunning() != null) {
-            idx = msg.getRunning();
-            clocks = clocks.update(idx, new PlayerClock(msg.getClocks()[idx], true));
-        }
-
         post(new ClockUpdateEvent(clocks, msg.getRunning()));
     }
 
