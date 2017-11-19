@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
+
+    <point feature="ROAD" cx="500" cy="100" baseLocation="N">
+        <apply>TB.CcRR!.c E</apply>
+        <apply>TB.CcR!.w E</apply>
+        <apply>TB.CRcR.w S</apply>
+        <apply>TB.CccR.w S</apply>
+    </point>
     <point feature="ROAD" cx="390" cy="405">
         <apply>BA.Rr SW</apply>
     </point>
@@ -23,6 +30,10 @@
     </point>
     <point feature="ROAD" cx="130" cy="672">
         <apply>IC.LRFR W</apply>
+        <apply>TB.LRRR W</apply>
+    </point>
+    <point feature="ROAD" cx="642" cy="857">
+        <apply>TB.LRRR S</apply>
     </point>
     <point feature="ROAD" cx="550" cy="792">
         <apply>IC.RrRr SE</apply>
@@ -39,22 +50,52 @@
     <point feature="ROAD" cx="297" cy="580">
         <apply>IC.RFr.i WE</apply>
     </point>
+    <point feature="ROAD" cx="645" cy="787">
+        <apply>TB.RCc.g S</apply>
+    </point>
+    <point feature="ROAD" cx="405" cy="802">
+        <apply>TB.RRC S</apply>
+        <apply>TB.RRrr NS</apply>
+    </point>
+    <point feature="ROAD" cx="845" cy="560">
+        <apply>TB.RRrr WE</apply>
+    </point>
+    <point feature="ROAD" cx="872" cy="472">
+        <apply>TB.CcR.c E</apply>
+    </point>
 
     <point feature="CITY" cx="500" cy="140" baseLocation="N">
         <apply>IC.CCc+ S</apply>
         <apply>IC.CCC N</apply>
         <apply>IC.CCC E</apply>
         <apply>IC.CCCC N</apply>
+        <apply>TB.RC N</apply>
     </point>
     <point feature="CITY" cx="500" cy="100" baseLocation="N">
         <apply>TB.CCc.c S</apply>
         <apply>TB.CCc.w S</apply>
         <apply>TB.CcCC.c E</apply>
+        <apply>TB.CcRC.c S</apply>
+        <apply>TB.CcRC.g S</apply>
     </point>
 
     <point feature="FARM" cx="800" cy="200">
         <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
+    </point>
+    <point feature="FARM" cx="250" cy="100" baseLocation="NL">
+        <apply>TB.CcR!.w EL</apply>
+    </point>
+    <point feature="FARM" cx="750" cy="100" baseLocation="NR">
+        <apply>TB.CcR!.w ER</apply>
+    </point>
+    <point feature="FARM" cx="500" cy="100" baseLocation="NL.NR">
+        <apply>BA.CFc NL.NR</apply>
+        <apply>TB.CFc.w NL.NR</apply>
+        <apply>TB.CRc.g NL.NR</apply>
+        <apply>TB.CRc.w NL.NR</apply>
+        <apply>TB.CCc.w NL.NR</apply>
+        <apply>TB.RCc!.g EL.ER</apply>
     </point>
     <point feature="FARM" cx="850" cy="800">
         <apply>BA.RrC WR.EL.ER.SL</apply>
@@ -64,10 +105,7 @@
     </point>
     <point feature="FARM" cx="180" cy="500">
         <apply>BA.CRr SR.WL.WR.EL</apply>
-    </point>
-    <point feature="FARM" cx="500" cy="100">
-        <apply>BA.CFc NL.NR</apply>
-    </point>
+    </point>    
     <point feature="FARM" cx="500" cy="900">
         <apply>BA.CFc+ SL.SR</apply>
     </point>
@@ -82,6 +120,23 @@
     </point>
     <point feature="FARM" cx="750" cy="250">
         <apply>IC.LRFR WR.NL.NR.EL</apply>
+        <apply>TB.LRRR WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="645" cy="642">
+        <apply>TB.CcCC.c INNER_FARM</apply>
+    </point>
+    <point feature="FARM" cx="505" cy="780">
+        <apply>TB.CCc.w INNER_FARM</apply>
+        <apply>TB.CCc.c INNER_FARM</apply>
+    </point>
+    <point feature="FARM" cx="827" cy="437">
+        <apply>TB.RCc.g EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="325" cy="875">
+        <apply>TB.LRRR SR.WL</apply>
+    </point>
+    <point feature="FARM" cx="870" cy="760">
+        <apply>TB.LRRR ER.SL</apply>
     </point>
 
     <point feature="QUARTER" cx="720" cy="-300">
