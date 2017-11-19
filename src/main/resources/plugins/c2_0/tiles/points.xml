@@ -46,6 +46,11 @@
         <apply>IC.CCC E</apply>
         <apply>IC.CCCC N</apply>
     </point>
+    <point feature="CITY" cx="500" cy="100" baseLocation="N">
+        <apply>TB.CCc.c S</apply>
+        <apply>TB.CCc.w S</apply>
+        <apply>TB.CcCC.c E</apply>
+    </point>
 
     <point feature="FARM" cx="800" cy="200">
         <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
