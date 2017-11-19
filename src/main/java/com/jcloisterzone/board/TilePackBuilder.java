@@ -3,6 +3,8 @@ package com.jcloisterzone.board;
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
 import static com.jcloisterzone.XMLUtils.getTileId;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.NoSuchElementException;
 
@@ -147,7 +149,15 @@ public class TilePackBuilder {
                 return expansion.getOrigin().getLoader().getResource(fileName);
             }
         }
-        return TilePackBuilder.class.getClassLoader().getResource(fileName);
+        if (fileName.startsWith("/")) {
+            try {
+                return new File(fileName).toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return TilePackBuilder.class.getClassLoader().getResource(fileName);
+        }
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {

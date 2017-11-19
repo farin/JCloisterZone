@@ -1114,7 +1114,7 @@
         <subtract>R2.I.v</subtract>
     </shape>
 
-    <!--  Tunnel substractions -->
+    <!--  Tunnel subtractions -->
     <shape feature="FARM">
         <svg:polygon points="77,422 150,320 590,250 730,270 867,430 672,595 802,700 617,805 380,832 160,790 120,690 207,600"/>
         <subtract>TU.CRRR</subtract>
