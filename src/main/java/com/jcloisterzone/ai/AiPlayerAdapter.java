@@ -3,6 +3,9 @@ package com.jcloisterzone.ai;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameChangedEvent;
@@ -13,6 +16,8 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 
 public class AiPlayerAdapter {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private static ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -38,8 +43,12 @@ public class AiPlayerAdapter {
         Player activePlayer = state.getActivePlayer();
         if (player.equals(activePlayer)) {
             executor.submit(() -> {
-                WsInGameMessage msg = aiPlayer.apply(state);
-                sendWithDelay(msg, msg instanceof CommitMessage ? 0 : tilePlaceDelay);
+                try {
+                    WsInGameMessage msg = aiPlayer.apply(state);
+                    sendWithDelay(msg, msg instanceof CommitMessage ? 0 : tilePlaceDelay);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
             }, "AI player " + player.getNick());
         }
     }

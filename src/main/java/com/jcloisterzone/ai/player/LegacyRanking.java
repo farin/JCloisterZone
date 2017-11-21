@@ -55,6 +55,9 @@ class LegacyRanking implements GameStateRanking {
         this.state = state;
         lastPlaced = state.getLastPlaced();
 
+        //state.getAva
+        //state.getTilePack().
+
         ranking += ratePoints();
         ranking += rateUnfinishedFeatures();
         ranking += rateMeeples();
