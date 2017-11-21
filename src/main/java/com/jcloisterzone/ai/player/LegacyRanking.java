@@ -2,6 +2,8 @@ package com.jcloisterzone.ai.player;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.GameStateRanking;
+import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
@@ -11,6 +13,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
@@ -21,6 +24,7 @@ import com.jcloisterzone.reducers.ScoreFarm;
 import com.jcloisterzone.reducers.ScoreFarmBarn;
 
 import io.vavr.Predicates;
+import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
@@ -62,6 +66,7 @@ class LegacyRanking implements GameStateRanking {
         ranking += rateUnfinishedFeatures();
         ranking += rateMeeples();
         ranking += rateBoardShape();
+        ranking += rateDragon();
 
         return ranking;
     }
@@ -161,6 +166,20 @@ class LegacyRanking implements GameStateRanking {
                     r += q * 0.25;
                 }
             }
+        }
+        return r;
+    }
+
+    private double rateDragon() {
+        Position pos = state.getNeutralFigures().getDragonDeployment();
+        if (pos == null) {
+            return 0.;
+        }
+        double r = 0.0;
+        for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
+            int dist = t._2.getPosition().squareDistance(pos);
+            if (dist > 3) continue;
+            r += (t._1.getPlayer() == me ? -1.0 : 1.0) * (3 - dist);
         }
         return r;
     }
