@@ -1,13 +1,20 @@
 package com.jcloisterzone.ai;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
+import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
+import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
 
 public abstract class RankingAiPlayer implements AiPlayer {
@@ -25,6 +32,30 @@ public abstract class RankingAiPlayer implements AiPlayer {
         this.me = me;
         phaseReducer = new GameStatePhaseReducer(setup, 0);
         stateRanking = createStateRanking(me);
+    }
+
+    @Override
+    public Vector<WsInGameMessage> getPossibleActions(GameState state) {
+        ActionsState as = state.getPlayerActions();
+        PlacedTile lastPlaced = state.getLastPlaced();
+
+        // DIRTY HACK for portal, try each feature only once
+        // TODO solve it better. eg using solution from 3.x, this is still quite slow
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        Vector<WsInGameMessage> messages = as.getActions().flatMap(action -> {
+            Set options = action.getOptions();
+            if (action instanceof MeepleAction && lastPlaced != null && lastPlaced.getTile().getTrigger() == TileTrigger.PORTAL) {
+                Set<FeaturePointer> _options = options;
+                options = _options.groupBy(fp -> state.getFeature(fp)).values().map(s -> s.getOrNull()).toSet();
+            }
+            return options.map(o -> AiPlayer.Helpers.createMessage(action, o)).toVector();
+        });
+
+        if (as.isPassAllowed()) {
+            messages = messages.append(new PassMessage());
+        }
+
+        return messages;
     }
 
     @Override

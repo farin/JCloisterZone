@@ -25,7 +25,7 @@ public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
         ActionsState as = state.getPlayerActions();
 
         Vector<WsInGameMessage> messages = as.getActions().flatMap(action ->
-            action.getOptions().map(o -> _This.createMessage(action, o)).toVector()
+            action.getOptions().map(o -> Helpers.createMessage(action, o)).toVector()
         );
 
         if (as.isPassAllowed()) {
@@ -35,10 +35,9 @@ public interface AiPlayer extends Function1<GameState, WsInGameMessage> {
         return messages;
     }
 
-    // private helpers
-    class _This {
+    static class Helpers {
         @SuppressWarnings({ "rawtypes", "unchecked" })
-        private static WsInGameMessage createMessage(PlayerAction action, Object option) {
+        public static WsInGameMessage createMessage(PlayerAction action, Object option) {
             return action.select(option);
         }
     }
