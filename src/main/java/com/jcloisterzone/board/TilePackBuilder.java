@@ -337,7 +337,7 @@ public class TilePackBuilder {
         Vector<String> groupNames = Vector.ofAll(tiles.keySet()).sorted();
         for (String name : groupNames) {
             java.util.List<Tile> groupTiles = tiles.get(name);
-            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(Tile::getId), true));
+            groups = groups.put(name, new TileGroup(name, Vector.ofAll(groupTiles).sortBy(Tile::getId), !TileGroup.INACTIVE_GROUP.equals(name)));
         }
 
         return new Tiles(

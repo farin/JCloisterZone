@@ -257,6 +257,7 @@ public class TilePack implements Serializable {
      * @return a new instance with the group activated
      */
     public TilePack activateGroup(String groupName) {
+        assert !TileGroup.INACTIVE_GROUP.equals(groupName);
         TileGroup group = groups.get(groupName).getOrNull();
         if (group == null || group.isActive()) return this;
         return setGroups(groups.put(groupName, group.setActive(true)));
@@ -269,8 +270,8 @@ public class TilePack implements Serializable {
      * @return a new instance with the group deactivated
      */
     public TilePack deactivateGroup(String groupName) {
-        TileGroup group = groups.get(groupName).get();
-        if (!group.isActive()) return this;
+        TileGroup group = groups.get(groupName).getOrNull();
+        if (group == null || !group.isActive()) return this;
         return setGroups(groups.put(groupName, group.setActive(false)));
     }
 

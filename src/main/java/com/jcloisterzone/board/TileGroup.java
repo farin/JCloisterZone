@@ -18,6 +18,9 @@ public class TileGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //special group name which is inactive from beginning by default
+    public static final String INACTIVE_GROUP = "inactive";
+
     private final String name;
     private final Vector<Tile> tiles;
     private final boolean active;

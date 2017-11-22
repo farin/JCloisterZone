@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
@@ -11,13 +12,6 @@ import com.jcloisterzone.game.state.GameState;
  */
 public class AbbeyCapability extends Capability<Integer> {
 
-    //private final Set<Player> unusedAbbey = new HashSet<>();
-    //private Player abbeyRoundLastPlayer; //when last tile is drawn all players can still place abbey
-
-//    @Override
-//    public void initPlayer(Player player) {
-//        unusedAbbey.add(player);
-//    }
 
     @Override
     public GameState onStartGame(GameState state) {
@@ -26,28 +20,6 @@ public class AbbeyCapability extends Capability<Integer> {
 
     @Override
     public String getTileGroup(Tile tile) {
-        return tile.getId().equals(Tile.ABBEY_TILE_ID) ? "inactive": null;
+        return tile.getId().equals(Tile.ABBEY_TILE_ID) ? TileGroup.INACTIVE_GROUP: null;
     }
-
-//    public boolean hasUnusedAbbey(Player player) {
-//        return unusedAbbey.contains(player);
-//    }
-//
-//    public void useAbbey(Player player) {
-//        if (!unusedAbbey.remove(player)) {
-//            throw new IllegalArgumentException("Player alredy used his abbey");
-//        }
-//    }
-
-//    public void undoUseAbbey(Player player) {
-//        unusedAbbey.add(player);
-//    }
-
-//    public Player getAbbeyRoundLastPlayer() {
-//        return abbeyRoundLastPlayer;
-//    }
-//
-//    public void setAbbeyRoundLastPlayer(Player abbeyRoundLastPlayer) {
-//        this.abbeyRoundLastPlayer = abbeyRoundLastPlayer;
-//    }
 }
