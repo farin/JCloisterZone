@@ -257,8 +257,8 @@ public class TilePack implements Serializable {
      * @return a new instance with the group activated
      */
     public TilePack activateGroup(String groupName) {
-        TileGroup group = groups.get(groupName).get();
-        if (group.isActive()) return this;
+        TileGroup group = groups.get(groupName).getOrNull();
+        if (group == null || group.isActive()) return this;
         return setGroups(groups.put(groupName, group.setActive(true)));
     }
 
