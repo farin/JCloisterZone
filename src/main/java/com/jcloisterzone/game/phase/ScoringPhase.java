@@ -18,6 +18,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.ScoreFeatureReducer;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -99,7 +100,7 @@ public class ScoringPhase extends Phase {
         }
 
         state = scoreCompletedOnTile(state, lastPlaced);
-        if (lastPlaced.getTile().isAbbeyTile()) {
+        if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
             state = scoreCompletedNearAbbey(state, pos);
         }
 

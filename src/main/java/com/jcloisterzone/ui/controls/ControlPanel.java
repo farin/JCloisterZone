@@ -34,6 +34,7 @@ import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -261,7 +262,7 @@ public class ControlPanel extends JPanel {
         PlayerAction<?> action = as.getActions().get();
         if (!(action instanceof TilePlacementAction)) return false;
         TilePlacementAction tpa = (TilePlacementAction) action;
-        if (!tpa.getTile().isAbbeyTile()) return false;
+        if (!AbbeyCapability.isAbbey(tpa.getTile())) return false;
         return state.getTilePack().size() == 0;
     }
 

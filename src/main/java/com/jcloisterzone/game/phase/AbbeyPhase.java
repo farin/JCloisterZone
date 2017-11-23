@@ -8,7 +8,6 @@ import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -64,7 +63,7 @@ public class AbbeyPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
-        if (!msg.getTileId().equals(Tile.ABBEY_TILE_ID)) {
+        if (!msg.getTileId().equals(AbbeyCapability.ABBEY_TILE_ID)) {
             throw new IllegalArgumentException("Only abbey can be placed.");
         }
 

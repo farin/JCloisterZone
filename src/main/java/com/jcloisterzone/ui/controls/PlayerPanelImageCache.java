@@ -9,10 +9,10 @@ import javax.swing.ImageIcon;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -82,7 +82,7 @@ public class PlayerPanelImageCache {
         scaledImages.put("grain", rm.getImage("neutral/grain"));
         scaledImages.put("wine", rm.getImage("neutral/wine"));
 
-        scaledImages.put("abbey", scaleImage(rm.getTileImage(Tile.ABBEY_TILE_ID, Rotation.R0).getImage()));
+        scaledImages.put("abbey", scaleImage(rm.getTileImage(AbbeyCapability.ABBEY_TILE_ID, Rotation.R0).getImage()));
 
         scaledImages.put("lb_tower", scaleImage(rm.getImage("neutral/lb_tower")));
         scaledImages.put("lb_house", scaleImage(rm.getImage("neutral/lb_house")));

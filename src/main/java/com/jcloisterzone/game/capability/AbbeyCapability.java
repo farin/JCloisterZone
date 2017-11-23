@@ -17,18 +17,30 @@ import io.vavr.collection.HashMap;
  */
 public class AbbeyCapability extends Capability<Integer> {
 
+    /** The constant ABBEY_TILE_ID. */
+    public static final String ABBEY_TILE_ID = "AM.A";
+    /** Abbey tile, not placed yet. */
     public static Tile ABBEY_TILE;
 
     static {
         HashMap<Location, Feature> features = io.vavr.collection.HashMap.of(
             Location.CLOISTER, new Cloister()
         );
-        ABBEY_TILE = new Tile(Expansion.ABBEY_AND_MAYOR, Tile.ABBEY_TILE_ID, features);
+        ABBEY_TILE = new Tile(Expansion.ABBEY_AND_MAYOR, ABBEY_TILE_ID, features);
     }
 
 
     @Override
     public GameState onStartGame(GameState state) {
         return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.ABBEY_TILE, 1));
+    }
+
+    /**
+     * Checks if {@code tile} is an abbey.
+     *
+     * @return {@code true} if {@code tile} is an abbey, {@code false} otherwise
+     */
+    public static boolean isAbbey(Tile tile) {
+        return tile.getId().equals(ABBEY_TILE_ID);
     }
 }
