@@ -42,10 +42,8 @@ public class AbbeyPhase extends Phase {
         if (hasAbbey && (builderSecondTurnPart || !baazaarInProgress)) {
             Stream<Tuple2<Position, EdgePattern>> holes = state.getHoles();
             if (!holes.isEmpty()) {
-                Tile abbey = state.getTilePack().findTile(Tile.ABBEY_TILE_ID).get();
-
                 TilePlacementAction action = new TilePlacementAction(
-                    abbey,
+                    AbbeyCapability.ABBEY_TILE,
                     holes.flatMap(t ->
                         Array.ofAll(Arrays.asList(Rotation.values()))
                             .map(r -> new PlacementOption(t._1, r, null))
@@ -75,8 +73,7 @@ public class AbbeyPhase extends Phase {
             ps.addTokenCount(player.getIndex(), Token.ABBEY_TILE, -1)
         );
 
-        Tile abbey = state.getTilePack().findTile(Tile.ABBEY_TILE_ID).get();
-        state = (new PlaceTile(abbey, msg.getPosition(), msg.getRotation())).apply(state);
+        state = (new PlaceTile(AbbeyCapability.ABBEY_TILE, msg.getPosition(), msg.getRotation())).apply(state);
         state = clearActions(state);
 
         return next(state, ActionPhase.class);

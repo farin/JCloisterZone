@@ -44,7 +44,7 @@ public class PlaceTile implements Reducer {
     public GameState apply(GameState state) {
         LinkedHashMap<Position, PlacedTile> placedTiles = state.getPlacedTiles();
         assert !placedTiles.containsKey(pos);
-        boolean abbeyPlacement = Tile.ABBEY_TILE_ID.equals(tile.getId());
+        boolean abbeyPlacement = tile.isAbbeyTile();
 
         PlacedTile placedTile = new PlacedTile(tile, pos, rot);
         state = state.setPlacedTiles(

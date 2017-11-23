@@ -261,7 +261,7 @@ public class ControlPanel extends JPanel {
         PlayerAction<?> action = as.getActions().get();
         if (!(action instanceof TilePlacementAction)) return false;
         TilePlacementAction tpa = (TilePlacementAction) action;
-        if (!tpa.getTile().getId().equals(Tile.ABBEY_TILE_ID)) return false;
+        if (!tpa.getTile().isAbbeyTile()) return false;
         return state.getTilePack().size() == 0;
     }
 

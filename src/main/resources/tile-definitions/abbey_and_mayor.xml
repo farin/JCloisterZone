@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pack>
-    <tile id="A" count="?">
-        <cloister/>
-    </tile>
+    <!-- expansion also contains Abbey tile, with id AM.A when placed
+         this is not part of tile pack and tile is created from code separately
+     -->
     <tile id="C++">
         <city pennant="2">N E S W</city>
     </tile>
