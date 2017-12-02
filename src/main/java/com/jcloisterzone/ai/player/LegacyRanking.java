@@ -2,11 +2,14 @@ package com.jcloisterzone.ai.player;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.GameStateRanking;
+import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.feature.CompletableFeature;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
@@ -44,8 +47,11 @@ class LegacyRanking implements GameStateRanking {
     private final Player me;
 
     // ranking context
-    private PlacedTile lastPlaced;
     private GameState state;
+    private int numberOfPlayers;
+    private int remainingTurns;
+    private PlacedTile lastPlaced;
+    private Map<Position, Double> positionProbability;
 
     public LegacyRanking(Player me) {
         super();
@@ -57,10 +63,10 @@ class LegacyRanking implements GameStateRanking {
         double ranking = 0.0;
 
         this.state = state;
+        numberOfPlayers = state.getPlayers().length();
         lastPlaced = state.getLastPlaced();
-
-        //state.getAva
-        //state.getTilePack().
+        positionProbability = getPositionProbability();
+        remainingTurns = (int) Math.ceil(state.getTilePack().totalSize() / numberOfPlayers);
 
         ranking += ratePoints();
         ranking += rateUnfinishedFeatures();
@@ -69,6 +75,25 @@ class LegacyRanking implements GameStateRanking {
         ranking += rateDragon();
 
         return ranking;
+    }
+
+    private Map<Position, Double> getPositionProbability() {
+
+        Map<EdgePattern, Integer> packPatterns = state.getTilePack().getPatterns();
+        return state.getAvailablePlacements().toMap(avail -> {
+            int matchingTiles = 0;
+            for (Tuple2<EdgePattern, Integer> pattern : packPatterns) {
+                if (avail._2.isMatchingAnyRotation(pattern._1)) {
+                    matchingTiles += pattern._2;
+                    continue;
+                }
+            }
+            double prob = 0.0;
+            if (matchingTiles > 0) {
+                prob = 1.0 - Math.pow(1.0 - (1.0 / numberOfPlayers), matchingTiles);
+            }
+            return new Tuple2<Position, Double>(avail._1, prob);
+        });
     }
 
     private double ratePoints() {
@@ -88,13 +113,84 @@ class LegacyRanking implements GameStateRanking {
     private double rateUnfinishedFeatures() {
         double r = 0.0;
 
-        for (Completable completable : getOccupiedScoreables(state, Completable.class)) {
+        for (Completable origCompletable : getOccupiedScoreables(state, Completable.class)) {
+            Completable completable = origCompletable;
+            // reset inn/cathedral to get non zero points
+            if (completable instanceof City) {
+                completable = ((City) completable).setCathedral(false);
+            }
+            if (completable instanceof Road) {
+                completable = ((Road) completable).setInn(false);
+            }
+
             ScoreFeatureReducer sr = new ScoreCompletable(completable, true);
             sr.apply(state); //no assign!
+
+            double prob = 1.0;
+            Stream<Position> adjacent = null;
+
+            if (completable instanceof CloisterLike) {
+                CloisterLike cl = (CloisterLike) completable;
+                Position pos = cl.getTilePositions().get();
+                adjacent = Stream.ofAll(Position.ADJACENT_AND_DIAGONAL.values())
+                    .map(offset -> pos.add(offset))
+                    .filter(p -> positionProbability.containsKey(p));
+
+
+            } else if (completable instanceof CompletableFeature) {
+                CompletableFeature<?> cf = (CompletableFeature<?>) completable;
+                adjacent = Stream.ofAll(cf.getOpenEdges().map(edge -> {
+                    if (positionProbability.containsKey(edge.getP1())) {
+                        return edge.getP1();
+                    } else {
+                        return edge.getP2();
+                    }
+                }));
+            }
+
+            if (adjacent != null) {
+                prob = adjacent
+                  .map(p -> positionProbability.get(p).getOrNull())
+                  .min()
+                  .getOrNull();
+            }
+
+            Tuple2<Double, Double> penalty = null;
+            if (prob < 0.0001) {
+                penalty = new Tuple2<>(12.0, 3.0);
+            } else if (prob < 0.2) {
+                penalty = new Tuple2<>(3.0, 0.75);
+            } else if (prob < 0.55) {
+                penalty = new Tuple2<>(1.2, 0.3);
+            }
+
+            //TODO compare with number of available followers instead
+            //count them once and use here
+            if (remainingTurns > 7) {
+                if (penalty != null) {
+                    for (Follower follower : completable.getFollowers(state)) {
+                        if (follower.getPlayer() == me) {
+                            r -= penalty._1;
+                        } else {
+                            r += penalty._2;
+                        }
+                    }
+                }
+            }
+
             for (Player player : sr.getOwners()) {
                 double q = 1.0;
                 if (completable instanceof City) {
-                    q = 1.8;
+                    if (((City)origCompletable).isCathedral()) {
+                        q = 2.8 * prob;
+                    } else {
+                        q = 1.0 + prob * 0.8;
+                    }
+                }
+                if (completable instanceof Road) {
+                    if (((Road)origCompletable).isInn()) {
+                        q = 1.8 * prob;
+                    }
                 }
                 if (player != me) {
                     q = -q;

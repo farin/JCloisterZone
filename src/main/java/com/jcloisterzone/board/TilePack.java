@@ -11,7 +11,9 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.game.RandomGenerator;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 import io.vavr.control.Option;
@@ -89,6 +91,13 @@ public class TilePack implements Serializable {
 
     private Stream<Tile> getActiveTiles() {
         return getActiveGroups().flatMap(TileGroup::getTiles);
+    }
+
+    public Map<EdgePattern, Integer> getPatterns() {
+        return Stream.ofAll(groups.values()).flatMap(TileGroup::getTiles)
+            .map(Tile::getEdgePattern)
+            .map(EdgePattern::canonize)
+            .foldLeft(HashMap.empty(), (m, e) -> m.put(e, m.getOrElse(e, 0) + 1));
     }
 
     /**
@@ -178,6 +187,7 @@ public class TilePack implements Serializable {
             return setGroups(groups.put(group.getName(), group));
         }
     }
+
 
     /**
      * Draws random tile  {@code index}.

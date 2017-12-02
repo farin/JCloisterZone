@@ -15,7 +15,7 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     private static final long serialVersionUID = 1L;
 
-    protected final Set<Edge> openEdges; //TODO change to Set
+    protected final Set<Edge> openEdges;
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
     public CompletableFeature(List<FeaturePointer> places, Set<Edge> openEdges, Set<FeaturePointer> neighboring) {
@@ -25,6 +25,7 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
     }
 
     public abstract T mergeAbbeyEdge(Edge edge);
+    @Override
     public abstract T setNeighboring(Set<FeaturePointer> neighboring);
 
     @Override
@@ -36,6 +37,7 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
         return openEdges;
     }
 
+    @Override
     public Set<FeaturePointer> getNeighboring() {
         return neighboring;
     }
