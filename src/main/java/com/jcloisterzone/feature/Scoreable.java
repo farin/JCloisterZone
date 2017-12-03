@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -12,6 +11,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 
 /**
@@ -55,20 +55,8 @@ public interface Scoreable extends Structure {
             return 0;
         }
         Set<Position> position = getTilePositions();
-        buildings = buildings.filterKeys(pos -> position.contains(pos));
+        Seq<Token> buldingsSeq = buildings.filterKeys(pos -> position.contains(pos)).values();
 
-        if (state.getBooleanValue(Rule.BULDINGS_DIFFERENT_VALUE)) {
-            return buildings
-                .values()
-                .map(token -> {
-                    if (token == Token.LB_SHED) return 1;
-                    if (token == Token.LB_HOUSE) return 2;
-                    if (token == Token.LB_TOWER) return 3;
-                    throw new IllegalArgumentException();
-                })
-                .sum().intValue();
-        } else {
-            return buildings.size();
-        }
+        return LittleBuildingsCapability.getBuildingsPoints(state, buldingsSeq);
     }
 }

@@ -6,13 +6,16 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
+import com.jcloisterzone.game.state.mixins.RulesMixin;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 
 /**
@@ -47,5 +50,20 @@ public class LittleBuildingsCapability extends Capability<Map<Position, Token>> 
 
         Position pos = state.getLastPlaced().getPosition();
         return state.appendAction(new LittleBuildingAction(options, pos));
+    }
+
+    public static int getBuildingsPoints(RulesMixin rules, Seq<Token> buildings) {
+        if (rules.getBooleanValue(Rule.BULDINGS_DIFFERENT_VALUE)) {
+            return buildings
+                .map(token -> {
+                    if (token == Token.LB_SHED) return 1;
+                    if (token == Token.LB_HOUSE) return 2;
+                    if (token == Token.LB_TOWER) return 3;
+                    throw new IllegalArgumentException();
+                })
+                .sum().intValue();
+        } else {
+            return buildings.size();
+        }
     }
 }
