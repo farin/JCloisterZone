@@ -18,6 +18,7 @@ import com.jcloisterzone.game.phase.CocCountPhase;
 import com.jcloisterzone.game.phase.CocFinalScoringPhase;
 import com.jcloisterzone.game.phase.CocFollowerPhase;
 import com.jcloisterzone.game.phase.CocScoringPhase;
+import com.jcloisterzone.game.phase.CommitAbbeyPassPhase;
 import com.jcloisterzone.game.phase.CommitActionPhase;
 import com.jcloisterzone.game.phase.CornCirclePhase;
 import com.jcloisterzone.game.phase.DragonMovePhase;
@@ -90,6 +91,8 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(setup, next, MageAndWitchPhase.class);
         next = addPhase(setup, next, GoldPiecePhase.class);
         next = addPhase(setup, next, TilePhase.class);
+        // if abbey is passed, commit commit action phase follows to change salt by following Commit message
+        next = addPhase(setup, next, CommitAbbeyPassPhase.class);
         next = addPhase(setup, next, AbbeyPhase.class);
         next = addPhase(setup, next, FairyPhase.class);
         last.setDefaultNext(next); //after last phase, the first is default

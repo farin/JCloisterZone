@@ -58,7 +58,7 @@ public class AbbeyPhase extends Phase {
                 return promote(state);
             }
         }
-        return next(state);
+        return next(state, TilePhase.class);
     }
 
     @PhaseMessageHandler

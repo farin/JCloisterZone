@@ -12,6 +12,7 @@ import com.jcloisterzone.game.GameStatePhaseReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
+import com.jcloisterzone.wsio.message.WsSaltMeesage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
@@ -51,7 +52,7 @@ public abstract class RankingAiPlayer implements AiPlayer {
                 for (WsInGameMessage msg : getPossibleActions(itemState)) {
                     Vector<WsInGameMessage> chain = item._2.append(msg);
                     GameState newState = phaseReducer.apply(itemState, msg);
-                    boolean end = newState.getActivePlayer() != me;
+                    boolean end = newState.getActivePlayer() != me || msg instanceof WsSaltMeesage;
 
                     if (!end && msg instanceof PlaceTileMessage &&
                         newState.getLastPlaced().getTile().getTrigger() == TileTrigger.PORTAL) {
@@ -85,7 +86,6 @@ public abstract class RankingAiPlayer implements AiPlayer {
 
         WsInGameMessage msg = messages.get();
         messages = messages.drop(1);
-
 
         return msg;
     }
