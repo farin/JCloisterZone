@@ -196,7 +196,7 @@
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
                         <!-- jar cfM build/plugins/classic.jar -C src/main/resources/plugins/newart . -->
-                        <id>plugin-classic</id>
+                        <id>plugin-newart</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
