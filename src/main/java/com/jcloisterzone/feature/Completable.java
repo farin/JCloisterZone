@@ -16,4 +16,9 @@ public interface Completable extends Scoreable {
     Set<FeaturePointer> getNeighboring();
 
     int getPoints(GameState state);
+
+    /** get feature points as completed/incompleted (as is)
+     *  and unaffected by Mage or Witch
+     */
+    int getStructurePoints(GameState state, boolean completed);
 }

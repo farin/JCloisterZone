@@ -8,9 +8,15 @@ import com.jcloisterzone.game.state.GameState;
  */
 public interface CloisterLike extends Completable {
 
+    @Override
     default boolean isOpen(GameState state) {
         Position pos = getPlaces().get().getPosition();
         return state.getAdjacentAndDiagonalTiles2(pos).size() < 8;
+    }
+
+    @Override
+    default int getStructurePoints(GameState state, boolean completed) {
+        return getPoints(state);
     }
 
 }

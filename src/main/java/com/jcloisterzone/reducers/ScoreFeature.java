@@ -28,7 +28,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     // "out" variable - computed owners are store to instance
     // to be available to reducer caller
     private Set<Player> owners;
-
+    private HashMap<Player, Integer> powers;
 
     public ScoreFeature(Scoreable feature, boolean isFinal) {
         this.feature = feature;

@@ -25,22 +25,25 @@ public interface Scoreable extends Structure {
 
     PointCategory getPointCategory();
 
-    default Set<Player> getOwners(GameState state) {
-        HashMap<Player, Integer> powers = getFollowers(state)
+    default HashMap<Player, Integer> getPowers(GameState state) {
+        return getFollowers(state)
             .foldLeft(HashMap.<Player, Integer>empty(), (acc, m) -> {
                 Player player = m.getPlayer();
                 int power = m.getPower(state, this);
                 return acc.put(player, acc.get(player).getOrElse(0) + power);
             });
+    }
 
+    default Set<Player> getOwners(GameState state) {
+        HashMap<Player, Integer> powers = getPowers(state);
         Integer maxPower = powers.values().max().getOrElse(0);
         //can be 0 for Mayor on city without pennant, then return no owners
         if (maxPower == 0) {
             return HashSet.empty();
         }
-        return powers.keySet()
-            .filter(p -> powers.get(p).get() == maxPower);
+        return powers.keySet().filter(p -> powers.get(p).get() == maxPower);
     }
+
 
     default Follower getSampleFollower(GameState state, Player player) {
         return getFollowers(state).find(f -> f.getPlayer().equals(player)).getOrNull();
