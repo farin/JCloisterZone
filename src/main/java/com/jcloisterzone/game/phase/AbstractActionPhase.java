@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
@@ -15,10 +13,13 @@ import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.FlyingMachine;
 import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
@@ -38,7 +39,7 @@ import io.vavr.collection.Vector;
 
 public abstract class AbstractActionPhase extends Phase {
 
-    public AbstractActionPhase(Random random) {
+    public AbstractActionPhase(RandomGenerator random) {
         super(random);
     }
 
@@ -75,6 +76,10 @@ public abstract class AbstractActionPhase extends Phase {
 
             Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
+            //towers are handled by Tower capability (needs collect towers on all tiles)
+            places = places.filter(t -> !(t._2 instanceof Tower));
+
+
             if (!isCurrentTile) {
                 //exclude completed
                 places = places.filter(t -> !(t._2 instanceof Completable) || ((Completable)t._2).isOpen(state));
@@ -89,7 +94,7 @@ public abstract class AbstractActionPhase extends Phase {
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = placesFp
-                .filter(t -> !t._2.isOccupied(state))
+                .filter(t -> meeple instanceof Special || !t._2.isOccupied(state))
                 .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .flatMap(t -> {
                     if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {

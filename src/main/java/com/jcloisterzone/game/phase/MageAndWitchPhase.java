@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.RemovMageOrWithAction;
@@ -14,6 +12,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.neutral.Witch;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -29,7 +28,7 @@ import io.vavr.collection.Vector;
 @RequiredCapability(MageAndWitchCapability.class)
 public class MageAndWitchPhase extends Phase {
 
-    public MageAndWitchPhase(Random random) {
+    public MageAndWitchPhase(RandomGenerator random) {
         super(random);
     }
 
@@ -39,8 +38,9 @@ public class MageAndWitchPhase extends Phase {
         NeutralFiguresState ns = state.getNeutralFigures();
         Completable mageFeature = (Completable) ns.getMage().getFeature(state);
         Completable witchFeature = (Completable) ns.getWitch().getFeature(state);
+        boolean mageAndWithOnSameFeature = mageFeature != null && mageFeature == witchFeature;
 
-        if (tile.getTrigger() != TileTrigger.MAGE && mageFeature != witchFeature) {
+        if (tile.getTrigger() != TileTrigger.MAGE && !mageAndWithOnSameFeature) {
             return next(state);
         }
 

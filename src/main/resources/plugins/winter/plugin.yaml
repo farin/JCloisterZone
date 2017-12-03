@@ -1,4 +1,10 @@
 version: 4.0
 title: Winter
-description: Winter artwork for basic and winter extra tiles
-author:
+title_i18n:
+  ca: L'hivern
+  cs: Zima
+description: Winter artwork for basic set and several extra tiles. (illustrated by Anne Pätzke)
+description_i18n:
+  ca: Llosetes nevades del conjunt bàsic i alguna lloseta extra (il·lustrades per l'Anne Pätzke).
+  cs: Zimní grafika pro základní sadu a několik dalších kartiček. (illustrátorka Anne Pätzke)
+authors:

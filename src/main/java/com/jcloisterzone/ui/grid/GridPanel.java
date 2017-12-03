@@ -44,6 +44,7 @@ import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.actionpanel.ActionInteractionPanel;
 import com.jcloisterzone.ui.grid.layer.AbstractAreaLayer;
+import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.view.GameView;
 
@@ -67,6 +68,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
     private final ControlPanel controlPanel;
     private final ChatPanel chatPanel;
     private ActionInteractionPanel<?> actionInteractionPanel;
+    private final GameEventsPanel eventsPanel;
+    private boolean isEventsPanelVisible;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -117,6 +120,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             chatPanel.initHidingMode();
             add(chatPanel, "pos 0 0 250 100%");
         }
+
+        eventsPanel = new GameEventsPanel(gc);
+        //client.is
+        add(eventsPanel, "pos 0 0 (100%-242) 36");
+        setComponentZOrder(eventsPanel, 2);
     }
 
     public double getMeepleScaleFactor() {
@@ -140,6 +148,15 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         tileHeight = (int)(ratio * baseWidth);
     }
 
+    public void toggleGameEvents(boolean visible) {
+        isEventsPanelVisible = visible;
+        eventsPanel.setVisible(visible);
+        if (visible) {
+            showLayer(EventsOverlayLayer.class);
+        } else {
+            hideLayer(EventsOverlayLayer.class);
+        }
+    }
 
     @Override
     public void forward() {
@@ -262,6 +279,10 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         return chatPanel;
     }
 
+    public GameEventsPanel getEventsPanel() {
+        return eventsPanel;
+    }
+
 //    public String getErrorMessage() {
 //        return errorMessage;
 //    }
@@ -312,6 +333,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             top = rect.y;
             bottom = rect.y + rect.height;
         }
+
+        eventsPanel.handleGameChanged(ev);
 
         repaint();
     }
@@ -453,6 +476,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         errorMsg = new ErrorMessagePanel(errorMessage);
         errorMsg.setOpaque(true);
         add(errorMsg, "pos 0 0 (100%-242) 30");
+        setComponentZOrder(errorMsg, 1);
         revalidate();
         repaint();
     }
@@ -632,7 +656,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             add(label);
             add(icon);
         }
-
     }
 
 }

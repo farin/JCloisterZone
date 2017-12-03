@@ -87,6 +87,7 @@ public class City extends CompletableFeature<City> {
         return tradeGoods.merge(city.tradeGoods, (a, b) -> a + b);
     }
 
+    @Override
     public City setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
         return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
@@ -140,9 +141,7 @@ public class City extends CompletableFeature<City> {
         return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
-    @Override
-    public int getPoints(GameState state) {
-        boolean completed = isCompleted(state);
+    private int getBasePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
 
         int pointsPerUnit = 2;
@@ -156,7 +155,18 @@ public class City extends CompletableFeature<City> {
                 pointsPerUnit--;
             }
         }
-        return getMageAndWitchPoints(state, pointsPerUnit * (tileCount + pennants)) + getLittleBuildingPoints(state);
+        return pointsPerUnit * (tileCount + pennants);
+    }
+
+    @Override
+    public int getStructurePoints(GameState state, boolean completed) {
+        return getBasePoints(state, completed) + getLittleBuildingPoints(state);
+    }
+
+    @Override
+    public int getPoints(GameState state) {
+        int basePoints = getBasePoints(state, isCompleted(state));
+        return getMageAndWitchPoints(state, basePoints) + getLittleBuildingPoints(state);
     }
 
     @Override

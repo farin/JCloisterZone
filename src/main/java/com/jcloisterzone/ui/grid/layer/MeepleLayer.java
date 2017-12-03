@@ -70,7 +70,7 @@ public class MeepleLayer extends AbstractGridLayer {
         HashMap<FeaturePointer, LinkedList<Figure<?>>> onFeature = new HashMap<>();
         LinkedList<Tuple2<Position, NeutralFigure<?>>> onTile = new LinkedList<>();
 
-        for (Tuple2<Meeple, FeaturePointer> t : gc.getGame().getState().getDeployedMeeples()) {
+        for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
             LinkedList<Figure<?>> list = onFeature.get(t._2);
             if (list == null) {
                 list = new LinkedList<>();
@@ -79,7 +79,7 @@ public class MeepleLayer extends AbstractGridLayer {
             list.add(t._1);
         }
 
-        for (Tuple2<NeutralFigure<?>, BoardPointer> t : gc.getGame().getState().getNeutralFigures().getDeployedNeutralFigures()) {
+        for (Tuple2<NeutralFigure<?>, BoardPointer> t : state.getNeutralFigures().getDeployedNeutralFigures()) {
             if (t._2 instanceof Position) {
                 onTile.add(new Tuple2<>((Position) t._2, t._1));
             } else {

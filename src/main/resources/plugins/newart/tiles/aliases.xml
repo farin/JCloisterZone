@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aliases xmlns="http://www.jcloisterzone.com/aliases">
+    <alias for="R2.I.s" useGeometry="R1.I.s" />
+    <alias for="R2.II" useGeometry="R1.II" />
+    <alias for="R2.RIrI" useGeometry="R1.RIrI" />
+    <alias for="R2.CcII+" useGeometry="R1.CcII" />
+    <alias for="R2.CIRI" useGeometry="R1.CIRI" />
+    <alias for="R2.RrII" useGeometry="R1.RrII" />
+
+    <alias for="GQ.LRRRR" useGeometry="AM.LRRRR" />
+    <alias for="GQ.CICI" useGeometry="R1.CICI" />
+    <alias for="GQ.Cc!" useGeometry="DG.Cc!.p" />
+    <alias for="GQ.CcRR" useGeometry="TB.CcRR.w" />
+    <alias for="GQ.CRcR.1" useGeometry="IC.CRcR+" />
+
+    <alias for="KR.CCcc" useGeometry="AM.CCcc+" />
+    <alias for="KR.RC" useGeometry="AM.RC" />
+
+    <alias for="PL.Cc+" useGeometry="BA.Cc+" />
+    <alias for="PL.CC" useGeometry="BA.CC.2" />
+    <alias for="PL.CCRR" useGeometry="AM.CCRR" />
+    <alias for="PL.Rr" useGeometry="BA.Rr" />
+    <alias for="PL.RRC" useGeometry="TB.RRC" />
+    <alias for="PL.RRRR" useGeometry="BA.RRRR" />
+
+    <alias for="CC.RrC" useGeometry="BA.RrC" />
+
+    <alias for="WI.R" useGeometry="AM.R" />
+    <alias for="WI.CRr" useGeometry="BA.CRr" />
+    <alias for="WI.RC" useGeometry="AM.RC" />
+    <alias for="WI.LR" useGeometry="BA.LR" />
+    <alias for="WI.RRR" useGeometry="BA.RRR" />
+    <alias for="WI.RrC" useGeometry="BA.RrC" />
+    <alias for="WI.RCc.i" useGeometry="IC.RCc.i" />
+    <alias for="WI.CFR" useGeometry="IC.CFR" />
+    <alias for="WI.LRFR" useGeometry="IC.LRFR" />
+    <alias for="WI.RrRr" useGeometry="IC.RrRr" />
+    <alias for="WI.CcR" useGeometry="IC.CcR" />
+    <alias for="WI.CR" useGeometry="TB.CR" />
+
+    <alias for="FE.CR" useGeometry="TB.CR" />
+    <alias for="FE.CRCR" useGeometry="IC.CRCR" />
+    <alias for="FE.RC" useGeometry="AM.RC" />
+    <alias for="FE.RrC" useGeometry="BA.RrC" />
+    <alias for="FE.CCc" useGeometry="TB.CCc.c" />
+    <alias for="FE.CFR" useGeometry="IC.CFR" />
+    <alias for="FE.CcCc" useGeometry="TB.CcCc.w" />
+    <alias for="FE.CRr" useGeometry="BA.CRr" />
+    <alias for="FE.RrRr" useGeometry="IC.RrRr" />
+
+    <alias for="WR.Cc.1" useGeometry="BA.Cc.1" />
+    <alias for="WR.CC.2" useGeometry="BA.CC.2" />
+
+    <alias for="BE.RrC" useGeometry="BA.RrC" />
+    <alias for="BE.CRr" useGeometry="BA.CRr" />
+    <alias for="BE.RCc" useGeometry="TB.RCc.g" />
+    <alias for="BE.CcR" useGeometry="IC.CcR" />
+
+    <alias for="MW.CccR.1" useGeometry="BA.CccR" />
+    <alias for="MW.CcRr.1" useGeometry="DG.CcRr.g" />
+    <alias for="MW.CRRr.2" useGeometry="GQ.CRRr" />
+    <alias for="MW.CCCR.3" useGeometry="BB.CCCR" />
+    <alias for="MW.CRRR.3" useGeometry="BA.CRRR" />
+    <alias for="MW.CFC" useGeometry="BA.CFC.2" />
+    <alias for="MW.CRcR" useGeometry="IC.CRcR+" />
+
+    <alias for="GO.RRrr.X" useGeometry="TB.RRrr" />
+    <alias for="GO.CcRr" useGeometry="BA.CcRr" />
+    <alias for="GO.RrRr" useGeometry="IC.RrRr" />
+
+</aliases>

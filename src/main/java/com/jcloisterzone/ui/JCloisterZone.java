@@ -124,7 +124,7 @@ public class JCloisterZone  {
                     }
 
                     try {
-                        Plugin plugin = Plugin.readPlugin(relPath, fullPath);
+                        Plugin plugin = Plugin.readPlugin(config, relPath, fullPath);
                         if (isPluginEnabled(config, relPath)) {
                             plugin.load();
                             plugin.setEnabled(true);

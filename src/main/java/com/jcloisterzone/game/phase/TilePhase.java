@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
@@ -12,9 +10,10 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.BridgePlaced;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
+import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -38,7 +37,7 @@ import io.vavr.collection.Vector;
 
 public class TilePhase extends Phase {
 
-    public TilePhase(Random random) {
+    public TilePhase(RandomGenerator random) {
         super(random);
     }
 
@@ -155,7 +154,7 @@ public class TilePhase extends Phase {
         Rotation rot = msg.getRotation();
         Player player = state.getActivePlayer();
 
-        assert tile.getId().equals(msg.getTileId());
+        assert tile.getId().equals(msg.getTileId()) : String.format("%s received, but %s is drawn", msg.getTileId(), tile.getId());
 
         TilePlacementAction action = (TilePlacementAction) state.getPlayerActions().getActions().get();
 
@@ -186,7 +185,7 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.appendEvent(
-                new BridgePlaced(PlayEventMeta.createWithPlayer(player), mandatoryBridge)
+                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), Token.BRIDGE, mandatoryBridge)
             );
         }
 

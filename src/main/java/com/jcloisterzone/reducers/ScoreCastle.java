@@ -9,8 +9,8 @@ public class ScoreCastle extends ScoreFeature implements ScoreFeatureReducer {
 
     private final int points;
 
-    public ScoreCastle(Castle feature, int points) {
-        super(feature);
+    public ScoreCastle(Castle feature, int points, boolean isFinal) {
+        super(feature, isFinal);
         this.points = points;
     }
 

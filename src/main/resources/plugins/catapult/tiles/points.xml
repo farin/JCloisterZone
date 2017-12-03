@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<points xmlns="http://www.jcloisterzone.com/points" xmlns:svg="http://www.w3.org/2000/svg">
+    <point feature="CLOISTER" cx="340" cy="400">
+        <apply>CA.L CLOISTER</apply>
+    </point>
+    <point feature="ROAD" cx="430" cy="140" baseLocation="N"> <!-- short / under _N regular right -->
+        <apply>CA.RRr.2 W</apply>
+    </point>
+    <point feature="ROAD" cx="500" cy="140" baseLocation="N"> <!-- short / center -->
+        <apply>CA.RrR.1 W</apply>
+    </point>
+    <point feature="ROAD" cx="720" cy="720" baseLocation="SE"> <!-- oblique -->
+        <apply>CA.RrR.1 SE</apply>
+    </point>
+    <point feature="CITY" cx="450" cy="500" baseLocation="W">
+        <apply>CA.C! E</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="820">
+        <apply>CA.C! WL.WR.SL.SR</apply>
+    </point>
+    <point feature="FARM" cx="200" cy="200">
+        <apply>CA.F NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>CA.RRr.2 ER.SL.SR.WL.WR.NL</apply>
+    </point>   
+    <point feature="FARM" cx="800" cy="200">
+        <apply>CA.L WR.NL.NR.EL</apply>
+        <apply>CA.RrR.1 SR.WL.WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="840" cy="840" baseLocation="SL.ER"> <!-- oblique -->
+        <apply>CA.RrR.1 SL.ER</apply>        
+    </point>    
+</points>

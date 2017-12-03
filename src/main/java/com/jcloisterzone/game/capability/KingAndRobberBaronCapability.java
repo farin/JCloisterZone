@@ -2,6 +2,8 @@ package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
@@ -25,29 +27,37 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         Set<Scoreable> completedFeatures = completed.keySet();
         int maxCitySize = getMaxSize(state, City.class, completedFeatures);
         int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);
-        boolean biggestCityCompleted = false;
-        boolean longestRoadCompleted = false;
+        City biggestCityCompleted = null;
+        Road longestRoadCompleted = null;
 
-        for (Scoreable c : completed.keySet()) {
-            if (!biggestCityCompleted && c instanceof City) {
-                biggestCityCompleted = c.getTilePositions().size() > maxCitySize;
+        for (Scoreable feature : completed.keySet()) {
+            if (feature instanceof City && feature.getTilePositions().size() > maxCitySize) {
+                biggestCityCompleted = (City) feature;
             }
-            if (!longestRoadCompleted && c instanceof Road) {
-                longestRoadCompleted = c.getTilePositions().size() > maxRoadSize;
+            if (feature instanceof Road && feature.getTilePositions().size() > maxRoadSize) {
+                longestRoadCompleted = (Road) feature;
             }
         }
 
         Player turnPlayer = state.getTurnPlayer();
         PlayersState ps = state.getPlayers();
-        if (biggestCityCompleted) {
+        if (biggestCityCompleted != null) {
             for (Player p : ps.getPlayers()) {
                 ps = ps.setTokenCount(p.getIndex(), Token.KING, p.equals(turnPlayer) ? 1 : 0);
             }
+            TokenReceivedEvent ev = new TokenReceivedEvent(
+                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, Token.KING, 1);
+            ev.setSourceFeature(biggestCityCompleted);
+            state = state.appendEvent(ev);
         }
-        if (longestRoadCompleted) {
+        if (longestRoadCompleted != null) {
             for (Player p : ps.getPlayers()) {
                 ps = ps.setTokenCount(p.getIndex(), Token.ROBBER, p.equals(turnPlayer) ? 1 : 0);
             }
+            TokenReceivedEvent ev = new TokenReceivedEvent(
+                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, Token.ROBBER, 1);
+            ev.setSourceFeature(longestRoadCompleted);
+            state = state.appendEvent(ev);
         }
         return state.setPlayers(ps);
     }

@@ -1,9 +1,15 @@
 package com.jcloisterzone.game.capability;
 
+import com.jcloisterzone.Expansion;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
+
+import io.vavr.collection.HashMap;
 
 
 /**
@@ -11,43 +17,30 @@ import com.jcloisterzone.game.state.GameState;
  */
 public class AbbeyCapability extends Capability<Integer> {
 
-    //private final Set<Player> unusedAbbey = new HashSet<>();
-    //private Player abbeyRoundLastPlayer; //when last tile is drawn all players can still place abbey
+    /** The constant ABBEY_TILE_ID. */
+    public static final String ABBEY_TILE_ID = "AM.A";
+    /** Abbey tile, not placed yet. */
+    public static Tile ABBEY_TILE;
 
-//    @Override
-//    public void initPlayer(Player player) {
-//        unusedAbbey.add(player);
-//    }
+    static {
+        HashMap<Location, Feature> features = io.vavr.collection.HashMap.of(
+            Location.CLOISTER, new Cloister()
+        );
+        ABBEY_TILE = new Tile(Expansion.ABBEY_AND_MAYOR, ABBEY_TILE_ID, features);
+    }
+
 
     @Override
     public GameState onStartGame(GameState state) {
         return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.ABBEY_TILE, 1));
     }
 
-    @Override
-    public String getTileGroup(Tile tile) {
-        return tile.getId().equals(Tile.ABBEY_TILE_ID) ? "inactive": null;
+    /**
+     * Checks if {@code tile} is an abbey.
+     *
+     * @return {@code true} if {@code tile} is an abbey, {@code false} otherwise
+     */
+    public static boolean isAbbey(Tile tile) {
+        return tile.getId().equals(ABBEY_TILE_ID);
     }
-
-//    public boolean hasUnusedAbbey(Player player) {
-//        return unusedAbbey.contains(player);
-//    }
-//
-//    public void useAbbey(Player player) {
-//        if (!unusedAbbey.remove(player)) {
-//            throw new IllegalArgumentException("Player alredy used his abbey");
-//        }
-//    }
-
-//    public void undoUseAbbey(Player player) {
-//        unusedAbbey.add(player);
-//    }
-
-//    public Player getAbbeyRoundLastPlayer() {
-//        return abbeyRoundLastPlayer;
-//    }
-//
-//    public void setAbbeyRoundLastPlayer(Player abbeyRoundLastPlayer) {
-//        this.abbeyRoundLastPlayer = abbeyRoundLastPlayer;
-//    }
 }

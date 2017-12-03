@@ -20,13 +20,15 @@ import io.vavr.collection.Stream;
 public class ScoreFarmBarn implements ScoreFeatureReducer {
 
     private final Farm farm;
+    private final boolean isFinal;
 
     // "out" variable - computed owners are store to instance
     // to be available to reducer caller
     private Map<Player, Integer> playerPoints = HashMap.empty();
 
-    public ScoreFarmBarn(Farm farm) {
+    public ScoreFarmBarn(Farm farm, boolean isFinal) {
         this.farm = farm;
+        this.isFinal = isFinal;
     }
 
     @Override
@@ -47,13 +49,7 @@ public class ScoreFarmBarn implements ScoreFeatureReducer {
             state = (new AddPoints(barn.getPlayer(), points, pointCategory)).apply(state);
             playerPoints = playerPoints.put(barn.getPlayer(), points);
 
-            ScoreEvent scoreEvent = new ScoreEvent(
-                points,
-                pointCategory,
-                true,
-                t._2,
-                barn
-            );
+            ScoreEvent scoreEvent = new ScoreEvent(points, pointCategory, isFinal, t._2, barn);
             state = state.appendEvent(scoreEvent);
         }
 
@@ -74,5 +70,4 @@ public class ScoreFarmBarn implements ScoreFeatureReducer {
     public int getFeaturePoints(Player player) {
         return playerPoints.getOrElse(player, 0);
     }
-
 }

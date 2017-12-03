@@ -3,10 +3,10 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("COMMIT")
-public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSeedMeesage {
+public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMeesage {
 
     private String gameId;
-    private long seed;
+    private long salt;
 
 
     public CommitMessage() {
@@ -22,11 +22,13 @@ public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSe
         this.gameId = gameId;
     }
 
-    public long getSeed() {
-        return seed;
+    @Override
+    public long getSalt() {
+        return salt;
     }
 
-    public void setSeed(long seed) {
-        this.seed = seed;
+    @Override
+    public void setSalt(long salt) {
+        this.salt = salt;
     }
 }

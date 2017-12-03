@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.FinalScoring;
 import com.jcloisterzone.wsio.message.GameOverMessage;
@@ -9,7 +8,7 @@ import com.jcloisterzone.wsio.message.GameOverMessage;
 
 public class GameOverPhase extends Phase {
 
-    public GameOverPhase(Random random) {
+    public GameOverPhase(RandomGenerator random) {
         super(random);
     }
 

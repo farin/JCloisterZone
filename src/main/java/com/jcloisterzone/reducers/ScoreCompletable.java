@@ -2,6 +2,8 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.figure.neutral.Mage;
+import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 
@@ -10,8 +12,8 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
     // points is store to instance and can be accesed after reduce
     private int points;
 
-    public ScoreCompletable(Completable feature) {
-        super(feature);
+    public ScoreCompletable(Completable feature, boolean isFinal) {
+        super(feature, isFinal);
     }
 
     @Override
@@ -21,7 +23,7 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
 
     @Override
     public int getFeaturePoints() {
-            return points;
+        return points;
     }
 
     @Override
@@ -32,6 +34,20 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
     @Override
     public GameState apply(GameState state) {
         points = getFeature().getPoints(state);
-        return super.apply(state);
+        state = super.apply(state);
+
+        if (!isFinal) {
+            Mage mage = state.getNeutralFigures().getMage();
+            if (mage != null && mage.getFeature(state) == getFeature()) {
+                state = (new ReturnNeutralFigure(mage)).apply(state);
+            }
+
+            Witch witch = state.getNeutralFigures().getWitch();
+            if (witch != null && witch.getFeature(state) == getFeature()) {
+                state = (new ReturnNeutralFigure(witch)).apply(state);
+            }
+        }
+
+        return state;
     }
 }

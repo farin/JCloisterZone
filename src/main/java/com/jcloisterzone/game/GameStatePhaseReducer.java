@@ -2,7 +2,6 @@ package com.jcloisterzone.game;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import com.jcloisterzone.game.phase.CocCountPhase;
 import com.jcloisterzone.game.phase.CocFinalScoringPhase;
 import com.jcloisterzone.game.phase.CocFollowerPhase;
 import com.jcloisterzone.game.phase.CocScoringPhase;
+import com.jcloisterzone.game.phase.CommitAbbeyPassPhase;
 import com.jcloisterzone.game.phase.CommitActionPhase;
 import com.jcloisterzone.game.phase.CornCirclePhase;
 import com.jcloisterzone.game.phase.DragonMovePhase;
@@ -51,11 +51,10 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
     private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
     private final Phase firstPhase;
-
-    private final Random random;
+    private final RandomGenerator random;
 
     public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
-        random = new Random(initialSeed);
+        random = new RandomGenerator(initialSeed);
 
         Phase over, last, next = null;
         //if there isn't assignment - phase is out of standard flow
@@ -92,15 +91,13 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(setup, next, MageAndWitchPhase.class);
         next = addPhase(setup, next, GoldPiecePhase.class);
         next = addPhase(setup, next, TilePhase.class);
+        // if abbey is passed, commit commit action phase follows to change salt by following Commit message
+        next = addPhase(setup, next, CommitAbbeyPassPhase.class);
         next = addPhase(setup, next, AbbeyPhase.class);
         next = addPhase(setup, next, FairyPhase.class);
         last.setDefaultNext(next); //after last phase, the first is default
 
         firstPhase = next;
-    }
-
-    public void updateRandomSeed(long seed) {
-        random.setSeed(seed);
     }
 
     private Phase addPhase(GameSetup setup, Phase next, Class<? extends Phase> phaseClass) {
@@ -112,7 +109,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         Phase phase;
         try {
-            phase = phaseClass.getConstructor(Random.class).newInstance(random);
+            phase = phaseClass.getConstructor(RandomGenerator.class).newInstance(random);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
             throw new RuntimeException(e);
@@ -168,5 +165,9 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
     public Phase getPhase(Class<? extends Phase> cls) {
         return phases.get(cls);
+    }
+
+    public RandomGenerator getRandom() {
+        return random;
     }
 }

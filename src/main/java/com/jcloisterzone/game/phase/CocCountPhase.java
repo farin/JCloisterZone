@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.board.Location;
@@ -9,6 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -20,7 +19,7 @@ import io.vavr.collection.Set;
 @RequiredCapability(CountCapability.class)
 public class CocCountPhase extends Phase {
 
-    public CocCountPhase(Random random) {
+    public CocCountPhase(RandomGenerator random) {
         super(random);
     }
 

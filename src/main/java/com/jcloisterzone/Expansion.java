@@ -55,6 +55,7 @@ public class Expansion {
     // Basic sets
     public static Expansion BASIC = new Expansion("BASIC", "BA", _tr("Basic game"),
             new Class[] { StandardGameCapability.class }, ExpansionType.BASIC);
+    @NotImplemented public static Expansion BASIC_2_0 = new Expansion("BASIC_2_0", "B2", _tr("Basic game (2.0)"), ExpansionType.BASIC);
     @NotImplemented public static Expansion WHEEL_OF_FORTUNE = new Expansion("WHEEL_OF_FORTUNE", "WF", _tr("Wheel of Fortune"), ExpansionType.BASIC);
 
     // Winter branch
@@ -72,7 +73,7 @@ public class Expansion {
             new Class[] { TowerCapability.class }, ExpansionType.MAJOR);
     public static Expansion ABBEY_AND_MAYOR = new Expansion("ABBEY_AND_MAYOR", "AM", _tr("Abbey & Mayor"),
             new Class[] { AbbeyCapability.class, WagonCapability.class, MayorCapability.class, BarnCapability.class }, ExpansionType.MAJOR);
-    public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
+    @NotImplemented public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
     public static Expansion BRIDGES_CASTLES_AND_BAZAARS = new Expansion("BRIDGES_CASTLES_AND_BAZAARS", "BB", _tr("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }, ExpansionType.MAJOR);
     @NotImplemented public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"), ExpansionType.MAJOR);
@@ -95,7 +96,7 @@ public class Expansion {
     public static Expansion LITTLE_BUILDINGS = new Expansion("LITTLE_BUILDINGS", "LB", _tr("Little Buildings"), new Class[] { LittleBuildingsCapability.class }, ExpansionType.MINOR);
     public static Expansion WIND_ROSE = new Expansion("WIND_ROSE", "WR", _tr("The Wind Rose"), new Class[] { WindRoseCapability.class }, ExpansionType.MINOR);
     public static Expansion GERMAN_MONASTERIES = new Expansion("GERMAN_MONASTERIES", "GM", _tr("The German Monasteries"), new Class[] { GermanMonasteriesCapability.class }, ExpansionType.MINOR);
-    @NotImplemented public static Expansion CASTLES = new Expansion("CASTLES", "CA", _tr("Castles in Germany"), ExpansionType.MINOR);
+    @NotImplemented public static Expansion CASTLES = new Expansion("CASTLES", "CS", _tr("Castles in Germany"), ExpansionType.MINOR);
     @NotImplemented public static Expansion HALFINGS_I = new Expansion("HALFINGS_I", "H1", _tr("Halfings") + " I", ExpansionType.MINOR);
     @NotImplemented public static Expansion HALFINGS_II = new Expansion("HALFINGS_II", "H2", _tr("Halfings") + " ÏI", ExpansionType.MINOR);
     @NotImplemented public static Expansion WATCHTOWER = new Expansion("WATCHTOWER", "WT", _tr("The Watchtower"), ExpansionType.MINOR);

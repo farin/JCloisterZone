@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.BazaarBidAction;
@@ -10,6 +8,7 @@ import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
@@ -29,7 +28,7 @@ import io.vavr.collection.Queue;
 @RequiredCapability(BazaarCapability.class)
 public class BazaarPhase extends Phase {
 
-    public BazaarPhase(Random random) {
+    public BazaarPhase(RandomGenerator random) {
         super(random);
     }
 

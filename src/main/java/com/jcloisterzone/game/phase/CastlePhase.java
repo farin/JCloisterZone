@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Position;
@@ -12,6 +10,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -28,7 +27,7 @@ import io.vavr.collection.Set;
 @RequiredCapability(CastleCapability.class)
 public class CastlePhase extends Phase {
 
-    public CastlePhase(Random random) {
+    public CastlePhase(RandomGenerator random) {
         super(random);
     }
 

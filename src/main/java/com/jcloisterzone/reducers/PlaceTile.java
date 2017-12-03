@@ -14,6 +14,7 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.MultiTileFeature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -44,7 +45,7 @@ public class PlaceTile implements Reducer {
     public GameState apply(GameState state) {
         LinkedHashMap<Position, PlacedTile> placedTiles = state.getPlacedTiles();
         assert !placedTiles.containsKey(pos);
-        boolean abbeyPlacement = Tile.ABBEY_TILE_ID.equals(tile.getId());
+        boolean abbeyPlacement = AbbeyCapability.isAbbey(tile);
 
         PlacedTile placedTile = new PlacedTile(tile, pos, rot);
         state = state.setPlacedTiles(

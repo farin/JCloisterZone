@@ -47,12 +47,12 @@ public class FinalScoring implements Reducer {
     @Override
     public GameState apply(GameState state) {
         for (Completable completable : getOccupiedScoreables(state, Completable.class)) {
-            state = (new ScoreCompletable(completable)).apply(state);
+            state = (new ScoreCompletable(completable, true)).apply(state);
         }
 
         for (Castle castle : getOccupiedScoreables(state, Castle.class)) {
             // no points for castles at the end
-            state = (new ScoreCastle(castle, 0)).apply(state);
+            state = (new ScoreCastle(castle, 0, true)).apply(state);
         }
 
         LinkedHashMap<Meeple, FeaturePointer> abbots = state.getDeployedMeeples()
@@ -74,9 +74,9 @@ public class FinalScoring implements Reducer {
             boolean hasBarn = farm.getSpecialMeeples(state)
                 .find(Predicates.instanceOf(Barn.class)).isDefined();
             if (hasBarn) {
-                state = (new ScoreFarmBarn(farm)).apply(state);
+                state = (new ScoreFarmBarn(farm, true)).apply(state);
             } else {
-                state = (new ScoreFarm(farm)).apply(state);
+                state = (new ScoreFarm(farm, true)).apply(state);
             }
         }
 

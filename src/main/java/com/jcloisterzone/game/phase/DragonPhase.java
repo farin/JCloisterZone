@@ -1,17 +1,16 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.GameState;
 
 @RequiredCapability(DragonCapability.class)
 public class DragonPhase extends Phase {
 
-    public DragonPhase(Random random) {
+    public DragonPhase(RandomGenerator random) {
         super(random);
     }
 

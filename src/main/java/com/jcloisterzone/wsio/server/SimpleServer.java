@@ -70,7 +70,7 @@ import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSeedMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMeesage;
 
 public class SimpleServer extends WebSocketServer  {
 
@@ -267,8 +267,8 @@ public class SimpleServer extends WebSocketServer  {
         }
     }
 
-    private long getRandomSeed() {
-        return random.nextLong();
+    private long createSalt() {
+        return System.currentTimeMillis();
     }
 
     @WsSubscribe
@@ -444,21 +444,8 @@ public class SimpleServer extends WebSocketServer  {
             }
             clocks = new long[playerCount];
         } else {
+            // for saved games, CLOCK message is emitted by active client after load
             clocks = savedGame.getClocks();
-//            List<Player> players = snapshot.getPlayers();
-//            clocks = new long[players.size()];
-//            for (int i = 0; i < clocks.length; i++) {
-//                //IMMUTABLE TODO
-//                //PlayerClock clock = players.get(i).getClock();
-//                //clocks[i] = clock.resetRunning();
-////                if (clock.isRunning()) {
-////                    runningClock = i;
-////                }
-//                // ---- just dev fix
-//                clocks[i] = 0;
-//                runningClock = -1;
-//            }
-            runningSince = System.currentTimeMillis();
         }
         gameStarted = true;
         broadcast(newGameMessage(true));
@@ -483,8 +470,8 @@ public class SimpleServer extends WebSocketServer  {
     private void handleInGameMessage(WsInGameMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        if (msg instanceof WsSeedMeesage) {
-            ((WsSeedMeesage) msg).setSeed(getRandomSeed());
+        if (msg instanceof WsSaltMeesage) {
+            ((WsSaltMeesage) msg).setSalt(createSalt());
         }
         broadcast(msg);
     }

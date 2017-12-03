@@ -22,11 +22,6 @@ public class Tile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * The constant ABBEY_TILE_ID.
-     */
-    public static final String ABBEY_TILE_ID = "AM.A";
-
     private final Expansion origin;
     private final String id;
     private final EdgePattern edgePattern;
@@ -129,16 +124,6 @@ public class Tile implements Serializable {
         assert bridgeLoc == Location.NS || bridgeLoc == Location.WE;
         Bridge bridge = new Bridge(bridgeLoc);
         return setInitialFeatures(initialFeatures.put(bridgeLoc, bridge));
-    }
-
-    /**
-     * Checks if {@code this} is an abbey tile.
-     * {@see AbbeyCapability}
-     *
-     * @return {@code true} if {@code this} is an abbey tile., {@code false} otherwise
-     */
-    public boolean isAbbeyTile() {
-        return id.equals(ABBEY_TILE_ID);
     }
 
     @Override

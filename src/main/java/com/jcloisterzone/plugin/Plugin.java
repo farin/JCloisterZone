@@ -29,12 +29,14 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ExpansionType;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
@@ -64,6 +66,7 @@ public class Plugin implements ResourceManager {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final Config config;
     private final Path path;
     private final Path relPath;
     private final ImageLoader imageLoader;
@@ -89,13 +92,14 @@ public class Plugin implements ResourceManager {
     private Vector<Expansion> expansionsToRegister = Vector.empty();
     private java.util.Set<String> supportedExpansions = null; // expansion codes
 
-    public static Plugin readPlugin(Path relPath, Path path) throws NotAPluginException, PluginLoadException {
-        Plugin plugin = new Plugin(relPath, path);
+    public static Plugin readPlugin(Config config, Path relPath, Path path) throws NotAPluginException, PluginLoadException {
+        Plugin plugin = new Plugin(config, relPath, path);
         plugin.loadMetadata();
         return plugin;
     }
 
-    public Plugin(Path relPath, Path path) throws PluginLoadException {
+    public Plugin(Config config, Path relPath, Path path) throws PluginLoadException {
+        this.config = config;
         this.relPath = relPath;
         this.path = path;
         URL url = getFixedURL();
@@ -124,7 +128,7 @@ public class Plugin implements ResourceManager {
         }
         try {
             meta = (PluginMeta) yaml.load(pluginYaml.openStream());
-        } catch (IOException e) {
+        } catch (IOException | YAMLException e) {
             throw new PluginLoadException(e);
         }
 
@@ -159,7 +163,8 @@ public class Plugin implements ResourceManager {
                 }
                 @SuppressWarnings("unchecked")
                 Class<? extends Capability<?>>[] _capabilityClasses = capabilityClasses.toArray(new Class[capabilityClasses.size()]);
-                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(), expMeta.getLabel(), _capabilityClasses, type);
+                Expansion exp = new Expansion(expMeta.getName(), expMeta.getCode(),
+                        getLocalizedString(expMeta.getLabel(), expMeta.getLabel_i18n()), _capabilityClasses, type);
                 expansionsToRegister = expansionsToRegister.append(exp);
             }
         }
@@ -212,6 +217,15 @@ public class Plugin implements ResourceManager {
         }
     }
 
+    public String getLocalizedString(String defaultValue, java.util.Map<String, String> trans) {
+        if (trans == null) {
+            return defaultValue;
+        }
+        String lang = config.getLocaleObject().getLanguage();
+        String value = trans.get(lang);
+        return value == null ? defaultValue : value;
+    }
+
     public Image getIcon() {
         return imageLoader.getImage("icon");
     }
@@ -226,6 +240,14 @@ public class Plugin implements ResourceManager {
 
     public PluginMeta getMetadata() {
         return meta;
+    }
+
+    public String getTitle() {
+        return getLocalizedString(meta.getTitle(), meta.getTitle_i18n());
+    }
+
+    public String getDescription() {
+        return getLocalizedString(meta.getDescription(), meta.getDescription_i18n());
     }
 
     public boolean isDefault() {

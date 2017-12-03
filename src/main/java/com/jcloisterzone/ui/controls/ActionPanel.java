@@ -20,6 +20,7 @@ import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.action.TunnelAction;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
@@ -144,7 +145,7 @@ public class ActionPanel extends MouseTrackingComponent implements ForwardBackwa
 
         if (action instanceof TilePlacementAction) {
             TilePlacementAction tpa = (TilePlacementAction) action;
-            if (tpa.getTile().isAbbeyTile() || actionsState.isPassAllowed()) {
+            if (AbbeyCapability.isAbbey(tpa.getTile()) || actionsState.isPassAllowed()) {
                 imgOffset = 4;
                 maxIconSize = 52;
             } else {

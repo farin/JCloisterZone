@@ -42,8 +42,10 @@ public class PlayerClock implements Serializable {
     }
 
     public PlayerClock setTime(long time) {
-        return new PlayerClock(time, running,
-            running ? System.currentTimeMillis() : 0) ;
+        if (!running && this.time == time) {
+            return this;
+        }
+        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
     }
 
     public boolean isRunning() {
@@ -51,6 +53,9 @@ public class PlayerClock implements Serializable {
     }
 
     public PlayerClock setRunning(boolean running) {
+        if (this.running == running) {
+            return this;
+        }
         return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
     }
 }

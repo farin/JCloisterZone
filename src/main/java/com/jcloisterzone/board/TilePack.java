@@ -1,7 +1,6 @@
 package com.jcloisterzone.board;
 
 import java.io.Serializable;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -9,9 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Immutable;
+import com.jcloisterzone.game.RandomGenerator;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 import io.vavr.control.Option;
@@ -89,6 +91,13 @@ public class TilePack implements Serializable {
 
     private Stream<Tile> getActiveTiles() {
         return getActiveGroups().flatMap(TileGroup::getTiles);
+    }
+
+    public Map<EdgePattern, Integer> getPatterns() {
+        return Stream.ofAll(groups.values()).flatMap(TileGroup::getTiles)
+            .map(Tile::getEdgePattern)
+            .map(EdgePattern::canonize)
+            .foldLeft(HashMap.empty(), (m, e) -> m.put(e, m.getOrElse(e, 0) + 1));
     }
 
     /**
@@ -179,6 +188,7 @@ public class TilePack implements Serializable {
         }
     }
 
+
     /**
      * Draws random tile  {@code index}.
      *
@@ -186,7 +196,7 @@ public class TilePack implements Serializable {
      * @return a tuple containing both the tile drawn and the tile pack it belongs to
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */
-    public Tuple2<Tile, TilePack> drawTile(Random random) {
+    public Tuple2<Tile, TilePack> drawTile(RandomGenerator random) {
         int index = random.nextInt(getInternalSize());
         for (TileGroup group : getActiveGroups()) {
             if (index < group.size()) {
@@ -257,8 +267,8 @@ public class TilePack implements Serializable {
      * @return a new instance with the group activated
      */
     public TilePack activateGroup(String groupName) {
-        TileGroup group = groups.get(groupName).get();
-        if (group.isActive()) return this;
+        TileGroup group = groups.get(groupName).getOrNull();
+        if (group == null || group.isActive()) return this;
         return setGroups(groups.put(groupName, group.setActive(true)));
     }
 
@@ -269,8 +279,8 @@ public class TilePack implements Serializable {
      * @return a new instance with the group deactivated
      */
     public TilePack deactivateGroup(String groupName) {
-        TileGroup group = groups.get(groupName).get();
-        if (!group.isActive()) return this;
+        TileGroup group = groups.get(groupName).getOrNull();
+        if (group == null || !group.isActive()) return this;
         return setGroups(groups.put(groupName, group.setActive(false)));
     }
 

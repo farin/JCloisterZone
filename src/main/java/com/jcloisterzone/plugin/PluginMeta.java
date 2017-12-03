@@ -1,11 +1,15 @@
 package com.jcloisterzone.plugin;
 
+import java.util.HashMap;
+
 public class PluginMeta {
 
     private String version;
     private String title;
+    private HashMap<String, String> title_i18n;
     private String description;
-    private String author;
+    private HashMap<String, String> description_i18n;
+    private String authors;
     private ExpansionMeta[] expansions;
 
     private TileImagesMeta tile_images;
@@ -28,11 +32,11 @@ public class PluginMeta {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getAuthor() {
-        return author;
+    public String getAuthors() {
+        return authors;
     }
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthors(String authors) {
+        this.authors = authors;
     }
     public TileImagesMeta getTile_images() {
         return tile_images;
@@ -46,6 +50,20 @@ public class PluginMeta {
     public void setExpansions(ExpansionMeta[] expansions) {
         this.expansions = expansions;
     }
+
+    public HashMap<String, String> getTitle_i18n() {
+        return title_i18n;
+    }
+    public void setTitle_i18n(HashMap<String, String> title_i18n) {
+        this.title_i18n = title_i18n;
+    }
+    public HashMap<String, String> getDescription_i18n() {
+        return description_i18n;
+    }
+    public void setDescription_i18n(HashMap<String, String> description_i18n) {
+        this.description_i18n = description_i18n;
+    }
+
 
     public static class TileImagesMeta {
         private String offset;
@@ -76,6 +94,7 @@ public class PluginMeta {
         private String code;
         private String name;
         private String label;
+        private HashMap<String, String> label_i18n;
         private String[] capabilities;
         private String type;
 
@@ -108,6 +127,12 @@ public class PluginMeta {
         }
         public void setType(String type) {
             this.type = type;
+        }
+        public HashMap<String, String> getLabel_i18n() {
+            return label_i18n;
+        }
+        public void setLabel_i18n(HashMap<String, String> label_i18n) {
+            this.label_i18n = label_i18n;
         }
     }
 

@@ -1,8 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderState;
@@ -14,7 +13,7 @@ import com.jcloisterzone.game.state.GameState;
  */
 public class CleanUpTurnPartPhase extends Phase {
 
-    public CleanUpTurnPartPhase(Random random) {
+    public CleanUpTurnPartPhase(RandomGenerator random) {
         super(random);
     }
 

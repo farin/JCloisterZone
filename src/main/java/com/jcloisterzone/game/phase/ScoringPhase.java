@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -18,7 +16,9 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.ScoreFeatureReducer;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
@@ -46,7 +46,7 @@ public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
 
-    public ScoringPhase(Random random) {
+    public ScoringPhase(RandomGenerator random) {
         super(random);
     }
 
@@ -80,8 +80,8 @@ public class ScoringPhase extends Phase {
             Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
             if (placedBarnFarm != null) {
                 //ScoreFeature is scoring just followers!
-                state = (new ScoreFarm(placedBarnFarm)).apply(state);
-                state = (new UndeployMeeples(placedBarnFarm)).apply(state);
+                state = (new ScoreFarm(placedBarnFarm, false)).apply(state);
+                state = (new UndeployMeeples(placedBarnFarm, false)).apply(state);
             }
 
             GameState _state = state;
@@ -95,12 +95,12 @@ public class ScoringPhase extends Phase {
                     .isDefined()
                 )) {
                 state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
-                state = (new UndeployMeeples(farm)).apply(state);
+                state = (new UndeployMeeples(farm, false)).apply(state);
             }
         }
 
         state = scoreCompletedOnTile(state, lastPlaced);
-        if (lastPlaced.getTile().isAbbeyTile()) {
+        if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
             state = scoreCompletedNearAbbey(state, pos);
         }
 
@@ -183,9 +183,9 @@ public class ScoringPhase extends Phase {
         }
 
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
-            ScoreCompletable scoreReducer = new ScoreCompletable(completable);
+            ScoreCompletable scoreReducer = new ScoreCompletable(completable, false);
             state = scoreReducer.apply(state);
-            state = (new UndeployMeeples(completable)).apply(state);
+            state = (new UndeployMeeples(completable, false)).apply(state);
 
             completedMutable.put(completable, scoreReducer);
         }

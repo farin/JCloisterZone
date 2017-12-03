@@ -111,6 +111,13 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemActionListener(MenuItem.ZOOM_IN, e -> zoom(2.0));
         menu.setItemActionListener(MenuItem.ZOOM_OUT, e -> zoom(-2.0));
         menu.setItemActionListener(MenuItem.ROTATE_BOARD, e -> rotateBoard());
+        menu.setItemActionListener(MenuItem.GAME_EVENTS, e -> {
+            JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
+            mainPanel.getGridPanel().toggleGameEvents(ch.isSelected());
+        });
+        if (menu.isSelected(MenuItem.LAST_PLACEMENTS)) {
+            mainPanel.getGridPanel().toggleGameEvents(true);
+        }
         menu.setItemActionListener(MenuItem.LAST_PLACEMENTS, e -> {
             JCheckBoxMenuItem ch = (JCheckBoxMenuItem) e.getSource();
             mainPanel.toggleRecentHistory(ch.isSelected());
@@ -139,6 +146,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         menu.setItemActionListener(MenuItem.LEAVE_GAME, e -> gc.leaveGame());
 
         menu.setItemEnabled(MenuItem.FARM_HINTS, true);
+        menu.setItemEnabled(MenuItem.GAME_EVENTS, true);
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, true);
         menu.setItemEnabled(MenuItem.PROJECTED_POINTS, true);
 
@@ -174,6 +182,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemEnabled(MenuItem.FARM_HINTS, false);
+        menu.setItemEnabled(MenuItem.GAME_EVENTS, false);
         menu.setItemEnabled(MenuItem.LAST_PLACEMENTS, false);
         menu.setItemEnabled(MenuItem.PROJECTED_POINTS, false);
         menu.setItemEnabled(MenuItem.ZOOM_IN, false);

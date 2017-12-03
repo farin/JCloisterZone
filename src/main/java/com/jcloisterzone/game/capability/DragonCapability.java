@@ -28,7 +28,7 @@ public class DragonCapability extends Capability<Vector<Position>> {
 
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "valcano").isEmpty()) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "volcano").isEmpty()) {
             tile = tile.setTileTrigger(TileTrigger.VOLCANO);
         }
         if (!XMLUtils.getElementStreamByTagName(tileElements, "dragon").isEmpty()) {

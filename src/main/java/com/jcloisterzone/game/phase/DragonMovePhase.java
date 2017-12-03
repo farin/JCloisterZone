@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.board.Position;
@@ -10,6 +8,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -27,7 +26,7 @@ import io.vavr.collection.Vector;
 @RequiredCapability(DragonCapability.class)
 public class DragonMovePhase extends Phase {
 
-    public DragonMovePhase(Random random) {
+    public DragonMovePhase(RandomGenerator random) {
         super(random);
     }
 
@@ -112,7 +111,7 @@ public class DragonMovePhase extends Phase {
             Meeple m = t._1;
             FeaturePointer fp = t._2;
             if (pos.equals(fp.getPosition()) && m.canBeEatenByDragon(state)) {
-                state = (new UndeployMeeple(m)).apply(state);
+                state = (new UndeployMeeple(m, true)).apply(state);
             }
         }
 

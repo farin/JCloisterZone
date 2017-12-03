@@ -107,21 +107,30 @@ public class Road extends CompletableFeature<Road> {
         return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
     }
 
+    @Override
     public Road setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
         return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
     }
 
+    private int getBasePoints(GameState state, boolean completed) {
+        int tileCount = getTilePositions().size();
+        if (inn) {
+            return completed ? tileCount * 2 : 0;
+        } else {
+            return tileCount;
+        }
+    }
+
     @Override
     public int getPoints(GameState state) {
-        int tileCount = getTilePositions().size();
-        int points;
-        if (inn) {
-            points = isCompleted(state) ? tileCount * 2 : 0;
-        } else {
-            points = tileCount;
-        }
-        return getMageAndWitchPoints(state, points) + getLittleBuildingPoints(state);
+        int basePoints = getBasePoints(state, isCompleted(state));
+        return getMageAndWitchPoints(state, basePoints) + getLittleBuildingPoints(state);
+    }
+
+    @Override
+    public int getStructurePoints(GameState state, boolean completed) {
+        return getBasePoints(state, completed) + getLittleBuildingPoints(state);
     }
 
     @Override

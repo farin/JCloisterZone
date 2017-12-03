@@ -243,7 +243,7 @@ public class ClientMessageListener implements MessageListener {
         }
 
         GameController gc = (GameController) getController(msg);
-        if (gc == null /*|| msg.getReplay() != null*/) {
+        if (gc == null /*|| !msg.getReplay().isEmpty()*/) {
             /* if replay, reinit controller - for some (unknown reason this was in old code
              * but now when replaye is always non null it breaks eventBus listeners
              * need to revalidate it with play server and resume, then hopefully remove it
@@ -276,7 +276,17 @@ public class ClientMessageListener implements MessageListener {
                 openGameSetup(gc, msg);
                 break;
             case RUNNING:
-                handleGameStarted(gc, io.vavr.collection.List.ofAll(msg.getReplay()));
+                io.vavr.collection.List<WsReplayableMessage> replay;
+                if (msg.getReplay() == null) {
+                    replay = io.vavr.collection.List.empty();
+                } else {
+                    replay = io.vavr.collection.List.ofAll(msg.getReplay());
+                }
+                if (client.getView() instanceof ChannelView) {
+                    openGameSetup(gc, msg); // Setup triggers game view immediately
+                }
+
+                handleGameStarted(gc, replay);
                 break;
             }
         }

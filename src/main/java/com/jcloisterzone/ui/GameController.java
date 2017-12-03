@@ -120,7 +120,7 @@ public class GameController extends EventProxyUiController<Game> {
         }
         client.closeGame(true);
         GameOverPanel panel = new GameOverPanel(client, this, showPlayAgain);
-        gameView.getGridPanel().add(panel, "pos 0 0");
+        gameView.getGridPanel().add(panel, "pos 0 35");
         gameView.getGridPanel().revalidate();
     }
 

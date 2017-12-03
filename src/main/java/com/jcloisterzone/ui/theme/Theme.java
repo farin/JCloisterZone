@@ -15,6 +15,8 @@ public class Theme {
     private Color semiTransparentBg;
     private Color playerBoxBg;
     private Color alternativeBg;
+    private Color eventsBg;
+    private Color boardOverlay;
     private Color tileDistCountBg;
     private Color panelShadow;
     private Color markerColor;
@@ -54,6 +56,12 @@ public class Theme {
     }
     public Color getAlternativeBg() {
         return alternativeBg;
+    }
+    public Color getEventsBg() {
+        return eventsBg;
+    }
+    public Color getBoardOverlay() {
+        return boardOverlay;
     }
     public Color getTileDistCountBg() {
         return tileDistCountBg;
@@ -134,6 +142,8 @@ public class Theme {
         LIGHT.semiTransparentBg = new Color(255, 255, 255, 245);
         LIGHT.playerBoxBg =  new Color(219, 219, 219);
         LIGHT.alternativeBg = LIGHT.playerBoxBg;
+        LIGHT.eventsBg = Color.WHITE;
+        LIGHT.boardOverlay = new Color(115, 115, 115, 185);
         LIGHT.tileDistCountBg = Color.WHITE;
         LIGHT.panelShadow = new Color(255, 255, 255, 158);
         LIGHT.markerColor = Color.BLACK;
@@ -158,6 +168,8 @@ public class Theme {
         DARK.semiTransparentBg = new Color(33, 37, 43, 245);
         DARK.playerBoxBg = new Color(70, 70, 70);
         DARK.alternativeBg = new Color(10, 11, 13);
+        DARK.eventsBg = DARK.alternativeBg;
+        DARK.boardOverlay = new Color(70, 70,  70, 195);
         DARK.tileDistCountBg = DARK.alternativeBg;
         DARK.panelShadow = new Color(33, 37, 43, 150);
         DARK.markerColor = Color.WHITE;

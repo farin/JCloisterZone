@@ -1,10 +1,9 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.wsio.message.PassMessage;
@@ -15,12 +14,12 @@ public abstract class Phase {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Random random;
+    private final RandomGenerator random;
 
     //TODO change to class ? but what about skipping phase in handlePass
     private Phase defaultNext;
 
-    public Phase(Random random) {
+    public Phase(RandomGenerator random) {
         this.random = random;
     }
 
@@ -75,7 +74,7 @@ public abstract class Phase {
         return promote(state);
     }
 
-    public Random getRandom() {
+    public RandomGenerator getRandom() {
         return random;
     }
 

@@ -195,6 +195,27 @@
                     </execution>
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/classic.jar -C src/main/resources/plugins/newart . -->
+                        <id>plugin-newart</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/newart.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/newart" />
+                                    <arg value="." />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
                         <!-- jar cfM build/plugins/rgg_siege.jar -C src/main/resources/plugins/rgg_siege . -->
                         <id>plugin-rgg_siege</id>
                         <phase>package</phase>
@@ -230,6 +251,27 @@
                                     <arg value="build/plugins/winter.jar" />
                                     <arg value="-C" />
                                     <arg value="src/main/resources/plugins/winter" />
+                                    <arg value="." />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Package plugin resource files in a flat hierarchy. -->
+                        <!-- jar cfM build/plugins/winter.jar -C src/main/resources/plugins/winter . -->
+                        <id>plugin-winter</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="build/plugins" />
+                                <exec executable="jar">
+                                    <arg value="cfM" />
+                                    <arg value="build/plugins/catapult.jar" />
+                                    <arg value="-C" />
+                                    <arg value="src/main/resources/plugins/catapult" />
                                     <arg value="." />
                                 </exec>
                             </target>

@@ -246,7 +246,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 //   TODO IMMUTABLE
 
         drawMeepleBox(null, "abbey", ps.getPlayerTokenCount(index, Token.ABBEY_TILE), false);
-        drawMeepleBox(null, "towerpiece", ps.getPlayerTokenCount(index, Token.TOWER_PIECE), true);
+        drawMeepleBox(null, "tower_piece", ps.getPlayerTokenCount(index, Token.TOWER_PIECE), true);
         drawMeepleBox(null, "bridge", ps.getPlayerTokenCount(index, Token.BRIDGE), true);
         drawMeepleBox(null, "castle", ps.getPlayerTokenCount(index, Token.CASTLE), true);
 
@@ -254,9 +254,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         drawMeepleBox(player, "tunnel.B", ps.getPlayerTokenCount(index, Token.TUNNEL_B), true);
         drawMeepleBox(player, "tunnel.C", ps.getPlayerTokenCount(index, Token.TUNNEL_C), true);
 
-        drawMeepleBox(null, "lb-shed", ps.getPlayerTokenCount(index, Token.LB_SHED), true);
-        drawMeepleBox(null, "lb-house", ps.getPlayerTokenCount(index, Token.LB_HOUSE), true);
-        drawMeepleBox(null, "lb-tower", ps.getPlayerTokenCount(index, Token.LB_TOWER), true);
+        drawMeepleBox(null, "lb_shed", ps.getPlayerTokenCount(index, Token.LB_SHED), true);
+        drawMeepleBox(null, "lb_house", ps.getPlayerTokenCount(index, Token.LB_HOUSE), true);
+        drawMeepleBox(null, "lb_tower", ps.getPlayerTokenCount(index, Token.LB_TOWER), true);
 
         if (ps.getPlayerTokenCount(index, Token.KING) > 0) {
             KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);

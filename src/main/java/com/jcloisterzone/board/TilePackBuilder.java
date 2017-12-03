@@ -3,6 +3,8 @@ package com.jcloisterzone.board;
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
 import static com.jcloisterzone.XMLUtils.getTileId;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.NoSuchElementException;
 
@@ -107,11 +109,7 @@ public class TilePackBuilder {
         Element el = getExpansionDefinition(expansion);
         return XMLUtils.elementStream(el.getElementsByTagName("tile")).map(tileElement -> {
             String tileId = getTileId(expansion, tileElement);
-            if (Tile.ABBEY_TILE_ID.equals(tileId)) {
-                return new TileCount(tileId, null);
-            } else {
-                return new TileCount(tileId, getTileCount(tileElement, tileId, 1));
-            }
+            return new TileCount(tileId, getTileCount(tileElement, tileId, 1));
         });
     }
 
@@ -122,9 +120,7 @@ public class TilePackBuilder {
         for (int i = 0; i < nl.getLength(); i++) {
             Element tileElement = (Element) nl.item(i);
             String tileId = getTileId(expansion, tileElement);
-            if (!Tile.ABBEY_TILE_ID.equals(tileId)) {
-                size += getTileCount(tileElement, tileId, 1);
-            }
+            size += getTileCount(tileElement, tileId, 1);
         }
         return size;
     }
@@ -147,7 +143,15 @@ public class TilePackBuilder {
                 return expansion.getOrigin().getLoader().getResource(fileName);
             }
         }
-        return TilePackBuilder.class.getClassLoader().getResource(fileName);
+        if (fileName.startsWith("/")) {
+            try {
+                return new File(fileName).toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return TilePackBuilder.class.getClassLoader().getResource(fileName);
+        }
     }
 
     protected Element getExpansionDefinition(Expansion expansion) {
@@ -168,12 +172,8 @@ public class TilePackBuilder {
     }
 
     protected int getTileCount(Element tileEl, String tileId, int expansionCount) {
-        if (Tile.ABBEY_TILE_ID.equals(tileId)) {
-            return 1;
-        } else {
-            int baseCount = attributeIntValue(tileEl, "count", 1);
-            return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE));
-        }
+        int baseCount = attributeIntValue(tileEl, "count", 1);
+        return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE));
     }
 
     protected String getTileGroup(Tile tile, Vector<Element> tileElements) {

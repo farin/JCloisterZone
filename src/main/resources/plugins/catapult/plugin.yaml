@@ -1,0 +1,46 @@
+version: 4.0
+title: The Catapult
+title_i18n:
+  ca: La catapulta
+  cs: Katapult
+  de: Das Katapult
+  el: Ο Καταπέλτης
+  es: La Catapulta
+  fi: Katapultti
+  fr: La catapulte
+  hu: A Katapult
+  it: La Catapulta
+  ja: カタパルト
+  nl: De Katapult
+  pl: Katapulta
+  ro: Catapulta
+  ru: Катапульта
+  sk: Katapult
+description: Plain catapult tiles. Nothing more, nothing less.
+description_i18n:
+  ca: Llosetes de la catapulta. Res més.
+  cs: Kartičky z rozšíření katapult. Nic víc, nic míň.
+authors: 
+expansions:
+  -
+    code: CA
+    name: CATAPULT
+    type: MAJOR
+    label: The Catapult
+    label_i18n:
+      ca: La catapulta
+      cs: Katapult
+      de: Das Katapult
+      el: Ο Καταπέλτης
+      es: La Catapulta
+      fi: Katapultti
+      fr: La catapulte
+      hu: A Katapult
+      it: La Catapulta
+      ja: カタパルト
+      nl: De Katapult
+      pl: Katapulta
+      ro: Catapulta
+      ru: Катапульта
+      sk: Katapult
+    

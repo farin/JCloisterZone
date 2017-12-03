@@ -5,22 +5,27 @@
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
 * saved game format changed to JSON (and instead of game snapshot contains just action history)
-* removed Catapult tiles, with many other expansion this extra tiles makes not much sense
+* event log added - game events are displayed on top of the window (use E key to hide/show)
+
 * added The Count expansion
-* plugin changes: 
-  Multiple plugin folders can be specified in config (as relative or absolute paths).
-  Plugins can contain java classes and register new expansions. 
-* fixed #63 - experimental change: multiple tile sets of same expansion are allowed.
+* added game event panel on top of window 
+* added Japanese translation (thx to Alexis Jeandeau)
+* multiple plugin folders can be specified in config (as relative or absolute paths)
+* plugins can contain java classes and register new expansions and capabilities
+* added "Carrcassone for 2" plugin (thx to Tom Hill)
+* catapult tiles moved to separate plugin, disabled by default
+  (with many other expansion these extra tiles are much less important) 
+* issue #63: experimental change: multiple tile sets of same expansion are allowed.
   No UI is present but feature can be enabled by manual edit of preset in config file
   (or by save game edit)
-* fixed #223 - experimental change: capabilities and expansions are independent. Game can be
+* issue #223 - experimental change: capabilities and expansions are independent. Game can be
   created with different set of capabilities then standard derived from expansion.
   Eg. Princess and dragon tiles but without dragon figure. Or add big follower
   to basic tiles (without inns & cathedrals tiles)
   No UI for creation such game is present yet, but same as multiple sets
   it can be achieved by manual edit of preset in config.yaml
   (Such games can be normally played with remote players)
-* added Japanese translation (thx to Alexis Jeandeau)
+
 
 ### Current expansions changes
 

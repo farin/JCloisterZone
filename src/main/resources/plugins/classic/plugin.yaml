@@ -1,4 +1,10 @@
 version: 4.0
 title: Classic artwork
-description: Graphics from original board game
-author:
+title_i18n:
+  ca: Disseny clàssic
+  cs: Klasická grafika
+description: Classic board game artwork (illustrated by Doris Matthäus)
+description_i18n:
+  ca: Disseny clàssic del joc de taula (il·lustrat per la Doris Matthäus).
+  cs: Původní grafika z deskové hry (ilustrátorka Doris Matthäus)
+authors:

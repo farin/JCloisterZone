@@ -13,7 +13,9 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-
+/**
+ * Cloister or Shrine
+ */
 public class Cloister extends TileFeature implements Scoreable, CloisterLike {
 
     private static final long serialVersionUID = 1L;
@@ -72,7 +74,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     @Override
     public int getPoints(GameState state) {
         Position p = places.get().getPosition();
-        return state.getAdjacentAndDiagonalTiles2(p).size() + 1;
+        return state.getAdjacentAndDiagonalTiles2(p).size() + 1 + getLittleBuildingPoints(state);
     }
 
     @Override
