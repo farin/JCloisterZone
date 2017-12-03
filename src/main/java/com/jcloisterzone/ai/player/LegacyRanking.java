@@ -1,5 +1,7 @@
 package com.jcloisterzone.ai.player;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +14,10 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.CompletableFeature;
 import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
@@ -32,10 +32,8 @@ import com.jcloisterzone.reducers.ScoreFarmBarn;
 
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
-import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
-import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
@@ -60,7 +58,10 @@ class LegacyRanking implements GameStateRanking {
     private int remainingTurns;
     private PlacedTile lastPlaced;
     private Map<Position, Double> positionProbability;
+
     private java.util.HashMap<Edge, CompletableRanking> edges;
+    private java.util.List<CompletableRanking> occupiedCompletables;
+    private java.util.List<ScoreFeatureReducer> occupiedFarms;
 
     public LegacyRanking(Player me) {
         super();
@@ -78,6 +79,8 @@ class LegacyRanking implements GameStateRanking {
         positionProbability = getPositionProbability();
         remainingTurns = (int) Math.ceil(state.getTilePack().totalSize() / numberOfPlayers);
         edges = new java.util.HashMap<>();
+        occupiedCompletables = new ArrayList<>();
+        occupiedFarms = new ArrayList<>();
 
         logger.debug("--> {}", lastPlaced);
         r = ratePoints();
@@ -201,29 +204,37 @@ class LegacyRanking implements GameStateRanking {
     }
 
     private double rateOpenFeatures() {
+        // TODO don't count blocked feature and features with more owners
         double r = 0.0;
-        Array<Seq<Follower>> followers = state.getPlayers().getFollowers();
+        //Array<Seq<Follower>> followers = state.getPlayers().getFollowers();
         for (Player player : state.getPlayers().getPlayers()) {
-            @SuppressWarnings("rawtypes")
-            Map<Class, Integer> placedOn = followers
-                .get(player.getIndex())
-                .groupBy(f -> {
-                    Feature feature = f.getFeature(state);
-                    if (feature == null) return null;
-                    if (feature instanceof CloisterLike) return (Class) Cloister.class;
-                    return feature.getClass();
-                })
-                .mapValues(seq -> seq.size());
+            int cloisters = 0, roads = 0, cities = 0, farms = 0;
+
+            for (CompletableRanking cr : occupiedCompletables) {
+                Set<Player> owners  = cr.getOwners();
+                if (owners.size() != 1) continue;
+                if (owners.get() != player) continue;
+
+                if (cr.getFeature() instanceof CloisterLike) {
+                    cloisters += 1;
+                } else if (cr.getFeature() instanceof Road) {
+                    roads += 1;
+                } else if (cr.getFeature() instanceof City) {
+                    cities += 1;
+                }
+            }
+
+            for (ScoreFeatureReducer sfr : occupiedFarms) {
+                if (sfr.getOwners().contains(player)) {
+                    farms += 1;
+                }
+            }
 
             double pr = 0.0;
-            int open = placedOn.get(Road.class).getOrElse(0);
-            pr -= OPEN_ROAD_PENALTY[open];
-            open = placedOn.get(City.class).getOrElse(0);
-            pr -= OPEN_CITY_PENALTY[open];
-            open = placedOn.get(Cloister.class).getOrElse(0);
-            pr -= OPEN_CLOISTER_PENALTY[open];
-            open = placedOn.get(Farm.class).getOrElse(0);
-            pr -= OPEN_FARM_PENALTY[open];
+            pr -= OPEN_ROAD_PENALTY[roads];
+            pr -= OPEN_CITY_PENALTY[cities];
+            pr -= OPEN_CLOISTER_PENALTY[cloisters];
+            pr -= OPEN_FARM_PENALTY[farms];
             r += ptsforPlayer(player, pr);
         }
         return r;
@@ -241,6 +252,7 @@ class LegacyRanking implements GameStateRanking {
                 for (Edge edge : cf.getOpenEdges()) {
                     edges.put(edge, cr);
                 }
+                occupiedCompletables.add(cr);
             }
 
             double prob = countCompleteProbability(completable);
@@ -290,6 +302,8 @@ class LegacyRanking implements GameStateRanking {
                sr = new ScoreFarm(farm, true);
             }
             sr.apply(state);
+            occupiedFarms.add(sr);
+
             for (Player player : sr.getOwners()) {
                 double q = 0.99;
                 if (player != me) {
@@ -317,7 +331,7 @@ class LegacyRanking implements GameStateRanking {
                 inSupply += 1;
             }
             if (inSupply == 0) {
-                r += ptsforPlayer(player, 1.5);
+                r += ptsforPlayer(player, -4.0);
             }
         }
         return r;
