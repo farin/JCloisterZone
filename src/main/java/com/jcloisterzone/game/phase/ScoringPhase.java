@@ -34,7 +34,6 @@ import com.jcloisterzone.reducers.UndeployMeeples;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
-import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
@@ -160,10 +159,9 @@ public class ScoringPhase extends Phase {
     }
 
     private Map<Wagon, FeaturePointer> getDeployedWagons(GameState state) {
-        return LinkedHashMap.narrow(
-         state.getDeployedMeeples()
+        return state.getDeployedMeeples()
            .filter((m, fp) -> m instanceof Wagon)
-        );
+           .mapKeys(m -> (Wagon) m);
     }
 
     private GameState scoreCompleted(GameState state, Completable completable, PlacedTile triggerBuilderForPlaced) {
