@@ -1,5 +1,10 @@
 package com.jcloisterzone.ai;
 
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.GameSetup;
@@ -13,6 +18,8 @@ import io.vavr.collection.Queue;
 import io.vavr.collection.Vector;
 
 public abstract class RankingAiPlayer implements AiPlayer {
+
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private GameStateRanking stateRanking;
     private GameStatePhaseReducer phaseReducer;
@@ -32,8 +39,8 @@ public abstract class RankingAiPlayer implements AiPlayer {
     @Override
     public WsInGameMessage apply(GameState state) {
         if (messages.isEmpty()) {
-            Queue<Tuple2<GameState, Vector<WsInGameMessage>>> queue = Queue.of(new Tuple2<>(state, Vector.empty()));
             Double bestSoFar = Double.NEGATIVE_INFINITY;
+            Queue<Tuple2<GameState, Vector<WsInGameMessage>>> queue = Queue.of(new Tuple2<>(state, Vector.empty()));
 
             while (!queue.isEmpty()) {
                 Tuple2<Tuple2<GameState, Vector<WsInGameMessage>>, Queue<Tuple2<GameState, Vector<WsInGameMessage>>>> t = queue.dequeue();
@@ -70,13 +77,16 @@ public abstract class RankingAiPlayer implements AiPlayer {
                 }
             }
 
-//            System.err.println("====>");
-//            String chainStr = messages.map(_msg -> _msg.getClass().getSimpleName()).toJavaStream().collect(Collectors.joining(", "));
-//            System.err.println(String.format(">>> %f\n%s", bestSoFar, chainStr));
+            if (logger.isDebugEnabled()) {
+                String chainStr = messages.map(_msg -> _msg.getClass().getSimpleName()).toJavaStream().collect(Collectors.joining(", "));
+                logger.debug(String.format("Best ranking %s, %s", bestSoFar, chainStr));
+            }
         }
 
         WsInGameMessage msg = messages.get();
         messages = messages.drop(1);
+
+
         return msg;
     }
 

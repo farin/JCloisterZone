@@ -1,5 +1,8 @@
 package com.jcloisterzone.ai.player;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.ai.GameStateRanking;
 import com.jcloisterzone.board.Edge;
@@ -38,6 +41,8 @@ import io.vavr.collection.Stream;
 
 class LegacyRanking implements GameStateRanking {
 
+    protected final transient Logger logger = LoggerFactory.getLogger("AI Ranking");
+
     public static final double[]  OPEN_ROAD_PENALTY =
         { 0.0, 1.0, 2.5, 4.5, 7.5, 10.5, 14.5, 19.0, 29.0 };
     public static final double[]  OPEN_CITY_PENALTY =
@@ -65,6 +70,7 @@ class LegacyRanking implements GameStateRanking {
     @Override
     public Double apply(GameState state) {
         double ranking = 0.0;
+        double r;
 
         this.state = state;
         numberOfPlayers = state.getPlayers().length();
@@ -73,14 +79,44 @@ class LegacyRanking implements GameStateRanking {
         remainingTurns = (int) Math.ceil(state.getTilePack().totalSize() / numberOfPlayers);
         edges = new java.util.HashMap<>();
 
-        ranking += ratePoints();
-        ranking += rateUnfinishedFeatures();
-        ranking += rateOpenFeatures();
-        ranking += rateMeeples();
-        ranking += rateBoardShape();
-        ranking += rateDragon();
-        ranking += rateConnections();
-
+        logger.debug("--> {}", lastPlaced);
+        r = ratePoints();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Points              %8.5f", r));
+        }
+        logger.debug("  > Unfinished features");
+        r = rateUnfinishedFeatures();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("    > Total %8.5f", r));
+        }
+        r = rateOpenFeatures();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Open features       %8.5f", r));
+        }
+        r = rateMeeples();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Meeples             %8.5f", r));
+        }
+        r = rateBoardShape();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Board shape         %8.5f", r));
+        }
+        r = rateDragon();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Dragon              %8.5f", r));
+        }
+        r = rateConnections();
+        ranking += r;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("  > Connections         %8.5f", r));
+            logger.debug(String.format("--> Total               %8.5f", ranking));
+        }
         return ranking;
     }
 
@@ -198,6 +234,7 @@ class LegacyRanking implements GameStateRanking {
 
         for (Completable completable : state.getFeatures(Completable.class)) {
             CompletableRanking cr = new CompletableRanking(state, completable);
+            double fr = 0.0;
 
             if (completable instanceof CompletableFeature) {
                 CompletableFeature<?> cf = (CompletableFeature<?>) completable;
@@ -224,9 +261,9 @@ class LegacyRanking implements GameStateRanking {
                 if (penalty != null) {
                     for (Follower follower : completable.getFollowers(state)) {
                         if (follower.getPlayer() == me) {
-                            r -= penalty._1;
+                            fr -= penalty._1;
                         } else {
-                            r += penalty._2;
+                            fr += penalty._2;
                         }
                     }
                 }
@@ -234,9 +271,13 @@ class LegacyRanking implements GameStateRanking {
 
             double points = getCompletablePoints(cr);
             for (Player player : cr.getOwners()) {
-                double q = player == me ? 1.0 : -1.0;
-                r += q * points;
+                fr += ptsforPlayer(player, points);
             }
+
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("    > %s  %8.5f", completable, fr));
+            }
+            r += fr;
         }
 
         for (Farm farm : state.getFeatures(Farm.class)) {
