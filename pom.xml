@@ -259,7 +259,7 @@
                     <execution>
                         <!-- Package plugin resource files in a flat hierarchy. -->
                         <!-- jar cfM build/plugins/winter.jar -C src/main/resources/plugins/winter . -->
-                        <id>plugin-winter</id>
+                        <id>plugin-catapult</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
