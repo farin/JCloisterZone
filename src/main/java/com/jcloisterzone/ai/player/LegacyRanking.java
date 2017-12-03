@@ -85,11 +85,11 @@ class LegacyRanking implements GameStateRanking {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("  > Points              %8.5f", r));
         }
-        logger.debug("  > Unfinished features");
+        //logger.debug("  > Unfinished features");
         r = rateUnfinishedFeatures();
         ranking += r;
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("    > Total %8.5f", r));
+            logger.debug(String.format("  > Unfinished features       %8.5f", r));
         }
         r = rateOpenFeatures();
         ranking += r;
@@ -194,7 +194,7 @@ class LegacyRanking implements GameStateRanking {
             int uncertain = 9 - cr.getIncompletePoints();
             return cr.getIncompletePoints() + prob * 0.5 * uncertain;
         } else {
-            int uncertain = cr.getIncompletePoints() + cr.getCompletePoints();
+            int uncertain = cr.getCompletePoints() - cr.getIncompletePoints();
             // multiply with 0.8 to advantage closed features
             return cr.getIncompletePoints() + prob * 0.8 * uncertain;
         }
@@ -274,9 +274,9 @@ class LegacyRanking implements GameStateRanking {
                 fr += ptsforPlayer(player, points);
             }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("    > %s  %8.5f", completable, fr));
-            }
+//            if (logger.isDebugEnabled()) {
+//                logger.debug(String.format("    > %s  %8.5f", completable, fr));
+//            }
             r += fr;
         }
 
