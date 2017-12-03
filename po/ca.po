@@ -95,7 +95,7 @@ msgstr "Turons i ovelles"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "Under the Big Top"
-msgstr ""
+msgstr "Sota la carpa de circ"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "King and Robber Baron"
@@ -172,7 +172,7 @@ msgstr "Mitges llosetes"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "The Watchtower"
-msgstr ""
+msgstr "La torre de vigilància"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:104
 msgid "The Flier"
@@ -220,7 +220,7 @@ msgstr "Promocionals Darmstadt"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:117
 msgid "Labyrinth"
-msgstr ""
+msgstr "Laberint"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:34
 msgid "Bridge"
@@ -252,7 +252,7 @@ msgstr "Torre"
 
 #: src/main/java/com/jcloisterzone/feature/YagaHut.java:73
 msgid "Yaga's Hut"
-msgstr ""
+msgstr "La cabana de Yaga"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:11
 msgid "Randomize seating order"
@@ -260,7 +260,7 @@ msgstr "Situa els jugadors aleatòriament"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:13
 msgid "Use pig herds independently (without T&B expansion)"
-msgstr ""
+msgstr "Usa porcades independentment (sense expansió de mercaders)"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:15
 msgid "Princess MUST remove a knight from city."
@@ -302,11 +302,11 @@ msgstr "Aplica la regla del túnel als túnels d''altres expansions."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:28
 msgid "Assign 3/2 tunnel set in game of two/three players."
-msgstr ""
+msgstr "Assigna un conjunt de 3/2 túnels per partides de 2/3 jugadors."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:30
 msgid "Only follower can be returned by festival (instead of any figure)"
-msgstr ""
+msgstr "El festival només retorna seguidors (en lloc de qualsevol figura)."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:32
 msgid "Keep basic cloisters in the game."
@@ -516,11 +516,11 @@ msgstr "Desa"
 #: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:50
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
 msgid "Tile Distribution"
-msgstr ""
+msgstr "Distribució de llosetes"
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:136
 msgid "%d tiles left"
-msgstr "Queden %d llosetes"
+msgstr "Queden %d llosetes."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:84
 msgid "Bazaar supply"
@@ -592,13 +592,15 @@ msgstr "de/en un {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
 msgid "Prisoners exchange"
-msgstr ""
+msgstr "Intercanvi de presoners"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
 msgid ""
 "The captured prisoner is going to be immediately exchanged. You can select "
 "which follower you want to exchange for."
 msgstr ""
+"El presoner capturat s''intercanviarà immediatament. Podeu escollir per "
+"quin seguidor el voleu intercanviar."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:36
 msgid "Mage and Witch"
