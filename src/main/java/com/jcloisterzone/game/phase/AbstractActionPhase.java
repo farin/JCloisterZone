@@ -17,6 +17,7 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -93,7 +94,7 @@ public abstract class AbstractActionPhase extends Phase {
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = placesFp
-                .filter(t -> !t._2.isOccupied(state))
+                .filter(t -> meeple instanceof Special || !t._2.isOccupied(state))
                 .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .flatMap(t -> {
                     if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {

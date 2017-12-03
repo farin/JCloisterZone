@@ -56,7 +56,7 @@ public class ActionPhase extends AbstractActionPhase {
             SmallFollower.class, BigFollower.class, Phantom.class,
             Wagon.class, Mayor.class, Builder.class, Pig.class
         );
-;
+
         Vector<PlayerAction<?>> actions = prepareMeepleActions(state, meepleTypes);
 
         GameState nextState = state.setPlayerActions(
