@@ -43,6 +43,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.River;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.plugin.PluginMeta.ExpansionMeta;
 import com.jcloisterzone.ui.ImmutablePoint;
@@ -572,6 +573,7 @@ public class Plugin implements ResourceManager {
 
         // get base areas for all features
         Map<Location, FeatureArea> baseAreas = Stream.ofAll(features)
+            .filter(t -> !(t._2 instanceof River)) // TODO nice to have, defined river shapes as feature class instead of subtract areas
             .filter(t -> t._1 != complementFarm)
             .flatMap(t -> {
                 if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
