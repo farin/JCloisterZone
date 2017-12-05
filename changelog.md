@@ -1,7 +1,14 @@
+
 # Version history
 
-## 4.0
-*fall 2017*
+## 4.0.1
+*2017-12-05*
+
+* fixed Tunnel regression. Game crashes when playing with or without some colors
+  (to be exact, when you not take player slots from beginning)
+
+## 4.0.0
+*2017-12-04*
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)
 * saved game format changed to JSON (and instead of game snapshot contains just action history)
@@ -25,6 +32,7 @@
   No UI for creation such game is present yet, but same as multiple sets
   it can be achieved by manual edit of preset in config.yaml
   (Such games can be normally played with remote players)
+* fixed definition for FE.RC tile (Festival) - city wasn't bind to farm (farm may score one city less sometimes) 
 
 
 ### Current expansions changes

@@ -41,7 +41,11 @@ public class ActionWrapper implements Comparable<ActionWrapper> {
     }
 
     public Image getImage(ResourceManager rm, Player player, boolean active) {
-        return getImage(rm, player != null && active ? player.getColors().getMeepleColor() : INACTIVE_COLOR);
+        Color color = INACTIVE_COLOR;
+        if (active && player != null) {
+            color = player.getColors().getMeepleColor();
+        }
+        return getImage(rm, color);
     }
 
     protected Image getImage(ResourceManager rm, Color color) {
