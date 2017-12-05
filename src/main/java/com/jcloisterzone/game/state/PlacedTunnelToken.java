@@ -15,6 +15,8 @@ public class PlacedTunnelToken implements Serializable {
     private final Token token;
 
     public PlacedTunnelToken(int playerIndex, Token token) {
+        assert playerIndex > -1;
+        assert token == Token.TUNNEL_A || token == Token.TUNNEL_B || token == Token.TUNNEL_C;
         this.playerIndex = playerIndex;
         this.token = token;
     }
@@ -46,6 +48,11 @@ public class PlacedTunnelToken implements Serializable {
         if (token != other.token)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return playerIndex + " " + token;
     }
 
 

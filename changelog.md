@@ -1,6 +1,13 @@
+
 # Version history
 
-## 4.0
+## 4.0.1
+*2017-12-05*
+
+* fixed Tunnel regression. Game crashes when playing with or without some colors
+  (to be exact, when you not take player slots from beginning)
+
+## 4.0.0
 *2017-12-04*
 
 * multiple undo steps are now supported (including eg. undoing paid ransom)

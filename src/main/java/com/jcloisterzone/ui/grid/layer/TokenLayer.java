@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.ImageIcon;
 
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
@@ -91,8 +92,8 @@ public class TokenLayer extends AbstractGridLayer {
                 FeaturePointer fp  = t._1;
                 Position pos = fp.getPosition();
                 PlacedTunnelToken placedTunnel = t._2;
-                Color color = gc.getGame().getPlayerSlots()[placedTunnel.getPlayerIndex()]
-                    .getColors().getTunnelColors().get(t._2.getToken());
+                Player player = state.getPlayers().getPlayer(placedTunnel.getPlayerIndex());
+                Color color = player.getSlot().getColors().getTunnelColors().get(t._2.getToken());
                 Image img = rm.getLayeredImage(new LayeredImageDescriptor("player-meeples/tunnel", color));
                 PlacedTile pt = state.getPlacedTiles().get(pos).get();
                 ImmutablePoint point = rm.getMeeplePlacement(pt.getTile(), pt.getRotation(), fp.getLocation());

@@ -21,7 +21,8 @@ public class TunnelActionWrapper extends ActionWrapper {
     @Override
     public Image getImage(ResourceManager rm, Player player, boolean active) {
         Token token = getAction().getToken();
-        return getImage(rm, active ? player.getColors().getTunnelColors().get(token) : INACTIVE_COLOR);
+        // Always display tokens in color
+        return getImage(rm, player.getColors().getTunnelColors().get(token));
     }
 
 }
