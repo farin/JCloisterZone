@@ -1,6 +1,11 @@
 
 # Version history
 
+## 4.0.2
+*2017-12-10*
+
+* fixed trade goods final scoring
+
 ## 4.0.1
 *2017-12-05*
 
