@@ -84,7 +84,7 @@ public class TradeGoodsCapability extends Capability<Void> {
                     hiVal = playerValue;
                     hiPlayers = List.of(player);
                 } else if (playerValue == hiVal) {
-                    hiPlayers.prepend(player);
+                    hiPlayers = hiPlayers.prepend(player);
                 }
             }
             for (Player player: hiPlayers) {
