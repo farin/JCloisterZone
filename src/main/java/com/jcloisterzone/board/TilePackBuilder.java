@@ -164,11 +164,10 @@ public class TilePackBuilder {
     }
 
     protected boolean isTunnelActive(Expansion expansion) {
-        return expansion == Expansion.TUNNEL ||
-            (
-                state.getCapabilities().contains(TunnelCapability.class) &&
-                state.getBooleanValue(Rule.TUNNELIZE_ALL_EXPANSIONS)
-            );
+        if (!state.getCapabilities().contains(TunnelCapability.class)) {
+            return false;
+        }
+        return expansion == Expansion.TUNNEL || state.getBooleanValue(Rule.TUNNELIZE_ALL_EXPANSIONS);
     }
 
     protected int getTileCount(Element tileEl, String tileId, int expansionCount) {
