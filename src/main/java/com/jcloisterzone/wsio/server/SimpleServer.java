@@ -106,6 +106,9 @@ public class SimpleServer extends WebSocketServer  {
 
     public SimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
         super(address);
+        setReuseAddr(true);
+        setConnectionLostTimeout(0); //disable heartbeat
+
         this.errHandler = errHandler;
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
     }
@@ -250,7 +253,7 @@ public class SimpleServer extends WebSocketServer  {
 
     private boolean isParticipant(String clientId, String secret) {
         for (int i = 0; i < slots.length; i++) {
-            if (clientId.equals(slots[i].getClientId()) && secret.equals(slots[i].getSecret())) {
+            if (slots[i] != null && clientId.equals(slots[i].getClientId()) && secret.equals(slots[i].getSecret())) {
                 return true;
             }
         }
