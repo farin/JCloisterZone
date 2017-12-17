@@ -1,40 +1,31 @@
 package com.jcloisterzone.ui.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JPanel;
 
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ClientListChangedEvent;
-import com.jcloisterzone.event.GameStartedEvent;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.MenuBar;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
-import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.panel.BackgroundPanel;
 import com.jcloisterzone.ui.panel.ConnectedClientsPanel;
 import com.jcloisterzone.ui.panel.CreateGamePanel;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.Stream;
 import net.miginfocom.swing.MigLayout;
 
-public class GameSetupView extends AbstractUiView {
+public class GameSetupView extends AbstractUiView implements GameChatView {
 
     private final GameController gc;
     private final Game game;
@@ -60,7 +51,7 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Override
-    public void show(Container pane, Object ctx) {
+    public void show(Container pane) {
         Game game = gc.getGame();
 
         BackgroundPanel bg = new BackgroundPanel();
@@ -106,8 +97,8 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Override
-    public boolean requestHide(UiView nextView, Object nextCtx) {
-        if (nextCtx != this) {
+    public boolean requestHide(UiView nextView) {
+        if (!(nextView instanceof GameView)) {
             return client.closeGame();
         } else {
             return true;
@@ -115,7 +106,7 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Override
-    public void hide(UiView nextView, Object nextCtx) {
+    public void hide(UiView nextView) {
         gc.unregister(createGamePanel);
         gc.unregister(chatPanel);
         gc.unregister(this);
@@ -138,39 +129,6 @@ public class GameSetupView extends AbstractUiView {
     }
 
     @Subscribe
-    public void onGameStarted(GameStartedEvent ev) {
-        Stream<PlayerSlot> slots = Stream.ofAll(Arrays.asList(gc.getGame().getPlayerSlots()));
-        Array<PlayerSlot> occupiedSlots = slots.filter(slot -> slot != null && slot.isOccupied()).toArray();
-        // for free color we can't search slot - because for load game, slots are already filtered
-        // to existing ones
-        Array<PlayerColors> freeColors = Stream.range(0, PlayerSlot.COUNT)
-            .filter(i -> occupiedSlots.find(s -> s.getNumber() == i).isEmpty())
-            .map(i -> gc.getConfig().getPlayerColor(i))
-            .toArray();
-
-        int occupiedSize = occupiedSlots.size();
-        int freeSize = freeColors.size();
-        int i = 0;
-        for (PlayerSlot slot : occupiedSlots) {
-            Map<Token, Color> tunnelColors = new HashMap<>();
-            tunnelColors.put(Token.TUNNEL_A, slot.getColors().getMeepleColor());
-            if (freeSize >= occupiedSize) {
-                tunnelColors.put(Token.TUNNEL_B, freeColors.get(i).getMeepleColor());
-                i++;
-            }
-            if (freeSize >= 2 * occupiedSize) {
-                tunnelColors.put(Token.TUNNEL_C, freeColors.get(i).getMeepleColor());
-                i++;
-            }
-            slot.getColors().setTunnelColors(tunnelColors);
-        }
-
-        GameView view = new GameView(client, gc);
-        view.setChatPanel(chatPanel);
-        client.mountView(view, this);
-    }
-
-    @Subscribe
     public void clientListChanged(ClientListChangedEvent ev) {
         connectedClientsPanel.updateClients(ev.getClients());
     }
@@ -178,5 +136,10 @@ public class GameSetupView extends AbstractUiView {
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
         client.mountView(new StartView(client));
+    }
+
+    @Override
+    public ChatPanel getChatPanel() {
+        return chatPanel;
     }
 }

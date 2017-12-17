@@ -107,7 +107,9 @@ public class SimpleServer extends WebSocketServer  {
     public SimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
         super(address);
         setReuseAddr(true);
-        setConnectionLostTimeout(0); //disable heartbeat
+        if (System.getProperty("hearthbeat") != null) {
+            setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+        }
 
         this.errHandler = errHandler;
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];

@@ -25,7 +25,6 @@ import com.jcloisterzone.ui.panel.StartPanel;
 
 public class StartView extends AbstractUiView {
 
-
     private StartPanel startPanel;
 
     public StartView(Client client) {
@@ -33,7 +32,7 @@ public class StartView extends AbstractUiView {
     }
 
     @Override
-    public void show(Container pane, Object ctx) {
+    public void show(Container pane) {
         pane.setLayout(new BorderLayout()); //TODO should be this line in client init?
         JPanel envelope = new BackgroundPanel(new GridBagLayout());
         envelope.setBackground(client.getTheme().getMainBg());

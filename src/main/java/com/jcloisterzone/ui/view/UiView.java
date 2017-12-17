@@ -5,9 +5,9 @@ import java.awt.event.KeyEvent;
 
 public interface UiView {
 
-    void show(Container pane, Object ctx);
-    boolean requestHide(UiView nextView, Object nextCtx);
-    void hide(UiView nextView, Object nextCtx);
+    void show(Container pane);
+    boolean requestHide(UiView nextView);
+    void hide(UiView nextView);
 
     boolean dispatchKeyEvent(KeyEvent e);
 

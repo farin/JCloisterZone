@@ -108,6 +108,9 @@ public class WebSocketConnection implements Connection {
         this.listener = listener;
         this.uri = uri;
         ws = new WebSocketClientImpl(uri, username, null);
+        if (System.getProperty("hearthbeat") != null) {
+            ws.setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+        }
         ws.connect();
     }
 

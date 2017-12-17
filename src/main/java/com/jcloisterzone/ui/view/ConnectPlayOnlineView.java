@@ -19,7 +19,7 @@ public class ConnectPlayOnlineView extends AbstractUiView  {
     }
 
     @Override
-    public void show(Container pane, Object ctx) {
+    public void show(Container pane) {
         JPanel envelope = new BackgroundPanel();
         envelope.setLayout(new GridBagLayout()); //to have centered inner panel
 

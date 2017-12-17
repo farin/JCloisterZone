@@ -24,7 +24,6 @@ import com.jcloisterzone.event.ClockUpdateEvent;
 import com.jcloisterzone.event.Event;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.GameOverEvent;
-import com.jcloisterzone.event.GameStartedEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.Meeple;
@@ -325,7 +324,7 @@ public class Game implements EventProxy {
         createAiPlayers(gc);
 
         // 3. notify started game - event handlers requires initial state with game config to be set
-        post(new GameStartedEvent());
+        gc.onGameStarted(this);
 
         // 4. trigger initial board changes - make it after started event to propagate all event correctly to GameView
         Phase firstPhase = phaseReducer.getFirstPhase();

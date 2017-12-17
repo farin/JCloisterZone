@@ -124,7 +124,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         eventsPanel = new GameEventsPanel(gc);
         //client.is
         add(eventsPanel, "pos 0 0 (100%-242) 36");
-        setComponentZOrder(eventsPanel, 2);
+        setComponentZOrder(eventsPanel, chatPanel == null ? 1 : 2);
     }
 
     public double getMeepleScaleFactor() {

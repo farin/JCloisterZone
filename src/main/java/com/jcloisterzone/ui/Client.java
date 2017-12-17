@@ -122,19 +122,15 @@ public class Client extends JFrame {
     }
 
     public boolean mountView(UiView view) {
-        return mountView(view, null);
-    }
-
-    public boolean mountView(UiView view, Object ctx) {
         if (this.view != null) {
-            if (this.view.requestHide(view, ctx)) {
-                this.view.hide(view, ctx);
+            if (this.view.requestHide(view)) {
+                this.view.hide(view);
             } else {
                 return false;
             }
         }
         cleanContentPane();
-        view.show(getContentPane(), ctx);
+        view.show(getContentPane());
         getContentPane().setVisible(true);
         this.view = view;
         logger.info("{} mounted", view.getClass().getSimpleName());
@@ -493,7 +489,7 @@ public class Client extends JFrame {
     }
 
     public void handleQuit() {
-        if (getView().requestHide(null, null)) {
+        if (getView().requestHide(null)) {
             System.exit(0);
         }
     }

@@ -25,7 +25,7 @@ public class ChannelView extends AbstractUiView {
     }
 
     @Override
-    public void show(Container pane, Object ctx) {
+    public void show(Container pane) {
         channelPanel = new ChannelPanel(client, cc);
         pane.add(channelPanel);
 
@@ -48,7 +48,7 @@ public class ChannelView extends AbstractUiView {
     }
 
     @Override
-    public void hide(UiView nextView, Object nextCtx) {
+    public void hide(UiView nextView) {
         MenuBar menu = client.getJMenuBar();
         if (nextView instanceof StartView) {
             menu.setItemEnabled(MenuItem.DISCONNECT, false);

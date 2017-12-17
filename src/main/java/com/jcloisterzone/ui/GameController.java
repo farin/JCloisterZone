@@ -4,9 +4,13 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +23,16 @@ import com.jcloisterzone.event.GameListChangedEvent;
 import com.jcloisterzone.event.GameOverEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
+import com.jcloisterzone.ui.controls.chat.GameChatPanel;
 import com.jcloisterzone.ui.dialog.DiscardedTilesDialog;
 import com.jcloisterzone.ui.panel.GameOverPanel;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
 import com.jcloisterzone.ui.view.ChannelView;
+import com.jcloisterzone.ui.view.GameChatView;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.Connection;
@@ -32,6 +40,9 @@ import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
+
+import io.vavr.collection.Array;
+import io.vavr.collection.Stream;
 
 public class GameController extends EventProxyUiController<Game> {
 
@@ -70,9 +81,51 @@ public class GameController extends EventProxyUiController<Game> {
         this.gameStatus = gameStatus;
     }
 
+    public void onGameStarted(Game game) {
+        Stream<PlayerSlot> slots = Stream.ofAll(Arrays.asList(game.getPlayerSlots()));
+        Array<PlayerSlot> occupiedSlots = slots.filter(slot -> slot != null && slot.isOccupied()).toArray();
+        // for free color we can't search slot - because for load game, slots are already filtered
+        // to existing ones
+        Array<PlayerColors> freeColors = Stream.range(0, PlayerSlot.COUNT)
+            .filter(i -> occupiedSlots.find(s -> s.getNumber() == i).isEmpty())
+            .map(i -> getConfig().getPlayerColor(i))
+            .toArray();
+
+        int occupiedSize = occupiedSlots.size();
+        int freeSize = freeColors.size();
+        int i = 0;
+        for (PlayerSlot slot : occupiedSlots) {
+            Map<Token, Color> tunnelColors = new HashMap<>();
+            tunnelColors.put(Token.TUNNEL_A, slot.getColors().getMeepleColor());
+            if (freeSize >= occupiedSize) {
+                tunnelColors.put(Token.TUNNEL_B, freeColors.get(i).getMeepleColor());
+                i++;
+            }
+            if (freeSize >= 2 * occupiedSize) {
+                tunnelColors.put(Token.TUNNEL_C, freeColors.get(i).getMeepleColor());
+                i++;
+            }
+            slot.getColors().setTunnelColors(tunnelColors);
+        }
+
+        if (gameView == null) {
+            gameView = new GameView(client, this);
+            if (client.getView() instanceof GameChatView) {
+                GameChatView prevView = (GameChatView) client.getView();
+                gameView.setChatPanel(prevView.getChatPanel());
+            } else {
+                gameView.setChatPanel(new GameChatPanel(client, game));
+            }
+            SwingUtilities.invokeLater(() -> {
+                client.mountView(gameView);
+            });
+        }
+    }
+
+
     @Subscribe
     public void handleGameChanged(GameChangedEvent ev) {
-        //TODO probabaly can be removed
+        //TODO probably can be removed
         if (gameView == null) {
             logger.warn("gameView is null");
             return;

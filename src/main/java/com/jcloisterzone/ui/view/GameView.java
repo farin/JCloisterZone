@@ -22,6 +22,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.java_websocket.framing.CloseFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
 
-public class GameView extends AbstractUiView implements WindowStateListener {
+public class GameView extends AbstractUiView implements WindowStateListener, GameChatView {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -86,7 +87,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     @Override
-    public void show(Container pane, Object ctx) {
+    public void show(Container pane) {
         mainPanel = new MainPanel(client, this, chatPanel);
         mainPanel.setBackground(client.getTheme().getMainBg());
 
@@ -95,7 +96,9 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         gc.getReportingTool().setContainer(mainPanel);
         mainPanel.started();
 
-        gc.register(chatPanel);
+        if (chatPanel != null) {
+            gc.register(chatPanel);
+        }
         gc.register(this);
 
         timer = new Timer(true);
@@ -167,13 +170,13 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     }
 
     @Override
-    public boolean requestHide(UiView nextView, Object nextCtx) {
+    public boolean requestHide(UiView nextView) {
         if (gameRunning && gc.getChannel() == null) return client.closeGame();
         return true;
     }
 
     @Override
-    public void hide(UiView nextView, Object nextCtx) {
+    public void hide(UiView nextView) {
         timer.cancel();
         gc.unregister(chatPanel);
         gc.unregister(this);
@@ -224,7 +227,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
         String message = _tr("Connection lost") + ". " + _tr("Reconnecting...");
-        if (remote) {
+        if (code == CloseFrame.ABNORMAL_CLOSE || remote) {
             if (gc.getChannel() == null) {
                 if (!game.isOver()) {
                     //simple server sends game message automatically, send game id for online server only
@@ -250,7 +253,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if (chatPanel.getInput().hasFocus()) return false;
+        if (chatPanel != null && chatPanel.getInput().hasFocus()) return false;
         if (e.getID() == KeyEvent.KEY_PRESSED) {
             if (e.getKeyChar() == '`' || e.getKeyChar() == ';') {
                 e.consume();
@@ -327,6 +330,7 @@ public class GameView extends AbstractUiView implements WindowStateListener {
         return mainPanel;
     }
 
+    @Override
     public ChatPanel getChatPanel() {
         return chatPanel;
     }

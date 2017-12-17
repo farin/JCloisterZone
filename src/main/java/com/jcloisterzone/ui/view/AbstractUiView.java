@@ -13,12 +13,12 @@ public abstract class AbstractUiView implements UiView {
     }
 
     @Override
-    public boolean requestHide(UiView nextView, Object nextCtx) {
+    public boolean requestHide(UiView nextView) {
         return true;
     }
 
     @Override
-    public void hide(UiView nextView, Object nextCtx) {
+    public void hide(UiView nextView) {
     }
 
     @Override
