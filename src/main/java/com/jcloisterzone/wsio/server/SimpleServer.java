@@ -3,9 +3,7 @@ package com.jcloisterzone.wsio.server;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.java_websocket.WebSocket;
@@ -72,6 +70,9 @@ import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.WsSaltMeesage;
 
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
+
 public class SimpleServer extends WebSocketServer  {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -95,7 +96,7 @@ public class SimpleServer extends WebSocketServer  {
     private int runningClock;
     private long runningSince;
 
-    protected final Map<WebSocket, ServerRemoteClient> connections = new HashMap<>();
+    protected Map<WebSocket, ServerRemoteClient> connections = HashMap.empty();
     private String hostClientId;
 
     private Random random = new Random();
@@ -160,8 +161,12 @@ public class SimpleServer extends WebSocketServer  {
     @Override
     public void onClose(WebSocket ws, int code, String reason, boolean remote) {
         if (!remote) return;
-        RemoteClient conn = connections.remove(ws);
-        if (conn == null) return;
+        RemoteClient conn = connections.get(ws).getOrNull();
+        if (conn == null) {
+            return;
+        }
+
+        connections = connections.remove(ws);
 
         for (ServerPlayerSlot slot : slots) {
             if (slot != null && conn.getSessionId().equals(slot.getSessionId())) {
@@ -200,7 +205,7 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private String getSessionId(WebSocket ws) {
-        return connections.get(ws).getSessionId();
+        return connections.get(ws).get().getSessionId();
     }
 
     private SlotMessage newSlotMessage(ServerPlayerSlot slot) {
@@ -263,17 +268,26 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     private boolean shouldAutoAssign(HelloMessage msg, String sessionId, ServerPlayerSlot slot) {
-        if (slot == null || slot.getSessionId() != null) return false;
         if (gameStarted) {
             return msg.getClientId().equals(slot.getClientId()) && msg.getSecret().equals(slot.getSecret());
         } else {
-            boolean isHostClient = msg.getClientId().equals(hostClientId);
-            return msg.getClientId().equals(slot.getAutoAssignClientId()) || (isHostClient && slot.getAiClassName() != null);
+            if (slot.getSessionId() == null) {
+                boolean isHostClient = msg.getClientId().equals(hostClientId);
+                return msg.getClientId().equals(slot.getAutoAssignClientId()) || (isHostClient && slot.getAiClassName() != null);
+            } else {
+                return false;
+            }
         }
     }
 
     private long createSalt() {
         return System.currentTimeMillis();
+    }
+
+    private void closeStaleConnections(String sessionId) {
+        connections
+            .filter((ws, client) -> client.getSessionId() == sessionId)
+            .forEach((ws, client) -> { ws.close(); });
     }
 
     @WsSubscribe
@@ -297,7 +311,12 @@ public class SimpleServer extends WebSocketServer  {
         client.setSecret(msg.getSecret());
 
         for (ServerPlayerSlot slot : slots) {
-            if (shouldAutoAssign(msg, sessionId, slot)) {
+            if (slot != null && shouldAutoAssign(msg, sessionId, slot)) {
+                if (gameStarted && slot.getSessionId() != null) {
+                    // when already paired with session, close old session and pair with new one
+                    closeStaleConnections(slot.getSessionId());
+                }
+
                 slot.setClientId(msg.getClientId());
                 slot.setSessionId(sessionId);
                 slot.setSecret(msg.getSecret());
@@ -306,7 +325,7 @@ public class SimpleServer extends WebSocketServer  {
         }
 
         //add after broadcasting slot update
-        connections.put(ws, client);
+        connections = connections.put(ws, client);
 
         send(ws, new WelcomeMessage(sessionId, nickname, 120, System.currentTimeMillis()));
         send(ws, newGameMessage(gameStarted));
@@ -350,7 +369,7 @@ public class SimpleServer extends WebSocketServer  {
     public void handleTakeSlot(WebSocket ws, TakeSlotMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (gameStarted) throw new IllegalArgumentException("Game is already started.");
-        ServerRemoteClient client = connections.get(ws);
+        ServerRemoteClient client = connections.get(ws).get();
         String sessionId = client.getSessionId();
         int number = msg.getNumber();
         if (number < 0 || number >= slots.length || slots[number] == null) {
@@ -600,7 +619,7 @@ public class SimpleServer extends WebSocketServer  {
             for (WebSocket conn : connections.keySet()) {
                 conn.close();
             }
-            connections.clear();
+            connections = HashMap.empty();
             createGame(null, null, null);
             logger.info("Game finished. Starting a new one.");
         }
