@@ -49,6 +49,9 @@ public class WebSocketConnection implements Connection {
 
         public WebSocketClientImpl(URI serverURI, String username, String reconnectGameId) {
             super(serverURI);
+            if (System.getProperty("hearthbeat") != null) {
+                setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+            }
             this.username = username;
             this.reconnectGameId = reconnectGameId;
         }
@@ -108,9 +111,6 @@ public class WebSocketConnection implements Connection {
         this.listener = listener;
         this.uri = uri;
         ws = new WebSocketClientImpl(uri, username, null);
-        if (System.getProperty("hearthbeat") != null) {
-            ws.setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
-        }
         ws.connect();
     }
 
@@ -158,6 +158,9 @@ public class WebSocketConnection implements Connection {
 
     @Override
     public void send(WsMessage arg) {
+        if (ws.isClosed() || ws.isClosing()) {
+            return;
+        }
         schedulePing();
         try {
             ws.send(parser.toJson(arg));

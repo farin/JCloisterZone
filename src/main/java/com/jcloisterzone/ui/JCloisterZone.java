@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
+import org.java_websocket.WebSocketImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,6 +199,10 @@ public class JCloisterZone  {
         System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
+
+        if (logger.isDebugEnabled()) {
+            WebSocketImpl.DEBUG = true;
+        }
 
         logger.info("Data directory {}", dataDirectory.toString());
 
