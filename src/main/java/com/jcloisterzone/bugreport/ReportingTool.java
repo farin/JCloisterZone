@@ -4,32 +4,25 @@ import java.awt.Container;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.xml.transform.TransformerException;
 
-import com.google.common.collect.EvictingQueue;
 import com.jcloisterzone.Application;
+import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.game.Game;
+import com.jcloisterzone.game.save.SavedGame;
+import com.jcloisterzone.game.save.SavedGameParser;
 
 public class ReportingTool {
 
-    private EvictingQueue<String> events = EvictingQueue.create(200);
     private Game game;
     private Container container;
-
-
-    synchronized
-    public void report(String s) {
-        events.add(System.currentTimeMillis() + " " + (game == null ? "null" : game.getPhase()) + " " + s);
-    }
-
-    public void setEvents(EvictingQueue<String> events) {
-        this.events = events;
-    }
 
     public void createReport(FileOutputStream fos, String description) throws IOException, TransformerException {
         //createStringReport(System.out, description);
@@ -52,19 +45,13 @@ public class ReportingTool {
         zos.write((System.getProperty("java.version")+"\r\n").getBytes());
         zos.closeEntry();
 
-        ze = new ZipEntry("events.txt");
+        ze = new ZipEntry("savegame.jcz");
         zos.putNextEntry(ze);
-        for (String s : events) {
-            zos.write(s.getBytes());
-            zos.write("\r\n".getBytes());
-        }
+        SavedGame save = new SavedGame(game);
+        SavedGameParser parser = new SavedGameParser(true);
+        save.setAnnotations(game.getGameAnnotations());
+        zos.write(parser.toJson(save).getBytes());
         zos.closeEntry();
-
-//        ze = new ZipEntry("savegame.jcz");
-//        zos.putNextEntry(ze);
-//        Snapshot snapshot = new Snapshot(game);
-//        snapshot.save(zos, false, false);
-//        zos.closeEntry();
 
         if (container != null) {
             ze = new ZipEntry("board.png");
@@ -74,6 +61,16 @@ public class ReportingTool {
             ImageIO.write(im, "PNG", zos);
             zos.closeEntry();
         }
+
+        if (System.err instanceof FileTeeStream) {
+            FileTeeStream errStream = (FileTeeStream) System.err;
+            if (errStream.getFile().exists()) {
+                ze = new ZipEntry("error.log");
+                zos.putNextEntry(ze);
+                zos.write(Files.readAllBytes(errStream.getFile().toPath()));
+                zos.closeEntry();
+            }
+        }
         zos.close();
     }
 
@@ -81,15 +78,12 @@ public class ReportingTool {
     public void createStringReport(PrintStream out, String description) throws IOException, TransformerException {
         out.println("---------- description ------------");
         out.println(description);
-        out.println("---------- events ------------");
-        for (String s : events) {
-            out.println(s);
-        }
 
-//        out.println("---------- save ------------");
-//        Snapshot snapshot = new Snapshot(game);
-//        snapshot.setGzipOutput(false);
-//        out.println(snapshot.saveToString());
+        out.println("---------- save ------------");
+        SavedGame save = new SavedGame(game);
+        SavedGameParser parser = new SavedGameParser(true);
+        save.setAnnotations(game.getGameAnnotations());
+        parser.toJson(save, new OutputStreamWriter(out));
 
         out.println("---------- system env ------------");
         out.println(System.getProperty("java.version"));

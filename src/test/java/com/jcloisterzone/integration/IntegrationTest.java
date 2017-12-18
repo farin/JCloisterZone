@@ -40,7 +40,7 @@ public class IntegrationTest {
 
     protected GameState createGameState(String savedGameFile) {
         Config config = new Config();
-        SavedGameParser parser = new SavedGameParser(config);
+        SavedGameParser parser = new SavedGameParser();
         JsonReader reader;
         try {
             URL resource = getClass().getClassLoader().getResource(savedGameFile);

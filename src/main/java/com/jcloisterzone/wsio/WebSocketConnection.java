@@ -85,10 +85,6 @@ public class WebSocketConnection implements Connection {
             if (logger.isInfoEnabled()) {
                 logger.info(payload);
             }
-            if (reportingTool != null) {
-                reportingTool.report(payload);
-            }
-
             if (msg instanceof WelcomeMessage) {
                 WelcomeMessage welcome = (WelcomeMessage) msg;
                 sessionId = welcome.getSessionId();

@@ -62,7 +62,6 @@ public class GameController extends EventProxyUiController<Game> {
     public GameController(Client client, Game game) {
         super(client, game);
         this.game = game;
-        getInvokeInSwingUiAdapter().setReportingTool(reportingTool);
         connProxy = new ConnectionProxy();
     }
 

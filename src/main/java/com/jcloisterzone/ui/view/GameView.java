@@ -388,7 +388,7 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
                 }
                 try (Writer writer = new FileWriter(file)) {
                     SavedGame save = new SavedGame(game);
-                    SavedGameParser parser = new SavedGameParser(getClient().getConfig());
+                    SavedGameParser parser = new SavedGameParser("pretty".equals(getClient().getConfig().getSaved_games().getFormat()));
                     save.setAnnotations(game.getGameAnnotations());
                     parser.toJson(save, writer);
                 } catch (IOException ex) {

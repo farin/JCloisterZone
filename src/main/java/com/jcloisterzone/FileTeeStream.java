@@ -52,4 +52,8 @@ public class FileTeeStream extends PrintStream {
             outStream.close();
         }
     }
+
+    public File getFile() {
+        return file;
+    }
 }

@@ -476,7 +476,7 @@ public class Client extends JFrame {
             File file = fc.getSelectedFile();
             if (file != null) {
                 try {
-                    SavedGameParser parser = new SavedGameParser(getConfig());
+                    SavedGameParser parser = new SavedGameParser();
                     JsonReader reader = new JsonReader(new FileReader(file));
                     SavedGame sg = parser.fromJson(reader);
                     createGame(sg);
