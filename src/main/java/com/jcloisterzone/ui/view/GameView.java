@@ -50,6 +50,8 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    public static final String RECONNECTING_ERR_MSG = "RECONNECTING";
+
     private final GameController gc;
     private final Game game;
     private boolean gameRunning = true; //is it needed, what about use game state (but force close don't change it)
@@ -232,11 +234,11 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
                 if (!game.isOver()) {
                     //simple server sends game message automatically, send game id for online server only
                     gc.getConnection().reconnect(null);
-                    getGridPanel().showErrorMessage(message);
+                    getGridPanel().showErrorMessage(message, RECONNECTING_ERR_MSG);
                 }
             } else {
                 gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
-                getGridPanel().showErrorMessage(message);
+                getGridPanel().showErrorMessage(message, RECONNECTING_ERR_MSG);
             }
         }
     }
@@ -248,7 +250,7 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
             message = ex.getClass().getSimpleName();
         }
         logger.error(message, ex);
-        getGridPanel().showErrorMessage(message);
+        getGridPanel().showErrorMessage(message, null);
     }
 
     @Override

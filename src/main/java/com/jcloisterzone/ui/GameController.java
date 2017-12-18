@@ -119,6 +119,8 @@ public class GameController extends EventProxyUiController<Game> {
             SwingUtilities.invokeLater(() -> {
                 client.mountView(gameView);
             });
+        } else {
+            gameView.getGridPanel().hideErrorMessage(GameView.RECONNECTING_ERR_MSG);
         }
     }
 

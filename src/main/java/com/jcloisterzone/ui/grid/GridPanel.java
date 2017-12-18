@@ -84,6 +84,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
 
     private List<GridLayer> layers = new ArrayList<GridLayer>();
     private ErrorMessagePanel errorMsg;
+    private String errorCode;
 
     public GridPanel(Client client, GameView gameView, ControlPanel controlPanel, ChatPanel chatPanel) {
         setDoubleBuffered(true);
@@ -469,16 +470,32 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //hideLayer(AbbeyPlacementLayer.class);
     }
 
-    public void showErrorMessage(String errorMessage) {
+    public void showErrorMessage(String errorMessage, String errCode) {
         if (errorMsg != null) {
             remove(errorMsg);
         }
+        this.errorCode = errCode;
         errorMsg = new ErrorMessagePanel(errorMessage);
         errorMsg.setOpaque(true);
         add(errorMsg, "pos 0 0 (100%-242) 30");
         setComponentZOrder(errorMsg, 1);
         revalidate();
         repaint();
+    }
+
+    public void hideErrorMessage(String errorCode) {
+        if (errorCode != null) {
+            if (!errorCode.equals(this.errorCode)) {
+                return;
+            }
+        }
+
+        if (errorMsg != null) {
+            remove(errorMsg);
+            errorMsg = null;
+            this.errorCode = null;
+            repaint();
+        }
     }
 
     // delegated UI methods
@@ -649,8 +666,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
             icon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    GridPanel.this.remove(ErrorMessagePanel.this);
-                    GridPanel.this.repaint();
+                    hideErrorMessage(null);
                 }
             });
             add(label);
