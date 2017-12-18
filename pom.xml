@@ -298,9 +298,7 @@
                             </target>
                         </configuration>
                     </execution>
-                    <execution>
-                        <!-- Package plugin resource files in a flat hierarchy. -->
-                        <!-- jar cfM build/plugins/jcz3d.jar -C src/main/resources/plugins/jcz3d . -->
+                    <!--execution>
                         <id>plugin-jcz3d</id>
                         <phase>package</phase>
                         <goals>
@@ -318,7 +316,7 @@
                                 </exec>
                             </target>
                         </configuration>
-                    </execution>
+                    </execution-->
                 </executions>
             </plugin>
         </plugins>
