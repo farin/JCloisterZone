@@ -15,6 +15,10 @@ public class RandomGenerator {
         this.salt = salt;
     }
 
+    public long getSalt() {
+        return salt;
+    }
+
     public int nextInt(int bound) {
         return (random.nextInt(bound) + ((int)(salt % bound))) % bound;
     }

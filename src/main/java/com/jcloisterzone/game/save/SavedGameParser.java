@@ -52,7 +52,10 @@ public class SavedGameParser {
 
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
-            return (WsReplayableMessage.class.isAssignableFrom(f.getDeclaringClass()) && f.getName().equals("gameId"));
+           if (WsReplayableMessage.class.isAssignableFrom(f.getDeclaringClass())) {
+               return f.getName().equals("gameId") || f.getName().equals("messageId");
+           }
+           return false;
         }
 
     }

@@ -232,6 +232,10 @@ public class Game implements EventProxy {
     }
 
     public String getMessageId() {
+        return getMessageId(state);
+    }
+
+    private String getMessageId(GameState state) {
         String extra = BuilderState.SECOND_TURN == state.getCapabilityModel(BuilderCapability.class) ? "*" : "";
         return String.format("%s%s.%s.%s", state.getTurnNumber(), extra, state.getPhase().getSimpleName(), messageIdPhaseSequence);
     }
@@ -244,13 +248,31 @@ public class Game implements EventProxy {
 
     @WsSubscribe
     public void handleInGameMessage(WsReplayableMessage msg) {
+        if (!replay.isEmpty()) {
+            WsReplayableMessage prevMsg = replay.get();
+            if (prevMsg.getMessageId().equals(msg.getMessageId())) {
+                logger.warn("Dropping already delivered message {}", msg.getMessageId());
+                return;
+            }
+        }
+        // first, try to derive new state to verify that message is valid
+        long origSalt = phaseReducer.getRandom().getSalt();
+        GameState newState = null;
+        try {
+            if (msg instanceof WsSaltMeesage) {
+                phaseReducer.getRandom().setSalt(((WsSaltMeesage)msg).getSalt());
+            }
+            newState = phaseReducer.apply(state, msg);
+        } catch (Exception e) {
+            // revert salt back as message never received
+            phaseReducer.getRandom().setSalt(origSalt);
+            throw e;
+        }
+
+        updateMessageIdPhaseSequence(state, newState);
         markUndo();
         replay = replay.prepend(msg);
-        if (msg instanceof WsSaltMeesage) {
-            phaseReducer.getRandom().setSalt(((WsSaltMeesage)msg).getSalt());
-        }
-        Class<? extends Phase> oldPhase = state.getPhase();
-        GameState newState = phaseReducer.apply(state, msg);
+
         Player activePlayer = newState.getActivePlayer();
         if (msg instanceof WsSaltMeesage
             || activePlayer == null
@@ -259,7 +281,11 @@ public class Game implements EventProxy {
             clearUndo();
         }
         replaceState(newState);
-        if (oldPhase.equals(state.getPhase())) {
+
+    }
+
+    private void updateMessageIdPhaseSequence(GameState oldState, GameState newState) {
+        if (oldState.getPhase().equals(newState.getPhase())) {
             messageIdPhaseSequence++;
         } else {
             messageIdPhaseSequence = 0;
@@ -347,10 +373,13 @@ public class Game implements EventProxy {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
+            msg.setMessageId(getMessageId(state));
             if (msg instanceof WsSaltMeesage) {
                 phaseReducer.getRandom().setSalt(((WsSaltMeesage) msg).getSalt());
             }
+            GameState prev = state;
             state = phaseReducer.apply(state, msg);
+            updateMessageIdPhaseSequence(prev, state);
         }
         replaceState(state);
     }
