@@ -6,6 +6,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class BazaarBidMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
+    private String messageId;
     private int supplyIndex;
     private int price;
 
@@ -25,6 +26,16 @@ public class BazaarBidMessage implements WsInGameMessage, WsReplayableMessage {
     @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public int getSupplyIndex() {

@@ -9,6 +9,7 @@ public class BazaarBuyOrSellMessage implements WsInGameMessage, WsReplayableMess
     public enum BuyOrSellOption { BUY, SELL }
 
     private String gameId;
+    private String messageId;
     private BuyOrSellOption value;
 
     public BazaarBuyOrSellMessage() {
@@ -26,6 +27,16 @@ public class BazaarBuyOrSellMessage implements WsInGameMessage, WsReplayableMess
     @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public BuyOrSellOption getValue() {

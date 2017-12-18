@@ -6,6 +6,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMeesage {
 
     private String gameId;
+    private String messageId;
     private long salt;
 
 
@@ -20,6 +21,16 @@ public class CommitMessage implements WsInGameMessage, WsReplayableMessage, WsSa
     @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     @Override

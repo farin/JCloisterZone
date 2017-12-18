@@ -8,6 +8,7 @@ public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsRepla
     public enum CornCircleOption { DEPLOY, REMOVE }
 
     private String gameId;
+    private String messageId;
     private CornCircleOption value;
 
     public CornCircleRemoveOrDeployMessage() {
@@ -25,6 +26,16 @@ public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsRepla
     @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public CornCircleOption getValue() {

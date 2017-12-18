@@ -8,13 +8,13 @@ public class UndoMessage implements WsInGameMessage {
     private String gameId;
     /** notifies server hot to cut replay history,
      *  because server doesn't understand game rules */
-    private int replaySize;
+    private String lastMessageId;
 
     public UndoMessage() {
     }
 
-    public UndoMessage(int replaySize) {
-        this.replaySize = replaySize;
+    public UndoMessage(String lastMessageId) {
+        this.lastMessageId = lastMessageId;
     }
 
     @Override
@@ -27,11 +27,11 @@ public class UndoMessage implements WsInGameMessage {
         this.gameId = gameId;
     }
 
-    public int getReplaySize() {
-        return replaySize;
+    public String getLastMessageId() {
+        return lastMessageId;
     }
 
-    public void setReplaySize(int replaySize) {
-        this.replaySize = replaySize;
+    public void setLastMessageId(String lastMessageId) {
+        this.lastMessageId = lastMessageId;
     }
 }

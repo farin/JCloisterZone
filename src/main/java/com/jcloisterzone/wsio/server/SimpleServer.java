@@ -579,7 +579,17 @@ public class SimpleServer extends WebSocketServer  {
     public void handleUndo(WebSocket ws, UndoMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        replay = replay.subList(0, msg.getReplaySize());
+
+        List<WsReplayableMessage> trimmed = new ArrayList<>();
+        if (!"".equals(msg.getLastMessageId())) {
+            for (WsReplayableMessage m : replay) {
+                trimmed.add(m);
+                if (m.getMessageId().equals(msg.getLastMessageId())) {
+                    break;
+                }
+            }
+        }
+        replay = trimmed;
         broadcast(msg);
     }
 

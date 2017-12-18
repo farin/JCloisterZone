@@ -11,6 +11,7 @@ public class SetNextPlayer implements Reducer {
     public GameState apply(GameState state) {
         Player p = state.getTurnPlayer().getNextPlayer(state);
         state = state.mapPlayers(ps -> ps.setTurnPlayerIndex(p.getIndex()));
+        state = state.setTurnNumber(state.getTurnNumber() + 1);
         state = state.appendEvent(
             new PlayerTurnEvent(PlayEventMeta.createWithoutPlayer(), p)
         );

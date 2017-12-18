@@ -27,6 +27,8 @@ import com.jcloisterzone.event.GameOverEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.capability.BuilderCapability;
+import com.jcloisterzone.game.capability.BuilderState;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.ActionsState;
@@ -79,6 +81,8 @@ public class Game implements EventProxy {
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
 
     private int idSequenceCurrVal = 0;
+    /** message counter in current phase */
+    private int messageIdPhaseSequence = 0;
 
     public Game(String gameId, long randomSeed) {
         this.gameId = gameId;
@@ -227,6 +231,11 @@ public class Game implements EventProxy {
         replaceState(head._1.getState());
     }
 
+    public String getMessageId() {
+        String extra = BuilderState.SECOND_TURN == state.getCapabilityModel(BuilderCapability.class) ? "*" : "";
+        return String.format("%s%s.%s.%s", state.getTurnNumber(), extra, state.getPhase().getSimpleName(), messageIdPhaseSequence);
+    }
+
     @WsSubscribe
     public void handleSlotMessage(SlotMessage msg) {
         slotSupported[msg.getNumber()] = msg.getSupportedSetup();
@@ -240,6 +249,7 @@ public class Game implements EventProxy {
         if (msg instanceof WsSaltMeesage) {
             phaseReducer.getRandom().setSalt(((WsSaltMeesage)msg).getSalt());
         }
+        Class<? extends Phase> oldPhase = state.getPhase();
         GameState newState = phaseReducer.apply(state, msg);
         Player activePlayer = newState.getActivePlayer();
         if (msg instanceof WsSaltMeesage
@@ -249,6 +259,11 @@ public class Game implements EventProxy {
             clearUndo();
         }
         replaceState(newState);
+        if (oldPhase.equals(state.getPhase())) {
+            messageIdPhaseSequence++;
+        } else {
+            messageIdPhaseSequence = 0;
+        }
     }
 
     @WsSubscribe

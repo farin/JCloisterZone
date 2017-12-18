@@ -40,6 +40,7 @@ import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.LeaveGameMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
+import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
@@ -281,6 +282,9 @@ public class GameController extends EventProxyUiController<Game> {
         public void send(WsMessage msg) {
             if (msg instanceof WsInGameMessage) {
                 ((WsInGameMessage) msg).setGameId(game.getGameId());
+            }
+            if (msg instanceof WsReplayableMessage) {
+                ((WsReplayableMessage) msg).setMessageId(game.getMessageId());
             }
             getConnection().send(msg);
         }

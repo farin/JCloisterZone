@@ -65,6 +65,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     private final Queue<PlayEvent> events;
 
     private final Class<? extends Phase> phase;
+    private final int turnNumber;
 
     public static GameState createInitial(
             Map<Rule, Object> rules,
@@ -85,7 +86,8 @@ public class GameState implements ActionsMixin, BoardMixin,
             null,
             HashSet.empty(),
             Queue.empty(),
-            null
+            null,
+            1
         );
     }
 
@@ -103,7 +105,8 @@ public class GameState implements ActionsMixin, BoardMixin,
             ActionsState playerActions,
             Set<Flag> flags,
             Queue<PlayEvent> events,
-            Class<? extends Phase> phase) {
+            Class<? extends Phase> phase,
+            int turnNumber) {
         this.rules = rules;
         this.capabilities = capabilities;
         this.players = players;
@@ -118,6 +121,7 @@ public class GameState implements ActionsMixin, BoardMixin,
         this.flags = flags;
         this.events = events;
         this.phase = phase;
+        this.turnNumber = turnNumber;
     }
 
     @Override
@@ -129,7 +133,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -142,7 +146,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -154,7 +158,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -170,7 +174,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -183,7 +187,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -196,7 +200,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -208,7 +212,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -220,7 +224,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -236,10 +240,11 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
+    @Override
     public GameState setPlayerActions(ActionsState playerActions) {
         if (playerActions == this.playerActions) return this;
         return new GameState(
@@ -248,7 +253,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -265,7 +270,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -278,7 +283,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
         );
     }
 
@@ -290,7 +295,19 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase
+            phase, turnNumber
+        );
+    }
+
+    public GameState setTurnNumber(int turnNumber) {
+        if (turnNumber == this.turnNumber) return this;
+        return new GameState(
+            rules, capabilities, players,
+            tilePack, drawnTile, placedTiles, discardedTiles,
+            featureMap, neutralFigures,
+            deployedMeeples, playerActions,
+            flags, events,
+            phase, turnNumber
         );
     }
 
@@ -304,6 +321,7 @@ public class GameState implements ActionsMixin, BoardMixin,
         return capabilities;
     }
 
+    @Override
     public PlayersState getPlayers() {
         return players;
     }
@@ -355,5 +373,9 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     public Class<? extends Phase> getPhase() {
         return phase;
+    }
+
+    public int getTurnNumber() {
+        return turnNumber;
     }
 }

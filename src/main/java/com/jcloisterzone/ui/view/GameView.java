@@ -45,6 +45,9 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.grid.MainPanel;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.UndoMessage;
+import com.jcloisterzone.wsio.message.WsReplayableMessage;
+
+import io.vavr.collection.List;
 
 public class GameView extends AbstractUiView implements WindowStateListener, GameChatView {
 
@@ -110,8 +113,9 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
         menu.setItemActionListener(MenuItem.SAVE, e -> handleSave());
         menu.setItemActionListener(MenuItem.UNDO, e -> {
             menu.setItemEnabled(MenuItem.UNDO, false);
-            int replaySize = game.getUndoHistory().head().getReplay().size();
-            gc.getConnection().send(new UndoMessage(replaySize));
+            List<WsReplayableMessage> replay = game.getUndoHistory().head().getReplay();
+            String lastMessageId = replay.isEmpty() ? "" : replay.last().getMessageId();
+            gc.getConnection().send(new UndoMessage(lastMessageId));
         });
         menu.setItemActionListener(MenuItem.ZOOM_IN, e -> zoom(2.0));
         menu.setItemActionListener(MenuItem.ZOOM_OUT, e -> zoom(-2.0));

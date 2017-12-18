@@ -7,6 +7,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class MoveNeutralFigureMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
+    private String messageId;
     private String figureId;
     private BoardPointer to;
 
@@ -18,12 +19,24 @@ public class MoveNeutralFigureMessage implements WsInGameMessage, WsReplayableMe
         this.to = to;
     }
 
+    @Override
     public String getGameId() {
         return gameId;
     }
 
+    @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getFigureId() {

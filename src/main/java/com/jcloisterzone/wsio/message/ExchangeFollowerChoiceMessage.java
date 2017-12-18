@@ -6,6 +6,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class ExchangeFollowerChoiceMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
+    private String messageId;
     private String meepleId;
 
     public ExchangeFollowerChoiceMessage() {
@@ -23,6 +24,16 @@ public class ExchangeFollowerChoiceMessage implements WsInGameMessage, WsReplaya
     @Override
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String getMessageId() {
+        return messageId;
+    }
+
+    @Override
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getMeepleId() {
