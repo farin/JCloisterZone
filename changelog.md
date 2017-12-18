@@ -1,6 +1,12 @@
 
 # Version history
 
+## 4.1.0
+
+* connection stability improvements - websocket connection revisited and fixed reconnect on lost connection issues
+* handle properly when single message is sent to server twice 
+* fix: captured meeple color in game events panel
+
 ## 4.0.2
 *2017-12-10*
 

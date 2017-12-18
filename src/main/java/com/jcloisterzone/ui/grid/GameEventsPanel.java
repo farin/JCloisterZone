@@ -254,7 +254,7 @@ public class GameEventsPanel extends JPanel {
     }
 
     private ImageEventItem getMeepleItem(PlayEvent ev, Meeple meeple, FeaturePointer fp) {
-        Image img = rm.getLayeredImage(new LayeredImageDescriptor(meeple.getClass(), triggeringColor));
+        Image img = rm.getLayeredImage(new LayeredImageDescriptor(meeple.getClass(), meeple.getPlayer().getColors().getMeepleColor()));
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
         item.setImage(img);
         item.setPadding(2);
