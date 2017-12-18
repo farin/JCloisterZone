@@ -29,6 +29,7 @@ import com.jcloisterzone.event.play.NeutralFigureMoved;
 import com.jcloisterzone.event.play.NeutralFigureReturned;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
+import com.jcloisterzone.event.play.PrisonersExchangeEvent;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TilePlacedEvent;
@@ -109,7 +110,7 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
         mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
         mapping = mapping.put(CastleCreated.class, this::processCastleCreatedEvent);
-
+        mapping = mapping.put(PrisonersExchangeEvent.class, ev -> null);
     }
 
     private EventItem processTilePlacedEvent(PlayEvent _ev) {
