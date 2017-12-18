@@ -116,7 +116,7 @@ public class WebSocketConnection implements Connection {
 
     @Override
     public void reconnect(final String gameId) {
-        reconnectFuture = scheduler.scheduleAtFixedRate(new Runnable() {
+        reconnectFuture = scheduler.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
                 ws = new WebSocketClientImpl(uri, nickname, gameId);

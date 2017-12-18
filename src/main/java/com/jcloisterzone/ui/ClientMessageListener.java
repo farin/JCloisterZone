@@ -121,8 +121,7 @@ public class ClientMessageListener implements MessageListener {
 
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
-        channelControllers.clear();
-        gameControllers.clear();
+        // do not clear controllers, may reconnect and use them
         client.onWebsocketClose(code, reason, remote);
     }
 
