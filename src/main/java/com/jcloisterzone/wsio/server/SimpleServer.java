@@ -25,6 +25,7 @@ import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
+import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
@@ -110,6 +111,8 @@ public class SimpleServer extends WebSocketServer  {
         setReuseAddr(true);
         if (System.getProperty("hearthbeat") != null) {
             setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+        } else {
+            setConnectionLostTimeout(Connection.DEFAULT_HEARTHBEAT_INTERVAL);
         }
 
         this.errHandler = errHandler;

@@ -51,6 +51,8 @@ public class WebSocketConnection implements Connection {
             super(serverURI);
             if (System.getProperty("hearthbeat") != null) {
                 setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+            } else {
+                setConnectionLostTimeout(DEFAULT_HEARTHBEAT_INTERVAL);
             }
             this.username = username;
             this.reconnectGameId = reconnectGameId;
@@ -59,6 +61,10 @@ public class WebSocketConnection implements Connection {
         @Override
         public void onClose(int code, String reason, boolean remote) {
             cancelPing();
+
+            // workaround for https://github.com/TooTallNate/Java-WebSocket/issues/587
+            ws.setConnectionLostTimeout(0);
+
             listener.onWebsocketClose(code, reason, remote && !closedByUser);
         }
 

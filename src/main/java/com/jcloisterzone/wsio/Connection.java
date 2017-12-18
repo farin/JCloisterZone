@@ -4,6 +4,8 @@ import com.jcloisterzone.wsio.message.WsMessage;
 
 public interface Connection {
 
+    public static int DEFAULT_HEARTHBEAT_INTERVAL = 30;
+
     public void send(WsMessage arg);
 
     public boolean isClosed();
