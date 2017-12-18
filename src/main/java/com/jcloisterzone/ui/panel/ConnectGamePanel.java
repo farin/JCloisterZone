@@ -133,13 +133,14 @@ public class ConnectGamePanel extends ThemedJPanel {
     public void onWebsocketError(Exception ex) {
         message.setForeground(Color.RED);
         btnConnect.setEnabled(true);
+
         if (ex instanceof UnresolvedAddressException) {
             message.setText( _tr("Connection failed. Unknown host."));
         } else if (ex instanceof ConnectException && "Connection refused: connect".equals(ex.getMessage())) {
             message.setText( _tr("Connection refused."));
         } else {
             message.setText( _tr("Connection failed.") + " (" + ex.getMessage() + ")");
-            logger.warn(ex.getMessage(), ex);
+            logger.info(ex.getMessage(), ex);
         }
 
     }
