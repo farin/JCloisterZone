@@ -116,11 +116,13 @@ public class GameController extends EventProxyUiController<Game> {
             } else {
                 gameView.setChatPanel(new GameChatPanel(client, game));
             }
+        } else {
+            gameView.getGridPanel().hideErrorMessage(GameView.RECONNECTING_ERR_MSG);
+        }
+        if (client.getView() != gameView) {
             SwingUtilities.invokeLater(() -> {
                 client.mountView(gameView);
             });
-        } else {
-            gameView.getGridPanel().hideErrorMessage(GameView.RECONNECTING_ERR_MSG);
         }
     }
 

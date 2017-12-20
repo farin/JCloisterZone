@@ -281,10 +281,6 @@ public class ClientMessageListener implements MessageListener {
                 } else {
                     replay = io.vavr.collection.List.ofAll(msg.getReplay());
                 }
-                if (client.getView() instanceof ChannelView) {
-                    openGameSetup(gc, msg); // Setup triggers game view immediately
-                }
-
                 handleGameStarted(gc, replay);
                 break;
             }
