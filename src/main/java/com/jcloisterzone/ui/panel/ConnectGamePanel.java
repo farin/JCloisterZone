@@ -136,7 +136,7 @@ public class ConnectGamePanel extends ThemedJPanel {
 
         if (ex instanceof UnresolvedAddressException) {
             message.setText( _tr("Connection failed. Unknown host."));
-        } else if (ex instanceof ConnectException && "Connection refused: connect".equals(ex.getMessage())) {
+        } else if (ex instanceof ConnectException && ex.getMessage().contains("Connection refused")) {
             message.setText( _tr("Connection refused."));
         } else {
             message.setText( _tr("Connection failed.") + " (" + ex.getMessage() + ")");
