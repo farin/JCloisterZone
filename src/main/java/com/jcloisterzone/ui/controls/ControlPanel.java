@@ -44,6 +44,7 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.FinalScoring;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.wsio.message.CommitMessage;
@@ -54,7 +55,7 @@ import io.vavr.collection.Queue;
 import io.vavr.collection.Vector;
 import net.miginfocom.swing.MigLayout;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JPanel implements UIEventListener {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
 
@@ -96,7 +97,6 @@ public class ControlPanel extends JPanel {
         this.gameView = gameView;
         this.game = gameView.getGame();
         this.gc = gameView.getGameController();
-        gc.register(this);
 
         setOpaque(false);
         setLayout(new MigLayout("ins 0, gap 0", "[grow]", ""));

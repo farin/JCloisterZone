@@ -29,7 +29,6 @@ public class PlacementHistory extends AbstractGridLayer {
 
     public PlacementHistory(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
     }
 
     private Player getTriggeringPlayer(GameState state, PlayEvent ev) {

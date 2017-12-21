@@ -75,6 +75,7 @@ public class Game implements EventProxy {
 
     protected PlayerSlot[] slots;
     protected SupportedSetup[] slotSupported = new SupportedSetup[PlayerSlot.COUNT];
+    private boolean aiPlayersRegistered;
 
     private List<UndoHistoryItem> undoHistory = List.empty();
 
@@ -385,6 +386,11 @@ public class Game implements EventProxy {
     }
 
     private void createAiPlayers(GameController gc) {
+        if (aiPlayersRegistered) {
+            // do not create AI players for second time when game is just resumed
+            // eg. reconnect after lost connection or simply continue paused game on play server
+            return;
+        }
         for (PlayerSlot slot : slots) {
             if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
@@ -402,6 +408,7 @@ public class Game implements EventProxy {
                 }
             }
         }
+        aiPlayersRegistered = true;
     }
 
     public void setSlots(PlayerSlot[] slots) {

@@ -29,6 +29,7 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.grid.DragInsensitiveMouseClickListener;
 import com.jcloisterzone.ui.grid.GridLayer;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -36,7 +37,7 @@ import com.jcloisterzone.ui.resources.ConvenientResourceManager;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.TileImage;
 
-public abstract class AbstractGridLayer implements GridLayer {
+public abstract class AbstractGridLayer implements GridLayer, UIEventListener {
 
     protected boolean visible;
     protected final GridPanel gridPanel;

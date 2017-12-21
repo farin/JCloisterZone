@@ -53,7 +53,6 @@ public class MeepleLayer extends AbstractGridLayer {
 
     public MeepleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
     }
 
     @Subscribe

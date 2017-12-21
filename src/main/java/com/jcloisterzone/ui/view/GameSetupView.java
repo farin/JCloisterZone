@@ -31,6 +31,7 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
     private final Game game;
     private final boolean mutableSlots;
 
+    private BackgroundPanel root;
     private ChatPanel chatPanel;
     private CreateGamePanel createGamePanel;
     private ConnectedClientsPanel connectedClientsPanel;
@@ -54,11 +55,14 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
     public void show(Container pane) {
         Game game = gc.getGame();
 
-        BackgroundPanel bg = new BackgroundPanel();
-        bg.setLayout(new BorderLayout());
-        pane.add(bg);
+        root = new BackgroundPanel();
+        root.setLayout(new BorderLayout());
+        pane.add(root);
 
-        showCreateGamePanel(bg, mutableSlots, game.getPlayerSlots());
+        showCreateGamePanel(root, mutableSlots, game.getPlayerSlots());
+
+        gc.register(this);
+        registerChildComponents(root, gc);
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.LEAVE_GAME, new ActionListener() {
@@ -79,7 +83,6 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
 
         panel.add(envelope, BorderLayout.CENTER);
 
-
         JPanel chatColumn = new JPanel();
         chatColumn.setOpaque(false);
         chatColumn.setLayout(new MigLayout("ins 0, gap 0 10", "[grow]", "[60px][grow]"));
@@ -90,10 +93,6 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
 
         chatPanel = new GameChatPanel(client, game);
         chatColumn.add(chatPanel, "cell 0 1, grow");
-
-        gc.register(createGamePanel);
-        gc.register(chatPanel);
-        gc.register(this);
     }
 
     @Override
@@ -107,9 +106,8 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
 
     @Override
     public void hide(UiView nextView) {
-        gc.unregister(createGamePanel);
-        gc.unregister(chatPanel);
         gc.unregister(this);
+        unregisterChildComponents(root, gc);
 
         MenuBar menu = client.getJMenuBar();
         menu.setItemEnabled(MenuItem.LEAVE_GAME, false);

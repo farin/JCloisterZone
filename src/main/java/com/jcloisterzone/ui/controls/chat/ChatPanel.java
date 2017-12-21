@@ -49,13 +49,14 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.Subscribe;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
 import com.jcloisterzone.wsio.message.PostChatMessage;
 
 import net.miginfocom.swing.MigLayout;
 
-public abstract class ChatPanel extends JPanel implements WindowStateListener {
+public abstract class ChatPanel extends JPanel implements WindowStateListener, UIEventListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

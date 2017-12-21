@@ -27,14 +27,10 @@ public class GoldLayer extends AbstractGridLayer {
 
     private Map<Position, Integer> placedGold = HashMap.empty();
 
-
-
     public GoldLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         goldImage = rm.getImage("neutral/gold");
         widthHeightRatio = goldImage.getWidth(null) / (double) goldImage.getHeight(null);
-
-        gc.register(this);
     }
 
     @Subscribe

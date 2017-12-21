@@ -32,8 +32,6 @@ public class AnimationLayer extends AbstractGridLayer {
         this.service = new AnimationService();
         this.service.setGridPanel(gridPanel);
         this.service.start();
-
-        gc.register(this);
     }
 
     @Subscribe

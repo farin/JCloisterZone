@@ -31,7 +31,6 @@ public class CastleLayer extends AbstractGridLayer {
     public CastleLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
         castleImage = rm.getImage("neutral/castle");
-        gc.register(this);
     }
 
 

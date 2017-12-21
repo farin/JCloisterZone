@@ -99,12 +99,8 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
         pane.add(mainPanel);
 
         gc.getReportingTool().setContainer(mainPanel);
-        mainPanel.started();
 
-        if (chatPanel != null) {
-            gc.register(chatPanel);
-        }
-        gc.register(this);
+        registerChildComponents(mainPanel, gc);
 
         timer = new Timer(true);
         timer.scheduleAtFixedRate(new KeyRepeater(), 0, 40);
@@ -184,8 +180,9 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
     @Override
     public void hide(UiView nextView) {
         timer.cancel();
-        gc.unregister(chatPanel);
-        gc.unregister(this);
+
+        unregisterChildComponents(mainPanel, gc);
+
         Connection conn = gc.getConnection();
         if (conn != null) conn.stopReconnecting();
 

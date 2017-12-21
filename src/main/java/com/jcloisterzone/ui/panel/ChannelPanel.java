@@ -32,6 +32,7 @@ import com.jcloisterzone.ui.ChannelController;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.LengthRestrictedDocument;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.controls.chat.ChannelChatPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
@@ -46,7 +47,7 @@ import com.jcloisterzone.wsio.server.RemoteClient;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-public class ChannelPanel extends ThemedJPanel {
+public class ChannelPanel extends ThemedJPanel implements UIEventListener {
 
     private static final int MAX_GAME_TITLE_LENGTH = 60;
 
@@ -84,9 +85,6 @@ public class ChannelPanel extends ThemedJPanel {
         scroll.setViewportBorder(null);  //ubuntu jdk
         scroll.setBorder(BorderFactory.createEmptyBorder()); //win jdk
         add(scroll, "cell 2 1, grow");
-
-        cc.register(this);
-        cc.register(chatPanel);
     }
 
     private JPanel createCreateGamePanel() {
@@ -219,6 +217,7 @@ public class ChannelPanel extends ThemedJPanel {
             add(buttons, "wrap");
 
             //TODO but what about unregister
+            // TODO component listener to unregister from game controller
             gc.register(this);
         }
 

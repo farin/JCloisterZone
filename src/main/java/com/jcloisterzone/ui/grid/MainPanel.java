@@ -13,6 +13,7 @@ import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.CapabilitiesState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.controls.ControlPanel;
 import com.jcloisterzone.ui.controls.chat.ChatPanel;
 import com.jcloisterzone.ui.grid.layer.AnimationLayer;
@@ -35,7 +36,7 @@ import com.jcloisterzone.ui.view.GameView;
 
 
 @SuppressWarnings("serial")
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements UIEventListener {
 
     private final Client client;
     private final GameView gameView;
@@ -56,28 +57,9 @@ public class MainPanel extends JPanel {
         this.gc = gameView.getGameController();
         this.game = gc.getGame();
         this.chatPanel = chatPanel;
-        gc.register(this);
 
         setLayout(new BorderLayout());
-    }
 
-    public GridPanel getGridPanel() {
-        return gridPanel;
-    }
-
-    public ControlPanel getControlPanel() {
-        return controlPanel;
-    }
-
-    public void setShowFarmHints(boolean showFarmHints) {
-        if (showFarmHints) {
-            getGridPanel().showLayer(farmHintLayer);
-        } else {
-            getGridPanel().hideLayer(farmHintLayer);
-        }
-    }
-
-    public void started() {
         controlPanel = new ControlPanel(gameView);
         gridPanel = new GridPanel(client, gameView, controlPanel, chatPanel);
         MeepleLayer meepleLayer = new MeepleLayer(gridPanel, gc);
@@ -90,7 +72,6 @@ public class MainPanel extends JPanel {
 
         gridPanel.addLayer(tilePlacementLayer, false);
         gridPanel.addLayer(tileLayer);
-
 
         gridPanel.addLayer(farmHintLayer, false);
 
@@ -137,6 +118,23 @@ public class MainPanel extends JPanel {
 
         add(gridPanel);
     }
+
+    public GridPanel getGridPanel() {
+        return gridPanel;
+    }
+
+    public ControlPanel getControlPanel() {
+        return controlPanel;
+    }
+
+    public void setShowFarmHints(boolean showFarmHints) {
+        if (showFarmHints) {
+            getGridPanel().showLayer(farmHintLayer);
+        } else {
+            getGridPanel().hideLayer(farmHintLayer);
+        }
+    }
+
 
     public void toggleRecentHistory(boolean show) {
         if (show) {

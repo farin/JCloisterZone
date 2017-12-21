@@ -35,7 +35,6 @@ public class TowerLayer extends AbstractGridLayer {
 
     public TowerLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
     }
 
 

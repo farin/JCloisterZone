@@ -50,7 +50,6 @@ public class FarmHintsLayer extends AbstractGridLayer {
 
     public FarmHintsLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
     }
 
     @Subscribe

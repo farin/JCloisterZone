@@ -43,8 +43,6 @@ public class TokenLayer extends AbstractGridLayer {
 
     public TokenLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
-
     }
 
     @Subscribe

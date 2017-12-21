@@ -37,8 +37,6 @@ public class TileLayer extends AbstractGridLayer {
 
     public TileLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-
-        gc.register(this);
     }
 
     @Subscribe

@@ -35,7 +35,6 @@ public class BridgeLayer extends AbstractGridLayer {
 
     public BridgeLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        gc.register(this);
     }
 
     @Subscribe

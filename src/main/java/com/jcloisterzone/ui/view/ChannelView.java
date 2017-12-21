@@ -32,6 +32,8 @@ public class ChannelView extends AbstractUiView {
         chatPanel = channelPanel.getChatPanel();
         cc.setChannelPanel(channelPanel);
 
+        registerChildComponents(channelPanel, cc);
+
         MenuBar menu = client.getJMenuBar();
         menu.setItemActionListener(MenuItem.DISCONNECT, new ActionListener() {
             @Override
@@ -49,6 +51,8 @@ public class ChannelView extends AbstractUiView {
 
     @Override
     public void hide(UiView nextView) {
+        unregisterChildComponents(channelPanel, cc);
+
         MenuBar menu = client.getJMenuBar();
         if (nextView instanceof StartView) {
             menu.setItemEnabled(MenuItem.DISCONNECT, false);

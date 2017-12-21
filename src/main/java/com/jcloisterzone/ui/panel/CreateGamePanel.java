@@ -53,6 +53,7 @@ import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.component.TextPrompt;
 import com.jcloisterzone.ui.component.TextPrompt.Show;
@@ -67,7 +68,7 @@ import com.jcloisterzone.wsio.message.StartGameMessage;
 import io.vavr.collection.Set;
 import net.miginfocom.swing.MigLayout;
 
-public class CreateGamePanel extends ThemedJPanel {
+public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
 
     private static final long serialVersionUID = -8993000662700228625L;
 

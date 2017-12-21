@@ -37,7 +37,9 @@ import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.Client;
+import com.jcloisterzone.ui.EventProxyUiController;
 import com.jcloisterzone.ui.GameController;
+import com.jcloisterzone.ui.UIEventListener;
 import com.jcloisterzone.ui.UiUtils;
 import com.jcloisterzone.ui.annotations.LinkedPanel;
 import com.jcloisterzone.ui.controls.ControlPanel;
@@ -50,7 +52,7 @@ import com.jcloisterzone.ui.view.GameView;
 
 import net.miginfocom.swing.MigLayout;
 
-public class GridPanel extends JPanel implements ForwardBackwardListener {
+public class GridPanel extends JPanel implements ForwardBackwardListener, UIEventListener {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -96,8 +98,6 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         this.gc = gameView.getGameController();
         this.controlPanel = controlPanel;
 
-        gc.register(this);
-
         boolean networkGame = "true".equals(System.getProperty("forceChat"));
         for (Player p : gc.getGame().getState().getPlayers().getPlayers()) {
             if (!p.getSlot().isOwn()) {
@@ -126,6 +126,26 @@ public class GridPanel extends JPanel implements ForwardBackwardListener {
         //client.is
         add(eventsPanel, "pos 0 0 (100%-242) 36");
         setComponentZOrder(eventsPanel, chatPanel == null ? 1 : 2);
+    }
+
+    @Override
+    public void registerTo(EventProxyUiController<?> gc) {
+        UIEventListener.super.registerTo(gc);
+        for (GridLayer layer : layers) {
+            if (layer instanceof UIEventListener) {
+                ((UIEventListener)layer).registerTo(gc);
+            }
+        }
+    }
+
+    @Override
+    public void unregisterFrom(EventProxyUiController<?> gc) {
+        UIEventListener.super.unregisterFrom(gc);
+        for (GridLayer layer : layers) {
+            if (layer instanceof UIEventListener) {
+                ((UIEventListener)layer).unregisterFrom(gc);
+            }
+        }
     }
 
     public double getMeepleScaleFactor() {
