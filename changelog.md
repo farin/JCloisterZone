@@ -2,6 +2,7 @@
 # Version history
 
 ## 4.1.0
+*2017-12-25*
 
 * connection stability improvements - websocket connection revisited and fixed reconnect on lost connection issues
 * handle properly when single message is sent to server twice 

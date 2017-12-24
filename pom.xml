@@ -130,8 +130,8 @@
                                         <Class-Path>.</Class-Path>
                                         <Created-By>Farin</Created-By>
                                         <Implementation-Title>JCloisterZone</Implementation-Title>
-                                        <Implementation-Version>4.1.0</Implementation-Version>
-                                        <Release-Date>2017-12-24</Release-Date>
+                                        <Implementation-Version>${jcz.version}</Implementation-Version>
+                                        <Release-Date>${jcz.date}</Release-Date>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
