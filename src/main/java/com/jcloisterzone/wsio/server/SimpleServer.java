@@ -135,15 +135,33 @@ public class SimpleServer extends WebSocketServer  {
         } else {
             gameId = KeyUtils.createRandomId();
             initialSeed = random.nextLong();
-            gameSetup = new GameSetup(
-                io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
-                io.vavr.collection.HashSet.of(StandardGameCapability.class),
-                Rule.getDefaultRules()
-            );
             replay = new ArrayList<>();
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new ServerPlayerSlot(i);
             }
+            if (game == null) {
+                gameSetup = new GameSetup(
+                    io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
+                    io.vavr.collection.HashSet.of(StandardGameCapability.class),
+                    Rule.getDefaultRules()
+                );
+            } else {
+                gameSetup = game.getSetup();
+                int maxSerial = 0;
+                for (PlayerSlot slot : game.getPlayerSlots()) {
+                    boolean ownedByCreator = hostClientId != null && hostClientId.equals(slot.getClientId());
+                    if (ownedByCreator || slot.getAiClassName() != null) {
+                        int idx = slot.getNumber();
+                        slots[idx].setAutoAssignClientId(hostClientId);
+                        slots[idx].setNickname(slot.getNickname());
+                        slots[idx].setSerial(slot.getSerial());
+                        slots[idx].setAiClassName(slot.getAiClassName());
+                        maxSerial = Math.max(maxSerial, slot.getSerial());
+                    }
+                }
+                slotSerial = maxSerial + 1;
+            }
+
         }
     }
 
