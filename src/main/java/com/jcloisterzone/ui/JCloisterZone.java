@@ -200,7 +200,7 @@ public class JCloisterZone  {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JCloisterZone");
 
-        if (logger.isDebugEnabled()) {
+        if ("true".equals(System.getProperty("wsdebug"))) {
             WebSocketImpl.DEBUG = true;
         }
 
