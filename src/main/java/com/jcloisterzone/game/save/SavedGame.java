@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.PlayerClock;
 import com.jcloisterzone.game.Capability;
@@ -17,6 +16,7 @@ import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
 import com.jcloisterzone.wsio.message.adapters.ExpansionMapAdapter;
@@ -55,7 +55,7 @@ public class SavedGame implements Serializable {
     public SavedGame(Game game) {
         gameId = game.getGameId();
         name = game.getName();
-        appVersion = Application.VERSION;
+        appVersion = JCloisterZone.VERSION;
         initialSeed = game.getInitialSeed();
         created = new Date();
         slots = new ArrayList<>();

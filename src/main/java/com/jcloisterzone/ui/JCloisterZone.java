@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.Manifest;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -36,6 +38,11 @@ import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.plugin.PluginLoadException;
 
 public class JCloisterZone  {
+
+    public static String VERSION = "dev-snapshot";
+    public static String BUILD_DATE = "";
+
+    public static final String PROTCOL_VERSION = "4.1.0";
 
     private Path getDataDirectory(String basePath, String dirName) {
         if (basePath == null || basePath.length() == 0) return null;
@@ -172,14 +179,14 @@ public class JCloisterZone  {
 
     private void checkForUpdate(Config config, final Client client) {
         final String updateUrlStr = config.getUpdate();
-        if (updateUrlStr != null && !com.jcloisterzone.Application.VERSION.contains("dev")) {
+        if (updateUrlStr != null && !JCloisterZone.VERSION.contains("dev")) {
             (new Thread() {
                 @Override
                 public void run() {
                     try {
                         URL url = new URL(updateUrlStr);
                         final AppUpdate update = AppUpdate.fetch(url);
-                        if (update != null && (new VersionComparator()).compare(com.jcloisterzone.Application.VERSION, update.getVersion()) < 0) {
+                        if (update != null && (new VersionComparator()).compare(JCloisterZone.VERSION, update.getVersion()) < 0) {
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -205,6 +212,33 @@ public class JCloisterZone  {
         }
 
         logger.info("Data directory {}", dataDirectory.toString());
+
+        try {
+            Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
+            while (resources.hasMoreElements()) {
+                try {
+                    Manifest manifest = new Manifest(resources.nextElement().openStream());
+//                    manifest.getMainAttributes().forEach((k, v) -> {
+//                        System.err.println(k + " -> " + v);
+//                    });
+//                    System.err.println("-----------");
+                    if ("JCloisterZone".equals(manifest.getMainAttributes().getValue("Implementation-Title"))) {
+                        String version = manifest.getMainAttributes().getValue("Implementation-Version");
+                        if (version != null) {
+                            VERSION = version;
+                        }
+                        String buildDate = manifest.getMainAttributes().getValue("Release-Date");
+                        if (buildDate != null) {
+                            BUILD_DATE = buildDate;
+                        }
+                    }
+                } catch (IOException ex) {
+                    logger.error(ex.getMessage(), ex);
+                }
+            }
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
 
         ConfigLoader configLoader = new ConfigLoader(dataDirectory);
         Config config = configLoader.load();

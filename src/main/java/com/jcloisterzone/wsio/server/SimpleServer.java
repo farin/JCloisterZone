@@ -12,7 +12,6 @@ import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Application;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
@@ -25,6 +24,7 @@ import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
+import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
@@ -313,8 +313,8 @@ public class SimpleServer extends WebSocketServer  {
 
     @WsSubscribe
     public void handleHello(WebSocket ws, HelloMessage msg) {
-        if (new VersionComparator().compare(Application.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
-            send(ws, new ErrorMessage(ErrorMessage.BAD_VERSION, "Protocol version " + Application.PROTCOL_VERSION + " required."));
+        if (new VersionComparator().compare(JCloisterZone.PROTCOL_VERSION, msg.getProtocolVersion()) != 0) {
+            send(ws, new ErrorMessage(ErrorMessage.BAD_VERSION, "Protocol version " + JCloisterZone.PROTCOL_VERSION + " required."));
             ws.close();
             return;
         }

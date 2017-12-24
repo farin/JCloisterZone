@@ -13,11 +13,11 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 import javax.xml.transform.TransformerException;
 
-import com.jcloisterzone.Application;
 import com.jcloisterzone.FileTeeStream;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGameParser;
+import com.jcloisterzone.ui.JCloisterZone;
 
 public class ReportingTool {
 
@@ -37,7 +37,7 @@ public class ReportingTool {
         zos.putNextEntry(ze);
         zos.write(description.getBytes());
         zos.write("\r\n--- reported with -----\r\n".getBytes());
-        zos.write((Application.VERSION + " " + Application.BUILD_DATE + " \r\n").getBytes());
+        zos.write((JCloisterZone.VERSION + " " + JCloisterZone.BUILD_DATE + " \r\n").getBytes());
         zos.write((System.getProperty("os.name")+" ").getBytes());
         zos.write((System.getProperty("os.arch")+" ").getBytes());
         zos.write((System.getProperty("os.version")+"\r\n").getBytes());
