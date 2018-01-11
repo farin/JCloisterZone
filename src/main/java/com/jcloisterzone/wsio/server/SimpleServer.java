@@ -25,7 +25,6 @@ import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
 import com.jcloisterzone.ui.JCloisterZone;
-import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
@@ -108,12 +107,12 @@ public class SimpleServer extends WebSocketServer  {
 
     public SimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
         super(address);
-        setReuseAddr(true);
-        if (System.getProperty("hearthbeat") != null) {
-            setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
-        } else {
-            setConnectionLostTimeout(Connection.DEFAULT_HEARTHBEAT_INTERVAL);
-        }
+//        setReuseAddr(true);
+//        if (System.getProperty("hearthbeat") != null) {
+//            setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+//        } else {
+//            setConnectionLostTimeout(Connection.DEFAULT_HEARTHBEAT_INTERVAL);
+//        }
 
         this.errHandler = errHandler;
         slots = new ServerPlayerSlot[PlayerSlot.COUNT];
@@ -209,10 +208,10 @@ public class SimpleServer extends WebSocketServer  {
         errHandler.onError(ws, ex);
     }
 
-    @Override
-    public void onStart() {
-
-    }
+//    @Override
+//    public void onStart() {
+//
+//    }
 
     @Override
     public void onMessage(WebSocket ws, String payload) {

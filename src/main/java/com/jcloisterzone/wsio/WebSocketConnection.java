@@ -49,11 +49,11 @@ public class WebSocketConnection implements Connection {
 
         public WebSocketClientImpl(URI serverURI, String username, String reconnectGameId) {
             super(serverURI);
-            if (System.getProperty("hearthbeat") != null) {
-                setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
-            } else {
-                setConnectionLostTimeout(DEFAULT_HEARTHBEAT_INTERVAL);
-            }
+//            if (System.getProperty("hearthbeat") != null) {
+//                setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
+//            } else {
+//                setConnectionLostTimeout(DEFAULT_HEARTHBEAT_INTERVAL);
+//            }
             this.username = username;
             this.reconnectGameId = reconnectGameId;
         }
@@ -63,7 +63,7 @@ public class WebSocketConnection implements Connection {
             cancelPing();
 
             // workaround for https://github.com/TooTallNate/Java-WebSocket/issues/587
-            ws.setConnectionLostTimeout(0);
+            //ws.setConnectionLostTimeout(0);
 
             listener.onWebsocketClose(code, reason, remote && !closedByUser);
         }
