@@ -1,6 +1,13 @@
 
 # Version history
 
+## 4.1.1
+*2018-01-19*
+
+* underlying JavaWebsocket library reverted to version used in 3.x. 
+  Recent version seems to be unreliable and dropping messages 
+  sometimes. Which makes client out of sync and caused unpredictable bugs. 
+
 ## 4.1.0
 *2017-12-25*
 
