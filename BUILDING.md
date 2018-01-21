@@ -179,6 +179,7 @@ msgmerge -N -U po/pl.po po/keys.pot
 msgmerge -N -U po/ro.po po/keys.pot
 msgmerge -N -U po/ru.po po/keys.pot
 msgmerge -N -U po/sk.po po/keys.pot
+msgmerge -N -U po/zh.po po/keys.pot
 rm po/*~
 rm po/keys.pot
 ```
