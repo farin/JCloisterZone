@@ -1,6 +1,10 @@
 
 # Version history
 
+## 4.1.2
+
+* fix: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
+
 ## 4.1.1
 *2018-01-19*
 

@@ -105,6 +105,7 @@ public class PlaceTile implements Reducer {
             });
 
         if (abbeyPlacement) {
+            java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();
             FeaturePointer abbeyFp = new FeaturePointer(pos, Location.CLOISTER);
             Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
             for (Location side : Location.SIDES) {
@@ -114,10 +115,17 @@ public class PlaceTile implements Reducer {
                     //farm (or empty tile - which can happen only in debug when non-hole placement is enabled)
                     continue;
                 }
+                CompletableFeature<?> originalAdj = adj;
+                if (featureReplacement.get(originalAdj) != null) {
+                    // when same feature is merged on multiple abbey side, then use update feature objects
+                    // to not lost partial changes
+                    adj = featureReplacement.get(originalAdj);
+                }
                 FeaturePointer adjPtr = adj.getPlaces().find(fp -> adjPartOfPtr.isPartOf(fp)).get();
 
                 adj = adj.mergeAbbeyEdge(new Edge(pos, side));
                 adj = adj.setNeighboring(adj.getNeighboring().add(abbeyFp));
+                featureReplacement.put(originalAdj, adj);
                 for (FeaturePointer fp : adj.getPlaces()) {
                     fpUpdate.put(fp, adj);
                 }
