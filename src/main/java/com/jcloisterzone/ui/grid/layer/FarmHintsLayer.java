@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -19,6 +21,7 @@ import com.jcloisterzone.ui.resources.ResourceManager;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
 public class FarmHintsLayer extends AbstractGridLayer {
@@ -89,6 +92,19 @@ public class FarmHintsLayer extends AbstractGridLayer {
         FarmHintsLayerModel model = new FarmHintsLayerModel();
         model.hints = state.getFeatures(Farm.class)
             .map(farm -> new Tuple2<>(farm, farm.getOwners(state)))
+            .map(t -> {
+                //handle farms with abbeys
+                if (t._2.isEmpty()) {
+                    Set<Player> barnOwners = t._1.getSpecialMeeples(state)
+                       .filter(m -> m instanceof Barn)
+                       .map(m -> m.getPlayer())
+                       .toSet();
+                    if (!barnOwners.isEmpty()) {
+                        return new Tuple2<>(t._1, barnOwners);
+                    }
+                }
+                return t;
+            })
             .filter(t -> {
                 Farm farm = t._1;
                 //don't display unimportant farms

@@ -1,9 +1,11 @@
 
+
 # Version history
 
 ## 4.1.2
 
-* fix: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
+* fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
+* fixed #257: Farm hints display correct color for farms with barns.
 
 ## 4.1.1
 *2018-01-19*
