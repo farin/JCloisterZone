@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import java.util.function.Function;
+
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
@@ -9,6 +11,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
@@ -21,6 +24,7 @@ import com.jcloisterzone.wsio.message.PassMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
@@ -62,17 +66,19 @@ public abstract class AbstractCocScoringPhase extends Phase {
         throw new IllegalArgumentException("Illegal locaion " + loc);
     }
 
-    protected abstract List<Location> getScoredQuarters();
+    protected abstract Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state);
 
     private StepResult processPlayer(GameState state, Player player) {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
         Position lastPlacedPos = state.getLastPlaced().getPosition();
 
-        // TODO derive final phase including farms
-        Vector<MeepleAction> actions = getScoredQuarters()
-            .filter(quarter -> quarter != countFp.getLocation())
-            .flatMap(quarter -> {
+        Vector<MeepleAction> actions = getScoredQuarters(state)
+            .filter(quarter_filter -> quarter_filter._1 != countFp.getLocation())
+            .flatMap(quarter_filter -> {
+                Location quarter = quarter_filter._1;
+                Function<Feature, Boolean> filter = quarter_filter._2;
                 Set<FeaturePointer> options = state.getFeatures(getFeatureTypeForLocation(quarter))
+                    .filter(f -> filter == null || filter.apply(f))
                     .filter(f -> f instanceof Farm || ((Completable) f).isCompleted(state))
                     .flatMap(f -> {
                         List<FeaturePointer> places = f.getPlaces();

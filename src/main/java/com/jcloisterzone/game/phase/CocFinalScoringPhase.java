@@ -1,9 +1,14 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.game.RandomGenerator;
+import java.util.function.Function;
 
-import io.vavr.collection.List;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.state.GameState;
+
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 
@@ -12,8 +17,8 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected List<Location> getScoredQuarters() {
-        return List.of(Location.QUARTER_MARKET);
+    protected  Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state) {
+        return HashMap.of(Location.QUARTER_MARKET, null);
     }
 
 }

@@ -2,10 +2,14 @@
 
 # Version history
 
-## 4.1.2
-
 * fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
 * fixed #257: Farm hints display correct color for farms with barns.
+* fix: Barn and Market quarter:
+  followers for the City of C. can be deployed on farm when barn is placed 
+  or when barn farm is extended by aother farm with followers 
+  
+   
+
 
 ## 4.1.1
 *2018-01-19*
