@@ -55,16 +55,22 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
                     .map(l -> new FeaturePointer(Position.ZERO, l))
                     .toArray();
 
-                for (FeaturePointer fp : fps) {
+                // convert from part location to exact location
+                Map<Location, Feature> _features = features;
+                fps = fps.map(fp -> {
                     Location partLoc = fp.getLocation();
-                    Tuple2<Location, Feature> item = features
+                    Tuple2<Location, Feature> item = _features
                         .find(t -> partLoc.isPartOf(t._1))
                         .getOrElseThrow(() -> new IllegalStateException(
                             String.format("%s / <wagon-move>: No feature for %s", tileId, partLoc)
                         ));
-                    Completable feature = (Completable) item._2;
-                    feature = feature.setNeighboring(fps.remove(fp).toSet());
-                    features = features.put(item._1, feature);
+                    return fp.setLocation(item._1);
+                });
+
+                for (FeaturePointer fp : fps) {
+                    Completable feature = (Completable) features.get(fp.getLocation()).getOrNull();
+                    feature = feature.setNeighboring(feature.getNeighboring().addAll(fps.remove(fp)));
+                    features = features.put(fp.getLocation(), feature);
                 }
             }
             tile = tile.setInitialFeatures(features);

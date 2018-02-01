@@ -8,6 +8,7 @@
   followers for the City of C. can be deployed on farm when barn is placed 
   or when barn farm is extended by another farm with followers 
   score properly followers moved on barn farm just before final scoring
+* fix: some legal wagon moves were missing
 
 
 ## 4.1.1
