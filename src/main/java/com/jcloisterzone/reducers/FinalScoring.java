@@ -73,10 +73,19 @@ public class FinalScoring implements Reducer {
         for (Farm farm : getOccupiedScoreables(state, Farm.class)) {
             boolean hasBarn = farm.getSpecialMeeples(state)
                 .find(Predicates.instanceOf(Barn.class)).isDefined();
+            boolean hasFollowers = !farm.getFollowers(state).isEmpty();
+
             if (hasBarn) {
+                if (hasFollowers) {
+                    // special case, followers deployed using City of Carcassonne before final scoring
+                    state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
+                    state = (new UndeployMeeples(farm, false)).apply(state);
+                }
                 state = (new ScoreFarmBarn(farm, true)).apply(state);
             } else {
-                state = (new ScoreFarm(farm, true)).apply(state);
+                if (hasFollowers) {
+                    state = (new ScoreFarm(farm, true)).apply(state);
+                }
             }
         }
 

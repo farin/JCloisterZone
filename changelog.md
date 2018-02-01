@@ -6,9 +6,8 @@
 * fixed #257: Farm hints display correct color for farms with barns.
 * fix: Barn and Market quarter:
   followers for the City of C. can be deployed on farm when barn is placed 
-  or when barn farm is extended by aother farm with followers 
-  
-   
+  or when barn farm is extended by another farm with followers 
+  score properly followers moved on barn farm just before final scoring
 
 
 ## 4.1.1
