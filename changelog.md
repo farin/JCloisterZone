@@ -13,6 +13,7 @@
   score properly followers moved on barn farm just before final scoring
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
+* fix: broken undo for loaded games
 
 
 ## 4.1.1

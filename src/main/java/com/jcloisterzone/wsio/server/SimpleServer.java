@@ -604,7 +604,8 @@ public class SimpleServer extends WebSocketServer  {
         if (!"".equals(msg.getLastMessageId())) {
             for (WsReplayableMessage m : replay) {
                 trimmed.add(m);
-                if (m.getMessageId().equals(msg.getLastMessageId())) {
+                // m.getMessageId() can be null for loaded game!
+                if (msg.getLastMessageId().equals(m.getMessageId())) {
                     break;
                 }
             }
