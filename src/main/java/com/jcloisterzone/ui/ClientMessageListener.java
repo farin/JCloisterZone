@@ -20,9 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.ai.AiPlayer;
+import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.config.Config.AutostartConfig;
 import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.config.Config.PresetConfig;
+import com.jcloisterzone.debug.ForcedDrawTilePack;
 import com.jcloisterzone.event.ChatEvent;
 import com.jcloisterzone.event.ClientListChangedEvent;
 import com.jcloisterzone.event.GameListChangedEvent;
@@ -217,7 +219,21 @@ public class ClientMessageListener implements MessageListener {
 
     private void handleGameStarted(final GameController gc, io.vavr.collection.List<WsReplayableMessage> replay) throws InvocationTargetException, InterruptedException {
         conn.getReportingTool().setGame(gc.getGame());
-        gc.getGame().start(gc, replay, gc.getClient().getSavedGameAnnotations());
+        HashMap<String, Object> annotations = gc.getClient().getSavedGameAnnotations();
+        gc.getGame().start(gc, replay, annotations);
+
+        if (!"false".equals(System.getProperty("showGameDebugModeInfo"))) {
+            SwingUtilities.invokeLater(() -> {
+                TilePack tilePack = gc.getGame().getState().getTilePack();
+                if (!tilePack.getClass().equals(TilePack.class)) {
+                    String msg = String.format("Game is running in debug mode and using %s tile pack.", tilePack.getClass().getSimpleName());
+                    if (tilePack instanceof ForcedDrawTilePack) {
+                        msg = String.format("%s Tiles: %s ...", msg, String.join(", ", ((ForcedDrawTilePack)tilePack).getDrawQueue().slice(0, 5)));
+                    }
+                    gc.getGameView().getGridPanel().showInfoMessage(msg, "GAME-IN-DEBUG-MODE");
+                }
+            });
+        }
     }
 
     private void openGameSetup(final GameController gc, final GameMessage msg) throws InvocationTargetException, InterruptedException {

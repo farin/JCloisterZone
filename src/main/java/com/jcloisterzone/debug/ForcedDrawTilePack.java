@@ -134,4 +134,8 @@ public class ForcedDrawTilePack extends TilePack {
         return super.size() + getHiddenUnderHills();
     }
 
+    public Queue<String> getDrawQueue() {
+        return drawQueue;
+    }
+
 }

@@ -61,6 +61,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
     public static int INITIAL_TILE_WIDTH = 120;
 
     private static final Color MESSAGE_ERROR = new Color(186, 61, 61, 245);
+    private static final Color MESSAGE_INFO = new Color(79, 146, 255, 245);
     private static final Color MESSAGE_HINT = new Color(147, 146, 155, 245);
 
     final Client client;
@@ -490,12 +491,21 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
         //hideLayer(AbbeyPlacementLayer.class);
     }
 
+    public void showInfoMessage(String errorMessage, String errCode) {
+        showMessage(MESSAGE_INFO, errorMessage, errCode);
+    }
+
     public void showErrorMessage(String errorMessage, String errCode) {
+        showMessage(MESSAGE_ERROR, errorMessage, errCode);
+    }
+
+
+    private void showMessage(Color color, String errorMessage, String errCode) {
         if (errorMsg != null) {
             remove(errorMsg);
         }
         this.errorCode = errCode;
-        errorMsg = new ErrorMessagePanel(errorMessage);
+        errorMsg = new ErrorMessagePanel(color, errorMessage);
         errorMsg.setOpaque(true);
         add(errorMsg, "pos 0 0 (100%-242) 30");
         setComponentZOrder(errorMsg, 1);
@@ -675,8 +685,8 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
 
     class ErrorMessagePanel extends JPanel {
 
-        public ErrorMessagePanel(String text) {
-            setBackground(MESSAGE_ERROR);
+        public ErrorMessagePanel(Color color, String text) {
+            setBackground(color);
             setLayout(new MigLayout("fill", "[]push[]"));
             JLabel label = new JLabel(text);
             label.setForeground(Color.WHITE);

@@ -2,6 +2,9 @@
 
 # Version history
 
+* display info message when game is created with debug options (forced draw order). This is important 
+    for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
+    And currently there was no change to recognize that game is regular. 
 * fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
 * fixed #257: Farm hints display correct color for farms with barns.
 * fix: Barn and Market quarter:
