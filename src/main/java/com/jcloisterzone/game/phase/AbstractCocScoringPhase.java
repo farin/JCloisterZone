@@ -16,8 +16,10 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PassMessage;
@@ -70,7 +72,19 @@ public abstract class AbstractCocScoringPhase extends Phase {
 
     private StepResult processPlayer(GameState state, Player player) {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
-        Position lastPlacedPos = state.getLastPlaced().getPosition();
+        PlacedTile lastPlaced = state.getLastPlaced();
+        Position lastPlacedPos = lastPlaced.getPosition();
+
+        java.util.Set<Completable> justPlacedAbbeyAdjacent = new java.util.HashSet<>();
+        if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
+            for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(lastPlacedPos)) {
+                PlacedTile pt = t._2;
+                Feature feature = state.getFeaturePartOf(new FeaturePointer(pt.getPosition(), t._1.rev()));
+                if (feature instanceof Completable) {
+                    justPlacedAbbeyAdjacent.add((Completable) feature);
+                }
+            }
+        }
 
         Vector<MeepleAction> actions = getScoredQuarters(state)
             .filter(quarter_filter -> quarter_filter._1 != countFp.getLocation())
@@ -82,13 +96,12 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .filter(f -> f instanceof Farm || ((Completable) f).isCompleted(state))
                     .flatMap(f -> {
                         List<FeaturePointer> places = f.getPlaces();
-                        if (f instanceof Farm) {
-                            return places;
-                        }
-                        if (places.find(p -> p.getPosition().equals(lastPlacedPos)).isDefined()) {
-                            //feature lays on last placed tile -> is finished this turn
-                            return places;
-                        }
+                        if (f instanceof Farm) return places;
+                        if (justPlacedAbbeyAdjacent.contains(f)) return places;
+
+                        //feature lays on last placed tile -> is finished this turn
+                        if (places.find(p -> p.getPosition().equals(lastPlacedPos)).isDefined()) return places;
+
                         if (f instanceof Cloister) {
                             Position cloisterPos = places.get().getPosition();
                             if (!Position.ADJACENT_AND_DIAGONAL
