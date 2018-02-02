@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("ERR")
-public class ErrorMessage implements WsMessage {
+public class ErrorMessage extends AbstractWsMessage {
 
     public static final String BAD_VERSION = "badVersion";
     public static final String INVALID_PASSWORD = "invalidPassword";

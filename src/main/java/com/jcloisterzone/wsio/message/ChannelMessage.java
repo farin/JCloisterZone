@@ -4,7 +4,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 @WsMessageCommand("CHANNEL")
-public class ChannelMessage implements WsMessage {
+public class ChannelMessage extends AbstractWsMessage {
 
     private String name;
     private RemoteClient[] clients;

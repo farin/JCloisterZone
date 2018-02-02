@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("UNDO")
-public class UndoMessage implements WsInGameMessage {
+public class UndoMessage extends AbstractWsMessage implements WsInGameMessage {
 
     private String gameId;
     /** notifies server hot to cut replay history,

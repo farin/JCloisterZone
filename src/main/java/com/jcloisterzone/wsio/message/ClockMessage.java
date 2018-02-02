@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("CLOCK")
-public class ClockMessage implements WsInGameMessage {
+public class ClockMessage extends AbstractWsMessage implements WsInGameMessage {
 
     private String gameId;
     private Integer running;

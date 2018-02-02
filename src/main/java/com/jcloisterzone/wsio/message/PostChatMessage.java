@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("POST_CHAT")
-public class PostChatMessage implements WsInGameMessage, WsInChannelMessage {
+public class PostChatMessage extends AbstractWsMessage implements WsInGameMessage, WsInChannelMessage {
 
     private String gameId;
     private String channel;
@@ -40,6 +40,7 @@ public class PostChatMessage implements WsInGameMessage, WsInChannelMessage {
         return channel;
     }
 
+    @Override
     public void setChannel(String channel) {
         this.channel = channel;
     }

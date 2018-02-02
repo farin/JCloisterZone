@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("LEAVE_GAME")
-public class LeaveGameMessage implements WsInGameMessage {
+public class LeaveGameMessage extends AbstractWsMessage implements WsInGameMessage {
     private String gameId;
 
     public LeaveGameMessage() {

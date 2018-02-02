@@ -4,7 +4,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("DEPLOY_MEEPLE")
-public class DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage {
+public class DeployMeepleMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private String messageId;

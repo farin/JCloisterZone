@@ -6,6 +6,8 @@ public interface Connection {
 
     public static int DEFAULT_HEARTHBEAT_INTERVAL = 30;
 
+    public static int CLOSE_MESSAGE_LOST = 4000;
+
     public void send(WsMessage arg);
 
     public boolean isClosed();

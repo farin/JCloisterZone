@@ -4,7 +4,7 @@ import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("SET_RULE")
-public class SetRuleMessage implements WsInGameMessage {
+public class SetRuleMessage extends AbstractWsMessage implements WsInGameMessage {
 
     private String gameId;
     private Rule rule;

@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_OVER")
-public class GameOverMessage implements WsInGameMessage, WsReplayableMessage {
+public class GameOverMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private String messageId;

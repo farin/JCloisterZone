@@ -3,7 +3,9 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("ABANDON_GAME")
-public class AbandonGameMessage implements WsMessage { // althoug contiains gameId, it is not WsInGameMessage message
+public class AbandonGameMessage extends AbstractWsMessage {
+    // although contains gameId, this class doesn't implement WsInGameMessage message
+
     private String gameId;
 
     public AbandonGameMessage() {

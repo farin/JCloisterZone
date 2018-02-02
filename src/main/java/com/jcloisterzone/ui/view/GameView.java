@@ -230,7 +230,7 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
         String message = _tr("Connection lost") + ". " + _tr("Reconnecting...");
-        if (code == CloseFrame.ABNORMAL_CLOSE || remote) {
+        if (code == CloseFrame.ABNORMAL_CLOSE || code == Connection.CLOSE_MESSAGE_LOST || remote) {
             if (gc.getChannel() == null) {
                 if (!game.isOver()) {
                     //simple server sends game message automatically, send game id for online server only

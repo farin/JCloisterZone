@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("JOIN_GAME")
-public class JoinGameMessage implements WsMessage {
+public class JoinGameMessage extends AbstractWsMessage {
     private String gameId;
     private String password;
 

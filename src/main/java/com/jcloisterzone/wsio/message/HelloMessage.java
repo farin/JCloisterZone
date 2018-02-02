@@ -4,7 +4,7 @@ import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("HELLO")
-public class HelloMessage implements WsMessage {
+public class HelloMessage extends AbstractWsMessage {
 
     private String appVersion = JCloisterZone.VERSION;
     private String protocolVersion = "" + JCloisterZone.PROTCOL_VERSION;

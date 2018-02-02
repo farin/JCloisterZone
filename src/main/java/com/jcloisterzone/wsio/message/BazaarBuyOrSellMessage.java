@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("BAZAAR_BUY_OR_SELL")
-public class BazaarBuyOrSellMessage implements WsInGameMessage, WsReplayableMessage {
+public class BazaarBuyOrSellMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     //TODO move to own file (and probably action package)
     public enum BuyOrSellOption { BUY, SELL }

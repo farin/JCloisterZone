@@ -42,7 +42,7 @@ public class JCloisterZone  {
     public static String VERSION = "dev-snapshot";
     public static String BUILD_DATE = "";
 
-    public static final String PROTCOL_VERSION = "4.1.0";
+    public static final String PROTCOL_VERSION = "4.2.0";
 
     private Path getDataDirectory(String basePath, String dirName) {
         if (basePath == null || basePath.length() == 0) return null;

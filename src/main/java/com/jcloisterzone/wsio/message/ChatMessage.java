@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("CHAT")
-public class ChatMessage implements WsInGameMessage, WsInChannelMessage {
+public class ChatMessage extends AbstractWsMessage implements WsInGameMessage, WsInChannelMessage {
 
     private String gameId;
     private String channel;

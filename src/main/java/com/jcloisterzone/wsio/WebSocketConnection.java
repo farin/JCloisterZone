@@ -30,6 +30,7 @@ public class WebSocketConnection implements Connection {
     private URI uri;
     private final MessageListener listener;
 
+    private long msgSequence;
     private String sessionId;
     private String clientId;
     private String secret; //TODO will be used for message signing
@@ -85,6 +86,17 @@ public class WebSocketConnection implements Connection {
             if (logger.isInfoEnabled()) {
                 logger.info(payload);
             }
+
+            if (msg.getSequenceNumber() != null) {
+                if (msgSequence != msg.getSequenceNumber()) {
+                    String errMessage = String.format("Message with seq %s has been lost", msgSequence + 1);
+                    listener.onWebsocketError(new MessageLostException(errMessage));
+                    close(Connection.CLOSE_MESSAGE_LOST, errMessage);
+                    return;
+                }
+                msgSequence = msg.getSequenceNumber() + 1;
+            }
+
             if (msg instanceof WelcomeMessage) {
                 WelcomeMessage welcome = (WelcomeMessage) msg;
                 sessionId = welcome.getSessionId();
@@ -98,6 +110,7 @@ public class WebSocketConnection implements Connection {
 
         @Override
         public void onOpen(ServerHandshake arg0) {
+            msgSequence = 1;
             WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             if (reconnectGameId != null) {
                 JoinGameMessage msg = new JoinGameMessage();
@@ -206,5 +219,12 @@ public class WebSocketConnection implements Connection {
 
     public String getMaintenance() {
         return maintenance;
+    }
+
+    public static class MessageLostException extends Exception {
+
+        public MessageLostException(String message) {
+            super(message);
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME_UPDATE")
-public class GameUpdateMessage implements WsInChannelMessage {
+public class GameUpdateMessage extends AbstractWsMessage implements WsInChannelMessage {
 
     private String channel;
     private GameMessage game;
@@ -16,6 +16,7 @@ public class GameUpdateMessage implements WsInChannelMessage {
         return channel;
     }
 
+    @Override
     public void setChannel(String channel) {
         this.channel = channel;
     }

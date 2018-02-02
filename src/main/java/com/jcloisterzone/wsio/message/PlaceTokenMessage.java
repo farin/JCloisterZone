@@ -5,7 +5,7 @@ import com.jcloisterzone.game.Token;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("PLACE_TOKEN")
-public class PlaceTokenMessage implements WsInGameMessage, WsReplayableMessage {
+public class PlaceTokenMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private String messageId;

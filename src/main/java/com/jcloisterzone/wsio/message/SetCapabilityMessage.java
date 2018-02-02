@@ -6,7 +6,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesAdapter;
 
 @WsMessageCommand("SET_CAPABILITY")
-public class SetCapabilityMessage implements WsInGameMessage {
+public class SetCapabilityMessage extends AbstractWsMessage implements WsInGameMessage {
 
     private String gameId;
     @JsonAdapter(CapabilitiesAdapter.class)

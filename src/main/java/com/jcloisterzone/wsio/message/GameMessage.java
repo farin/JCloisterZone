@@ -5,7 +5,7 @@ import java.util.List;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("GAME")
-public class GameMessage implements WsMessage, WsInGameMessage {
+public class GameMessage extends AbstractWsMessage implements WsInGameMessage {
 
     public enum GameStatus {
         OPEN, RUNNING, REMOVED, PAUSED

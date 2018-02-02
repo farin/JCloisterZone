@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("CLIENT_UPDATE")
-public class ClientUpdateMessage implements WsInGameMessage, WsInChannelMessage {
+public class ClientUpdateMessage extends AbstractWsMessage implements WsInGameMessage, WsInChannelMessage {
 
     public enum ClientState {
         ACTIVE, IN_GAME, OFFLINE

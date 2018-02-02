@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("CIRCLE_REMOVE_OR_DEPLOY")
-public class CornCircleRemoveOrDeployMessage implements WsInGameMessage, WsReplayableMessage {
+public class CornCircleRemoveOrDeployMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     public enum CornCircleOption { DEPLOY, REMOVE }
 

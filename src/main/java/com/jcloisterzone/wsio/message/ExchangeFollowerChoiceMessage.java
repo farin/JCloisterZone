@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("EXCHANGE_FOLLOWER")
-public class ExchangeFollowerChoiceMessage implements WsInGameMessage, WsReplayableMessage {
+public class ExchangeFollowerChoiceMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private String messageId;

@@ -97,6 +97,7 @@ public class SimpleServer extends WebSocketServer  {
     private long runningSince;
 
     protected Map<WebSocket, ServerRemoteClient> connections = HashMap.empty();
+    protected Map<WebSocket, Long> sequences = HashMap.empty();
     private String hostClientId;
 
     private Random random = new Random();
@@ -187,6 +188,7 @@ public class SimpleServer extends WebSocketServer  {
         }
 
         connections = connections.remove(ws);
+        sequences = sequences.remove(ws);
 
         for (ServerPlayerSlot slot : slots) {
             if (slot != null && conn.getSessionId().equals(slot.getSessionId())) {
@@ -222,6 +224,7 @@ public class SimpleServer extends WebSocketServer  {
 
     @Override
     public void onOpen(WebSocket ws, ClientHandshake hs) {
+        sequences = sequences.put(ws, 1L);
     }
 
     private String getSessionId(WebSocket ws) {
@@ -624,17 +627,21 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     public void send(WebSocket ws, WsMessage message) {
+        long sequenceNumber = sequences.get(ws).get();
+        Long originalSequenceNumber = message.getSequenceNumber();
+        message.setSequnceNumber(sequenceNumber);
         ws.send(parser.toJson(message));
+        message.setSequnceNumber(originalSequenceNumber);
+        sequences = sequences.put(ws, sequenceNumber + 1);
     }
 
     public void broadcast(WsMessage msg) {
         if (gameStarted && msg instanceof WsReplayableMessage) {
             replay.add((WsReplayableMessage) msg);
         }
-        String payload = parser.toJson(msg);
         for (WebSocket ws : connections.keySet()) {
             if (ws.isOpen()) { //prevent exception when server is closing
-                ws.send(payload);
+                send(ws, msg);
             }
         }
     }
