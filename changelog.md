@@ -7,6 +7,7 @@
     And currently there was no change to recognize that game is regular. 
 * fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
 * fixed #257: Farm hints display correct color for farms with barns.
+* fixed #258: Pig/Barn issue, when pig was deployed instead of barn.
 * fix: Barn and Market quarter:
   followers for the City of C. can be deployed on farm when barn is placed 
   or when barn farm is extended by another farm with followers 

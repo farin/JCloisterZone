@@ -9,7 +9,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
@@ -28,7 +27,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
 
     @Override
     public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Barn(idProvider.generateId(Pig.class), player));
+        return List.of(new Barn(idProvider.generateId(Barn.class), player));
     }
 
     @Override
