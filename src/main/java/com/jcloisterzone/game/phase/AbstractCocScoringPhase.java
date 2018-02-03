@@ -65,7 +65,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         if (loc == Location.QUARTER_BLACKSMITH) return Road.class;
         if (loc == Location.QUARTER_CATHEDRAL) return Cloister.class;
         if (loc == Location.QUARTER_MARKET) return Farm.class;
-        throw new IllegalArgumentException("Illegal locaion " + loc);
+        throw new IllegalArgumentException("Illegal location " + loc);
     }
 
     protected abstract Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state);
@@ -139,7 +139,6 @@ public abstract class AbstractCocScoringPhase extends Phase {
         }
 
         ActionsState as = new ActionsState(player, Vector.narrow(actions), true);
-        as = as.mergeMeepleActions();
         return promote(state.setPlayerActions(as));
     }
 
