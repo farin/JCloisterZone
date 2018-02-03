@@ -3,8 +3,8 @@
 # Version history
 
 * display info message when game is created with debug options (forced draw order). This is important 
-    for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
-    And currently there was no change to recognize that game is regular. 
+  for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
+  And currently there was no change to recognize that game is regular.
 * fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
 * fixed #257: Farm hints display correct color for farms with barns.
 * fixed #258: Pig/Barn issue, when pig was deployed instead of barn.
@@ -14,6 +14,8 @@
   score properly followers moved on barn farm just before final scoring
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
+* fix: when moves from multiple City of C. quarters are available (eg legal move on cloister and road at 
+  one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to cloister)
 * fix: broken undo for loaded games
 * fix: don't offer AI unsupported expansion in create game panel after "Play again" is used
 

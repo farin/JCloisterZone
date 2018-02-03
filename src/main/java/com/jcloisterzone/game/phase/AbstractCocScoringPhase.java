@@ -126,11 +126,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .groupBy(Object::getClass)                    // for each meeple class create action ...
                     .values()
                     .map(Seq::get)
-                    .map(m -> {
-                        MeepleAction action = new MeepleAction(m, options);
-                        action.setCityOfCarcassoneMove(true);
-                        return action;
-                    });
+                    .map(m -> new MeepleAction(m, options, true));
             })
             .toVector();
 
@@ -139,6 +135,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         }
 
         ActionsState as = new ActionsState(player, Vector.narrow(actions), true);
+        as = as.mergeMeepleActions();
         return promote(state.setPlayerActions(as));
     }
 

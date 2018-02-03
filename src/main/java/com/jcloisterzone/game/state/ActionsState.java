@@ -7,10 +7,8 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 
 import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
 
 /**
@@ -99,11 +97,7 @@ public class ActionsState implements Serializable {
         }
 
         Vector<PlayerAction<?>> actions = Vector.ofAll(
-            grouped.map(v -> {
-                Set<FeaturePointer> mergedOptions = v.map(PlayerAction::getOptions).reduce(Set::addAll);
-                MeepleAction sample = v.get();
-                return new MeepleAction(sample.getMeepleId(), sample.getMeepleType(), mergedOptions);
-            })
+            grouped.map(v -> v.reduce(MeepleAction::merge))
         ); // one MeepleAction per meeple type, each containing as options those of all other MeepleActions of the same meeple type
         actions = actions.appendAll(
             this.actions.filter(Predicates.instanceOf(MeepleAction.class).negate())
