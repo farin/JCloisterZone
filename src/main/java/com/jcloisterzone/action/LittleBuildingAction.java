@@ -12,7 +12,7 @@ import io.vavr.collection.Set;
 
 @LinkedImage("actions/building")
 @LinkedGridLayer(LittleBuildingActionLayer.class)
-public class LittleBuildingAction extends PlayerAction<Token> {
+public class LittleBuildingAction extends AbstractPlayerAction<Token> {
 
     private final Position pos;
 

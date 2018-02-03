@@ -10,7 +10,7 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import io.vavr.collection.Set;
 
 @LinkedPanel(SelectMageWitchRemovalPanel.class)
-public class RemovMageOrWithAction extends PlayerAction<NeutralFigure<FeaturePointer>> {
+public class RemovMageOrWithAction extends AbstractPlayerAction<NeutralFigure<FeaturePointer>> {
 
     public RemovMageOrWithAction(Set<NeutralFigure<FeaturePointer>> options) {
         super(options);

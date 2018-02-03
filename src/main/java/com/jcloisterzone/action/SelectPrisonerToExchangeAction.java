@@ -17,7 +17,7 @@ import io.vavr.collection.Set;
  *
  */
 @LinkedPanel(PrisonersExchangePanel.class)
-public class SelectPrisonerToExchangeAction extends PlayerAction<Follower> {
+public class SelectPrisonerToExchangeAction extends AbstractPlayerAction<Follower> {
 
     private final Follower justCapturedFollower;
 

@@ -11,7 +11,7 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import io.vavr.collection.HashSet;
 
 @LinkedPanel(CornCirclesPanel.class)
-public class CornCircleSelectDeployOrRemoveAction extends PlayerAction<CornCircleOption> {
+public class CornCircleSelectDeployOrRemoveAction extends AbstractPlayerAction<CornCircleOption> {
 
     public CornCircleSelectDeployOrRemoveAction() {
         super(HashSet.ofAll(Arrays.asList(CornCircleOption.values())));

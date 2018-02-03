@@ -10,7 +10,7 @@ import io.vavr.collection.Set;
 
 
 @LinkedGridLayer(FollowerAreaLayer.class)
-public abstract class SelectFollowerAction extends PlayerAction<MeeplePointer> {
+public abstract class SelectFollowerAction extends AbstractPlayerAction<MeeplePointer> {
 
     public SelectFollowerAction(Set<MeeplePointer> options) {
         super(options);

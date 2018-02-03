@@ -105,6 +105,4 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         gc.getConnection().send(action.select(fp));
         return;
     }
-
-
 }

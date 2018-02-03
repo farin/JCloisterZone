@@ -5,7 +5,7 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.HashSet;
 
-public class ConfirmAction extends PlayerAction<Boolean> {
+public class ConfirmAction extends AbstractPlayerAction<Boolean> {
 
     private static final long serialVersionUID = 1L;
 

@@ -2,12 +2,15 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.ui.annotations.LinkedGridLayer;
+import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.collection.Set;
 
-public class MeepleAction extends SelectFeatureAction {
+@LinkedGridLayer(FeatureAreaLayer.class)
+public class MeepleAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {
 
     private static final long serialVersionUID = 1L;
 

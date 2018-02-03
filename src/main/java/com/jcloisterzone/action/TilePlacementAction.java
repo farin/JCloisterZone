@@ -14,7 +14,7 @@ import io.vavr.collection.Stream;
 
 
 @LinkedGridLayer(TilePlacementLayer.class)
-public class TilePlacementAction extends PlayerAction<PlacementOption> {
+public class TilePlacementAction extends AbstractPlayerAction<PlacementOption> {
 
     private static final long serialVersionUID = 1L;
 

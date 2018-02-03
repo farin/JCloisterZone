@@ -8,7 +8,7 @@ import com.jcloisterzone.wsio.message.WsInGameMessage;
 import io.vavr.collection.Set;
 
 @LinkedPanel(BazaarPanel.class)
-public class BazaarSelectTileAction extends PlayerAction<BazaarItem> {
+public class BazaarSelectTileAction extends AbstractPlayerAction<BazaarItem> {
 
     public BazaarSelectTileAction(Set<BazaarItem> options) {
         super(options);

@@ -12,7 +12,7 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 
 @LinkedPanel(BazaarPanel.class)
-public class BazaarSelectBuyOrSellAction extends PlayerAction<BuyOrSellOption>{
+public class BazaarSelectBuyOrSellAction extends AbstractPlayerAction<BuyOrSellOption>{
 
     public BazaarSelectBuyOrSellAction() {
         this(HashSet.ofAll(Arrays.asList(BuyOrSellOption.values())));
