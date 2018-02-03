@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.wsio.MessageParser;
+import com.jcloisterzone.wsio.message.AbstractWsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 public class SavedGameParser {
@@ -55,8 +56,12 @@ public class SavedGameParser {
 
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
-           if (WsReplayableMessage.class.isAssignableFrom(f.getDeclaringClass())) {
-               return f.getName().equals("gameId") || f.getName().equals("messageId");
+           String name = f.getName();
+           if (WsReplayableMessage.class.isAssignableFrom(f.getDeclaringClass()) && (name.equals("gameId") || name.equals("messageId"))) {
+               return true;
+           }
+           if (AbstractWsMessage.class.isAssignableFrom(f.getDeclaringClass()) && name.equals("sequenceNumber")) {
+               return true;
            }
            return false;
         }

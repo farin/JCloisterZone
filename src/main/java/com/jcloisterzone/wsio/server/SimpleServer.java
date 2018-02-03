@@ -225,7 +225,7 @@ public class SimpleServer extends WebSocketServer  {
 //    }
 
     @Override
-    public void onMessage(WebSocket ws, String payload) {
+    synchronized public void onMessage(WebSocket ws, String payload) {
         //logger.info(payload);
         WsMessage msg = parser.fromJson(payload);
         dispatcher.dispatch(msg, ws, this);

@@ -81,21 +81,19 @@ public class WebSocketConnection implements Connection {
         }
 
         @Override
-        public void onMessage(String payload) {
+        synchronized public void onMessage(String payload) {
             WsMessage msg = parser.fromJson(payload);
             if (logger.isInfoEnabled()) {
                 logger.info(payload);
             }
 
-            if (msg.getSequenceNumber() != null) {
-                if (msgSequence != msg.getSequenceNumber()) {
-                    String errMessage = String.format("Message with seq %s has been lost", msgSequence + 1);
-                    listener.onWebsocketError(new MessageLostException(errMessage));
-                    close(Connection.CLOSE_MESSAGE_LOST, errMessage);
-                    return;
-                }
-                msgSequence = msg.getSequenceNumber() + 1;
+            if (msgSequence != msg.getSequenceNumber()) {
+                String errMessage = String.format("Message lost. Received #%s but expected #%s.", msg.getSequenceNumber(), msgSequence);
+                listener.onWebsocketError(new MessageLostException(errMessage));
+                close(Connection.CLOSE_MESSAGE_LOST, errMessage);
+                return;
             }
+            msgSequence = msg.getSequenceNumber() + 1;
 
             if (msg instanceof WelcomeMessage) {
                 WelcomeMessage welcome = (WelcomeMessage) msg;
