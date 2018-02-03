@@ -16,7 +16,6 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.FeatureArea;
-import com.jcloisterzone.wsio.message.DeployFlierMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
@@ -70,13 +69,6 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         Position pos = fp.getPosition();
 
         if (action instanceof MeepleAction) {
-            MeepleAction ma = (MeepleAction) action;
-
-            if (fp.getLocation() == Location.FLYING_MACHINE) {
-                gc.getConnection().send(new DeployFlierMessage(fp, ma.getMeepleIdFor(fp)));
-                return;
-            }
-
             boolean isMonasteryLocataion = fp.getLocation() == Location.CLOISTER || fp.getLocation() == Location.MONASTERY;
 
             if (isMonasteryLocataion) {

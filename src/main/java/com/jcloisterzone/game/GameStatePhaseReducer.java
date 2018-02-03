@@ -130,7 +130,9 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
             assert params.length == 2;
 
             Class<?> acceptedMessageClass = params[1];
-            if (!acceptedMessageClass.isInstance(message)) {
+            // check exact class instead of isInstance -
+            // eg. DeployFlierMessage extends DeployMeepleMessage but can have separate handlers
+            if (!acceptedMessageClass.equals(message.getClass())) {
                 continue;
             }
             try {
