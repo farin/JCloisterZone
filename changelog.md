@@ -18,7 +18,7 @@
   one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to cloister)
 * fix: broken undo for loaded games
 * fix: don't offer AI unsupported expansion in create game panel after "Play again" is used
-
+* fix: preserve figure order in player panels
 
 ## 4.1.1
 *2018-01-19*

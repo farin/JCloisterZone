@@ -15,9 +15,16 @@ import java.awt.image.BufferedImage;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PlayerClock;
+import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Mayor;
+import com.jcloisterzone.figure.Phantom;
+import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
@@ -220,26 +227,38 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             }
         }
 
-        int small = 0;
-        String smallImgKey = SmallFollower.class.getSimpleName();
+        player.getFollowers(state)
+            .filter(f -> f.isInSupply(state))
+            .groupBy(Follower::getClass)
+            .toArray()
+            .sortBy(t -> {
+               if (t._1.equals(SmallFollower.class)) return 1;
+               if (t._1.equals(Phantom.class)) return 2;
+               if (t._1.equals(BigFollower.class)) return 3;
+               if (t._1.equals(Mayor.class)) return 4;
+               if (t._1.equals(Wagon.class)) return 4;
+               return 99;
+            })
+            .forEach(t -> {
+                drawMeepleBox(player, t._1.getSimpleName(), t._2.length(), t._1.equals(SmallFollower.class));
+            });
 
-        for (Follower f : player.getFollowers(state).filter(f -> f.isInSupply(state))) {
-            //instanceof cannot be used because of Phantom
-            if (f.getClass().equals(SmallFollower.class)) {
-                small++;
-            } else { //all small followers are at beginning of collection
-                drawMeepleBox(player, smallImgKey, small, true);
-                small = 0;
-                drawMeepleBox(player, f.getClass().getSimpleName(), 1, false);
-            }
-        }
-        drawMeepleBox(player, smallImgKey, small, true); //case when only small followers are in collection (not drawn yet)
 
 //      gp.profile(" > followers");
 
-        for (Special meeple : player.getSpecialMeeples(state).filter(f -> f.isInSupply(state))) {
-            drawMeepleBox(player, meeple.getClass().getSimpleName(), 1, false);
-        }
+        player.getSpecialMeeples(state)
+            .filter(f -> f.isInSupply(state))
+            .groupBy(Special::getClass)
+            .toArray()
+            .sortBy(t -> {
+               if (t._1.equals(Builder.class)) return 1;
+               if (t._1.equals(Pig.class)) return 2;
+               if (t._1.equals(Barn.class)) return 3;
+               return 99;
+            })
+            .forEach(t -> {
+                drawMeepleBox(player, t._1.getSimpleName(), t._2.length(), false);
+            });
 
 //      gp.profile(" > special");
 
