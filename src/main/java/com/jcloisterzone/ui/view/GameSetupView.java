@@ -72,6 +72,8 @@ public class GameSetupView extends AbstractUiView implements GameChatView {
             }
         });
         menu.setItemEnabled(MenuItem.LEAVE_GAME, true);
+
+        createGamePanel.updateSupportedExpansions(game.mergeSupportedExpansions());
     }
 
     private void showCreateGamePanel(Container panel, boolean mutableSlots, PlayerSlot[] slots) {

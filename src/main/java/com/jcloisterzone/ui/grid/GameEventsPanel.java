@@ -158,8 +158,8 @@ public class GameEventsPanel extends JPanel {
         ScoreEvent ev = (ScoreEvent) _ev;
         ScoreEventItem item = new ScoreEventItem(theme, ev, turnColor, triggeringColor);
 
-        if (ev.getCategory() == PointCategory.FAIRY) {
-            item.setHighlightedPositions(Vector.of(ev.getFeaturePointer().getPosition()));
+        if (ev.getCategory() == PointCategory.FAIRY || ev.getFeaturePointer() == null) {
+            item.setHighlightedPositions(Vector.of(ev.getPosition()));
         } else {
             Feature feature = state.getFeature(ev.getFeaturePointer());
             item.setHighlightedFeature(feature);

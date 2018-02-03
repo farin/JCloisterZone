@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.config.ConfigLoader;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Game;
@@ -156,6 +157,14 @@ public class SimpleServer extends WebSocketServer  {
                         slots[idx].setNickname(slot.getNickname());
                         slots[idx].setSerial(slot.getSerial());
                         slots[idx].setAiClassName(slot.getAiClassName());
+                        if (slot.getAiClassName() != null) {
+                            try {
+                                AiPlayer aiPlayer = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                                slots[idx].setSupportedSetup(aiPlayer.supportedSetup());
+                            } catch (Exception e) {
+                                logger.error(e.getMessage(), e);
+                            }
+                        }
                         maxSerial = Math.max(maxSerial, slot.getSerial());
                     }
                 }

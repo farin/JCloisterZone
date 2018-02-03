@@ -15,6 +15,7 @@
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
 * fix: broken undo for loaded games
+* fix: don't offer AI unsupported expansion in create game panel after "Play again" is used
 
 
 ## 4.1.1

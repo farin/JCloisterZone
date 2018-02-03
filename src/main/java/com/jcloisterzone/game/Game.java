@@ -308,7 +308,7 @@ public class Game implements EventProxy {
     }
 
 
-    private java.util.Set<Expansion> mergeSupportedExpansions() {
+    public java.util.Set<Expansion> mergeSupportedExpansions() {
         SupportedSetup merged = SupportedSetup.getCurrentClientSupported();
         for (int i = 0; i < slotSupported.length; i++) {
             if (slotSupported[i] == null) {
