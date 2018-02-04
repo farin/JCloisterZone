@@ -22,6 +22,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.CastleCreated;
+import com.jcloisterzone.event.play.DoubleTurnEvent;
 import com.jcloisterzone.event.play.FollowerCaptured;
 import com.jcloisterzone.event.play.MeepleDeployed;
 import com.jcloisterzone.event.play.MeepleReturned;
@@ -111,6 +112,7 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
         mapping = mapping.put(CastleCreated.class, this::processCastleCreatedEvent);
         mapping = mapping.put(PrisonersExchangeEvent.class, ev -> null);
+        mapping = mapping.put(DoubleTurnEvent.class, ev -> null);
     }
 
     private EventItem processTilePlacedEvent(PlayEvent _ev) {

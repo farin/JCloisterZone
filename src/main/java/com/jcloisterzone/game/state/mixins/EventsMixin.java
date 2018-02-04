@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.state.mixins;
 
+import com.jcloisterzone.event.play.DoubleTurnEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.game.state.GameState;
@@ -21,6 +22,17 @@ public interface EventsMixin {
         for (PlayEvent ev : getEvents().reverseIterator()) {
             res = res.prepend(ev);
             if (ev instanceof PlayerTurnEvent) {
+                break;
+            }
+        }
+        return res;
+    }
+
+    default List<PlayEvent> getCurrentTurnPartEvents() {
+        List<PlayEvent> res = List.empty();
+        for (PlayEvent ev : getEvents().reverseIterator()) {
+            res = res.prepend(ev);
+            if (ev instanceof PlayerTurnEvent || ev instanceof DoubleTurnEvent) {
                 break;
             }
         }

@@ -36,7 +36,7 @@ public class CocFollowerPhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        Stream<ScoreEvent> events = Stream.ofAll(state.getCurrentTurnEvents())
+        Stream<ScoreEvent> events = Stream.ofAll(state.getCurrentTurnPartEvents())
             .filter(Predicates.instanceOf(ScoreEvent.class))
             .map(ev -> (ScoreEvent) ev)
             .filter(ev -> ev.getCategory().hasLandscapeSource())

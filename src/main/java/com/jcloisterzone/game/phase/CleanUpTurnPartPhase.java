@@ -1,5 +1,7 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.event.play.DoubleTurnEvent;
+import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -33,6 +35,10 @@ public class CleanUpTurnPartPhase extends Phase {
                 .remove(Flag.FLYING_MACHINE_USED)
             );
         }
+
+        state = state.appendEvent(
+            new DoubleTurnEvent(PlayEventMeta.createWithoutPlayer())
+        );
 
         if (builderTakeAnotherTurn) {
             return next(state, state.getCapabilities().contains(AbbeyCapability.class) ? AbbeyPhase.class : TilePhase.class);

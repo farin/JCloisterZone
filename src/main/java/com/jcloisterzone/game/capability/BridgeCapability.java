@@ -35,7 +35,7 @@ public class BridgeCapability extends Capability<Set<FeaturePointer>> {
             player.getIndex(), Token.BRIDGE) > 0;
 
         if (!playerHasBridge ||
-            state.getCurrentTurnEvents().find(
+            state.getCurrentTurnPartEvents().find(
                ev -> ev instanceof TokenPlacedEvent && ((TokenPlacedEvent)ev).getToken() == Token.BRIDGE
             ).isDefined()) {
             return state;
