@@ -23,6 +23,7 @@
   feature was scored during first part 
 * fix: restrict corn circles actions to followers only (instead of meeples)
 * fix: the rules that restrict the placement of cloisters next to already placed shrines also restrict the placement of abbeys.
+* fix: german monasteries and abbot related issues (portal allows placement next to abbot, crash when abbot in tower area)
 * fix: broken undo for loaded games
 * fix: don't offer AI unsupported expansion in create game panel after "Play again" is used
 * fix: preserve figure order in player panels

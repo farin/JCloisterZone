@@ -78,11 +78,23 @@ public abstract class AbstractActionPhase extends Phase {
 
             //towers are handled by Tower capability (needs collect towers on all tiles)
             places = places.filter(t -> !(t._2 instanceof Tower));
+            places = places.flatMap(t -> {
+               Structure struct = t._2;
+               if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
+                   return List.of(t, new Tuple2<>(Location.MONASTERY, t._2));
+               }
+               return List.of(t);
+            });
 
 
             if (!isCurrentTile) {
                 //exclude completed
-                places = places.filter(t -> !(t._2 instanceof Completable) || ((Completable)t._2).isOpen(state));
+                places = places.filter(t -> {
+                    if (t._1 == Location.MONASTERY) {
+                        return true;
+                    }
+                    return !(t._2 instanceof Completable) || ((Completable)t._2).isOpen(state);
+                });
             }
 
             if (state.hasFlag(Flag.FLYING_MACHINE_USED)) {
@@ -94,18 +106,20 @@ public abstract class AbstractActionPhase extends Phase {
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = placesFp
-                .filter(t -> meeple instanceof Special || !t._2.isOccupied(state))
-                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
-                .flatMap(t -> {
-                    if (t._2 instanceof Cloister && ((Cloister)t._2).isMonastery()) {
-                        return List.of(
-                            t,
-                            t.update1(new FeaturePointer(t._1.getPosition(), Location.MONASTERY))
-                        );
-                    } else {
-                        return List.of(t);
+                .filter(t -> {
+                    if (meeple instanceof Special) return true;
+                    Structure struct = t._2;
+                    boolean isMonastery = struct instanceof Cloister && ((Cloister)struct).isMonastery();
+                    if (isMonastery) {
+                        boolean isOccupied = !state.getDeployedMeeples()
+                           .values()
+                           .filter(fp -> fp.getPosition().equals(t._1.getPosition()) && (fp.getLocation() == Location.MONASTERY || fp.getLocation() == Location.CLOISTER))
+                           .isEmpty();
+                        if (isOccupied) return false;
                     }
+                    return !t._2.isOccupied(state);
                 })
+                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .map(t -> t._1)
                 .toSet();
 
