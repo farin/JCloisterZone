@@ -4,10 +4,9 @@ import java.util.Arrays;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.EdgePattern;
 import com.jcloisterzone.board.PlacementOption;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -20,7 +19,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 
-import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
 
@@ -39,14 +37,23 @@ public class AbbeyPhase extends Phase {
         boolean builderSecondTurnPart = builderState == BuilderState.SECOND_TURN;
         boolean hasAbbey = state.getPlayers().getPlayerTokenCount(state.getPlayers().getTurnPlayerIndex(), Token.ABBEY_TILE) > 0;
         if (hasAbbey && (builderSecondTurnPart || !baazaarInProgress)) {
-            Stream<Tuple2<Position, EdgePattern>> holes = state.getHoles();
-            if (!holes.isEmpty()) {
+            GameState _state = state;
+            Stream<PlacementOption> options = state.getHoles()
+                .flatMap(t ->
+                    Array.ofAll(Arrays.asList(Rotation.values()))
+                    .map(r -> new PlacementOption(t._1, r, null))
+                )
+                .filter(tp -> {
+                    for (Capability<?> cap : _state.getCapabilities().toSeq()) {
+                        if (!cap.isTilePlacementAllowed(_state, AbbeyCapability.ABBEY_TILE, tp)) return false;
+                    }
+                    return true;
+                });
+
+            if (!options.isEmpty()) {
                 TilePlacementAction action = new TilePlacementAction(
                     AbbeyCapability.ABBEY_TILE,
-                    holes.flatMap(t ->
-                        Array.ofAll(Arrays.asList(Rotation.values()))
-                            .map(r -> new PlacementOption(t._1, r, null))
-                    ).toSet()
+                    options.toSet()
                 );
 
                 state = state.setPlayerActions(new ActionsState(

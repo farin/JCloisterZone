@@ -68,8 +68,8 @@ public final class ShrineCapability extends Capability<Void> {
 
     @Override
     public boolean isTilePlacementAllowed(GameState state, Tile tile, PlacementOption placement) {
-        // unplaced cloister taken from Tile (with initial position set to 0,0)
-        // it's enough, because just isShrine() is needed
+        // cloister taken from not yet placed Tile (with initial position set to 0,0)
+        // is enough, because just isShrine() is needed
         Cloister cloister = getCloister(tile);
         if (cloister == null) {
             return true;
