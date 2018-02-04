@@ -11,6 +11,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.BigFollower;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
@@ -91,11 +92,12 @@ public class CornCirclePhase extends Phase {
         CornCircleOption option = state.getCapabilityModel(CornCircleCapability.class);
         Class<? extends Feature> cornType = getCornType(state);
 
-        Stream<Tuple2<Meeple, FeaturePointer>> meeples = Stream.ofAll(state.getDeployedMeeples())
+        Stream<Tuple2<Meeple, FeaturePointer>> followers = Stream.ofAll(state.getDeployedMeeples())
+            .filter(t -> t._1 instanceof Follower)
             .filter(t -> t._1.getPlayer().equals(player))
             .filter(t -> cornType.isInstance(state.getFeature(t._2)));
 
-        if (meeples.isEmpty()) {
+        if (followers.isEmpty()) {
             return nextCornPlayer(state, player);
         }
 
@@ -116,13 +118,13 @@ public class CornCirclePhase extends Phase {
                 return nextCornPlayer(state, player);
             }
 
-            Set<FeaturePointer> deployOptions = meeples.map(Tuple2::_2).toSet();
+            Set<FeaturePointer> deployOptions = followers.map(Tuple2::_2).toSet();
             actions = availMeeples.map(meeple ->
                 new MeepleAction(meeple, deployOptions)
             );
             break;
         case REMOVE:
-            Set<MeeplePointer> removeOptions = meeples.map(MeeplePointer::new).toSet();
+            Set<MeeplePointer> removeOptions = followers.map(MeeplePointer::new).toSet();
             actions = Vector.of(
                 new ReturnMeepleAction(removeOptions, ReturnMeepleSource.CORN_CIRCLE)
             );

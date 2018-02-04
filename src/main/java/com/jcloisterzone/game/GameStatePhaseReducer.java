@@ -38,6 +38,7 @@ import com.jcloisterzone.game.phase.TilePhase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
 import com.jcloisterzone.game.phase.WagonPhase;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
 import io.vavr.Function2;
@@ -142,6 +143,9 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
                 throw new RuntimeException(e.getCause() == null ? e : e.getCause());
             }
         }
+
+        MessageParser parser = new MessageParser();
+        logger.warn("Unhandled message:\n\t" +  parser.toJson(message));
         throw new IllegalArgumentException(String.format("Message %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));
     }
 

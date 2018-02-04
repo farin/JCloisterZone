@@ -2,6 +2,9 @@
 
 # Version history
 
+## 4.2.0
+*not released yet*
+
 * display info message when game is created with debug options (forced draw order). This is important 
   for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
   And currently there was no change to recognize that game is regular.
@@ -18,6 +21,7 @@
   one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to cloister)
 * fix: builder double turn allowed wrongly add follower into City of C. after each turn part if opponent 
   feature was scored during first part 
+* fix: restrict corn circles actions to followers only (instead of meeples)
 * fix: broken undo for loaded games
 * fix: don't offer AI unsupported expansion in create game panel after "Play again" is used
 * fix: preserve figure order in player panels
