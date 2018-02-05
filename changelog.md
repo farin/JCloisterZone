@@ -2,8 +2,8 @@
 
 # Version history
 
-## 4.2.0
-*not released yet*
+## 4.2.1
+*2018-02-05*
 
 * display info message when game is created with debug options (forced draw order). This is important 
   for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
