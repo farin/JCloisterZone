@@ -41,7 +41,7 @@ public class PlaceBridge implements Reducer {
         state = state.setPlacedTiles(placedTiles.put(bridgePos, ptile));
 
         Bridge bridge = new Bridge(bridgeLoc);
-        Road bridgeRoad = bridge.placeOnBoard(bridgePos, tileRotation);
+        Road bridgeRoad = bridge.placeOnBoard(bridgePos, Rotation.R0); // bridge itself is rotated, placed like tile has no rotation!
         state = state.setFeatureMap(
             state.getFeatureMap().put(ptr, bridgeRoad)
         );
