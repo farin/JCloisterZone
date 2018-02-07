@@ -5,7 +5,8 @@
 ## upcoming release
 
 * fix: road with bridge can remain not scored. This can happen when bridge was placed result of tile placement
-  on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.  
+  on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.
+* fix: gold was not awarded from cloister tile itself (but only from adjacent tiles)
 
 ## 4.2.1
 *2018-02-05*
