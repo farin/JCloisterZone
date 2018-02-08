@@ -166,6 +166,20 @@ public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
         startGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // first remove all unsupported expansions
+                // TODO it would be better do it on server side, but let's  make it after game creation panel redesing
+                java.util.Set<Expansion> supported = game.mergeSupportedExpansions();
+                GameSetup originalSetup = game.getSetup();
+                GameSetup setup = originalSetup;
+
+                for (Expansion exp : setup.getExpansions().keySet()) {
+                    if (!supported.contains(exp)) {
+                        setup = setup.mapExpansions(m -> m.remove(exp));
+                        gc.getConnection().send(new SetExpansionMessage(exp, 0));
+                    }
+                }
+                sendCapabilityChange(originalSetup, setup);
+
                 StartGameMessage msg = new StartGameMessage();
                 gc.getConnection().send(msg);
             }
