@@ -129,8 +129,14 @@ public class BazaarPanel extends ActionInteractionPanel<PlayerAction<?>> impleme
             }
             setPanelState(BazaarPanelState.SELECT_TILE);
         } else if (action instanceof BazaarBidAction) {
+            // update index, although it is usually set from SELECT_TILE
+            // game can be eg. loaded without rendering in SELECT_TILE state
+            setSelectedItem(model.getAuctionedItemIndex());
             setPanelState(BazaarPanelState.MAKE_BID);
         } else if (action instanceof BazaarSelectBuyOrSellAction) {
+            // update index, although it is usually set from SELECT_TILE
+            // game can be eg. loaded without rendering in SELECT_TILE state
+            setSelectedItem(model.getAuctionedItemIndex());
             setPanelState(BazaarPanelState.BUY_OR_SELL);
         }
     }

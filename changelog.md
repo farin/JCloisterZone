@@ -7,6 +7,7 @@
 * fix: road with bridge can remain not scored. This can happen when bridge was placed result of tile placement
   on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.
 * fix: gold was not awarded from cloister tile itself (but only from adjacent tiles)
+* fix: missing bid buttons when game is saved and loaded during bazaar auction 
 
 ## 4.2.1
 *2018-02-05*
