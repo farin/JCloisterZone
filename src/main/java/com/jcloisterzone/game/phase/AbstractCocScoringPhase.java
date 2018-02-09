@@ -26,7 +26,6 @@ import com.jcloisterzone.wsio.message.PassMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
@@ -68,7 +67,9 @@ public abstract class AbstractCocScoringPhase extends Phase {
         throw new IllegalArgumentException("Illegal location " + loc);
     }
 
-    protected abstract Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state);
+    //protected abstract Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state);
+
+    protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);
 
     private StepResult processPlayer(GameState state, Player player) {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
@@ -86,33 +87,14 @@ public abstract class AbstractCocScoringPhase extends Phase {
             }
         }
 
-        Vector<MeepleAction> actions = getScoredQuarters(state)
-            .filter(quarter_filter -> quarter_filter._1 != countFp.getLocation())
-            .flatMap(quarter_filter -> {
-                Location quarter = quarter_filter._1;
-                Function<Feature, Boolean> filter = quarter_filter._2;
+        Function<Feature, Boolean> filter = getAllowedFeaturesFilter(state);
+
+        Vector<MeepleAction> actions = Location.QUARTERS
+            .filter(quarter -> quarter != countFp.getLocation())
+            .flatMap(quarter -> {
                 Set<FeaturePointer> options = state.getFeatures(getFeatureTypeForLocation(quarter))
-                    .filter(f -> filter == null || filter.apply(f))
-                    .filter(f -> f instanceof Farm || ((Completable) f).isCompleted(state))
-                    .flatMap(f -> {
-                        List<FeaturePointer> places = f.getPlaces();
-                        if (f instanceof Farm) return places;
-                        if (justPlacedAbbeyAdjacent.contains(f)) return places;
-
-                        //feature lays on last placed tile -> is finished this turn
-                        if (places.find(p -> p.getPosition().equals(lastPlacedPos)).isDefined()) return places;
-
-                        if (f instanceof Cloister) {
-                            Position cloisterPos = places.get().getPosition();
-                            if (!Position.ADJACENT_AND_DIAGONAL
-                                .map(t -> cloisterPos.add(t._2))
-                                .filter(p -> p.equals(lastPlacedPos))
-                                .isEmpty()) {
-                                return places;
-                            }
-                        }
-                        return List.empty();
-                    })
+                    .filter(filter::apply)
+                    .flatMap(Feature::getPlaces)
                     .toSet();
 
                 if (options.isEmpty()) {

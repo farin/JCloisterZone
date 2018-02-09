@@ -2,13 +2,11 @@ package com.jcloisterzone.game.phase;
 
 import java.util.function.Function;
 
-import com.jcloisterzone.board.Location;
+import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
-
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
 
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 
@@ -17,8 +15,17 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected  Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state) {
-        return HashMap.of(Location.QUARTER_MARKET, null);
+    protected Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state) {
+        return f -> {
+            if (f instanceof Farm) {
+                return true;
+            }
+            if (f instanceof Completable) {
+                return !((Completable)f).isCompleted(state);
+            }
+            throw new UnsupportedOperationException();
+        };
     }
+
 
 }
