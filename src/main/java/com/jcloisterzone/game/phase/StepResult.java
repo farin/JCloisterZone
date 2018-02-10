@@ -1,7 +1,9 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.game.state.GameState;
 
+@Immutable
 public class StepResult {
 
     private final GameState state;

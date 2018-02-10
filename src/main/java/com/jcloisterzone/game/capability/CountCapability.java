@@ -19,15 +19,10 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 import io.vavr.collection.Vector;
 
-/** model is Position od CO.7 tile */
-public class CountCapability extends Capability<Position> {
+public class CountCapability extends Capability<CountCapabilityModel> {
 
     public static String QUARTER_ACTION_TILE_ID = "CO.7";
     private static final String[] FORBIDDEN_TILES = new String[] { "CO.6", "CO.7" };
-
-//
-//    // active player for pre score phase
-//    private Player moveOutPlayer;
 
     @Override
     public GameState onStartGame(GameState state) {
@@ -45,7 +40,6 @@ public class CountCapability extends Capability<Position> {
         }
         return tile;
     }
-
 
     public static boolean isTileForbidden(Tile tile) {
         String id = tile.getId();
@@ -68,7 +62,7 @@ public class CountCapability extends Capability<Position> {
         }
 
         Position quarterPosition = pt.getPosition();
-        state = setModel(state, quarterPosition);
+        state = setModel(state, new CountCapabilityModel(quarterPosition, null));
         Count count = state.getNeutralFigures().getCount();
         state = (new MoveNeutralFigure<>(
             count,
@@ -76,24 +70,4 @@ public class CountCapability extends Capability<Position> {
         )).apply(state);
         return state;
     }
-//
-//    public Quarter getQuarter(Location loc) {
-//        return (Quarter) game.getBoard().get(quarterPosition).getFeature(loc);
-//    }
-//
-//    public Quarter getQuarterFor(Feature f) {
-//        if (f instanceof City) return getQuarter(Location.QUARTER_CASTLE);
-//        if (f instanceof Road) return getQuarter(Location.QUARTER_BLACKSMITH);
-//        if (f instanceof Cloister) return getQuarter(Location.QUARTER_CATHEDRAL);
-//        if (f instanceof Farm) return getQuarter(Location.QUARTER_MARKET);
-//        throw new IllegalArgumentException("Illegal feature " + f);
-//    }
-//
-//    public Player getMoveOutPlayer() {
-//        return moveOutPlayer;
-//    }
-//
-//    public void setMoveOutPlayer(Player moveOutPlayer) {
-//        this.moveOutPlayer = moveOutPlayer;
-//    }
 }

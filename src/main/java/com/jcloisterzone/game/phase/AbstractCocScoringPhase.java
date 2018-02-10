@@ -14,14 +14,11 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PassMessage;
 
 import io.vavr.Tuple2;
@@ -36,17 +33,16 @@ public abstract class AbstractCocScoringPhase extends Phase {
         super(random);
     }
 
-    private boolean isLast(GameState state, Player player) {
-        return state.getTurnPlayer().equals(player);
-    }
+    protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);
+    protected abstract boolean isLast(GameState state, Player player, boolean actionUsed);
 
     private StepResult endPhase(GameState state) {
         state = clearActions(state);
         return next(state);
     }
 
-    private StepResult nextPlayer(GameState state, Player player) {
-        if (isLast(state, player)) {
+    protected StepResult nextPlayer(GameState state, Player player, boolean actionUsed) {
+        if (isLast(state, player, actionUsed)) {
             return endPhase(state);
         } else {
             return processPlayer(state, player.getNextPlayer(state));
@@ -67,11 +63,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         throw new IllegalArgumentException("Illegal location " + loc);
     }
 
-    //protected abstract Map<Location, Function<Feature, Boolean>> getScoredQuarters(GameState state);
-
-    protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);
-
-    private StepResult processPlayer(GameState state, Player player) {
+    protected StepResult processPlayer(GameState state, Player player) {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
         PlacedTile lastPlaced = state.getLastPlaced();
         Position lastPlacedPos = lastPlaced.getPosition();
@@ -113,7 +105,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
             .toVector();
 
         if (actions.isEmpty()) {
-            return nextPlayer(state, player);
+            return nextPlayer(state, player, false);
         }
 
         ActionsState as = new ActionsState(player, Vector.narrow(actions), true);
@@ -125,17 +117,6 @@ public abstract class AbstractCocScoringPhase extends Phase {
     @PhaseMessageHandler
     public StepResult handlePass(GameState state, PassMessage msg) {
         Player player = state.getActivePlayer();
-        return nextPlayer(state, player);
+        return nextPlayer(state, player, false);
     }
-
-    @PhaseMessageHandler
-    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        FeaturePointer fp = msg.getPointer();
-        Player player = state.getActivePlayer();
-        Follower follower = player.getFollowers(state).find(f -> f.getId().equals(msg.getMeepleId())).get();
-
-        state = (new DeployMeeple(follower, fp)).apply(state);
-        return processPlayer(state, player);
-    }
-
 }

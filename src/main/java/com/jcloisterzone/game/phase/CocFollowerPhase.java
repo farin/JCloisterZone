@@ -58,16 +58,16 @@ public class CocFollowerPhase extends Phase {
             return next(state);
         }
 
-        Position pos = state.getCapabilityModel(CountCapability.class);
+        Position quarterPos = state.getCapabilityModel(CountCapability.class).getQuarterPosition();
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
             SmallFollower.class, BigFollower.class, Phantom.class,
             Wagon.class, Mayor.class
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
-        Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(pos)
+        Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(quarterPos)
             .filter(t -> t._1.isCityOfCarcassonneQuarter())
-            .map(t -> new Tuple2<>(new FeaturePointer(pos, t._1), (Quarter) t._2));
+            .map(t -> new Tuple2<>(new FeaturePointer(quarterPos, t._1), (Quarter) t._2));
 
         GameState _state = state;
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {

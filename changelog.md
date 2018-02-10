@@ -1,11 +1,25 @@
 
 
+
 # Version history
 
 ## upcoming release
 
-* The Count, final scoring change:
+* The Count, final scoring changed according to "Complete annotated rules" notes.
   - followers can be moved from all quarters (not only from the Market to forms)
+  - players take turns
+    Question:
+        How does follower placement during the final scoring work?
+    Answer: 
+        In principle very similarly to the way it works during the game. The 'trigger' for the final scoring 
+        is the player who placed the last tile and so ended the game. Beginning with the player on the left 
+        of the 'trigger' player, each player redeploys one of his or her followers from 
+        Carcassonne to an appropriate feature [followers in castle can only be deployed 
+        to cities, and so on] on the board. Followers can also be redeployed to incomplete
+        roads, cities, cloisters, or farms, since these will also be scored at the end of the game.
+        This process continues until no player can redeploy any more players from Carcassonne. 
+        The Count still blocks the city quarter in which he is resident. Normally the player with 
+        the most followers in Carcassonne will be the one to redeploy the last figure. 
 * fix: road with bridge can remain not scored. This can happen when bridge was placed result of tile placement
   on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.
 * fix: gold was not awarded from cloister tile itself (but only from adjacent tiles)

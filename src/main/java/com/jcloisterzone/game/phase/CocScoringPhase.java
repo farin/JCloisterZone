@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import java.util.function.Function;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -10,12 +11,15 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.DeployMeeple;
+import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
@@ -25,6 +29,11 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
 
     public CocScoringPhase(RandomGenerator random) {
         super(random);
+    }
+
+    @Override
+    protected boolean isLast(GameState state, Player player, boolean actionUsed) {
+        return state.getTurnPlayer().equals(player);
     }
 
     @Override
@@ -100,5 +109,15 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
             }
             throw new UnsupportedOperationException();
         };
+    }
+
+    @PhaseMessageHandler
+    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
+        FeaturePointer fp = msg.getPointer();
+        Player player = state.getActivePlayer();
+        Follower follower = player.getFollowers(state).find(f -> f.getId().equals(msg.getMeepleId())).get();
+
+        state = (new DeployMeeple(follower, fp)).apply(state);
+        return processPlayer(state, player);
     }
 }

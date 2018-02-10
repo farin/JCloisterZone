@@ -27,12 +27,12 @@ public class CocCountPhase extends Phase {
     public StepResult enter(GameState state) {
         Player player = state.getTurnPlayer();
         Count count = state.getNeutralFigures().getCount();
-        Position pos = state.getCapabilityModel(CountCapability.class);
+        Position quarterPos = state.getCapabilityModel(CountCapability.class).getQuarterPosition();
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
 
         Set<FeaturePointer> options = Location.QUARTERS
             .filter(loc -> loc != countFp.getLocation())
-            .map(loc -> new FeaturePointer(pos, loc))
+            .map(loc -> new FeaturePointer(quarterPos, loc))
             .toSet();
         NeutralFigureAction action = new NeutralFigureAction(count, options);
 
