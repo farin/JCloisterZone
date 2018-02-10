@@ -204,6 +204,11 @@ public class GameState implements ActionsMixin, BoardMixin,
         );
     }
 
+    @Override
+    public GameState mapFeatureMap(Function<Map<FeaturePointer, Feature>, Map<FeaturePointer, Feature>> fn) {
+        return setFeatureMap(fn.apply(featureMap));
+    }
+
     public GameState setDiscardedTiles(List<Tile> discardedTiles) {
         if (discardedTiles == this.discardedTiles) return this;
         return new GameState(

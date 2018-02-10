@@ -18,6 +18,7 @@ import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
+import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
@@ -104,7 +105,7 @@ public class Expansion {
     // Minis expansion line
     public static Expansion FLIER = new Expansion("FLIER", "FL", "#1 - " + _tr("The Flier"), new Class[] { FlierCapability.class }, ExpansionType.MINI);
     @NotImplemented public static Expansion MESSAGES = new Expansion("MESSAGES", "ME", "#2 - " + _tr("The Messages"), ExpansionType.MINI);
-    @NotImplemented public static Expansion FERRIES = new Expansion("FERRIES", "FR", "#3 - " + _tr("The Ferries"), ExpansionType.MINI);
+    public static Expansion FERRIES = new Expansion("FERRIES", "FR", "#3 - " + _tr("The Ferries"), new Class[] { FerriesCapability.class }, ExpansionType.MINI);
     public static Expansion GOLDMINES = new Expansion("GOLDMINES", "GO", "#4 - " + _tr("The Goldmines"), new Class[] { GoldminesCapability.class }, ExpansionType.MINI);
     public static Expansion MAGE_AND_WITCH = new Expansion("MAGE_AND_WITCH", "MW", "#5 - " + _tr("Mage & Witch"), new Class[] { MageAndWitchCapability.class }, ExpansionType.MINI);
     @NotImplemented public static Expansion ROBBERS = new Expansion("ROBBERS", "RO", "#6 - " + _tr("The Robbers"), ExpansionType.MINI);
@@ -123,7 +124,7 @@ public class Expansion {
         ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS,
         KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT, GQ11, CULT, TUNNEL,
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
-        FLIER, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
+        FLIER, FERRIES, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
         RUSSIAN_PROMOS
     );
 

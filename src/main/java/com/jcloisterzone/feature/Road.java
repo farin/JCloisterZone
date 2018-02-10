@@ -2,15 +2,25 @@ package com.jcloisterzone.feature;
 
 import static com.jcloisterzone.ui.I18nUtils._tr;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.function.Function;
+
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.capability.FerriesCapability;
+import com.jcloisterzone.game.capability.FerriesCapabilityModel;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTunnelToken;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 public class Road extends CompletableFeature<Road> {
@@ -140,6 +150,67 @@ public class Road extends CompletableFeature<Road> {
 
     public static String name() {
         return _tr("Road");
+    }
+
+    private FeaturePointer findPartOf(Iterable<FeaturePointer> list, FeaturePointer fp) {
+        for (FeaturePointer item : list) {
+            if (fp.isPartOf(item)) {
+               return item;
+            }
+        }
+        return null;
+    }
+
+    public List<FeaturePointer> findNearest(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> predicate) {
+        java.util.Set<FeaturePointer> places = this.places.toJavaSet();
+        places.remove(from);
+        Deque<FeaturePointer> queue = new ArrayDeque<FeaturePointer>();
+        queue.push(from);
+        java.util.Set<FeaturePointer> result = new java.util.HashSet<>();
+
+        Map<FeaturePointer, PlacedTunnelToken> placedTunnels = state.getCapabilityModel(TunnelCapability.class);
+        FerriesCapabilityModel ferriesModel = state.getCapabilityModel(FerriesCapability.class);
+
+        while (!queue.isEmpty()) {
+            FeaturePointer fp = queue.pop();
+
+            if (predicate.apply(fp)) {
+                result.add(fp);
+                continue;
+            }
+
+            for (FeaturePointer adj : fp.getAdjacent(Road.class)) {
+                FeaturePointer place = findPartOf(places, adj);
+                if (place != null && places.remove(place)) {
+                    queue.push(place);
+                }
+            }
+
+            if (placedTunnels != null) {
+                PlacedTunnelToken placedTunnel = placedTunnels.get(fp).getOrNull();
+                if (placedTunnel != null) {
+                    FeaturePointer place = placedTunnels
+                        .find(t -> t._2 != null && t._2 != placedTunnel && t._2.getToken() == placedTunnel.getToken())
+                        .map(Tuple2::_1)
+                        .getOrNull();
+                    if (place != null && places.remove(place)) {
+                        queue.push(place);
+                    }
+                }
+            }
+
+            if (ferriesModel != null) {
+                FeaturePointer ferry = ferriesModel.getFerries().find(f -> fp.isPartOf(f)).getOrNull();
+                if (ferry != null) {
+                    FeaturePointer place = ferry.setLocation(ferry.getLocation().subtract(fp.getLocation()));
+
+                    if (place != null && places.remove(place)) {
+                        queue.push(place);
+                    }
+                }
+            }
+        }
+        return List.ofAll(result);
     }
 
     // immutable helpers

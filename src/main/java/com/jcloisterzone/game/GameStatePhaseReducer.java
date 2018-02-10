@@ -12,6 +12,7 @@ import com.jcloisterzone.game.phase.AbbeyPhase;
 import com.jcloisterzone.game.phase.ActionPhase;
 import com.jcloisterzone.game.phase.BazaarPhase;
 import com.jcloisterzone.game.phase.CastlePhase;
+import com.jcloisterzone.game.phase.ChangeFerriesPhase;
 import com.jcloisterzone.game.phase.CleanUpTurnPartPhase;
 import com.jcloisterzone.game.phase.CleanUpTurnPhase;
 import com.jcloisterzone.game.phase.CocCountPhase;
@@ -31,6 +32,7 @@ import com.jcloisterzone.game.phase.MageAndWitchPhase;
 import com.jcloisterzone.game.phase.PhantomPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.PhaseMessageHandler;
+import com.jcloisterzone.game.phase.PlaceFerryPhase;
 import com.jcloisterzone.game.phase.RequiredCapability;
 import com.jcloisterzone.game.phase.ScoringPhase;
 import com.jcloisterzone.game.phase.StepResult;
@@ -86,6 +88,8 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
                next = addPhase(setup, next, DragonPhase.class);
         }
 
+        next = addPhase(setup, next, ChangeFerriesPhase.class);
+        next = addPhase(setup, next, PlaceFerryPhase.class);
         next = addPhase(setup, next, PhantomPhase.class);
                addPhase(setup, next, TowerCapturePhase.class);
         next = addPhase(setup, next, ActionPhase.class);

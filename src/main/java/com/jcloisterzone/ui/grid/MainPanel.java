@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
@@ -22,6 +23,7 @@ import com.jcloisterzone.ui.grid.layer.CastleLayer;
 import com.jcloisterzone.ui.grid.layer.EventsOverlayLayer;
 import com.jcloisterzone.ui.grid.layer.FarmHintsLayer;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
+import com.jcloisterzone.ui.grid.layer.FerriesLayer;
 import com.jcloisterzone.ui.grid.layer.FollowerAreaLayer;
 import com.jcloisterzone.ui.grid.layer.GoldLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
@@ -81,6 +83,9 @@ public class MainPanel extends JPanel implements UIEventListener {
         }
         if (capabs.contains(TowerCapability.class)) {
             gridPanel.addLayer(new TowerLayer(gridPanel, gc));
+        }
+        if (capabs.contains(FerriesCapability.class)) {
+            gridPanel.addLayer(new FerriesLayer(gridPanel, gc));
         }
 
         gridPanel.addLayer(new TokenLayer(gridPanel, gc));

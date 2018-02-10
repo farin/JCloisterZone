@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.state.mixins;
 
 import java.awt.Rectangle;
+import java.util.function.Function;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -24,7 +25,7 @@ public interface BoardMixin {
 
     Map<FeaturePointer, Feature> getFeatureMap();
     GameState setFeatureMap(Map<FeaturePointer, Feature> featureMap);
-
+    GameState mapFeatureMap(Function<Map<FeaturePointer, Feature>, Map<FeaturePointer, Feature>> fn);
 
     // Tiles
 

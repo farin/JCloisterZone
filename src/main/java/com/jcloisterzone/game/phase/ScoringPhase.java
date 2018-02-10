@@ -10,6 +10,7 @@ import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
@@ -22,6 +23,7 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -52,6 +54,37 @@ public class ScoringPhase extends Phase {
     private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {
         for (Tuple2<Location, Completable> t : state.getTileFeatures2(tile.getPosition(), Completable.class)) {
             state = scoreCompleted(state, t._2, tile);
+        }
+        return state;
+    }
+
+    private GameState scoreClosedByFerries(GameState state) {
+        /*
+            A scoring is handled by placement itself
+            must take care about B & C
+
+
+           -A - B    -->     -A  B        B (disconnected] is now completed must be score
+                C              \ C
+
+           -A - B    -->     -A  /B
+                C                \C       C (connected) must me scored
+
+        */
+        for (Tuple2<Position, Tuple2<Location, Location>> t : state.getCapabilityModel(FerriesCapability.class).getMovedFerries()) {
+            Location from = t._2._1;
+            Location to = t._2._2;
+
+            // disconnected
+            List<FeaturePointer> affected = from.subtract(to).splitToSides()
+                .map(loc -> new FeaturePointer(t._1, loc));
+            // connected (add only first side is enough, it's connected, sides must belong to same road
+            affected = affected.append(new FeaturePointer(t._1, to.subtract(from).splitToSides().get()));
+
+            for (FeaturePointer fp : affected) {
+                Road road = (Road) state.getFeature(fp);
+                state = scoreCompleted(state, road, null);
+            }
         }
         return state;
     }
@@ -103,6 +136,10 @@ public class ScoringPhase extends Phase {
             state = scoreCompletedNearAbbey(state, pos);
         }
 
+        if (state.getCapabilities().contains(FerriesCapability.class)) {
+            state = scoreClosedByFerries(state);
+        }
+
         if (state.getCapabilities().contains(TunnelCapability.class)) {
             GameState _state = state;
             List<Feature> tunnelModified = state.getCurrentTurnEvents()
@@ -126,7 +163,6 @@ public class ScoringPhase extends Phase {
                 state = scoreCompleted(state, cloister, null);
             }
         }
-
 
         CastleCapability castleCap = state.getCapabilities().get(CastleCapability.class);
         HashMap<Completable, ScoreFeatureReducer> completed = HashMap.ofAll(completedMutable);

@@ -6,6 +6,7 @@ import com.jcloisterzone.event.play.MeepleReturned;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.Builder;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.state.GameState;
@@ -32,18 +33,20 @@ public class UndeployMeeple implements Reducer {
 
         PlayEventMeta metaWithPlayer = PlayEventMeta.createWithActivePlayer(state);
         state = primaryUndeploy(state, metaWithPlayer, meeple, source);
-        Player owner = meeple.getPlayer();
 
         // Undeploy lonely Builders and Pigs
-        PlayEventMeta metaNoPlayer = PlayEventMeta.createWithoutPlayer();
-        Structure feature = state.getStructure(source);
-        Stream<Tuple2<Meeple, FeaturePointer>> threatened = feature.getMeeples2(state)
-            .filter(m -> (m._1 instanceof Pig) || (m._1 instanceof Builder))
-            .filter(m -> m._1.getPlayer().equals(owner));
+        if (meeple instanceof Follower) {
+            Player owner = meeple.getPlayer();
+            PlayEventMeta metaNoPlayer = PlayEventMeta.createWithoutPlayer();
+            Structure feature = state.getStructure(source);
+            Stream<Tuple2<Meeple, FeaturePointer>> threatened = feature.getMeeples2(state)
+                .filter(m -> (m._1 instanceof Pig) || (m._1 instanceof Builder))
+                .filter(m -> m._1.getPlayer().equals(owner));
 
-        for (Tuple2<Meeple, FeaturePointer> t : threatened) {
-            if (feature.getFollowers(state).find(f -> f.getPlayer().equals(owner)).isEmpty()) {
-                state = undeploy(state, metaNoPlayer, t._1, t._2);
+            for (Tuple2<Meeple, FeaturePointer> t : threatened) {
+                if (feature.getFollowers(state).find(f -> f.getPlayer().equals(owner)).isEmpty()) {
+                    state = undeploy(state, metaNoPlayer, t._1, t._2);
+                }
             }
         }
 

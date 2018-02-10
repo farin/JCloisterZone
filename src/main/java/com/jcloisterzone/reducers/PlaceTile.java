@@ -144,7 +144,7 @@ public class PlaceTile implements Reducer {
             });
         }
 
-        state = state.setFeatureMap(HashMap.ofAll(fpUpdate).merge(state.getFeatureMap()));
+        state = state.mapFeatureMap(m -> HashMap.ofAll(fpUpdate).merge(m));
         state = state.appendEvent(
             new TilePlacedEvent(PlayEventMeta.createWithActivePlayer(state), tile, pos, rot)
         );

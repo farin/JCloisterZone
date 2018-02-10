@@ -44,7 +44,7 @@ public class PlaceTunnel implements Reducer {
             Map<FeaturePointer, Feature> featureMapUpdate = merged
                 .getPlaces()
                 .toMap(fp -> new Tuple2<>(fp, merged));
-            state = state.setFeatureMap(featureMapUpdate.merge(state.getFeatureMap()));
+            state = state.mapFeatureMap(m -> featureMapUpdate.merge(m));
         }
 
         state = state.addFlag(Flag.TUNNEL_PLACED);

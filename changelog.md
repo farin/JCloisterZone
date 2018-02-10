@@ -3,8 +3,10 @@
 
 # Version history
 
-## upcoming release
+## 4.3.0
+ * 2018-02-11*
 
+* Ferries (Mini #3) expansion
 * The Count, final scoring changed according to "Complete annotated rules" notes.
   - followers can be moved from all quarters (not only from the Market to forms)
   - players take turns
