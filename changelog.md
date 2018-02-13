@@ -1,10 +1,15 @@
 
 
 
+
 # Version history
 
+## upcoming version
+
+* fixed Ferries + Tunnel: sometimes ferry can't be changed when road is extended through tunnel connection
+
 ## 4.3.0
- * 2018-02-11*
+ *2018-02-11*
 
 * Ferries (Mini #3) expansion
 * The Count, final scoring changed according to "Complete annotated rules" notes.

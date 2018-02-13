@@ -190,7 +190,11 @@ public class Road extends CompletableFeature<Road> {
                 PlacedTunnelToken placedTunnel = placedTunnels.get(fp).getOrNull();
                 if (placedTunnel != null) {
                     FeaturePointer place = placedTunnels
-                        .find(t -> t._2 != null && t._2 != placedTunnel && t._2.getToken() == placedTunnel.getToken())
+                        .find(t ->
+                            t._2 != null && t._2 != placedTunnel
+                            && t._2.getToken() == placedTunnel.getToken()
+                            && t._2.getPlayerIndex() == placedTunnel.getPlayerIndex()
+                        )
                         .map(Tuple2::_1)
                         .getOrNull();
                     if (place != null && places.remove(place)) {
