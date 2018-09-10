@@ -105,6 +105,7 @@ public class PreferencesDialog extends JDialog {
         result.add(new StringOption("ro", "român (ro)"));
         result.add(new StringOption("ru", "русский (ru)"));
         result.add(new StringOption("sk", "slovenčina (sk)"));
+        result.add(new StringOption("zh", "中文 (zh)"));
 
         boolean match = false;
         for (StringOption opt : result) {

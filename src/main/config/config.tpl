@@ -4,7 +4,7 @@ update: ${update}
 port: ${port}
 
 # keep empty for system language or fill to force locale
-# supported locales are cs, de, el, en, es, fr, hu, it, ja, pl, ro, ru, sk, nl
+# supported locales are cs, de, el, en, es, fr, hu, it, ja, nl, pl, ro, ru, sk, zh
 locale: ${locale}
 
 score_display_duration: ${score_display_duration} # seconds
