@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-29 20:58+0100\n"
-"PO-Revision-Date: 2015-10-22 13:09+0100\n"
+"PO-Revision-Date: 2019-04-07 01:14+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
@@ -93,7 +93,7 @@ msgstr "Dombok és birkák"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:79
 msgid "Under the Big Top"
-msgstr ""
+msgstr "Vár a porond"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "King and Robber Baron"
@@ -109,7 +109,7 @@ msgstr "A folyó II"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "The Cathars / Siege"
-msgstr "A Katharok"
+msgstr "A katharok"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "The Besiegers"
@@ -161,16 +161,16 @@ msgstr "Német kolostorok"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:98
 msgid "Castles in Germany"
-msgstr ""
+msgstr "Német várak"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:99
 #: src/main/java/com/jcloisterzone/Expansion.java:100
 msgid "Halfings"
-msgstr ""
+msgstr "Fele-fele"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "The Watchtower"
-msgstr ""
+msgstr "Őrtornyok"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:104
 msgid "The Flier"
@@ -210,15 +210,15 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/Expansion.java:115
 msgid "Russian Promos"
-msgstr ""
+msgstr "Orosz promó lapkák"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:116
 msgid "Darmstadt Promo"
-msgstr ""
+msgstr "Darmstadt promó"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:117
 msgid "Labyrinth"
-msgstr ""
+msgstr "Labirintus"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:34
 msgid "Bridge"
@@ -250,7 +250,7 @@ msgstr "A torony"
 
 #: src/main/java/com/jcloisterzone/feature/YagaHut.java:73
 msgid "Yaga's Hut"
-msgstr ""
+msgstr "Baba Jaga kunyhója"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:11
 msgid "Randomize seating order"
@@ -258,7 +258,7 @@ msgstr "Véletlenszerű ülésrend"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:13
 msgid "Use pig herds independently (without T&B expansion)"
-msgstr ""
+msgstr "A disznókonda szabály alkalmazása a 2. kiegészítő nélkül is"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:15
 msgid "Princess MUST remove a knight from city."
@@ -299,11 +299,11 @@ msgstr "Csatorna szabály engedélyezése más kiegészítőkben is."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:28
 msgid "Assign 3/2 tunnel set in game of two/three players."
-msgstr ""
+msgstr "2 vagy 3 játékos esetén fejenként 3 ill. 2 alagútjelző jár"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:30
 msgid "Only follower can be returned by festival (instead of any figure)"
-msgstr ""
+msgstr "Fesztivál lapkánál csak követő vehető vissza (nem bármely figura)"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:32
 msgid "Keep basic cloisters in the game."
@@ -409,19 +409,20 @@ msgstr "Folytatás"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Skip Abbey"
-msgstr ""
+msgstr "Igen"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:286
 msgid "Cancel and place Abbey"
-msgstr ""
+msgstr "Mégsem"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
 msgstr ""
+"Ez az utolsó kör. Biztosan az apátság lerakása nélkül fejezed be a játékot?"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:289
 msgid "Last chance to place the Abbey"
-msgstr ""
+msgstr "Utolsó lehetőség az apátság lerakására"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:33
 msgid "About application"
@@ -478,11 +479,11 @@ msgstr "A beállított nyelv érvénybe lépéséhez újraindítás szükséges"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:210
 msgid "Theme"
-msgstr ""
+msgstr "Téma"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:226
 msgid "To apply new theme you must restart the application"
-msgstr ""
+msgstr "Az új téma érvényesítéséhez a program újraindítása szükséges"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:232
 msgid "AI placement delay (ms)"
@@ -513,7 +514,7 @@ msgstr "Mentés"
 #: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:50
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
 msgid "Tile Distribution"
-msgstr ""
+msgstr "Lapkák"
 
 #: src/main/java/com/jcloisterzone/ui/GameController.java:136
 msgid "%d tiles left"
@@ -589,13 +590,15 @@ msgstr "a {0} -ról/re."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
 msgid "Prisoners exchange"
-msgstr ""
+msgstr "Fogolycsere"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
 msgid ""
 "The captured prisoner is going to be immediately exchanged. You can select "
 "which follower you want to exchange for."
 msgstr ""
+"Kiválaszthatod, hogy a fogságban lévő saját alattvalóid közül melyiket "
+"szeretnéd kiváltani a foglyul ejtett alattvalóval."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:36
 msgid "Mage and Witch"
