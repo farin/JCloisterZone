@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+	<tile id="C!.v" count="2">
+		<vineyard/>
+	 	<city>N</city>
+	 	<farm city="N">WR WL SR</farm>
+	 	<farm city="N">EL ER SL</farm> 
+	</tile>
+	<tile id="CC!.v" count="2">
+	 	<vineyard/>
+	 	<city>N W</city>
+	 	<city>E</city>
+	 	<farm city="N E">SL SR</farm>
+	 	<!-- TODO link E city to N edge -->
+	</tile>
+	<tile id="Cc.h.1">
+	 	<hill/>
+        <city>N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="CC.h.2">
+		<hill/>
+        <city castle-base="true">N</city>
+        <city castle-base="true">W</city>
+        <farm city="N W">EL ER SL SR</farm>
+    </tile>
+    <tile id="Cc.v">
+	 	<vineyard/>
+        <city>N W</city>
+        <farm city="N">SL SR EL ER</farm>
+    </tile>
+    <tile id="CFC.h">
+    	<hill/>
+        <city castle-base="true">N</city>
+        <city castle-base="true">S</city>
+        <farm city="N S">WL WR EL ER</farm>
+    </tile>
+    <tile id="CFC.v">
+    	<vineyard/>
+        <city>W</city>
+        <city>E</city>
+        <farm city="W E">NL NR</farm>
+        <farm city="W E">SL SR</farm>
+    </tile>
+    <tile id="CFR.h">
+        <hill/>
+        <city castle-base="true">N</city>
+        <road>S</road>
+        <farm city="N">WL WR SR</farm>
+        <farm city="N">EL ER SL</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="CRr.h">
+    	<hill/>
+    	<city castle-base="true">N</city>
+        <road>E S</road>        
+        <farm city="N">EL WL WR SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="LCRr">
+    	<cloister/>
+    	<city castle-base="true">N</city>
+        <road>E S</road>        
+        <farm city="N">EL WL WR SR</farm>
+        <farm>ER SL</farm>
+    </tile>
+    <tile id="LRrR">
+    	<cloister/>
+    	<road>S</road>    	
+        <road>N E</road>        
+        <farm>ER SL SR WL WR NL</farm>
+        <farm>NR EL</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RCC.v">
+    	<vineyard/>
+    	<city castle-base="true">N</city>
+    	<city castle-base="true">W</city>
+    	<road>S</road>    	
+        <farm city="N W">SR</farm>
+        <farm city="N">EL ER SL</farm>
+        <wagon-move>
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RFR.h">
+    	<hill/>
+    	<road>N</road>
+    	<road>S</road>
+    	<farm>NR EL ER SL</farm>
+    	<farm>SR WL WR NL</farm>
+    	<wagon-move>    	
+            <neighbouring>N S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RR.h">
+    	<hill/>
+    	<road>W</road>
+    	<road>S</road>
+    	<farm>WR NL NR EL ER SL</farm>
+    	<farm>SR WL</farm>
+    	<wagon-move>    	
+            <neighbouring>W S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="RrC.h">
+    	<hill/>
+        <road>S W</road>
+        <city castle-base="true">N</city>
+        <farm city="N">WR EL ER SL</farm>
+        <farm>WL SR</farm>
+    </tile>
+    <tile id="RRr.v">
+    	<vineyard/>
+    	<road>W E</road>
+    	<road>S</road>
+    	<farm>WR NL NR EL</farm>
+    	<farm>ER SL SR WL</farm>
+    </tile>
+</pack>

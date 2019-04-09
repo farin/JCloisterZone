@@ -17,6 +17,7 @@ import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.figure.neutral.Fairy;
@@ -54,7 +55,7 @@ public class ActionPhase extends AbstractActionPhase {
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
             SmallFollower.class, BigFollower.class, Phantom.class,
-            Wagon.class, Mayor.class, Builder.class, Pig.class
+            Wagon.class, Mayor.class, Builder.class, Pig.class, Shepherd.class
         );
 
         Vector<PlayerAction<?>> actions = prepareMeepleActions(state, meepleTypes);

@@ -22,6 +22,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.Wagon;
@@ -252,8 +253,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             .toArray()
             .sortBy(t -> {
                if (t._1.equals(Builder.class)) return 1;
-               if (t._1.equals(Pig.class)) return 2;
-               if (t._1.equals(Barn.class)) return 3;
+               if (t._1.equals(Shepherd.class)) return 2;
+               if (t._1.equals(Pig.class)) return 3;
+               if (t._1.equals(Barn.class)) return 4;
                return 99;
             })
             .forEach(t -> {

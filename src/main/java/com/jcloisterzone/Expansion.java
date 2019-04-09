@@ -5,6 +5,7 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -34,6 +35,7 @@ import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.RiverCapability;
+import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.capability.StandardGameCapability;
@@ -77,7 +79,8 @@ public class Expansion {
     @NotImplemented public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
     public static Expansion BRIDGES_CASTLES_AND_BAZAARS = new Expansion("BRIDGES_CASTLES_AND_BAZAARS", "BB", _tr("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }, ExpansionType.MAJOR);
-    @NotImplemented public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"), ExpansionType.MAJOR);
+    public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"), 
+    		new Class[] { SheepCapability.class }, ExpansionType.MAJOR);
     @NotImplemented public static Expansion UNDER_THE_BIG_TOP = new Expansion("UNDER_THE_BIG_TOP", "UN", _tr("Under the Big Top"), ExpansionType.MAJOR);
 
     // Small expansion
@@ -121,7 +124,7 @@ public class Expansion {
     private static Vector<Expansion> _values = Vector.of(
         BASIC, WINTER,
         INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON, TOWER,
-        ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS,
+        ABBEY_AND_MAYOR, BRIDGES_CASTLES_AND_BAZAARS, HILLS_AND_SHEEP,
         KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT, GQ11, CULT, TUNNEL,
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
         FLIER, FERRIES, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
