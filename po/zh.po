@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-09 01:14+0800\n"
+"POT-Creation-Date: 2019-04-09 11:13+0200\n"
 "PO-Revision-Date: 2018-09-10 00:21+0800\n"
 "Last-Translator: Sizhuang Liu <oldherl@gmail.com>\n"
 "Language-Team: \n"
@@ -18,738 +18,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.1.1\n"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
-#: src/main/java/com/jcloisterzone/ui/Client.java:643
-msgid "Connection lost"
-msgstr "连接已断开"
-
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
-msgid "Reconnecting..."
-msgstr "重新连接中……"
-
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:375
-msgid "Save game"
-msgstr "保存游戏"
-
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:393
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:428
-#: src/main/java/com/jcloisterzone/ui/Client.java:433
-#: src/main/java/com/jcloisterzone/ui/Client.java:485
-#: src/main/java/com/jcloisterzone/ui/Client.java:651
-msgid "Error"
-msgstr "错误"
-
-#: src/main/java/com/jcloisterzone/ui/view/StartView.java:61
-msgid "JCloisterZone "
-msgstr "JCloisterZone "
-
-#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
-msgid "JCloisterZone saved games"
-msgstr "JCloisterZone 保存的游戏"
-
-#: src/main/java/com/jcloisterzone/ui/GameController.java:193
-msgid "%d tiles left"
-msgstr "还剩 %d 块"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
-msgid "New game"
-msgstr "新建游戏"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:98
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:73
-msgid "Connect"
-msgstr "连接"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
-msgid "Play Online"
-msgstr "在线对战"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
-msgid "Disconnect"
-msgstr "切断连接"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
-msgid "Leave Game"
-msgstr "离开游戏"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
-msgid "Save Game"
-msgstr "保存游戏"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
-msgid "Load Game"
-msgstr "载入游戏"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
-msgid "Quit"
-msgstr "退出"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:36
-msgid "Undo"
-msgstr "撤销"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
-msgid "Zoom In"
-msgstr "放大"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
-msgid "Zoom Out"
-msgstr "缩小"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:39
-msgid "Rotate Board"
-msgstr "旋转棋盘"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
-msgid "Show Game Events"
-msgstr "显示游戏事件"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
-msgid "Show Last Placements"
-msgstr "显示最后放置的板块"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
-msgid "Show Farm Hints"
-msgstr "显示草地提示"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
-msgid "Show Projected Points"
-msgstr "显示预测得分"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
-msgid "Show Discarded Tiles"
-msgstr "显示废弃的板块"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
-msgid "Show Game Setup"
-msgstr "显示游戏设置"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
-msgid "Take Screenshot"
-msgstr "截取屏幕截图"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
-msgid "Beep Alert at Player Turn"
-msgstr "玩家回合时播放提示音"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
-msgid "Confirm Every Meeple Deployment"
-msgstr "放置每个小人后均需确认"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
-msgid "Confirm Meeple Deployment on a Farm"
-msgstr "在草地放置小人后需确认"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
-msgid "Confirm Meeple Deployment on a Tower"
-msgstr "在高塔放置小人后需确认"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
-msgid "Confirm Ransom Payment"
-msgstr "支付赎金后需确认"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:342
-msgid "Preferences"
-msgstr "用户设定"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
-msgid "About"
-msgstr "关于"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
-#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:50
-msgid "Tile Distribution"
-msgstr "板块分布"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:58
-#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
-msgid "Controls"
-msgstr "控制方法"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:59
-msgid "Report Bug"
+#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
+#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
+msgid "Report bug"
 msgstr "报告 bug"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:88
-msgid "Session"
-msgstr "会话"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:133
-msgid "Game"
-msgstr "游戏"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:154
-msgid "Settings"
-msgstr "设定"
-
-#: src/main/java/com/jcloisterzone/ui/MenuBar.java:213
-msgid "Help"
-msgstr "帮助"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:36
-msgid "Discarded tiles"
-msgstr "废弃的板块"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:45
-msgid "These tiles have been discarded during the game"
-msgstr "本局游戏中废弃了这些板块"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:33
-msgid "About application"
-msgstr "关于本应用"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:54
-msgid "Version"
-msgstr "版本"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:58
-msgid ""
-"Distributed under the terms of GNU Affero General Public License version 3"
-msgstr "按照 GNU Affero General Public License 第3版的条款发行"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
-msgid "Game setup"
-msgstr "游戏设置"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:37
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:240
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:229
-msgid "Expansions"
-msgstr "扩展包"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:42
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:248
-msgid "Rules"
-msgstr "规则"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:92
-msgid "Use system language"
-msgstr "使用系统默认语言"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:189
-msgid "Language"
-msgstr "语言"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:205
-msgid "To apply new language you must restart the application"
-msgstr "重新启动客户端后方可应用新语言"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:211
-msgid "Theme"
-msgstr "主题"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:227
-msgid "To apply new theme you must restart the application"
-msgstr "重新启动客户端后方可应用新主题"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:233
-msgid "AI placement delay (ms)"
-msgstr "电脑玩家放置延迟（毫秒）"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:239
-msgid "Score display duration (sec)"
-msgstr "得分显示时间（秒）"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
-msgid "Interface"
-msgstr "用户界面"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
-msgid "Plugins"
-msgstr "插件"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:377
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
-msgid "Cancel"
-msgstr "取消"
-
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:385
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:382
-msgid "Save"
-msgstr "保存"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:466
-msgid ""
-"Online play server is not compatible with your application. Please upgrade "
-"JCloisterZone to the latest version."
-msgstr "在线游戏服务器和你的客户端版本不兼容。请升级至最新版的 JCloisterZone。"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:468
-msgid ""
-"Remote JCloisterZone is not compatible with local application. Please "
-"upgrade both applications to same version."
-msgstr ""
-"远程 JCloisterZone 和你的客户端版本不兼容。请双方升级至同一版本的 "
-"JCloisterZone。"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:470
-msgid "Incompatible versions"
-msgstr "版本不兼容"
-
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:473
-msgid "Invalid password"
-msgstr "密码无效"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
-msgid "Prisoners exchange"
-msgstr "交换犯人"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
-msgid ""
-"The captured prisoner is going to be immediately exchanged. You can select "
-"which follower you want to exchange for."
-msgstr "即将交换被捕的犯人。你可以选择用哪个随从来交换。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:39
-msgid "Corn circle"
-msgstr "麦田怪圈"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:44
-msgid "Each player…"
-msgstr "各位玩家……"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:50
-msgid "may deploy additional follower"
-msgstr "可放置额外的随从"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:63
-msgid "must remove follower"
-msgstr "必须移除随从"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:77
-#, java-format
-msgid "on/from a {0}."
-msgstr "从{0}上。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:84
-msgid "Bazaar supply"
-msgstr "集市供給"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:273
-msgid "Choose your tile."
-msgstr "选择你的板块。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:275
-msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
-msgstr "<html>选择下个拍卖的板块<br>并给出起拍价。</html>"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:280
-msgid "Raise bid or pass."
-msgstr "提高出价或跳过。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:284
-msgid "Buy or sell tile from latest bidder."
-msgstr "买下或卖出最新出价者的板块。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:290
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:293
-msgid "points"
-msgstr "分数"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:307
-msgid "Buy"
-msgstr "买"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:308
-msgid "Sell"
-msgstr "卖"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:317
-msgid "Select"
-msgstr "选择"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:326
-msgid "Bid"
-msgstr "出价"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:327
-msgid "Pass"
-msgstr "跳过"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:36
-msgid "Mage and Witch"
-msgstr "魔术师和魔女"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:41
-msgid ""
-"It''s not possible to place mage or witch because there isn''t an unfinished "
-"feature. Select what figure do you want to remove from board."
-msgstr ""
-"不存在未完成的地形，不可放置魔术师或魔女。选择你想要从版图上移除的人物。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:48
-msgid "Remove the mage."
-msgstr "移除魔术师。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:62
-msgid "Remove the witch."
-msgstr "移除魔女。"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:121
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:123
-msgid "Place as abbot"
-msgstr "放置为修道院长"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:123
-msgid "Place as monk"
-msgstr "放置为修道僧"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:126
-msgid "How do you want to place follower on monastery?"
-msgstr "你想如何放置随从或修道院？"
-
-#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:127
-msgid "Monastery"
-msgstr "修道院"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:52
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:48
-msgid "Connecting"
-msgstr "连接中"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:72
-msgid "Host"
-msgstr "主机名"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
-msgid "Port"
-msgstr "端口号"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:96
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:77
-msgid "Back"
-msgstr "后退"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
-msgid "Connection failed. Unknown host."
-msgstr "连接失败，未知主机名。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:140
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:119
-msgid "Connection refused."
-msgstr "拒绝连接。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:142
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:121
-msgid "Connection failed."
-msgstr "连接失败。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:156
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:132
-msgid "Invalid port number."
-msgstr "无效的端口号。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:98
-msgid "Game title"
-msgstr "游戏标题"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:106
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:180
-msgid "Password"
-msgstr "密码"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:110
-msgid "If you leave password empty, anybody can connect to your game."
-msgstr "若密码留空，任何人均可连接到你的游戏。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:114
-msgid "Create game"
-msgstr "创建游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
-msgid "Join game"
-msgstr "加入游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
-msgid "Continue"
-msgstr "继续"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:199
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
-msgid "Remove game"
-msgstr "删除游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
-msgid "Do you want to remove game permanently?"
-msgstr "你真的要删除游戏吗？"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:233
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:199
-msgid "Players"
-msgstr "玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
-msgid ""
-"Create a new game or continue a previously saved one. A game will be hosted "
-"on your computer and other players may connect during game set up. You can "
-"also play only against any number of computer players."
-msgstr ""
-"创建新游戏或者继续以前保存的游戏。你的电脑作为主机，其他玩家可在设置期间连接"
-"进来。你也可只与任意数量的电脑玩家对战。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:82
-msgid "or"
-msgstr "或者"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
-#: src/main/java/com/jcloisterzone/ui/Client.java:470
-msgid "Load game"
-msgstr "载入游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:95
-msgid ""
-"You can also connect to remote JCloisterZone application hosting a game. "
-"Connect when game is created but not yet started."
-msgstr ""
-"你也可连接到远程的 JCloisterZone 应用，在其创建了游戏但还未开始时加入游戏。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:116
-msgid ""
-"Connect to other players and play with them using internet connection and "
-"public game server play.jcloisterzone.com."
-msgstr ""
-"通过互联网连接到公共服务器 play.jcloisterzone.com，与其他玩家在线对战。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:118
-msgid "Play online"
-msgstr "在线对战"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:150
-msgid "Start game"
-msgstr "开始游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
-msgid "Leave game"
-msgstr "离开游戏"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:204
-msgid "Click twice on a slot button to add a computer player."
-msgstr "双击空位的按钮可添加电脑玩家。"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:280
-msgid "Clock"
-msgstr "时钟"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:285
-msgid "player time limit"
-msgstr "玩家时间限制"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:296
-msgid "minutes"
-msgstr "分钟"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:328
-msgid "Presets"
-msgstr "预设"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:349
-msgid "Preset name"
-msgstr "预设名"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:410
-msgid "Delete"
-msgstr "删除"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:18
-msgid ""
-"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
-"scroll the board. Click with <b>middle</b> mouse button to center the board. "
-"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
-msgstr ""
-"<html>用<b>A</b>、<b>S</b>、<b>W</b>、<b>D</b>或<b>方向</b>键移动棋盘。单击鼠"
-"标<b>中键</b>使棋盘居中。<b>+</b>、<b>-</b>键或鼠标<b>滚轮</b>可缩放棋盘。</"
-"html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
-msgid ""
-"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
-"by <b>left</b> click.</html>"
-msgstr ""
-"<html>按<b>Tab</b>键或<b>右击</b>鼠标可旋转板块。鼠标<b>左击</b>放置板块。</"
-"html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:26
-msgid ""
-"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
-"select appropriate action.</html>"
-msgstr ""
-"<html>当放置板块时，再次按下<b>Tab</b>键或者<b>右击</b>鼠标选择适当的行动。</"
-"html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
-msgid ""
-"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
-"no action.</html>"
-msgstr "<html>另外也可按<b>回车</b>键或<b>空格</b>键跳过本回合的行动。</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
-msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
-"tiles.</html>"
-msgstr ""
-"<html>按<b>F</b>键开关草地提示，或按<b>X</b>键查看最后放置的板块。</html>"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:147
-msgid "Unassigned player"
-msgstr "未分配的玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:151
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:177
-msgid "Local player"
-msgstr "本地玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:154
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:181
-msgid "Remote player"
-msgstr "远程玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:159
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:187
-msgid "Computer player"
-msgstr "电脑玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:162
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:190
-msgid "Remote computer player"
-msgstr "远程电脑玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:172
-msgid "Open player slot"
-msgstr "空闲位置"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:49
-msgid "Connected clients"
-msgstr "已连接的客户端"
-
-#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:63
-msgid "Nickname"
-msgstr "昵称"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
-msgid "Play again"
-msgstr "再玩一次"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
-msgid "Player"
-msgstr "玩家"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
-msgid "Rank"
-msgstr "排名"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
-msgid "Total points"
-msgstr "分数合计"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
-msgid "Roads"
-msgstr "道路"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
-msgid "Cities"
-msgstr "城市"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
-msgid "Cloisters"
-msgstr "修道院"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
-msgid "Farms"
-msgstr "草地"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
-msgid "Castles"
-msgstr "城堡"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
-msgid "The biggest city"
-msgstr "最大的城市"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
-msgid "The longest road"
-msgstr "最长的道路"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
-msgid "Trade goods"
-msgstr "交易商品"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
-msgid "Gold"
-msgstr "金"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
-msgid "Fairy"
-msgstr "妖精"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
-msgid "Tower ransom"
-msgstr "塔的赎金"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
-msgid "Bazaars"
-msgstr "集市"
-
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
-msgid "Wind rose"
-msgstr "风玫瑰图"
-
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
-msgid ""
-"The game is not finished. Do you really want to stop game and disconnect all "
-"other players?"
-msgstr "游戏还未结束，你确定要停止游戏并断开与其他所有玩家的连接吗？"
-
-#: src/main/java/com/jcloisterzone/ui/Client.java:304
-msgid "The game is not finished. Do you really want to leave it?"
-msgstr "游戏还未结束，你确定要离开吗？"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
-msgid "Skip"
-msgstr "跳过"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
-msgid "Skip Abbey"
-msgstr "跳过大修道院"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
-msgid "Cancel and place Abbey"
-msgstr "取消并放置大修道院"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:289
-msgid "This is your last turn. If you skip it your Abbey remain unplaced."
-msgstr "这是你的最后一个回合。若跳过，你将没有机会放置大修道院。"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
-msgid "Last chance to place the Abbey"
-msgstr "放置大修道院的最后机会"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:59
-msgid "Confirm or undo a meeple placement."
-msgstr "确认或者撤销放置小人。"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:60
-msgid "Waiting for a confirmation by remote player."
-msgstr "等待远程玩家确认。"
-
-#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:61
-msgid "No action available. Pass or undo a tile placement."
-msgstr "无可用的行动。跳过或者取消放置板块。"
-
-#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:126
-msgid "Type to chat"
-msgstr "此处打字可聊天"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:36
 msgid ""
@@ -767,46 +39,9 @@ msgstr "请描述 bug ……"
 msgid "...then download report archive and send via email to farin@farin.cz"
 msgstr "……然后下载压缩文件并发送电子邮件至 farin@farin.cz"
 
-#: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
-#: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
-msgid "Report bug"
-msgstr "报告 bug"
-
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:80
 msgid "Bug report failed"
 msgstr "Bug 报告失败"
-
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:91
-msgid "Cloister"
-msgstr "修道院"
-
-#: src/main/java/com/jcloisterzone/feature/Farm.java:127
-msgid "Farm"
-msgstr "草地"
-
-#: src/main/java/com/jcloisterzone/feature/Road.java:152
-msgid "Road"
-msgstr "道路"
-
-#: src/main/java/com/jcloisterzone/feature/City.java:178
-msgid "City"
-msgstr "城市"
-
-#: src/main/java/com/jcloisterzone/feature/Tower.java:41
-msgid "Tower"
-msgstr "塔"
-
-#: src/main/java/com/jcloisterzone/feature/Bridge.java:34
-msgid "Bridge"
-msgstr "桥"
-
-#: src/main/java/com/jcloisterzone/feature/YagaHut.java:73
-msgid "Yaga's Hut"
-msgstr "雅加婆婆小屋"
-
-#: src/main/java/com/jcloisterzone/feature/Castle.java:62
-msgid "Castle"
-msgstr "承包"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:57
 msgid "Basic game"
@@ -996,6 +231,38 @@ msgstr "达姆施塔特促销"
 msgid "Labyrinth"
 msgstr "迷宫"
 
+#: src/main/java/com/jcloisterzone/feature/Bridge.java:34
+msgid "Bridge"
+msgstr "桥"
+
+#: src/main/java/com/jcloisterzone/feature/Castle.java:62
+msgid "Castle"
+msgstr "承包"
+
+#: src/main/java/com/jcloisterzone/feature/City.java:178
+msgid "City"
+msgstr "城市"
+
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:91
+msgid "Cloister"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/feature/Farm.java:127
+msgid "Farm"
+msgstr "草地"
+
+#: src/main/java/com/jcloisterzone/feature/Road.java:152
+msgid "Road"
+msgstr "道路"
+
+#: src/main/java/com/jcloisterzone/feature/Tower.java:41
+msgid "Tower"
+msgstr "塔"
+
+#: src/main/java/com/jcloisterzone/feature/YagaHut.java:73
+msgid "Yaga's Hut"
+msgstr "雅加婆婆小屋"
+
 #: src/main/java/com/jcloisterzone/game/Rule.java:11
 msgid "Randomize seating order"
 msgstr "随机席位"
@@ -1054,3 +321,736 @@ msgstr "保留普通修道院。"
 #: src/main/java/com/jcloisterzone/game/Rule.java:34
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "每座塔/家/小屋分别加3/2/1分。"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:155
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
+msgid "Leave game"
+msgstr "离开游戏"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:295
+#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:377
+msgid "Cancel"
+msgstr "取消"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:297
+msgid ""
+"The game is not finished. Do you really want to stop game and disconnect all "
+"other players?"
+msgstr "游戏还未结束，你确定要停止游戏并断开与其他所有玩家的连接吗？"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:304
+msgid "The game is not finished. Do you really want to leave it?"
+msgstr "游戏还未结束，你确定要离开吗？"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:433
+#: src/main/java/com/jcloisterzone/ui/Client.java:485
+#: src/main/java/com/jcloisterzone/ui/Client.java:651
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:393
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:428
+msgid "Error"
+msgstr "错误"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:470
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
+msgid "Load game"
+msgstr "载入游戏"
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:643
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
+msgid "Connection lost"
+msgstr "连接已断开"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:466
+msgid ""
+"Online play server is not compatible with your application. Please upgrade "
+"JCloisterZone to the latest version."
+msgstr "在线游戏服务器和你的客户端版本不兼容。请升级至最新版的 JCloisterZone。"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:468
+msgid ""
+"Remote JCloisterZone is not compatible with local application. Please "
+"upgrade both applications to same version."
+msgstr ""
+"远程 JCloisterZone 和你的客户端版本不兼容。请双方升级至同一版本的 "
+"JCloisterZone。"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:470
+msgid "Incompatible versions"
+msgstr "版本不兼容"
+
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:473
+msgid "Invalid password"
+msgstr "密码无效"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:59
+msgid "Confirm or undo a meeple placement."
+msgstr "确认或者撤销放置小人。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:60
+msgid "Waiting for a confirmation by remote player."
+msgstr "等待远程玩家确认。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ActionPanel.java:61
+msgid "No action available. Pass or undo a tile placement."
+msgstr "无可用的行动。跳过或者取消放置板块。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/chat/ChatPanel.java:126
+msgid "Type to chat"
+msgstr "此处打字可聊天"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
+msgid "Skip"
+msgstr "跳过"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
+msgid "Continue"
+msgstr "继续"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+msgid "Skip Abbey"
+msgstr "跳过大修道院"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+msgid "Cancel and place Abbey"
+msgstr "取消并放置大修道院"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:289
+msgid "This is your last turn. If you skip it your Abbey remain unplaced."
+msgstr "这是你的最后一个回合。若跳过，你将没有机会放置大修道院。"
+
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+msgid "Last chance to place the Abbey"
+msgstr "放置大修道院的最后机会"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:33
+msgid "About application"
+msgstr "关于本应用"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:54
+msgid "Version"
+msgstr "版本"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/AboutDialog.java:58
+msgid ""
+"Distributed under the terms of GNU Affero General Public License version 3"
+msgstr "按照 GNU Affero General Public License 第3版的条款发行"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:36
+msgid "Discarded tiles"
+msgstr "废弃的板块"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/DiscardedTilesDialog.java:45
+msgid "These tiles have been discarded during the game"
+msgstr "本局游戏中废弃了这些板块"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:27
+msgid "Game setup"
+msgstr "游戏设置"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:37
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:240
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:229
+msgid "Expansions"
+msgstr "扩展包"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:42
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:248
+msgid "Rules"
+msgstr "规则"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/HelpDialog.java:37
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:58
+msgid "Controls"
+msgstr "控制方法"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:92
+msgid "Use system language"
+msgstr "使用系统默认语言"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:189
+msgid "Language"
+msgstr "语言"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:205
+msgid "To apply new language you must restart the application"
+msgstr "重新启动客户端后方可应用新语言"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:211
+msgid "Theme"
+msgstr "主题"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:227
+msgid "To apply new theme you must restart the application"
+msgstr "重新启动客户端后方可应用新主题"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:233
+msgid "AI placement delay (ms)"
+msgstr "电脑玩家放置延迟（毫秒）"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:239
+msgid "Score display duration (sec)"
+msgstr "得分显示时间（秒）"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:342
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
+msgid "Preferences"
+msgstr "用户设定"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
+msgid "Interface"
+msgstr "用户界面"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
+msgid "Plugins"
+msgstr "插件"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:385
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:382
+msgid "Save"
+msgstr "保存"
+
+#: src/main/java/com/jcloisterzone/ui/dialog/TileDistributionWindow.java:50
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:57
+msgid "Tile Distribution"
+msgstr "板块分布"
+
+#: src/main/java/com/jcloisterzone/ui/GameController.java:193
+msgid "%d tiles left"
+msgstr "还剩 %d 块"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:84
+msgid "Bazaar supply"
+msgstr "集市供給"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:273
+msgid "Choose your tile."
+msgstr "选择你的板块。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:275
+msgid "<html>Choose tile for next auction<br>and make initial offer.</html>"
+msgstr "<html>选择下个拍卖的板块<br>并给出起拍价。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:280
+msgid "Raise bid or pass."
+msgstr "提高出价或跳过。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:284
+msgid "Buy or sell tile from latest bidder."
+msgstr "买下或卖出最新出价者的板块。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:290
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:293
+msgid "points"
+msgstr "分数"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:307
+msgid "Buy"
+msgstr "买"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:308
+msgid "Sell"
+msgstr "卖"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:317
+msgid "Select"
+msgstr "选择"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:326
+msgid "Bid"
+msgstr "出价"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/BazaarPanel.java:327
+msgid "Pass"
+msgstr "跳过"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:39
+msgid "Corn circle"
+msgstr "麦田怪圈"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:44
+msgid "Each player…"
+msgstr "各位玩家……"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:50
+msgid "may deploy additional follower"
+msgstr "可放置额外的随从"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:63
+msgid "must remove follower"
+msgstr "必须移除随从"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:77
+#, java-format
+msgid "on/from a {0}."
+msgstr "从{0}上。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
+msgid "Prisoners exchange"
+msgstr "交换犯人"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
+msgid ""
+"The captured prisoner is going to be immediately exchanged. You can select "
+"which follower you want to exchange for."
+msgstr "即将交换被捕的犯人。你可以选择用哪个随从来交换。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:36
+msgid "Mage and Witch"
+msgstr "魔术师和魔女"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:41
+msgid ""
+"It''s not possible to place mage or witch because there isn''t an unfinished "
+"feature. Select what figure do you want to remove from board."
+msgstr ""
+"不存在未完成的地形，不可放置魔术师或魔女。选择你想要从版图上移除的人物。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:48
+msgid "Remove the mage."
+msgstr "移除魔术师。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/SelectMageWitchRemovalPanel.java:62
+msgid "Remove the witch."
+msgstr "移除魔女。"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:121
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:123
+msgid "Place as abbot"
+msgstr "放置为修道院长"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:123
+msgid "Place as monk"
+msgstr "放置为修道僧"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:126
+msgid "How do you want to place follower on monastery?"
+msgstr "你想如何放置随从或修道院？"
+
+#: src/main/java/com/jcloisterzone/ui/grid/layer/FeatureAreaLayer.java:127
+msgid "Monastery"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
+msgid "New game"
+msgstr "新建游戏"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:73
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:98
+msgid "Connect"
+msgstr "连接"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:29
+msgid "Play Online"
+msgstr "在线对战"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:30
+msgid "Disconnect"
+msgstr "切断连接"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:31
+msgid "Leave Game"
+msgstr "离开游戏"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:32
+msgid "Save Game"
+msgstr "保存游戏"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:33
+msgid "Load Game"
+msgstr "载入游戏"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:34
+msgid "Quit"
+msgstr "退出"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:36
+msgid "Undo"
+msgstr "撤销"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:37
+msgid "Zoom In"
+msgstr "放大"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:38
+msgid "Zoom Out"
+msgstr "缩小"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:39
+msgid "Rotate Board"
+msgstr "旋转棋盘"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
+msgid "Show Game Events"
+msgstr "显示游戏事件"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
+msgid "Show Last Placements"
+msgstr "显示最后放置的板块"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:42
+msgid "Show Farm Hints"
+msgstr "显示草地提示"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:43
+msgid "Show Projected Points"
+msgstr "显示预测得分"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:44
+msgid "Show Discarded Tiles"
+msgstr "显示废弃的板块"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:45
+msgid "Show Game Setup"
+msgstr "显示游戏设置"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:46
+msgid "Take Screenshot"
+msgstr "截取屏幕截图"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:48
+msgid "Beep Alert at Player Turn"
+msgstr "玩家回合时播放提示音"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:49
+msgid "Confirm Every Meeple Deployment"
+msgstr "放置每个小人后均需确认"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:50
+msgid "Confirm Meeple Deployment on a Farm"
+msgstr "在草地放置小人后需确认"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:51
+msgid "Confirm Meeple Deployment on a Tower"
+msgstr "在高塔放置小人后需确认"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
+msgid "Confirm Ransom Payment"
+msgstr "支付赎金后需确认"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
+msgid "About"
+msgstr "关于"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:59
+msgid "Report Bug"
+msgstr "报告 bug"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:88
+msgid "Session"
+msgstr "会话"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:133
+msgid "Game"
+msgstr "游戏"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:154
+msgid "Settings"
+msgstr "设定"
+
+#: src/main/java/com/jcloisterzone/ui/MenuBar.java:213
+msgid "Help"
+msgstr "帮助"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:98
+msgid "Game title"
+msgstr "游戏标题"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:106
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:180
+msgid "Password"
+msgstr "密码"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:110
+msgid "If you leave password empty, anybody can connect to your game."
+msgstr "若密码留空，任何人均可连接到你的游戏。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:114
+msgid "Create game"
+msgstr "创建游戏"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
+msgid "Join game"
+msgstr "加入游戏"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:199
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
+msgid "Remove game"
+msgstr "删除游戏"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
+msgid "Do you want to remove game permanently?"
+msgstr "你真的要删除游戏吗？"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:233
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:199
+msgid "Players"
+msgstr "玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectedClientsPanel.java:49
+msgid "Connected clients"
+msgstr "已连接的客户端"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:52
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:48
+msgid "Connecting"
+msgstr "连接中"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:72
+msgid "Host"
+msgstr "主机名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:83
+msgid "Port"
+msgstr "端口号"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:96
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:77
+msgid "Back"
+msgstr "后退"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:138
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:117
+msgid "Connection failed. Unknown host."
+msgstr "连接失败，未知主机名。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:119
+msgid "Connection refused."
+msgstr "拒绝连接。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:142
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:121
+msgid "Connection failed."
+msgstr "连接失败。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:132
+msgid "Invalid port number."
+msgstr "无效的端口号。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:63
+msgid "Nickname"
+msgstr "昵称"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:150
+msgid "Start game"
+msgstr "开始游戏"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:204
+msgid "Click twice on a slot button to add a computer player."
+msgstr "双击空位的按钮可添加电脑玩家。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:280
+msgid "Clock"
+msgstr "时钟"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:285
+msgid "player time limit"
+msgstr "玩家时间限制"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:296
+msgid "minutes"
+msgstr "分钟"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:328
+msgid "Presets"
+msgstr "预设"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:349
+msgid "Preset name"
+msgstr "预设名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:410
+msgid "Delete"
+msgstr "删除"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:147
+msgid "Unassigned player"
+msgstr "未分配的玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:151
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:177
+msgid "Local player"
+msgstr "本地玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:154
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:181
+msgid "Remote player"
+msgstr "远程玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:159
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:187
+msgid "Computer player"
+msgstr "电脑玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:190
+msgid "Remote computer player"
+msgstr "远程电脑玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePlayerPanel.java:172
+msgid "Open player slot"
+msgstr "空闲位置"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
+msgid "Play again"
+msgstr "再玩一次"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+msgid "Player"
+msgstr "玩家"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
+msgid "Rank"
+msgstr "排名"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+msgid "Total points"
+msgstr "分数合计"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
+msgid "Roads"
+msgstr "道路"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+msgid "Cities"
+msgstr "城市"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+msgid "Cloisters"
+msgstr "修道院"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+msgid "Farms"
+msgstr "草地"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+msgid "Castles"
+msgstr "城堡"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+msgid "The biggest city"
+msgstr "最大的城市"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+msgid "The longest road"
+msgstr "最长的道路"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+msgid "Trade goods"
+msgstr "交易商品"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
+msgid "Gold"
+msgstr "金"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
+msgid "Fairy"
+msgstr "妖精"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
+msgid "Tower ransom"
+msgstr "塔的赎金"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
+msgid "Bazaars"
+msgstr "集市"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
+msgid "Wind rose"
+msgstr "风玫瑰图"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:18
+msgid ""
+"<html>Use <b>A</b>, <b>S</b>, <b>W</b>, <b>D</b> or <b>cursor</b> keys to "
+"scroll the board. Click with <b>middle</b> mouse button to center the board. "
+"Zoom with <b>+</b> or <b>-</b> keys or use mouse <b>wheel</b>.</html>"
+msgstr ""
+"<html>用<b>A</b>、<b>S</b>、<b>W</b>、<b>D</b>或<b>方向</b>键移动棋盘。单击鼠"
+"标<b>中键</b>使棋盘居中。<b>+</b>、<b>-</b>键或鼠标<b>滚轮</b>可缩放棋盘。</"
+"html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:23
+msgid ""
+"<html>Rotate a tile by <b>Tab</b> key or <b>right</b> mouse click. Place it "
+"by <b>left</b> click.</html>"
+msgstr ""
+"<html>按<b>Tab</b>键或<b>右击</b>鼠标可旋转板块。鼠标<b>左击</b>放置板块。</"
+"html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:26
+msgid ""
+"<html>When tile is placed use <b>Tab</b> or <b>right</b> click again to "
+"select appropriate action.</html>"
+msgstr ""
+"<html>当放置板块时，再次按下<b>Tab</b>键或者<b>右击</b>鼠标选择适当的行动。</"
+"html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:30
+msgid ""
+"<html>Alternativelly you can pass with <b>Enter</b> or <b>Space</b> to play "
+"no action.</html>"
+msgstr "<html>另外也可按<b>回车</b>键或<b>空格</b>键跳过本回合的行动。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
+msgid ""
+"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"tiles.</html>"
+msgstr ""
+"<html>按<b>F</b>键开关草地提示，或按<b>X</b>键查看最后放置的板块。</html>"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:63
+msgid ""
+"Create a new game or continue a previously saved one. A game will be hosted "
+"on your computer and other players may connect during game set up. You can "
+"also play only against any number of computer players."
+msgstr ""
+"创建新游戏或者继续以前保存的游戏。你的电脑作为主机，其他玩家可在设置期间连接"
+"进来。你也可只与任意数量的电脑玩家对战。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:82
+msgid "or"
+msgstr "或者"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:95
+msgid ""
+"You can also connect to remote JCloisterZone application hosting a game. "
+"Connect when game is created but not yet started."
+msgstr ""
+"你也可连接到远程的 JCloisterZone 应用，在其创建了游戏但还未开始时加入游戏。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:116
+msgid ""
+"Connect to other players and play with them using internet connection and "
+"public game server play.jcloisterzone.com."
+msgstr ""
+"通过互联网连接到公共服务器 play.jcloisterzone.com，与其他玩家在线对战。"
+
+#: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:118
+msgid "Play online"
+msgstr "在线对战"
+
+#: src/main/java/com/jcloisterzone/ui/SavegameFileFilter.java:18
+msgid "JCloisterZone saved games"
+msgstr "JCloisterZone 保存的游戏"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
+msgid "Reconnecting..."
+msgstr "重新连接中……"
+
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:375
+msgid "Save game"
+msgstr "保存游戏"
+
+#: src/main/java/com/jcloisterzone/ui/view/StartView.java:61
+msgid "JCloisterZone "
+msgstr "JCloisterZone "
