@@ -4,12 +4,14 @@
 
 # Version history
 
-## upcoming version
+## 4.3.1
+*2019-04-09*
 
 * fixed Ferries + Tunnel: sometimes ferry can't be changed when road is extended through tunnel connection
+* fixed often computer player crash when playing with Corn Circles (may fixes similar situation on other expansions) 
 
 ## 4.3.0
- *2018-02-11*
+*2018-02-11*
 
 * Ferries (Mini #3) expansion
 * The Count, final scoring changed according to "Complete annotated rules" notes.

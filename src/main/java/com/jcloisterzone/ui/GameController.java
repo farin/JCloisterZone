@@ -84,7 +84,7 @@ public class GameController extends EventProxyUiController<Game> {
     public void onGameStarted(Game game) {
         Stream<PlayerSlot> slots = Stream.ofAll(Arrays.asList(game.getPlayerSlots()));
         Array<PlayerSlot> occupiedSlots = slots.filter(slot -> slot != null && slot.isOccupied()).toArray();
-        // for free color we can't search slot - because for load game, slots are already filtered
+        // for free color we can't search slot - because for loaded game, slots are already filtered
         // to existing ones
         Array<PlayerColors> freeColors = Stream.range(0, PlayerSlot.COUNT)
             .filter(i -> occupiedSlots.find(s -> s.getNumber() == i).isEmpty())

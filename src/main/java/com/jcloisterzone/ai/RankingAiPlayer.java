@@ -52,7 +52,7 @@ public abstract class RankingAiPlayer implements AiPlayer {
                 for (WsInGameMessage msg : getPossibleActions(itemState)) {
                     Vector<WsInGameMessage> chain = item._2.append(msg);
                     GameState newState = phaseReducer.apply(itemState, msg);
-                    boolean end = newState.getActivePlayer() != me || msg instanceof WsSaltMeesage;
+                    boolean end = newState.getActivePlayer() != me || newState.getTurnPlayer() != state.getTurnPlayer() || msg instanceof WsSaltMeesage;
 
                     if (!end && msg instanceof PlaceTileMessage &&
                         newState.getLastPlaced().getTile().getTrigger() == TileTrigger.PORTAL) {

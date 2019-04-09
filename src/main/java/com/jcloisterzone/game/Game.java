@@ -55,7 +55,6 @@ import io.vavr.collection.Queue;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-//TODO remove extends from GameSettings
 public class Game implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -394,7 +393,7 @@ public class Game implements EventProxy {
         for (PlayerSlot slot : slots) {
             if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
-                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).getDeclaredConstructor().newInstance();
                     for (Player player : this.state.getPlayers().getPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             AiPlayerAdapter adapter = new AiPlayerAdapter(gc, player, ai);
