@@ -14,6 +14,8 @@ import io.vavr.collection.Vector;
 
 public class BazaarCapability extends Capability<BazaarCapabilityModel> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "bazaar").isEmpty()) {

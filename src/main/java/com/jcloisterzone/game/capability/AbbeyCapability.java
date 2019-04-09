@@ -17,6 +17,12 @@ import io.vavr.collection.HashMap;
  */
 public class AbbeyCapability extends Capability<Integer> {
 
+	public static enum AbbeyToken implements Token {
+		ABBEY_TILE // represent Abbey tile in player's supply
+	}
+
+	private static final long serialVersionUID = 1L;
+
     /** The constant ABBEY_TILE_ID. */
     public static final String ABBEY_TILE_ID = "AM.A";
     /** Abbey tile, not placed yet. */
@@ -32,7 +38,7 @@ public class AbbeyCapability extends Capability<Integer> {
 
     @Override
     public GameState onStartGame(GameState state) {
-        return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.ABBEY_TILE, 1));
+        return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(AbbeyToken.ABBEY_TILE, 1));
     }
 
     /**

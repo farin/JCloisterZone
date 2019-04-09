@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
@@ -20,7 +20,7 @@ public class CastleAction extends AbstractPlayerAction<FeaturePointer> implement
 
     @Override
     public WsInGameMessage select(FeaturePointer ptr) {
-        return new PlaceTokenMessage(Token.CASTLE, ptr);
+        return new PlaceTokenMessage(CastleToken.CASTLE, ptr);
     }
 
     @Override

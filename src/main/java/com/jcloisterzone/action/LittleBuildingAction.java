@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
@@ -12,18 +12,17 @@ import io.vavr.collection.Set;
 
 @LinkedImage("actions/building")
 @LinkedGridLayer(LittleBuildingActionLayer.class)
-public class LittleBuildingAction extends AbstractPlayerAction<Token> {
+public class LittleBuildingAction extends AbstractPlayerAction<LittleBuilding> {
 
     private final Position pos;
 
-    public LittleBuildingAction(Set<Token> options, Position pos) {
+    public LittleBuildingAction(Set<LittleBuilding> options, Position pos) {
         super(options);
         this.pos = pos;
-        assert options.find(t -> !t.isLittleBuilding()).isEmpty();
     }
 
     @Override
-    public WsInGameMessage select(Token option) {
+    public WsInGameMessage select(LittleBuilding option) {
         return new PlaceTokenMessage(option, pos);
     }
 

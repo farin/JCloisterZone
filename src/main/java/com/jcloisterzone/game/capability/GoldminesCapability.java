@@ -36,6 +36,12 @@ import io.vavr.collection.Vector;
  */
 public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
+	public static enum GoldToken implements Token {
+		GOLD;
+	}
+
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "goldmine").isEmpty()) {
@@ -138,10 +144,10 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             int count = entry.getValue();
             if (count > 0) {
                 state = state.mapPlayers(ps ->
-                   ps.addTokenCount(pl.getIndex(), Token.GOLD, count)
+                   ps.addTokenCount(pl.getIndex(), GoldToken.GOLD, count)
                 );
                 TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state), pl, Token.GOLD, count
+                    PlayEventMeta.createWithActivePlayer(state), pl, GoldToken.GOLD, count
                 );
                 ev.setSourcePositions(Vector.ofAll(awardedGoldPositions.get(pl)));
                 state = state.appendEvent(ev);
@@ -156,7 +162,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
         PlayersState ps = state.getPlayers();
 
         for (Player player: ps.getPlayers()) {
-            int pieces = ps.getPlayerTokenCount(player.getIndex(), Token.GOLD);
+            int pieces = ps.getPlayerTokenCount(player.getIndex(), GoldToken.GOLD);
             if (pieces == 0) {
                 continue;
             }

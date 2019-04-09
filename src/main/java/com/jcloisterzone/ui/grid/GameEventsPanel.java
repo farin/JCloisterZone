@@ -41,6 +41,8 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.eventpanel.EventItem;
@@ -208,16 +210,16 @@ public class GameEventsPanel extends JPanel {
         TokenPlacedEvent ev = (TokenPlacedEvent) _ev;
         Token token = ev.getToken();
 
-        if (token == Token.GOLD) {
+        if (token == GoldToken.GOLD) {
             // gold placement on board is obvious and only recevied gold should be notified
             return null;
         }
 
         ImageEventItem item = new ImageEventItem(ev, turnColor, triggeringColor);
 
-        if (token.isTunnel()) {
+        if (token instanceof Tunnel) {
             Player player = state.getPlayers().getPlayer(ev.getMetadata().getTriggeringPlayerIndex());
-            java.util.Map<Token, Color> tunnelColors = player.getColors().getTunnelColors();
+            java.util.Map<Tunnel, Color> tunnelColors = player.getColors().getTunnelColors();
             Image img = rm.getLayeredImage(
                 new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(token))
              );

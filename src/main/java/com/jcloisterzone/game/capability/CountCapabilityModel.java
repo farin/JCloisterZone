@@ -1,11 +1,15 @@
 package com.jcloisterzone.game.capability;
 
+import java.io.Serializable;
+
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 
 @Immutable
-public class CountCapabilityModel {
+public class CountCapabilityModel implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
     /** position of CO.7 tile */
     private final Position quarterPosition;

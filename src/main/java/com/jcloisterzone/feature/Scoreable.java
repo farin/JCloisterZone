@@ -4,8 +4,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.HashMap;
@@ -50,12 +50,12 @@ public interface Scoreable extends Structure {
     }
 
     default int getLittleBuildingPoints(GameState state) {
-        Map<Position, Token> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
+        Map<Position, LittleBuilding> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
         if (buildings == null) {
             return 0;
         }
         Set<Position> position = getTilePositions();
-        Seq<Token> buldingsSeq = buildings.filterKeys(pos -> position.contains(pos)).values();
+        Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos -> position.contains(pos)).values();
 
         return LittleBuildingsCapability.getBuildingsPoints(state, buldingsSeq);
     }

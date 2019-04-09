@@ -21,6 +21,8 @@ import io.vavr.collection.Vector;
 
 public class CountCapability extends Capability<CountCapabilityModel> {
 
+	private static final long serialVersionUID = 1L;
+
     public static String QUARTER_ACTION_TILE_ID = "CO.7";
     private static final String[] FORBIDDEN_TILES = new String[] { "CO.6", "CO.7" };
 

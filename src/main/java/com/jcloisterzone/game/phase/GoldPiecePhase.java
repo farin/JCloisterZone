@@ -8,6 +8,7 @@ import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -50,7 +51,7 @@ public class GoldPiecePhase extends Phase {
             int currValue = placedGold.get(pos).getOrElse(0);
             return placedGold.put(pos, currValue + 1);
         });
-        state = state.appendEvent(new TokenPlacedEvent(PlayEventMeta.createWithoutPlayer(), Token.GOLD, pos));
+        state = state.appendEvent(new TokenPlacedEvent(PlayEventMeta.createWithoutPlayer(), GoldToken.GOLD, pos));
         return state;
     }
 
@@ -60,7 +61,7 @@ public class GoldPiecePhase extends Phase {
         Token token = msg.getToken();
         Position pos = (Position) msg.getPointer();
 
-        if (token != Token.GOLD) {
+        if (token != GoldToken.GOLD) {
             throw new IllegalArgumentException();
         }
         state = placeGoldToken(state, pos);

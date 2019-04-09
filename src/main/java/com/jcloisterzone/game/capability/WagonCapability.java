@@ -32,7 +32,7 @@ import io.vavr.collection.Vector;
  */
 public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePointer>>> {
 
-    //private final Map<Player, Feature> scoredWagons = new HashMap<>();
+	private static final long serialVersionUID = 1L;
 
     @Override
     public GameState onStartGame(GameState state) {

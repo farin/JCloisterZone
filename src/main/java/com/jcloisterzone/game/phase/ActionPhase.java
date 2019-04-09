@@ -26,7 +26,11 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -135,7 +139,7 @@ public class ActionPhase extends AbstractActionPhase {
 
         state = state.setFeatureMap(state.getFeatureMap().put(ptr, tower));
         state = state.appendEvent(new TokenPlacedEvent(
-            PlayEventMeta.createWithActivePlayer(state), Token.TOWER_PIECE, ptr)
+            PlayEventMeta.createWithActivePlayer(state), TowerToken.TOWER_PIECE, ptr)
         );
 
         state = clearActions(state);
@@ -150,7 +154,7 @@ public class ActionPhase extends AbstractActionPhase {
     }
 
     private StepResult handlePlaceTunnel(GameState state, PlaceTokenMessage msg) {
-        Token token = msg.getToken();
+        Tunnel token = (Tunnel) msg.getToken();
         FeaturePointer ptr = (FeaturePointer) msg.getPointer();
         state = (new PlaceTunnel(token, ptr)).apply(state);
         state = clearActions(state);
@@ -158,7 +162,7 @@ public class ActionPhase extends AbstractActionPhase {
     }
 
     private StepResult handlePlaceLittleBuilding(GameState state, PlaceTokenMessage msg) {
-        Token token = msg.getToken();
+    	LittleBuilding token = (LittleBuilding) msg.getToken();
         Position pos = (Position) msg.getPointer();
         state = (new PlaceLittleBuilding(token, pos)).apply(state);
         state = clearActions(state);
@@ -174,22 +178,18 @@ public class ActionPhase extends AbstractActionPhase {
             ps.addTokenCount(player.getIndex(), token, -1)
         );
 
-        switch (token) {
-        case TOWER_PIECE:
-            // TODO validation against ActionState
-            return handlePlaceTower(state, msg);
-        case BRIDGE:
-            return handlePlaceBridge(state, msg);
-        case TUNNEL_A:
-        case TUNNEL_B:
-        case TUNNEL_C:
-            return handlePlaceTunnel(state, msg);
-        case LB_SHED:
-        case LB_HOUSE:
-        case LB_TOWER:
-            return handlePlaceLittleBuilding(state, msg);
-        default:
-            throw new IllegalArgumentException(String.format("%s placement is not allowed", token));
+        if (token instanceof Tunnel) {
+        	return handlePlaceTunnel(state, msg);
         }
+        if (token instanceof LittleBuilding) {
+        	return handlePlaceLittleBuilding(state, msg);
+        }
+        if (token instanceof TowerToken) {
+        	return handlePlaceTower(state, msg);
+        }
+        if (token instanceof BrigeToken) {
+        	return handlePlaceBridge(state, msg);
+        }
+        throw new IllegalArgumentException(String.format("%s placement is not allowed", token));
     }
 }

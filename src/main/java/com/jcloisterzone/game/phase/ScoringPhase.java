@@ -25,6 +25,7 @@ import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -145,7 +146,7 @@ public class ScoringPhase extends Phase {
             List<Feature> tunnelModified = state.getCurrentTurnEvents()
                 .filter(Predicates.instanceOf(TokenPlacedEvent.class))
                 .map(ev -> (TokenPlacedEvent) ev)
-                .filter(ev -> ev.getToken().isTunnel())
+                .filter(ev -> ev.getToken() instanceof Tunnel)
                 .map(ev -> _state.getFeature((FeaturePointer) ev.getPointer()));
             assert tunnelModified.size() <= 1;
 

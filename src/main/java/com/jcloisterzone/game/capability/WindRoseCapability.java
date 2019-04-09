@@ -18,6 +18,8 @@ import io.vavr.collection.Vector;
 /** model contains placement of last placed rose */
 public class WindRoseCapability extends Capability<PlacedTile> {
 
+	private static final long serialVersionUID = 1L;
+
     public static final int WIND_ROSE_POINTS = 3;
 
     @Override

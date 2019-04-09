@@ -11,8 +11,8 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.CastleCapability;
+import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -32,7 +32,7 @@ public class CastlePhase extends Phase {
     }
 
     private Set<FeaturePointer> getPlayerOptions(GameState state, Player player) {
-        if (state.getPlayers().getPlayerTokenCount(player.getIndex(), Token.CASTLE) == 0) {
+        if (state.getPlayers().getPlayerTokenCount(player.getIndex(), CastleToken.CASTLE) == 0) {
             return HashSet.empty();
         }
 
@@ -77,7 +77,7 @@ public class CastlePhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handlePlaceTokenMessage(GameState state, PlaceTokenMessage msg) {
-        if (msg.getToken() != Token.CASTLE) {
+        if (msg.getToken() != CastleToken.CASTLE) {
             throw new IllegalArgumentException();
         }
         Player player = state.getActivePlayer();
@@ -87,7 +87,7 @@ public class CastlePhase extends Phase {
         Map<FeaturePointer, Feature> update = city.getPlaces().toMap(ptr -> new Tuple2<>(ptr, castle));
 
         state = state.mapPlayers(ps ->
-           ps.addTokenCount(player.getIndex(), Token.CASTLE, -1)
+           ps.addTokenCount(player.getIndex(), CastleToken.CASTLE, -1)
         );
         state = state.mapFeatureMap(m -> update.merge(m));
         state = state.appendEvent(new CastleCreated(

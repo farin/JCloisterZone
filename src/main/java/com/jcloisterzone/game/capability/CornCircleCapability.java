@@ -16,6 +16,8 @@ import io.vavr.collection.Vector;
 
 public class CornCircleCapability extends Capability<CornCircleOption> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         Vector<Element> circleEl = XMLUtils.getElementStreamByTagName(tileElements, "corn-circle").toVector();

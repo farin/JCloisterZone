@@ -11,7 +11,7 @@ import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.ui.GameController;
@@ -44,7 +44,7 @@ public class TowerLayer extends AbstractGridLayer {
         for (PlayEvent pe : ev.getPlayEventsSymmetricDifference()) {
             if (pe instanceof TokenPlacedEvent) {
                 TokenPlacedEvent tpe = (TokenPlacedEvent) pe;
-                if (tpe.getToken() == Token.TOWER_PIECE) {
+                if (tpe.getToken() == TowerToken.TOWER_PIECE) {
                     towersChanged = true;
                     break;
                 }

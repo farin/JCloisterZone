@@ -25,6 +25,8 @@ import io.vavr.collection.Vector;
 
 public class FestivalCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     public final String UNDEPLOY_FESTIVAL = "festival";
 
 

@@ -17,6 +17,8 @@ import io.vavr.collection.Vector;
 
 public final class SiegeCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "besieged")) {

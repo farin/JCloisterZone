@@ -14,6 +14,8 @@ import io.vavr.collection.Vector;
 
 public class MageAndWitchCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public GameState onStartGame(GameState state) {
         return state.setNeutralFigures(

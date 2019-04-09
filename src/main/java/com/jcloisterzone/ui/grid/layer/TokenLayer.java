@@ -16,6 +16,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -55,16 +56,16 @@ public class TokenLayer extends AbstractGridLayer {
             }
         }
 
-        Map<Position, Token> currLbModel = ev.getCurrentState().getCapabilityModel(LittleBuildingsCapability.class);
+        Map<Position, LittleBuilding> currLbModel = ev.getCurrentState().getCapabilityModel(LittleBuildingsCapability.class);
         if (currLbModel != null) {
-            Map<Position, Token> prevLbModel = ev.getPrevState().getCapabilityModel(LittleBuildingsCapability.class);
+            Map<Position, LittleBuilding> prevLbModel = ev.getPrevState().getCapabilityModel(LittleBuildingsCapability.class);
             if (prevLbModel != currLbModel) {
                 model.buildings = createLbViewModel(ev.getCurrentState(), currLbModel);
             }
         }
     }
 
-    private Seq<Tuple2<ImmutablePoint, Image>> createLbViewModel(GameState state, Map<Position, Token> lbState) {
+    private Seq<Tuple2<ImmutablePoint, Image>> createLbViewModel(GameState state, Map<Position, LittleBuilding> lbState) {
         ImmutablePoint point = new ImmutablePoint(65, 35);
         return lbState.map(t -> {
             Position pos = t._1;
@@ -73,7 +74,7 @@ public class TokenLayer extends AbstractGridLayer {
             Image img = rm.getImage("neutral/" + imgName);
             int w = img.getWidth(null);
             int h = img.getHeight(null);
-            if (lb == Token.LB_TOWER) {
+            if (lb == LittleBuilding.LB_TOWER) {
                 img = img.getScaledInstance(w, (int) (h * 0.7), Image.SCALE_SMOOTH);
             }
             return new Tuple2<>(

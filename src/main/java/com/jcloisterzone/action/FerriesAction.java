@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
@@ -20,6 +20,6 @@ public class FerriesAction extends AbstractPlayerAction<FeaturePointer> implemen
 
     @Override
     public WsInGameMessage select(FeaturePointer option) {
-        return new PlaceTokenMessage(Token.FERRY, option);
+        return new PlaceTokenMessage(FerryToken.FERRY, option);
     }
 }

@@ -23,19 +23,27 @@ import io.vavr.collection.Set;
  */
 public final class TunnelCapability extends Capability<Map<FeaturePointer, PlacedTunnelToken>> {
 
+	public static enum Tunnel implements Token {
+		TUNNEL_A,
+		TUNNEL_B,
+		TUNNEL_C;
+	}
+
+	private static final long serialVersionUID = 1L;
+
     @Override
     public GameState onStartGame(GameState state) {
         int playersCount = state.getPlayers().getPlayers().length();
         boolean moreTokens = state.getBooleanValue(Rule.MORE_TUNNEL_TOKENS);
         state = state.mapPlayers(ps -> {
-            ps = ps.setTokenCountForAllPlayers(Token.TUNNEL_A, 2);
+            ps = ps.setTokenCountForAllPlayers(Tunnel.TUNNEL_A, 2);
             if (playersCount == 3 && moreTokens) {
-                ps = ps.setTokenCountForAllPlayers(Token.TUNNEL_B, 2);
+                ps = ps.setTokenCountForAllPlayers(Tunnel.TUNNEL_B, 2);
             }
             if (playersCount < 3) {
-                ps = ps.setTokenCountForAllPlayers(Token.TUNNEL_B, 2);
+                ps = ps.setTokenCountForAllPlayers(Tunnel.TUNNEL_B, 2);
                 if (moreTokens) {
-                    ps = ps.setTokenCountForAllPlayers(Token.TUNNEL_C, 2);
+                    ps = ps.setTokenCountForAllPlayers(Tunnel.TUNNEL_C, 2);
                 }
             }
             return ps;
@@ -62,7 +70,7 @@ public final class TunnelCapability extends Capability<Map<FeaturePointer, Place
         }
 
         ActionsState as = state.getPlayerActions();
-        for (Token token : Token.tunnelValues()) {
+        for (Tunnel token : Tunnel.values()) {
             if (state.getPlayers().getPlayerTokenCount(player.getIndex(), token) == 0) {
                 continue;
             }

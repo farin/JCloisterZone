@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import java.io.Serializable;
 import java.util.function.Function;
 
 import com.jcloisterzone.Immutable;
@@ -14,7 +15,9 @@ import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 @Immutable
-public class FerriesCapabilityModel {
+public class FerriesCapabilityModel implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
     /** all placed ferries */
     private final Set<FeaturePointer> ferries;

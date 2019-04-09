@@ -6,8 +6,8 @@ import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
@@ -17,12 +17,11 @@ import io.vavr.collection.Map;
 
 public class PlaceTunnel implements Reducer {
 
-    private final Token token;
+    private final Tunnel token;
     private final FeaturePointer ptr;
 
-    public PlaceTunnel(Token token, FeaturePointer ptr) {
+    public PlaceTunnel(Tunnel token, FeaturePointer ptr) {
         super();
-        assert token.isTunnel();
         this.token = token;
         this.ptr = ptr;
     }

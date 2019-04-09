@@ -3,11 +3,11 @@ package com.jcloisterzone.feature;
 import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.TradeGoods;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.HashMap;

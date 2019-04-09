@@ -18,6 +18,8 @@ import io.vavr.collection.Set;
 
 public class PrincessCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "princess")) {

@@ -5,8 +5,8 @@ import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
+import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
@@ -26,7 +26,7 @@ public class PlaceFerry implements Reducer {
 
         state = state.mapCapabilityModel(FerriesCapability.class, m -> m.addFerry(ferry));
 
-        List<Road> ends = ferry.getLocation().splitToSides().map(l -> (Road) _state.getFeature(ferry.setLocation(l)));;
+        List<Road> ends = ferry.getLocation().splitToSides().map(l -> (Road) _state.getFeature(ferry.setLocation(l)));
         assert ends.size() == 2;
         Road r1 = ends.get(0);
         Road r2 = ends.get(1);
@@ -40,7 +40,7 @@ public class PlaceFerry implements Reducer {
         }
 
         state = state.appendEvent(
-            new TokenPlacedEvent(PlayEventMeta.createWithActivePlayer(state), Token.FERRY, ferry)
+            new TokenPlacedEvent(PlayEventMeta.createWithActivePlayer(state), FerryToken.FERRY, ferry)
         );
         return state;
     }

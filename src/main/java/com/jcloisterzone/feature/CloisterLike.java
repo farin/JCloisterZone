@@ -1,8 +1,8 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.collection.Map;
@@ -26,12 +26,12 @@ public interface CloisterLike extends Completable {
 
     @Override
     default int getLittleBuildingPoints(GameState state) {
-        Map<Position, Token> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
+        Map<Position, LittleBuilding> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
         if (buildings == null) {
             return 0;
         }
         Position cloisterPos = getPlaces().get().getPosition();
-        Seq<Token> buldingsSeq = buildings.filterKeys(pos ->
+        Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos ->
             Math.abs(pos.x - cloisterPos.x) <= 1 && Math.abs(pos.y - cloisterPos.y) <= 1
         ).values();
 

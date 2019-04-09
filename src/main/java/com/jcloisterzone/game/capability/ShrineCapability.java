@@ -29,6 +29,8 @@ import io.vavr.collection.Set;
 
 public final class ShrineCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Feature initFeature(GameState settings, String tileId, Feature feature, Element xml) {
         if (feature instanceof Cloister) {
