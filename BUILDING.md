@@ -163,39 +163,31 @@ area_highlight: figure
 
 ```bash
 xgettext -k_tr -o po/keys.pot --from-code=utf-8 $(find . -name "*.java")
-msgmerge -N -U po/ca.po po/keys.pot
-msgmerge -N -U po/cs.po po/keys.pot
-msgmerge -N -U po/de.po po/keys.pot
-msgmerge -N -U po/el.po po/keys.pot
-msgmerge -N -U po/en.po po/keys.pot
-msgmerge -N -U po/es.po po/keys.pot
-msgmerge -N -U po/fi.po po/keys.pot
-msgmerge -N -U po/fr.po po/keys.pot
-msgmerge -N -U po/hu.po po/keys.pot
-msgmerge -N -U po/nl.po po/keys.pot
-msgmerge -N -U po/it.po po/keys.pot
-msgmerge -N -U po/ja.po po/keys.pot
-msgmerge -N -U po/pl.po po/keys.pot
-msgmerge -N -U po/ro.po po/keys.pot
-msgmerge -N -U po/ru.po po/keys.pot
-msgmerge -N -U po/sk.po po/keys.pot
-msgmerge -N -U po/zh.po po/keys.pot
-rm po/*~
-rm po/keys.pot
+./scripts/po-update.sh
 ```
 
-### package
+### Release package
+
+Patched Java-Websocket need to be installed in mvn repository
+In https://github.com/farin/Java-WebSocket project run
 
 ```
-mvn package
-
-cd build
-chmod a+x JCloisterZone.jar
-mkdir JCloisterZone
-mv JCloisterZone.jar plugins JCloisterZone
-
-JCZVER=3.4.3
-tar cvzf JCloisterZone-$JCZVER.tgz JCloisterZone
-7z a JCloisterZone-$JCZVER.7z JCloisterZone
-zip -r -9 JCloisterZone-$JCZVER.zip JCloisterZone
+mvn install
 ```
+
+Then build sources
+ 
+```
+./scripts/build.sh 4.3.1
+```
+
+Copy additional plugins from https://github.com/farin/JCloisterZone-plugins
+And finally run
+```
+./scripts/package.sh 4.3.1
+```
+ 
+
+ 
+
+
