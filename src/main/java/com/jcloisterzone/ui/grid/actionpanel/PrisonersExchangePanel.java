@@ -29,7 +29,8 @@ public class PrisonersExchangePanel extends ActionInteractionPanel<SelectPrisone
         super(client, gc);
     }
 
-    public void setGameState(GameState state) {
+    @Override
+	public void setGameState(GameState state) {
         super.setGameState(state);
 
         SelectPrisonerToExchangeAction action = getAction();
@@ -40,7 +41,7 @@ public class PrisonersExchangePanel extends ActionInteractionPanel<SelectPrisone
         JLabel label;
 
         label = new ThemedJLabel(_tr("Prisoners exchange"));
-        label.setFont(CornCirclesPanel.FONT_HEADER);
+        label.setFont(FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 

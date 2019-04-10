@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.RemovMageOrWithAction;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.state.GameState;
@@ -20,8 +20,8 @@ import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
 import net.miginfocom.swing.MigLayout;
 
-//TODO change generic T to proper class
-public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAction<?>> {
+
+public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<RemovMageOrWithAction> {
 
 
     public SelectMageWitchRemovalPanel(Client client, GameController gc) {
@@ -34,7 +34,7 @@ public class SelectMageWitchRemovalPanel extends ActionInteractionPanel<PlayerAc
         JLabel label;
 
         label = new ThemedJLabel(_tr("Mage and Witch"));
-        label.setFont(CornCirclesPanel.FONT_HEADER);
+        label.setFont(FONT_HEADER);
         label.setForeground(gc.getClient().getTheme().getHeaderFontColor());
         add(label, "wrap, gapbottom 10");
 

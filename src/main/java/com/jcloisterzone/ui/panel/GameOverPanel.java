@@ -30,6 +30,7 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
@@ -127,6 +128,7 @@ public class GameOverPanel extends JPanel {
             if (capabilities.contains(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
             if (capabilities.contains(TradeGoodsCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(GoldminesCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(SheepCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(FairyCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(TowerCapability.class)) rowSpec.append("[]");
             if (hasBazaars) rowSpec.append("[]");
@@ -158,6 +160,9 @@ public class GameOverPanel extends JPanel {
             }
             if (capabilities.contains(GoldminesCapability.class)) {
                 add(new JLabel(_tr("Gold")), getLegendSpec(0, gridy++));
+            }
+            if (capabilities.contains(SheepCapability.class)) {
+                add(new JLabel(_tr("Sheep")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(FairyCapability.class)) {
                 add(new JLabel(_tr("Fairy")), getLegendSpec(0, gridy++));
@@ -202,6 +207,9 @@ public class GameOverPanel extends JPanel {
                 }
                 if (capabilities.contains(GoldminesCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(state, PointCategory.GOLD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                }
+                if (capabilities.contains(SheepCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.SHEEP), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
                 if (capabilities.contains(FairyCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(state, PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));

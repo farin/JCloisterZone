@@ -1,5 +1,7 @@
 package com.jcloisterzone.ui.grid.actionpanel;
 
+import java.awt.Font;
+
 import javax.swing.JPanel;
 
 import com.jcloisterzone.action.PlayerAction;
@@ -8,6 +10,8 @@ import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 
 public class ActionInteractionPanel<T extends PlayerAction<?>> extends JPanel {
+
+	public static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
 
     protected final Client client;
     protected final GameController gc;
