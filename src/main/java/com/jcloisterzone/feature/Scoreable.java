@@ -3,11 +3,15 @@ package com.jcloisterzone.feature;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
@@ -25,23 +29,46 @@ public interface Scoreable extends Structure {
 
     PointCategory getPointCategory();
 
-    default HashMap<Player, Integer> getPowers(GameState state) {
-        return getFollowers(state)
-            .foldLeft(HashMap.<Player, Integer>empty(), (acc, m) -> {
-                Player player = m.getPlayer();
-                int power = m.getPower(state, this);
-                return acc.put(player, acc.get(player).getOrElse(0) + power);
+    /**
+     * Map value is int tuple with power and tie breaking power
+     * (hill presence/hill count according to rules)
+     */
+    default HashMap<Player, Tuple2<Integer, Integer>> getPowers(GameState state) {
+    	boolean useHillTiebreaker = state.hasCapability(HillCapability.class);
+    	boolean useOnHillCount = state.getBooleanValue(Rule.ON_HILL_NUMBER_TIEBREAKER);
+        return getFollowers2(state)
+            .foldLeft(HashMap.<Player, Tuple2<Integer, Integer>>empty(), (acc, follower2) -> {
+            	Follower follower = follower2._1;
+            	FeaturePointer fp = follower2._2;
+                Player player = follower.getPlayer();
+                int power = follower.getPower(state, this);
+                Tuple2<Integer, Integer> t = acc.get(player).getOrElse(new Tuple2<Integer, Integer>(0, 0));
+                t = t.map1(p -> p + power);
+                if (useHillTiebreaker) {
+                	boolean onHill = state.getPlacedTile(fp.getPosition()).getTile().hasModifier(HillCapability.HILL);
+                	if (onHill) {
+                		if (useOnHillCount) {
+                			t = t.map2(cnt -> cnt + 1);
+                		} else {
+                			if (t._2 == 0) {
+                				t = t.update2(1);
+                			}
+                		}
+                	}
+                }
+                return acc.put(player, t);
             });
     }
 
     default Set<Player> getOwners(GameState state) {
-        HashMap<Player, Integer> powers = getPowers(state);
-        Integer maxPower = powers.values().max().getOrElse(0);
+        HashMap<Player, Tuple2<Integer, Integer>> powers = getPowers(state);
+        int maxPower = powers.values().map(Tuple2::_1).max().getOrElse(0);
         //can be 0 for Mayor on city without pennant, then return no owners
         if (maxPower == 0) {
             return HashSet.empty();
         }
-        return powers.keySet().filter(p -> powers.get(p).get() == maxPower);
+        int maxTiebreaker = powers.values().filter(t -> t._1 == maxPower).map(Tuple2::_2).max().getOrElse(0);
+        return powers.filterValues(t -> t._1 == maxPower && t._2 == maxTiebreaker).keySet();
     }
 
 

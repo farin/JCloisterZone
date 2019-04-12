@@ -4,6 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
@@ -23,7 +24,7 @@ public class CompletableRanking {
         this.feature = feature;
         incompletePoints = feature.getStructurePoints(state, false);
         completePoints = feature.getStructurePoints(state, true);
-        powers = feature.getPowers(state);
+        powers = feature.getPowers(state).mapValues(Tuple2::_1);
 
         // copy from Scoreable interface
         ownersPower = powers.values().max().getOrElse(0);
