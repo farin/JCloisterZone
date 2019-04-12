@@ -72,7 +72,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
     private final ChatPanel chatPanel;
     private ActionInteractionPanel<?> actionInteractionPanel;
     private final GameEventsPanel eventsPanel;
-    private boolean isEventsPanelVisible;
+    private boolean isEventsPanelVisible = true;
 
     /** current board size */
     private int left, right, top, bottom;
@@ -339,7 +339,11 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
                 }
                 try {
                     actionInteractionPanel = cls.getConstructor(Client.class, GameController.class).newInstance(client, gc);
-                    add(actionInteractionPanel, "pos (100%-525) 0 (100%-275) 100%"); //TODO more robust layouting
+                    int width = Math.max(250, (int) actionInteractionPanel.getPreferredSize().getWidth());
+                    int left = 275 + width;
+                    int top = isEventsPanelVisible ? 36 : 0;
+                    String constraints = String.format("pos (100%%-%d) %d (100%%-275) 100%%", left, top);
+                    add(actionInteractionPanel, constraints);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
