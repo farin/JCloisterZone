@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
@@ -16,7 +17,24 @@ import io.vavr.collection.Vector;
 
 public class CornCircleCapability extends Capability<CornCircleOption> {
 
+	public static class CornCircleModifier extends TileModifier {
+		private Class<? extends Feature> featureType;
+
+		CornCircleModifier(Class<? extends Feature> featureType) {
+			super("CornCircle" + featureType.getSimpleName());
+			this.featureType = featureType;
+		}
+
+		public Class<? extends Feature> getFeatureType() {
+			return featureType;
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
+
+	private static final CornCircleModifier CORN_CIRCLE_ROAD = new CornCircleModifier(Road.class);
+	private static final CornCircleModifier CORN_CIRCLE_CITY = new CornCircleModifier(City.class);
+	private static final CornCircleModifier CORN_CIRCLE_FARM = new CornCircleModifier(Farm.class);
 
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
@@ -24,12 +42,21 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
         assert circleEl.size() <= 1;
         for (Element el : circleEl) {
             String type = el.getAttribute("type");
-            Class<? extends Feature> cornCircleType = null;
-            if ("Road".equals(type)) cornCircleType = Road.class;
-            if ("City".equals(type)) cornCircleType = City.class;
-            if ("Farm".equals(type)) cornCircleType = Farm.class;
-            if (cornCircleType == null) throw new IllegalArgumentException("Invalid corn cicle type.");
-            return tile.setCornCircle(cornCircleType);
+            CornCircleModifier modifier;
+            switch (type) {
+            case "Road":
+            	modifier = CORN_CIRCLE_ROAD;
+            	break;
+            case "City":
+            	modifier = CORN_CIRCLE_CITY;
+            	break;
+            case "Farm":
+            	modifier = CORN_CIRCLE_FARM;
+            	break;
+            default:
+            	throw new IllegalArgumentException("Invalid corn cicle type.");
+            }
+            return tile.addTileModifier(modifier);
         }
         return tile;
     }

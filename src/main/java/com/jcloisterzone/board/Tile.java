@@ -30,13 +30,7 @@ public class Tile implements Serializable {
     private final TileSymmetry symmetry;
 
     private final Map<Location, Feature> initialFeatures;
-
-    //private final TileTrigger trigger;
     private final Set<TileModifier> modifiers;
-
-    // replace with modifier
-    @Deprecated
-    private final Class<? extends Feature> cornCircle;
 
     /**
      * Instantiates a new {@code TileDefinition}
@@ -46,7 +40,7 @@ public class Tile implements Serializable {
      * @param initialFeatures the {@link Feature}s of the tile
      */
     public Tile(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
-        this(origin, id, initialFeatures, HashSet.empty(), null);
+        this(origin, id, initialFeatures, HashSet.empty());
     }
 
     /**
@@ -55,21 +49,18 @@ public class Tile implements Serializable {
      * @param origin          the {@link Expansion} this tile belongs to
      * @param id              the identifier of the tile
      * @param initialFeatures the {@link Feature}s of the tile
-     * @param trigger         the tile trigger (a tag for some special behaviour)
+     * @param trigger         the tile trigger (a tag for some special behavior)
      * @param flier           the direction pointed by of the flier ({@see FlierCapability})
      * @param windRose        the direction pointed by the wind rose ({@see WindRoseCapability})
      * @param cornCircle      the feature on the corn circle, if any ({@see CornCircleCapability})
      */
     public Tile(Expansion origin, String id,
         Map<Location, Feature> initialFeatures,
-        Set<TileModifier> modifiers,
-        Class<? extends Feature> cornCircle) {
+        Set<TileModifier> modifiers) {
         this.origin = origin;
         this.id = id;
         this.initialFeatures = initialFeatures;
-
         this.modifiers = modifiers;
-        this.cornCircle = cornCircle;
 
         this.edgePattern = computeEdgePattern();
         this.symmetry = this.edgePattern.getSymmetry();
@@ -82,18 +73,7 @@ public class Tile implements Serializable {
      * @return a new instance with the trigger set
      */
     public Tile addTileModifier(TileModifier modifier) {
-        return new Tile(origin, id, initialFeatures, modifiers.add(modifier), cornCircle);
-    }
-
-    /**
-     * Sets the feature on the corn circle (if any).
-     * {@see CornCircleCapability}
-     *
-     * @param cornCircle the feature to set
-     * @return a new instance with the corn circle feature set
-     */
-    public Tile setCornCircle(Class<? extends Feature> cornCircle) {
-        return new Tile(origin, id, initialFeatures, modifiers, cornCircle);
+        return new Tile(origin, id, initialFeatures, modifiers.add(modifier));
     }
 
     /**
@@ -103,7 +83,7 @@ public class Tile implements Serializable {
      * @return a new instance with the features set
      */
     public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
-        return new Tile(origin, id, initialFeatures, modifiers, cornCircle);
+        return new Tile(origin, id, initialFeatures, modifiers);
     }
 
     /**
@@ -175,16 +155,6 @@ public class Tile implements Serializable {
      */
     public Set<TileModifier> getTileModifiers() {
         return modifiers;
-    }
-
-    /**
-     * Gets the feature on the corn circle (if any).
-     * {@see CornCircleCapability}
-     *
-     * @return the feature on the corn circle, if any
-     */
-    public Class<? extends Feature> getCornCircle() {
-        return cornCircle;
     }
 
     /**
