@@ -59,7 +59,6 @@ public class ControlPanel extends JPanel implements UIEventListener {
 
     private static Font FONT_PACK_SIZE = new Font(null, Font.PLAIN, 20);
 
-
     @Deprecated
     public static final Color FONT_SHADOW_COLOR = new Color(0, 0, 0, 60);
     public static final int CORNER_DIAMETER = 16;
@@ -87,7 +86,6 @@ public class ControlPanel extends JPanel implements UIEventListener {
     private PlayerPanel[] playerPanels;
     private NeutralFigurePanel neutralPanel;
 
-    private BazaarCapability bcb;
     private BazaarSupplyPanel bazaarSupplyPanel;
 
     private final Timer timer;

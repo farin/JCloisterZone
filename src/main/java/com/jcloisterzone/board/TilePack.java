@@ -85,6 +85,10 @@ public class TilePack implements Serializable {
         return new TilePack(groups, hiddenUnderHills);
     }
 
+    public TilePack increaseHiddenUnderHills() {
+        return setHiddenUnderHills(hiddenUnderHills + 1);
+    }
+
     private Stream<TileGroup> getActiveGroups() {
         return Stream.ofAll(groups.values()).filter(TileGroup::isActive);
     }
@@ -124,7 +128,7 @@ public class TilePack implements Serializable {
      * @return {@code true} if this pack is empty, {@code false} otherwise
      */
     public boolean isEmpty() {
-        return size() - hiddenUnderHills <= 0;
+        return size() <= 0;
     }
 
     /**

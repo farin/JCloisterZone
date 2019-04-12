@@ -20,6 +20,7 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.capability.CountCapability;
+import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -186,6 +187,13 @@ public class TilePhase extends Phase {
             state = state.appendEvent(
                 new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), BrigeToken.BRIDGE, mandatoryBridge)
             );
+        }
+
+        if (tile.hasModifier(HillCapability.HILL)) {
+        	TilePack tilePack = state.getTilePack();
+        	if (!tilePack.isEmpty()) {
+        		state = state.setTilePack(tilePack.increaseHiddenUnderHills());
+        	}
         }
 
         state = clearActions(state);

@@ -58,6 +58,10 @@ public class GameChangedEvent extends Event {
         return prev.getPlacedTiles() != curr.getPlacedTiles();
     }
 
+    public boolean hasTilePackChanged() {
+        return prev.getTilePack() != curr.getTilePack();
+    }
+
     public boolean hasPlayerActionsChanged() {
         return prev.getPlayerActions() != curr.getPlayerActions();
     }
