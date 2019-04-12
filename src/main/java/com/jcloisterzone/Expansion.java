@@ -5,7 +5,6 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -24,6 +23,7 @@ import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.FlierCapability;
 import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
+import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
@@ -42,6 +42,7 @@ import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
 import com.jcloisterzone.game.capability.YagaCapability;
@@ -79,8 +80,8 @@ public class Expansion {
     @NotImplemented public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", _tr("The Catapult"), ExpansionType.MAJOR);
     public static Expansion BRIDGES_CASTLES_AND_BAZAARS = new Expansion("BRIDGES_CASTLES_AND_BAZAARS", "BB", _tr("Bridges, Castles and Bazaars"),
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }, ExpansionType.MAJOR);
-    public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"), 
-    		new Class[] { SheepCapability.class }, ExpansionType.MAJOR);
+    public static Expansion HILLS_AND_SHEEP = new Expansion("HILLS_AND_SHEEP", "HS", _tr("Hills and Sheep"),
+    		new Class[] { SheepCapability.class, HillCapability.class, VineyardCapability.class }, ExpansionType.MAJOR);
     @NotImplemented public static Expansion UNDER_THE_BIG_TOP = new Expansion("UNDER_THE_BIG_TOP", "UN", _tr("Under the Big Top"), ExpansionType.MAJOR);
 
     // Small expansion
