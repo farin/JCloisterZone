@@ -5,7 +5,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.RandomGenerator;
@@ -34,7 +33,7 @@ public class PlaceFerryPhase extends Phase {
         Tile tile = placedTile.getTile();
         Position pos = placedTile.getPosition();
         Rotation rot = placedTile.getRotation();
-        if (tile.getTrigger() == TileTrigger.FERRY) {
+        if (tile.hasModifier(FerriesCapability.LAKE_FERRY)) {
             Set<FeaturePointer> ferries = tile.getInitialFeatures()
                 .filter(t -> t._2 instanceof Road)
                 .map(Tuple2::_1)

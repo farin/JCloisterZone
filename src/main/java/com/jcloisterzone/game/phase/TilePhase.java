@@ -8,7 +8,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
@@ -192,7 +191,7 @@ public class TilePhase extends Phase {
         state = clearActions(state);
         state = state.setDrawnTile(null);
 
-        if (tile.getTrigger() == TileTrigger.BAZAAR) {
+        if (tile.hasModifier(BazaarCapability.BAZAAR)) {
             BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
             //Do not trigger another auction is current is not resolved
             if (model.getSupply() == null) {

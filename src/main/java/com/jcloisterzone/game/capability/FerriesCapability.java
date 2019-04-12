@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
@@ -19,10 +19,12 @@ public class FerriesCapability extends Capability<FerriesCapabilityModel> {
 		FERRY;
 	}
 
+	public static final TileModifier LAKE_FERRY = new TileModifier("LakeFerry");
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "ferry").isEmpty()) {
-            tile = tile.setTileTrigger(TileTrigger.FERRY);
+            tile = tile.addTileModifier(LAKE_FERRY);
         }
         return tile;
     }

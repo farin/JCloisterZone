@@ -12,7 +12,9 @@ import com.jcloisterzone.feature.River;
 import com.jcloisterzone.feature.Road;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 
 /**
  * Represents a tile type
@@ -29,8 +31,11 @@ public class Tile implements Serializable {
 
     private final Map<Location, Feature> initialFeatures;
 
-    private final TileTrigger trigger;
-    private final Location windRose;
+    //private final TileTrigger trigger;
+    private final Set<TileModifier> modifiers;
+
+    // replace with modifier
+    @Deprecated
     private final Class<? extends Feature> cornCircle;
 
     /**
@@ -41,7 +46,7 @@ public class Tile implements Serializable {
      * @param initialFeatures the {@link Feature}s of the tile
      */
     public Tile(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
-        this(origin, id, initialFeatures, null, null, null);
+        this(origin, id, initialFeatures, HashSet.empty(), null);
     }
 
     /**
@@ -57,14 +62,13 @@ public class Tile implements Serializable {
      */
     public Tile(Expansion origin, String id,
         Map<Location, Feature> initialFeatures,
-        TileTrigger trigger, Location windRose,
+        Set<TileModifier> modifiers,
         Class<? extends Feature> cornCircle) {
         this.origin = origin;
         this.id = id;
         this.initialFeatures = initialFeatures;
 
-        this.trigger = trigger;
-        this.windRose = windRose;
+        this.modifiers = modifiers;
         this.cornCircle = cornCircle;
 
         this.edgePattern = computeEdgePattern();
@@ -77,20 +81,8 @@ public class Tile implements Serializable {
      * @param trigger the trigger to set
      * @return a new instance with the trigger set
      */
-    public Tile setTileTrigger(TileTrigger trigger) {
-        assert this.trigger == null;
-        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
-    }
-
-    /**
-     * Sets the direction pointed by the wind rose.
-     * {@see WindRoseCapability}
-     *
-     * @param windRose the direction to set
-     * @return a new instance with the direction pointed by the wind rose set
-     */
-    public Tile setWindRose(Location windRose) {
-        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
+    public Tile addTileModifier(TileModifier modifier) {
+        return new Tile(origin, id, initialFeatures, modifiers.add(modifier), cornCircle);
     }
 
     /**
@@ -101,7 +93,7 @@ public class Tile implements Serializable {
      * @return a new instance with the corn circle feature set
      */
     public Tile setCornCircle(Class<? extends Feature> cornCircle) {
-        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
+        return new Tile(origin, id, initialFeatures, modifiers, cornCircle);
     }
 
     /**
@@ -111,7 +103,7 @@ public class Tile implements Serializable {
      * @return a new instance with the features set
      */
     public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
-        return new Tile(origin, id, initialFeatures, trigger, windRose, cornCircle);
+        return new Tile(origin, id, initialFeatures, modifiers, cornCircle);
     }
 
     /**
@@ -177,21 +169,12 @@ public class Tile implements Serializable {
     }
 
     /**
-     * Gets the trigger of this tile.
+     * Gets all tile modifiers of this tile.
      *
      * @return the trigger of this tile
      */
-    public TileTrigger getTrigger() {
-        return trigger;
-    }
-
-    /**
-     * Gets the direction pointed by the wind rose.
-     *
-     * @return the direction pointed by the wind rose
-     */
-    public Location getWindRose() {
-        return windRose;
+    public Set<TileModifier> getTileModifiers() {
+        return modifiers;
     }
 
     /**
@@ -202,6 +185,13 @@ public class Tile implements Serializable {
      */
     public Class<? extends Feature> getCornCircle() {
         return cornCircle;
+    }
+
+    /**
+     * Checks whether this tile has a modifier
+     */
+    public boolean hasModifier(TileModifier modifier) {
+    	return modifiers.contains(modifier);
     }
 
     /**

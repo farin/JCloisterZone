@@ -2,7 +2,6 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.RandomGenerator;
@@ -26,7 +25,7 @@ public class GoldPiecePhase extends Phase {
     @Override
     public StepResult enter(GameState state) {
         PlacedTile placedTile = state.getLastPlaced();
-        if (placedTile.getTile().getTrigger() == TileTrigger.GOLDMINE) {
+        if (placedTile.getTile().hasModifier(GoldminesCapability.GOLDMINE)) {
             Position pos = placedTile.getPosition();
             state = placeGoldToken(state, pos);
             Set<Position> options = state.getAdjacentAndDiagonalTiles(pos).map(PlacedTile::getPosition).toSet();

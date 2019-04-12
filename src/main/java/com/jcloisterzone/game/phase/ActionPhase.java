@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.PrincessAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
@@ -27,6 +26,7 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
 import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
@@ -119,7 +119,7 @@ public class ActionPhase extends AbstractActionPhase {
             }
             break;
         case FESTIVAL:
-            if (state.getLastPlaced().getTile().getTrigger() != TileTrigger.FESTIVAL) {
+            if (!state.getLastPlaced().getTile().hasModifier(FestivalCapability.FESTIVAL)) {
                 throw new IllegalArgumentException("Festival return is not allowed");
             }
             break;

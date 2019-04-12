@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.Capability;
@@ -15,6 +15,8 @@ import io.vavr.collection.Vector;
 public class MageAndWitchCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final TileModifier MAGE_TRIGGER = new TileModifier("MageTrigger");
 
     @Override
     public GameState onStartGame(GameState state) {
@@ -28,7 +30,7 @@ public class MageAndWitchCapability extends Capability<Void> {
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "mage").isEmpty()) {
-           tile = tile.setTileTrigger(TileTrigger.MAGE);
+           tile = tile.addTileModifier(MAGE_TRIGGER);
         }
         return tile;
     }

@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
@@ -55,7 +55,7 @@ public abstract class RankingAiPlayer implements AiPlayer {
                     boolean end = newState.getActivePlayer() != me || newState.getTurnPlayer() != state.getTurnPlayer() || msg instanceof WsSaltMeesage;
 
                     if (!end && msg instanceof PlaceTileMessage &&
-                        newState.getLastPlaced().getTile().getTrigger() == TileTrigger.PORTAL) {
+                        newState.getLastPlaced().getTile().hasModifier(PortalCapability.MAGIC_PORTAL)) {
                         // hack to avoid bad performance on Portal tile
                         // rank just placement then rang meeple placement separately
                         // still not perfect because it can miss good on tile meeple placement

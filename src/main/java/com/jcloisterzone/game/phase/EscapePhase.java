@@ -7,7 +7,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.EscapeAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
@@ -57,7 +56,7 @@ public class EscapePhase extends Phase {
 
                 if (!state.getBooleanValue(Rule.ESCAPE_RGG)) {
                     cityTiles = cityTiles.filter(pt ->
-                        pt.getTile().getTrigger() == TileTrigger.BESIEGED
+                        pt.getTile().hasModifier(SiegeCapability.SIEGE_ESCAPE_TILE)
                     );
                 }
 

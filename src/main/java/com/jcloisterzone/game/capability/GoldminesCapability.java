@@ -11,7 +11,7 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Castle;
@@ -42,10 +42,12 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
 	private static final long serialVersionUID = 1L;
 
+	 public static final TileModifier GOLDMINE = new TileModifier("Goldmine");
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "goldmine").isEmpty()) {
-            tile = tile.setTileTrigger(TileTrigger.GOLDMINE);
+            tile = tile.addTileModifier(GOLDMINE);
         }
         return tile;
     }
