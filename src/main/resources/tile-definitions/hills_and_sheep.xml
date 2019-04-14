@@ -9,7 +9,7 @@
 	<tile id="CC!.v" count="2">
 	 	<vineyard/>
 	 	<city>N W</city>
-	 	<city>E</city>
+	 	<city multi-edge="N">E</city>
 	 	<farm city="N E">SL SR</farm>
 	 	<!-- TODO link E city to N edge -->
 	</tile>

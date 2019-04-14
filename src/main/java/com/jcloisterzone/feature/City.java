@@ -10,6 +10,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
@@ -20,20 +21,24 @@ public class City extends CompletableFeature<City> {
 
     private static final long serialVersionUID = 1L;
 
+    private final Set<Tuple2<Edge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
     private final int pennants;
     private final Map<TradeGoods, Integer> tradeGoods;
     private final boolean besieged, cathedral, princess, castleBase;
 
+
     public City(List<FeaturePointer> places, Set<Edge> openEdges, int pennants) {
-        this(places, openEdges, HashSet.empty(), pennants, HashMap.empty(), false, false, false, false);
+        this(places, openEdges, HashSet.empty(), HashSet.empty(), pennants, HashMap.empty(), false, false, false, false);
     }
 
     public City(List<FeaturePointer> places,
             Set<Edge> openEdges, Set<FeaturePointer> neighboring,
+            Set<Tuple2<Edge, FeaturePointer>> multiEdges,
             int pennants,
             Map<TradeGoods, Integer> tradeGoods, boolean besieged, boolean cathedral, boolean princess,
             boolean castleBase) {
         super(places, openEdges, neighboring);
+        this.multiEdges = multiEdges;
         this.pennants = pennants;
         this.tradeGoods = tradeGoods;
         this.besieged = besieged;
@@ -49,6 +54,7 @@ public class City extends CompletableFeature<City> {
             mergePlaces(city),
             mergeEdges(city),
             mergeNeighboring(city),
+            mergeMultiEdges(city),
             pennants + city.pennants,
             mergeTradeGoods(city),
             besieged || city.besieged,
@@ -64,6 +70,23 @@ public class City extends CompletableFeature<City> {
             places,
             openEdges.remove(edge),
             neighboring,
+            multiEdges.filter(me -> !me._1.equals(edge)),
+            pennants,
+            tradeGoods,
+            besieged ,
+            cathedral,
+            princess,
+            castleBase
+        );
+    }
+
+    @Override
+    public City setOpenEdges(Set<Edge> openEdges) {
+        return new City(
+            places,
+            openEdges,
+            neighboring,
+            multiEdges,
             pennants,
             tradeGoods,
             besieged ,
@@ -79,6 +102,7 @@ public class City extends CompletableFeature<City> {
             placeOnBoardPlaces(pos, rot),
             placeOnBoardEdges(pos, rot),
             placeOnBoardNeighboring(pos, rot),
+            placeOnBoardMultiEdges(pos, rot),
             pennants, tradeGoods, besieged, cathedral, princess, castleBase
         );
     }
@@ -87,10 +111,19 @@ public class City extends CompletableFeature<City> {
         return tradeGoods.merge(city.tradeGoods, (a, b) -> a + b);
     }
 
+    public City setMultiEdges(Set<Tuple2<Edge, FeaturePointer>> multiEdges) {
+        if (this.multiEdges == multiEdges) return this;
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+    }
+
+    public Set<Tuple2<Edge, FeaturePointer>> getMultiEdges() {
+		return multiEdges;
+	}
+
     @Override
     public City setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     public boolean isBesieged() {
@@ -99,7 +132,7 @@ public class City extends CompletableFeature<City> {
 
     public City setBesieged(boolean besieged) {
         if (this.besieged == besieged) return this;
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     public boolean isCathedral() {
@@ -108,7 +141,7 @@ public class City extends CompletableFeature<City> {
 
     public City setCathedral(boolean cathedral) {
         if (this.cathedral == cathedral) return this;
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     public boolean isPrincess() {
@@ -117,7 +150,7 @@ public class City extends CompletableFeature<City> {
 
     public City setPrincess(boolean princess) {
         if (this.princess == princess) return this;
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     public boolean isCastleBase() {
@@ -126,7 +159,7 @@ public class City extends CompletableFeature<City> {
 
     public City setCastleBase(boolean castleBase) {
         if (this.castleBase == castleBase) return this;
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     public int getPennants() {
@@ -138,7 +171,7 @@ public class City extends CompletableFeature<City> {
     }
 
     public City setTradeGoods(Map<TradeGoods, Integer> tradeGoods) {
-        return new City(places, openEdges, neighboring, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
+        return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
     private int getBasePoints(GameState state, boolean completed) {
@@ -176,5 +209,17 @@ public class City extends CompletableFeature<City> {
 
     public static String name() {
         return _tr("City");
+    }
+
+    protected Set<Tuple2<Edge, FeaturePointer>> mergeMultiEdges(City city) {
+    	return multiEdges.addAll(city.multiEdges);
+    }
+
+    protected Set<Tuple2<Edge, FeaturePointer>> placeOnBoardMultiEdges(Position pos, Rotation rot) {
+    	return multiEdges.map(t -> {
+    		Edge edge = t._1.rotateCW(Position.ZERO, rot).translate(pos);
+    		FeaturePointer fp = t._2.rotateCW(rot).translate(pos);
+    		return new Tuple2<>(edge, fp);
+    	});
     }
 }
