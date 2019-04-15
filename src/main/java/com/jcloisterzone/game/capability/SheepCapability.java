@@ -16,6 +16,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import io.vavr.collection.TreeMap;
 import io.vavr.collection.Vector;
 
 /**
@@ -40,7 +41,8 @@ public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepTo
 
 	private static final long serialVersionUID = 1L;
 
-	public static final Map<SheepToken, Integer> SHEEP_TOKEN_COUNT = HashMap.of(
+	// use sorted map (TreeMap) to same bag content on all clients!
+	public static final Map<SheepToken, Integer> SHEEP_TOKEN_COUNT = TreeMap.of(
 		SheepToken.SHEEP_1X, 4,
 		SheepToken.SHEEP_2X, 5,
 		SheepToken.SHEEP_3X, 5,

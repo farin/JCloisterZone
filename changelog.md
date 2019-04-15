@@ -17,6 +17,7 @@
 *2019-04-11*
 
 * rebuild which fixes run on Java 8 (unable to connect issue)
+* newart plugin was bundled in 
 
 ## 4.3.1
 *2019-04-09*
