@@ -48,6 +48,7 @@ import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.bugreport.ReportingTool;
@@ -480,7 +481,7 @@ public class Client extends JFrame {
                     JsonReader reader = new JsonReader(new FileReader(file));
                     SavedGame sg = parser.fromJson(reader);
                     createGame(sg);
-                } catch (IOException ex) {
+                } catch (IOException | JsonSyntaxException ex) {
                     //do not create error.log
                     JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), _tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }

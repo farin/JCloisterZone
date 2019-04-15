@@ -11,6 +11,7 @@
 * End game stats shows number of placed tiles. (#227)
 * fixed #263: game freeze when undo was used on meeple placement after using flying machine
 * fixed #276: ferry move removes inn from roads
+* fixed #262: error when wagon scores castle
 
 ## 4.3.2
 *2019-04-11*

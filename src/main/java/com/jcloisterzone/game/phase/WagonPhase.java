@@ -4,6 +4,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.RandomGenerator;
@@ -35,20 +36,22 @@ public class WagonPhase extends Phase {
             Tuple2<Wagon, FeaturePointer> item = dequeueTuple._1;
 
             Wagon wagon = item._1;
-            Completable feature = (Completable) state.getFeature(item._2);
-            GameState _state = state;
-            Set<FeaturePointer> options = feature.getNeighboring()
-                .filter(fp -> {
-                    Completable nei = (Completable) _state.getFeature(fp);
-                    return nei != null && !nei.isCompleted(_state) && !nei.isOccupied(_state);
-                });
+            Feature feature = state.getFeature(item._2);
+            if (feature instanceof Completable) { // skip Castle
+                GameState _state = state;
+                Set<FeaturePointer> options = ((Completable)feature).getNeighboring()
+                    .filter(fp -> {
+                        Completable nei = (Completable) _state.getFeature(fp);
+                        return nei != null && !nei.isCompleted(_state) && !nei.isOccupied(_state);
+                    });
 
-            if (!options.isEmpty()) {
-                PlayerAction<?> action = new MeepleAction(wagon, options);
-                state = state.setPlayerActions(
-                    new ActionsState(wagon.getPlayer(), action, true)
-                );
-                return promote(state);
+                if (!options.isEmpty()) {
+                    PlayerAction<?> action = new MeepleAction(wagon, options);
+                    state = state.setPlayerActions(
+                        new ActionsState(wagon.getPlayer(), action, true)
+                    );
+                    return promote(state);
+                }
             }
         }
         return next(state);
