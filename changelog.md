@@ -8,7 +8,8 @@
 	  Because in reality no specific tile is internally selected at the time when hill is placed.
 	  With such implementation nobody can dig particular tiles from saved game because
 	  no hidden information exists.	  
-* fixed #263: undo crashed game when used on meeple placement after using flying machine 
+* fixed #263: game freeze when undo was used on meeple placement after using flying machine 
+* fixed #276: ferry move removes inn from roads
 
 ## 4.3.2
 *2019-04-11*

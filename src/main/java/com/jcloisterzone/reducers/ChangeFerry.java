@@ -72,7 +72,7 @@ public class ChangeFerry implements Reducer {
                         return (Road) pt.getInitialFeaturePartOf(fp.getLocation())
                             .placeOnBoard(fp.getPosition(), pt.getRotation());
                    });
-           boolean isInn = initialFeatures.foldLeft(false, (res, road) -> res && road.isInn());
+           boolean isInn = initialFeatures.foldLeft(false, (res, road) -> res || road.isInn());
            Set<FeaturePointer> openTunnelEnds = merged.getOpenTunnelEnds().intersect(places.toSet());
            Set<Edge> openEdges = merged.getOpenEdges().intersect(
                initialFeatures.flatMap(f -> f.getOpenEdges()).toSet()
