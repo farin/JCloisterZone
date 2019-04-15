@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Rule;
@@ -122,7 +123,7 @@ public class GameOverPanel extends JPanel {
             //setTitle(_tr("Game overview"));
             boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
-            StringBuilder rowSpec = new StringBuilder("[][]10[]10[]20[][][][]");
+            StringBuilder rowSpec = new StringBuilder("[][]10[][]10[]20[][][][]");
             if (capabilities.contains(CastleCapability.class)) rowSpec.append("[]");
             rowSpec.append("20"); //gap
             if (capabilities.contains(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
@@ -141,6 +142,7 @@ public class GameOverPanel extends JPanel {
             add(new JLabel(_tr("Player")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Rank")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Total points")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Tiles placed")), getLegendSpec(0, gridy++));
 
             add(new JLabel(_tr("Roads")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Cities")), getLegendSpec(0, gridy++));
@@ -188,6 +190,9 @@ public class GameOverPanel extends JPanel {
 
                 add(new JLabel(getRank(players, gridx), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPoints(state), SwingConstants.CENTER), getSpec(gridx, gridy++));
+
+                int tilesPlaced = state.getEvents().filter(ev -> ev instanceof TilePlacedEvent && Integer.valueOf(player.getIndex()).equals(ev.getMetadata().getTriggeringPlayerIndex())).size();
+                add(new JLabel("" +tilesPlaced, SwingConstants.CENTER), getSpec(gridx, gridy++));
 
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
