@@ -47,6 +47,7 @@ public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepTo
 		SheepToken.SHEEP_4X, 2,
 		SheepToken.WOLF, 2
 	);
+	public static final int TOKENS_COUNT = SHEEP_TOKEN_COUNT.values().sum().intValue();
 
 
 	@Override
