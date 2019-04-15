@@ -28,4 +28,9 @@ public class UndoHistoryItem implements Serializable {
     public List<WsReplayableMessage> getReplay() {
         return replay;
     }
+
+    @Override
+    public String toString() {
+    	return "UndoHistoryItem(" + replay.head() + ")";
+    }
 }

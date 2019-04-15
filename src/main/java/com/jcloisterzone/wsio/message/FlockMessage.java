@@ -3,13 +3,15 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("FLOCK_EXPAND_OR_SCORE")
-public class FlockMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
+public class FlockMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMessage {
 
 	public enum FlockOption { EXPAND, SCORE }
 
     private String gameId;
     private String messageId;
     private FlockOption value;
+
+    private long salt;
 
     public FlockMessage() {
 	}
@@ -45,6 +47,16 @@ public class FlockMessage extends AbstractWsMessage implements WsInGameMessage, 
 	public void setValue(FlockOption value) {
 		this.value = value;
 	}
+
+	@Override
+    public long getSalt() {
+        return salt;
+    }
+
+    @Override
+    public void setSalt(long salt) {
+        this.salt = salt;
+    }
 
 
 }

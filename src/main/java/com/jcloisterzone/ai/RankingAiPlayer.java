@@ -12,7 +12,7 @@ import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsSaltMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
@@ -52,7 +52,7 @@ public abstract class RankingAiPlayer implements AiPlayer {
                 for (WsInGameMessage msg : getPossibleActions(itemState)) {
                     Vector<WsInGameMessage> chain = item._2.append(msg);
                     GameState newState = phaseReducer.apply(itemState, msg);
-                    boolean end = newState.getActivePlayer() != me || newState.getTurnPlayer() != state.getTurnPlayer() || msg instanceof WsSaltMeesage;
+                    boolean end = newState.getActivePlayer() != me || newState.getTurnPlayer() != state.getTurnPlayer() || msg instanceof WsSaltMessage;
 
                     if (!end && msg instanceof PlaceTileMessage &&
                         newState.getLastPlaced().getTile().hasModifier(PortalCapability.MAGIC_PORTAL)) {

@@ -1,5 +1,15 @@
 # Version history
 
+## upcoming release (4.4.0)
+
+* Hills and Sheep expansion
+	- note about hills: a tile hidden under hill is selected from all tiles including dragon tiles even they 
+	  are not in play yet (if hill is drawn before volcano). 
+	  Because in reality no specific tile is internally selected at the time when hill is placed.
+	  With such implementation nobody can dig particular tiles from saved game because
+	  no hidden information exists.	  
+* fixed #263: undo crashed game when used on meeple placement after using flying machine 
+
 ## 4.3.2
 *2019-04-11*
 
