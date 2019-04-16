@@ -8,7 +8,7 @@
      Because in reality no specific tile is internally selected at the time when hill is placed.
      With such implementation nobody can dig particular tiles from saved game because
      no hidden information exists.
-* End game stats shows number of placed tiles. (#227)
+* End game stats shows number of placed tiles and consumed time. (#227)
 * fixed #263: game freeze when undo was used on meeple placement after using flying machine
 * fixed #276: ferry move removes inn from roads
 * fixed #262: error when wagon scores castle

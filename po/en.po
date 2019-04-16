@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 20:41+0200\n"
+"POT-Creation-Date: 2019-04-16 21:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -940,59 +940,63 @@ msgstr ""
 msgid "Tiles placed"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
-msgid "Roads"
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+msgid "Time consumed"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
-msgid "Cities"
+msgid "Roads"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
-msgid "Cloisters"
+msgid "Cities"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
+msgid "Cloisters"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
 msgid "Farms"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
 msgid "Castles"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "The biggest city"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "The longest road"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
 msgid "Trade goods"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
 msgid "Gold"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:168
 msgid "Sheep"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:171
 msgid "Fairy"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:174
 msgid "Tower ransom"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:176
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:177
 msgid "Bazaars"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:180
 msgid "Wind rose"
 msgstr ""
 

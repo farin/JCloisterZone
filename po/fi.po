@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 20:41+0200\n"
+"POT-Creation-Date: 2019-04-16 21:19+0200\n"
 "PO-Revision-Date: 2015-10-22 13:09+0100\n"
 "Last-Translator: Ahti <ahti.komu@gmail.com>\n"
 "Language-Team: Ahti Komu\n"
@@ -955,59 +955,63 @@ msgstr "Yhteispisteet"
 msgid "Tiles placed"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+msgid "Time consumed"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Roads"
 msgstr "Tiet"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Cities"
 msgstr "Kaupungit"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "Cloisters"
 msgstr "Luostarit"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
 msgid "Farms"
 msgstr "Maatilat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
 msgid "Castles"
 msgstr "Linnat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "The biggest city"
 msgstr "Isoin kaupunki"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "The longest road"
 msgstr "Pisin tie"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
 msgid "Trade goods"
 msgstr "Resurssit"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
 msgid "Gold"
 msgstr "Kulta"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:168
 msgid "Sheep"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:171
 msgid "Fairy"
 msgstr "Haltia"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:174
 msgid "Tower ransom"
 msgstr "Tornilunnaat"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:176
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:177
 msgid "Bazaars"
 msgstr "Basaarit"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:180
 msgid "Wind rose"
 msgstr ""
 

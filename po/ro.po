@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 20:41+0200\n"
+"POT-Creation-Date: 2019-04-16 21:19+0200\n"
 "PO-Revision-Date: 2015-10-22 13:11+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
@@ -966,59 +966,63 @@ msgstr "Număr total de puncte"
 msgid "Tiles placed"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+msgid "Time consumed"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Roads"
 msgstr "Drumuri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Cities"
 msgstr "Orașe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "Cloisters"
 msgstr "Mănăstiri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
 msgid "Farms"
 msgstr "Ferme"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
 msgid "Castles"
 msgstr "Castele"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "The biggest city"
 msgstr "Cel mai mare oraș"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "The longest road"
 msgstr "Cel mai lung drum"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
 msgid "Trade goods"
 msgstr "Schimb de bunuri"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
 msgid "Gold"
 msgstr "Aur"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:168
 msgid "Sheep"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:171
 msgid "Fairy"
 msgstr "Zână"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:173
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:174
 msgid "Tower ransom"
 msgstr "Răscumpărare turn"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:176
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:177
 msgid "Bazaars"
 msgstr "Piețe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:179
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:180
 msgid "Wind rose"
 msgstr "Roza vânturilor"
 

@@ -306,6 +306,7 @@ public class GameEventsPanel extends JPanel {
         triggeringColor = null;
 
         boolean ignore = true;
+        boolean finalScoring = false;
         EventItem dragonItem = null;
 
         for (PlayEvent ev : events) {
@@ -326,11 +327,19 @@ public class GameEventsPanel extends JPanel {
                 continue;
             }
 
-            Integer idx = ev.getMetadata().getTriggeringPlayerIndex();
-            if (idx == null) {
-                triggeringColor = turnColor;
-            } else {
-                triggeringColor = getMeepleColor(state.getPlayers().getPlayer(idx));
+            if (!finalScoring) {
+                if (ev instanceof ScoreEvent && ((ScoreEvent) ev).isFinal()) {
+                    turnColor = Color.GRAY;
+                    triggeringColor = null;
+                    finalScoring = true;
+                } else {
+                    Integer idx = ev.getMetadata().getTriggeringPlayerIndex();
+                    if (idx == null) {
+                        triggeringColor = turnColor;
+                    } else {
+                        triggeringColor = getMeepleColor(state.getPlayers().getPlayer(idx));
+                    }
+                }
             }
 
             Function1<PlayEvent, EventItem> fn = mapping.get(ev.getClass()).getOrNull();
