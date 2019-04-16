@@ -21,7 +21,26 @@
         <svg:polygon points="255,530 247,515 330,415 450,440 530,420 567,460 632,280 710,492 767,552 745,572 747,687 755,692 755,737 735,745 730,787 655,835 645,832 635,835 625,830 555,862 477,825 462,830 400,802 357,820 255,750"/>
         <apply>KR.LC CLOISTER</apply>
     </shape>
-    
+
+    <shape feature="CLOISTER">
+        <svg:circle cx="465" cy="350" r="245"/>
+        <apply>CU.S CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
+        <svg:circle cx="510" cy="460" r="245"/>
+        <apply>CU.SR CLOISTER</apply>
+        <apply>CU.SRFR CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
+        <svg:circle cx="515" cy="570" r="245"/>
+        <apply>CU.SC CLOISTER</apply>
+        <apply>CU.SCFR CLOISTER</apply>
+    </shape>
+    <shape feature="CLOISTER">
+        <svg:circle cx="535" cy="540" r="245"/>
+        <apply>CU.SRCR CLOISTER</apply>
+    </shape>
+
     <shape feature="QUARTER">
         <svg:circle cx="720" cy="-300" r="600" />
         <apply>CO.7 QUARTER_CASTLE</apply>
@@ -280,6 +299,12 @@
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 875,145 815,182 802,207 772,212 697,250 670,280 637,277 610,260 500,270 475,280 442,285 422,275 370,282 355,292 317,285 227,255 192,255 127,202 62,87"/>
         <apply>IC.CFR N</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="0,0 999,0 960,50 925,95 890,125 842,145 840,160 812,172 797,170 747,202 715,210 692,235 650,237 627,227 510,227 492,242 445,247 425,232 405,245 365,247 345,255 320,255 307,247 262,242 210,212 192,217 167,217 150,200 110,175 67,100 25,37"/>
+        <apply>CU.SC N</apply>
+        <apply>CU.SCFR N</apply>
+        <apply>CU.SRCR N</apply>
     </shape>
     <shape feature="CITY">
         <svg:polygon points="12,0 999,0 999,90 902,177 897,217 882,232 895,255 892,275 907,295 920,325 917,355 905,417 917,442 915,470 902,490 912,582 927,617 932,652 917,680 927,747 950,807 972,865 999,895 999,982 925,927 812,867 810,847 737,845 730,812 707,790 587,790 562,747 575,715 562,715 497,620 475,625 465,607 465,580 422,520 400,520 382,477 395,462 345,370 335,367 297,280 305,267 290,242 267,217 202,215 190,195 192,177 157,165 92,130 67,122 60,107 65,92"/>

@@ -12,12 +12,13 @@
 * fixed #263: game freeze when undo was used on meeple placement after using flying machine
 * fixed #276: ferry move removes inn from roads
 * fixed #262: error when wagon scores castle
+* newart plugin extended with King and Robber baron, and Cult.  
 
 ## 4.3.2
 *2019-04-11*
 
 * rebuild which fixes run on Java 8 (unable to connect issue)
-* newart plugin was bundled in 
+* newart plugin was bundled in (Basic game, Inns and Catherdrals, Traders and Builders for now)
 
 ## 4.3.1
 *2019-04-09*
