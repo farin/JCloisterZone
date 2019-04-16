@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-09 11:13+0200\n"
+"POT-Creation-Date: 2019-04-16 20:41+0200\n"
 "PO-Revision-Date: 2017-08-24 22:34+0900\n"
 "Last-Translator: Alexis Jeandeau <alexis.jeandeau@gmail.com>\n"
 "Language-Team: \n"
@@ -45,192 +45,192 @@ msgstr ""
 msgid "Bug report failed"
 msgstr "バグ報告に失敗しました"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:57
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "Basic game"
 msgstr "基本ゲーム"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:59
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Basic game (2.0)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "Wheel of Fortune"
 msgstr "運命の輪"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:66
 msgid "Winter Edition"
 msgstr "カルカソンヌ冬"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "The Gingerbread Man"
 msgstr "ジンジャーブレッドマン"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "Inns & Cathedrals"
 msgstr "宿と大聖堂"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "Traders & Builders"
 msgstr "商人と建築士"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Princess & The Dragon"
 msgstr "王女とドラゴン"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Tower"
 msgstr "塔"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "Abbey & Mayor"
 msgstr "大修道院と市長"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Catapult"
 msgstr "カタパルト"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "Bridges, Castles and Bazaars"
 msgstr "橋・城・バザール"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "Hills and Sheep"
 msgstr "丘と羊"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Under the Big Top"
 msgstr ""
 
 # Used to be "King and Scout", but JCloisterZone only includes the "King and Robber Baron" (originally "König und Raubritter") part of the expansion (5 tiles).
-#: src/main/java/com/jcloisterzone/Expansion.java:84
+#: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "King and Robber Baron"
 msgstr "王と泥棒男爵"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The River"
 msgstr "川"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The River II"
 msgstr "川Ⅱ"
 
 # Used to be just "The Cathars".
 # 攻城 would be better for siege?
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Cathars / Siege"
 msgstr "カタリ派/攻囲"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Besiegers"
 msgstr "攻囲軍"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:93
 msgid "The Count of Carcassonne"
 msgstr "カルカソンヌの伯爵"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:94
 msgid "The Mini Expansion (GQ11)"
 msgstr "ミニ拡張（GQ11）"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The Cult"
 msgstr "崇拝"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "The Tunnel"
 msgstr "トンネル"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:93
+#: src/main/java/com/jcloisterzone/Expansion.java:97
 msgid "The Corn Circles"
 msgstr "ミステリー・サークル"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:98
 msgid "The Plague"
 msgstr "ペスト"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:99
 msgid "The Phantom"
 msgstr "従者"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
+#: src/main/java/com/jcloisterzone/Expansion.java:100
 msgid "The Festival (10th an.)"
 msgstr "祭り（10周年記念）"
 
 # Original title: "Die Haüser" (The Houses)
 # Maybe 家 would be better?
-#: src/main/java/com/jcloisterzone/Expansion.java:97
+#: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Little Buildings"
 msgstr "小さな建物"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:98
+#: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "The Wind Rose"
 msgstr "羅針図"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:99
+#: src/main/java/com/jcloisterzone/Expansion.java:103
 msgid "The German Monasteries"
 msgstr "ドイツの修道院"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:100
+#: src/main/java/com/jcloisterzone/Expansion.java:104
 msgid "Castles in Germany"
 msgstr "ドイツの城"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:101
-#: src/main/java/com/jcloisterzone/Expansion.java:102
+#: src/main/java/com/jcloisterzone/Expansion.java:105
+#: src/main/java/com/jcloisterzone/Expansion.java:106
 msgid "Halfings"
 msgstr "ハーフ"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:103
+#: src/main/java/com/jcloisterzone/Expansion.java:107
 msgid "The Watchtower"
 msgstr ""
 
 # Also called "The Flying Machines".
 # グライダー? 航空機 seems more appropriate considering the original name:
 # https://translate.google.com/#auto/ja/Die%20Flugger%C3%A4te
-#: src/main/java/com/jcloisterzone/Expansion.java:106
+#: src/main/java/com/jcloisterzone/Expansion.java:110
 msgid "The Flier"
 msgstr "航空機"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:107
+#: src/main/java/com/jcloisterzone/Expansion.java:111
 msgid "The Messages"
 msgstr "メッセージ"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:108
+#: src/main/java/com/jcloisterzone/Expansion.java:112
 msgid "The Ferries"
 msgstr "フェリー"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:109
+#: src/main/java/com/jcloisterzone/Expansion.java:113
 msgid "The Goldmines"
 msgstr "金鉱山"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:110
+#: src/main/java/com/jcloisterzone/Expansion.java:114
 msgid "Mage & Witch"
 msgstr "魔術師と魔女"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:111
+#: src/main/java/com/jcloisterzone/Expansion.java:115
 msgid "The Robbers"
 msgstr "強盗"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:112
+#: src/main/java/com/jcloisterzone/Expansion.java:116
 msgid "The Corn Circles II"
 msgstr "ミステリー・サークルII"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:115
+#: src/main/java/com/jcloisterzone/Expansion.java:119
 msgid "The School"
 msgstr "学校"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:116
+#: src/main/java/com/jcloisterzone/Expansion.java:120
 msgid "La Porxada"
 msgstr "ポルチャーダ"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:117
+#: src/main/java/com/jcloisterzone/Expansion.java:121
 msgid "Russian Promos"
 msgstr "ロシアのプロモーション"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:118
+#: src/main/java/com/jcloisterzone/Expansion.java:122
 msgid "Darmstadt Promo"
 msgstr "ダルムシュタットのプロモーション"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:119
+#: src/main/java/com/jcloisterzone/Expansion.java:123
 msgid "Labyrinth"
 msgstr ""
 
@@ -242,11 +242,11 @@ msgstr "橋"
 msgid "Castle"
 msgstr "城"
 
-#: src/main/java/com/jcloisterzone/feature/City.java:178
+#: src/main/java/com/jcloisterzone/feature/City.java:211
 msgid "City"
 msgstr "都市"
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:91
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:104
 msgid "Cloister"
 msgstr "修道院"
 
@@ -254,7 +254,7 @@ msgstr "修道院"
 msgid "Farm"
 msgstr "草原"
 
-#: src/main/java/com/jcloisterzone/feature/Road.java:152
+#: src/main/java/com/jcloisterzone/feature/Road.java:163
 msgid "Road"
 msgstr "道路"
 
@@ -266,80 +266,84 @@ msgstr "塔"
 msgid "Yaga's Hut"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:11
+#: src/main/java/com/jcloisterzone/game/Rule.java:16
 msgid "Randomize seating order"
 msgstr "席順をランダム化する"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:13
+#: src/main/java/com/jcloisterzone/game/Rule.java:18
 msgid "Use pig herds independently (without T&B expansion)"
 msgstr "豚の群れを単独で使います。（「商人と建築士」を使わない場合。）"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:15
+#: src/main/java/com/jcloisterzone/game/Rule.java:20
 msgid "Princess MUST remove a knight from city."
 msgstr "王女は都市から騎士を取り除かなければなりません。"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:16
+#: src/main/java/com/jcloisterzone/game/Rule.java:21
 msgid "Dragon movement occurs after scoring."
 msgstr "ドラゴンの動きは得点後に発生します。"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:17
+#: src/main/java/com/jcloisterzone/game/Rule.java:22
 msgid "Place fairy on the tile. (instead of next to a follower)"
 msgstr "妖精をタイルに置きます。（コマのそばより。）"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:19
+#: src/main/java/com/jcloisterzone/game/Rule.java:24
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
 msgstr "別の納屋がすでに配置されている草原で直接納屋配置することを許可します。"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:21
+#: src/main/java/com/jcloisterzone/game/Rule.java:26
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr "バザーの入札は出来ません。 各プレイヤーはタイル１枚を選択します。"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:23
-msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
-msgstr "攻囲された都市のタイルの隣に避難修道院の配置が可能です。"
-
-#: src/main/java/com/jcloisterzone/game/Rule.java:25
-msgid "The Pig herd is present on the farm tile."
-msgstr "豚の群れが草原タイルに存在しています。"
-
-#: src/main/java/com/jcloisterzone/game/Rule.java:27
-msgid "Apply tunnel rule on tunnels from other expansions."
-msgstr "他の拡張セットのトンネルにトンネル・ルールを使う。"
-
 #: src/main/java/com/jcloisterzone/game/Rule.java:28
-msgid "Assign 3/2 tunnel set in game of two/three players."
+msgid "Count number of followers on hill as tiebreaker."
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:30
+msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
+msgstr "攻囲された都市のタイルの隣に避難修道院の配置が可能です。"
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:32
+msgid "The Pig herd is present on the farm tile."
+msgstr "豚の群れが草原タイルに存在しています。"
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:34
+msgid "Apply tunnel rule on tunnels from other expansions."
+msgstr "他の拡張セットのトンネルにトンネル・ルールを使う。"
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:35
+msgid "Assign 3/2 tunnel set in game of two/three players."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:37
 msgid "Only follower can be returned by festival (instead of any figure)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:32
+#: src/main/java/com/jcloisterzone/game/Rule.java:39
 msgid "Keep basic cloisters in the game."
 msgstr "一般修道院を残します。"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:34
+#: src/main/java/com/jcloisterzone/game/Rule.java:41
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "各塔・家・小屋に３・２・１ポイントを追加します。"
 
 # リタイヤ？
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
+#: src/main/java/com/jcloisterzone/ui/Client.java:306
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:68
 msgid "Leave game"
 msgstr "ゲームをやめる"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:377
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
@@ -347,24 +351,24 @@ msgstr ""
 "ゲームが終了していません。本当にゲームを停止し、他のプレーヤーを切断します"
 "か？"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:304
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "ゲームが終了していません。本当にやめますか？"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:433
-#: src/main/java/com/jcloisterzone/ui/Client.java:485
-#: src/main/java/com/jcloisterzone/ui/Client.java:651
+#: src/main/java/com/jcloisterzone/ui/Client.java:434
+#: src/main/java/com/jcloisterzone/ui/Client.java:486
+#: src/main/java/com/jcloisterzone/ui/Client.java:652
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:393
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:428
 msgid "Error"
 msgstr "エラー"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:470
+#: src/main/java/com/jcloisterzone/ui/Client.java:471
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
 msgid "Load game"
 msgstr "ゲームを開く"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:643
+#: src/main/java/com/jcloisterzone/ui/Client.java:644
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
 msgid "Connection lost"
 msgstr "接続は切断されました"
@@ -410,28 +414,28 @@ msgstr ""
 msgid "Type to chat"
 msgstr "ここでチャットできます"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:72
 msgid "Skip"
 msgstr "スキップ"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
 msgid "Continue"
 msgstr "次へ"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "Skip Abbey"
 msgstr "大修道院をスキップ"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "Cancel and place Abbey"
 msgstr "キャンセルして大修道院を設置する"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:289
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
 msgstr "最後のターンです。スキップすれば、大修道院は未配置のままになります。"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
 msgid "Last chance to place the Abbey"
 msgstr "大修道院を配置するには最後のチャンスです"
 
@@ -579,32 +583,62 @@ msgstr "入札する"
 msgid "Pass"
 msgstr "スキップ"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:39
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:36
 msgid "Corn circle"
 msgstr "ミステリー・サークル"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:41
 msgid "Each player…"
 msgstr "各プレーヤーが…"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:50
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:47
 msgid "may deploy additional follower"
 msgstr "コマをもう一つ配置できます"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:63
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:60
 msgid "must remove follower"
 msgstr "コマを取り外さなければなりません"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:78
 #, java-format
 msgid "on/from a {0}."
 msgstr "{0}に。"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:50
+msgid "Shepherd"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:55
+msgid "Farm with shepherd was expanded."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:86
+msgid "You can draw another sheep/wolf token from a bag."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:90
+#, java-format
+msgid "({0} tokens left in bag)"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:96
+msgid "Expand the flock of sheep."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:108
+#, java-format
+msgid "Or score the flock for {0} points."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:112
+msgid "Herd the flock into the stable."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:43
 msgid "Prisoners exchange"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:48
 msgid ""
 "The captured prisoner is going to be immediately exchanged. You can select "
 "which follower you want to exchange for."
@@ -913,71 +947,79 @@ msgstr "リモートCPU"
 msgid "Open player slot"
 msgstr "空いているプレイヤースロット"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:78
 msgid "Play again"
 msgstr "再プレイ"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
 msgid "Player"
 msgstr "プレイヤー"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
 msgid "Rank"
 msgstr "ランク"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
 msgid "Total points"
 msgstr "合計ポイント"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+msgid "Tiles placed"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
 msgid "Roads"
 msgstr "道路"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Cities"
 msgstr "都市"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Cloisters"
 msgstr "修道院"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "Farms"
 msgstr "草原"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
 msgid "Castles"
 msgstr "城"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
 msgid "The biggest city"
 msgstr "最大の都市"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "The longest road"
 msgstr "最長の道路"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
 msgid "Trade goods"
 msgstr "商品を取引"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
 msgid "Gold"
 msgstr "金"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+msgid "Sheep"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
 msgid "Fairy"
 msgstr "妖精"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:173
 msgid "Tower ransom"
 msgstr "塔の身代金"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:176
 msgid "Bazaars"
 msgstr "バザール"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:179
 msgid "Wind rose"
 msgstr "羅針図"
 

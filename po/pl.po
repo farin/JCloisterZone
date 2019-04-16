@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-09 11:13+0200\n"
+"POT-Creation-Date: 2019-04-16 20:41+0200\n"
 "PO-Revision-Date: 2015-10-22 13:10+0100\n"
 "Last-Translator: Tomasz Skowroński\n"
 "Language-Team: \n"
@@ -44,184 +44,184 @@ msgstr ""
 msgid "Bug report failed"
 msgstr "Zgłoszenie błędu nie powiodło się"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:57
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "Basic game"
 msgstr "Podstawowa gra"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:59
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Basic game (2.0)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "Wheel of Fortune"
 msgstr "Koło Fortuny"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:66
 msgid "Winter Edition"
 msgstr "Zimowe Wydanie"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:64
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "The Gingerbread Man"
 msgstr "Piernikowy Ludek"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:70
 msgid "Inns & Cathedrals"
 msgstr "Karczmy i Katedry"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:69
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "Traders & Builders"
 msgstr "Kupcy i Budowniczowie"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:71
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Princess & The Dragon"
 msgstr "Księżniczka i Smok"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:73
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Tower"
 msgstr "Wieża"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:75
+#: src/main/java/com/jcloisterzone/Expansion.java:78
 msgid "Abbey & Mayor"
 msgstr "Opactwo i Burmistrz"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:77
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The Catapult"
 msgstr "Katapulta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "Bridges, Castles and Bazaars"
 msgstr "Mosty, Zamki i Bazary"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "Hills and Sheep"
 msgstr "Owce i Wzgórza"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:85
 msgid "Under the Big Top"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:84
+#: src/main/java/com/jcloisterzone/Expansion.java:88
 msgid "King and Robber Baron"
 msgstr "Król i Baron Rabusiów"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:89
 msgid "The River"
 msgstr "Rzeka"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:86
+#: src/main/java/com/jcloisterzone/Expansion.java:90
 msgid "The River II"
 msgstr "Rzeka II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:87
+#: src/main/java/com/jcloisterzone/Expansion.java:91
 msgid "The Cathars / Siege"
 msgstr "Katarzy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:92
 msgid "The Besiegers"
 msgstr "Oblężenie"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:93
 msgid "The Count of Carcassonne"
 msgstr "Hrabia"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:94
 msgid "The Mini Expansion (GQ11)"
 msgstr "Mały Dodatek (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:95
 msgid "The Cult"
 msgstr "Kult"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
+#: src/main/java/com/jcloisterzone/Expansion.java:96
 msgid "The Tunnel"
 msgstr "Tunel"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:93
+#: src/main/java/com/jcloisterzone/Expansion.java:97
 msgid "The Corn Circles"
 msgstr "Kręgi w zbożu"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:98
 msgid "The Plague"
 msgstr "Plaga"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:99
 msgid "The Phantom"
 msgstr "Świta (Fantom)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
+#: src/main/java/com/jcloisterzone/Expansion.java:100
 msgid "The Festival (10th an.)"
 msgstr "Festiwal (10-lecie)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:97
+#: src/main/java/com/jcloisterzone/Expansion.java:101
 msgid "Little Buildings"
 msgstr "Małe Budynki"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:98
+#: src/main/java/com/jcloisterzone/Expansion.java:102
 msgid "The Wind Rose"
 msgstr "Róża Wiatrów"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:99
+#: src/main/java/com/jcloisterzone/Expansion.java:103
 msgid "The German Monasteries"
 msgstr "Klasztory"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:100
+#: src/main/java/com/jcloisterzone/Expansion.java:104
 msgid "Castles in Germany"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:101
-#: src/main/java/com/jcloisterzone/Expansion.java:102
+#: src/main/java/com/jcloisterzone/Expansion.java:105
+#: src/main/java/com/jcloisterzone/Expansion.java:106
 msgid "Halfings"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:103
+#: src/main/java/com/jcloisterzone/Expansion.java:107
 msgid "The Watchtower"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:106
+#: src/main/java/com/jcloisterzone/Expansion.java:110
 msgid "The Flier"
 msgstr "Maszyny Latające"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:107
+#: src/main/java/com/jcloisterzone/Expansion.java:111
 msgid "The Messages"
 msgstr "Kurierzy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:108
+#: src/main/java/com/jcloisterzone/Expansion.java:112
 msgid "The Ferries"
 msgstr "Promy"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:109
+#: src/main/java/com/jcloisterzone/Expansion.java:113
 msgid "The Goldmines"
 msgstr "Kopalnie złota"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:110
+#: src/main/java/com/jcloisterzone/Expansion.java:114
 msgid "Mage & Witch"
 msgstr "Mag i Wiedźma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:111
+#: src/main/java/com/jcloisterzone/Expansion.java:115
 msgid "The Robbers"
 msgstr "Bandyci"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:112
+#: src/main/java/com/jcloisterzone/Expansion.java:116
 msgid "The Corn Circles II"
 msgstr "Kręgi w zbożu II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:115
+#: src/main/java/com/jcloisterzone/Expansion.java:119
 msgid "The School"
 msgstr "Szkoła"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:116
+#: src/main/java/com/jcloisterzone/Expansion.java:120
 msgid "La Porxada"
 msgstr "La Porxada"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:117
+#: src/main/java/com/jcloisterzone/Expansion.java:121
 msgid "Russian Promos"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:118
+#: src/main/java/com/jcloisterzone/Expansion.java:122
 msgid "Darmstadt Promo"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:119
+#: src/main/java/com/jcloisterzone/Expansion.java:123
 msgid "Labyrinth"
 msgstr ""
 
@@ -233,11 +233,11 @@ msgstr "Most"
 msgid "Castle"
 msgstr "Zamek"
 
-#: src/main/java/com/jcloisterzone/feature/City.java:178
+#: src/main/java/com/jcloisterzone/feature/City.java:211
 msgid "City"
 msgstr "Miasto"
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:91
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:104
 msgid "Cloister"
 msgstr "Klasztor"
 
@@ -245,7 +245,7 @@ msgstr "Klasztor"
 msgid "Farm"
 msgstr "Łąka"
 
-#: src/main/java/com/jcloisterzone/feature/Road.java:152
+#: src/main/java/com/jcloisterzone/feature/Road.java:163
 msgid "Road"
 msgstr "Droga"
 
@@ -257,85 +257,89 @@ msgstr "Wieża"
 msgid "Yaga's Hut"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:11
+#: src/main/java/com/jcloisterzone/game/Rule.java:16
 msgid "Randomize seating order"
 msgstr "Losowa kolejność graczy"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:13
+#: src/main/java/com/jcloisterzone/game/Rule.java:18
 msgid "Use pig herds independently (without T&B expansion)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:15
+#: src/main/java/com/jcloisterzone/game/Rule.java:20
 msgid "Princess MUST remove a knight from city."
 msgstr "Księżniczka MUSI usunąć rycerza z miasta."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:16
+#: src/main/java/com/jcloisterzone/game/Rule.java:21
 msgid "Dragon movement occurs after scoring."
 msgstr "Ruch smoka następuje po fazie punktacji."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:17
+#: src/main/java/com/jcloisterzone/game/Rule.java:22
 msgid "Place fairy on the tile. (instead of next to a follower)"
 msgstr "Połóż wróżkę na kafelku (zamiast obok pionka)."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:19
+#: src/main/java/com/jcloisterzone/game/Rule.java:24
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
 msgstr ""
 "Zezwól na bezpośrednie położenie pionka na łące, na której znajdują się już "
 "inni chłopi.\t\t"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:21
+#: src/main/java/com/jcloisterzone/game/Rule.java:26
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
 "Nie można licytować na bazarze. Każdy z graczy po prostu wybiera jeden "
 "kafelek."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:23
+#: src/main/java/com/jcloisterzone/game/Rule.java:28
+msgid "Count number of followers on hill as tiebreaker."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:30
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
 "Klasztor umożliwiający ucieczkę może przylegać do któregokolwiek kafelka "
 "obleganego miasta."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:25
+#: src/main/java/com/jcloisterzone/game/Rule.java:32
 msgid "The Pig herd is present on the farm tile."
 msgstr "Prosiak może znajdować się na łące."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:27
+#: src/main/java/com/jcloisterzone/game/Rule.java:34
 msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Zastosuj zasadę tunelu dla tuneli z innych dodatków."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:28
+#: src/main/java/com/jcloisterzone/game/Rule.java:35
 msgid "Assign 3/2 tunnel set in game of two/three players."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:30
+#: src/main/java/com/jcloisterzone/game/Rule.java:37
 msgid "Only follower can be returned by festival (instead of any figure)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:32
+#: src/main/java/com/jcloisterzone/game/Rule.java:39
 msgid "Keep basic cloisters in the game."
 msgstr "Pozostaw w grze klasztory z wersji podstawowej"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:34
+#: src/main/java/com/jcloisterzone/game/Rule.java:41
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "Dodaj odpowiednio 3/2/1 punkty za wieżę/dom/szopę."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:299
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
+#: src/main/java/com/jcloisterzone/ui/Client.java:306
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:66
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:68
 msgid "Leave game"
 msgstr "Opuść grę"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:295
-#: src/main/java/com/jcloisterzone/ui/Client.java:302
+#: src/main/java/com/jcloisterzone/ui/Client.java:296
+#: src/main/java/com/jcloisterzone/ui/Client.java:303
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:377
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:297
+#: src/main/java/com/jcloisterzone/ui/Client.java:298
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
@@ -343,24 +347,24 @@ msgstr ""
 "Gra nie jest zakończona. Czy naprawdę chcesz ją przerwać i rozłączyć "
 "pozostałych graczy?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:304
+#: src/main/java/com/jcloisterzone/ui/Client.java:305
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "Gra nie jest zakończona. Czy naprawdę chcesz ją opuścić?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:433
-#: src/main/java/com/jcloisterzone/ui/Client.java:485
-#: src/main/java/com/jcloisterzone/ui/Client.java:651
+#: src/main/java/com/jcloisterzone/ui/Client.java:434
+#: src/main/java/com/jcloisterzone/ui/Client.java:486
+#: src/main/java/com/jcloisterzone/ui/Client.java:652
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:393
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:428
 msgid "Error"
 msgstr "Błąd"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:470
+#: src/main/java/com/jcloisterzone/ui/Client.java:471
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
 msgid "Load game"
 msgstr "Wczytaj"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:643
+#: src/main/java/com/jcloisterzone/ui/Client.java:644
 #: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
 msgid "Connection lost"
 msgstr "Połączenie przerwane"
@@ -405,28 +409,28 @@ msgstr "Brak dostępnej akcji. Zrezygnuj lub anuluj położenie kafelka."
 msgid "Type to chat"
 msgstr "Napisz na czacie"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:72
 msgid "Skip"
 msgstr "Pomiń"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:74
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
 #: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
 msgid "Continue"
 msgstr "Kontynuuj"
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "Skip Abbey"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:285
 msgid "Cancel and place Abbey"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:289
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:287
 msgid "This is your last turn. If you skip it your Abbey remain unplaced."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:290
+#: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:288
 msgid "Last chance to place the Abbey"
 msgstr ""
 
@@ -574,32 +578,62 @@ msgstr "Licytuj"
 msgid "Pass"
 msgstr "Zrezygnuj"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:39
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:36
 msgid "Corn circle"
 msgstr "Krąg w zbożu"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:44
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:41
 msgid "Each player…"
 msgstr "Każdy gracz..."
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:50
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:47
 msgid "may deploy additional follower"
 msgstr "może dołożyć dodatkowy pionek"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:63
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:60
 msgid "must remove follower"
 msgstr "musi zabrać pionek"
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:77
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/CornCirclesPanel.java:78
 #, java-format
 msgid "on/from a {0}."
 msgstr "na kafelek/z kafelka {0}."
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:42
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:50
+msgid "Shepherd"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:55
+msgid "Farm with shepherd was expanded."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:86
+msgid "You can draw another sheep/wolf token from a bag."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:90
+#, java-format
+msgid "({0} tokens left in bag)"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:96
+msgid "Expand the flock of sheep."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:108
+#, java-format
+msgid "Or score the flock for {0} points."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:112
+msgid "Herd the flock into the stable."
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:43
 msgid "Prisoners exchange"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:47
+#: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:48
 msgid ""
 "The captured prisoner is going to be immediately exchanged. You can select "
 "which follower you want to exchange for."
@@ -907,71 +941,79 @@ msgstr "Zdalny gracz komputerowy"
 msgid "Open player slot"
 msgstr "Dodaj gracza"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:76
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:78
 msgid "Play again"
 msgstr "Zagraj ponownie"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:139
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
 msgid "Player"
 msgstr "Gracz"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:140
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
 msgid "Rank"
 msgstr "Miejsce"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:141
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
 msgid "Total points"
 msgstr "Łączny wynik"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+msgid "Tiles placed"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
 msgid "Roads"
 msgstr "Drogi"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Cities"
 msgstr "Miasta"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Cloisters"
 msgstr "Klasztory"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "Farms"
 msgstr "Łąki"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
 msgid "Castles"
 msgstr "Zamki"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:156
 msgid "The biggest city"
 msgstr "Największe miasto"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
 msgid "The longest road"
 msgstr "Najdłuższa droga"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:161
 msgid "Trade goods"
 msgstr "Towary handlowe"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:160
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:164
 msgid "Gold"
 msgstr "Złoto"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:167
+msgid "Sheep"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:170
 msgid "Fairy"
 msgstr "Wróżka"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:173
 msgid "Tower ransom"
 msgstr "Oblężenie wieży"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:176
 msgid "Bazaars"
 msgstr "Bazary"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:179
 msgid "Wind rose"
 msgstr "Róża wiatrów"
 
