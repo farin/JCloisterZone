@@ -185,6 +185,7 @@
         <svg:polygon points="600,0 600,210 560,300 370,500 200,600 0,600 0,400 230,400 400,190 400,0"/>
         <apply>BA.CRr SE</apply>
         <apply>BA.RrC SW</apply>
+        <apply>BE.RrC SW</apply>        
         <apply>CA.RRr.2 NE</apply>
         <apply>IC.RrRr NW</apply>
         <apply>DG.RrRr.g NW</apply>
@@ -196,6 +197,7 @@
         <apply>DG.CRr.g SE</apply>
         <apply>TO.RrC SW</apply>
         <apply>CC.Rr SW</apply>
+        <apply>CC.RrC SW</apply>
         <apply>C2.RRr SW</apply>
     </shape>
     <shape feature="ROAD" baseLocation="NW">
@@ -493,8 +495,7 @@
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 290,290 390,350 610,350 690,290 999,0"/>
-        <apply allRotations="1">* N</apply>
-        <apply>BE.RrC N</apply> <!-- override alias  -->
+        <apply allRotations="1">* N</apply>        
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 999,0 950,80 550,280 340,560 250,850 80,980 0,999"/>
@@ -508,6 +509,10 @@
         <svg:polygon points="0,0 390,160 840,160 999,30 999,999 800,750 710,740 590,810 280,790 0,999"/>
         <apply>* WE</apply>
         <apply svg:transform="rotate(270 500 500)">* NS</apply>
+    </shape>
+    <shape feature="CITY">
+        <svg:polygon points="40,0 999,0 999,15 895,112 855,166 802,205 697,315 630,317 600,340 577,342 555,327 422,325 405,337 377,337 345,317 345,290 312,197 220,185 95,65"/>
+        <apply>BE.RrC N</apply>
     </shape>
     <shape feature="CITY">
         <svg:polygon points="0,0 40,0 310,200 350,220 550,220 580,200 690,210 730,230 850,200 900,100 999,10 990,990 770,710 700,720 600,790 490,780 460,760 300,770 260,810 210,800 0,999"/>
@@ -529,7 +534,7 @@
         <apply>IC.CRCR N</apply>
         <apply>IC.RrC.i N</apply>
         <apply>R2.IFC E</apply>
-        <apply>CC.RrC N</apply> <!-- override alias -->
+        <apply>CC.RrC N</apply>
         <apply>WR.RrC N</apply>
         <apply>BB.CCCR E</apply>
         <apply>HS.CRr.h N</apply>
@@ -892,6 +897,8 @@
         <apply>DG.CRr.g ER.SL</apply>
         <apply>BA.CRRR SR.WL</apply>
         <apply>BA.RrC SR.WL</apply>
+        <apply>BE.RrC SR.WL</apply>
+        <apply>CC.RrC SR.WL</apply>
         <apply>IC.RrC.i SR.WL</apply>
         <apply>IC.RRR.i SR.WL</apply>
         <apply>DG.RRR.g SR.WL</apply>
@@ -1097,6 +1104,8 @@
         <apply>BA.CcRr+ EL.SR</apply>
         <apply>BA.CRr EL.WL.WR.SR</apply>
         <apply>BA.RrC WR.EL.ER.SL</apply>
+        <apply>BE.RrC WR.EL.ER.SL</apply>
+        <apply>CC.RrC WR.EL.ER.SL</apply>
         <apply>IC.CCC SL.SR</apply>
         <apply>IC.CCc+ EL.ER</apply>
         <apply>IC.RCc.i SL.EL.ER</apply>
