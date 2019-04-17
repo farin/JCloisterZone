@@ -15,6 +15,7 @@ import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.FlockMessage;
 import com.jcloisterzone.wsio.message.FlockMessage.FlockOption;
@@ -89,7 +90,8 @@ public class ShepherdPhase extends Phase {
 		}).sum().intValue();
 
 		for (Tuple2<Meeple, FeaturePointer> t : shepherdsOnFarm) {
-			Shepherd m = (Shepherd) t._1;
+		    Shepherd m = (Shepherd) t._1;
+		    state = (new AddPoints(m.getPlayer(), points, PointCategory.SHEEP)).apply(state);
 			ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.SHEEP, false, t._2, m);
             state = state.appendEvent(scoreEvent);
             state = (new UndeployMeeple(m, false)).apply(state);
