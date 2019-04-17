@@ -1,6 +1,7 @@
 # Version history
 
-## upcoming release (4.4.0)
+## 4.4.0
+*2019-04-17*
 
 * Hills and Sheep expansion
    - note about hills: a tile hidden under hill is selected from all tiles including dragon tiles even they 
