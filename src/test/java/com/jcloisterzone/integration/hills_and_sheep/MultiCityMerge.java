@@ -40,4 +40,19 @@ public class MultiCityMerge extends IntegrationTest {
         assertEquals(8, alice.getPoints());
         assertEquals(8, bob.getPoints());
     }
+
+    /**
+     *  HS.CC!.v merging
+     */
+    @Test
+    public void testMultiCityMergeAbbey() {
+        GameState state = createGameState("saved-games/hills_and_sheep/multi_city_merge_abbey.jcz");
+
+        Array<PlayerScore> score = state.getPlayers().getScore();
+        PlayerScore alice = score.get(0);
+        PlayerScore bob = score.get(1);
+
+        assertEquals(4, alice.getPoints());
+        assertEquals(4, bob.getPoints());
+    }
 }
