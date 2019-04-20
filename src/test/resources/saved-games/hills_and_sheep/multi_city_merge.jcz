@@ -1,37 +1,48 @@
 {
-  "gameId": "1",
-  "name": "Test farm scoring",
+  "gameId": "1s2pfh8gim1puqfid4lj53kfa1",
+  "name": "",
   "appVersion": "4.4.0",
   "initialSeed": 1,
-  "created": "2017-01-01T00:00:00.000Z",
-  "annotations": {
-    "tilePack": {
-      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
-      "params": {
-         "drawOrder": [
-            "BA.C", "BA.RFr", "BA.CC.2", "BA.C", "BA.CFC.2", "BA.L", "#END"
-         ]
-       }
-    }
-  },
+  "created": "2019-04-20T21:32:32.708Z",
   "slots": [
-    {"number": 0, "serial": 1, "clientId": "1", "nickname": "Alice"},
-    {"number": 1, "serial": 2, "clientId": "2", "nickname": "Bob"}
+    {
+      "number": 0,
+      "serial": 4,
+      "clientId": "1",
+      "nickname": "Alice"
+    },
+    {
+      "number": 1,
+      "serial": 5,
+      "clientId": "2",
+      "nickname": "Bob"
+    }
   ],
-  "clocks": [0, 0],
+  "clocks": [
+    52878,
+    4393
+  ],
   "setup": {
     "expansions": {
-      "BASIC": 1
+      "BASIC": 1,
+      "HILLS_AND_SHEEP": 1
     },
-    "rules": {},
-    "capabilities": ["StandardGame"]
+    "rules": {
+      "MORE_TUNNEL_TOKENS": true,
+      "TUNNELIZE_ALL_EXPANSIONS": true,
+      "PIG_HERD_ON_GQ_FARM": true
+    },
+    "capabilities": [
+      "Sheep",
+      "StandardGame"
+    ]
   },
   "replay": [
     {
       "type": "PLACE_TILE",
       "payload": {
-        "tileId": "BA.C",
-        "rotation": "R180",
+        "tileId": "BA.Cccc+",
+        "rotation": "R0",
         "position": [
           0,
           -1
@@ -46,7 +57,7 @@
             0,
             -1
           ],
-          "location": "NL.NR.EL.ER.WL.WR"
+          "location": "NWSE"
         },
         "meepleId": "0.small.1"
       }
@@ -60,38 +71,8 @@
     {
       "type": "PLACE_TILE",
       "payload": {
-        "tileId": "BA.RFr",
-        "rotation": "R0",
-        "position": [
-          -1,
-          0
-        ]
-      }
-    },
-    {
-      "type": "DEPLOY_MEEPLE",
-      "payload": {
-        "pointer": {
-          "position": [
-            -1,
-            0
-          ],
-          "location": "NL.NR.EL.WR"
-        },
-        "meepleId": "1.small.1"
-      }
-    },
-    {
-      "type": "COMMIT",
-      "payload": {
-        "salt": 0
-      }
-    },
-    {
-      "type": "PLACE_TILE",
-      "payload": {
-        "tileId": "BA.CC.2",
-        "rotation": "R0",
+        "tileId": "BA.Cc+",
+        "rotation": "R90",
         "position": [
           -1,
           -1
@@ -111,7 +92,7 @@
     {
       "type": "PLACE_TILE",
       "payload": {
-        "tileId": "BA.C",
+        "tileId": "BA.Cc+",
         "rotation": "R180",
         "position": [
           -1,
@@ -120,17 +101,8 @@
       }
     },
     {
-      "type": "DEPLOY_MEEPLE",
-      "payload": {
-        "pointer": {
-          "position": [
-            -1,
-            -2
-          ],
-          "location": "NL.NR.EL.ER.WL.WR"
-        },
-        "meepleId": "1.small.2"
-      }
+      "type": "PASS",
+      "payload": {}
     },
     {
       "type": "COMMIT",
@@ -141,10 +113,31 @@
     {
       "type": "PLACE_TILE",
       "payload": {
-        "tileId": "BA.CFC.2",
-        "rotation": "R90",
+        "tileId": "HS.CC!.v",
+        "rotation": "R180",
         "position": [
-          -2,
+          0,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 0
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.Cc.1",
+        "rotation": "R0",
+        "position": [
+          1,
           -1
         ]
       }
@@ -162,10 +155,10 @@
     {
       "type": "PLACE_TILE",
       "payload": {
-        "tileId": "BA.L",
-        "rotation": "R0",
+        "tileId": "BA.Cc.1",
+        "rotation": "R270",
         "position": [
-          -2,
+          1,
           -2
         ]
       }
@@ -179,10 +172,21 @@
       "payload": {
         "salt": 0
       }
-    },
-    {
-      "type": "GAME_OVER",
-      "payload": {}
     }
-  ]
+  ],
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": {
+        "drawOrder": [
+          "BA.Cccc+",
+          "BA.Cc+",
+          "BA.Cc+",
+          "HS.CC!.v",
+          "BA.Cc.1",
+          "BA.Cc.1"
+        ]
+      }
+    }
+  }
 }
