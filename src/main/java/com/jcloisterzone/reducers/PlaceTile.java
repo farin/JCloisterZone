@@ -23,12 +23,16 @@ import com.jcloisterzone.game.state.PlacedTunnelToken;
 
 import io.vavr.Function3;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
+
+import javax.lang.model.type.ArrayType;
+import java.util.ArrayList;
 
 public class PlaceTile implements Reducer {
 
@@ -57,6 +61,8 @@ public class PlaceTile implements Reducer {
         GameState _state = state;
         java.util.Map<FeaturePointer, Feature> fpUpdate = new java.util.HashMap<>();
         java.util.Set<FeaturePointer> newTunnels = new java.util.HashSet<>();
+        java.util.List<Tuple3<FeaturePointer, FeaturePointer, Edge>> multiEdgePairsToMerge = new ArrayList<>();
+
         Stream.ofAll(tile.getInitialFeatures().values())
             .map(f -> f.placeOnBoard(pos, rot))
             .forEach(feature -> {
@@ -69,6 +75,7 @@ public class PlaceTile implements Reducer {
                 // merge features
                 if (feature instanceof MultiTileFeature) {
                     java.util.Set<Feature> alreadyMerged = new java.util.HashSet<>();
+                    java.util.Set<Edge> mergedEdges = new java.util.HashSet<>();
 
                     Function3<MultiTileFeature, FeaturePointer, MultiTileFeature, MultiTileFeature> merge = (f, fullFp, adj) -> {
                         // if needs merge, check if state contains recent feature version
@@ -97,11 +104,24 @@ public class PlaceTile implements Reducer {
                     	// find adjacent feature part (already placed)
                         Tuple2<FeaturePointer, Feature> adjTuple = _state.getFeaturePartOf2(adjFp);
                         MultiTileFeature adj = adjTuple == null ? null : (MultiTileFeature) adjTuple._2;
-                        if (adj == null || alreadyMerged.contains(adj)) {
-                            // adjacent tile is empty or adjacent feature is same as feature adjacent (already processed) to other side
-                            return f;
+                        if (adj != null) {
+                            if (!alreadyMerged.contains(adj)) {
+                                // adjacent tile is not empty and adjacent feature is not same as feature adjacent (already processed) to other side
+                                f = merge.apply(f, adjTuple._1, adj);
+                            }
+
+                            if (f instanceof City) {
+                                // this is needed to get correct open edges when merging HS.CC!.v tile) from two sided to same city
+                                Edge edge = new Edge(pos, adjFp.getPosition());
+                                mergedEdges.add(edge);
+                                Set<Edge> openEdges = ((City) f).getOpenEdges();
+                                if (openEdges.contains(edge)) {
+                                    f = ((City) f).setOpenEdges(openEdges.remove(edge));
+                                }
+                            }
+
                         }
-                    	return merge.apply(f, adjTuple._1, adj);
+                        return f;
                     });
 
                     // finally handle mutli-tile edge (Hills & Sheep HS.CC!.v tile)
@@ -110,31 +130,45 @@ public class PlaceTile implements Reducer {
                     	Set<Edge> openEdges = city.getOpenEdges();
                     	// if mutli-edge reference is no longer between open edges, another city was just merged this edge
                     	// and we need to merge third city there
-                    	Set<Tuple2<Edge, FeaturePointer>> mutliEdgeToMerge = city.getMultiEdges().filter(e -> !openEdges.contains(e._1));
+                    	Set<Tuple2<Edge, FeaturePointer>> mutliEdgeToMerge = city.getMultiEdges().filter(e -> mergedEdges.contains(e._1));
 
-//                    	System.err.println("------------");
-//                    	System.err.println(openEdges);
-//                    	System.err.println(city.getMultiEdges());
-//                    	System.err.println(mutliEdgeToMerge);
+                    	if (mutliEdgeToMerge.nonEmpty()) {
+                            for (Tuple2<Edge, FeaturePointer> multiEdge : mutliEdgeToMerge) {
+                                FeaturePointer fullFp = multiEdge._2;
+                                City adj = (City) _state.getFeature(fullFp);
 
-                    	for (Tuple2<Edge, FeaturePointer> multiEdge : mutliEdgeToMerge) {
-                    		FeaturePointer fullFp = multiEdge._2;
-                    		City adj = (City) _state.getFeature(fullFp);
+                                // finding feature pointer on pos is technicaly not necessary, any place can be used, but let it clear
+                                multiEdgePairsToMerge.add(new Tuple3<FeaturePointer, FeaturePointer, Edge>(
+                                        fullFp,
+                                        feature.getPlaces().find(fp -> fp.getPosition().equals(pos)).get(),
+                                        multiEdge._1
+                                ));
+                            }
 
-                    		if (!alreadyMerged.contains(adj)) {
-                    			city = (City) merge.apply(city, fullFp, adj);
-                    		}
-                    	}
-
-                    	city = city.setMultiEdges(city.getMultiEdges().removeAll(mutliEdgeToMerge));
-                    	city = city.setOpenEdges(city.getOpenEdges().removeAll(mutliEdgeToMerge.map(Tuple2::_1)));
-                    	feature = city;
+                            city = city.setMultiEdges(city.getMultiEdges().removeAll(mutliEdgeToMerge));
+                            city = city.setOpenEdges(city.getOpenEdges().removeAll(mutliEdgeToMerge.map(Tuple2::_1)));
+                            feature = city;
+                        }
                     }
                 }
                 for (FeaturePointer fp : feature.getPlaces()) {
                     fpUpdate.put(fp, feature);
                 }
             });
+
+        // merge hills and sheep multi edge after all normal merges are processed
+        for (Tuple3<FeaturePointer, FeaturePointer, Edge> t: multiEdgePairsToMerge) {
+            City c1 = (City) fpUpdate.get(t._1);
+            City c2 = (City) fpUpdate.get(t._2);
+
+            if (c1 != c2) {
+                City c = c1.merge(c2);
+                c = c.setOpenEdges(c.getOpenEdges().remove(t._3));
+                for (FeaturePointer fp : c.getPlaces()) {
+                    fpUpdate.put(fp, c);
+                }
+            }
+        }
 
         if (abbeyPlacement) {
             java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();

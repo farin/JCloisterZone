@@ -1,10 +1,15 @@
 # Version history
 
+## upcoming release (4.4.1)
+
+* fixed pweird" city tile from Hills and Sheep issue. Sometimes city remains unfinished when
+  placed and two edges of this tile was adjacent to same city.
+
 ## 4.4.0
 *2019-04-17*
 
 * Hills and Sheep expansion
-   - note about hills: a tile hidden under hill is selected from all tiles including dragon tiles even they 
+   - note about hills: a tile hidden under hill is selected from all tiles including dragon tiles even they
      are not in play yet (if hill is drawn before volcano).
      Because in reality no specific tile is internally selected at the time when hill is placed.
      With such implementation nobody can dig particular tiles from saved game because
@@ -13,7 +18,7 @@
 * fixed #263: game freeze when undo was used on meeple placement after using flying machine
 * fixed #276: ferry move removes inn from roads
 * fixed #262: error when wagon scores castle
-* newart plugin extended with King and Robber baron, and Cult.  
+* newart plugin extended with King and Robber baron, and Cult.
 
 ## 4.3.2
 *2019-04-11*
