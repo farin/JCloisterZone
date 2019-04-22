@@ -171,6 +171,8 @@ public class PlaceTile implements Reducer {
         }
 
         if (abbeyPlacement) {
+            // Abbey is always just placed tile
+            // it's not possible to be adjacent to placed tile because it abbey can be placed only to existing hole.
             java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();
             FeaturePointer abbeyFp = new FeaturePointer(pos, Location.CLOISTER);
             Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
