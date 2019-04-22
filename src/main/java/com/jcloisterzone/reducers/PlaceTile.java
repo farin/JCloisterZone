@@ -138,14 +138,11 @@ public class PlaceTile implements Reducer {
                                 ));
                             }
 
-                            city = city.setMultiEdges(city.getMultiEdges().removeAll(mutliEdgeToMerge));
                             feature = city;
                         }
                     }
                 }
-                for (FeaturePointer fp : feature.getPlaces()) {
-                    fpUpdate.put(fp, feature);
-                }
+                updateRefs(fpUpdate, feature);
             });
 
         // merge hills and sheep multi edge after all normal merges are processed
@@ -155,9 +152,7 @@ public class PlaceTile implements Reducer {
             City c = c1 == c2 ? c1 : c1.merge(c2);
 
             c = c.setOpenEdges(c.getOpenEdges().remove(t._3));
-            for (FeaturePointer fp : c.getPlaces()) {
-                fpUpdate.put(fp, c);
-            }
+            updateRefs(fpUpdate, c);
         }
 
         if (abbeyPlacement) {
@@ -168,25 +163,44 @@ public class PlaceTile implements Reducer {
             Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
             for (Location side : Location.SIDES) {
                 FeaturePointer adjPartOfPtr = new FeaturePointer(pos.add(side), side.rev());
-                CompletableFeature<?> adj = (CompletableFeature) state.getFeaturePartOf(adjPartOfPtr);
-                if (adj == null) {
+                CompletableFeature<?> originalAdj = (CompletableFeature) state.getFeaturePartOf(adjPartOfPtr);
+                if (originalAdj == null) {
                     //farm (or empty tile - which can happen only in debug when non-hole placement is enabled)
                     continue;
                 }
-                CompletableFeature<?> originalAdj = adj;
-                if (featureReplacement.get(originalAdj) != null) {
-                    // when same feature is merged on multiple abbey side, then use update feature objects
-                    // to not lost partial changes
-                    adj = featureReplacement.get(originalAdj);
-                }
+
+                // when same feature is merged on multiple abbey sides, then use update feature objects
+                // to not lost partial changes
+                CompletableFeature<?> adj = featureReplacement.getOrDefault(originalAdj, originalAdj);
                 FeaturePointer adjPtr = adj.getPlaces().find(fp -> adjPartOfPtr.isPartOf(fp)).get();
 
                 adj = adj.mergeAbbeyEdge(new Edge(pos, side));
                 adj = adj.setNeighboring(adj.getNeighboring().add(abbeyFp));
-                featureReplacement.put(originalAdj, adj);
-                for (FeaturePointer fp : adj.getPlaces()) {
-                    fpUpdate.put(fp, adj);
+
+                if (adj instanceof City) {
+                    ShortEdge edge = new ShortEdge(pos, side);
+                    City city = (City) adj;
+                    Tuple2<ShortEdge, FeaturePointer> multiEdge = city.getMultiEdges().find(me -> me._1.equals(edge)).getOrNull();
+                    if (multiEdge != null) {
+                        FeaturePointer multiEdgeFp = multiEdge._2;
+                        City originalCity2 = (City) state.getFeaturePartOf(multiEdgeFp);
+                        City city2 = (City) featureReplacement.getOrDefault(originalCity2, originalCity2);
+
+                        if (originalAdj == originalCity2) {
+                            adj = adj.setOpenEdges(adj.getOpenEdges().remove(multiEdge._1));
+                        } else {
+                            city2 = city2.setOpenEdges(city2.getOpenEdges().remove(multiEdge._1));
+                            city2 = city2.setNeighboring(city2.getNeighboring().add(abbeyFp));
+
+                            featureReplacement.put(originalCity2, city2);
+                            updateRefs(fpUpdate, city2);
+                            abbeyNeighboring = abbeyNeighboring.add(multiEdgeFp);
+                        }
+                    }
                 }
+
+                featureReplacement.put(originalAdj, adj);
+                updateRefs(fpUpdate, adj);
                 abbeyNeighboring = abbeyNeighboring.add(adjPtr);
             }
             if (!abbeyNeighboring.isEmpty()) {
@@ -210,6 +224,12 @@ public class PlaceTile implements Reducer {
             state = cap.onTilePlaced(state, placedTile);
         }
         return state;
+    }
+
+    private void updateRefs(java.util.Map<FeaturePointer, Feature> fpUpdate, Feature f) {
+        for (FeaturePointer fp : f.getPlaces()) {
+            fpUpdate.put(fp, f);
+        }
     }
 
 }

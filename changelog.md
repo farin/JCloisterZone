@@ -2,8 +2,9 @@
 
 ## upcoming release (4.4.1)
 
-* fixed pweird" city tile from Hills and Sheep issue. Sometimes city remains unfinished when
-  placed and two edges of this tile was adjacent to same city.
+* fixed "weird" city tile from Hills and Sheep issues
+   - Sometimes city remains unfinished when placed and two edges of this tile was adjacent to same city.
+   - Also city wasn't completed when Abbey was attached to "weird" edge
 
 ## 4.4.0
 *2019-04-17*
