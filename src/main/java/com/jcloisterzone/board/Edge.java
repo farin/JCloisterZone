@@ -126,7 +126,8 @@ public class Edge implements Serializable {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null) return false;
-        if (!(obj instanceof Edge)) return false;
+        // compare exact classes, ShortEdge shoudn't be equal Edge
+        if (!(obj.getClass().equals(getClass()))) return false;
         Edge e = (Edge) obj;
         return Objects.equals(p1, e.p1) && Objects.equals(p2, e.p2);
     }

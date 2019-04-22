@@ -40,7 +40,7 @@ public class TileBuilder {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private java.util.Map<Location, Feature> features;
-    private java.util.List<Tuple3<Edge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
+    private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
     private String tileId;
 
     private GameState state;
@@ -90,7 +90,7 @@ public class TileBuilder {
             }
         }
 
-        for (Tuple3<Edge, Location, FeaturePointer> multiEdge: multiEdges) {
+        for (Tuple3<ShortEdge, Location, FeaturePointer> multiEdge: multiEdges) {
         	java.util.Map.Entry<Location, Feature> matched = null;
         	for (java.util.Map.Entry<Location, Feature> entry : features.entrySet()) {
         		if (multiEdge._2.isPartOf(entry.getKey())) {
@@ -103,8 +103,8 @@ public class TileBuilder {
         		throw new IllegalArgumentException("Matching city not found");
         	}
         	City target = (City) matched.getValue();
-        	assert target.getOpenEdges().contains(multiEdge._1);
-        	Set<Tuple2<Edge, FeaturePointer>> targeMultiEdges = target.getMultiEdges();
+        	assert target.getOpenEdges().contains(multiEdge._1.toEdge());
+        	Set<Tuple2<ShortEdge, FeaturePointer>> targeMultiEdges = target.getMultiEdges();
         	targeMultiEdges = targeMultiEdges.add(new Tuple2<>(multiEdge._1, multiEdge._3));
         	target = target.setMultiEdges(targeMultiEdges);
         	features.put(matched.getKey(), target);
@@ -187,8 +187,8 @@ public class TileBuilder {
         	if (!multiEdgeLoc.isEdgeLocation()) {
         		throw new IllegalArgumentException("Multi edge must be side location");
         	}
-        	Edge multiEdge = new Edge(Position.ZERO, multiEdgeLoc);
-        	multiEdges.add(new Tuple3<Edge, Location, FeaturePointer>(multiEdge, multiEdgeLoc, place));
+        	ShortEdge multiEdge = new ShortEdge(Position.ZERO, multiEdgeLoc);
+        	multiEdges.add(new Tuple3<ShortEdge, Location, FeaturePointer>(multiEdge, multiEdgeLoc, place));
         	openEdges = openEdges.add(multiEdge);
         }
 

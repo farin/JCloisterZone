@@ -6,6 +6,7 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
+import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
@@ -21,7 +22,7 @@ public class City extends CompletableFeature<City> {
 
     private static final long serialVersionUID = 1L;
 
-    private final Set<Tuple2<Edge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
+    private final Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
     private final int pennants;
     private final Map<TradeGoods, Integer> tradeGoods;
     private final boolean besieged, cathedral, princess, castleBase;
@@ -33,7 +34,7 @@ public class City extends CompletableFeature<City> {
 
     public City(List<FeaturePointer> places,
             Set<Edge> openEdges, Set<FeaturePointer> neighboring,
-            Set<Tuple2<Edge, FeaturePointer>> multiEdges,
+            Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges,
             int pennants,
             Map<TradeGoods, Integer> tradeGoods, boolean besieged, boolean cathedral, boolean princess,
             boolean castleBase) {
@@ -111,12 +112,12 @@ public class City extends CompletableFeature<City> {
         return tradeGoods.merge(city.tradeGoods, (a, b) -> a + b);
     }
 
-    public City setMultiEdges(Set<Tuple2<Edge, FeaturePointer>> multiEdges) {
+    public City setMultiEdges(Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges) {
         if (this.multiEdges == multiEdges) return this;
         return new City(places, openEdges, neighboring, multiEdges, pennants, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
-    public Set<Tuple2<Edge, FeaturePointer>> getMultiEdges() {
+    public Set<Tuple2<ShortEdge, FeaturePointer>> getMultiEdges() {
 		return multiEdges;
 	}
 
@@ -211,13 +212,13 @@ public class City extends CompletableFeature<City> {
         return _tr("City");
     }
 
-    protected Set<Tuple2<Edge, FeaturePointer>> mergeMultiEdges(City city) {
+    protected Set<Tuple2<ShortEdge, FeaturePointer>> mergeMultiEdges(City city) {
     	return multiEdges.addAll(city.multiEdges);
     }
 
-    protected Set<Tuple2<Edge, FeaturePointer>> placeOnBoardMultiEdges(Position pos, Rotation rot) {
+    protected Set<Tuple2<ShortEdge, FeaturePointer>> placeOnBoardMultiEdges(Position pos, Rotation rot) {
     	return multiEdges.map(t -> {
-    		Edge edge = t._1.rotateCW(Position.ZERO, rot).translate(pos);
+    		ShortEdge edge = t._1.rotateCW(Position.ZERO, rot).translate(pos);
     		FeaturePointer fp = t._2.rotateCW(rot).translate(pos);
     		return new Tuple2<>(edge, fp);
     	});
