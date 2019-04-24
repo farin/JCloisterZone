@@ -1,6 +1,7 @@
 # Version history
 
-## upcoming release (4.4.1)
+## 4.4.1
+*2019-04-24*
 
 * fixed "weird" city tile from Hills and Sheep issues
    - Sometimes city remains unfinished when placed and two edges of this tile was adjacent to same city.
