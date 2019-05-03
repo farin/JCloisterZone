@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.plugin.MergedAliases;
 import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.ImmutablePoint;
 
@@ -31,6 +30,7 @@ public class PlugableResourceManager implements ResourceManager {
         reload();
     }
 
+    @Override
     public void reload() {
         Stream<Plugin> enabledPlugins = Stream.ofAll(plugins)
             .filter(Plugin::isEnabled);
@@ -42,8 +42,7 @@ public class PlugableResourceManager implements ResourceManager {
             .append(new DefaultResourceManager())
             .toVector();
 
-        MergedAliases mergedAliases = new MergedAliases(enabledPlugins);
-        enabledPlugins.forEach(p -> p.setMergedAliases(mergedAliases));
+        enabledPlugins.forEach(p -> p.setParentResourceManager(this));
     }
 
     @Override
@@ -78,9 +77,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
-            ImmutablePoint result = manager.getMeeplePlacement(tile, rot, loc);
+            ImmutablePoint result = manager.getMeeplePlacement(effectiveTileId, tile, rot, loc);
             if (result != null) return result;
         }
         return null;
@@ -115,9 +114,9 @@ public class PlugableResourceManager implements ResourceManager {
 
 
     @Override
-    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
+    public FeatureArea getFeatureArea(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
         for (ResourceManager manager : managers) {
-            FeatureArea result = manager.getFeatureArea(tile, rot, loc);
+            FeatureArea result = manager.getFeatureArea(effectiveTileId, tile, rot, loc);
             if (result != null) return result;
         }
         return null;

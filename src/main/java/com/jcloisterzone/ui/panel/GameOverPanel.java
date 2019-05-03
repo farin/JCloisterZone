@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.event.play.TilePlacedEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Rule;
@@ -30,6 +31,7 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TradeGoodsCapability;
 import com.jcloisterzone.game.capability.WindRoseCapability;
@@ -121,12 +123,13 @@ public class GameOverPanel extends JPanel {
             //setTitle(_tr("Game overview"));
             boolean hasBazaars = capabilities.contains(BazaarCapability.class) && !state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
 
-            StringBuilder rowSpec = new StringBuilder("[][]10[]10[]20[][][][]");
+            StringBuilder rowSpec = new StringBuilder("[][]10[][]10[][]20[][][][]");
             if (capabilities.contains(CastleCapability.class)) rowSpec.append("[]");
             rowSpec.append("20"); //gap
             if (capabilities.contains(KingAndRobberBaronCapability.class)) rowSpec.append("[][]20");
             if (capabilities.contains(TradeGoodsCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(GoldminesCapability.class)) rowSpec.append("[]");
+            if (capabilities.contains(SheepCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(FairyCapability.class)) rowSpec.append("[]");
             if (capabilities.contains(TowerCapability.class)) rowSpec.append("[]");
             if (hasBazaars) rowSpec.append("[]");
@@ -139,6 +142,8 @@ public class GameOverPanel extends JPanel {
             add(new JLabel(_tr("Player")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Rank")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Total points")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Tiles placed")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Time consumed")), getLegendSpec(0, gridy++));
 
             add(new JLabel(_tr("Roads")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Cities")), getLegendSpec(0, gridy++));
@@ -158,6 +163,9 @@ public class GameOverPanel extends JPanel {
             }
             if (capabilities.contains(GoldminesCapability.class)) {
                 add(new JLabel(_tr("Gold")), getLegendSpec(0, gridy++));
+            }
+            if (capabilities.contains(SheepCapability.class)) {
+                add(new JLabel(_tr("Sheep")), getLegendSpec(0, gridy++));
             }
             if (capabilities.contains(FairyCapability.class)) {
                 add(new JLabel(_tr("Fairy")), getLegendSpec(0, gridy++));
@@ -184,6 +192,16 @@ public class GameOverPanel extends JPanel {
                 add(new JLabel(getRank(players, gridx), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPoints(state), SwingConstants.CENTER), getSpec(gridx, gridy++));
 
+                int tilesPlaced = state.getEvents().filter(ev -> ev instanceof TilePlacedEvent && Integer.valueOf(player.getIndex()).equals(ev.getMetadata().getTriggeringPlayerIndex())).size();
+                add(new JLabel("" +tilesPlaced, SwingConstants.CENTER), getSpec(gridx, gridy++));
+
+                int seconds = (int)(game.getClocks().get(player.getIndex()).getTime() / 1000);
+                int hours = seconds / 3600;
+                seconds = seconds % 3600;
+                int minutes = seconds / 60;
+                seconds = seconds % 60;
+                add(new JLabel(String.format("%d:%02d:%02d", hours, minutes, seconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
+
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
@@ -202,6 +220,9 @@ public class GameOverPanel extends JPanel {
                 }
                 if (capabilities.contains(GoldminesCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(state, PointCategory.GOLD), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                }
+                if (capabilities.contains(SheepCapability.class)) {
+                    add(new JLabel("" +player.getPointsInCategory(state, PointCategory.SHEEP), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 }
                 if (capabilities.contains(FairyCapability.class)) {
                     add(new JLabel("" +player.getPointsInCategory(state, PointCategory.FAIRY), SwingConstants.CENTER), getSpec(gridx, gridy++));

@@ -25,10 +25,16 @@ import io.vavr.collection.Stream;
 
 public class CastleCapability extends Capability<Void> {
 
+	public static enum CastleToken implements Token {
+		CASTLE;
+	}
+
+	private static final long serialVersionUID = 1L;
+
     @Override
     public GameState onStartGame(GameState state) {
         int tokens = state.getPlayers().length() < 5 ? 3 : 2;
-        return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.CASTLE, tokens));
+        return state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(CastleToken.CASTLE, tokens));
     }
 
     @Override

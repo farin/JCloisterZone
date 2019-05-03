@@ -13,6 +13,8 @@ import io.vavr.collection.Vector;
 
 public class YagaCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         Vector<Element> yagaEl = XMLUtils.getElementStreamByTagName(tileElements, "yaga-hut").toVector();

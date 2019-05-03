@@ -60,7 +60,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
+    public ImmutablePoint getMeeplePlacement(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
         return null;
     }
 
@@ -79,7 +79,7 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(Tile tile, Rotation rotation, Location loc) {
+    public FeatureArea getFeatureArea(String effectiveTileId, Tile tile, Rotation rotation, Location loc) {
 //        if (loc.isCityOfCarcassonneQuarter()) {
 //            double rx = NORMALIZED_SIZE * 0.6;
 //            double ry = NORMALIZED_SIZE * 0.6;

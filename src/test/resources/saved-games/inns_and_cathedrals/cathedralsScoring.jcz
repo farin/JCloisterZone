@@ -1,7 +1,7 @@
 {
   "gameId": "1",
   "name": "Test scoring when city/road has multiple parts on same tile",
-  "appVersion": "4.0.0",
+  "appVersion": "4.4.0",
   "initialSeed": 1,
   "created": "2017-01-01T00:00:00.000Z",
   "annotations": {
@@ -57,7 +57,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -471010245328329796
+        "salt": -471010245328329796
       }
     },
     {
@@ -78,7 +78,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 5226483826994678049
+        "salt": 5226483826994678049
       }
     },
     {
@@ -99,7 +99,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -5781014131322451782
+        "salt": -5781014131322451782
       }
     },
     {
@@ -129,7 +129,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 5273240344717429084
+        "salt": 5273240344717429084
       }
     },
     {
@@ -150,7 +150,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -8497610715639962093
+        "salt": -8497610715639962093
       }
     },
     {
@@ -171,7 +171,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 1395499967274068615
+        "salt": 1395499967274068615
       }
     },
     {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.jcloisterzone.Immutable;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 
 @Immutable
 public class PlacedTunnelToken implements Serializable {
@@ -12,11 +12,10 @@ public class PlacedTunnelToken implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final int playerIndex;
-    private final Token token;
+    private final Tunnel token;
 
-    public PlacedTunnelToken(int playerIndex, Token token) {
+    public PlacedTunnelToken(int playerIndex, Tunnel token) {
         assert playerIndex > -1;
-        assert token == Token.TUNNEL_A || token == Token.TUNNEL_B || token == Token.TUNNEL_C;
         this.playerIndex = playerIndex;
         this.token = token;
     }
@@ -25,7 +24,7 @@ public class PlacedTunnelToken implements Serializable {
         return playerIndex;
     }
 
-    public Token getToken() {
+    public Tunnel getToken() {
         return token;
     }
 

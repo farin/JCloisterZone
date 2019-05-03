@@ -4,7 +4,6 @@ import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.RemovMageOrWithAction;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
@@ -40,7 +39,7 @@ public class MageAndWitchPhase extends Phase {
         Completable witchFeature = (Completable) ns.getWitch().getFeature(state);
         boolean mageAndWithOnSameFeature = mageFeature != null && mageFeature == witchFeature;
 
-        if (tile.getTrigger() != TileTrigger.MAGE && !mageAndWithOnSameFeature) {
+        if (!tile.hasModifier(MageAndWitchCapability.MAGE_TRIGGER) && !mageAndWithOnSameFeature) {
             return next(state);
         }
 

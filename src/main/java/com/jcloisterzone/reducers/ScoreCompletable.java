@@ -9,7 +9,7 @@ import com.jcloisterzone.game.state.GameState;
 
 public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReducer {
 
-    // points is store to instance and can be accesed after reduce
+    // points is store to instance and can be accessed after reduce
     private int points;
 
     public ScoreCompletable(Completable feature, boolean isFinal) {

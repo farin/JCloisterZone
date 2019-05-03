@@ -19,6 +19,7 @@ import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.ui.annotations.LinkedImage;
@@ -67,8 +68,9 @@ public class ActionWrapper implements Comparable<ActionWrapper> {
             if (meepleType.equals(Wagon.class)) return 12;
             if (meepleType.equals(Mayor.class)) return 13;
             if (meepleType.equals(Builder.class)) return 14;
-            if (meepleType.equals(Pig.class)) return 15;
-            if (meepleType.equals(Phantom.class)) return 16;
+            if (meepleType.equals(Shepherd.class)) return 15;
+            if (meepleType.equals(Pig.class)) return 16;            
+            if (meepleType.equals(Phantom.class)) return 17;
             return 19;
         }
 

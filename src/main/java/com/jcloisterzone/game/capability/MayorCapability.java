@@ -10,6 +10,8 @@ import io.vavr.collection.List;
 
 public class MayorCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
         return List.of(new Mayor(idProvider.generateId(Mayor.class), player));

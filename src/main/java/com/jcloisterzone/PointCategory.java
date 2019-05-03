@@ -11,6 +11,7 @@ public enum PointCategory {
     TRADE_GOODS(true),
     GOLD(true),
     FAIRY(false),
+    SHEEP(false),
     TOWER_RANSOM(false),
     BIGGEST_CITY(false),
     LONGEST_ROAD(false),

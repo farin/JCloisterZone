@@ -10,6 +10,7 @@ import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
+import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.CapabilitiesState;
 import com.jcloisterzone.ui.Client;
@@ -29,6 +30,7 @@ import com.jcloisterzone.ui.grid.layer.GoldLayer;
 import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
 import com.jcloisterzone.ui.grid.layer.MeepleLayer;
 import com.jcloisterzone.ui.grid.layer.PlacementHistory;
+import com.jcloisterzone.ui.grid.layer.SheepLayer;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
 import com.jcloisterzone.ui.grid.layer.TileLayer;
 import com.jcloisterzone.ui.grid.layer.TilePlacementLayer;
@@ -90,6 +92,10 @@ public class MainPanel extends JPanel implements UIEventListener {
 
         gridPanel.addLayer(new TokenLayer(gridPanel, gc));
 
+        if (capabs.contains(SheepCapability.class)) {
+            gridPanel.addLayer(new SheepLayer(gridPanel, gc));
+        }
+
         gridPanel.addLayer(meepleLayer);
 
         if (capabs.contains(BridgeCapability.class)) {
@@ -103,7 +109,6 @@ public class MainPanel extends JPanel implements UIEventListener {
         }
 
         gridPanel.addLayer(new FollowerAreaLayer(gridPanel, gc, meepleLayer), false);
-
 
         gridPanel.addLayer(new FeatureAreaLayer(gridPanel, gc), false);
         gridPanel.addLayer(new TileActionLayer(gridPanel, gc), false);
@@ -154,12 +159,4 @@ public class MainPanel extends JPanel implements UIEventListener {
         gridPanel.hideLayer(TilePlacementLayer.class);
         gridPanel.removeInteractionPanels();
     }
-
-
-//    private void hideMageWitchPanel() {
-//        if (gridPanel.getMageWitchPanel() != null) {
-//            gridPanel.remove(gridPanel.getMageWitchPanel());
-//            gridPanel.revalidate();
-//        }
-//    }
 }

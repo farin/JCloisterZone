@@ -10,6 +10,8 @@ import io.vavr.collection.List;
 
 public class PhantomCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
         return List.of(new Phantom(idProvider.generateId(Phantom.class), player));

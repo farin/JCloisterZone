@@ -25,6 +25,7 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
     }
 
     public abstract T mergeAbbeyEdge(Edge edge);
+    public abstract T setOpenEdges(Set<Edge> openEdges);
     @Override
     public abstract T setNeighboring(Set<FeaturePointer> neighboring);
 

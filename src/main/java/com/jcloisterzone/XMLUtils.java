@@ -121,6 +121,14 @@ public class XMLUtils {
         return Stream.of(tokens).map(s -> Location.valueOf(s));
     }
 
+    public static Location attrAsLocation(Element e, String attr) {
+        String[] tokens = e.getAttribute(attr).trim().split("\\s+");
+        if (tokens.length != 1) {
+        	throw new IllegalArgumentException("Invalid number of locations. " + e.getAttribute(attr));
+        }
+        return Location.valueOf(tokens[0]);
+    }
+
     public static String getTileId(Expansion expansion, Element xml) {
         return expansion.getCode() + "." + xml.getAttribute("id");
     }

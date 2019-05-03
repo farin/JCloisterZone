@@ -17,6 +17,7 @@ import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.ImmutablePoint;
 import com.jcloisterzone.ui.controls.action.ActionWrapper;
@@ -32,18 +33,17 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
 
     private Map<Token, Image> images = new HashMap<>();
     private ActionWrapper actionWrapper;
-    //private LittleBuildingAction action;
-    private Token selected = null;
+    private LittleBuilding selected = null;
 
-    private HashMap<Token, Rectangle> areas = new HashMap<>();
+    private HashMap<LittleBuilding, Rectangle> areas = new HashMap<>();
 
     int icoSize, padding;
 
     public LittleBuildingActionLayer(GridPanel gridPanel, GameController gc) {
         super(gridPanel, gc);
-        images.put(Token.LB_SHED, rm.getImage("neutral/lb_shed"));
-        images.put(Token.LB_HOUSE, rm.getImage("neutral/lb_house"));
-        images.put(Token.LB_TOWER, rm.getImage("neutral/lb_tower"));
+        images.put(LittleBuilding.LB_SHED, rm.getImage("neutral/lb_shed"));
+        images.put(LittleBuilding.LB_HOUSE, rm.getImage("neutral/lb_house"));
+        images.put(LittleBuilding.LB_TOWER, rm.getImage("neutral/lb_tower"));
         recomputeDimenensions(getTileWidth());
     }
 
@@ -90,20 +90,13 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
         super.boardRotated(boardRotation);
     }
 
-    private int geBuildingIndex(Token lb) {
-        if (lb == Token.LB_SHED) return 0;
-        if (lb == Token.LB_HOUSE) return 1;
-        if (lb == Token.LB_TOWER) return 2;
-        throw new IllegalArgumentException();
-    }
-
-    private int getIconX(Token lb) {
+    private int getIconX(LittleBuilding lb) {
         int x = -icoSize / 2 - padding * 3;
-        return x + geBuildingIndex(lb) * (icoSize + 3*padding);
+        return x + lb.ordinal() * (icoSize + 3*padding);
     }
 
     @SuppressWarnings("unused")
-    private int getIconY(Token lb) {
+    private int getIconY(LittleBuilding lb) {
         return -icoSize / 2;
     }
 
@@ -115,7 +108,7 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
         Position pos = action.getPosition();
         AffineTransform at = getAffineTransformIgnoringRotation(pos);
 
-        for (Token lb : Token.littleBuildingValues()) {
+        for (LittleBuilding lb : LittleBuilding.values()) {
             if (action.getOptions().contains(lb)) {
                 int x = getIconX(lb), y = getIconY(lb);
                 Rectangle rect = new Rectangle(x-padding, y-padding, icoSize+2*padding, icoSize+2*padding);
@@ -133,7 +126,7 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
         ImmutablePoint shadowOffset = new ImmutablePoint(3, 3);
         shadowOffset = shadowOffset.rotate(gridPanel.getBoardRotation().inverse());
 
-        for (Token lb : Token.littleBuildingValues()) {
+        for (LittleBuilding lb : LittleBuilding.values()) {
             Rectangle r = areas.get(lb);
             if (r == null) continue;
             g2.setComposite(SHADOW_COMPOSITE);
@@ -165,8 +158,8 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
             Point2D point = gridPanel.getRelativePoint(e.getPoint());
             int x = (int) point.getX();
             int y = (int) point.getY();
-            Token newValue = null;
-            for (Entry<Token, Rectangle> entry : areas.entrySet()) {
+            LittleBuilding newValue = null;
+            for (Entry<LittleBuilding, Rectangle> entry : areas.entrySet()) {
                 if (entry.getValue().contains(x, y)) {
                     newValue = entry.getKey();
                     break;

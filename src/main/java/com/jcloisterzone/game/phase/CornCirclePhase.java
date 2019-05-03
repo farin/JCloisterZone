@@ -19,6 +19,7 @@ import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CornCircleCapability;
+import com.jcloisterzone.game.capability.CornCircleCapability.CornCircleModifier;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -45,7 +46,11 @@ public class CornCirclePhase extends Phase {
 
     private Class<? extends Feature> getCornType(GameState state) {
         PlacedTile placedTile = state.getLastPlaced();
-        return  placedTile.getTile().getCornCircle();
+
+        return placedTile.getTile().getTileModifiers()
+        		.find(m -> m instanceof CornCircleModifier)
+        		.map(m -> ((CornCircleModifier)m).getFeatureType())
+        		.getOrNull();
     }
 
 

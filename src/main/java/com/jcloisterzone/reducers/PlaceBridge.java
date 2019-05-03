@@ -8,8 +8,8 @@ import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Bridge;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 
@@ -46,7 +46,7 @@ public class PlaceBridge implements Reducer {
         state = state.mapCapabilityModel(BridgeCapability.class, model -> model.add(ptr));
         if (!silent) {
             state = state.appendEvent(
-                new TokenPlacedEvent(PlayEventMeta.createWithActivePlayer(state), Token.BRIDGE, ptr)
+                new TokenPlacedEvent(PlayEventMeta.createWithActivePlayer(state), BrigeToken.BRIDGE, ptr)
             );
         }
 

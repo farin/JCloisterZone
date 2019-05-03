@@ -1,6 +1,6 @@
 package com.jcloisterzone.wsio.message;
 
-public interface WsSaltMeesage extends WsInGameMessage {
+public interface WsSaltMessage extends WsInGameMessage {
     long getSalt();
     void setSalt(long seed);
 }

@@ -1,7 +1,7 @@
 {
   "gameId": "1",
   "name": "Test scoring when city/road has multiple parts on same tile",
-  "appVersion": "4.0.0",
+  "appVersion": "4.4.0",
   "initialSeed": 1,
   "created": "2017-01-01T00:00:00.000Z",
   "annotations": {
@@ -55,7 +55,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 2010968943090286199
+        "salt": 0
       }
     },
     {
@@ -85,7 +85,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -5034286322062475830
+        "salt": 0
       }
     },
     {
@@ -106,7 +106,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 5235692220528777487
+        "salt": 0
       }
     },
     {
@@ -136,7 +136,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 5173816055025545627
+        "salt": 0
       }
     },
     {
@@ -157,7 +157,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -5331115278852252461
+        "salt": 0
       }
     },
     {
@@ -178,7 +178,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 739074212969356032
+        "salt": 0
       }
     },
     {
@@ -199,7 +199,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 8239306827944360609
+        "salt": 0
       }
     },
     {
@@ -220,7 +220,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 8072390463455096137
+        "salt": 0
       }
     },
     {
@@ -241,7 +241,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 296755571141370125
+        "salt": 0
       }
     },
     {
@@ -271,7 +271,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -5078302348296795641
+        "salt": 0
       }
     },
     {
@@ -292,7 +292,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 3686494453446621573
+        "salt": 0
       }
     },
     {
@@ -313,7 +313,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -7017364662445884209
+        "salt": 0
       }
     },
     {
@@ -334,7 +334,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -4127833834348375115
+        "salt": 0
       }
     },
     {
@@ -355,7 +355,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -7843205783097446595
+        "salt": 0
       }
     }
   ]

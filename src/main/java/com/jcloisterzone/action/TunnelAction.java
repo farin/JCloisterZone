@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
@@ -15,15 +15,14 @@ import io.vavr.collection.Set;
 @LinkedGridLayer(FeatureAreaLayer.class)
 public class TunnelAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {
 
-    private final Token token;
+    private final Tunnel token;
 
-    public TunnelAction(Set<FeaturePointer> options, Token token) {
+    public TunnelAction(Set<FeaturePointer> options, Tunnel token) {
         super(options);
-        assert token.isTunnel();
         this.token = token;
     }
 
-    public Token getToken() {
+    public Tunnel getToken() {
         return token;
     }
 

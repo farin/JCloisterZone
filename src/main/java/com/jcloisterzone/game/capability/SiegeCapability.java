@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
@@ -16,6 +16,10 @@ import io.vavr.collection.Vector;
 
 
 public final class SiegeCapability extends Capability<Void> {
+
+	private static final long serialVersionUID = 1L;
+
+	public static final TileModifier SIEGE_ESCAPE_TILE = new TileModifier("SiegeEscapeTile");
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
@@ -31,7 +35,7 @@ public final class SiegeCapability extends Capability<Void> {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "city")
                 .filter(cityEl -> attributeBoolValue(cityEl, "besieged"))
                 .isEmpty()) {
-            tile = tile.setTileTrigger(TileTrigger.BESIEGED);
+            tile = tile.addTileModifier(SIEGE_ESCAPE_TILE);
         }
         return tile;
     }

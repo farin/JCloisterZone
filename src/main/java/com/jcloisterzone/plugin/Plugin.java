@@ -57,7 +57,6 @@ import com.jcloisterzone.ui.resources.TileImage;
 import com.jcloisterzone.ui.resources.svg.ThemeGeometry;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
@@ -80,8 +79,7 @@ public class Plugin implements ResourceManager {
     private boolean enabled;
 
     private PluginAliases aliases;
-    /** reference to merged aliases of all plugins */
-    private Aliases mergedAliases;
+    private ResourceManager parentResourceManager;
 
     private ThemeGeometry pluginGeometry;
     private Insets imageOffset =  new Insets(0, 0, 0, 0);
@@ -112,7 +110,7 @@ public class Plugin implements ResourceManager {
     private URL getFixedURL() throws PluginLoadException {
         try {
             URL url = path.toUri().toURL();
-            if (Files.isRegularFile(path)) {
+            if (Files.isRegularFile(path) || url.toString().endsWith("/")) {
                 return url;
             }
             return new URL(url.toString() + "/");
@@ -328,30 +326,6 @@ public class Plugin implements ResourceManager {
         }
     }
 
-    protected String getEffectiveTileIdForImage(String tileId) {
-        if (!isEnabled()) {
-            return null;
-        }
-        String aliasedId = mergedAliases.getImageAlias(tileId);
-        if (aliasedId != null) {
-            tileId = aliasedId;
-        }
-        String expCode = tileId.split("\\.")[0];
-        return supportedExpansions.contains(expCode) ? tileId : null;
-    }
-
-    protected String getEffectiveTileIdForGeometry(String tileId) {
-        if (!isEnabled()) {
-            return null;
-        }
-        String aliasedId = mergedAliases.getGeometryAlias(tileId);
-        if (aliasedId != null) {
-            tileId = aliasedId;
-        }
-        String expCode = tileId.split("\\.")[0];
-        return supportedExpansions.contains(expCode) ? tileId : null;
-    }
-
     public boolean isExpansionSupported(Expansion exp) {
         return supportedExpansions.contains(exp.getCode());
     }
@@ -364,14 +338,32 @@ public class Plugin implements ResourceManager {
         return imageRatioY/(double)imageRatioX;
     }
 
+    private boolean isTileSupported(String tileId) {
+        return supportedExpansions.contains(tileId.split("\\.", 2)[0]);
+    }
+
     @Override
     public TileImage getTileImage(String tileId, Rotation rot) {
-        tileId = getEffectiveTileIdForImage(tileId);
-        if (tileId == null) {
+        if (!isEnabled()) {
             return null;
         }
+
+        String aliasId = aliases.getImageAlias(tileId);
+        if (aliasId != null) {
+            if (!isTileSupported(aliasId)) {
+                // cross plugin alias, resolve it from parent resource manager
+                return parentResourceManager.getTileImage(aliasId, rot);
+            }
+            tileId = aliasId;
+        } else {
+            if (!isTileSupported(tileId)) {
+                return null;
+            }
+        }
+
         String[] tokens = tileId.split("\\.", 2);
-        String baseName = "tiles/"+tokens[0] + "/" + tokens[1];
+        String baseName = String.format("tiles/%s/%s", tokens[0], tokens[1]);
+
         String fileName;
         Image img;
         // first try to find rotation specific image
@@ -411,20 +403,36 @@ public class Plugin implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
-        String tileId = getEffectiveTileIdForGeometry(tile.getId());
-        if (tileId == null) return null;
+    public ImmutablePoint getMeeplePlacement(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
+        if (!isEnabled()) {
+            return null;
+        }
+
+        String aliasId = aliases.getGeometryAlias(effectiveTileId);
+        if (aliasId != null) {
+            if (!isTileSupported(aliasId)) {
+                // cross plugin alias, resolve it from parent resource manager
+                return parentResourceManager.getMeeplePlacement(aliasId, tile, rot, loc);
+            }
+            effectiveTileId = aliasId;
+        } else {
+            if (!isTileSupported(effectiveTileId)) {
+                return null;
+            }
+        }
+
         if (loc == Location.MONASTERY) loc = Location.CLOISTER;
 
         Location iniLoc = loc.rotateCCW(rot);
         Feature feature = tile.getInitialFeatures().get(iniLoc).get();
+        Class<? extends Feature> featureClass = feature.getClass();
 
-        ImmutablePoint point = pluginGeometry.getMeeplePlacement(tileId, feature.getClass(), iniLoc);
+        ImmutablePoint point = pluginGeometry.getMeeplePlacement(effectiveTileId, featureClass, iniLoc);
         if (point == null) {
-            point = DEFAULT_GEOMETRY.getMeeplePlacement(tileId, feature.getClass(), iniLoc);
+            point = DEFAULT_GEOMETRY.getMeeplePlacement(effectiveTileId, featureClass, iniLoc);
         }
         if (point == null) {
-            logger.warn("No point defined for <" + (new FeatureDescriptor(tile.getId(), feature.getClass(), loc)) + ">");
+            logger.warn("No point defined for <" + (new FeatureDescriptor(tile.getId(), featureClass, loc)) + ">");
             point = ImmutablePoint.ZERO;
         }
         return point.rotate100(rot);
@@ -538,23 +546,35 @@ public class Plugin implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
+    public FeatureArea getFeatureArea(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
+        if (!isEnabled()) {
+            return null;
+        }
+
         Tuple2<Tile, Rotation> key = new Tuple2<>(tile, rot);
         Map<Location, FeatureArea> areas = areaCache.get(key);
         if (areas == null) {
-            areas = getTileFeatureAreas(tile, rot);
+            String aliasId = aliases.getGeometryAlias(effectiveTileId);
+            if (aliasId != null) {
+                if (!isTileSupported(aliasId)) {
+                    // cross plugin alias, resolve it from parent resource manager
+                    return parentResourceManager.getFeatureArea(aliasId, tile, rot, loc);
+                }
+                effectiveTileId = aliasId;
+            } else {
+                if (!isTileSupported(tile.getId())) {
+                    return null;
+                }
+            }
+
+            areas = getTileFeatureAreas(tile, rot, effectiveTileId);
             areaCache.put(key, areas);
         }
         return areas.get(loc).getOrNull();
     }
 
 
-    private Map<Location, FeatureArea> getTileFeatureAreas(Tile tile, Rotation rot) {
-        String effectiveTileId = getEffectiveTileIdForGeometry(tile.getId());
-        if (effectiveTileId == null) {
-            return HashMap.empty();
-        }
-
+    private Map<Location, FeatureArea> getTileFeatureAreas(Tile tile, Rotation rot, String effectiveTileId) {
         Map<Location, Feature> features = tile.getInitialFeatures();
 
         Location complementFarm = features
@@ -704,12 +724,12 @@ public class Plugin implements ResourceManager {
         return aliases;
     }
 
-    public Aliases getMergedAliases() {
-        return mergedAliases;
+    public ResourceManager getParentResourceManager() {
+        return parentResourceManager;
     }
 
-    public void setMergedAliases(Aliases mergedAliases) {
-        this.mergedAliases = mergedAliases;
+    public void setParentResourceManager(ResourceManager parentResourceManager) {
+        this.parentResourceManager = parentResourceManager;
     }
 }
 

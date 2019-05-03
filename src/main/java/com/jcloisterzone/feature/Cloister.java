@@ -7,8 +7,11 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -73,8 +76,18 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
 
     @Override
     public int getPoints(GameState state) {
+    	boolean scoreVineyards = state.hasCapability(VineyardCapability.class);
         Position p = places.get().getPosition();
-        return state.getAdjacentAndDiagonalTiles2(p).size() + 1 + getLittleBuildingPoints(state);
+        int adjacent = 0;
+        int adjacentVineyards = 0;
+        for (Tuple2<Location, PlacedTile> t : state.getAdjacentAndDiagonalTiles2(p)) {
+        	adjacent++;
+        	if (scoreVineyards && t._2.getTile().hasModifier(VineyardCapability.VINEYARD)) {
+        		adjacentVineyards++;
+        	}
+        }
+        int vineyardPoints = adjacent == 8 ? adjacentVineyards * 3 : 0;
+        return adjacent + 1 + vineyardPoints + getLittleBuildingPoints(state);
     }
 
     @Override

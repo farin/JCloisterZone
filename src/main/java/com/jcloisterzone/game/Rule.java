@@ -7,6 +7,11 @@ import com.jcloisterzone.Expansion;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 
+/*
+ * TODO decouple this from single global just same as done for Tokens or TileModifier. Use just generic Rule interface and let
+ * capabilities or expansion sets (some rules ale related to capabilities) to define their own rules
+ *
+ */
 public enum Rule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _tr("Randomize seating order")),
 
@@ -20,9 +25,11 @@ public enum Rule {
 
     BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, _tr("No bazaar bidding. Each player just chooses one tile.")),
 
+    ON_HILL_NUMBER_TIEBREAKER(Expansion.HILLS_AND_SHEEP, Boolean.class, _tr("Count number of followers on hill as tiebreaker.") + " [house rule]"),
+
     ESCAPE_RGG(Expansion.CATHARS, Boolean.class, _tr("Escape cloister can be placed adjacent to any tile of a besieged city.") + " (RGG)"),
 
-    PIG_HERD_ON_GQ_FARM(Expansion.GQ11, Boolean.class, _tr("The Pig herd is present on the farm tile.")),
+    PIG_HERD_ON_GQ_FARM(Expansion.GQ11, Boolean.class, _tr("The Pig herd is present on the farm tile.") + " [house rule]"),
 
     TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, Boolean.class, _tr("Apply tunnel rule on tunnels from other expansions.")),
     MORE_TUNNEL_TOKENS(Expansion.TUNNEL, Boolean.class, _tr("Assign 3/2 tunnel set in game of two/three players.")),

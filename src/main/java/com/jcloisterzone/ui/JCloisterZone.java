@@ -42,7 +42,7 @@ public class JCloisterZone  {
     public static String VERSION = "dev-snapshot";
     public static String BUILD_DATE = "";
 
-    public static final String PROTCOL_VERSION = "4.3.0";
+    public static final String PROTCOL_VERSION = "4.4.0";
 
     private Path getDataDirectory(String basePath, String dirName) {
         if (basePath == null || basePath.length() == 0) return null;
@@ -191,13 +191,13 @@ public class JCloisterZone  {
                                 @Override
                                 public void run() {
                                     client.showUpdateIsAvailable(update);
-                                };
+                                }
                             });
                         }
                     } catch (MalformedURLException e) {
                         logger.error("Malformed key update.url in config file.", e);
                     }
-                };
+                }
             }).start();
         }
     }

@@ -38,7 +38,6 @@ public class GoldLayer extends AbstractGridLayer {
         placedGold = ev.getCurrentState().getCapabilityModel(GoldminesCapability.class);
     }
 
-
     @Override
     public void paint(Graphics2D g2) {
         int size = getTileWidth();

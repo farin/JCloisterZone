@@ -6,7 +6,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.figure.Follower;
@@ -25,13 +25,16 @@ import io.vavr.collection.Vector;
 
 public class FestivalCapability extends Capability<Void> {
 
-    public final String UNDEPLOY_FESTIVAL = "festival";
+	private static final long serialVersionUID = 1L;
+
+	public static final TileModifier FESTIVAL = new TileModifier("Festival");
+    public static final String UNDEPLOY_FESTIVAL = "festival";
 
 
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "festival").isEmpty()) {
-            tile = tile.setTileTrigger(TileTrigger.FESTIVAL);
+            tile = tile.addTileModifier(FESTIVAL);
         }
         return tile;
     }
@@ -39,7 +42,7 @@ public class FestivalCapability extends Capability<Void> {
     @Override
     public GameState onActionPhaseEntered(GameState state) {
         PlacedTile placedTile = state.getLastPlaced();
-        if (placedTile.getTile().getTrigger() != TileTrigger.FESTIVAL) {
+        if (!placedTile.getTile().hasModifier(FESTIVAL)) {
             return state;
         }
 

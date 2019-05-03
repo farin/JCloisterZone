@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.PlaceTileMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsSaltMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
@@ -52,10 +52,10 @@ public abstract class RankingAiPlayer implements AiPlayer {
                 for (WsInGameMessage msg : getPossibleActions(itemState)) {
                     Vector<WsInGameMessage> chain = item._2.append(msg);
                     GameState newState = phaseReducer.apply(itemState, msg);
-                    boolean end = newState.getActivePlayer() != me || msg instanceof WsSaltMeesage;
+                    boolean end = newState.getActivePlayer() != me || newState.getTurnPlayer() != state.getTurnPlayer() || msg instanceof WsSaltMessage;
 
                     if (!end && msg instanceof PlaceTileMessage &&
-                        newState.getLastPlaced().getTile().getTrigger() == TileTrigger.PORTAL) {
+                        newState.getLastPlaced().getTile().hasModifier(PortalCapability.MAGIC_PORTAL)) {
                         // hack to avoid bad performance on Portal tile
                         // rank just placement then rang meeple placement separately
                         // still not perfect because it can miss good on tile meeple placement

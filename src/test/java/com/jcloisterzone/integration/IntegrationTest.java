@@ -19,7 +19,7 @@ import com.jcloisterzone.game.save.SavedGameParser;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSaltMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMessage;
 
 
 public class IntegrationTest {
@@ -68,8 +68,8 @@ public class IntegrationTest {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : sg.getReplay()) {
-            if (msg instanceof WsSaltMeesage) {
-                phaseReducer.getRandom().setSalt(((WsSaltMeesage) msg).getSalt());
+            if (msg instanceof WsSaltMessage) {
+                phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
             }
             state = phaseReducer.apply(state, msg);
         }

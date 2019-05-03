@@ -8,19 +8,19 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TileDiscardedEvent;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.capability.CountCapability;
+import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -166,7 +166,7 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.mapPlayers(ps ->
-                ps.addTokenCount(player.getIndex(), Token.BRIDGE, -1)
+                ps.addTokenCount(player.getIndex(), BrigeToken.BRIDGE, -1)
             );
             state = state.mapCapabilityModel(BridgeCapability.class, model -> model.add(mandatoryBridge));
 
@@ -185,14 +185,21 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.appendEvent(
-                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), Token.BRIDGE, mandatoryBridge)
+                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), BrigeToken.BRIDGE, mandatoryBridge)
             );
+        }
+
+        if (tile.hasModifier(HillCapability.HILL)) {
+        	TilePack tilePack = state.getTilePack();
+        	if (!tilePack.isEmpty()) {
+        		state = state.setTilePack(tilePack.increaseHiddenUnderHills());
+        	}
         }
 
         state = clearActions(state);
         state = state.setDrawnTile(null);
 
-        if (tile.getTrigger() == TileTrigger.BAZAAR) {
+        if (tile.hasModifier(BazaarCapability.BAZAAR)) {
             BazaarCapabilityModel model = state.getCapabilityModel(BazaarCapability.class);
             //Do not trigger another auction is current is not resolved
             if (model.getSupply() == null) {

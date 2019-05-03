@@ -34,13 +34,12 @@ public class CleanUpTurnPartPhase extends Phase {
                 .remove(Flag.PRINCESS_USED)
                 .remove(Flag.FLYING_MACHINE_USED)
             );
-        }
-
-        state = state.appendEvent(
-            new DoubleTurnEvent(PlayEventMeta.createWithoutPlayer())
-        );
+        }        
 
         if (builderTakeAnotherTurn) {
+        	state = state.appendEvent(
+        		new DoubleTurnEvent(PlayEventMeta.createWithoutPlayer())
+            );
             return next(state, state.getCapabilities().contains(AbbeyCapability.class) ? AbbeyPhase.class : TilePhase.class);
         } else {
             return next(state);

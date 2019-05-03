@@ -27,8 +27,6 @@ import com.jcloisterzone.event.GameOverEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.setup.SupportedExpansionsChangeEvent;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.BuilderState;
 import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.ActionsState;
@@ -42,7 +40,7 @@ import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSaltMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMessage;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
@@ -55,7 +53,6 @@ import io.vavr.collection.Queue;
  * Other information than board needs in game. Contains players with their
  * points, followers ... and game rules of current game.
  */
-//TODO remove extends from GameSettings
 public class Game implements EventProxy {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -83,7 +80,7 @@ public class Game implements EventProxy {
 
     private int idSequenceCurrVal = 0;
     /** message counter in current phase */
-    private int messageIdPhaseSequence = 0;
+    private int messageIdTurnSequence = 0;
 
     public Game(String gameId, long randomSeed) {
         this.gameId = gameId;
@@ -237,8 +234,7 @@ public class Game implements EventProxy {
     }
 
     private String getMessageId(GameState state) {
-        String extra = BuilderState.SECOND_TURN == state.getCapabilityModel(BuilderCapability.class) ? "*" : "";
-        return String.format("%s%s.%s.%s", state.getTurnNumber(), extra, state.getPhase().getSimpleName(), messageIdPhaseSequence);
+        return String.format("%s.%s", state.getTurnNumber(), messageIdTurnSequence);
     }
 
     @WsSubscribe
@@ -260,8 +256,8 @@ public class Game implements EventProxy {
         long origSalt = phaseReducer.getRandom().getSalt();
         GameState newState = null;
         try {
-            if (msg instanceof WsSaltMeesage) {
-                phaseReducer.getRandom().setSalt(((WsSaltMeesage)msg).getSalt());
+            if (msg instanceof WsSaltMessage) {
+                phaseReducer.getRandom().setSalt(((WsSaltMessage)msg).getSalt());
             }
             newState = phaseReducer.apply(state, msg);
         } catch (Exception e) {
@@ -270,26 +266,26 @@ public class Game implements EventProxy {
             throw e;
         }
 
-        updateMessageIdPhaseSequence(state, newState);
-        markUndo();
-        replay = replay.prepend(msg);
+        Player oldActivePlayer = state.getActivePlayer();
+        Player newActivePlayer = newState.getActivePlayer();
+        boolean undoAllowed = !(msg instanceof WsSaltMessage) &&
+        			newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
 
-        Player activePlayer = newState.getActivePlayer();
-        if (msg instanceof WsSaltMeesage
-            || activePlayer == null
-            || !activePlayer.equals(undoHistory.get().getState().getActivePlayer())
-        ) {
-            clearUndo();
+        updateMessageIdSequence(state, newState);
+        if (undoAllowed) {
+        	markUndo();
+        } else {
+        	clearUndo();
         }
+        replay = replay.prepend(msg);
         replaceState(newState);
-
     }
 
-    private void updateMessageIdPhaseSequence(GameState oldState, GameState newState) {
-        if (oldState.getPhase().equals(newState.getPhase())) {
-            messageIdPhaseSequence++;
+    private void updateMessageIdSequence(GameState oldState, GameState newState) {
+        if (oldState.getTurnNumber() == newState.getTurnNumber()) {
+            messageIdTurnSequence++;
         } else {
-            messageIdPhaseSequence = 0;
+            messageIdTurnSequence = 0;
         }
     }
 
@@ -375,12 +371,12 @@ public class Game implements EventProxy {
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
             msg.setMessageId(getMessageId(state));
-            if (msg instanceof WsSaltMeesage) {
-                phaseReducer.getRandom().setSalt(((WsSaltMeesage) msg).getSalt());
+            if (msg instanceof WsSaltMessage) {
+                phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
             }
             GameState prev = state;
             state = phaseReducer.apply(state, msg);
-            updateMessageIdPhaseSequence(prev, state);
+            updateMessageIdSequence(prev, state);
         }
         replaceState(state);
     }
@@ -394,7 +390,7 @@ public class Game implements EventProxy {
         for (PlayerSlot slot : slots) {
             if (slot != null && slot.isAi() && slot.isOwn()) {
                 try {
-                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).newInstance();
+                    AiPlayer ai = (AiPlayer) Class.forName(slot.getAiClassName()).getDeclaredConstructor().newInstance();
                     for (Player player : this.state.getPlayers().getPlayers()) {
                         if (player.getSlot().getNumber() == slot.getNumber()) {
                             AiPlayerAdapter adapter = new AiPlayerAdapter(gc, player, ai);

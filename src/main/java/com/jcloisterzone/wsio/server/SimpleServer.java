@@ -42,6 +42,7 @@ import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.ErrorMessage;
 import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
+import com.jcloisterzone.wsio.message.FlockMessage;
 import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
 import com.jcloisterzone.wsio.message.GameOverMessage;
@@ -69,7 +70,7 @@ import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSaltMeesage;
+import com.jcloisterzone.wsio.message.WsSaltMessage;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -103,8 +104,8 @@ public class SimpleServer extends WebSocketServer  {
 
     private Random random = new Random();
 
-    public static interface SimpleServerErrorHandler {
-        public void onError(WebSocket ws, final Exception ex);
+    public interface SimpleServerErrorHandler {
+        void onError(WebSocket ws, final Exception ex);
     }
 
     public SimpleServer(InetSocketAddress address, SimpleServerErrorHandler errHandler) {
@@ -526,8 +527,8 @@ public class SimpleServer extends WebSocketServer  {
     private void handleInGameMessage(WsInGameMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-        if (msg instanceof WsSaltMeesage) {
-            ((WsSaltMeesage) msg).setSalt(createSalt());
+        if (msg instanceof WsSaltMessage) {
+            ((WsSaltMessage) msg).setSalt(createSalt());
         }
         broadcast(msg);
     }
@@ -600,6 +601,11 @@ public class SimpleServer extends WebSocketServer  {
     @WsSubscribe
     public void handleCornCircleRemoveOrDeployMessage(WebSocket ws, CornCircleRemoveOrDeployMessage msg) {
         handleInGameMessage(msg);
+    }
+
+    @WsSubscribe
+    public void hadleFlockMessage(WebSocket ws, FlockMessage msg) {
+    	handleInGameMessage(msg);
     }
 
     @WsSubscribe

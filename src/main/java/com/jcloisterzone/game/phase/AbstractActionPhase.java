@@ -5,7 +5,6 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.TileTrigger;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.FlierRollEvent;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
@@ -21,6 +20,7 @@ import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -60,7 +60,7 @@ public abstract class AbstractActionPhase extends Phase {
         Position currentTilePos = lastPlaced.getPosition();
         Stream<PlacedTile> tiles;
 
-        if (lastPlaced.getTile().getTrigger() == TileTrigger.PORTAL && !state.getFlags().contains(Flag.PORTAL_USED)) {
+        if (lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL) && !state.getFlags().contains(Flag.PORTAL_USED)) {
             tiles = Stream.ofAll(state.getPlacedTiles().values());
         } else {
             tiles = Stream.of(lastPlaced);
@@ -146,7 +146,7 @@ public abstract class AbstractActionPhase extends Phase {
         //TODO validate placement against players actions
 
         if (fp.getLocation() != Location.TOWER
-            && placedTile.getTile().getTrigger() == TileTrigger.PORTAL
+            && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)
             && !fp.getPosition().equals(placedTile.getPosition())
         ) {
             state = state.addFlag(Flag.PORTAL_USED);

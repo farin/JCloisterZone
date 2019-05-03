@@ -19,6 +19,7 @@ public class ConvenientResourceManager implements ResourceManager {
         this.manager = manager;
     }
 
+    @Override
     public void reload() {
         manager.reload();
         imageCache.clear();
@@ -59,8 +60,8 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public ImmutablePoint getMeeplePlacement(Tile tile, Rotation rot, Location loc) {
-        return manager.getMeeplePlacement(tile, rot, loc);
+    public ImmutablePoint getMeeplePlacement(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
+        return manager.getMeeplePlacement(effectiveTileId, tile, rot, loc);
     }
 
     @Override
@@ -79,8 +80,8 @@ public class ConvenientResourceManager implements ResourceManager {
     }
 
     @Override
-    public FeatureArea getFeatureArea(Tile tile, Rotation rot, Location loc) {
-        return manager.getFeatureArea(tile, rot, loc);
+    public FeatureArea getFeatureArea(String effectiveTileId, Tile tile, Rotation rot, Location loc) {
+        return manager.getFeatureArea(effectiveTileId, tile, rot, loc);
     }
 
 }

@@ -7,14 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.config.Config.ColorConfig;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 
 public class PlayerColors {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Color meeple, font;
-    private Map<Token, Color> tunnelColors;
+    private Map<Tunnel, Color> tunnelColors;
 
     public PlayerColors() {
         meeple = Color.BLACK;
@@ -34,11 +34,11 @@ public class PlayerColors {
         return font;
     }
 
-    public Map<Token, Color> getTunnelColors() {
+    public Map<Tunnel, Color> getTunnelColors() {
         return tunnelColors;
     }
 
-    public void setTunnelColors(Map<Token, Color> tunnelColors) {
+    public void setTunnelColors(Map<Tunnel, Color> tunnelColors) {
         this.tunnelColors = tunnelColors;
     }
 

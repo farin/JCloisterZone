@@ -14,8 +14,8 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.grid.GridPanel;
@@ -41,7 +41,7 @@ public class BridgeLayer extends AbstractGridLayer {
     public void handleGameChanged(GameChangedEvent ev) {
         boolean bridgesChanged = false;
         for (PlayEvent pe : ev.getPlayEventsSymmetricDifference()) {
-            if (pe instanceof TokenPlacedEvent && ((TokenPlacedEvent)pe).getToken() == Token.BRIDGE) {
+            if (pe instanceof TokenPlacedEvent && ((TokenPlacedEvent)pe).getToken() == BrigeToken.BRIDGE) {
                 bridgesChanged = true;
                 break;
             }

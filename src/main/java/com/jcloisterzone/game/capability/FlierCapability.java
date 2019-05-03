@@ -15,6 +15,8 @@ import io.vavr.collection.Vector;
 
 public class FlierCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         Vector<Element> flyingMachineEl = XMLUtils.getElementStreamByTagName(tileElements, "flying-machine").toVector();

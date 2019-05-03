@@ -2,16 +2,16 @@ package com.jcloisterzone.ui.grid.actionpanel;
 
 import static com.jcloisterzone.ui.I18nUtils._tr;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.CornCircleSelectDeployOrRemoveAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.game.capability.CornCircleCapability.CornCircleModifier;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.gtk.ThemedJLabel;
@@ -21,10 +21,7 @@ import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircle
 import net.miginfocom.swing.MigLayout;
 
 
-
-public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
-
-    public static Font FONT_HEADER = new Font(null, Font.BOLD, 18);
+public class CornCirclesPanel extends ActionInteractionPanel<CornCircleSelectDeployOrRemoveAction> {
 
     private JButton deploymentOption, removalOption;
 
@@ -73,7 +70,11 @@ public class CornCirclesPanel extends ActionInteractionPanel<PlayerAction<?>> {
         add(removalOption, "wrap, growx, h 40, gapbottom 5");
 
         Tile tile = gc.getGame().getState().getLastPlaced().getTile();
-        String feature = Feature.getLocalizedNamefor(tile.getCornCircle());
+        String feature = tile.getTileModifiers()
+        		.find(m -> m instanceof CornCircleModifier)
+        		.map(m -> Feature.getLocalizedNamefor(((CornCircleModifier)m).getFeatureType()))
+        		.getOrElseThrow(IllegalArgumentException::new);
+
         label = new ThemedJLabel(_tr("on/from a {0}.", feature.toLowerCase()));
         add(label, "wrap");
     }

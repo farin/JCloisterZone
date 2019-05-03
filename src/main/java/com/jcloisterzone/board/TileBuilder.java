@@ -1,5 +1,6 @@
 package com.jcloisterzone.board;
 
+import static com.jcloisterzone.XMLUtils.attrAsLocation;
 import static com.jcloisterzone.XMLUtils.attrAsLocations;
 import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
@@ -25,6 +26,8 @@ import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -37,6 +40,7 @@ public class TileBuilder {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private java.util.Map<Location, Feature> features;
+    private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
     private String tileId;
 
     private GameState state;
@@ -53,6 +57,7 @@ public class TileBuilder {
     public Tile createTile(Expansion expansion, String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
+        multiEdges = new java.util.ArrayList<>();
         this.tileId = tileId;
 
         logger.debug("Creating " + tileId);
@@ -83,6 +88,26 @@ public class TileBuilder {
             for (int i = 0; i < nl.getLength(); i++) {
                 processRiverElement((Element) nl.item(i));
             }
+        }
+
+        for (Tuple3<ShortEdge, Location, FeaturePointer> multiEdge: multiEdges) {
+        	java.util.Map.Entry<Location, Feature> matched = null;
+        	for (java.util.Map.Entry<Location, Feature> entry : features.entrySet()) {
+        		if (multiEdge._2.isPartOf(entry.getKey())) {
+        			matched = entry;
+        			break;
+        		}
+        	}
+
+        	if (matched == null) {
+        		throw new IllegalArgumentException("Matching city not found");
+        	}
+        	City target = (City) matched.getValue();
+        	assert target.getOpenEdges().contains(multiEdge._1.toEdge());
+        	Set<Tuple2<ShortEdge, FeaturePointer>> targeMultiEdges = target.getMultiEdges();
+        	targeMultiEdges = targeMultiEdges.add(new Tuple2<>(multiEdge._1, multiEdge._3));
+        	target = target.setMultiEdges(targeMultiEdges);
+        	features.put(matched.getKey(), target);
         }
 
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
@@ -155,10 +180,21 @@ public class TileBuilder {
     private void processCityElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
         FeaturePointer place = initFeaturePointer(sides, City.class);
+        Set<Edge> openEdges = initOpenEdges(sides);
+
+        if (e.hasAttribute("multi-edge")) {
+        	Location multiEdgeLoc = attrAsLocation(e, "multi-edge");
+        	if (!multiEdgeLoc.isEdgeLocation()) {
+        		throw new IllegalArgumentException("Multi edge must be side location");
+        	}
+        	ShortEdge multiEdge = new ShortEdge(Position.ZERO, multiEdgeLoc);
+        	multiEdges.add(new Tuple3<ShortEdge, Location, FeaturePointer>(multiEdge, multiEdgeLoc, place));
+        	openEdges = openEdges.add(multiEdge);
+        }
 
         City city = new City(
             List.of(place),
-            initOpenEdges(sides),
+            openEdges,
             attributeIntValue(e, "pennant", 0)
         );
 

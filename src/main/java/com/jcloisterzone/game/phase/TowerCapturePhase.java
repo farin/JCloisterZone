@@ -11,8 +11,8 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.CaptureMeeple;
@@ -35,7 +35,7 @@ public class TowerCapturePhase extends Phase {
     @Override
     public StepResult enter(GameState state) {
         TokenPlacedEvent event = (TokenPlacedEvent) state.getEvents().last();
-        assert event.getToken() == Token.TOWER_PIECE;
+        assert event.getToken() == TowerToken.TOWER_PIECE;
 
         FeaturePointer ptr = (FeaturePointer) event.getPointer();
         Tower tower = (Tower) state.getFeatureMap().get(ptr).get();

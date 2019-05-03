@@ -74,6 +74,17 @@ public class Road extends CompletableFeature<Road> {
         );
     }
 
+    @Override
+    public Road setOpenEdges(Set<Edge> openEdges) {
+        return new Road(
+            places,
+            openEdges,
+            neighboring,
+            inn,
+            openTunnelEnds
+        );
+    }
+
     /** Merge roads through connecting tunnel ends. */
     public Road connectTunnels(Road road, FeaturePointer tunnelEnd1, FeaturePointer tunnelEnd2) {
         Road merged;

@@ -1,15 +1,41 @@
-
-
-
-
 # Version history
 
-## upcoming version
+## 4.4.1
+*2019-04-24*
+
+* fixed "weird" city tile from Hills and Sheep issues
+   - Sometimes city remains unfinished when placed and two edges of this tile was adjacent to same city.
+   - Also city wasn't completed when Abbey was attached to "weird" edge
+
+## 4.4.0
+*2019-04-17*
+
+* Hills and Sheep expansion
+   - note about hills: a tile hidden under hill is selected from all tiles including dragon tiles even they
+     are not in play yet (if hill is drawn before volcano).
+     Because in reality no specific tile is internally selected at the time when hill is placed.
+     With such implementation nobody can dig particular tiles from saved game because
+     no hidden information exists.
+* End game stats shows number of placed tiles and consumed time. (#227)
+* fixed #263: game freeze when undo was used on meeple placement after using flying machine
+* fixed #276: ferry move removes inn from roads
+* fixed #262: error when wagon scores castle
+* newart plugin extended with King and Robber baron, and Cult.
+
+## 4.3.2
+*2019-04-11*
+
+* rebuild which fixes run on Java 8 (unable to connect issue)
+* newart plugin was bundled in (Basic game, Inns and Catherdrals, Traders and Builders for now)
+
+## 4.3.1
+*2019-04-09*
 
 * fixed Ferries + Tunnel: sometimes ferry can't be changed when road is extended through tunnel connection
+* fixed often computer player crash when playing with Corn Circles (may fixes similar situation on other expansions)
 
 ## 4.3.0
- *2018-02-11*
+*2018-02-11*
 
 * Ferries (Mini #3) expansion
 * The Count, final scoring changed according to "Complete annotated rules" notes.
@@ -17,40 +43,40 @@
   - players take turns
     Question:
         How does follower placement during the final scoring work?
-    Answer: 
-        In principle very similarly to the way it works during the game. The 'trigger' for the final scoring 
-        is the player who placed the last tile and so ended the game. Beginning with the player on the left 
-        of the 'trigger' player, each player redeploys one of his or her followers from 
-        Carcassonne to an appropriate feature [followers in castle can only be deployed 
+    Answer:
+        In principle very similarly to the way it works during the game. The 'trigger' for the final scoring
+        is the player who placed the last tile and so ended the game. Beginning with the player on the left
+        of the 'trigger' player, each player redeploys one of his or her followers from
+        Carcassonne to an appropriate feature [followers in castle can only be deployed
         to cities, and so on] on the board. Followers can also be redeployed to incomplete
         roads, cities, cloisters, or farms, since these will also be scored at the end of the game.
-        This process continues until no player can redeploy any more players from Carcassonne. 
-        The Count still blocks the city quarter in which he is resident. Normally the player with 
-        the most followers in Carcassonne will be the one to redeploy the last figure. 
+        This process continues until no player can redeploy any more players from Carcassonne.
+        The Count still blocks the city quarter in which he is resident. Normally the player with
+        the most followers in Carcassonne will be the one to redeploy the last figure.
 * fix: road with bridge can remain not scored. This can happen when bridge was placed result of tile placement
   on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.
 * fix: gold was not awarded from cloister tile itself (but only from adjacent tiles)
-* fix: missing bid buttons when game is saved and loaded during bazaar auction 
+* fix: missing bid buttons when game is saved and loaded during bazaar auction
 
 ## 4.2.1
 *2018-02-05*
 
-* display info message when game is created with debug options (forced draw order). This is important 
+* display info message when game is created with debug options (forced draw order). This is important
   for remote party because this option is part of game setup (since 4.x) and they are used by all participants.
   And currently there was no change to recognize that game is regular.
-* fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished. 
+* fixed #255: Abbey and scoring road/city touching abbey with more then one side. Now feature is correctly finished.
 * fixed #257: Farm hints display correct color for farms with barns.
 * fixed #258: Pig/Barn issue, when pig was deployed instead of barn.
 * fix: Barn and Market quarter:
-  followers for the City of C. can be deployed on farm when barn is placed 
-  or when barn farm is extended by another farm with followers 
+  followers for the City of C. can be deployed on farm when barn is placed
+  or when barn farm is extended by another farm with followers
   score properly followers moved on barn farm just before final scoring
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
-* fix: when moves from multiple City of C. quarters are available (eg legal move on cloister and road at 
+* fix: when moves from multiple City of C. quarters are available (eg legal move on cloister and road at
   one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to cloister)
-* fix: builder double turn allowed wrongly add follower into City of C. after each turn part if opponent 
-  feature was scored during first part 
+* fix: builder double turn allowed wrongly add follower into City of C. after each turn part if opponent
+  feature was scored during first part
 * fix: restrict corn circles actions to followers only (instead of meeples)
 * fix: the rules that restrict the placement of cloisters next to already placed shrines also restrict the placement of abbeys.
 * fix: german monasteries and abbot related issues (portal allows placement next to abbot, crash when abbot in tower area)
@@ -61,15 +87,15 @@
 ## 4.1.1
 *2018-01-19*
 
-* underlying JavaWebsocket library reverted to version used in 3.x. 
-  Recent version seems to be unreliable and dropping messages 
-  sometimes. Which makes client out of sync and caused unpredictable bugs. 
+* underlying JavaWebsocket library reverted to version used in 3.x.
+  Recent version seems to be unreliable and dropping messages
+  sometimes. Which makes client out of sync and caused unpredictable bugs.
 
 ## 4.1.0
 *2017-12-25*
 
 * connection stability improvements - websocket connection revisited and fixed reconnect on lost connection issues
-* handle properly when single message is sent to server twice 
+* handle properly when single message is sent to server twice
 * fix: captured meeple color in game events panel
 * fix: play again button
 
@@ -92,13 +118,13 @@
 * event log added - game events are displayed on top of the window (use E key to hide/show)
 
 * added The Count expansion
-* added game event panel on top of window 
+* added game event panel on top of window
 * added Japanese translation (thx to Alexis Jeandeau)
 * multiple plugin folders can be specified in config (as relative or absolute paths)
 * plugins can contain java classes and register new expansions and capabilities
 * added "Carrcassone for 2" plugin (thx to Tom Hill)
 * catapult tiles moved to separate plugin, disabled by default
-  (with many other expansion these extra tiles are much less important) 
+  (with many other expansion these extra tiles are much less important)
 * issue #63: experimental change: multiple tile sets of same expansion are allowed.
   No UI is present but feature can be enabled by manual edit of preset in config file
   (or by save game edit)
@@ -109,7 +135,7 @@
   No UI for creation such game is present yet, but same as multiple sets
   it can be achieved by manual edit of preset in config.yaml
   (Such games can be normally played with remote players)
-* fixed definition for FE.RC tile (Festival) - city wasn't bind to farm (farm may score one city less sometimes) 
+* fixed definition for FE.RC tile (Festival) - city wasn't bind to farm (farm may score one city less sometimes)
 
 
 ### Current expansions changes
@@ -716,4 +742,3 @@ many internal changes in code
 
 ## 0.8
 * initial version
-

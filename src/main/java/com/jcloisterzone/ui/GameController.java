@@ -24,7 +24,7 @@ import com.jcloisterzone.event.GameOverEvent;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.MenuBar.MenuItem;
 import com.jcloisterzone.ui.controls.chat.GameChatPanel;
@@ -84,7 +84,7 @@ public class GameController extends EventProxyUiController<Game> {
     public void onGameStarted(Game game) {
         Stream<PlayerSlot> slots = Stream.ofAll(Arrays.asList(game.getPlayerSlots()));
         Array<PlayerSlot> occupiedSlots = slots.filter(slot -> slot != null && slot.isOccupied()).toArray();
-        // for free color we can't search slot - because for load game, slots are already filtered
+        // for free color we can't search slot - because for loaded game, slots are already filtered
         // to existing ones
         Array<PlayerColors> freeColors = Stream.range(0, PlayerSlot.COUNT)
             .filter(i -> occupiedSlots.find(s -> s.getNumber() == i).isEmpty())
@@ -95,14 +95,14 @@ public class GameController extends EventProxyUiController<Game> {
         int freeSize = freeColors.size();
         int i = 0;
         for (PlayerSlot slot : occupiedSlots) {
-            Map<Token, Color> tunnelColors = new HashMap<>();
-            tunnelColors.put(Token.TUNNEL_A, slot.getColors().getMeepleColor());
+            Map<Tunnel, Color> tunnelColors = new HashMap<>();
+            tunnelColors.put(Tunnel.TUNNEL_A, slot.getColors().getMeepleColor());
             if (freeSize >= occupiedSize) {
-                tunnelColors.put(Token.TUNNEL_B, freeColors.get(i).getMeepleColor());
+                tunnelColors.put(Tunnel.TUNNEL_B, freeColors.get(i).getMeepleColor());
                 i++;
             }
             if (freeSize >= 2 * occupiedSize) {
-                tunnelColors.put(Token.TUNNEL_C, freeColors.get(i).getMeepleColor());
+                tunnelColors.put(Tunnel.TUNNEL_C, freeColors.get(i).getMeepleColor());
                 i++;
             }
             slot.getColors().setTunnelColors(tunnelColors);

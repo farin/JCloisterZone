@@ -30,6 +30,12 @@ import io.vavr.collection.Vector;
  */
 public final class TowerCapability extends Capability<Array<List<Follower>>> {
 
+	public static enum TowerToken implements Token {
+		TOWER_PIECE;
+	}
+
+	private static final long serialVersionUID = 1L;
+
     public static final int RANSOM_POINTS = 3;
 
     private int getInitialPiecesCount(GameState state) {
@@ -47,7 +53,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
     @Override
     public GameState onStartGame(GameState state) {
         int pieces = getInitialPiecesCount(state);
-        state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(Token.TOWER_PIECE, pieces));
+        state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(TowerToken.TOWER_PIECE, pieces));
         state = setModel(state, Array.fill(state.getPlayers().length(), List::empty));
         return state;
     }
@@ -75,7 +81,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
         ActionsState as = state.getPlayerActions();
 
         if (!openTowersForPiece.isEmpty()) {
-            if (state.getPlayers().getPlayerTokenCount(player.getIndex(), Token.TOWER_PIECE) > 0) {
+            if (state.getPlayers().getPlayerTokenCount(player.getIndex(), TowerToken.TOWER_PIECE) > 0) {
                 as = as.appendAction(new TowerPieceAction(openTowersForPiece.map(FeaturePointer::getPosition)));
             }
         }

@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.TradeGoods;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
@@ -24,6 +23,12 @@ import io.vavr.collection.Map;
 
 public class TradeGoodsCapability extends Capability<Void> {
 
+	public static enum TradeGoods implements Token {
+	    WINE,
+	    CLOTH,
+	    GRAIN;
+	}
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -40,7 +45,7 @@ public class TradeGoodsCapability extends Capability<Void> {
             int playerIdx = state.getPlayers().getTurnPlayerIndex();
             state = state.mapPlayers(ps -> {
                 for (Tuple2<TradeGoods, Integer> t : cityTradeGoods) {
-                    ps = ps.addTokenCount(playerIdx, t._1.getToken(), t._2);
+                    ps = ps.addTokenCount(playerIdx, t._1, t._2);
                 }
                 return ps;
             });
@@ -48,7 +53,7 @@ public class TradeGoodsCapability extends Capability<Void> {
                 TokenReceivedEvent ev = new TokenReceivedEvent(
                     PlayEventMeta.createWithActivePlayer(state),
                     state.getPlayers().getTurnPlayer(),
-                    t._1.getToken(), t._2
+                    t._1, t._2
                 );
                 ev.setSourceFeature(feature);
                 state = state.appendEvent(ev);
@@ -76,10 +81,9 @@ public class TradeGoodsCapability extends Capability<Void> {
         for (TradeGoods tr : TradeGoods.values()) {
             int hiVal = 1;
             List<Player> hiPlayers = List.empty();
-            Token token = tr.getToken();
 
             for (Player player: ps.getPlayers()) {
-                int playerValue = ps.getPlayerTokenCount(player.getIndex(), token);
+                int playerValue = ps.getPlayerTokenCount(player.getIndex(), tr);
                 if (playerValue > hiVal) {
                     hiVal = playerValue;
                     hiPlayers = List.of(player);

@@ -11,6 +11,8 @@ import io.vavr.collection.Stream;
 
 public class StandardGameCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     public static final int SMALL_FOLLOWER_QUANTITY = 7;
 
     @Override

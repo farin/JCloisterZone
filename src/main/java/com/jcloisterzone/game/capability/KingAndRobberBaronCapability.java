@@ -22,6 +22,11 @@ import io.vavr.collection.Set;
 
 public final class KingAndRobberBaronCapability extends Capability<Void> {
 
+	public static enum BiggestFeatureAward implements Token {
+		KING,
+		ROBBER;
+	}
+
     @Override
     public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         Set<Scoreable> completedFeatures = completed.keySet();
@@ -43,19 +48,19 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         PlayersState ps = state.getPlayers();
         if (biggestCityCompleted != null) {
             for (Player p : ps.getPlayers()) {
-                ps = ps.setTokenCount(p.getIndex(), Token.KING, p.equals(turnPlayer) ? 1 : 0);
+                ps = ps.setTokenCount(p.getIndex(), BiggestFeatureAward.KING, p.equals(turnPlayer) ? 1 : 0);
             }
             TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, Token.KING, 1);
+                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, BiggestFeatureAward.KING, 1);
             ev.setSourceFeature(biggestCityCompleted);
             state = state.appendEvent(ev);
         }
         if (longestRoadCompleted != null) {
             for (Player p : ps.getPlayers()) {
-                ps = ps.setTokenCount(p.getIndex(), Token.ROBBER, p.equals(turnPlayer) ? 1 : 0);
+                ps = ps.setTokenCount(p.getIndex(), BiggestFeatureAward.ROBBER, p.equals(turnPlayer) ? 1 : 0);
             }
             TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, Token.ROBBER, 1);
+                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, BiggestFeatureAward.ROBBER, 1);
             ev.setSourceFeature(longestRoadCompleted);
             state = state.appendEvent(ev);
         }
@@ -67,10 +72,10 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         PlayersState ps = state.getPlayers();
 
         for (Player player: ps.getPlayers()) {
-            if (ps.getPlayerTokenCount(player.getIndex(), Token.KING) > 0) {
+            if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.KING) > 0) {
                 state = (new AddPoints(player, countCompletedCities(state), PointCategory.BIGGEST_CITY)).apply(state);
             }
-            if (ps.getPlayerTokenCount(player.getIndex(), Token.ROBBER) > 0) {
+            if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.ROBBER) > 0) {
                 state = (new AddPoints(player, countCompletedRoads(state), PointCategory.LONGEST_ROAD)).apply(state);
             }
         }

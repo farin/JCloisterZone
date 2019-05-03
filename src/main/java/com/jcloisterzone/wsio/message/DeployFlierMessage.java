@@ -13,7 +13,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
  * (DeployMeepleMessage would work but result of dice would be known before tile placement)
  */
 @WsMessageCommand("DEPLOY_FLIER")
-public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMeesage {
+public class DeployFlierMessage extends DeployMeepleMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMessage {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -9,6 +9,8 @@ import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Shepherd;
+import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
@@ -48,6 +50,10 @@ public class UndeployMeeple implements Reducer {
                     state = undeploy(state, metaNoPlayer, t._1, t._2);
                 }
             }
+        }
+
+        if (meeple instanceof Shepherd) {
+        	state = state.mapCapabilityModel(SheepCapability.class, tokens -> tokens.remove(source));
         }
 
         return state;

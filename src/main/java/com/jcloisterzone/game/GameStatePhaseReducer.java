@@ -35,6 +35,7 @@ import com.jcloisterzone.game.phase.PhaseMessageHandler;
 import com.jcloisterzone.game.phase.PlaceFerryPhase;
 import com.jcloisterzone.game.phase.RequiredCapability;
 import com.jcloisterzone.game.phase.ScoringPhase;
+import com.jcloisterzone.game.phase.ShepherdPhase;
 import com.jcloisterzone.game.phase.StepResult;
 import com.jcloisterzone.game.phase.TilePhase;
 import com.jcloisterzone.game.phase.TowerCapturePhase;
@@ -88,6 +89,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
                next = addPhase(setup, next, DragonPhase.class);
         }
 
+        next = addPhase(setup, next, ShepherdPhase.class);
         next = addPhase(setup, next, ChangeFerriesPhase.class);
         next = addPhase(setup, next, PlaceFerryPhase.class);
         next = addPhase(setup, next, PhantomPhase.class);

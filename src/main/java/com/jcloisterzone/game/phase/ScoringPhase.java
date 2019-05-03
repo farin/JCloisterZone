@@ -3,15 +3,10 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.CloisterLike;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
@@ -25,6 +20,7 @@ import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -92,9 +88,20 @@ public class ScoringPhase extends Phase {
     private GameState scoreCompletedNearAbbey(GameState state, Position pos) {
         for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(pos)) {
             PlacedTile pt = t._2;
-            Feature feature = state.getFeaturePartOf(new FeaturePointer(pt.getPosition(), t._1.rev()));
+            FeaturePointer fp = new FeaturePointer(pt.getPosition(), t._1.rev());
+            Feature feature = state.getFeaturePartOf(fp);
             if (feature instanceof Completable) {
                 state = scoreCompleted(state, (Completable) feature, null);
+            }
+            if (feature instanceof City) {
+                // also check if second city on multi edge is completed
+                City city = (City) feature;
+                ShortEdge edge = new ShortEdge(pos, pt.getPosition());
+                Tuple2<ShortEdge, FeaturePointer> multiEdge = city.getMultiEdges().find(me -> me._1.equals(edge)).getOrNull();
+                if (multiEdge != null) {
+                    City another = (City) state.getFeature(multiEdge._2);
+                    state = scoreCompleted(state, another, null);
+                }
             }
         }
         return state;
@@ -145,7 +152,7 @@ public class ScoringPhase extends Phase {
             List<Feature> tunnelModified = state.getCurrentTurnEvents()
                 .filter(Predicates.instanceOf(TokenPlacedEvent.class))
                 .map(ev -> (TokenPlacedEvent) ev)
-                .filter(ev -> ev.getToken().isTunnel())
+                .filter(ev -> ev.getToken() instanceof Tunnel)
                 .map(ev -> _state.getFeature((FeaturePointer) ev.getPointer()));
             assert tunnelModified.size() <= 1;
 

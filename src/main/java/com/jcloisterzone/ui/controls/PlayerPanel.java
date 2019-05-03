@@ -22,14 +22,23 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Mayor;
 import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.AbbeyCapability.AbbeyToken;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
+import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
+import com.jcloisterzone.game.capability.KingAndRobberBaronCapability.BiggestFeatureAward;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.TowerCapability;
+import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
+import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
@@ -252,8 +261,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             .toArray()
             .sortBy(t -> {
                if (t._1.equals(Builder.class)) return 1;
-               if (t._1.equals(Pig.class)) return 2;
-               if (t._1.equals(Barn.class)) return 3;
+               if (t._1.equals(Shepherd.class)) return 2;
+               if (t._1.equals(Pig.class)) return 3;
+               if (t._1.equals(Barn.class)) return 4;
                return 99;
             })
             .forEach(t -> {
@@ -264,20 +274,20 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
 //   TODO IMMUTABLE
 
-        drawMeepleBox(null, "abbey", ps.getPlayerTokenCount(index, Token.ABBEY_TILE), false);
-        drawMeepleBox(null, "tower_piece", ps.getPlayerTokenCount(index, Token.TOWER_PIECE), true);
-        drawMeepleBox(null, "bridge", ps.getPlayerTokenCount(index, Token.BRIDGE), true);
-        drawMeepleBox(null, "castle", ps.getPlayerTokenCount(index, Token.CASTLE), true);
+        drawMeepleBox(null, "abbey", ps.getPlayerTokenCount(index, AbbeyToken.ABBEY_TILE), false);
+        drawMeepleBox(null, "tower_piece", ps.getPlayerTokenCount(index, TowerToken.TOWER_PIECE), true);
+        drawMeepleBox(null, "bridge", ps.getPlayerTokenCount(index, BrigeToken.BRIDGE), true);
+        drawMeepleBox(null, "castle", ps.getPlayerTokenCount(index, CastleToken.CASTLE), true);
 
-        drawMeepleBox(player, "tunnel.A", ps.getPlayerTokenCount(index, Token.TUNNEL_A), true);
-        drawMeepleBox(player, "tunnel.B", ps.getPlayerTokenCount(index, Token.TUNNEL_B), true);
-        drawMeepleBox(player, "tunnel.C", ps.getPlayerTokenCount(index, Token.TUNNEL_C), true);
+        drawMeepleBox(player, "tunnel.A", ps.getPlayerTokenCount(index, Tunnel.TUNNEL_A), true);
+        drawMeepleBox(player, "tunnel.B", ps.getPlayerTokenCount(index, Tunnel.TUNNEL_B), true);
+        drawMeepleBox(player, "tunnel.C", ps.getPlayerTokenCount(index, Tunnel.TUNNEL_C), true);
 
-        drawMeepleBox(null, "lb_shed", ps.getPlayerTokenCount(index, Token.LB_SHED), true);
-        drawMeepleBox(null, "lb_house", ps.getPlayerTokenCount(index, Token.LB_HOUSE), true);
-        drawMeepleBox(null, "lb_tower", ps.getPlayerTokenCount(index, Token.LB_TOWER), true);
+        drawMeepleBox(null, "lb_shed", ps.getPlayerTokenCount(index, LittleBuilding.LB_SHED), true);
+        drawMeepleBox(null, "lb_house", ps.getPlayerTokenCount(index, LittleBuilding.LB_HOUSE), true);
+        drawMeepleBox(null, "lb_tower", ps.getPlayerTokenCount(index, LittleBuilding.LB_TOWER), true);
 
-        if (ps.getPlayerTokenCount(index, Token.KING) > 0) {
+        if (ps.getPlayerTokenCount(index, BiggestFeatureAward.KING) > 0) {
             KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);
             Rectangle r = drawMeepleBox(null, "king", 1, false, "king");
             if ("king".equals(mouseOverKey)) {
@@ -291,7 +301,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
             }
         }
 
-        if (ps.getPlayerTokenCount(index, Token.ROBBER) > 0) {
+        if (ps.getPlayerTokenCount(index, BiggestFeatureAward.ROBBER) > 0) {
             KingAndRobberBaronCapability cap = state.getCapabilities().get(KingAndRobberBaronCapability.class);
             Rectangle r = drawMeepleBox(null, "robber", 1, false, "robber");
             if ("robber".equals(mouseOverKey)) {
@@ -306,11 +316,11 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
         }
 
 
-        drawMeepleBox(null, "cloth", ps.getPlayerTokenCount(index, Token.CLOTH), true);
-        drawMeepleBox(null, "grain", ps.getPlayerTokenCount(index, Token.GRAIN), true);
-        drawMeepleBox(null, "wine", ps.getPlayerTokenCount(index, Token.WINE), true);
+        drawMeepleBox(null, "cloth", ps.getPlayerTokenCount(index, TradeGoods.CLOTH), true);
+        drawMeepleBox(null, "grain", ps.getPlayerTokenCount(index, TradeGoods.GRAIN), true);
+        drawMeepleBox(null, "wine", ps.getPlayerTokenCount(index, TradeGoods.WINE), true);
 
-        drawMeepleBox(null, "gold", ps.getPlayerTokenCount(index, Token.GOLD), true);
+        drawMeepleBox(null, "gold", ps.getPlayerTokenCount(index, GoldToken.GOLD), true);
 
         io.vavr.collection.Array<io.vavr.collection.List<Follower>> towerModel = state.getCapabilityModel(TowerCapability.class);
         if (towerModel != null) {

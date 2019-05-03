@@ -1,14 +1,17 @@
 package com.jcloisterzone.wsio.message;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.wsio.WsMessageCommand;
+import com.jcloisterzone.wsio.message.adapters.TokenAdapter;
 
 @WsMessageCommand("PLACE_TOKEN")
 public class PlaceTokenMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
     private String messageId;
+    @JsonAdapter(TokenAdapter.class)
     private Token token;
     private BoardPointer pointer;
 

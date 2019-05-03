@@ -8,6 +8,7 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
+import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.FerriesCapabilityModel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -70,7 +71,7 @@ public class ChangeFerriesPhase extends Phase {
     public StepResult handlePlaceToken(GameState state, PlaceTokenMessage msg) {
         Token token = msg.getToken();
 
-        if (token != Token.FERRY) {
+        if (token != FerryToken.FERRY) {
             throw new IllegalArgumentException();
         }
 

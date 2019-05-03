@@ -3,7 +3,7 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("COMMIT")
-public class CommitMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMeesage {
+public class CommitMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage, WsSaltMessage {
 
     private String gameId;
     private String messageId;

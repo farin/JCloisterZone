@@ -1,7 +1,7 @@
 {
   "gameId": "1",
   "name": "Test farm scoring",
-  "appVersion": "4.0.0",
+  "appVersion": "4.4.0",
   "initialSeed": 1,
   "created": "2017-01-01T00:00:00.000Z",
   "annotations": {
@@ -54,7 +54,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -559177068956049969
+        "salt": 0
       }
     },
     {
@@ -84,7 +84,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -4057507296742016129
+        "salt": 0
       }
     },
     {
@@ -105,7 +105,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 2714907532544901876
+        "salt": 0
       }
     },
     {
@@ -135,7 +135,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -7338419511948821030
+        "salt": 0
       }
     },
     {
@@ -156,7 +156,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": -7557399669144877427
+        "salt": 0
       }
     },
     {
@@ -177,7 +177,7 @@
     {
       "type": "COMMIT",
       "payload": {
-        "seed": 7997557059357424672
+        "salt": 0
       }
     },
     {

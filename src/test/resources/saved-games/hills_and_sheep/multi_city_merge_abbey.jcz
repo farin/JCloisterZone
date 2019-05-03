@@ -1,0 +1,229 @@
+{
+  "gameId": "gvv9ii57vv85qsk1hsptnnib4o",
+  "name": "",
+  "appVersion": "dev-snapshot",
+  "initialSeed": 387965770263639154,
+  "created": "2019-04-20T22:01:30.084Z",
+  "slots": [
+    {
+      "number": 0,
+      "serial": 1,
+      "clientId": "8nkf6d232u8p4236v3njho6dj6",
+      "nickname": "Alice"
+    },
+    {
+      "number": 1,
+      "serial": 2,
+      "clientId": "8nkf6d232u8p4236v3njho6dj6",
+      "nickname": "Bob"
+    }
+  ],
+  "clocks": [
+    16585,
+    46668
+  ],
+  "setup": {
+    "expansions": {
+      "ABBEY_AND_MAYOR": 1,
+      "HILLS_AND_SHEEP": 1,
+      "BASIC": 1
+    },
+    "rules": {
+      "MORE_TUNNEL_TOKENS": true,
+      "TUNNELIZE_ALL_EXPANSIONS": true,
+      "PIG_HERD_ON_GQ_FARM": true
+    },
+    "capabilities": [
+      "Mayor",
+      "Abbey",
+      "Sheep",
+      "Hill",
+      "Barn",
+      "Vineyard",
+      "Wagon",
+      "StandardGame"
+    ]
+  },
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.RFr",
+        "rotation": "R0",
+        "position": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790430342
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "HS.CC!.v",
+        "rotation": "R90",
+        "position": [
+          0,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            0,
+            -1
+          ],
+          "location": "S"
+        },
+        "meepleId": "1.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790432529
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R180",
+        "position": [
+          0,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "DEPLOY_MEEPLE",
+      "payload": {
+        "pointer": {
+          "position": [
+            0,
+            -2
+          ],
+          "location": "S"
+        },
+        "meepleId": "0.small.1"
+      }
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790436091
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.RFr",
+        "rotation": "R0",
+        "position": [
+          2,
+          0
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790440625
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R0",
+        "position": [
+          1,
+          -2
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790443233
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R90",
+        "position": [
+          2,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790446368
+      }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "AM.A",
+        "rotation": "R0",
+        "position": [
+          1,
+          -1
+        ]
+      }
+    },
+    {
+      "type": "PASS",
+      "payload": {}
+    },
+    {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 1555790453257
+      }
+    }
+  ],
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": {
+        "drawOrder": [
+          "BA.RFr",
+          "HS.CC!.v",
+          "BA.C",
+          "BA.RFr",
+          "BA.C",
+          "BA.C"
+        ]
+      }
+    }
+  }
+}

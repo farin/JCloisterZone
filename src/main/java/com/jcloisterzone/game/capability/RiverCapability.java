@@ -16,6 +16,8 @@ import io.vavr.collection.List;
 
 public class RiverCapability extends Capability<Void> {
 
+	private static final long serialVersionUID = 1L;
+
     @Override
     public GameState onStartGame(GameState state) {
         state = state.mapTilePack(pack -> {

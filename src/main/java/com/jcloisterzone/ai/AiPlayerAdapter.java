@@ -38,9 +38,9 @@ public class AiPlayerAdapter {
     }
 
     @Subscribe
-    public void onGameStateChanged(GameChangedEvent ev) {
+    public void onGameStateChanged(GameChangedEvent ev) {    	
         GameState state = ev.getCurrentState();
-        Player activePlayer = state.getActivePlayer();
+        Player activePlayer = state.getActivePlayer();        
         if (player.equals(activePlayer)) {
             executor.submit(() -> {
                 try {

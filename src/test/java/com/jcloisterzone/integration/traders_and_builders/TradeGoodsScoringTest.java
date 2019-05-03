@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.jcloisterzone.PlayerScore;
 import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.integration.IntegrationTest;
 
@@ -25,14 +25,14 @@ public class TradeGoodsScoringTest extends IntegrationTest {
 
         assertEquals(16, alice.getPoints());
         assertEquals(10, alice.getStats().get(PointCategory.TRADE_GOODS).getOrElse(0).intValue());
-        assertEquals(1, state.getPlayers().getPlayerTokenCount(0, Token.CLOTH));
-        assertEquals(0, state.getPlayers().getPlayerTokenCount(0, Token.GRAIN));
-        assertEquals(0, state.getPlayers().getPlayerTokenCount(0, Token.WINE));
+        assertEquals(1, state.getPlayers().getPlayerTokenCount(0, TradeGoods.CLOTH));
+        assertEquals(0, state.getPlayers().getPlayerTokenCount(0, TradeGoods.GRAIN));
+        assertEquals(0, state.getPlayers().getPlayerTokenCount(0, TradeGoods.WINE));
 
         assertEquals(20, bob.getPoints());
         assertEquals(20, bob.getStats().get(PointCategory.TRADE_GOODS).getOrElse(0).intValue());
-        assertEquals(1, state.getPlayers().getPlayerTokenCount(1, Token.CLOTH));
-        assertEquals(0, state.getPlayers().getPlayerTokenCount(1, Token.GRAIN));
-        assertEquals(2, state.getPlayers().getPlayerTokenCount(1, Token.WINE));
+        assertEquals(1, state.getPlayers().getPlayerTokenCount(1, TradeGoods.CLOTH));
+        assertEquals(0, state.getPlayers().getPlayerTokenCount(1, TradeGoods.GRAIN));
+        assertEquals(2, state.getPlayers().getPlayerTokenCount(1, TradeGoods.WINE));
     }
 }

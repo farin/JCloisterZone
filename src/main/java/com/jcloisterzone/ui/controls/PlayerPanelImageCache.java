@@ -11,8 +11,8 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.AbbeyCapability;
+import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.ui.Client;
 import com.jcloisterzone.ui.resources.LayeredImageDescriptor;
@@ -57,13 +57,13 @@ public class PlayerPanelImageCache {
             scaleFigureImages(player, color, player.getFollowers(state));
             scaleFigureImages(player, color, player.getSpecialMeeples(state));
 
-            Map<Token, Color> tunnelColors = player.getColors().getTunnelColors();
+            Map<Tunnel, Color> tunnelColors = player.getColors().getTunnelColors();
             Image tunnelA = rm.getLayeredImage(
-                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_A)));
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Tunnel.TUNNEL_A)));
             Image tunnelB = rm.getLayeredImage(
-                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_B)));
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Tunnel.TUNNEL_B)));
             Image tunnelC = rm.getLayeredImage(
-                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Token.TUNNEL_C)));
+                    new LayeredImageDescriptor("player-meeples/tunnel", tunnelColors.get(Tunnel.TUNNEL_C)));
 
             scaledImages.put(String.format("%dtunnel.A", player.getIndex()), scaleImage(tunnelA));
             scaledImages.put(String.format("%dtunnel.B", player.getIndex()), scaleImage(tunnelB));

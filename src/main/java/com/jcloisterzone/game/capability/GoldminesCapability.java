@@ -11,7 +11,7 @@ import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.TileTrigger;
+import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Castle;
@@ -36,10 +36,18 @@ import io.vavr.collection.Vector;
  */
 public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
+	public static enum GoldToken implements Token {
+		GOLD;
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	 public static final TileModifier GOLDMINE = new TileModifier("Goldmine");
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "goldmine").isEmpty()) {
-            tile = tile.setTileTrigger(TileTrigger.GOLDMINE);
+            tile = tile.addTileModifier(GOLDMINE);
         }
         return tile;
     }
@@ -138,10 +146,10 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             int count = entry.getValue();
             if (count > 0) {
                 state = state.mapPlayers(ps ->
-                   ps.addTokenCount(pl.getIndex(), Token.GOLD, count)
+                   ps.addTokenCount(pl.getIndex(), GoldToken.GOLD, count)
                 );
                 TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state), pl, Token.GOLD, count
+                    PlayEventMeta.createWithActivePlayer(state), pl, GoldToken.GOLD, count
                 );
                 ev.setSourcePositions(Vector.ofAll(awardedGoldPositions.get(pl)));
                 state = state.appendEvent(ev);
@@ -156,7 +164,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
         PlayersState ps = state.getPlayers();
 
         for (Player player: ps.getPlayers()) {
-            int pieces = ps.getPlayerTokenCount(player.getIndex(), Token.GOLD);
+            int pieces = ps.getPlayerTokenCount(player.getIndex(), GoldToken.GOLD);
             if (pieces == 0) {
                 continue;
             }

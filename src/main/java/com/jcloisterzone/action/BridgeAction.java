@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
@@ -22,7 +22,7 @@ public class BridgeAction extends AbstractPlayerAction<FeaturePointer> implement
 
     @Override
     public WsInGameMessage select(FeaturePointer ptr) {
-        return new PlaceTokenMessage(Token.BRIDGE, ptr);
+        return new PlaceTokenMessage(BrigeToken.BRIDGE, ptr);
     }
 
     @Override

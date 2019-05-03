@@ -1,7 +1,7 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.ui.annotations.LinkedGridLayer;
 import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.ui.grid.layer.TileActionLayer;
@@ -21,7 +21,7 @@ public class GoldPieceAction extends SelectTileAction {
 
     @Override
     public WsInGameMessage select(Position pos) {
-        return new PlaceTokenMessage(Token.GOLD, pos);
+        return new PlaceTokenMessage(GoldToken.GOLD, pos);
     }
 
     @Override
