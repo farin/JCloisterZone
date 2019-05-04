@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-16 21:19+0200\n"
-"PO-Revision-Date: 2019-04-07 01:14+0100\n"
+"PO-Revision-Date: 2019-05-04 00:26+0100\n"
 "Last-Translator: Roman <farin@farin.cz>\n"
 "Language-Team: \n"
 "Language: hu\n"
@@ -49,7 +49,7 @@ msgstr "Alapjáték"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Basic game (2.0)"
-msgstr ""
+msgstr "Alapjáték (2.0)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "Wheel of Fortune"
@@ -291,6 +291,7 @@ msgstr "Bazár lapon nincs licit kör. Minden játékos csak választ egy lapot.
 #: src/main/java/com/jcloisterzone/game/Rule.java:28
 msgid "Count number of followers on hill as tiebreaker."
 msgstr ""
+"Kiértékeléskor a dombon álló alattvalók száma is eldöntheti a holtversenyt."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:30
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -598,33 +599,33 @@ msgstr "a {0} -ról/re."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:50
 msgid "Shepherd"
-msgstr ""
+msgstr "Pásztor"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:55
 msgid "Farm with shepherd was expanded."
-msgstr ""
+msgstr "Megnövekedett a mező, amelyen a pásztor áll."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:86
 msgid "You can draw another sheep/wolf token from a bag."
-msgstr ""
+msgstr "Húzhatsz egy újabb birka/farkas jelölőt a zsákból."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:90
 #, java-format
 msgid "({0} tokens left in bag)"
-msgstr ""
+msgstr "({0} jelölő maradt a zsákban)"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:96
 msgid "Expand the flock of sheep."
-msgstr ""
+msgstr "A nyáj méretének növelése."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:108
 #, java-format
 msgid "Or score the flock for {0} points."
-msgstr ""
+msgstr "A nyáj kiértékelése {0} pontért."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:112
 msgid "Herd the flock into the stable."
-msgstr ""
+msgstr "A nyáj visszaterelése az istállóba."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:43
 msgid "Prisoners exchange"
@@ -729,7 +730,7 @@ msgstr "Elforgatás"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Show Game Events"
-msgstr ""
+msgstr "Eseménysor megjelenítése"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show Last Placements"
@@ -958,11 +959,11 @@ msgstr "Összpontszám"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
 msgid "Tiles placed"
-msgstr ""
+msgstr "Lerakott lapkák"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
 msgid "Time consumed"
-msgstr ""
+msgstr "Felhasznált idő"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Roads"
@@ -1002,7 +1003,7 @@ msgstr "Arany"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:168
 msgid "Sheep"
-msgstr ""
+msgstr "Birkák"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:171
 msgid "Fairy"
