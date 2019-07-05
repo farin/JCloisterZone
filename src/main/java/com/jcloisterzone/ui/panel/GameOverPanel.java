@@ -181,6 +181,11 @@ public class GameOverPanel extends JPanel {
             }
 
             Player[] players = getSortedPlayers().toArray(new Player[state.getPlayers().length()]);
+            // calculate the full time of the current played game
+            int fulltime = 0;
+            for (Player player : players) {
+                fulltime = fulltime + (int)(game.getClocks().get(player.getIndex()).getTime());
+            }
             for (Player player : players) {
                 gridy = 0;
                 Color color = player.getColors().getMeepleColor();
@@ -200,8 +205,13 @@ public class GameOverPanel extends JPanel {
                 seconds = seconds % 3600;
                 int minutes = seconds / 60;
                 seconds = seconds % 60;
-                add(new JLabel(String.format("%d:%02d:%02d", hours, minutes, seconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
-
+                int fullseconds = fulltime / 1000;
+                int fullhours = fullseconds / 3600;
+                fullseconds = fullseconds % 3600;
+                int fullminutes = fullseconds / 60;
+                fullseconds = fullseconds % 60;
+                add(new JLabel(String.format("%d:%02d:%02d/%d:%02d:%02d", hours, minutes, seconds, fullhours, fullminutes, fullseconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
+               
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
