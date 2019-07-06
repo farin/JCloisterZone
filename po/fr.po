@@ -971,7 +971,7 @@ msgid "Tiles placed"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
-msgid "Time consumed"
+msgid "Time consumed:(Player/Game)"
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
