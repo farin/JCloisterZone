@@ -143,7 +143,7 @@ public class GameOverPanel extends JPanel {
             add(new JLabel(_tr("Rank")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Total points")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Tiles placed")), getLegendSpec(0, gridy++));
-            add(new JLabel(_tr("Time consumed")), getLegendSpec(0, gridy++));
+            add(new JLabel(_tr("Time consumed\n(Player/Game)")), getLegendSpec(0, gridy++));
 
             add(new JLabel(_tr("Roads")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Cities")), getLegendSpec(0, gridy++));
@@ -210,7 +210,7 @@ public class GameOverPanel extends JPanel {
                 fullseconds = fullseconds % 3600;
                 int fullminutes = fullseconds / 60;
                 fullseconds = fullseconds % 60;
-                add(new JLabel(String.format("%d:%02d:%02d/%d:%02d:%02d", hours, minutes, seconds, fullhours, fullminutes, fullseconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel(String.format("%d:%02d:%02d/\n%d:%02d:%02d", hours, minutes, seconds, fullhours, fullminutes, fullseconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
                
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
