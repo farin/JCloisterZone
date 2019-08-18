@@ -145,7 +145,6 @@ public class GameOverPanel extends JPanel {
             add(new JLabel(_tr("Tiles placed")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Time consumed:(Player/Game)")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Time consumed:(Percentage)")), getLegendSpec(0, gridy++));
-
             add(new JLabel(_tr("Roads")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Cities")), getLegendSpec(0, gridy++));
             add(new JLabel(_tr("Cloisters")), getLegendSpec(0, gridy++));
