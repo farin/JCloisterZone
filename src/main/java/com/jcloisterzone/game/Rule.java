@@ -16,6 +16,7 @@ public enum Rule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _tr("Randomize seating order")),
 
     USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _tr("Use pig herds independently (without T&B expansion)")),
+    MINI_CITIES_ONLY_TWO_POINTS(Expansion.BASIC, Boolean.class, _tr("Only 2 points for small cities of 2 tiles with no pennants.")),
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _tr("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
     DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _tr("Dragon movement occurs after scoring.") + " (RGG)"),

@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
 
@@ -189,7 +190,11 @@ public class City extends CompletableFeature<City> {
                 pointsPerUnit--;
             }
         }
-        return pointsPerUnit * (tileCount + pennants);
+        if (state.getBooleanValue(Rule.MINI_CITIES_ONLY_TWO_POINTS) && tileCount + pennants == 2) {
+            return 2;
+        } else {
+            return pointsPerUnit * (tileCount + pennants);
+        }
     }
 
     @Override
