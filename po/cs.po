@@ -959,6 +959,10 @@ msgstr "Položeno kartiček"
 msgid "Time consumed"
 msgstr "Využitý čas"
 
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
+msgid "Time consumed:(Percentage)"
+msgstr ""
+
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Roads"
 msgstr "Cesty"
